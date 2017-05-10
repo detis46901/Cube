@@ -1,0 +1,10 @@
+<div class="container">
+  <div class="w3-display-topcenter" style="top:43px">
+    <div ngbDropdown class="d-inline-block">
+      <button class="btn btn-outline-primary" id="dropdownMenu1" ngbDropdownToggle>Pages</button>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+        <button *ngFor = "let userpage of userpages" class="dropdown-item">{{userpage.page}}</button>
+      </div>
+    </div>
+  </div>
+</div>

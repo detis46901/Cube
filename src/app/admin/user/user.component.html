@@ -1,0 +1,45 @@
+<div style="width:100%">
+        <form class="form-inline" #e="ngForm" *ngFor="let user of users">
+            <i (click)="deleteUser(user.ID)" class="fa fa-times" aria-hidden="true"></i>
+            <input id="exuserfirstname" ngModel required name="exuserfirstname" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "user.firstName" type="text" (blur)="updateUser(user)">
+            <input id="exuserlastname" ngModel required name="exuserlastname" class="form-control" style="border-color: rgba(255,255,255,0); width:15%" [(ngModel)] = "user.lastName" type="text" (blur)="updateUser(user)">
+            <select id="exuserrole" ngModel required name="exuserrole" class="form-control" style="border-color: rgba(255,255,255,0); width:20%" [(ngModel)] = "user.roleID" #role="ngModel" type="text" (blur)="updateUser(user)">
+                <option *ngFor="let role of roles" [value]="role.ID">
+                    {{role.role}}
+                </option>
+            </select>
+            <input id="exuseractive" name="exuseractive" class="form-check-input" style="border-color: rgba(255,255,255,0); width:5%" [(ngModel)] = "user.active" type="checkbox" (change)="updateUser(user)">
+            <input id="exuseremail" ngModel required name="exuseremail" class="form-control" style="border-color: rgba(255,255,255,0); width:20%" [(ngModel)] = "user.email" type="text" (blur)="updateUser(user)">
+            <input id="exuseradministrator" name="exuseradministrator" class="form-check-input" style="border-color: rgba(255,255,255,0); width:5%" [(ngModel)] = "user.administrator" type="checkbox" (change)="updateUser(user)">
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-outline-primary" id="dropdownMenu2" ngbDropdownToggle>Options</button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+                    <button type="button" (click)="resetPassword(user.ID)" class="btn btn-secondary">Reset Password</button>
+                     <button type="button" (click)="openPages(user.ID, user.firstName, user.lastName)" class="btn btn-secondary">Pages</button>
+                </div>
+             </div>
+              <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-outline-primary" id="dropdownMenu3" ngbDropdownToggle>Edit Pages</button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu3">
+                    <button *ngFor="let userpage of (userpages | pagefilter: (user.ID))" type="button" (click)="openPageConfig(userpage.ID, user.ID)" class="btn btn-secondary">{{userpage.page}}</button><br>
+                </div>
+             </div>
+        </form>
+
+ <form #f="ngForm" class="form-inline" (ngSubmit)="addUser(newuser)">
+     <i class="fa fa-arrow-right" aria-hidden="true"></i>
+     <input id="newuserfirstname" name="newuserfirstname" style="border-color: rgba(255,255,255,0); width:10%" required #newuserfirstnameinput [(ngModel)] = "newuser.firstName" type="text" placeholder="First Name">
+     <input id="newuserlastname" name="newuserlastname" style="border-color: rgba(255,255,255,0); width:15%" required #newuserlastnameinput [(ngModel)] = "newuser.lastName" type="text" placeholder="Last Name">
+     <select id="newuserrole" name="newuserrole" name="exuserrole" class="form-control" style="border-color: rgba(255,255,255,0); width:20%" [(ngModel)] = "newuser.roleID" required #role="ngModel" type="text" (blur)="updateUser(user)">
+        <option *ngFor="let role of roles" [value]="role.ID">
+            {{role.role}}
+        </option>
+    </select>
+    <input id="newuseractive" name="newuseractive" style="border-color: rgba(255,255,255,0); width:5%" #newuseractiveinput [(ngModel)] = "newuser.active" type="checkbox" placeholder="Active" checked>
+    <input id="newuseremail" name="newuseremail" style="border-color: rgba(255,255,255,0); width:20%" required #newuseremailinput [(ngModel)] = "newuser.email" type="text" placeholder="Email">
+    <input id="newuseradministrator" name="newuseradministrator" style="border-color: rgba(255,255,255,0); width:5%" #newuseradministratorinput [(ngModel)] = "newuser.administrator" type="checkbox" placeholder="Administrator">
+    <button type="submit" [disabled]="!f.valid">Submit</button>
+</form> 
+</div>
+
+<template ngbModalContainer></template>

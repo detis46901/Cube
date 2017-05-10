@@ -1,0 +1,11 @@
+<table class="table"><tr><th>
+<a [routerLink]="['/admin']" routerLinkActive="active">Admin Home</a><br></th></tr>
+<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['user']}}]" routerLinkActive="active">Users</a></td></tr>
+<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['organization']}}]" routerLinkActive="active">Organization</a></td></tr>
+<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['module']}}]" routerLinkActive="active">Modules</a></td></tr>
+<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['layer']}}]" routerLinkActive="active">Layers</a></td></tr>
+<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['page']}}]" routerLinkActive="active">Pages</a></td></tr>
+<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['default']}}]" routerLinkActive="active">Defaults</a></td></tr>
+<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['boundary']}}]" routerLinkActive="active">Boundaries</a></td></tr>
+<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['notification']}}]" routerLinkActive="active">Notifications</a></td></tr>
+</table>

@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-md-4">
+        <table class="table">
+            <tr>
+                <th>Departments</th>
+            </tr>
+            <tr *ngFor="let department of departments" (click)="departmentClick(department)">
+                <td><form class="form-inline">
+                    <div class="form-group" style="width:100%">
+                        <label for="exdepartment"><i (click)="deleteDepartment(department.ID)" class="fa fa-times" aria-hidden="true"></i></label>
+                        <input id="exdepartment" name="exdepartment" class="form-control" style="border-color: rgba(255,255,255,0); width:90%" #editdepartmentinput [(ngModel)] = "department.department" type="text" (blur)="updateDepartment(department)">
+                    </div>
+                </form></td>
+            </tr>
+            <tr><td><input id="newdepartment" style="border-color: rgba(255,255,255,0); width:100%" #newdepartmentinput [(ngModel)] = "newdepartment" type="text" placeholder="New Department" (keyup.enter)="addDepartment(newdepartment); newdepartmentinput.value=''" aria-describedby="departmentHelpBlock"><br>
+            <p id="departmentHelpBlock" class="form-text form-muted">Press enter to create a department.</p></td></tr>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <table *ngIf="showgroup" class="table">
+            <tr>
+                <th>{{selecteddepartment.department}} Groups</th>
+            </tr>
+            <tr *ngFor="let group of groups" (click)="groupClick(group)">
+                <td *ngIf="filterGroup(group.departmentID)"><form class="form-inline">
+                    <div class="form-group" style="width:100%">
+                        <label for="exgroup" *ngIf="filterGroup(group.departmentID)"><i (click)="deleteGroup(group.ID)" class="fa fa-times" aria-hidden="true"></i></label>
+                        <input id="exgroup" name="exgroup" class="form-control" style="border-color: rgba(255,255,255,0); width:90%" #editgroupinput [(ngModel)] = "group.group" type="text" (blur)="updateGroup(group)">
+                    </div>
+                </form></td>
+            </tr>
+            <tr><td><input class="form-control" style="border-color: rgba(255,255,255,0); width=100%" #newgroupinput [(ngModel)] = "newgroup" type="text" placeholder="New Group" (keyup.enter)="addGroup(newgroup); newgroupinput.value=''" aria-describedby="groupHelpBlock"><br>
+            <p id="groupHelpBlock" class="form-text form-muted">Press enter to create a group.</p></td></tr>
+        </table>
+    </div>
+    <div class="col-md-4">
+       <table *ngIf="showrole" class="table">
+            <tr>
+                <th>{{selectedgroup.group}} Roles</th>
+            </tr>
+            <tr *ngFor="let role of roles">
+                <td *ngIf="filterRole(role.groupID)"><form class="form-inline">
+                    <div class="form-group" style="width:100%">
+                        <label for="exrole" *ngIf="filterRole(role.groupID)"><i (click)="deleteRole(role.ID)" class="fa fa-times" aria-hidden="true"></i></label>
+                        <input id="exrole" name="exrole" class="form-control" style="border-color: rgba(255,255,255,0); width:90%" #editroleinput [(ngModel)] = "role.role" type="text" (blur)="updateRole(role)">
+                    </div>
+                </form></td>
+            </tr>
+            <tr><td><input id="newrole" style="border-color: rgba(255,255,255,0); width:100%" #newroleinput [(ngModel)] = "newrole.role" type="text" placeholder="New Role" name="newrole" (keyup.enter)="addRole(newrole); newroleinput.value=''" aria-describedby="roleHelpBlock"><br>
+            <p id="roleHelpBlock" class="form-text form-muted">Press enter to create a role.</p></td></tr>
+        </table>
+    </div>
+</div>

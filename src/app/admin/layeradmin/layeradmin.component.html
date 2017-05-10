@@ -1,0 +1,58 @@
+<div style="width:100%">
+        <form class="form-inline" #e="ngForm" *ngFor="let layeradmin of layeradmins">
+            <i (click)="deleteLayer(layeradmin.ID)" class="fa fa-times" aria-hidden="true"></i>
+            <input id="exlayername" ngModel required name="exlayername" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
+            <select id="exlayertype" ngModel required name="exlayertype" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "layeradmin.layerType" type="text" (blur)="updateLayer(layeradmin)">
+                <option>
+                    PostGIS
+                </option>
+                <option>
+                    WMS
+                </option>
+                <option>
+                    KML - Link
+                </option>
+                <option>
+                    KML - Drive
+                </option>
+            </select>
+            <input id="exlayerurl" name="exlayerurl" class="form-control" style="border-color: rgba(255,255,255,0); width:20%" [(ngModel)] = "layeradmin.layerURL" type="text" (change)="updateLayer(layeradmin)">
+            <input id="exlayerident" name="exlayerident" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
+            <input id="exlayerformat" name="exlayerformat" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "layeradmin.layerFormat" type="text" (change)="updateLayer(layeradmin)">            
+            <input id="exlayerdescription" ngModel required name="exlayerdescription" class="form-control" style="border-color: rgba(255,255,255,0); width:20%" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)">
+<template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Permissions</h4>
+  </div>
+  <div class="modal-body">
+    <p>One fine body&hellip;</p>
+    <p>{{userperm}}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+  </div>
+</template>
+
+<button class="btn btn-outline-primary" (click)="openpermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>
+
+        </form>
+
+ 
+</div>
+
+<button class="btn btn-outline-primary" (click)="opennew()">Create New Layer</button>
+
+<template ngbModalContainer></template>
+
+<template #content let-c="close" let-d="dismiss">
+  
+</template>
+
+
+
+
+
+{{closeResult}}

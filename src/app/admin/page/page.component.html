@@ -1,0 +1,34 @@
+<div class="modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">{{firstName}} {{lastName}} - Pages</h4>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <tr>
+                <th>Pages</th>
+                <th>Active</th>
+                <th>Default</th>
+            </tr>
+            <tr>
+                <td>
+                <form class="form-inline" *ngFor="let userpage of userpages">
+                    <div class="form-group" style="width:100%">
+                        <label for="exuserpage"><i (click)="deleteUserPage(userpage.ID)" class="fa fa-times" aria-hidden="true"></i></label>
+                        <input id="exuserpage" name="exuserpage" class="form-control" style="border-color: rgba(255,255,255,0); width:60%" #edituserpageinput [(ngModel)] = "userpage.page" type="text" (blur)="updateUserPage(userpage)">
+                        <input id="exuserpageactive" name="exuserpageactive" class="form-check-input" style="border-color: rgba(255,255,255,0); width:5%" [(ngModel)] = "userpage.active" type="checkbox" (change)="updateUserPage(userpage)">
+                        <input id="exuserpagedefault" name="exuserpagedefault" class="form-check-input" style="border-color: rgba(255,255,255,0); width:5%" [(ngModel)] = "userpage.default" type="checkbox" (change)="updateUserPage(userpage)">
+                        <i (click)="deleteUserPage(userpage.ID)" class="fa fa-arrow-up" aria-hidden="true"></i>
+                        <i (click)="deleteUserPage(userpage.ID)" class="fa fa-arrow-down" aria-hidden="true"></i>
+                       </div>
+                </form>
+                </td>
+                
+            </tr>
+            <tr><td><input id="newuserpage" style="border-color: rgba(255,255,255,0); width:100%" #newuserpageinput [(ngModel)] = "newuserpage" type="text" placeholder="New Page" (keyup.enter)="addUserPage(newuserpage); newuserpageinput.value=''" aria-describedby="userpageHelpBlock"><br>
+            <p id="userpageHelpBlock" class="form-text form-muted">Press enter to create a page`.</p></td></tr>
+        </table>
+    </div>
+</div>

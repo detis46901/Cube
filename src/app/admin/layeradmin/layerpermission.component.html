@@ -1,0 +1,41 @@
+  <div class="modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">{{layerName}} - Permissions</h4>
+  </div>
+  <div class="modal-body">
+    <form class="form-inline" #f="ngForm" *ngFor="let layerpermission of layerpermissions">
+    <div class="form-group">
+                <i (click)="deleteLayerPermission(layerpermission.ID)" class="fa fa-times" aria-hidden="true"></i>
+     <select id="user" name="user" class="form-control" [(ngModel)] = "layerpermission.userID" required type="text" (blur)="updateLayerPermission(layerpermission)"  >
+                <option [value]="user.ID" *ngFor="let user of users">
+                    {{user.firstName}} {{user.lastName}}
+                </option>
+    </select>
+    </div>
+    <div class="form-group">
+    <label class="btn btn-primary" [class.active]="layerpermission.edit">
+    <input type="checkbox" name="layerpermissionedit" [(ngModel)]="layerpermission.edit" (change)="updateLayerPermission(layerpermission)"> Edit </label>
+    </div>
+</form> 
+
+<form class="form-inline" #f="ngForm" (ngSubmit)="addLayerPermission(newlayerpermission)">
+    <div class="form-group">
+     <label for="user">User</label>
+     <select id="user" name="user" class="form-control" [(ngModel)] = "newlayerpermission.userID" required type="text">
+                <option [value]="user.ID" *ngFor="let user of users">
+                    {{user.firstName}} {{user.lastName}}
+                </option>
+    </select>
+    </div>
+    <div class="form-group">
+    <label class="btn btn-primary" [class.active]="newlayerpermission.edit">
+    <input type="checkbox" name="newlayerpermissionedit" [(ngModel)]="newlayerpermission.edit"> Edit </label>
+    </div>
+    <button class="btn btn-outline-primary" type="submit" [disabled]="!f.valid">Next</button>
+</form> 
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="activeModal.close('Close click')">Close</button>
+  </div>
