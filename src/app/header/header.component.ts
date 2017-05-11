@@ -10,6 +10,4 @@ export class HeaderComponent {
     }
     @Input() user: User
     condition = false;
- 
-
     }
