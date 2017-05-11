@@ -1,9 +1,13 @@
 <div class="col-md-6 col-md-offset-3">
-    <div class="alert alert-info">
+    <!-- Not sure what this is designed to do><div class="alert alert-info">
         Username: test<br />
         Password: test
-    </div>
-    <h2>Login</h2>
+    </div><Not sure what this is designed to do-->
+    <!--<div>
+        <h2>Welcome to Cube</h3>
+    </div>-->
+    <h1>Welcome to Cube</h1>
+    <h3>Login</h3>
     <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
             <label for="username">Username</label>

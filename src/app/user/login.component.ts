@@ -7,7 +7,8 @@ import { AuthenticationService } from '../../_services/authentication.service';
 
 @Component({
     //moduleId: module.id, (why does this not need to be there???)
-    templateUrl: 'login.component.html'
+    templateUrl: 'login.component.html',
+    styleUrls: ['login.component.css']
 })
  
 export class LoginComponent implements OnInit {
