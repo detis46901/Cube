@@ -1,5 +1,56 @@
+body, html {
+    height: 100%;
+    color: black;
+    background-color: black;
+}
+
+.bg {
+    color: black;
+}
+
+
 h1 {
     text-align: center;
     font: Verdana;
-    color: #1967a8;
+    color: darkblue;
+    padding-right: 20px;
+}
+
+h3 {
+    font: Verdana;
+    padding-left: 50px;
+    padding-bottom: 5px;
+    padding-right: 60px;
+    text-align: center;
+}
+
+.panel-login {
+    border-color:lightblue;
+    width: 500px;
+    border-width: 7px;
+    border-radius: 7px;
+    background-color: whitesmoke;
+}
+
+.form-group {
+    width: 460px;
+    padding-left: 50px;
+    padding-bottom: 5px;
+}
+
+.form-group.label {
+    color: darkblue;
+}
+
+button {
+    background-color: lightblue;
+    color: darkblue;
+}
+
+hr {
+    border-width: 3px;
+    border-radius: 3px;
+    border-color: lightblue;
+    width: 490px;
+    margin-left: 15px;
 }
