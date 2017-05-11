@@ -39,9 +39,9 @@ export class MapComponent {
     public layerpermissions: any;
     public layeradmin = new LayerAdmin;
     public layeradmins: Array<LayerAdmin>;
-    public userpagelayers: Array<UserPageLayer>;
-    public userpages: any;
-    public defaultpage: any;
+    public userpagelayers: Array<UserPageLayer>; //***
+    public userpages: any; //***
+    public defaultpage: any; //***
     public currentlayer: any;
     public overlays: any;
     public q: number;
@@ -98,9 +98,9 @@ export class MapComponent {
         public setPage(): void {
             this.userPageService
                 .GetSome(this.userID)
-                .subscribe((data:UserPage[]) => this.userpages = data,
+                .subscribe((data:UserPage[]) => this.userpages = data, //***
                 error => console.log(error),
-                () => this.getDefaultPage()
+                () => this.getDefaultPage() //***
                 );
     }
 
@@ -111,12 +111,12 @@ export class MapComponent {
                     this.defaultpage = userpage
                 }
             }
-            //console.log (this.defaultpage)
-            this.getUserPageLayers(this.defaultpage)
+            console.log (this.defaultpage)
+            this.getUserPageLayers(this.defaultpage) //***
         }    
 
         public getUserPageLayers(page): void {
-            console.log("pageID = " + page.ID)
+            console.log("pageID = " + page.ID) //***Error being called here by web page: ERROR TypeError: Cannot read property 'ID' of undefined
             this.userPageLayerService
                 .GetPageLayers(page.ID)
                 .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
@@ -152,9 +152,11 @@ export class MapComponent {
 
         public addLayers() {
             console.log("addLayers Started.  I love Ava.")
+            //console.log(this.layeradmin);
             //console.log (this.mapService.map.addLayer)
             //this.mapService.openjson('http://localhost:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json')
             this.q=0
+            console.log(this.userpagelayers)
             let n = this.userpagelayers[0].layer_admin
             let l = n.layerName
             this.overlays = { [l] : L.tileLayer.wms(n.layerURL, { layers: n.layerIdent, format: n.layerFormat, transparent: true})}
