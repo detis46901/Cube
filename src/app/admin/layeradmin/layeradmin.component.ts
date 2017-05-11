@@ -59,7 +59,7 @@ openpermission(layerid, layername) {
 
 opennew() {
     console.log ("opennew")
-    this.userperm = "A user"
+    this.userperm = "A user" //Probably is a simple hardcoded test value here
     this.modalService.open(LayerNewComponent, {size:'lg'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
       this.getLayerItems();
