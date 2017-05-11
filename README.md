@@ -1,4 +1,4 @@
-## Cube Project (API)
+## Cube Project (Server)
 
 ### Description
 Cube is a web-based, open source, flexible GIS for communities and agencies to store and share information to solve problems.  The project is based completely on modern open source technologies.
