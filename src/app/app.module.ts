@@ -73,7 +73,9 @@ import { NumFilterPipe } from '../_pipes/numfilter.pipe';
     PageConfigComponent,
     LayerNewComponent
   ],
+
   entryComponents: [LayerNewComponent, LayerPermissionComponent, PageComponent, PageConfigComponent],
+
   imports: [
     BrowserModule,
     FormsModule,
@@ -81,6 +83,12 @@ import { NumFilterPipe } from '../_pipes/numfilter.pipe';
     JsonpModule,
     NgbModule.forRoot(),
     routing,
+    RouterModule.forRoot([
+      {
+        path: 'home',
+        component: HomeComponent
+      }
+    ])
     //routes
   ],
   providers: [

@@ -11,7 +11,7 @@ body, html {
 
 h1 {
     text-align: center;
-    font: Verdana;
+    font-family: "Calibri", "sans";
     color: darkblue;
     padding-right: 20px;
 }
