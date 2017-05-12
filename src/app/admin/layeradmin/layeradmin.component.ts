@@ -45,6 +45,7 @@ public userperm: string;
         
     }
 
+//Open permissions modal on request from "Layers"
 openpermission(layerid, layername) {
     const modalRef = this.modalService.open(LayerPermissionComponent)
        modalRef.componentInstance.layerID = layerid
@@ -57,9 +58,10 @@ openpermission(layerid, layername) {
     console.log("openpermission from layernew")
   }
 
+//Open create new layer modal on request from "Layers"
 opennew() {
     console.log ("opennew")
-    this.userperm = "A user" //Probably is a simple hardcoded test value here
+    this.userperm = "A user"
     this.modalService.open(LayerNewComponent, {size:'lg'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
       this.getLayerItems();

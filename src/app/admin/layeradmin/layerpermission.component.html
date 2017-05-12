@@ -1,3 +1,11 @@
+<!-- Consider some style changes: 
+      -The dropdown (combobox) controls that list each user should probably not be comboboxes, but static usernames.
+       The fact that every user with permission is listed already assures that one need not use this functionality.
+      -The current comboboxes (or future labels, etc.) and "Edit" checkbox contols should mimic the dual-column format
+       described for the "New Layer" modal style recommendation. They should be separated.
+      -The listed users need to be aligned with the "User" labelled control. This control is offset and looks awkward.-->
+
+<!-- This defines the modal that pops up after a "Permissions" click event from "Layers" control-->
   <div class="modal-header">
     <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
@@ -33,7 +41,7 @@
     <label class="btn btn-primary" [class.active]="newlayerpermission.edit">
     <input type="checkbox" name="newlayerpermissionedit" [(ngModel)]="newlayerpermission.edit"> Edit </label>
     </div>
-    <button class="btn btn-outline-primary" type="submit" [disabled]="!f.valid">Next</button>
+    <button class="btn btn-outline-primary" type="submit" [disabled]="!f.valid">Add Permission</button>
 </form> 
 
   <div class="modal-footer">

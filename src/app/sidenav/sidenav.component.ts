@@ -4,4 +4,5 @@ import { Component } from '@angular/core';
     selector: 'sidenav',
     templateUrl: './sidenav.component.html',
 })
-export class SideNavComponent { }
+export class SideNavComponent { 
+}

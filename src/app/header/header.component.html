@@ -1,8 +1,19 @@
+<!-- Consider some style changes: 
+      -Change location of "View Data"" to either the nav pane or other side of username, placement is awkward with username.
+       Perhaps integrate into menu tabs along the header later on (i.e. File|Edit|View etc.)
+      -"View Data" appears to be top padded slightly more than Welcome, {username}-->
+
 <!-- Top container (Same for every page)-->
 <div class="col-md-12 w3-black w3-large w3-padding" style="z-index:1">
-<button class="w3-btn w3-padding-0 w3-hover-text-grey" onclick="w3_open();"><i class="fa fa-bars"></i> &nbsp;View Data</button><!--This cannot access w3_open() even if script including function from sidenav.component.html is included above this block-->
+
+<!-- This cannot access w3_open() even if script including function from sidenav.component.html is included above this block.-->
+<button class="w3-btn w3-padding-0 w3-margin-bottom-4px -w3-hover-text-grey" onclick="w3_open();"><i class="fa fa-bars"></i> &nbsp;View Data</button>
+
+<!-- User welcome, username is hyperlink that redirects to home page.-->
 <span>Welcome, <strong><a routerLink="home">{{user.firstName}} {{user.lastName}}</a></strong></span>
 <span class="w3-right">
+
+<!-- Return to login, display Admin menu, and currently non-working avatar.-->
 <a href="/logout" class="w3-hover-none w3-hover-text-blue w3-show-inline-block"><i class="fa fa-power-off" aria-hidden="true"></i></a>
 <a *ngIf="user.administrator" class="w3-btn w3-orange w3-tiny w3-padding-tiny w3-border w3-border-orange w3-round-large w3-text-white" href="\admin">Admin</a>
 <img src="src/avatar2.png" class="w3-circle w3-margin-right" style="width:24px"></span> <!--Error here-->

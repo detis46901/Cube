@@ -1,6 +1,17 @@
+<!-- Consider some style changes: 
+      -Change the "fa fa-times" to a more important looking control that ensures user understanding of consequence of deletion.
+       Perhaps <strong> or likewise pertinent focus would be helpful.
+      -Make controls appear to be more cohesive with each other, use borders etc. for form container to distinguish-->
+
+<!-- Consider some logic changes:
+     -Refer to line 13-->
+
+
+<!-- This defines the component redirected to by the "Layers" option in the navigation sidepane.-->
 <div style="width:100%">
+        <!-- Displays user layers-->
         <form class="form-inline" #e="ngForm" *ngFor="let layeradmin of layeradmins">
-            <i (click)="deleteLayer(layeradmin.ID)" class="fa fa-times" aria-hidden="true"></i>
+            <i (click)="deleteLayer(layeradmin.ID)" class="fa fa-times" aria-hidden="true"></i> <!-- This line should not allow deletion without an "Are you sure?" message-->
             <input id="exlayername" ngModel required name="exlayername" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
             <select id="exlayertype" ngModel required name="exlayertype" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "layeradmin.layerType" type="text" (blur)="updateLayer(layeradmin)">
                 <option>
@@ -20,7 +31,9 @@
             <input id="exlayerident" name="exlayerident" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
             <input id="exlayerformat" name="exlayerformat" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "layeradmin.layerFormat" type="text" (change)="updateLayer(layeradmin)">            
             <input id="exlayerdescription" ngModel required name="exlayerdescription" class="form-control" style="border-color: rgba(255,255,255,0); width:20%" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)">
-<template #content let-c="close" let-d="dismiss">
+
+<!-- Template for layer permissions, interacts with layerpermission component and Permissions button from user Layers-->
+<ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header">
     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
       <span aria-hidden="true">&times;</span>
@@ -34,8 +47,9 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
   </div>
-</template>
+</ng-template>
 
+<!-- Display modal: users that have permissions with specific layer; Redirect to: layerpermission component via openpermission()-->
 <button class="btn btn-outline-primary" (click)="openpermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>
 
         </form>
@@ -43,6 +57,7 @@
  
 </div>
 
+<!-- Display modal: create new layer; Redirect to: layernew component via opennew()-->
 <button class="btn btn-default" (click)="opennew()">Create New Layer</button>
 
 <template ngbModalContainer></template>
@@ -55,4 +70,4 @@
 
 
 
-{{closeResult}}
+<!--{{closeResult}} -Debugging: Not necessary for now-->

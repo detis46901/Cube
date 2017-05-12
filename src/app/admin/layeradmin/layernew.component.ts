@@ -14,7 +14,7 @@ import { LayerPermissionComponent } from './layerpermission.component'
 @Component({
   selector: 'layernew',
   templateUrl: './layernew.component.html',
-  providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService]
+  providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService],
 })
 export class LayerNewComponent implements OnInit{
 
