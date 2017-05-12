@@ -1,8 +1,3 @@
-<!-- Consider some style changes: 
-      -Two columns for the input controls
-      -Resize "Layer Type" control to the width of the other controls
-      -Align by textbox controls, not labels in order to look cleaner-->
-
 <!-- This defines the modal that pops up after a "Create New Layer" click event from "Layers" control-->
 <div class="modal-header">
     <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
@@ -15,64 +10,81 @@
     <form #f="ngForm" (ngSubmit)="addLayer(newlayeradmin)">
 
         <!--Row 1-->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group" >
-                <label for="newlayername">Layer Name</label>
-                <input id="newlayername" name="newlayername" required #newlayerinput [(ngModel)] = "newlayeradmin.layerName" type="text" placeholder="Layer Name">
+        <div class="column">
+            <div class="form-group">
+                <div class="col-md-1">
+                    <label for="newlayername">Name</label>
+                </div>
+                <div class="col-md-5">
+                    <input id="newlayername" name="newlayername" required #newlayerinput [(ngModel)] = "newlayeradmin.layerName" type="text" placeholder="Layer Name">
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="form-group">
-                <label for="newlayertype">Layer Type</label>
-                <select id="newlayertype" name="newlayertype" class="form-control" [(ngModel)] = "newlayeradmin.layerType" required type="text" placeholder="Layer Type">
-                    <option>PostGIS</option>
-                    <option>WMS</option>
-                    <option>KML - Link</option>
-                    <option>KML - Drive</option>
-                </select>
+            <div class="form-group">
+                <div class="col-md-1">
+                    <label for="newlayerformat">Format</label>
                 </div>
-            </div>
+                <div class="col-md-5">
+                    <input id="newlayerformat" name="newlayerformat" #newlayerformatinput [(ngModel)] = "newlayeradmin.layerFormat" type="text" placeholder="Layer Format">
+                </div>
+            </div>      
         </div>
+        <br>
 
         <!--Row 2-->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                <label for="newlayerurl">Layer URL</label>
-                <input id="newlayerurl" name="newlayerurl" #newlayerurlinput [(ngModel)] = "newlayeradmin.layerURL" type="text" placeholder="Layer URL">
+        <div class="column">
+            <div class="form-group">
+                <div class="col-md-1">
+                    <label for="newlayertype">Type</label>
+                </div>
+                <div class="col-md-3">
+                    <select id="newlayertype" name="newlayertype" class="form-control input-sm col-sm" [(ngModel)] = "newlayeradmin.layerType" required type="text" placeholder="Layer Type">
+                    <option>PostGIS</option>
+                    <option>WMS</option>
+                    <option>KML-Link</option>
+                    <option>KML-Drive</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="form-group">
-                <label for="newlayerident">Layer Identity</label>
-                <input id="newlayerident" name="newlayerident" #newlayeridentinput [(ngModel)] = "newlayeradmin.layerIdent" type="text" placeholder="Layer Identity">
+            <div class="col-md-2"></div>
+
+            <div class="form-group">
+                <div class="col-md-1">
+                    <label for="newlayerident">Identity</label>
+                </div>
+                <div class="col-md-5">
+                    <input id="newlayerident" name="newlayerident" #newlayeridentinput [(ngModel)] = "newlayeradmin.layerIdent" type="text" placeholder="Layer Identity">
                 </div>
             </div>
         </div>
+        <br>
 
         <!--Row 3-->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                <label for="newlayerformat">Layer Format</label>
-                <input id="newlayerformat" name="newlayerformat" #newlayerformatinput [(ngModel)] = "newlayeradmin.layerFormat" type="text" placeholder="Layer Format">
+        <div class="column">
+            <div class="form-group">
+                <div class="col-md-1">
+                    <label for="newlayerurl">URL</label>
+                </div>
+                <div class="col-md-5">
+                    <input id="newlayerurl" name="newlayerurl" #newlayerurlinput [(ngModel)] = "newlayeradmin.layerURL" type="text" placeholder="Layer URL">
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="form-group">
-                <label for="newlayerdescription">Description</label>
-                <input id="newlayerdescription" name="newlayerdescription" required #newlayerdescriptioninput [(ngModel)] = "newlayeradmin.layerDescription" type="text" placeholder="Description">
+            <div class="form-group">
+                <div class="col-md-1">
+                    <label for="newlayerdescription">Description</label> <!-- This is getting clipped off by its input box-->
+                </div>
+                <div class="col-md-5">
+                    <input id="newlayerdescription" name="newlayerdescription" required #newlayerdescriptioninput [(ngModel)] = "newlayeradmin.layerDescription" type="text" placeholder="Description">
                 </div>
             </div>
         </div>
-                
-        <button type="button" class="btn btn-secondary" (click)="activeModal.close('Close click')">Close</button><button class="btn btn-outline-primary" [disabled]="!f.valid">Add Layer</button>
+        <br>
+        <br>
     </form>
 </div>
 
 <div class="modal-footer">
+    <button type="button" class="btn btn-secondary text-center" (click)="activeModal.close('Close click')">Close</button><button class="btn btn-outline-primary text-center" [disabled]="!f.valid">Add Layer</button>
 </div>

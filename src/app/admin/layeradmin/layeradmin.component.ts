@@ -70,6 +70,18 @@ opennew() {
     });
   }
 
+//Confirm request to delete layer from "Layers", this needs to be configured to run a new modal "warning", also documented in layeradmin component
+confirmDel() {
+    console.log ("opennew")
+    this.userperm = "A user"
+    this.modalService.open(LayerNewComponent, {size:'lg'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+      this.getLayerItems();
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
