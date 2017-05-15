@@ -120,6 +120,7 @@ confirmDel() {
     }
 
      public deleteLayer(layerID) {
+        console.log(layerID)
         this.layerPermissionService
             .GetSome(layerID)
             .subscribe(result => {
