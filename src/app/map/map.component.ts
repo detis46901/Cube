@@ -56,7 +56,6 @@ export class MapComponent {
     public cls: ControlLayers[] = []
     public cl = new ControlLayers
     public objects: any
-    
 
 
     ngOnChanges() {
@@ -72,10 +71,11 @@ export class MapComponent {
     }
 
         public init_map() {
+        console.log("map init started")
         this.addLayers()
         let map = L.map("mapid", {
             zoomControl: false,
-            center: L.latLng(40.731253, -86.996139),
+            center: L.latLng(40.4864, -86.1336),
             zoom: 12,
             minZoom: 4,
             maxZoom: 18,
@@ -87,20 +87,22 @@ export class MapComponent {
         this.layercontrol.addTo(map);
         L.control.scale().addTo(map);
         this.mapService.map = map;
-        this.geocoder.getCurrentLocation()
-            .subscribe(
-                location => map.panTo([location.latitude, location.longitude]),
-                err => console.error(err)
-            );  
-         this.openjson('http://localhost:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json')
+        //this.geocoder.getCurrentLocation()
+        //    .subscribe(
+        //        location => map.panTo([location.latitude, location.longitude]),
+        //        err => console.error(err)
+        //    );  
+        //this.openjson('http://localhost:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json') //Can't be opened currently: "No 'Access-Control-Allow-Origin" header
+
+        //this.openkml('http://localhost:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json')
         };
         
         public setPage(): void {
             this.userPageService
                 .GetSome(this.userID)
-                .subscribe((data:UserPage[]) => this.userpages = data, //***
+                .subscribe((data:UserPage[]) => this.userpages = data,
                 error => console.log(error),
-                () => this.getDefaultPage() //***
+                () => this.getDefaultPage()
                 );
     }
 
@@ -112,11 +114,11 @@ export class MapComponent {
                 }
             }
             console.log (this.defaultpage)
-            this.getUserPageLayers(this.defaultpage) //***
+            this.getUserPageLayers(this.defaultpage)
         }    
 
         public getUserPageLayers(page): void {
-            console.log("pageID = " + page.ID) //***Error being called here by web page: ERROR TypeError: Cannot read property 'ID' of undefined
+            console.log("get pageID = " + page.ID)
             this.userPageLayerService
                 .GetPageLayers(page.ID)
                 .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
@@ -128,7 +130,7 @@ export class MapComponent {
         }
 
         public setUserPageLayers(page): void {
-            console.log("pageID = " + page.ID)
+            console.log("set pageID = " + page.ID)
             this.userPageLayerService
                 .GetPageLayers(page.ID)
                 .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
@@ -151,7 +153,7 @@ export class MapComponent {
         }
 
         public addLayers() {
-            console.log("addLayers Started.  I love Ava.")
+            console.log("addLayers Started")
             //console.log(this.layeradmin);
             //console.log (this.mapService.map.addLayer)
             //this.mapService.openjson('http://localhost:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json')
@@ -234,7 +236,7 @@ export class MapComponent {
                 case 5:
                     this.overlays = {[this.cls[0].name]: this.cls[0].URL, [this.cls[1].name]: this.cls[1].URL, [this.cls[2].name]: this.cls[2].URL, [this.cls[3].name]: this.cls[3].URL, [this.cls[4].name]: this.cls[4].URL}
             }*/
-            console.log (this.cls)
+            //console.log (this.cls)
             //this.overlays = { [this.cls[0].name]: this.cls[1], [this.cls[2].name]: this.cls[3]}
             //console.log (this.overlays)
            
@@ -254,8 +256,10 @@ export class MapComponent {
             //}
         }
 
+        //This does not properly toggle the layer, it only turns it on. (Checked is probably always true)
         public toggleLayers(layers, checked) {
             this.layeradmin = layers
+            var onFlag = checked
             console.log ("Toggle Layers")
             console.log (this.layeradmin)
             console.log (checked)
@@ -263,17 +267,21 @@ export class MapComponent {
                 this.currentlayer = this.mapService.map.addLayer(L.tileLayer.wms(this.layeradmin.layerURL, {
                 layers: this.layeradmin.layerIdent,
                 format: this.layeradmin.layerFormat,
-                 transparent: true
-                    }))
-                    this.layercontrol.remove()
-                    //this.layercontrol.layers(this.mapService.baseMaps, this.mapService.overlays, {position: 'bottomright'})
+                transparent: true,
+                }))
+                //this.userpagelayers[0].layerOn = false
+                //this.userPageLayerService.Update() //Go with this for now this is probably best
+                this.layercontrol.remove()
+                //this.layercontrol.layers(this.mapService.baseMaps, this.mapService.overlays, {position: 'bottomright'})
             }
 
             else {
                 console.log (this.currentlayer)
+                //this.currentlayer.layerOn = true
                 this.mapService.map.removeLayer(this.currentlayer)
                 console.log("Turn off layer")
             }
+
             //let layercontrol = L.control.layers(this.mapService.baseMaps, this.overlays, {position: 'bottomright'})
             //layercontrol.addTo(this.mapService.map);
 
@@ -289,11 +297,21 @@ export class MapComponent {
         this.http.get(URL)
             .map((response) => <any>response.json())
             .subscribe(data => this.objects = data, 
-            () => (console.log(this.objects), this.loadjson()))
+            () => (console.log(this.objects), this.loadjson())) //This is getting nothing
         }
 
+   /* public openkml (URL) {
+        console.log("openkml started")
+        this.http.get(URL)
+        var kmlLayer = new L.KML(URL, {async: true});
+        kmlLayer.on("loaded", function(e) {
+            this.fitBounds(e.target.getBounds());
+        })
+        
+        }*/
+
     public loadjson() {
-        console.log(this.objects)
+        console.log(this.objects) //Undefined here as well as in openjson
     }
 
     ngAfterViewInit() {

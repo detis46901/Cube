@@ -30,9 +30,10 @@ export class NavigatorComponent {
 
         this.geocoder.geocode(this.address)
         .subscribe(location => {
-            this.map.fitBounds(location.viewBounds, {});
+            console.log(location)
+            this.map.fitBounds(location.viewBounds, {}); //Error thrown here, goto text field is nonfunctional
             this.address = location.address;
         }, error => console.error(error));
-        this.address = "Chocolate";
+        //this.address = "Chocolate";
     }
 }

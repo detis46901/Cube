@@ -14,7 +14,7 @@
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
         <div *ngFor="let userpagelayer of userpagelayers" class="btn-group" data-toggle="buttons">
           <label class="btn btn-primary" (click)="toggleLayers(userpagelayer.layer_admin, userpagelayer.layerON)" [class.active]="userpagelayer.layerON">
-            <input type="checkbox" [(ngModel)]="userpagelayer.layerON"> {{userpagelayer.layer_admin.layerName}}
+            <input type="checkbox" [(ngModel)]="userpagelayer.layerON" (change)="updateUserPageLayer(userpagelayer)"> {{userpagelayer.layer_admin.layerName}}
           </label><br>
         </div>
       </div>

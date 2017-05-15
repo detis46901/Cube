@@ -53,6 +53,7 @@ export class DepartmentService {
  //           .catch(this.handleError);
     }
  
+    //Add functionality to delete dependents of department here I believe, not sure how yet.
     public Delete = (id: number): Observable<Response> => {
         return this._http.delete(this.actionUrl + 'delete?rowID=' + id)
  //           .catch(this.handleError);
