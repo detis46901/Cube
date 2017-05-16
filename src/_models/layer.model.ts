@@ -26,6 +26,7 @@ export class UserPageLayer {
     userPageID: number;
     layerAdminID: number;
     layer_admin: LayerAdmin;
+    layerShown: boolean;
 }
 
 export class ControlLayers {

@@ -13,6 +13,7 @@ export class MarkerComponent {
     editing: boolean;
     removing: boolean;
     markerCount: number;
+    map: Map;
 
     constructor(private mapService: MapService) {
         this.editing = false;
@@ -30,6 +31,7 @@ export class MarkerComponent {
             if (this.editing) {
                 let marker = L.marker(e.latlng, {
                     icon: L.icon({
+                        //className: 'fa fa-map-marker fa'
                         iconUrl: "../images/marker-icon.png",
                         shadowUrl: "../../images/marker-shadow.png"
                     }),

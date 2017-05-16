@@ -16,5 +16,6 @@
 <!-- Return to login, display Admin menu, and currently non-working avatar.-->
 <a href="/logout" class="w3-hover-none w3-hover-text-blue w3-show-inline-block"><i class="fa fa-power-off" aria-hidden="true"></i></a>
 <a *ngIf="user.administrator" class="w3-btn w3-orange w3-tiny w3-padding-tiny w3-border w3-border-orange w3-round-large w3-text-white" href="\admin">Admin</a>
-<img src="src/avatar2.png" class="w3-circle w3-margin-right" style="width:24px"></span> <!--Error here-->
+<a *ngIf="!user.administrator" class ="w3-btn w3-blue w3-tiny w3-padding-tiny w3-border w3-border-blue w3-round-large w3-text-white" href="\user_settings">Settings</a>
+<img src="/src/avatar2.png" class="w3-circle w3-margin-right" style="width:24px"></span> <!--Error here-->
 </div>

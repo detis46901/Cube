@@ -86,5 +86,5 @@
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-secondary text-center" (click)="activeModal.close('Close click')">Close</button><button class="btn btn-outline-primary text-center" [disabled]="!f.valid">Add Layer</button>
+    <button type="button" class="btn btn-secondary text-center" (click)="activeModal.close('Close click')">Close</button><button class="btn btn-outline-primary text-center" (click)="addLayer(newlayeradmin)" [disabled]="!f.valid">Add Layer</button>
 </div>

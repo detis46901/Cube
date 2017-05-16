@@ -1,4 +1,27 @@
 <div style="width:100%">
+    <div class="row">
+        <div class="col-md-2">
+            <h4>First Name</h4>
+        </div>
+        <div class="col-md-2">
+            <h4>Last Name</h4>
+        </div>
+        <div class="col-md-1">
+            <h4>Role</h4>
+        </div>
+        <div class="col-md-1">
+            <h4>Active</h4>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-2">
+            <h4>Email</h4>
+        </div>
+        <div class="col-md-1">
+            <h4>Admin</h4>
+        </div>
+        <br>
+        <hr>
+    </div>
         <form class="form-inline" #e="ngForm" *ngFor="let user of users">
             <i (click)="deleteUser(user.ID)" class="fa fa-times" aria-hidden="true"></i>
             <input id="exuserfirstname" ngModel required name="exuserfirstname" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "user.firstName" type="text" (blur)="updateUser(user)">

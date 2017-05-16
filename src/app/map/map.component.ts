@@ -27,14 +27,15 @@ export class MapComponent {
     public token: string;
     public userID: number;
     
-@ViewChild(MarkerComponent) markerComponent: MarkerComponent;
+    @ViewChild(MarkerComponent) markerComponent: MarkerComponent;
 
- constructor(private mapService: MapService, private geocoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http:Http) {
-      var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    constructor(private mapService: MapService, private geocoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http:Http) {
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
     }
 
+    public _map: any;
     public layers: MapService;
     public layerpermissions: any;
     public layeradmin = new LayerAdmin;
@@ -42,12 +43,12 @@ export class MapComponent {
     public userpagelayers: Array<UserPageLayer>; //***
     public userpages: any; //***
     public defaultpage: any; //***
-    public currentlayer: any;
+    public currentlayer: L.Layer;
     public overlays: any;
     public q: number;
     public j: any[];
     public layercontrol: L.Control;
-    public layeron: string[];
+    public layerActive: Array<Boolean> = [];
     model = {
     left: true,
     middle: false,
@@ -61,6 +62,7 @@ export class MapComponent {
     ngOnChanges() {
         console.log('map changed');
     }
+
     ngOnInit() {
         //console.log("oninit")
         //console.log(document.getElementById("mapid").innerHTML)
@@ -69,11 +71,47 @@ export class MapComponent {
         //console.log (L.)
         this.setPage();
     }
+    
+    public setPage(): void {
+        this.userPageService
+            .GetSome(this.userID)
+            .subscribe((data:UserPage[]) => this.userpages = data,
+            error => console.log(error),
+            () => this.getDefaultPage()
+            );
+    }
 
-        public init_map() {
+    public getDefaultPage() {
+        console.log(this.userpages)
+        for (let userpage of this.userpages) {
+            if (userpage.default == true) {
+                this.defaultpage = userpage
+            }
+        }
+        console.log (this.defaultpage)
+        this.getUserPageLayers(this.defaultpage)
+    } 
+
+    public getUserPageLayers(page): void {
+        console.log("get pageID = " + page.ID)
+        this.userPageLayerService
+            .GetPageLayers(page.ID)
+            .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
+                error => console.log(error),
+                () =>  this.init_map()
+            );
+        //this.addLayers()      
+    }
+
+    public init_map() {
         console.log("map init started")
+
+        this.setFlags()
+        console.log('Flags array: ' + this.userpagelayers[0].layerShown)
+
         this.addLayers()
-        let map = L.map("mapid", {
+
+        this._map = L.map("mapid", {
             zoomControl: false,
             center: L.latLng(40.4864, -86.1336),
             zoom: 12,
@@ -82,11 +120,11 @@ export class MapComponent {
             layers: [this.mapService.baseMaps.OpenStreetMap]
         });       
         
-        L.control.zoom({ position: "bottomright" }).addTo(map);
+        L.control.zoom({ position: "bottomright" }).addTo(this._map);
         this.layercontrol = L.control.layers(this.mapService.baseMaps, this.overlays, {position: 'bottomright'})
-        this.layercontrol.addTo(map);
-        L.control.scale().addTo(map);
-        this.mapService.map = map;
+        this.layercontrol.addTo(this._map);
+        L.control.scale().addTo(this._map);
+        this.mapService.map = this._map;
         //this.geocoder.getCurrentLocation()
         //    .subscribe(
         //        location => map.panTo([location.latitude, location.longitude]),
@@ -95,121 +133,81 @@ export class MapComponent {
         //this.openjson('http://localhost:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json') //Can't be opened currently: "No 'Access-Control-Allow-Origin" header
 
         //this.openkml('http://localhost:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json')
-        };
-        
-        public setPage(): void {
-            this.userPageService
-                .GetSome(this.userID)
-                .subscribe((data:UserPage[]) => this.userpages = data,
-                error => console.log(error),
-                () => this.getDefaultPage()
-                );
+    }   
+
+    //This method sets flags for use with the "Layers in Map Component" map.component.html control in order to determine
+    //Which layers are currently active, so they can be turned on or off at will with the corresponding dropdown selection.
+    public setFlags() {
+        for (let x of this.userpagelayers) {
+            this.layerActive.push(x.layerON)
+            x.layerShown = x.layerON
+        }
     }
 
-        public getDefaultPage() {
-            console.log(this.userpages)
-            for (let userpage of this.userpages) {
-                if (userpage.default == true) {
-                    this.defaultpage = userpage
-                }
-            }
-            console.log (this.defaultpage)
-            this.getUserPageLayers(this.defaultpage)
-        }    
+    public addLayers() {
+        console.log("addLayers Started")
+        //console.log(this.layeradmin);
+        //console.log (this.mapService.map.addLayer)
+        //this.mapService.openjson('http://localhost:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json')
+        this.q=0
 
-        public getUserPageLayers(page): void {
-            console.log("get pageID = " + page.ID)
-            this.userPageLayerService
-                .GetPageLayers(page.ID)
-                .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
-                    error => console.log(error),
-                    () =>  this.init_map()
-                );
-            //this.addLayers()
-           
+        console.log(this.userpagelayers)
+
+        //let n = this.userpagelayers[0].layer_admin
+        //let l = n.layerName
+        //this.overlays = { [l] : L.tileLayer.wms(n.layerURL, { layers: n.layerIdent, format: n.layerFormat, transparent: true})}
+
+        console.log (this.overlays)
+        console.log (this.userpagelayers.length)
+
+        switch(this.userpagelayers.length) {
+            case 1:
+                this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true})}
+                break
+            case 2:
+                /*this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true})}*/
+                break
+            case 3:
+                this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[2].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layer_admin.layerURL, { layers: this.userpagelayers[2].layer_admin.layerIdent, format: this.userpagelayers[2].layer_admin.layerFormat, transparent: true})}
+                break
+            case 4:
+                this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[2].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layer_admin.layerURL, { layers: this.userpagelayers[2].layer_admin.layerIdent, format: this.userpagelayers[2].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[3].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[3].layer_admin.layerURL, { layers: this.userpagelayers[3].layer_admin.layerIdent, format: this.userpagelayers[3].layer_admin.layerFormat, transparent: true})}
+                break
+            case 5:
+                this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[2].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layer_admin.layerURL, { layers: this.userpagelayers[2].layer_admin.layerIdent, format: this.userpagelayers[2].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[3].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[3].layer_admin.layerURL, { layers: this.userpagelayers[3].layer_admin.layerIdent, format: this.userpagelayers[3].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[4].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[4].layer_admin.layerURL, { layers: this.userpagelayers[4].layer_admin.layerIdent, format: this.userpagelayers[4].layer_admin.layerFormat, transparent: true})}
+                break
+            case 6:
+                this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[2].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layer_admin.layerURL, { layers: this.userpagelayers[2].layer_admin.layerIdent, format: this.userpagelayers[2].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[3].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[3].layer_admin.layerURL, { layers: this.userpagelayers[3].layer_admin.layerIdent, format: this.userpagelayers[3].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[4].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[4].layer_admin.layerURL, { layers: this.userpagelayers[4].layer_admin.layerIdent, format: this.userpagelayers[4].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[5].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[5].layer_admin.layerURL, { layers: this.userpagelayers[5].layer_admin.layerIdent, format: this.userpagelayers[5].layer_admin.layerFormat, transparent: true})}
+                break
         }
 
-        public setUserPageLayers(page): void {
-            console.log("set pageID = " + page.ID)
-            this.userPageLayerService
-                .GetPageLayers(page.ID)
-                .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
-                    error => console.log(error),
-                    () => this.changePages()
-                );
-        }
+        console.log(this.overlays)
+        let n49 = L.tileLayer.wms("http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi", {
+            layers: 'nexrad-n0r-900913',
+            format: 'image/png',
+            transparent: true,
+            attribution: "Weather data © 2012 IEM Nexrad"
+        });
         
-        public changePages(): void {
-            this.addLayers();
-            this.mapService.map.eachLayer(function (removelayer) {removelayer.remove()})
-            console.log(this.mapService.baseMaps)
-            this.mapService.map.addLayer(L.tileLayer("http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
-            }))
-            // Need to add the base layer back in.
-            this.mapService.map.removeControl(this.layercontrol);
-            this.layercontrol = L.control.layers(this.mapService.baseMaps, this.overlays, {position: 'bottomright'})
-            this.layercontrol.addTo(this.mapService.map)
-        }
-
-        public addLayers() {
-            console.log("addLayers Started")
-            //console.log(this.layeradmin);
-            //console.log (this.mapService.map.addLayer)
-            //this.mapService.openjson('http://localhost:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json')
-            this.q=0
-            console.log(this.userpagelayers)
-            let n = this.userpagelayers[0].layer_admin
-            let l = n.layerName
-            this.overlays = { [l] : L.tileLayer.wms(n.layerURL, { layers: n.layerIdent, format: n.layerFormat, transparent: true})}
-            console.log (this.overlays)
-            console.log (this.userpagelayers.length)
-            switch(this.userpagelayers.length) {
-                case 1:
-                    this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true})}
-                    break
-                case 2:
-                    this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
-                                    [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true})}
-                    break
-                case 3:
-                    this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
-                                    [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true}),
-                                    [this.userpagelayers[2].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layer_admin.layerURL, { layers: this.userpagelayers[2].layer_admin.layerIdent, format: this.userpagelayers[2].layer_admin.layerFormat, transparent: true})}
-                    break
-                case 4:
-                    this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
-                                    [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true}),
-                                    [this.userpagelayers[2].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layer_admin.layerURL, { layers: this.userpagelayers[2].layer_admin.layerIdent, format: this.userpagelayers[2].layer_admin.layerFormat, transparent: true}),
-                                    [this.userpagelayers[3].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[3].layer_admin.layerURL, { layers: this.userpagelayers[3].layer_admin.layerIdent, format: this.userpagelayers[3].layer_admin.layerFormat, transparent: true})}
-                    break
-                case 5:
-                    this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
-                                    [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true}),
-                                    [this.userpagelayers[2].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layer_admin.layerURL, { layers: this.userpagelayers[2].layer_admin.layerIdent, format: this.userpagelayers[2].layer_admin.layerFormat, transparent: true}),
-                                    [this.userpagelayers[3].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[3].layer_admin.layerURL, { layers: this.userpagelayers[3].layer_admin.layerIdent, format: this.userpagelayers[3].layer_admin.layerFormat, transparent: true}),
-                                    [this.userpagelayers[4].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[4].layer_admin.layerURL, { layers: this.userpagelayers[4].layer_admin.layerIdent, format: this.userpagelayers[4].layer_admin.layerFormat, transparent: true})}
-                    break
-                case 6:
-                    this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
-                                    [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true}),
-                                    [this.userpagelayers[2].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layer_admin.layerURL, { layers: this.userpagelayers[2].layer_admin.layerIdent, format: this.userpagelayers[2].layer_admin.layerFormat, transparent: true}),
-                                    [this.userpagelayers[3].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[3].layer_admin.layerURL, { layers: this.userpagelayers[3].layer_admin.layerIdent, format: this.userpagelayers[3].layer_admin.layerFormat, transparent: true}),
-                                    [this.userpagelayers[4].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[4].layer_admin.layerURL, { layers: this.userpagelayers[4].layer_admin.layerIdent, format: this.userpagelayers[4].layer_admin.layerFormat, transparent: true}),
-                                    [this.userpagelayers[5].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[5].layer_admin.layerURL, { layers: this.userpagelayers[5].layer_admin.layerIdent, format: this.userpagelayers[5].layer_admin.layerFormat, transparent: true})}
-                    break
-        }
-             console.log(this.overlays)
-            let n49 = L.tileLayer.wms("http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi", {
-    layers: 'nexrad-n0r-900913',
-    format: 'image/png',
-    transparent: true,
-    attribution: "Weather data © 2012 IEM Nexrad"
-});
-            n49.setOpacity(.5);
+        n49.setOpacity(.5);
             //this.overlays = { nexrad: n49}
             //this.init_map()
-           /* for (let i of this.userpagelayers) {
+        /* for (let i of this.userpagelayers) {
                 n = i.layer_admin
                 console.log(n.layerName)
                 this.cl.name = n.layerName
@@ -239,7 +237,7 @@ export class MapComponent {
             //console.log (this.cls)
             //this.overlays = { [this.cls[0].name]: this.cls[1], [this.cls[2].name]: this.cls[3]}
             //console.log (this.overlays)
-           
+        
             //this.init_map()
                 //this.cls.push(n)
             //    this.q += 1;
@@ -254,61 +252,96 @@ export class MapComponent {
             //    console.log (this.overlays[p])
             //    console.log (p)
             //}
+    }
+        
+    public setUserPageLayers(page): void {
+        console.log("set pageID = " + page.ID)
+        this.userPageLayerService
+            .GetPageLayers(page.ID)
+            .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
+                error => console.log(error),
+                () => this.changePages()
+            );
+    }
+        
+    public changePages(): void {
+        this.addLayers();
+        this.mapService.map.eachLayer(function (removelayer) {removelayer.remove()})
+        console.log(this.mapService.baseMaps)
+        this.mapService.map.addLayer(L.tileLayer("http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
+        }))
+
+        // Need to add the base layer back in.
+        //this.mapService.map.removeControl(this.overlays);
+        this.layercontrol.remove()
+        this.layercontrol = L.control.layers(this.mapService.baseMaps, this.overlays, {position: 'bottomright'})
+        this.layercontrol.addTo(this.mapService.map)
+    }
+
+        
+
+    //Reads index of layer in dropdown, layeradmin, and if it is shown or not
+    public toggleLayers(index, layers, checked) {
+        this.layeradmin = layers
+        //console.log ("Toggle Layers")
+        //console.log (this.layeradmin)
+        console.log (checked)
+        console.log(index)
+        if (checked == true) {
+            //It may make sense to implement this using 'LayerGroup'
+            this.currentlayer = (L.tileLayer.wms(this.layeradmin.layerURL, {
+            layers: this.layeradmin.layerIdent,
+            format: this.layeradmin.layerFormat,
+            transparent: true,
+            })).addTo(this._map)
+            /*this.currentlayer = this.mapService.map.addLayer(L.tileLayer.wms(this.layeradmin.layerURL, {
+            layers: this.layeradmin.layerIdent,
+            format: this.layeradmin.layerFormat,
+            transparent: true,
+            }))*/ //this.currentlayer is 'Map' type, but to remove it must be 'Layer' type
+            //this.layercontrol.remove()
+            this.userpagelayers[index].layerShown = false
+            //this.layercontrol.layers(this.mapService.baseMaps, this.mapService.overlays, {position: 'bottomright'})
         }
 
-        //This does not properly toggle the layer, it only turns it on. (Checked is probably always true)
-        public toggleLayers(layers, checked) {
-            this.layeradmin = layers
-            var onFlag = checked
-            console.log ("Toggle Layers")
-            console.log (this.layeradmin)
-            console.log (checked)
-            if (checked == true) {
-                this.currentlayer = this.mapService.map.addLayer(L.tileLayer.wms(this.layeradmin.layerURL, {
-                layers: this.layeradmin.layerIdent,
-                format: this.layeradmin.layerFormat,
-                transparent: true,
-                }))
-                //this.userpagelayers[0].layerOn = false
-                //this.userPageLayerService.Update() //Go with this for now this is probably best
-                this.layercontrol.remove()
-                //this.layercontrol.layers(this.mapService.baseMaps, this.mapService.overlays, {position: 'bottomright'})
-            }
+        else {
+            //console.log (this.currentlayer)
+            this._map.removeLayer(this.currentlayer) //This seemingly does nothing, currentlayer must be of type 'Layer' to remove but it is of type 'Map'
+            //console.log(this.currentlayer)
+            this.userpagelayers[index].layerShown = true
+        }
 
-            else {
-                console.log (this.currentlayer)
-                //this.currentlayer.layerOn = true
-                this.mapService.map.removeLayer(this.currentlayer)
-                console.log("Turn off layer")
-            }
+        //let layercontrol = L.control.layers(this.mapService.baseMaps, this.overlays, {position: 'bottomright'})
+        //layercontrol.addTo(this.mapService.map);
 
-            //let layercontrol = L.control.layers(this.mapService.baseMaps, this.overlays, {position: 'bottomright'})
-            //layercontrol.addTo(this.mapService.map);
+        //this.mapService.map.addLayer(this.j)
+        
+    //this.mapService.map.eachLayer(function (layer) {
+    //     console.log(layer)
 
-            //this.mapService.map.addLayer(this.j)
-            
-        //this.mapService.map.eachLayer(function (layer) {
-        //     console.log(layer)
-
-//});
+    //});
     }
+
     public openjson (URL) {
         console.log("openjson started")
         this.http.get(URL)
             .map((response) => <any>response.json())
             .subscribe(data => this.objects = data, 
             () => (console.log(this.objects), this.loadjson())) //This is getting nothing
-        }
+    }
 
-   /* public openkml (URL) {
-        console.log("openkml started")
-        this.http.get(URL)
-        var kmlLayer = new L.KML(URL, {async: true});
-        kmlLayer.on("loaded", function(e) {
-            this.fitBounds(e.target.getBounds());
-        })
-        
-        }*/
+    //Can't seem to find the import file in index
+    /*public openkml (URL) {
+          var _tile = L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
+          var k = new L.KML('http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/wms?service=wms&request=GetMap&version=1.1.1&format=application/vnd.google-earth.kml+xml&layers=Kokomo:Pipes&styles=Pipes&height=2048&width=2048&transparent=false&srs=EPSG:4326&format_options=AUTOFIT:true;KMATTR:true;KMPLACEMARK:false;KMSCORE:60;MODE:refresh;SUPEROVERLAY:false', {async: true})
+          k.on("loaded", function(e) {
+              //this._map.fitBounds(e.target.getBounds())
+          })
+          this._map.addLayer(k);
+          this._map.addLayer(_tile)
+          this._map.addControl(new L.Control.Layers({}, {'Track':_tile }))
+    }*/
 
     public loadjson() {
         console.log(this.objects) //Undefined here as well as in openjson
