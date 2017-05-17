@@ -1,7 +1,17 @@
-#mapid{
+#mapid {
     position:absolute;
     top:43px;
     bottom:0;
     width:100%;
     z-index:-1
   }
+
+#dropdownMenu1 {
+    border: 2px solid rgb(26, 117, 255);
+    margin: 25px 15px 0 0;
+}
+
+#dropdownMenu2 {
+    border: 2px solid rgb(26, 117, 255);
+    margin: 5px 15px 0 0;
+}

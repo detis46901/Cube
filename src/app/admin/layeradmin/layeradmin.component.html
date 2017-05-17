@@ -9,8 +9,8 @@
 <div style="width:100%">
         <!-- Displays user layers-->
         <form class="form-inline" #e="ngForm" *ngFor="let layeradmin of layeradmins">
-           <i (click)="deleteLayer(layeradmin.ID)" class="fa fa-times" aria-hidden="true"></i>  <!--This line should not allow deletion without an "Are you sure?" message-->
-            <!--<button type="button"  class="fa fa-times" data-toggle="modal" data-target="#layer_warning"></button> <!- This needs to open the warning modal, right now it doesn't work. LOOK INTO DATA_TOGGLE BOOTSTRAP-->
+           <i (click)="deleteLayer(layeradmin.ID)" class="fa fa-times" aria-hidden="true"></i>
+            <!--<button type="button"  class="fa fa-times" data-toggle="modal" data-target="#layer_warning"></button> <!-Currently deletes layer above chosen layer.-->
             <input id="exlayername" ngModel required name="exlayername" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
             <select id="exlayertype" ngModel required name="exlayertype" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "layeradmin.layerType" type="text" (blur)="updateLayer(layeradmin)">
                 <option>PostGIS</option>

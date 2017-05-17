@@ -1,24 +1,23 @@
-
-import { Component, Input } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { Component } from '@angular/core';
 import { Api2Service } from '../api2.service';
+import { Configuration } from '../../_api/api.constants';
 import { User } from '../../_models/user-model'
-import { Configuration } from '../../_api/api.constants'
 
 @Component({
   selector: 'app-root',
-  templateUrl: './admin.component.html',
+  templateUrl: './settings.component.html',
   providers: [Api2Service, Configuration],
   //styleUrls: ['./app.component.css', './styles/w3.css'],
 })
-export class AdminComponent {
+
+export class SettingsComponent{
     public user = new User;
     public myItems: any;
     public token: string;
     public userID: number;
 
     constructor(private dataService: Api2Service) {
-      var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
     }
@@ -36,3 +35,5 @@ export class AdminComponent {
             
     }
 }
+
+//User settings tab, should be a lot like the admin menu in look and feel

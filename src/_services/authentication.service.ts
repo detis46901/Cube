@@ -15,8 +15,8 @@ export class AuthenticationService {
     }
  
     login(username: string, password: string): Observable<number> {
-        console.log('http://localhost:5000/api/authenticate', { email: username, password: password })
-        return this.http.post('http://localhost:5000/api/authenticate', { email: username, password: password })
+        //console.log('http://foster2.cityofkokomo.org:5000/api/authenticate', { email: username, password: password })
+        return this.http.post('http://foster2.cityofkokomo.org:5000/api/authenticate', { email: username, password: password })
             .map((response: Response) => {
                 console.log(response)
                 // login successful if there's a jwt token in the response

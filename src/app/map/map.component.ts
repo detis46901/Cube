@@ -122,7 +122,7 @@ export class MapComponent {
         
         L.control.zoom({ position: "bottomright" }).addTo(this._map);
         this.layercontrol = L.control.layers(this.mapService.baseMaps, this.overlays, {position: 'bottomright'})
-        this.layercontrol.addTo(this._map);
+        this.layercontrol.addTo(this._map); //Commenting this out throws an extra error when clicking username to go to homepage for some reason
         L.control.scale().addTo(this._map);
         this.mapService.map = this._map;
         //this.geocoder.getCurrentLocation()
@@ -130,9 +130,9 @@ export class MapComponent {
         //        location => map.panTo([location.latitude, location.longitude]),
         //        err => console.error(err)
         //    );  
-        //this.openjson('http://localhost:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json') //Can't be opened currently: "No 'Access-Control-Allow-Origin" header
+        //this.openjson('http://foster2.cityofkokomo.org:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json') //Can't be opened currently: "No 'Access-Control-Allow-Origin" header
 
-        //this.openkml('http://localhost:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json')
+        //this.openkml('http://foster2.cityofkokomo.org:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json')
     }   
 
     //This method sets flags for use with the "Layers in Map Component" map.component.html control in order to determine
@@ -148,9 +148,10 @@ export class MapComponent {
         console.log("addLayers Started")
         //console.log(this.layeradmin);
         //console.log (this.mapService.map.addLayer)
-        //this.mapService.openjson('http://localhost:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json')
+        //this.mapService.openjson('http://foster2.cityofkokomo.org:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json')
         this.q=0
 
+        console.log('Flags array: ' + this.userpagelayers[0].layerShown)
         console.log(this.userpagelayers)
 
         //let n = this.userpagelayers[0].layer_admin
@@ -165,8 +166,8 @@ export class MapComponent {
                 this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true})}
                 break
             case 2:
-                /*this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true})}*/
+                this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
+                                [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true})}
                 break
             case 3:
                 this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
@@ -265,6 +266,8 @@ export class MapComponent {
     }
         
     public changePages(): void {
+        console.log('Flags array: ' + this.userpagelayers[0].layerShown)
+        this.setFlags();
         this.addLayers();
         this.mapService.map.eachLayer(function (removelayer) {removelayer.remove()})
         console.log(this.mapService.baseMaps)
@@ -275,6 +278,8 @@ export class MapComponent {
         // Need to add the base layer back in.
         //this.mapService.map.removeControl(this.overlays);
         this.layercontrol.remove()
+
+        //Not really necessary anymore
         this.layercontrol = L.control.layers(this.mapService.baseMaps, this.overlays, {position: 'bottomright'})
         this.layercontrol.addTo(this.mapService.map)
     }
@@ -283,6 +288,7 @@ export class MapComponent {
 
     //Reads index of layer in dropdown, layeradmin, and if it is shown or not
     public toggleLayers(index, layers, checked) {
+        console.log('Flags array: ' + this.userpagelayers[0].layerShown)
         this.layeradmin = layers
         //console.log ("Toggle Layers")
         //console.log (this.layeradmin)
@@ -306,8 +312,8 @@ export class MapComponent {
         }
 
         else {
-            //console.log (this.currentlayer)
-            this._map.removeLayer(this.currentlayer) //This seemingly does nothing, currentlayer must be of type 'Layer' to remove but it is of type 'Map'
+            console.log (checked)
+            this._map.removeLayer(this.currentlayer)
             //console.log(this.currentlayer)
             this.userpagelayers[index].layerShown = true
         }

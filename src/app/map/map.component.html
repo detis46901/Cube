@@ -5,20 +5,20 @@
 
 <div class="w3-display-topright" style="top:43px">
     <div ngbDropdown class="d-inline-block">
-      <button class="btn btn-outline-primary" id="dropdownMenu1" ngbDropdownToggle>Pages in Map</button>
-      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-        <button *ngFor = "let userpage of userpages" (click) = "setUserPageLayers(userpage)" class="dropdown-item">{{userpage.page}}</button>
-      </div>
-    </div>
-
-<div ngbDropdown class="d-inline-block">
-      <button class="btn btn-outline-primary" id="dropdownMenu2" ngbDropdownToggle>Layers In Map Component</button>
-      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
-        <div *ngFor="let userpagelayer of userpagelayers" class="btn-group" data-toggle="buttons">
-          <label class="btn btn-primary" (click)="toggleLayers(userpagelayers.indexOf(userpagelayer), userpagelayer.layer_admin, userpagelayer.layerShown)" [class.active]="userpagelayer.layerON">
-            <input type="checkbox" [(ngModel)]="userpagelayer.layerON" (change)="updateUserPageLayer(userpagelayer)"> {{userpagelayer.layer_admin.layerName}}
-          </label><br>
+        <button class="btn btn-outline-primary" id="dropdownMenu1" ngbDropdownToggle>Pages in Map</button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+            <button *ngFor = "let userpage of userpages" (click) = "setUserPageLayers(userpage)" class="dropdown-item">{{userpage.page}}</button>
         </div>
-      </div>
-</div>
+    </div>
+    
+    <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-outline-primary" id="dropdownMenu2" ngbDropdownToggle>Layers in Map</button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+            <div *ngFor="let userpagelayer of userpagelayers" class="btn-group" data-toggle="buttons">
+                <label class="btn btn-primary" (click)="toggleLayers(userpagelayers.indexOf(userpagelayer), userpagelayer.layer_admin, userpagelayer.layerShown)" [class.active]="userpagelayer.layerShown">
+                    <input type="checkbox" [(ngModel)]="userpagelayer.layerON" (change)="updateUserPageLayer(userpagelayer)"> {{userpagelayer.layer_admin.layerName}}
+                </label><br>
+            </div>
+        </div>
+    </div>
 </div>
