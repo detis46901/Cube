@@ -1,22 +1,15 @@
-<!-- Consider some style changes: 
-      -Change location of "View Data"" to either the nav pane or other side of username, placement is awkward with username.
-       Perhaps integrate into menu tabs along the header later on (i.e. File|Edit|View etc.)
-      -"View Data" appears to be top padded slightly more than Welcome, {username}-->
-
 <!-- Top container (Same for every page)-->
 <div id="headerBar" class="col-md-12 w3-black w3-large w3-padding" style="z-index:1">
 
 <!-- User welcome, username is hyperlink that redirects to home page.-->
-<span>Welcome, <strong><a title="Return Home" routerLink="home">{{user.firstName}} {{user.lastName}}</a></strong></span>
+<span>Welcome, <strong><a title="Return Home" class="w3-hover-text-blue" routerLink="home">{{user.firstName}} {{user.lastName}}</a></strong></span>
 
-<!-- This cannot access w3_open() even if script including function from sidenav.component.html is included above this block.-->
-<button id="vData" class="w3-btn w3-hover-text-grey" (click)="w3_open()"><i class="fa fa-bars"></i> &nbsp;View Data</button>
+<button id="vData" class="w3-btn w3-hover-text-blue" (click)="w3_open_close()"><i class="fa fa-bars"></i> &nbsp;View Data</button>
 
 <span class="w3-right">
-<!-- Return to login, display Admin menu, and currently non-working avatar.-->
 <a href="/logout" id="logoutBtn" title="Logout" class="w3-hover-none w3-xlarge w3-hover-text-blue w3-show-inline-block"><i class="fa fa-power-off" aria-hidden="true"></i></a>
-<a href="/user_settings" id="settings" title="Settings" class="w3-xlarge w3-hover-text-gray w3-show-inline-block"><i class="fa fa-user-circle"></i></a>
-<a *ngIf="user.administrator" id="admin" title="Admin Menu" class="w3-btn w3-orange w3-tiny w3-border w3-border-orange w3-round-large w3-text-white" href="\admin">Admin</a></span>
+<a href="/settings" id="settings" title="Settings" class="w3-xlarge w3-hover-text-blue w3-show-inline-block"><i class="fa fa-cog"></i></a>
+<a *ngIf="user.administrator" id="admin" style="position:relative;bottom:3px" title="Admin Menu" class="w3-btn w3-orange w3-tiny w3-border w3-border-orange w3-round-large w3-text-white" href="\admin">Admin</a></span>
 <!--<a *ngIf="!user.administrator" class ="w3-btn w3-blue w3-tiny w3-padding-2 w3-border w3-border-blue w3-round-large w3-text-white" href="\user_settings">Settings</a>
 <img src="/src/avatar2.png" class="w3-circle w3-margin-right" style="width:24px"></span> <!-Error here-->
 </div>

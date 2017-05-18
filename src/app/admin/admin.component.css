@@ -1,0 +1,19 @@
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+#wrap {
+    background: #000;
+    position: relative;
+}
+
+#wrap::after {
+    position: absolute;
+    content: "\f234";
+    font-family: FontAwesome;
+    color: lightslategray;
+    font-size: 400px;
+}
+
+/*Can't seem to get access to the page outside of controls*/

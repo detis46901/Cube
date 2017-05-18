@@ -1,0 +1,15 @@
+#setting {
+    background-color: #000;
+    position: relative;
+    top: 50px;
+    bottom: 0;
+    width: 100%;
+}
+
+#setting::after {
+    position: absolute;
+    content: "\f234";
+    font-family: FontAwesome;
+    color: lightslategray;
+    font-size: 400px;
+}

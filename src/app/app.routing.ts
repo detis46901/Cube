@@ -8,14 +8,14 @@ import { LayerAdminComponent } from './admin/layeradmin/layeradmin.component';
 import { UserComponent } from './admin/user/user.component'
 import { AuthGuard } from '../_guards/auth.guard';
 import { AdminGuard } from '../_guards/admin.guard';
-//import { SettingsComponent } from './settings/settings.component'; User Settings
+import { SettingsComponent } from './settings/settings.component'; //User Settings
  
 const appRoutes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'logout', redirectTo: 'login'},
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
     { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-    //{ path: 'settings', component: SettingsComponent},    User Settings 
+    { path: 'settings', component: SettingsComponent},    //User Settings 
     { path: 'admin', component: AdminComponent, canActivate: [AdminGuard], children: [
         { path: 'user', component: UserComponent, outlet: 'admin'},
         { path: 'organization', component: OrganizationComponent, outlet: 'admin'},

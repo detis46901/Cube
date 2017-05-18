@@ -48,7 +48,7 @@ export class MapComponent {
     public q: number;
     public j: any[];
     public layercontrol: L.Control;
-    public layerActive: Array<Boolean> = [];
+    //public layerActive: Array<Boolean> = [];
     model = {
     left: true,
     middle: false,
@@ -57,6 +57,7 @@ export class MapComponent {
     public cls: ControlLayers[] = []
     public cl = new ControlLayers
     public objects: any
+    public currPage: any
 
 
     ngOnChanges() {
@@ -105,6 +106,9 @@ export class MapComponent {
 
     public init_map() {
         console.log("map init started")
+        this.currPage = this.defaultpage.page
+
+        //this.currPage = "Pages in Map"
 
         this.setFlags()
         console.log('Flags array: ' + this.userpagelayers[0].layerShown)
@@ -139,7 +143,7 @@ export class MapComponent {
     //Which layers are currently active, so they can be turned on or off at will with the corresponding dropdown selection.
     public setFlags() {
         for (let x of this.userpagelayers) {
-            this.layerActive.push(x.layerON)
+            //this.layerActive.push(x.layerON)
             x.layerShown = x.layerON
         }
     }
@@ -256,6 +260,8 @@ export class MapComponent {
     }
         
     public setUserPageLayers(page): void {
+        this.currPage = page.page
+        console.log(this.currPage)
         console.log("set pageID = " + page.ID)
         this.userPageLayerService
             .GetPageLayers(page.ID)

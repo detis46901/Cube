@@ -29,7 +29,8 @@ import { LoginComponent } from './user/login.component';
 import { HomeComponent } from './home.component';
 //admin components
 import { AdminComponent } from './admin/admin.component';
-import { AdminNavComponent } from './admin/adminnav/adminnav.component'
+import { AdminNavComponent } from './admin/adminnav/adminnav.component';
+import { SettingsNavComponent } from './settings/settingsnav/settingsnav.component'
 import { OrganizationComponent } from './admin/organization/organization.component';
 import { LayerAdminComponent} from './admin/layeradmin/layeradmin.component';
 import { LayerPermissionComponent} from './admin/layeradmin/layerpermission.component';
@@ -44,6 +45,7 @@ import { LayerAdminService } from '../_services/layeradmin.service';
 import { LayerPermissionService } from '../_services/layerpermission.service';
 import { UserPageLayerService } from '../_services/user-page-layer.service';
 import { UserPageService } from '../_services/user-page.service';
+import { SettingsComponent } from './settings/settings.component';
 import { Configuration } from '../_api/api.constants';
 import { FilterPipe } from '../_pipes/rowfilter.pipe';
 import { PagePipe } from '../_pipes/rowfilter2.pipe';
@@ -62,9 +64,11 @@ import { NumFilterPipe } from '../_pipes/numfilter.pipe';
     LoginComponent,
     AdminComponent,
     AdminNavComponent,
+    SettingsNavComponent,
     OrganizationComponent,
     LayerAdminComponent,
     UserComponent,
+    SettingsComponent,
     FilterPipe,
     NumFilterPipe,
     PagePipe,

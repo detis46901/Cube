@@ -18,7 +18,7 @@ export class HeaderComponent {
     @Input() user: User
     condition = false;
 
-    public w3_open() {
+    public w3_open_close() {
         //document.getElementById("mySidenav").style.width = "20%";
         document.getElementById("mySidenav").style.display = "block";
         document.getElementById("mySidenav").style.width = "250px";

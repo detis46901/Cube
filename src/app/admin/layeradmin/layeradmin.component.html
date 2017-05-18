@@ -8,6 +8,27 @@
 <!-- This defines the component redirected to by the "Layers" option in the navigation sidepane.-->
 <div style="width:100%">
         <!-- Displays user layers-->
+        <div class="row">
+            <div class="col-md-1" style="left:50px">
+                <h4>Name</h4>
+            </div>
+            <div class="col-md-2" style="left:75px">
+                <h4>Type</h4>
+            </div>
+            <div class="col-md-2" style="left:50px">
+                <h4>URL</h4>
+            </div>
+            <div class="col-md-1" style="left:25px">
+                <h4>Identity</h4>
+            </div>
+            <div class="col-md-2" style="left:40px">
+                <h4>Format</h4>
+            </div>
+            <div class="col-md-1">
+                <h4>Description</h4>
+            </div>
+            <hr>
+        </div>    
         <form class="form-inline" #e="ngForm" *ngFor="let layeradmin of layeradmins">
            <i (click)="deleteLayer(layeradmin.ID)" class="fa fa-times" aria-hidden="true"></i>
             <!--<button type="button"  class="fa fa-times" data-toggle="modal" data-target="#layer_warning"></button> <!-Currently deletes layer above chosen layer.-->
