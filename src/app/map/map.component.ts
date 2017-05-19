@@ -107,12 +107,11 @@ export class MapComponent {
     public init_map() {
         console.log("map init started")
         this.currPage = this.defaultpage.page
-
+        console.log(this.userpagelayers)
         //this.currPage = "Pages in Map"
 
         this.setFlags()
         console.log('Flags array: ' + this.userpagelayers[0].layerShown)
-
         this.addLayers()
 
         this._map = L.map("mapid", {
@@ -123,7 +122,7 @@ export class MapComponent {
             maxZoom: 18,
             layers: [this.mapService.baseMaps.OpenStreetMap]
         });       
-        
+        console.log("hello")
         L.control.zoom({ position: "bottomright" }).addTo(this._map);
         this.layercontrol = L.control.layers(this.mapService.baseMaps, this.overlays, {position: 'bottomright'})
         this.layercontrol.addTo(this._map); //Commenting this out throws an extra error when clicking username to go to homepage for some reason

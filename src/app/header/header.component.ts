@@ -16,7 +16,7 @@ export class HeaderComponent {
     } Maybe this is how to render the static pngs*/
 
     @Input() user: User
-    condition = false;
+    @Input() isHome = false;
 
     public w3_open_close() {
         //document.getElementById("mySidenav").style.width = "20%";

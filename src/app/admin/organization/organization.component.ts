@@ -163,6 +163,8 @@ public newdepartment: string;
                 console.log(result);
                 this.getDepartmentItems();
             })
+        /*this.deleteGroup(2);
+        this.deleteRole(3); This hard-coding example works fine*/
     }
 
     public deleteGroup(groupID) {

@@ -12,6 +12,7 @@ import { Configuration } from '../_api/api.constants'
 })
 export class HomeComponent {
 public user = new User;
+public isHome = true;
 public myItems: any;
 public token: string;
 public userID: number;

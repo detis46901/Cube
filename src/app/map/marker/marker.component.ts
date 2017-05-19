@@ -30,11 +30,11 @@ export class MarkerComponent {
         this.mapService.map.on("click", (e: MouseEvent) => {
             if (this.editing) {
                 let marker = L.marker(e.latlng, {
-                    icon: L.icon({
+                   /* icon: L.icon({
                         //className: 'fa fa-map-marker fa'
                         iconUrl: "../images/marker-icon.png",
                         shadowUrl: "../../images/marker-shadow.png"
-                    }),
+                    }),*/
                     draggable: true
                 })
                 .bindPopup("Marker #" + (this.markerCount + 1).toString(), {

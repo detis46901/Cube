@@ -46,6 +46,7 @@ import { LayerPermissionService } from '../_services/layerpermission.service';
 import { UserPageLayerService } from '../_services/user-page-layer.service';
 import { UserPageService } from '../_services/user-page.service';
 import { SettingsComponent } from './settings/settings.component';
+import { PasswordComponent } from './settings/password/password.component';
 import { Configuration } from '../_api/api.constants';
 import { FilterPipe } from '../_pipes/rowfilter.pipe';
 import { PagePipe } from '../_pipes/rowfilter2.pipe';
@@ -69,6 +70,7 @@ import { NumFilterPipe } from '../_pipes/numfilter.pipe';
     LayerAdminComponent,
     UserComponent,
     SettingsComponent,
+    PasswordComponent,
     FilterPipe,
     NumFilterPipe,
     PagePipe,

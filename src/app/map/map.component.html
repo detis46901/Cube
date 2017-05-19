@@ -5,7 +5,7 @@
 
 <div class="w3-display-topright" style="top:43px">
     <div ngbDropdown class="d-inline-block">
-        <button class="btn btn-outline-primary" style="position:absolute;right:80px" id="dropdownMenu1" ngbDropdownToggle>{{currPage}}</button><!--Perhaps using ngIf, interpolate the active page name as the button text if a page is selected-->
+        <button class="btn btn-outline-primary" style="position:absolute;right:83px" id="dropdownMenu1" ngbDropdownToggle>{{currPage}}</button><!--Perhaps using ngIf, interpolate the active page name as the button text if a page is selected-->
         <div class="dropdown-menu dropdown-menu-right" style="position:absolute;top:60px" aria-labelledby="dropdownMenu1">
             <!-- Should these be checkboxes in appearance?-->
             <button *ngFor = "let userpage of userpages" (click) = "setUserPageLayers(userpage)" class="dropdown-item btn btn-primary">{{userpage.page}}</button>
@@ -13,7 +13,7 @@
     </div>
     
     <div ngbDropdown class="d-inline-block"><!--Excluding this and wrapping both buttons in the <div ngbDropdown> tag above is how to unbind them, but it screw up the pages button-->
-        <button class="btn btn-outline-primary" style="position:absolute;right:0;top:20px" id="dropdownMenu2" ngbDropdownToggle>Layers</button>
+        <button class="btn btn-outline-primary" style="position:absolute;right:8px;top:20px" id="dropdownMenu2" ngbDropdownToggle>Layers</button>
         <div class="dropdown-menu dropdown-menu-right" style="position:absolute;top:60px" aria-labelledby="dropdownMenu2">
             <div *ngFor="let userpagelayer of userpagelayers" class="btn-group" data-toggle="buttons">
                 <!-- Should these be checkboxes in appearance?-->
@@ -24,3 +24,4 @@
         </div>
     </div>
 </div>
+                    <!--<input type="checkbox" [(ngModel)]="userpagelayer.layerON" (change)="updateUserPageLayer(userpagelayer)"> {{userpagelayer.layer_admin.layerName}}-->

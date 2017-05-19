@@ -2,9 +2,10 @@
 <div id="headerBar" class="col-md-12 w3-black w3-large w3-padding" style="z-index:1">
 
 <!-- User welcome, username is hyperlink that redirects to home page.-->
-<span>Welcome, <strong><a title="Return Home" class="w3-hover-text-blue" routerLink="home">{{user.firstName}} {{user.lastName}}</a></strong></span>
-
-<button id="vData" class="w3-btn w3-hover-text-blue" (click)="w3_open_close()"><i class="fa fa-bars"></i> &nbsp;View Data</button>
+<span id="welcome">Welcome, <strong><a title="Return Home" class="w3-hover-text-blue" routerLink="home">{{user.firstName}} {{user.lastName}}</a></strong></span>
+<!--<span>Welcome, <strong><a title="Return Home" class="w3-hover-text-blue" routerLink="home">{{isHome}}</a></strong></span>-->
+<!--ngIf here for only seeing this button on home page-->
+<button *ngIf="isHome" id="vData" class="w3-btn w3-hover-text-blue" (click)="w3_open_close()"><i class="fa fa-bars"></i> &nbsp;View Data</button>
 
 <span class="w3-right">
 <a href="/logout" id="logoutBtn" title="Logout" class="w3-hover-none w3-xlarge w3-hover-text-blue w3-show-inline-block"><i class="fa fa-power-off" aria-hidden="true"></i></a>
