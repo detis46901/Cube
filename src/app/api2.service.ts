@@ -41,7 +41,8 @@ export class Api2Service {
  
     public Add = (itemName: User): Observable<User> => {
         let toAdd = JSON.stringify({ ItemName: itemName });
- 
+        console.log(JSON.stringify(itemName.password)) 
+        console.log(this.headers)
         return this._http.post(this.actionUrl + 'create', JSON.stringify(itemName), { headers: this.headers })
             .map((response: Response) => <User>response.json())
  //           .catch(this.handleError);

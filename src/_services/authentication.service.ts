@@ -3,30 +3,37 @@ import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map'
 import { User } from '../_models/user-model';
+
  
 @Injectable()
 export class AuthenticationService {
     public token: string;
- 
+    public JWT: string;
+
     constructor(private http: Http) { //need to implement JWT here
-        // set token if saved in local storage        
+        var CryptoJS = require("crypto-js") //Required to use CryptoJS
+        var AES = require("crypto-js/aes")
+        var SHA256 = require("crypto-js/sha256")
+
+        // set token if saved in local storage    
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if(currentUser != null) {
+            var header = {
+                "alg": "HS256",
+                "typ": "JWT"
+            }
 
-        var header = ({
-            "alg": "HS256",
-            "typ": "JWT"})
+            var payload = {
+                currentUser
+            }
 
-        console.log(header)
-        
-        var payload = {
-            currentUser
+            //this.token = CryptoJS.enc.base64.stringify(header) + "." + CryptoJS.enc.base64.stringify(payload) //working on jwt here
+            console.log(this.token)
         }
 
-        //crypto-js/tags/3.1.2/build/components/enc-base64-min.js
-
+        //console.log(CryptoJS.enc.base64.stringify(currentUser))
         console.log(currentUser)
-        this.token = currentUser && currentUser.token;
-        console.log(this.token)
+        console.log(header)
     }
  
     login(username: string, password: string): Observable<number> {

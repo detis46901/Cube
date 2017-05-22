@@ -16,6 +16,8 @@ import { NumFilterPipe } from '../../../_pipes/numfilter.pipe'
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { PageComponent } from '../page/page.component'
 import { PageConfigComponent } from '../page/pageconfig.component'
+import { Md5 } from 'ts-md5/dist/md5'
+import { hashSync } from 'bcrypt'
 
 @Component({
   selector: 'user',
@@ -44,6 +46,7 @@ public selectedgroup: Group;
 public showgroup: boolean;
 public showrole: boolean;
 public newdepartment: string;
+public uList = [];
 
 
     constructor(private api2service: Api2Service, private roleservice: RoleService, private modalService: NgbModal, private userpageService: UserPageService) {
@@ -93,7 +96,38 @@ public newdepartment: string;
 
     public addUser(newuser) {
         this.newuser = newuser
-        this.newuser.password = "Monday01"
+
+        //node_modules/hash-and-salt method I think it doesn't work because its taking from NodeJS javascript into typescript
+        /*var password = require('password-hash-and-salt')
+        var salt = 'secret'
+
+        //password('Monday01').hash(salt, hash)
+
+        //password('Monday01').hash(function(salt, hash) {
+        password('Monday01').hash(salt, function(salt, hash) {
+            console.log(hash)
+            //if(error)
+                //throw new Error('Hash error')
+            this.newuser.password = hash
+
+            password('hack').verifyAgainst(this.newuser.password, function(error, verified) {
+                if(error)
+                    throw new Error('Hack error')
+                if(!verified) {
+                    console.log('hack attempt')
+                } else {
+                    console.log('The secret is')
+                }       
+            })
+        })*/
+
+     
+
+        console.log(Md5.hashStr('Monday01')) //works
+        this.newuser.password = 'Monday01'
+        //this.newuser.password = (Md5.hashStr("Monday01")).toString() //works
+        console.log(newuser.password)
+
         this.api2service
             .Add(this.newuser)
             .subscribe(result => {
