@@ -8,10 +8,25 @@ import { User } from '../_models/user-model';
 export class AuthenticationService {
     public token: string;
  
-    constructor(private http: Http) {
-        // set token if saved in local storage
+    constructor(private http: Http) { //need to implement JWT here
+        // set token if saved in local storage        
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+        var header = ({
+            "alg": "HS256",
+            "typ": "JWT"})
+
+        console.log(header)
+        
+        var payload = {
+            currentUser
+        }
+
+        //crypto-js/tags/3.1.2/build/components/enc-base64-min.js
+
+        console.log(currentUser)
         this.token = currentUser && currentUser.token;
+        console.log(this.token)
     }
  
     login(username: string, password: string): Observable<number> {
