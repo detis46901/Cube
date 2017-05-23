@@ -17,15 +17,25 @@ export class HeaderComponent {
 
     @Input() user: User
     @Input() isHome = false;
+    private isOpen = false;
 
     public w3_open_close() {
-        //document.getElementById("mySidenav").style.width = "20%";
-        document.getElementById("mySidenav").style.display = "block";
-        document.getElementById("mySidenav").style.width = "250px";
-        document.getElementById("place-input").style.marginLeft = "265px";
-        document.getElementById("goto").style.marginLeft = "565px";
-        document.getElementById("add-marker").style.marginLeft = "610px";
-        document.getElementById("remove-marker").style.marginLeft = "650px";
+        if(!this.isOpen) {
+            document.getElementById("mySidenav").style.display = "block";
+            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementById("place-input").style.marginLeft = "265px";
+            document.getElementById("goto").style.marginLeft = "565px";
+            document.getElementById("add-marker").style.marginLeft = "610px";
+            document.getElementById("remove-marker").style.marginLeft = "650px";
+        }
+        else {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("place-input").style.marginLeft = "15px";
+            document.getElementById("goto").style.marginLeft = "315px";
+            document.getElementById("add-marker").style.marginLeft = "360px";
+            document.getElementById("remove-marker").style.marginLeft = "400px";
+        }
+        this.isOpen = !this.isOpen
     }
 
     /*public w3_close() {

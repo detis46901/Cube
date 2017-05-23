@@ -17,7 +17,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { PageComponent } from '../page/page.component'
 import { PageConfigComponent } from '../page/pageconfig.component'
 import { Md5 } from 'ts-md5/dist/md5'
-import { hashSync } from 'bcrypt'
+import { hash } from 'bcrypt'
 
 @Component({
   selector: 'user',
@@ -74,13 +74,14 @@ public uList = [];
         this.newuser.active = true;
         this.newuser.email = "";
         this.newuser.administrator = false;
+        this.newuser.password = "";
     }
 
     public getUserItems(): void {
          this.api2service
             .GetAll()
             .subscribe((data:User[]) => this.users = data,
-                error => console.log(error),
+                error => console.log(error)
                 //() => console.log(this.departments[0].department)
                 );
     }
@@ -121,10 +122,16 @@ public uList = [];
             })
         })*/
 
-     
+        if (this.newuser.password == "") {
+            this.newuser.password = Md5.hashStr('Monday01').toString()
+        }
 
-        console.log(Md5.hashStr('Monday01')) //works
-        this.newuser.password = 'Monday01'
+        else {
+            this.newuser.password = Md5.hashStr(this.newuser.password).toString()
+        }
+
+        console.log(Md5.hashStr(newuser.password)) //works
+        
         //this.newuser.password = (Md5.hashStr("Monday01")).toString() //works
         console.log(newuser.password)
 
@@ -146,18 +153,18 @@ public uList = [];
             })
     }
 
-    public resetPassword(userID) {
+    public resetPassword(userID, password) {
         this.api2service
             .GetSingle(userID)
             .subscribe(result => {
                 console.log(result);
                 this.user = result;
                 this.user.password = "Monday01"
-        this.api2service
-            .Update(this.user)
-            .subscribe(result => {
-                this.getUserItems();
-            })
+                this.api2service
+                    .Update(this.user)
+                    .subscribe(result => {
+                        this.getUserItems();
+                    })
 
             })
     }

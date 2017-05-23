@@ -2,7 +2,7 @@
     <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
-    <h4 class="modal-title">{{pageID}} - Pages</h4>
+    <h4 class="modal-title">Page: {{pageID}}</h4>
   </div>
   <div class="row">
     <div class="col-md-12">
@@ -27,8 +27,8 @@
                     {{layerpermission.layer_admin['layerName']}}
                 </option>
             </select>
-            <button class="btn btn-outline-primary" type="submit" [disabled]="!f.valid">Next</button>
+            <button class="btn btn-outline-primary" type="submit" [disabled]="!f.valid">Add</button>
             </form>
-            <p id="userpagelayerHelpBlock" class="form-text form-muted">Press enter to create a page.</p>
+            <!--<p id="userpagelayerHelpBlock" class="form-text form-muted">Press enter to create a page.</p> This seems like it was put here by accident-->
     </div>
 </div>

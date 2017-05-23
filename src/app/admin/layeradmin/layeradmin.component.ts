@@ -18,18 +18,19 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
   providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService]
   //styleUrls: ['./app.component.css', './styles/w3.css'],
 })
+
 export class LayerAdminComponent implements OnInit{
 
-closeResult: string;
-public user = new User;
-public layeradmin = new LayerAdmin;
-public newlayeradmin = new LayerAdmin;
-public newlayerpermission = new LayerPermission;
-public layerpermission: any;
-public layeradmins: any;
-public token: string;
-public userID: number;
-public userperm: string;
+    closeResult: string;
+    public user = new User;
+    public layeradmin = new LayerAdmin;
+    public newlayeradmin = new LayerAdmin;
+    public newlayerpermission = new LayerPermission;
+    public layerpermission: any;
+    public layeradmins: any;
+    public token: string;
+    public userID: number;
+    public userperm: string;
 
     constructor(private layerAdminService: LayerAdminService, private modalService: NgbModal, private layerPermissionService: LayerPermissionService) {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -45,40 +46,40 @@ public userperm: string;
         
     }
 
-//Open permissions modal on request from "Layers"
-openpermission(layerid, layername) {
-    const modalRef = this.modalService.open(LayerPermissionComponent)
-       modalRef.componentInstance.layerID = layerid
-       modalRef.componentInstance.layerName = layername
-        modalRef.result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });;
-    console.log("openpermission from layernew")
-  }
+    //Open permissions modal on request from "Layers"
+    openpermission(layerid, layername) {
+        const modalRef = this.modalService.open(LayerPermissionComponent)
+          modalRef.componentInstance.layerID = layerid
+          modalRef.componentInstance.layerName = layername
+            modalRef.result.then((result) => {
+          this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });;
+        console.log("openpermission from layernew")
+      }
 
-//Open create new layer modal on request from "Layers"
-opennew() {
-    console.log ("opennew")
-    this.userperm = "A user"
-    this.modalService.open(LayerNewComponent, {size:'lg'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-      this.getLayerItems();
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
-  }
+    //Open create new layer modal on request from "Layers"
+    opennew() {
+        console.log ("opennew")
+        this.userperm = "A user"
+        this.modalService.open(LayerNewComponent).result.then((result) => {
+          this.closeResult = `Closed with: ${result}`;
+          this.getLayerItems();
+        }, (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
+      }
 
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
+    private getDismissReason(reason: any): string {
+      if (reason === ModalDismissReasons.ESC) {
+        return 'by pressing ESC';
+      } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+        return 'by clicking on a backdrop';
+      } else {
+        return  `with: ${reason}`;
+      }
     }
-  }
 
     initNewLayer(): void {
         this.newlayeradmin.layerName = "";
@@ -90,7 +91,7 @@ opennew() {
     }
 
     public getLayerItems(): void {
-         this.layerAdminService
+        this.layerAdminService
             .GetAll()
             .subscribe((data:LayerAdmin[]) => this.layeradmins = data,
                 error => console.log(error),
@@ -98,7 +99,7 @@ opennew() {
                 );
     }
 
-      public updateLayer(layer) {
+    public updateLayer(layer) {
         this.layerAdminService
             .Update(layer)
             .subscribe(result => {
@@ -126,6 +127,10 @@ opennew() {
                 console.log(result);
                 this.getLayerItems();
             })
+    }
+
+    public orderPages() {
+
     }
 }
 

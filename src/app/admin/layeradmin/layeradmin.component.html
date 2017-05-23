@@ -27,22 +27,25 @@
             <div class="col-md-1">
                 <h4>Description</h4>
             </div>
-            <hr>
-        </div>    
+            <div class="col-md-2">
+                <button id="orderBy" type="button" style="position:absolute;height:25px;width:75px;left:50px;top:8px" class="btn-primary" (click)="orderPages()">Order by</button><!--Probably a ngbdropdown-->
+            </div>
+        </div>
+        <br>    
         <form class="form-inline" #e="ngForm" *ngFor="let layeradmin of layeradmins">
            <i (click)="deleteLayer(layeradmin.ID)" class="fa fa-times" aria-hidden="true"></i>
             <!--<button type="button"  class="fa fa-times" data-toggle="modal" data-target="#layer_warning"></button> <!-Currently deletes layer above chosen layer.-->
-            <input id="exlayername" ngModel required name="exlayername" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
-            <select id="exlayertype" ngModel required name="exlayertype" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "layeradmin.layerType" type="text" (blur)="updateLayer(layeradmin)">
+            <input id="exlayername" ngModel required name="exlayername" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
+            <select id="exlayertype" ngModel required name="exlayertype" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerType" type="text" (blur)="updateLayer(layeradmin)">
                 <option>PostGIS</option>
                 <option>WMS</option>
                 <option>KML-Link</option>
                 <option>KML-Drive</option>
             </select>
-            <input id="exlayerurl" name="exlayerurl" class="form-control" style="border-color: rgba(255,255,255,0); width:20%" [(ngModel)] = "layeradmin.layerURL" type="text" (change)="updateLayer(layeradmin)">
-            <input id="exlayerident" name="exlayerident" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
-            <input id="exlayerformat" name="exlayerformat" class="form-control" style="border-color: rgba(255,255,255,0); width:10%" [(ngModel)] = "layeradmin.layerFormat" type="text" (change)="updateLayer(layeradmin)">            
-            <input id="exlayerdescription" ngModel required name="exlayerdescription" class="form-control" style="border-color: rgba(255,255,255,0); width:20%" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)">
+            <input id="exlayerurl" name="exlayerurl" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:20%" [(ngModel)] = "layeradmin.layerURL" type="text" (change)="updateLayer(layeradmin)">
+            <input id="exlayerident" name="exlayerident" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
+            <input id="exlayerformat" name="exlayerformat" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerFormat" type="text" (change)="updateLayer(layeradmin)">            
+            <input id="exlayerdescription" ngModel required name="exlayerdescription" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:20%" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)">
 
 <!-- Template for layer permissions, interacts with layerpermission component and Permissions button from user Layers-->
 <ng-template #content let-c="close" let-d="dismiss">

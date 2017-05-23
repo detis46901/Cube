@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from '../../_services/authentication.service';
  import { Api2Service } from '../api2.service';
  import { User } from '../../_models/user-model'
+ import { Md5 } from 'ts-md5/dist/md5'
 
 @Component({
     //moduleId: module.id, (why does this not need to be there???)
@@ -30,6 +31,8 @@ export class LoginComponent implements OnInit {
     login() {
         this.loading = true;
         console.log(this.model.username)
+        //console.log(Md5.hashStr(this.model.password).toString())
+        this.model.password = Md5.hashStr(this.model.password).toString() //This works fine in conjunction with user.component.ts.addUser, but existing users can't login if this is left on
         this.authenticationService.login(this.model.username, this.model.password)
             .subscribe(result => {
                 if (result > 0 ) {

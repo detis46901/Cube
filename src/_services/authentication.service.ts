@@ -3,8 +3,8 @@ import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map'
 import { User } from '../_models/user-model';
+//import * as CryptoJS from 'crypto-js'
 
- 
 @Injectable()
 export class AuthenticationService {
     public token: string;
@@ -12,12 +12,13 @@ export class AuthenticationService {
 
     constructor(private http: Http) { //need to implement JWT here
         var CryptoJS = require("crypto-js") //Required to use CryptoJS
-        var AES = require("crypto-js/aes")
-        var SHA256 = require("crypto-js/sha256")
+        //var jwt = require('jsonwebtoken')
 
         // set token if saved in local storage    
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if(currentUser != null) {
+        this.token = currentUser && currentUser.token;
+
+        /*if(currentUser != null) {
             var header = {
                 "alg": "HS256",
                 "typ": "JWT"
@@ -27,23 +28,35 @@ export class AuthenticationService {
                 currentUser
             }
 
-            //this.token = CryptoJS.enc.base64.stringify(header) + "." + CryptoJS.enc.base64.stringify(payload) //working on jwt here
-            console.log(this.token)
-        }
+            var stringHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))
+            var encHeader = CryptoJS.enc.base64(stringHeader)
+
+            var stringPayload = CryptoJS.enc.Utf8.parse(JSON.stringify(payload))
+            var encPayload = CryptoJS.enc.base64(stringPayload)
+
+            var secret = "secret key"
+            //var signature = CryptoJS
+
+            var unsigned = encHeader + "." + encPayload
+
+            console.log(unsigned)
+            console.log(this.JWT) //CryptoJS implementation
+        }*/
 
         //console.log(CryptoJS.enc.base64.stringify(currentUser))
-        console.log(currentUser)
-        console.log(header)
+        //console.log(currentUser)
+        //console.log(unsigned)
     }
  
     login(username: string, password: string): Observable<number> {
         //console.log('http://foster2.cityofkokomo.org:5000/api/authenticate', { email: username, password: password })
+
+        //Insert hash here, and send hash to authenticate password
         return this.http.post('http://foster2.cityofkokomo.org:5000/api/authenticate', { email: username, password: password })
             .map((response: Response) => {
                 console.log(response)
                 // login successful if there's a jwt token in the response
                 let token = response.json() && response.json().token;
-                
                 if (token) {
                     // set token property
                     this.token = token;
