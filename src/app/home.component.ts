@@ -11,6 +11,10 @@ import { Configuration } from '../_api/api.constants'
   //styleUrls: ['./app.component.css', './styles/w3.css'],
 })
 export class HomeComponent {
+
+//This is the "constant" (though not declared as such) that tells the header's toggle menu button which screen the user is on
+private screen = 1;
+
 public user = new User;
 public isHome = true;
 public myItems: any;

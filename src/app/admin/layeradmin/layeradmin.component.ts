@@ -9,6 +9,7 @@ import { LayerPermissionService } from '../../../_services/layerpermission.servi
 import { LayerAdmin, LayerPermission } from '../../../_models/layer.model';
 import { LayerPermissionComponent } from './layerpermission.component';
 import { LayerNewComponent } from './layernew.component'
+import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component'
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -21,8 +22,11 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 export class LayerAdminComponent implements OnInit{
 
+    private objCode = 2
+
     closeResult: string;
     public user = new User;
+    public currLayer = new LayerAdmin;
     public layeradmin = new LayerAdmin;
     public newlayeradmin = new LayerAdmin;
     public newlayerpermission = new LayerPermission;
@@ -69,7 +73,16 @@ export class LayerAdminComponent implements OnInit{
         }, (reason) => {
           this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         });
-      }
+    }
+
+    opendelete(layer_id) {
+        this.currLayer.ID = layer_id
+        this.modalService.open(ConfirmdeleteComponent).result.then((result) => {
+          this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
+    }
 
     private getDismissReason(reason: any): string {
       if (reason === ModalDismissReasons.ESC) {
@@ -129,7 +142,7 @@ export class LayerAdminComponent implements OnInit{
             })
     }
 
-    public orderPages() {
+    public sortPages() {
 
     }
 }

@@ -8,44 +8,43 @@
 <!-- This defines the component redirected to by the "Layers" option in the navigation sidepane.-->
 <div style="width:100%">
         <!-- Displays user layers-->
-        <div class="row">
-            <div class="col-md-1" style="left:50px">
+        <div class="row" style="position:relative; bottom:3px; left:20px">
+            <div class="col-md-1" style="left:15px">
                 <h4>Name</h4>
             </div>
-            <div class="col-md-2" style="left:75px">
+            <div class="col-md-2" style="left:35px">
                 <h4>Type</h4>
             </div>
-            <div class="col-md-2" style="left:50px">
+            <div class="col-md-2" style="right:45px">
                 <h4>URL</h4>
             </div>
-            <div class="col-md-1" style="left:25px">
+            <div class="col-md-1" style="right:5px">
                 <h4>Identity</h4>
             </div>
-            <div class="col-md-2" style="left:40px">
+            <div class="col-md-2" style="left:15px">
                 <h4>Format</h4>
             </div>
-            <div class="col-md-1">
+            <div class="col-md-1" style="right:68px">
                 <h4>Description</h4>
             </div>
             <div class="col-md-2">
-                <button id="orderBy" type="button" style="position:absolute;height:25px;width:75px;left:50px;top:8px" class="btn-primary" (click)="orderPages()">Order by</button><!--Probably a ngbdropdown-->
+                <button id="sort" type="button" style="position:absolute;height:25px;width:100px;left:90px;top:8px" class="btn-primary" (click)="sortPages()">Sort Layers</button><!--Probably a ngbdropdown-->
             </div>
-        </div>
-        <br>    
-        <form class="form-inline" #e="ngForm" *ngFor="let layeradmin of layeradmins">
-           <i (click)="deleteLayer(layeradmin.ID)" class="fa fa-times" aria-hidden="true"></i>
-            <!--<button type="button"  class="fa fa-times" data-toggle="modal" data-target="#layer_warning"></button> <!-Currently deletes layer above chosen layer.-->
-            <input id="exlayername" ngModel required name="exlayername" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
+        </div>    
+        <form class="form-inline" #e="ngForm" style="position:relative; left:20px" *ngFor="let layeradmin of layeradmins">
+            <i (click)="deleteLayer(layeradmin.ID)" class="fa fa-times" aria-hidden="true"></i>
+            <!--<i class="fa fa-times" (click)="opendelete(layeradmin.ID)" ></i> <!-Currently deletes layer above chosen layer.-->
+            <input id="exlayername" ngModel required name="exlayername" title="{{layeradmin.layerName}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
             <select id="exlayertype" ngModel required name="exlayertype" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerType" type="text" (blur)="updateLayer(layeradmin)">
                 <option>PostGIS</option>
                 <option>WMS</option>
                 <option>KML-Link</option>
                 <option>KML-Drive</option>
             </select>
-            <input id="exlayerurl" name="exlayerurl" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:20%" [(ngModel)] = "layeradmin.layerURL" type="text" (change)="updateLayer(layeradmin)">
-            <input id="exlayerident" name="exlayerident" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
+            <input id="exlayerurl" name="exlayerurl" title="{{layeradmin.layerURL}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:20%" [(ngModel)] = "layeradmin.layerURL" type="text" (change)="updateLayer(layeradmin)">
+            <input id="exlayerident" name="exlayerident" title="{{layeradmin.layerIdent}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
             <input id="exlayerformat" name="exlayerformat" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerFormat" type="text" (change)="updateLayer(layeradmin)">            
-            <input id="exlayerdescription" ngModel required name="exlayerdescription" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:20%" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)">
+            <input id="exlayerdescription" ngModel required name="exlayerdescription" title="{{layeradmin.layerDescription}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:20%" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)">
 
 <!-- Template for layer permissions, interacts with layerpermission component and Permissions button from user Layers-->
 <ng-template #content let-c="close" let-d="dismiss">
@@ -65,7 +64,7 @@
 </ng-template>
 
 <!-- Display modal: users that have permissions with specific layer; Redirect to: layerpermission component via openpermission()-->
-<button class="btn btn-outline-primary" (click)="openpermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>
+<button class="btn btn-outline-primary" title="Open layer permissions" (click)="openpermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>
 
 <!-- Implement a warning modal here to ensure user wants to delete the selected layer.-->
 <div id="layer_warning" class="modal" role="dialog">
@@ -92,7 +91,7 @@
 </div>
 
 <!-- Display modal: create new layer; Redirect to: layernew component via opennew()-->
-<button class="btn btn-default" (click)="opennew()">Create New Layer</button>
+<button class="btn btn-default" style="position:relative; top:5px; left:35px" (click)="opennew()">Create Layer</button>
 
 <template ngbModalContainer></template>
 

@@ -1,19 +1,38 @@
-html, body {
-    margin: 0;
-    height: 100%;
-}
-
-#wrap {
-    background: #000;
-    position: relative;
-}
-
-#wrap::after {
+#admin_bg {
+    /*background-color:#cce6ff ;
+    color: blue;*/
+	/**background-color: #0044cc;*/
+    background-color: #4d88ff;
+	background-image: -moz-linear-gradient(top, #99ccff, #4d88ff);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#99ccff), to(#4d88ff));
+	background-image: -webkit-linear-gradient(top, #99ccff, #4d88ff);
+	background-image: -o-linear-gradient(top, #99ccff, #4d88ff);
+	background-image: linear-gradient(to bottom, #99ccff, #4d88ff);
     position: absolute;
+    height: 100%;
+    left: 0px;
+    top: 50px;
+    width: 100%;
+}
+
+#admin_nav {
+    position:absolute;
+    width:230px;
+    top:50px;
+    background-color: white;
+    color: #b3daff;
+    border: 2px black;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: none;
+    border-top-style: none;
+}
+
+#admin_bg:after {
     content: "\f234";
     font-family: FontAwesome;
-    color: lightslategray;
     font-size: 400px;
+    color: #b3daff;
+    left: 550px;
+    position: absolute;
 }
-
-/*Can't seem to get access to the page outside of controls*/

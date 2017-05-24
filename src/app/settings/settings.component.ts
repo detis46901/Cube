@@ -7,10 +7,13 @@ import { User } from '../../_models/user-model'
   selector: 'app-root',
   templateUrl: './settings.component.html',
   providers: [Api2Service, Configuration],
-  //styleUrls: ['./app.component.css', './styles/w3.css'],
+  styleUrls: ['./settings.component.css'],
 })
 
 export class SettingsComponent{
+    //Screen code (see home.component.ts)
+    private screen = 3;
+
     public user = new User;
     public myItems: any;
     public token: string;

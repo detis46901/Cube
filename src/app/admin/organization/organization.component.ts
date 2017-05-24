@@ -18,21 +18,24 @@ import { NumFilterPipe } from '../../../_pipes/numfilter.pipe'
   //styleUrls: ['./app.component.css', './styles/w3.css'],
 })
 export class OrganizationComponent implements OnInit{
-public user = new User;
-public department = new Department;
-public departments: any;
-public group = new Group;
-public groups: Array<any>;
-public role = new Role;
-public newrole = new Role;
-public roles: any;
-public token: string;
-public userID: number;
-public selecteddepartment: Department;
-public selectedgroup: Group;
-public showgroup: boolean;
-public showrole: boolean;
-public newdepartment: string;
+
+    private objCode = 3
+
+    public user = new User;
+    public department = new Department;
+    public departments: any;
+    public group = new Group;
+    public groups: Array<any>;
+    public role = new Role;
+    public newrole = new Role;
+    public roles: any;
+    public token: string;
+    public userID: number;
+    public selecteddepartment: Department;
+    public selectedgroup: Group;
+    public showgroup: boolean;
+    public showrole: boolean;
+    public newdepartment: string;
 
 
     constructor(private departmentService: DepartmentService, private groupService: GroupService, private roleService: RoleService) {

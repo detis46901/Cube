@@ -9,9 +9,12 @@ import { Configuration } from '../../_api/api.constants'
   selector: 'app-root',
   templateUrl: './admin.component.html',
   providers: [Api2Service, Configuration],
-  //styleUrls: ['./app.component.css', './styles/w3.css'],
+  styleUrls: ['./admin.component.css'],
 })
 export class AdminComponent {
+    //screen code (see home.component.html)
+    private screen = 2;
+
     public user = new User;
     public myItems: any;
     public token: string;

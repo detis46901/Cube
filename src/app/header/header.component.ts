@@ -16,10 +16,30 @@ export class HeaderComponent {
     } Maybe this is how to render the static pngs*/
 
     @Input() user: User
-    @Input() isHome = false;
-    private isOpen = false;
+    //@Input() isHome = false; //Not currently being used
+    @Input() screenCode = 0; //1 for home (map) screen, 2 for admin menu screen, 3 for user settings screen
+    @Input() isOpen = false;
 
-    public w3_open_close() {
+    public menu_toggle(sCode) {
+        switch(sCode) {
+            case 0: 
+                //throw exception here for a call without a screen code (will default to 0 as assigned above)
+                break
+            case 1:
+                this.home_toggle()
+                break
+            case 2:
+                this.admin_toggle()
+                break
+            case 3:
+                this.user_toggle()
+                break
+        }
+    }
+
+
+    //Code 1
+    public home_toggle() {
         if(!this.isOpen) {
             document.getElementById("mySidenav").style.display = "block";
             document.getElementById("mySidenav").style.width = "250px";
@@ -34,6 +54,32 @@ export class HeaderComponent {
             document.getElementById("goto").style.marginLeft = "315px";
             document.getElementById("add-marker").style.marginLeft = "360px";
             document.getElementById("remove-marker").style.marginLeft = "400px";
+        }
+        this.isOpen = !this.isOpen
+    }
+
+    //Code 2
+    public admin_toggle() {
+        if(!this.isOpen) {
+            document.getElementById("admin_nav").style.display = "block";
+            document.getElementById("admin_nav").style.width = "230px";
+        }
+        else {
+            document.getElementById("admin_nav").style.width = "0";
+            document.getElementById("admin_nav").style.display = "none";
+        }
+        this.isOpen = !this.isOpen
+    }
+
+    //Code 3
+    public user_toggle() {
+        if(!this.isOpen) {
+            document.getElementById("settings_nav").style.display = "block";
+            document.getElementById("settings_nav").style.width = "230px";
+        }
+        else {
+            document.getElementById("settings_nav").style.width = "0";
+            document.getElementById("settings_nav").style.display = "none";
         }
         this.isOpen = !this.isOpen
     }

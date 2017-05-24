@@ -27,26 +27,28 @@ import { hash } from 'bcrypt'
 })
 export class UserComponent implements OnInit{
 
-closeResult: string;
-public user = new User;
-public newuser = new User;
-public userpage = new UserPage;
-public userpages: any;
-public department = new Department;
-public users: any;
-public group = new Group;
-public groups: Array<any>;
-public role = new Role;
-public newrole = new Role;
-public roles: any;
-public token: string;
-public userID: number;
-public selecteddepartment: Department;
-public selectedgroup: Group;
-public showgroup: boolean;
-public showrole: boolean;
-public newdepartment: string;
-public uList = [];
+    private objCode = 1
+
+    closeResult: string;
+    public user = new User;
+    public newuser = new User;
+    public userpage = new UserPage;
+    public userpages: any;
+    public department = new Department;
+    public users: any;
+    public group = new Group;
+    public groups: Array<any>;
+    public role = new Role;
+    public newrole = new Role;
+    public roles: any;
+    public token: string;
+    public userID: number;
+    public selecteddepartment: Department;
+    public selectedgroup: Group;
+    public showgroup: boolean;
+    public showrole: boolean;
+    public newdepartment: string;
+    public uList = [];
 
 
     constructor(private api2service: Api2Service, private roleservice: RoleService, private modalService: NgbModal, private userpageService: UserPageService) {

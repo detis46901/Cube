@@ -1,3 +1,4 @@
-<header [user]="user"></header>
-<div style="position:absolute;width:230px;top:50px"><adminnav></adminnav></div>
+<div id="admin_bg"></div>
+<header [user]="user" [screenCode]="screen" [isOpen]="true"></header>
+<div id="admin_nav"><adminnav></adminnav></div>
 <div style="position:absolute;left:230px;top:50px;right:0px"><router-outlet name="admin"></router-outlet></div>

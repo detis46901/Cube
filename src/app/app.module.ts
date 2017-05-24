@@ -51,6 +51,7 @@ import { Configuration } from '../_api/api.constants';
 import { FilterPipe } from '../_pipes/rowfilter.pipe';
 import { PagePipe } from '../_pipes/rowfilter2.pipe';
 import { NumFilterPipe } from '../_pipes/numfilter.pipe';
+import { ConfirmdeleteComponent } from './admin/confirmdelete/confirmdelete.component';
 
 @NgModule({
   declarations: [
@@ -77,10 +78,11 @@ import { NumFilterPipe } from '../_pipes/numfilter.pipe';
     LayerPermissionComponent,
     PageComponent,
     PageConfigComponent,
-    LayerNewComponent
+    LayerNewComponent,
+    ConfirmdeleteComponent
   ],
 
-  entryComponents: [LayerNewComponent, LayerPermissionComponent, PageComponent, PageConfigComponent],
+  entryComponents: [LayerNewComponent, LayerPermissionComponent, PageComponent, PageConfigComponent, ConfirmdeleteComponent],
 
   imports: [
     BrowserModule,
