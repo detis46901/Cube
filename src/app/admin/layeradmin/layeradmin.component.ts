@@ -10,8 +10,8 @@ import { LayerAdmin, LayerPermission } from '../../../_models/layer.model';
 import { LayerPermissionComponent } from './layerpermission.component';
 import { LayerNewComponent } from './layernew.component'
 import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component'
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-
+import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmdeleteService } from '../../../_services/confirmdelete.service';
 
 @Component({
   selector: 'layeradmin',
@@ -35,9 +35,10 @@ export class LayerAdminComponent implements OnInit{
     public token: string;
     public userID: number;
     public userperm: string;
+    public confDel = false;
 
-    constructor(private layerAdminService: LayerAdminService, private modalService: NgbModal, private layerPermissionService: LayerPermissionService) {
-      var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    constructor(private layerAdminService: LayerAdminService, private modalService: NgbModal, private layerPermissionService: LayerPermissionService, private confDelService: ConfirmdeleteService) {
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
     }
@@ -76,13 +77,29 @@ export class LayerAdminComponent implements OnInit{
     }
 
     opendelete(layer_id) {
+        this.confDelService.resetDelete()
         this.currLayer.ID = layer_id
+        console.log(this.objCode, this.currLayer.ID)
+        this.confDelService.setVars(this.objCode, this.currLayer.ID)
+        console.log(this.confDelService.getVars())
+        //console.log(this.objCode, this.currLayer.ID)
         this.modalService.open(ConfirmdeleteComponent).result.then((result) => {
           this.closeResult = `Closed with: ${result}`;
         }, (reason) => {
           this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         });
+
+        console.log(this.confDelService.delete_obj)
+        /*if(this.confDelService.delete()) {
+            this.deleteLayer(layer_id)
+            this.confDelService.resetDelete()
+        }*/
     }
+
+    /*opendelete(layer_id) {
+        this.currLayer.ID = layer_id
+        this.confDel = true
+    }*/
 
     private getDismissReason(reason: any): string {
       if (reason === ModalDismissReasons.ESC) {
@@ -121,6 +138,7 @@ export class LayerAdminComponent implements OnInit{
             })
     }
 
+     //The way this deletes permissions and layers when a layer is deleted should be implemented with any deletion that involves dependents
      public deleteLayer(layerID) {
         console.log(layerID)
         this.layerPermissionService

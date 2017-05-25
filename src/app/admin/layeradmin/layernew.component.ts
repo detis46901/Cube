@@ -40,6 +40,7 @@ public layeradmin = new LayerAdmin;
     }
 
 open(content) {
+    console.log("layernew open(content)")
     this.userperm = "A user"
     this.modalService.open(content, {size:'lg'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;

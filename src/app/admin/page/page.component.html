@@ -25,8 +25,8 @@
                 <input id="exuserpage" name="exuserpage" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:45%" #edituserpageinput [(ngModel)] = "userpage.page" type="text" (blur)="updateUserPage(userpage)">
                 <input id="exuserpageactive" name="exuserpageactive" class="form-check-input" style="border-color: rgba(255,255,255,0); width:15%; position:relative" [(ngModel)] = "userpage.active" type="checkbox" (change)="updateUserPage(userpage)">
                 <input id="exuserpagedefault" name="exuserpagedefault" class="form-check-input" style="border-color: rgba(255,255,255,0); width:10%; position:relative; margin-right:35px" [(ngModel)] = "userpage.default" type="checkbox" (change)="updateUserPage(userpage)">
-                <i (click)="deleteUserPage(userpage.ID)" class="fa fa-arrow-up" aria-hidden="true"></i>
-                <i (click)="deleteUserPage(userpage.ID)" class="fa fa-arrow-down" aria-hidden="true"></i>
+                <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                <i class="fa fa-arrow-down" aria-hidden="true"></i>
             </div>
         </form> 
 

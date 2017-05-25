@@ -101,8 +101,10 @@ export class UserComponent implements OnInit{
         this.newuser = newuser
 
         //node_modules/hash-and-salt method I think it doesn't work because its taking from NodeJS javascript into typescript
-        /*var password = require('password-hash-and-salt')
+        var password = require('password-hash-and-salt')
+        console.log(password)
         var salt = 'secret'
+        var hashedpw = ""
 
         //password('Monday01').hash(salt, hash)
 
@@ -111,9 +113,9 @@ export class UserComponent implements OnInit{
             console.log(hash)
             //if(error)
                 //throw new Error('Hash error')
-            this.newuser.password = hash
+            hashedpw = hash
 
-            password('hack').verifyAgainst(this.newuser.password, function(error, verified) {
+            password('hack').verifyAgainst(hashedpw, function(error, verified) {
                 if(error)
                     throw new Error('Hack error')
                 if(!verified) {
@@ -122,7 +124,8 @@ export class UserComponent implements OnInit{
                     console.log('The secret is')
                 }       
             })
-        })*/
+        })
+        console.log(hashedpw)
 
         if (this.newuser.password == "") {
             this.newuser.password = Md5.hashStr('Monday01').toString()
@@ -136,6 +139,8 @@ export class UserComponent implements OnInit{
         
         //this.newuser.password = (Md5.hashStr("Monday01")).toString() //works
         console.log(newuser.password)
+
+        console.log(newuser)
 
         this.api2service
             .Add(this.newuser)

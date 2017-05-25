@@ -4,23 +4,45 @@ import { Api2Service } from '../../api2.service';
 import { User } from '../../../_models/user-model';
 import { Configuration } from '../../../_api/api.constants';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmdeleteService } from '../../../_services/confirmdelete.service';
 
 @Component({
   selector: 'confirmdelete',
   templateUrl: './confirmdelete.component.html',
-  styleUrls: ['./confirmdelete.component.css']
+  styleUrls: ['./confirmdelete.component.css'],
 })
 export class ConfirmdeleteComponent implements OnInit {
 
-	@Input() objectCode = 0;
-	@Input() objectID = 0;
+	//@Input() objectID = 0;
 
-	public closeResult: any
+	closeResult: string;
 	public token: string;
 	public userID: number;
-	public delete = false;
+	objectCode: number;
+	objectID: number;
+	objType: string;
 
-	constructor(private modalService: NgbModal, public activeModal: NgbActiveModal) { 
+	constructor(private modalService: NgbModal, public activeModal: NgbActiveModal, private confDelService: ConfirmdeleteService) {
+		this.objectCode = this.confDelService.getVars()[0]
+		this.objectID = this.confDelService.getVars()[1]
+		
+		//currently the object codes will align as follows: Users-1, Layers-2, Organization-3
+		switch(this.objectCode) {
+			case 0:
+				//throw error for no identified object
+				break
+			case 1:
+				this.objType = "User"
+				break
+			case 2:
+				this.objType = "Layer"
+				break
+			case 3:
+				this.objType = "Organization"
+				break
+		}
+
+		console.log("confirmDelete object code: " + this.objectCode)
 		var currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.token = currentUser && currentUser.token;
 		this.userID = currentUser && currentUser.userid;
@@ -30,31 +52,16 @@ export class ConfirmdeleteComponent implements OnInit {
 	}
 
 	open(content) {
-    this.modalService.open(content, {size:'lg'}).result.then((result) => {
+		console.log("confirmdelete open(content)")
+    this.modalService.open(content, {size:'sm'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
 
-	public deleteObject(objCode, objID) {
-		var willDelete
-	//currently the object codes will align as follows: Users-1, Layers-2, Organization-3
-		switch(objCode) {
-			case 0:
-			//throw error for no identified object
-				break
-			case 1:
-				willDelete = this.confirmUser(objID)
-				break
-			case 2:
-				this.confirmLayer(objID) //passes true up the tree until it can be used to actually delete on the individual component's method
-				break
-			case 3:
-				willDelete = this.confirmOrg(objID)
-				break
-		}
-		this.delete = willDelete
+	public deleteObject() {
+		this.confDelService.delete()
 	}
 
 	private confirmUser(obj_ID) {
@@ -63,6 +70,7 @@ export class ConfirmdeleteComponent implements OnInit {
 
 	private confirmLayer(obj_ID) {
 		console.log("confirmLayer")
+		console.log(this.objectCode)
 	}
 
 	private confirmOrg(obj_ID) {
