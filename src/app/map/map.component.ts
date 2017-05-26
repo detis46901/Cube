@@ -154,6 +154,8 @@ export class MapComponent {
         //this.mapService.openjson('http://foster2.cityofkokomo.org:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json')
         this.q=0
 
+        
+
         console.log('Flags array: ' + this.userpagelayers[0].layerShown)
         console.log(this.userpagelayers)
 

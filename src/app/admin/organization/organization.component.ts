@@ -159,7 +159,23 @@ export class OrganizationComponent implements OnInit{
             })
     }
 
+    //This should also delete all rows for which: group(departmentID) == departmentID, but before deletion of those groups, logging the IDs from those
+    //groups into an array and also deleting for which roles(groupID) == groupIDs to be deleted. This must be done in a cascade fashion.
     public deleteDepartment(departmentID) {
+
+        //This currently deletes all group tables DO NOT USE
+        this.groupService
+            .GetSome(departmentID)
+            .subscribe(result => {
+                for (let i of result) {
+                    //this.groupService
+                    //.Delete(i.ID)
+                    //.subscribe(result => {
+                        console.log(result)
+                    //})
+                }
+            })
+
         this.departmentService
             .Delete(departmentID)
             .subscribe(result => {
@@ -170,6 +186,8 @@ export class OrganizationComponent implements OnInit{
         this.deleteRole(3); This hard-coding example works fine*/
     }
 
+    //As above, so below
+    //Delete any row for which role(groupID) == groupID
     public deleteGroup(groupID) {
         this.groupService
             .Delete(groupID)

@@ -9,6 +9,8 @@ import { DepartmentService } from '../../../_services/department.service'
 import { GroupService } from '../../../_services/group.service'
 import { RoleService } from '../../../_services/role.service'
 import { UserPageService } from '../../../_services/user-page.service'
+import { LayerPermissionService } from '../../../_services/layerpermission.service';
+import { UserPageLayerService } from '../../../_services/user-page-layer.service';
 import { UserPage } from '../../../_models/user-model';
 import { Department, Group, Role } from '../../../_models/organization.model'
 import { PagePipe } from '../../../_pipes/rowfilter2.pipe'
@@ -22,7 +24,7 @@ import { hash } from 'bcrypt'
 @Component({
   selector: 'user',
   templateUrl: './user.component.html',
-  providers: [Api2Service, RoleService, UserPageService, Configuration, PagePipe, NumFilterPipe]
+  providers: [Api2Service, RoleService, UserPageService, LayerPermissionService, UserPageLayerService, Configuration, PagePipe, NumFilterPipe]
   //styleUrls: ['./app.component.css', './styles/w3.css'],
 })
 export class UserComponent implements OnInit{
@@ -51,7 +53,7 @@ export class UserComponent implements OnInit{
     public uList = [];
 
 
-    constructor(private api2service: Api2Service, private roleservice: RoleService, private modalService: NgbModal, private userpageService: UserPageService) {
+    constructor(private api2service: Api2Service, private roleservice: RoleService, private modalService: NgbModal, private userpageService: UserPageService, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService) {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
@@ -101,7 +103,7 @@ export class UserComponent implements OnInit{
         this.newuser = newuser
 
         //node_modules/hash-and-salt method I think it doesn't work because its taking from NodeJS javascript into typescript
-        var password = require('password-hash-and-salt')
+        /*var password = require('password-hash-and-salt')
         console.log(password)
         var salt = 'secret'
         var hashedpw = ""
@@ -125,8 +127,8 @@ export class UserComponent implements OnInit{
                 }       
             })
         })
-        console.log(hashedpw)
-
+        console.log(hashedpw)*/
+        console.log(this.newuser.password)
         if (this.newuser.password == "") {
             this.newuser.password = Md5.hashStr('Monday01').toString()
         }
@@ -160,6 +162,7 @@ export class UserComponent implements OnInit{
             })
     }
 
+    //rename to change password, add a modal that will ask what new password should be
     public resetPassword(userID, password) {
         this.api2service
             .GetSingle(userID)
@@ -176,6 +179,7 @@ export class UserComponent implements OnInit{
             })
     }
 
+    //Also delete all user_pages(userID) == userID, user_page_layers(userID), layer_permissions(userID)
     public deleteUser(userID) {
         console.log(userID)
         this.api2service

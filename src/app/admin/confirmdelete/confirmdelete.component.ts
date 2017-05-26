@@ -5,6 +5,7 @@ import { User } from '../../../_models/user-model';
 import { Configuration } from '../../../_api/api.constants';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmdeleteService } from '../../../_services/confirmdelete.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'confirmdelete',
@@ -21,6 +22,7 @@ export class ConfirmdeleteComponent implements OnInit {
 	objectCode: number;
 	objectID: number;
 	objType: string;
+	source: Observable<boolean>
 
 	constructor(private modalService: NgbModal, public activeModal: NgbActiveModal, private confDelService: ConfirmdeleteService) {
 		this.objectCode = this.confDelService.getVars()[0]
@@ -62,6 +64,9 @@ export class ConfirmdeleteComponent implements OnInit {
 
 	public deleteObject() {
 		this.confDelService.delete()
+		this.source = Observable.create(observer => {
+        observer.next(this.confDelService.delete_obj)
+        })
 	}
 
 	private confirmUser(obj_ID) {

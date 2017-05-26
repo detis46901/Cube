@@ -27,6 +27,13 @@ export class GroupService {
 //            .catch(this.handleError);
     }
  
+    public GetSome = (deptid): Observable<Group[]> => {
+        console.log(this.actionUrl + 'list?departmentID=' + deptid)
+        return this._http.get(this.actionUrl + 'list?departmentID=' + deptid)
+            .map((response: Response) => <Group[]>response.json())
+//            .catch(this.handleError);
+    }
+
     public GetSingle = (id: number): Observable<Group> => {
         return this._http.get(this.actionUrl + 'one?rowid=' + id)
             .map((response: Response) => <Group>response.json())
