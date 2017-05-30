@@ -15,6 +15,7 @@ import { User } from '../../../_models/user-model'
 
 export class PasswordComponent implements OnInit{
 
+    public model: any = {};
     public token: string;
     public userID: string;
     public user = new User;

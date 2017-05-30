@@ -19,7 +19,8 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { PageComponent } from '../page/page.component'
 import { PageConfigComponent } from '../page/pageconfig.component'
 import { Md5 } from 'ts-md5/dist/md5'
-import { hash } from 'bcrypt'
+//import { hash } from 'bcrypt'
+//import {hash, genSalt} from "bcrypt/bcrypt.js"
 
 @Component({
   selector: 'user',
@@ -27,6 +28,7 @@ import { hash } from 'bcrypt'
   providers: [Api2Service, RoleService, UserPageService, LayerPermissionService, UserPageLayerService, Configuration, PagePipe, NumFilterPipe]
   //styleUrls: ['./app.component.css', './styles/w3.css'],
 })
+
 export class UserComponent implements OnInit{
 
     private objCode = 1
@@ -99,8 +101,12 @@ export class UserComponent implements OnInit{
                 );
     }   
 
+
     public addUser(newuser) {
         this.newuser = newuser
+        
+
+        //var crypt = require('bcrypt');
 
         //node_modules/hash-and-salt method I think it doesn't work because its taking from NodeJS javascript into typescript
         /*var password = require('password-hash-and-salt')
@@ -127,7 +133,15 @@ export class UserComponent implements OnInit{
                 }       
             })
         })
-        console.log(hashedpw)*/
+        console.log(hashedpw)
+
+        crypt.genSalt(10, function(err, salt) {
+            crypt.hash("hello", salt, function(err, hash) {
+                console.log(hash)
+            })
+        })*/
+
+
         console.log(this.newuser.password)
         if (this.newuser.password == "") {
             this.newuser.password = Md5.hashStr('Monday01').toString()

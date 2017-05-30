@@ -1,0 +1,8 @@
+<!--
+    This can also be JSON I believe, and this may even be covered by ../.vscode/launch.json and settings.json
+    Goals for this file's contents:
+    
+    -Establish a standard password "Monday01" as default
+    -Establish the URLs and ports that are used in this project
+    -Anything else that needs to be standardized project-wide
+-->
