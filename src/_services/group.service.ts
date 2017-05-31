@@ -27,6 +27,7 @@ export class GroupService {
 //            .catch(this.handleError);
     }
  
+    //This has to be wrong, this needs to be a GroupID.
     public GetSome = (deptid): Observable<Group[]> => {
         console.log(this.actionUrl + 'list?departmentID=' + deptid)
         return this._http.get(this.actionUrl + 'list?departmentID=' + deptid)

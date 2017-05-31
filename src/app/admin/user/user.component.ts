@@ -1,3 +1,5 @@
+/// <reference path="../../../../node_modules/@types/password-hash-and-salt/index.d.ts" />
+/// <reference path="../../../../node_modules/@types/crypto-js/index.d.ts" />
 
 import { Component, Input, OnInit } from '@angular/core';
 //import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -19,6 +21,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { PageComponent } from '../page/page.component'
 import { PageConfigComponent } from '../page/pageconfig.component'
 import { Md5 } from 'ts-md5/dist/md5'
+//import * as pHash from 'password-hash-and-salt'
 //import { hash } from 'bcrypt'
 //import {hash, genSalt} from "bcrypt/bcrypt.js"
 
@@ -104,12 +107,18 @@ export class UserComponent implements OnInit{
 
     public addUser(newuser) {
         this.newuser = newuser
-        
+        /*var AES = require("crypto-js/aes");
+        var SHA256 = require("crypto-js/sha256");
+        var cryptoJS = require("crypto-js");
+        var cipherText = cryptoJS.AES.en
 
-        //var crypt = require('bcrypt');
 
+        console.log(SHA256("Message"));*/
+
+        //All of this is an attemp to hash things out. Password wise
+        //
         //node_modules/hash-and-salt method I think it doesn't work because its taking from NodeJS javascript into typescript
-        /*var password = require('password-hash-and-salt')
+        var password = require('password-hash-and-salt')
         console.log(password)
         var salt = 'secret'
         var hashedpw = ""
@@ -135,12 +144,6 @@ export class UserComponent implements OnInit{
         })
         console.log(hashedpw)
 
-        crypt.genSalt(10, function(err, salt) {
-            crypt.hash("hello", salt, function(err, hash) {
-                console.log(hash)
-            })
-        })*/
-
 
         console.log(this.newuser.password)
         if (this.newuser.password == "") {
@@ -153,7 +156,7 @@ export class UserComponent implements OnInit{
 
         console.log(Md5.hashStr(newuser.password)) //works
         
-        //this.newuser.password = (Md5.hashStr("Monday01")).toString() //works
+        this.newuser.password = (Md5.hashStr("Monday01")).toString() //works
         console.log(newuser.password)
 
         console.log(newuser)

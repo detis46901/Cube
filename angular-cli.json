@@ -3,6 +3,7 @@
     "version": "1.0.0-beta.21",
     "name": "c-proj"
   },
+
   "apps": [
     {
       "root": "src",
@@ -28,6 +29,7 @@
       }
     }
   ],
+
   "addons": [],
   "packages": [],
   "e2e": {

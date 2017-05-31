@@ -196,7 +196,9 @@ export class OrganizationComponent implements OnInit{
                 this.getGroupItems();
             })
     }
-
+    
+     //Delete all rows where any is true: Role.GroupID == GroupID where Group.DeptID == DepartmentID to delete
+     //Or where Role.GroupID == GroupID to delete
      public deleteRole(roleID) {
         this.roleService
             .Delete(roleID)
