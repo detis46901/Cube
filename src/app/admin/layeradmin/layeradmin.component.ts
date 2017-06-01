@@ -1,5 +1,4 @@
-
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Api2Service } from '../../api2.service';
 import { User } from '../../../_models/user-model'
@@ -11,18 +10,21 @@ import { LayerAdmin, LayerPermission } from '../../../_models/layer.model';
 import { LayerPermissionComponent } from './layerpermission.component';
 import { LayerNewComponent } from './layernew.component'
 import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component'
-import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmdeleteService } from '../../../_services/confirmdelete.service';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'layeradmin',
   templateUrl: './layeradmin.component.html',
-  providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService]
+  providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, NgbActiveModal]
   //styleUrls: ['./app.component.css', './styles/w3.css'],
 })
 
 export class LayerAdminComponent implements OnInit{
+
+    
+    public flag = false;
 
     private objCode = 2
     public btnId = document.getElementById('btnOpenDel')
@@ -54,10 +56,16 @@ export class LayerAdminComponent implements OnInit{
 
     ngOnInit() {
        this.getLayerItems();
+       console.log(this.flag)
        //console.log(this.layeradmins.layer)
        //this.getGroupItems();
        //this.getRoleItems();
         
+    }
+
+    setFlag() {
+        this.flag = true
+        console.log(this.flag)
     }
 
     //Open permissions modal on request from "Layers"

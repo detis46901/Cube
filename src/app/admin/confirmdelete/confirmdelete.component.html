@@ -7,6 +7,6 @@
     <p>Are you sure you want to delete this {{objType}}?</p><!--Interpolate the object name for "..."-->
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="deleteObject()">Delete</button><button class="btn btn-outline-primary" (click)="activeModal.close()">No</button>
+    <button type="button" class="btn btn-secondary" (click)="onClick()">Delete</button><button class="btn btn-outline-primary" (click)="activeModal.close()">No</button>
 </div>
 

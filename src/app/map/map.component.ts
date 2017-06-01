@@ -1,5 +1,6 @@
 /// <reference path="../../../typings/leaflet/leaflet.d.ts" />
 /// <reference path="../../../typings/geojson/geojson.d.ts" />
+/// <reference path="../../../typings/kml/kml.d.ts" />
 
 //Import statements
 import { ElementRef, Component, ViewChild } from '@angular/core';
@@ -16,6 +17,7 @@ import { UserPageLayer, ControlLayers } from '_models/layer.model';
 import { UserPage } from '../../_models/user-model';
 import { UserPageLayerService } from '../../_services/user-page-layer.service'
 import { Http } from '@angular/http'
+import { GeoJSON } from 'leaflet'
 
 @Component({
   selector: 'map',
@@ -31,7 +33,7 @@ export class MapComponent {
     @ViewChild(MarkerComponent) markerComponent: MarkerComponent;
 
     //Constructor, elementref is for use in ngAfterViewInit to test the geoJSON file. the rest are necessary for map component to work.
-    constructor(private elementRef: ElementRef, private mapService: MapService, private geocoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http:Http) {
+    constructor(private _http: Http, private elementRef: ElementRef, private mapService: MapService, private geocoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http:Http) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
@@ -39,6 +41,9 @@ export class MapComponent {
 
     //Class variables
     public _map: any;
+
+    //GeoJSON
+    public geoTest: GeoJSON.GeoJsonObject;
 
     //Database information
     public layers: MapService;
@@ -173,7 +178,7 @@ export class MapComponent {
         //console.log (this.layeradmin)
         //console.log (checked)
         //console.log (index)
-
+    
         if (checked == true) {
             //It may make sense to implement this using 'LayerGroup'
             this.currentlayer = (L.tileLayer.wms(this.layeradmin.layerURL, {
@@ -181,6 +186,9 @@ export class MapComponent {
             format: this.layeradmin.layerFormat,
             transparent: true,
             })).addTo(this._map)
+            console.log(L.tileLayer.wms(this.layeradmin.layerURL, {layers: this.layeradmin.layerIdent,
+            format: this.layeradmin.layerFormat,
+            transparent: true,}))
             this.userpagelayers[index].layerShown = false
         }
 
@@ -201,6 +209,9 @@ export class MapComponent {
     }
 
     public opengeo () {
+        /*this.geoTest = this._http.get("http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Kokomo:Bench_Marks&maxFeatures=50&outputFormat=application%2Fjson")
+            .map((response: Response) =><GeoJSON.GeoJsonObject>response.json())*/
+        L.geoJSON()
         console.log("openjson started")
          this.mapService.map.addLayer(L.tileLayer("http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
@@ -228,11 +239,11 @@ export class MapComponent {
 
     ngAfterViewInit() {
         //this.markerComponent.Initialize();
-       /* var s = document.createElement("script");
+        var s = document.createElement("script");
         s.type = "text/javascript";
-        s.src = "../../js/stations.js";
+        s.src = "../../assets/stations.js";
         this.elementRef.nativeElement.appendChild(s);
-        console.log('ngAfterViewInit');*/
+        console.log('ngAfterViewInit');
     };
     ngOnDestroy() {
         console.log('ngOnDestroy')

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Api2Service } from '../../api2.service';
 import { User } from '../../../_models/user-model';
@@ -15,7 +15,11 @@ import { Observable } from 'rxjs';
 export class ConfirmdeleteComponent implements OnInit {
 
 	//@Input() objectID = 0;
+	//@Output() deleteThis: boolean;
 
+	@Output() clicked = new EventEmitter<boolean>();
+
+	public delFlag: boolean;
 	closeResult: string;
 	public token: string;
 	public userID: number;
@@ -51,6 +55,11 @@ export class ConfirmdeleteComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		console.log("confDelete opened")
+	}
+
+	onClick() {
+		this.clicked.emit(false);
 	}
 
 	open(content) {
@@ -63,7 +72,8 @@ export class ConfirmdeleteComponent implements OnInit {
   }
 
 	public deleteObject() {
-		this.confDelService.delete()
+		this.delFlag = false;
+		this.delFlag = this.confDelService.delete()
 		this.source = Observable.create(observer => {
         observer.next(this.confDelService.delete_obj)
         })

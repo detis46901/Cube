@@ -32,6 +32,7 @@ export class ConfirmdeleteService {
     delete() {
         this.delete_obj = true;
         console.log(this.delete_obj)
+        return this.delete_obj;
         /*this.source = Observable.create(observer => {
         observer.next(this.delete_obj)
         })*/
