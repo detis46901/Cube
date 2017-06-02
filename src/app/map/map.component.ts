@@ -216,11 +216,12 @@ export class MapComponent {
     }
 
     public opengeo () {
-        var bob = this._http.get("http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Kokomo:Bench_Marks&maxFeatures=50&outputFormat=application%2Fjson", {headers: this.headers})
+        this._http.get("http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Kokomo:Bench_Marks&maxFeatures=50&outputFormat=application%2Fjson", {headers: this.headers})
             .map((response: Response) => <GeoJSON.GeoJsonObject>response.json())
-            .subscribe((data: GeoJSON.GeoJsonObject) => this.geoTest = data)
+            .subscribe((data: GeoJSON.GeoJsonObject) => this.geoTest = data) //Don't know if this is the right conversion, or if it's even doing anything.
+            //Getting an error that says the headers are not correct as well. Not sure where that needs to be set (Server or API)
         
-        console.log(bob)
+        
          this.mapService.map.addLayer(L.tileLayer("http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
         }))
