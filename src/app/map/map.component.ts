@@ -16,8 +16,9 @@ import { LayerPermission, LayerAdmin } from "../../_models/layer.model"
 import { UserPageLayer, ControlLayers } from '_models/layer.model';
 import { UserPage } from '../../_models/user-model';
 import { UserPageLayerService } from '../../_services/user-page-layer.service'
-import { Http } from '@angular/http'
-import { GeoJSON } from 'leaflet'
+import { Http, Response, Headers } from '@angular/http'
+import * as leaf from 'leaflet'
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'map',
@@ -29,6 +30,7 @@ export class MapComponent {
     //Token and current user, Working on changing the token format to JWT once hashing is operational
     public token: string;
     public userID: number;
+    public headers: Headers;
     
     @ViewChild(MarkerComponent) markerComponent: MarkerComponent;
 
@@ -37,13 +39,18 @@ export class MapComponent {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
+
+        this.headers = new Headers();
+        this.headers.append('Content-Type', 'application/json');
+        this.headers.append('Accept', 'application/json');
     }
 
     //Class variables
     public _map: any;
 
     //GeoJSON
-    public geoTest: GeoJSON.GeoJsonObject;
+    //public geoTest: Observable<GeoJSON.GeoJsonObject>;
+    public geoTest: any;
 
     //Database information
     public layers: MapService;
@@ -209,10 +216,11 @@ export class MapComponent {
     }
 
     public opengeo () {
-        /*this.geoTest = this._http.get("http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Kokomo:Bench_Marks&maxFeatures=50&outputFormat=application%2Fjson")
-            .map((response: Response) =><GeoJSON.GeoJsonObject>response.json())*/
-        L.geoJSON()
-        console.log("openjson started")
+        var bob = this._http.get("http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Kokomo:Bench_Marks&maxFeatures=50&outputFormat=application%2Fjson", {headers: this.headers})
+            .map((response: Response) => <GeoJSON.GeoJsonObject>response.json())
+            .subscribe((data: GeoJSON.GeoJsonObject) => this.geoTest = data)
+        
+        console.log(bob)
          this.mapService.map.addLayer(L.tileLayer("http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
         }))

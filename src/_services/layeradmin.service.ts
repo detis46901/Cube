@@ -22,6 +22,9 @@ export class LayerAdminService {
  
     public GetAll = (): Observable<LayerAdmin[]> => {
         console.log(this.actionUrl + 'list')
+        console.log(this._http.get(this.actionUrl + 'list')
+            .map((response: Response) => <LayerAdmin[]>response.json()))
+            
         return this._http.get(this.actionUrl + 'list')
             .map((response: Response) => <LayerAdmin[]>response.json())
 //            .catch(this.handleError);
@@ -48,6 +51,8 @@ export class LayerAdminService {
     }
  
     public Update = (itemToUpdate: LayerAdmin): Observable<LayerAdmin> => {
+        console.log(this._http.put(this.actionUrl + '/update', JSON.stringify(itemToUpdate), { headers: this.headers })
+            .map((response: Response) => <LayerAdmin>response.json()))
         return this._http.put(this.actionUrl + '/update', JSON.stringify(itemToUpdate), { headers: this.headers })
             .map((response: Response) => <LayerAdmin>response.json())
  //           .catch(this.handleError);

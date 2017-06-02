@@ -6,22 +6,22 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-        <table class="table">
+        <table class="table" style="position:relative; width:100%; left:15spx">
             <tr>
                 <th>Layers</th>
-                <th>Default On</th>
+                <th style="position:relative; right:110px">Default On</th>
             </tr>
             <tr *ngFor="let userpagelayer of userpagelayers">
-                <td><form class="form-inline">
-                    <div class="form-group" style="width:80%">
-                        <label for="exuserpagelayer"><i (click)="deleteUserPageLayer(userpagelayer.ID)" class="fa fa-times" aria-hidden="true"></i></label>
-                        {{userpagelayer.layer_admin.layerName}}
-                    </div>
+                <td><form class="form-inline" style="width:100%">
+                        <div class="form-group" style="width:80%">
+                            <label for="exuserpagelayer"><i (click)="deleteUserPageLayer(userpagelayer.ID)" class="fa fa-times" aria-hidden="true"></i></label>
+                            {{userpagelayer.layer_admin.layerName}}
+                        </div>
                     <input id="exuserpagelayeron" name="exuserpagelayeron" class="form-check-input" style="border-color: rgba(255,255,255,0); width:5%" [(ngModel)] = "userpagelayer.layerON" type="checkbox" (change)="updateUserPageLayer(userpagelayer)">
                 </form></td>
             </tr>
             </table>
-            <form class="form-inline" #f="ngForm" (ngSubmit)="addUserPageLayer(newuserpagelayer)">
+            <form class="form-inline" #f="ngForm" style="position:relative; left:20px; bottom:10px"(ngSubmit)="addUserPageLayer(newuserpagelayer)">
             <select id="layer" name="layer" class="form-control" [(ngModel)] = "newuserpagelayer.layerAdminID" required type="text">
                 <option [value]="layerpermission.layer_admin['ID']" *ngFor="let layerpermission of layerpermissions">
                     {{layerpermission.layer_admin['layerName']}}

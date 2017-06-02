@@ -10,9 +10,9 @@
     "moduleResolution": "node",
     "outDir": "../dist/out-tsc",
     "sourceMap": true,
-    "target": "es5",
-    "typeRoots": [
+    "target": "es5"
+   /* "typeRoots": [
       "../node_modules/@types"
-    ]
+    ]*/ //This may be preventing the typings folder from being used
   }
 }

@@ -36,7 +36,7 @@
     </div>    
     <form class="form-inline" #e="ngForm" style="position:relative; left:20px" *ngFor="let layeradmin of layeradmins">
         <!--<i (click)="deleteLayer(layeradmin.ID)" class="fa fa-times" aria-hidden="true"></i>-->
-        <button id="btnOpenDel" class="fa fa-times" (click)="setFlag()"></button><!--Use [(ngClass])?-->
+        <button id="btnOpenDel" class="fa fa-times" (click)="opendelete(layeradmin.ID)"></button><!--Use [(ngClass])?-->
         <!--<confirmdelete *ngIf="flag===true"></confirmdelete>-->
         <input id="exlayername" ngModel required name="exlayername" title="{{layeradmin.layerName}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
         <select id="exlayertype" ngModel required name="exlayertype" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerType" type="text" (blur)="updateLayer(layeradmin)">
@@ -53,7 +53,7 @@
         <!-- Display modal: users that have permissions with specific layer; Redirect to: layerpermission component via openpermission()-->
         <button class="btn btn-outline-primary" title="Open layer permissions" (click)="openpermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>
     </form>
-    <confirmdelete *ngIf="flag===true"></confirmdelete>
+    <!--<confirmdelete *ngIf="flag===true"></confirmdelete>-->
 </div>        
 
 <!-- Display modal: create new layer; Redirect to: layernew component via opennew()-->

@@ -1,5 +1,6 @@
-/// <reference path="../../../../node_modules/@types/password-hash-and-salt/index.d.ts" />
-/// <reference path="../../../../node_modules/@types/crypto-js/index.d.ts" />
+/// <reference types="password-hash-and-salt" />
+/// <reference types="node" />
+/// <reference types="jsonwebtoken" />
 
 import { Component, Input, OnInit } from '@angular/core';
 //import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -21,7 +22,8 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { PageComponent } from '../page/page.component'
 import { PageConfigComponent } from '../page/pageconfig.component'
 import { Md5 } from 'ts-md5/dist/md5'
-//import * as pHash from 'password-hash-and-salt'
+import * as pHash from 'password-hash-and-salt'
+import * as jwt from 'jsonwebtoken'
 //import { hash } from 'bcrypt'
 //import {hash, genSalt} from "bcrypt/bcrypt.js"
 
@@ -60,6 +62,7 @@ export class UserComponent implements OnInit{
 
     constructor(private api2service: Api2Service, private roleservice: RoleService, private modalService: NgbModal, private userpageService: UserPageService, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService) {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      console.log(currentUser)
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
     }
@@ -71,6 +74,7 @@ export class UserComponent implements OnInit{
        this.getUserPageItems()
        //this.getGroupItems();
        //this.getRoleItems();
+       console.log(this.users)
 
        
         
@@ -90,9 +94,11 @@ export class UserComponent implements OnInit{
          this.api2service
             .GetAll()
             .subscribe((data:User[]) => this.users = data,
-                error => console.log(error)
+                error => console.log(error),
+                () => console.log()
                 //() => console.log(this.departments[0].department)
                 );
+        console.log(this.users) //this returns nothing
     }
 
     public getRoleItems(): void {
@@ -118,21 +124,20 @@ export class UserComponent implements OnInit{
         //All of this is an attemp to hash things out. Password wise
         //
         //node_modules/hash-and-salt method I think it doesn't work because its taking from NodeJS javascript into typescript
-        var password = require('password-hash-and-salt')
-        console.log(password)
+        var preHash = "Monday01"
         var salt = 'secret'
         var hashedpw = ""
 
         //password('Monday01').hash(salt, hash)
 
         //password('Monday01').hash(function(salt, hash) {
-        password('Monday01').hash(salt, function(salt, hash) {
+        pHash(preHash).hash(function(error, hash) {
             console.log(hash)
-            //if(error)
-                //throw new Error('Hash error')
+            if(error)
+                throw new Error('Hash error')
             hashedpw = hash
 
-            password('hack').verifyAgainst(hashedpw, function(error, verified) {
+            pHash('hack').verifyAgainst(hashedpw, function(error, verified) {
                 if(error)
                     throw new Error('Hack error')
                 if(!verified) {
@@ -173,8 +178,8 @@ export class UserComponent implements OnInit{
     public updateUser(user) {
         this.api2service
             .Update(user)
-            .subscribe(result => {
-                console.log(result);
+            .subscribe(result => { //result is empty, layeradmins isn't
+                console.log(result); //This gets an empty object
                 this.getUserItems();
             })
     }

@@ -63,7 +63,13 @@ export class LayerAdminComponent implements OnInit{
         
     }
 
-    setFlag() {
+    setFlag(layer_id) {
+        this.confDelService.resetDelete()
+        this.currLayer.ID = layer_id
+        console.log(this.objCode, this.currLayer.ID)
+
+        this.confDelService.setVars(this.objCode, this.currLayer.ID)
+        console.log(this.confDelService.getVars())
         this.flag = true
         console.log(this.flag)
     }
@@ -158,14 +164,14 @@ export class LayerAdminComponent implements OnInit{
                 () => console.log()
                 );
         this.sortedOldToNew = this.layeradmins
-        console.log(this.sortedOldToNew)
+        console.log(this.layeradmins)
     }
 
     public updateLayer(layer) {
         this.layerAdminService
             .Update(layer)
             .subscribe(result => {
-                console.log(result);
+                console.log(result); //this returns the correct result, a populated object
                 this.getLayerItems();
             })
     }

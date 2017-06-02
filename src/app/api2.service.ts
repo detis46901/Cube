@@ -21,7 +21,10 @@ export class Api2Service {
     }
  
     public GetAll = (): Observable<User[]> => {
-        console.log(this.actionUrl)
+        console.log(this.actionUrl + 'list')
+        console.log(this._http.get(this.actionUrl + 'list')
+            .map((response: Response) => <User[]>response.json()))
+
         return this._http.get(this.actionUrl + 'list')
             .map((response: Response) => <User[]>response.json())
 //            .catch(this.handleError);
@@ -68,8 +71,11 @@ export class Api2Service {
             .map((response: Response) => <User>response.json())
  //           .catch(this.handleError);
     }
- 
+    
+    //WHAT IS WRONG WITH THIS look at layeradmin service
     public Update = (itemToUpdate: User): Observable<User> => {
+        console.log(this._http.put(this.actionUrl + '/update', JSON.stringify(itemToUpdate), { headers: this.headers })
+            .map((response: Response) => <User>response.json()))
         return this._http.put(this.actionUrl + '/update', JSON.stringify(itemToUpdate), { headers: this.headers })
             .map((response: Response) => <User>response.json())
  //           .catch(this.handleError);

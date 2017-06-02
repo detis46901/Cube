@@ -59,7 +59,8 @@ export class ConfirmdeleteComponent implements OnInit {
 	}
 
 	onClick() {
-		this.clicked.emit(false);
+		this.clicked.emit(true);
+		//this.activeModal.dismiss();
 	}
 
 	open(content) {
