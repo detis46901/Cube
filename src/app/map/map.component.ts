@@ -47,7 +47,7 @@ export class MapComponent {
     }
 
     //Class variables
-    public _map: any;
+    public _map: L.Map;
 
     //GeoJSON
     //public geoTest: Observable<GeoJSON.GeoJsonObject>;
@@ -135,16 +135,37 @@ export class MapComponent {
         L.control.zoom({ position: "bottomright" }).addTo(this._map);
         L.control.scale().addTo(this._map);
         this.mapService.map = this._map;
+        console.log(this._map)
 
         //var url = 'http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetMap&typeName=Kokomo:point&srsName=ESPG:4326&outputFormat=application%2Fjson'
-        this.wfsFeed = this.wfsservice.loadWFS("http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=Kokomo:Bench_Marks&srsName=EPSG:4326&maxFeatures=50&outputFormat=application%2Fjson")
-        console.log(this.wfsFeed)                                                                                                                                                               //4326
+                                                                                                                                                                                                //4326
+        //var myLayer = L.geoJSON().addTo(this._map)
+        //myLayer.addData(value)
+
+        var geoMap = this._map;
+        
+        var observer = {
+            next: function(value) {
+                console.log(value)
+                this._map = L.geoJSON(value).addTo(geoMap)
+            }
+        }
+        
+        
+        
+        this.wfsservice.loadWFS("http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&styles=Kokomo:point&typeName=Kokomo:Bench_Marks&srsName=EPSG:4326&maxFeatures=150&outputFormat=application%2Fjson")
+        .subscribe(observer)
+        //this._map.addLayers(this.wfsFeed) ^^^I don't think this is actually being added as a layer to the baseMap
+
+        //L.geoJSON()
+        console.log(this.wfsFeed)                                                                                                                                                               
         //this.opengeo();
         //this.openkml();
 
         //Essentially same as above but with arguments 
         //this.openjson('http://foster2.cityofkokomo.org:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json') //Can't be opened currently: "No 'Access-Control-Allow-Origin" header
         //this.openkml('http://foster2.cityofkokomo.org:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json')
+        
     }   
 
     //This method sets flags for use with the "Layers in Map Component" map.component.html control in order to determine

@@ -201,6 +201,10 @@ export class UserComponent implements OnInit{
             })
     }
 
+    public changePassword() {
+        
+    }
+
     //Also delete all user_pages(userID) == userID, user_page_layers(userID), layer_permissions(userID)
     public deleteUser(userID) {
         console.log(userID)

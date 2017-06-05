@@ -1,6 +1,7 @@
 import {Http, Headers, Response} from "@angular/http";
 import {Location} from "../core/location.class";
 import {Injectable} from "@angular/core";
+import {Observable} from 'rxjs'
 
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mergeMap";
@@ -23,11 +24,15 @@ export class WFSService {
         this.styleHead.append('Accept', 'application/json');
     }
 
-    loadWFS(path: string) {
-
-        this.http.get(path, {headers: this.headers})
+    /*loadWFS(path: string) {
+       this.http.get(path, {headers: this.headers})
             .map((response: Response) => <any>response.json())
-            .subscribe(data => {console.log(data); return(data)})
+            .subscribe(data => {console.log(data); return (data)})
+    }*/
+
+    loadWFS(path: string): Observable<any> {
+      return this.http.get(path, {headers: this.headers})
+            .map((response: Response) => <any>response.json())
     }
 
     loadStyles(path: string) {
