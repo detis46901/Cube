@@ -62,6 +62,7 @@ import { FilterPipe } from '../_pipes/rowfilter.pipe';
 import { PagePipe } from '../_pipes/rowfilter2.pipe';
 import { NumFilterPipe } from '../_pipes/numfilter.pipe';
 import { ConfirmdeleteService } from '../_services/confirmdelete.service';
+import { WFSService } from '../app/map/services/wfs.service'
 
 @NgModule({
   declarations: [
@@ -131,7 +132,8 @@ import { ConfirmdeleteService } from '../_services/confirmdelete.service';
     UserPageLayerService,
     UserPageService,
     ConfirmdeleteService,
-    Configuration, 
+    Configuration,
+    WFSService, 
     BaseRequestOptions], 
   bootstrap: [AppComponent]
 })

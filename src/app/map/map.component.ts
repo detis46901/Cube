@@ -5,6 +5,7 @@
 //Import statements
 import { ElementRef, Component, ViewChild } from '@angular/core';
 import { MapService } from "./services/map.service";
+import { WFSService } from "./services/wfs.service";
 import { Location } from "./core/location.class";
 import { GeocodingService } from "./services/geocoding.service";
 import { NavigatorComponent } from "./navigator/navigator.component";
@@ -35,7 +36,7 @@ export class MapComponent {
     @ViewChild(MarkerComponent) markerComponent: MarkerComponent;
 
     //Constructor, elementref is for use in ngAfterViewInit to test the geoJSON file. the rest are necessary for map component to work.
-    constructor(private _http: Http, private elementRef: ElementRef, private mapService: MapService, private geocoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http:Http) {
+    constructor(private _http: Http, private elementRef: ElementRef, private mapService: MapService, private wfsservice: WFSService, private geocoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http:Http) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
@@ -67,6 +68,7 @@ export class MapComponent {
     //objects is used in the openjson() method
     public objects: any
     public currPage: any
+    public wfsFeed: any
 
 
     ngOnChanges() {
@@ -134,7 +136,9 @@ export class MapComponent {
         L.control.scale().addTo(this._map);
         this.mapService.map = this._map;
 
-        //Neither of these are operational yet due to import/reference issues
+        //var url = 'http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetMap&typeName=Kokomo:point&srsName=ESPG:4326&outputFormat=application%2Fjson'
+        this.wfsFeed = this.wfsservice.loadWFS("http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=Kokomo:Bench_Marks&srsName=EPSG:4326&maxFeatures=50&outputFormat=application%2Fjson")
+        console.log(this.wfsFeed)                                                                                                                                                               //4326
         //this.opengeo();
         //this.openkml();
 
