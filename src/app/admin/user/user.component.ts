@@ -1,6 +1,7 @@
-/// <reference types="password-hash-and-salt" />
+/// <reference path="../../../../node_modules/@types/node/index.d.ts" />
 /// <reference types="node" />
 /// <reference types="jsonwebtoken" />
+/// <reference types="password-hash-and-salt" />
 
 import { Component, Input, OnInit } from '@angular/core';
 //import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -113,17 +114,7 @@ export class UserComponent implements OnInit{
 
     public addUser(newuser) {
         this.newuser = newuser
-        /*var AES = require("crypto-js/aes");
-        var SHA256 = require("crypto-js/sha256");
-        var cryptoJS = require("crypto-js");
-        var cipherText = cryptoJS.AES.en
 
-
-        console.log(SHA256("Message"));*/
-
-        //All of this is an attemp to hash things out. Password wise
-        //
-        //node_modules/hash-and-salt method I think it doesn't work because its taking from NodeJS javascript into typescript
         var preHash = "Monday01"
         var salt = 'secret'
         var hashedpw = ""

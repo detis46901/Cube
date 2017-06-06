@@ -24,6 +24,7 @@
     "@angular/platform-browser-dynamic": "^4.1.1",
     "@angular/platform-server": "^4.1.1",
     "@angular/router": "^4.1.1",
+    "@mapbox/togeojson": "^0.16.0",
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.15",
     "@types/bcrypt": "^1.0.0",
     "@types/crypto-js": "^3.1.33",

@@ -1,6 +1,7 @@
 /// <reference path="../../../typings/leaflet/leaflet.d.ts" />
 /// <reference path="../../../typings/geojson/geojson.d.ts" />
 /// <reference path="../../../typings/kml/kml.d.ts" />
+/// <reference path="../../../typings/leaflet/leaflet-omnivore.d.ts" />
 
 //Import statements
 import { ElementRef, Component, ViewChild } from '@angular/core';
@@ -20,6 +21,7 @@ import { UserPageLayerService } from '../../_services/user-page-layer.service'
 import { Http, Response, Headers } from '@angular/http'
 import * as leaf from 'leaflet'
 import { Observable } from 'rxjs/Observable';
+import * as omni from 'leaflet-omnivore';
 
 @Component({
   selector: 'map',
@@ -49,9 +51,10 @@ export class MapComponent {
     //Class variables
     public _map: L.Map;
 
-    //GeoJSON
-    //public geoTest: Observable<GeoJSON.GeoJsonObject>;
+    //GeoJSON testing variables
+    public geoFlag = false;
     public geoTest: any;
+    public geoURL = "http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&styles=Kokomo:point&typeName=Kokomo:Bench_Marks&srsName=EPSG:4326&maxFeatures=150&outputFormat=application%2Fjson";
 
     //Database information
     public layers: MapService;
@@ -132,39 +135,23 @@ export class MapComponent {
             layers: [this.mapService.baseMaps.OpenStreetMap]
         });       
 
+        
+
         L.control.zoom({ position: "bottomright" }).addTo(this._map);
         L.control.scale().addTo(this._map);
         this.mapService.map = this._map;
         console.log(this._map)
 
         //var url = 'http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetMap&typeName=Kokomo:point&srsName=ESPG:4326&outputFormat=application%2Fjson'
-                                                                                                                                                                                                //4326
-        //var myLayer = L.geoJSON().addTo(this._map)
-        //myLayer.addData(value)
 
-        var geoMap = this._map;
-        
-        var observer = {
-            next: function(value) {
-                console.log(value)
-                this._map = L.geoJSON(value).addTo(geoMap)
-            }
-        }
-        
-        
-        
-        this.wfsservice.loadWFS("http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&styles=Kokomo:point&typeName=Kokomo:Bench_Marks&srsName=EPSG:4326&maxFeatures=150&outputFormat=application%2Fjson")
-        .subscribe(observer)
-        //this._map.addLayers(this.wfsFeed) ^^^I don't think this is actually being added as a layer to the baseMap
+        //this.opengeo(this.geoURL)
+        //this.openkml(this.geoURL)
 
-        //L.geoJSON()
+        /*this.wfsservice.loadKML("http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&styles=Kokomo:point&typeName=Kokomo:Bench_Marks&srsName=EPSG:4326&maxFeatures=150&outputFormat=application%2Fjson")
+        .subscribe(observerK)*/
         console.log(this.wfsFeed)                                                                                                                                                               
-        //this.opengeo();
         //this.openkml();
 
-        //Essentially same as above but with arguments 
-        //this.openjson('http://foster2.cityofkokomo.org:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json') //Can't be opened currently: "No 'Access-Control-Allow-Origin" header
-        //this.openkml('http://foster2.cityofkokomo.org:8080/geoserver/sf/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sf:archsites&maxFeatures=50&outputFormat=application/json')
         
     }   
 
@@ -206,6 +193,7 @@ export class MapComponent {
 
     //Reads index of layer in dropdown, layeradmin, and if it is shown or not. Needs to remove a layer if a new one is selected
     public toggleLayers(index, layers, checked) {
+        console.log(layers)
         this.layeradmin = layers
         //console.log (this.layeradmin)
         //console.log (checked)
@@ -222,9 +210,10 @@ export class MapComponent {
             format: this.layeradmin.layerFormat,
             transparent: true,}))
             this.userpagelayers[index].layerShown = false
+            
         }
 
-        else {
+        else { 
             console.log (checked)
             this._map.removeLayer(this.currentlayer)
             //console.log(this.currentlayer)
@@ -240,32 +229,65 @@ export class MapComponent {
             () => (console.log(this.objects), this.loadjson())) //This is getting nothing
     }
 
-    public opengeo () {
-        this._http.get("http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Kokomo:Bench_Marks&maxFeatures=50&outputFormat=application%2Fjson", {headers: this.headers})
-            .map((response: Response) => <GeoJSON.GeoJsonObject>response.json())
-            .subscribe((data: GeoJSON.GeoJsonObject) => this.geoTest = data) //Don't know if this is the right conversion, or if it's even doing anything.
-            //Getting an error that says the headers are not correct as well. Not sure where that needs to be set (Server or API)
+    public opengeo (flag, URL) {
+        console.log(flag)
+
+        function onEach (feature, layer) {
+            //layer.bindPopup(geojson features)
+            layer.bindPopup("Hello")
+        }
+
+        var myStyle = {
+            "color": '#ff0000',
+            "weight": 5
+        }
+
+        var geoMap = this._map;
+        var thisLayer = this.currentlayer
         
-        
-         this.mapService.map.addLayer(L.tileLayer("http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
-        }))
-       // L.geoJSON()  //This is key in figuring out how to get KML to work, because there is a kml to geoJSON conversion method
+        //observer variable used in GeoJSON subscription, function parameter after value in L.geoJSON uses onEachFeature to allow clicking of features
+        var observer = {
+            next: function(value) {
+                console.log(value)
+                thisLayer = L.geoJSON(value)
+                L.geoJSON(value, {
+                    onEachFeature: onEach
+                    //style: myStyle
+                }).addTo(geoMap)
+            }
+        }
+
+        //Add geoJSON if none exists yet
+        if(!flag) {
+            console.log("if")
+            
+            var observerK = {
+                next: function(value) {
+                    //this._map = L.KML.addKML(value).addTo(geoMap)
+                }   
+            }
+            
+            
+            //Uses defined variable "observer" to subscribe to the wfsservice loadWFS observable, which finds the given URL below on Geoserver
+            this.wfsservice.loadWFS(URL)
+                .subscribe(observer)
+
+            this.geoFlag = true
+        }
+
+        //remove geoJSON layer from map if it exists on map
+        else {
+            //this._map.removeLayer(thisLayer)
+            this.setUserPageLayers(this.defaultpage)
+            this.geoFlag = false
+        }
     }
 
-    //Can't seem to find the import file in index
-    /*public openkml () {
-        var leaf = require('leaflet-plugins')
-        var _tile = L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
-        var k = L.KML('http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/wms?service=wms&request=GetMap&version=1.1.1&format=application/vnd.google-earth.kml+xml&layers=Kokomo:Pipes&styles=Pipes&height=2048&width=2048&transparent=false&srs=EPSG:4326&format_options=AUTOFIT:true;KMATTR:true;KMPLACEMARK:false;KMSCORE:60;MODE:refresh;SUPEROVERLAY:false', {async: true})
-        k.on("loaded", function(e) {
-            //this._map.fitBounds(e.target.getBounds())
-        })
-        this._map.addLayer(k);
-        this._map.addLayer(_tile)
-        console.log(leaf)
-        //this._map.addControl(new L.Control.Layers({}, {'Track':_tile }))
-    }*/
+    //kml can't be delivered by wfs, only wms. Need to focus more on gml than kml at the moment.
+    public openkml (URL) {
+        L.KML.addKML(URL)
+        //L.KML.addKML(URL)
+    }
 
     public loadjson() {
         console.log(this.objects) //Undefined here as well as in openjson

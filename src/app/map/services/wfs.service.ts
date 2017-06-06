@@ -30,8 +30,14 @@ export class WFSService {
             .subscribe(data => {console.log(data); return (data)})
     }*/
 
+    //modify to accept any GeoJSON resource from Geoserver using standards exemplified in other services
     loadWFS(path: string): Observable<any> {
       return this.http.get(path, {headers: this.headers})
+            .map((response: Response) => <any>response.json())
+    }
+
+    loadKML(path: string): Observable<any> {
+        return this.http.get(path, {headers: this.headers})
             .map((response: Response) => <any>response.json())
     }
 

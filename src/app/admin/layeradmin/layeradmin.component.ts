@@ -13,7 +13,6 @@ import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmdeleteService } from '../../../_services/confirmdelete.service';
 import { Observable } from 'rxjs/Observable';
-import $ from 'jquery';
 
 @Component({
   selector: 'layeradmin',

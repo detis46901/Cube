@@ -43,6 +43,7 @@ import { ModulesComponent } from './admin/modules/modules.component';
 import { DefaultsComponent } from './admin/defaults/defaults.component';
 import { BoundariesComponent } from './admin/boundaries/boundaries.component';
 import { NotificationsComponent } from './admin/notifications/notifications.component'
+import { GeoserverComponent } from './admin/geoserver/geoserver.component';
 
 import { ConfirmdeleteComponent } from './admin/confirmdelete/confirmdelete.component';
 
@@ -62,7 +63,7 @@ import { FilterPipe } from '../_pipes/rowfilter.pipe';
 import { PagePipe } from '../_pipes/rowfilter2.pipe';
 import { NumFilterPipe } from '../_pipes/numfilter.pipe';
 import { ConfirmdeleteService } from '../_services/confirmdelete.service';
-import { WFSService } from '../app/map/services/wfs.service'
+import { WFSService } from '../app/map/services/wfs.service';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { WFSService } from '../app/map/services/wfs.service'
     ModulesComponent,
     DefaultsComponent,
     BoundariesComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    GeoserverComponent
   ],
 
   entryComponents: [LayerNewComponent, LayerPermissionComponent, PageComponent, PageConfigComponent, ConfirmdeleteComponent],
