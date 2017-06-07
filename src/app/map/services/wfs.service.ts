@@ -38,7 +38,7 @@ export class WFSService {
 
     loadKML(path: string): Observable<any> {
         return this.http.get(path, {headers: this.headers})
-            .map((response: Response) => <any>response.json())
+            .map((response: Response) => <any>response.toString())
     }
 
     loadStyles(path: string) {

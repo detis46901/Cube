@@ -23,7 +23,7 @@ import { Observable } from 'rxjs/Observable';
 
 export class LayerAdminComponent implements OnInit{
 
-    
+    public deleteThis = false;
     public flag = false;
 
     private objCode = 2
@@ -61,6 +61,14 @@ export class LayerAdminComponent implements OnInit{
        //this.getGroupItems();
        //this.getRoleItems();
         
+    }
+
+    onClicked(deleteFlag) {
+        this.deleteThis = deleteFlag
+        console.log(this.deleteThis)
+        console.log(this.confDelService.getVars())
+        console.log(this.currLayer.ID)
+        this.deleteLayer(this.currLayer.ID)
     }
 
     setFlag(layer_id) {
@@ -109,6 +117,8 @@ export class LayerAdminComponent implements OnInit{
 
         this.modalService.open(ConfirmdeleteComponent);
         console.log(this.confDelService.delete_obj)
+
+        //Something here with $event probably
 
         /*var deleteObserver = {
             next: function(flag) {

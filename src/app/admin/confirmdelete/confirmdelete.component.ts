@@ -17,7 +17,7 @@ export class ConfirmdeleteComponent implements OnInit {
 	//@Input() objectID = 0;
 	//@Output() deleteThis: boolean;
 
-	@Output() clicked = new EventEmitter<boolean>();
+	@Output() clicked: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	public delFlag: boolean;
 	closeResult: string;
@@ -59,6 +59,7 @@ export class ConfirmdeleteComponent implements OnInit {
 	}
 
 	onClick() {
+		console.log('True')
 		this.clicked.emit(true);
 		//this.activeModal.dismiss();
 	}

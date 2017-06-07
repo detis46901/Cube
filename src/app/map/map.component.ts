@@ -1,8 +1,3 @@
-/// <reference path="../../../typings/leaflet/leaflet.d.ts" />
-/// <reference path="../../../typings/geojson/geojson.d.ts" />
-/// <reference path="../../../typings/kml/kml.d.ts" />
-/// <reference path="../../../typings/leaflet/leaflet-omnivore.d.ts" />
-
 //Import statements
 import { ElementRef, Component, ViewChild } from '@angular/core';
 import { MapService } from "./services/map.service";
@@ -19,9 +14,8 @@ import { UserPageLayer, ControlLayers } from '_models/layer.model';
 import { UserPage } from '../../_models/user-model';
 import { UserPageLayerService } from '../../_services/user-page-layer.service'
 import { Http, Response, Headers } from '@angular/http'
-import * as leaf from 'leaflet'
 import { Observable } from 'rxjs/Observable';
-import * as omni from 'leaflet-omnivore';
+//import * as omnivore from 'leaflet-omnivore';
 
 @Component({
   selector: 'map',
@@ -53,8 +47,12 @@ export class MapComponent {
 
     //GeoJSON testing variables
     public geoFlag = false;
-    public geoTest: any;
     public geoURL = "http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&styles=Kokomo:point&typeName=Kokomo:Bench_Marks&srsName=EPSG:4326&maxFeatures=150&outputFormat=application%2Fjson";
+    public geoTest: any;
+
+    public kmlFlag = false;
+    public kmlURL = "http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/wms?service=wms&request=GetMap&version=1.1.1&format=application/vnd.google-earth.kml+xml&layers=Kokomo:Bench_Marks&styles=point&height=2048&width=2048&transparent=false&srs=EPSG:4326&format_options=AUTOFIT:true;KMATTR:true;KMPLACEMARK:false;KMSCORE:60;MODE:refresh;SUPEROVERLAY:false&BBOX=-87,40,-86,41"
+    
 
     //Database information
     public layers: MapService;
@@ -236,7 +234,6 @@ export class MapComponent {
             //layer.bindPopup(geojson features)
             layer.bindPopup("Hello")
         }
-
         var myStyle = {
             "color": '#ff0000',
             "weight": 5
@@ -251,22 +248,17 @@ export class MapComponent {
                 console.log(value)
                 thisLayer = L.geoJSON(value)
                 L.geoJSON(value, {
-                    onEachFeature: onEach
-                    //style: myStyle
+                    onEachFeature: onEach,
+                    style: function(value) {
+                        return myStyle;
+                    } //not working
                 }).addTo(geoMap)
             }
         }
 
         //Add geoJSON if none exists yet
         if(!flag) {
-            console.log("if")
-            
-            var observerK = {
-                next: function(value) {
-                    //this._map = L.KML.addKML(value).addTo(geoMap)
-                }   
-            }
-            
+            console.log("if")         
             
             //Uses defined variable "observer" to subscribe to the wfsservice loadWFS observable, which finds the given URL below on Geoserver
             this.wfsservice.loadWFS(URL)
@@ -283,10 +275,33 @@ export class MapComponent {
         }
     }
 
-    //kml can't be delivered by wfs, only wms. Need to focus more on gml than kml at the moment.
-    public openkml (URL) {
-        L.KML.addKML(URL)
-        //L.KML.addKML(URL)
+    public openkml (flag, URL) {
+        console.log(flag)
+
+        var observer = {
+                next: function(value) {
+                console.log(value)
+            }
+        }
+
+        if(!flag) {
+            console.log("if")         
+            
+            //Uses defined variable "observer" to subscribe to the wfsservice loadWFS observable, which finds the given URL below on Geoserver
+            this.wfsservice.loadKML(URL)
+                .subscribe(observer)
+
+            //omnivore.kmlLoad()
+
+            this.kmlFlag = true
+        }
+
+        //remove geoJSON layer from map if it exists on map
+        else {
+            //this._map.removeLayer(thisLayer)
+            this.setUserPageLayers(this.defaultpage)
+            this.kmlFlag = false
+        }
     }
 
     public loadjson() {
