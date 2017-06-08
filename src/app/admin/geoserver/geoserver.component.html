@@ -1,3 +1,20 @@
+<h3>Geoserver Instances</h3>
+<hr>
 <div style="position:relative; left:20px"class="row">
-    <h4>Create a page that lists geoserver instances available and allows user to choose which to select. Selection allows importing of layers from that geoserver library and open a modal to do that.</h4>
+    <div class="row">
+        <div class="col-md-6">
+            <!--<form class="form-inline" #e="ngForm" style="position:relative; left:20px" *ngFor="let layeradmin of layeradmins">-->
+            <h4>Instance name: {{geoName}}</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <h4>URL: {{geoURL}}</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <h4>Additional details: {{geoEtc}}</h4>
+        </div>
+    </div>
 </div>

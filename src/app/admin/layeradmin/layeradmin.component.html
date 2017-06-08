@@ -1,7 +1,7 @@
 <!-- This defines the component redirected to by the "Layers" option in the navigation sidepane.-->
 <div style="width:100%">
     <!-- Displays user layers-->
-    <div class="row" style="position:relative; bottom:3px; left:20px">
+    <div class="row" style="position:relative; bottom:3px; left:40px">
         <div class="col-md-1" style="left:15px">
             <h4>Name</h4>
         </div>
@@ -20,14 +20,16 @@
         <div class="col-md-1" style="right:68px">
             <h4>Description</h4>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
+            <!-- Display modal: create new layer; Redirect to: layernew component via opennew()-->
+            <button class="btn btn-primary" style="position:relative; top:5px; right:40px" (click)="opennew()">Create Layer</button>
             <div ngbDropdown style="position:absolute; left:90px; top:10px">   
                 <button id="sort" type="button" style="position:absolute;height:25px;width:100px;left:0px;top:0px" class="btn-primary" ngbDropdownToggle (click)="sortPages()">Sort Layers</button>
                 <div id="sortDrop" class="dropdown-menu dropdown-menu-right" style="position:relative; top:22px" aria-labelledby="options">
                     <button type="button" style="position:relative; left:5px; margin-bottom:5px"class="btn btn-secondary">Name (Ascending)</button>
                     <button type="button" style="position:relative; left:5px; margin-bottom:5px"class="btn btn-secondary">Name (Descending)</button>
                     <button type="button" style="position:relative; left:5px; margin-bottom:5px"class="btn btn-secondary">Type</button>
-                    <button type="button" style="position:relative; left:5px; margin-bottom:5px"class="btn btn-secondary">Old to New</button>
+                    <button type="button" style="position:relative; left:5px; margin-bottom:5px"class="btn btn-secondary">Old to New</button><br>
                     <button type="button" style="position:relative; left:5px; margin-bottom:5px"class="btn btn-secondary">New to Old</button>
                 </div>
             </div>
@@ -36,7 +38,7 @@
     </div>    
     <form class="form-inline" #e="ngForm" style="position:relative; left:20px" *ngFor="let layeradmin of layeradmins">
         <!--<i (click)="deleteLayer(layeradmin.ID)" class="fa fa-times" aria-hidden="true"></i>-->
-        <button id="btnOpenDel" class="fa fa-times" (click)="setFlag(layeradmin.ID)"></button><!--Use [(ngClass])?-->
+        <i id="btnOpenDel" class="fa fa-times" (click)="setFlag(layeradmin.ID)"></i><!--Use [(ngClass])?-->
         <input id="exlayername" ngModel required name="exlayername" title="{{layeradmin.layerName}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
         <select id="exlayertype" ngModel required name="exlayertype" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerType" type="text" (blur)="updateLayer(layeradmin)">
             <option>PostGIS</option>
@@ -55,8 +57,7 @@
     <confirmdelete *ngIf="flag===true" (clicked)="onClicked($event)"></confirmdelete>
 </div>        
 
-<!-- Display modal: create new layer; Redirect to: layernew component via opennew()-->
-<button class="btn btn-default" style="position:relative; top:5px; left:35px" (click)="opennew()">Create Layer</button>
+
 
 <template ngbModalContainer></template>
 

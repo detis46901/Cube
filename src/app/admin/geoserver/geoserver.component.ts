@@ -7,6 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GeoserverComponent implements OnInit {
 
+  public geos: any;
+
+  public geoName: string = 'placeholder';
+  public geoURL: string = 'placeholder';
+  public geoEtc: string = 'placeholder';
+
   constructor() { }
 
   ngOnInit() {

@@ -1,3 +1,7 @@
+//6/8/17 - Causes a detrimental compile-time error... why?
+/// <reference path='../../../typings/leaflet.d.ts'/>
+/// <reference path='../../../typings/leaflet-omnivore.d.ts'/>
+
 //Import statements
 import { ElementRef, Component, ViewChild } from '@angular/core';
 import { MapService } from "./services/map.service";
@@ -9,13 +13,13 @@ import { MarkerComponent } from "./marker/marker.component";
 import { LayerPermissionService } from "../../_services/layerpermission.service"
 import { LayerAdminService } from "../../_services/layeradmin.service"
 import { UserPageService } from '../../_services/user-page.service'
-import { LayerPermission, LayerAdmin } from "../../_models/layer.model"
-import { UserPageLayer, ControlLayers } from '_models/layer.model';
+import { LayerPermission, LayerAdmin, UserPageLayer, ControlLayers } from "../../_models/layer.model";
 import { UserPage } from '../../_models/user-model';
 import { UserPageLayerService } from '../../_services/user-page-layer.service'
 import { Http, Response, Headers } from '@angular/http'
 import { Observable } from 'rxjs/Observable';
-//import * as omnivore from 'leaflet-omnivore';
+//6/8/17
+import * as omni from 'leaflet-omnivore';
 
 @Component({
   selector: 'map',
@@ -37,6 +41,7 @@ export class MapComponent {
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
 
+
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
         this.headers.append('Accept', 'application/json');
@@ -44,6 +49,8 @@ export class MapComponent {
 
     //Class variables
     public _map: L.Map;
+    
+    
 
     //GeoJSON testing variables
     public geoFlag = false;
@@ -278,6 +285,9 @@ export class MapComponent {
     public openkml (flag, URL) {
         console.log(flag)
 
+        let opt: any;
+        let runLayer: any;
+
         var observer = {
                 next: function(value) {
                 console.log(value)
@@ -291,7 +301,9 @@ export class MapComponent {
             this.wfsservice.loadKML(URL)
                 .subscribe(observer)
 
-            //omnivore.kmlLoad()
+            //6/8/17
+            runLayer = omnivore.kmlLoad(URL, opt, L.geoJSON())
+            console.log(runLayer)
 
             this.kmlFlag = true
         }

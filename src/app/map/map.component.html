@@ -5,10 +5,11 @@
 <script src="../../assets/KML.js"></script>
 <script src="../../assets/stations.js"></script>-->
 
-<button class="btn btn-primary" style="position:relative; left:760px; top:20px" (click)="opengeo(kmlFlag, kmlURL)">KML</button>
-<button class="btn btn-primary" style="position:relative; left:800px; top:20px" (click)="opengeo(geoFlag, geoURL)">GeoJSON</button>
 
 <div class="w3-display-topright" style="top:43px">
+    <button class="btn btn-primary" style="position:relative; left:0px; top:20px" (click)="openkml(kmlFlag, kmlURL)">KML</button>
+    <button class="btn btn-primary" style="position:relative; left:0px; top:20px" (click)="opengeo(geoFlag, geoURL)">GeoJSON</button>
+
     <div ngbDropdown class="d-inline-block">
         <button class="btn btn-outline-primary" style="position:absolute;right:83px" id="dropdownMenu1" ngbDropdownToggle>{{currPage}}</button><!--Perhaps using ngIf, interpolate the active page name as the button text if a page is selected-->
         <div class="dropdown-menu dropdown-menu-right" style="position:absolute;top:60px" aria-labelledby="dropdownMenu1">
