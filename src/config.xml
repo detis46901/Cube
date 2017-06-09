@@ -4,5 +4,30 @@
     
     -Establish a standard password "Monday01" as default
     -Establish the URLs and ports that are used in this project
+    -Geoserver instance information
     -Anything else that needs to be standardized project-wide
+
+    6/9/17: This is not implemented in any project files yet, this is a simple template to build upon.
+    How to consume/reference this from another file is probably the next step, after this file is syntactically correct.
 -->
+
+<!--Josh Church 6/9/17: This is obviously a prototype and probably isn't functional as of yet.-->
+<?xml version="1.0" encoding="UTF-8"?>
+<standards>
+    <project_title>Cube</project_title>
+    <hosturl>http://foster2.cityofkokomo.org</hosturl>
+    <password>Monday01</password>
+    <Server>
+        <port>:4200</port>
+    </Server>
+    <API>
+        <port>:5000</port>
+    </API>
+    <geoserver>
+        <port>:8080</port>
+        <path>/geoserver</path>
+    </geoserver>
+</standards>
+
+
+

@@ -1,6 +1,5 @@
-//6/8/17 - Causes a detrimental compile-time error... why?
 /// <reference path='../../../typings/leaflet.d.ts'/>
-/// <reference path='../../../typings/leaflet-omnivore.d.ts'/>
+// <reference path='../../../typings/leaflet-omnivore.d.ts'/>
 
 //Import statements
 import { ElementRef, Component, ViewChild } from '@angular/core';
@@ -18,8 +17,9 @@ import { UserPage } from '../../_models/user-model';
 import { UserPageLayerService } from '../../_services/user-page-layer.service'
 import { Http, Response, Headers } from '@angular/http'
 import { Observable } from 'rxjs/Observable';
+
 //6/8/17
-import * as omni from 'leaflet-omnivore';
+//import omnivore = require('leaflet-omnivore');
 
 @Component({
   selector: 'map',
@@ -40,7 +40,6 @@ export class MapComponent {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
-
 
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
@@ -123,6 +122,7 @@ export class MapComponent {
     }
 
     public init_map() {
+        //this.typeTest()
         this.currPage = this.defaultpage.page
         //console.log("map init started")
         //console.log(this.userpagelayers)
@@ -195,6 +195,11 @@ export class MapComponent {
     public loadLayers() {
         
     }
+
+    /*public typeTest() {
+        let x: omnivore.SomeType = omnivore.someVar.a;
+        console.log(x.count)
+    }*/
 
     //Reads index of layer in dropdown, layeradmin, and if it is shown or not. Needs to remove a layer if a new one is selected
     public toggleLayers(index, layers, checked) {
@@ -285,8 +290,9 @@ export class MapComponent {
     public openkml (flag, URL) {
         console.log(flag)
 
-        let opt: any;
+        let kmlMap = this._map
         let runLayer: any;
+        let maxZoom = 10;
 
         var observer = {
                 next: function(value) {
@@ -301,8 +307,12 @@ export class MapComponent {
             this.wfsservice.loadKML(URL)
                 .subscribe(observer)
 
-            //6/8/17
-            runLayer = omnivore.kmlLoad(URL, opt, L.geoJSON())
+            //6/9/17
+            runLayer = omnivore.kml(URL).on('ready', function() {
+                kmlMap.fitBounds(runLayer.getBounds(), maxZoom);
+            })
+            .addTo(kmlMap);
+
             console.log(runLayer)
 
             this.kmlFlag = true

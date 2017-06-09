@@ -29,6 +29,10 @@ export class Api2Service {
             .map((response: Response) => <User[]>response.json())
 //            .catch(this.handleError);
     }
+
+    /*public GetSome = (userid): Observable<User[]> => {
+        
+    }*/
  
     public GetSingle = (id: number): Observable<User> => {
         return this._http.get(this.actionUrl + 'one?rowid=' + id)

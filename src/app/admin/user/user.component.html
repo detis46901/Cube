@@ -32,11 +32,13 @@
             <input id="exuseremail" ngModel required name="exuseremail" title="{{user.email}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; width:18%" [(ngModel)] = "user.email" type="text" (blur)="updateUser(user)" (change)="updateUser(user)">
             <input id="exuseractive" name="exuseractive" class="form-check-input" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; width:5%" [(ngModel)] = "user.active" type="checkbox" (change)="updateUser(user)">
             <input id="exuseradministrator" name="exuseradministrator" class="form-check-input" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; width:6%" [(ngModel)] = "user.administrator" type="checkbox" (change)="updateUser(user)">
-            <div ngbDropdown style="position:relative; left:920px; top:35px">   
-             <button id="options" class="btn-primary" style="position:absolute; height:30px; width:6%; bottom:36px; border-radius:3px" ngbDropdownToggle>Options</button>
-                <div id="optDrop" style="position:absolute; height:90px; bottom:40px; left:0px; width:19%" class="dropdown-menu dropdown-menu-right" aria-labelledby="options">
-                    <button type="button" style="position:relative; left:5px; margin-bottom:5px" (click)="resetPassword(user.ID)" class="btn btn-secondary">Reset Password</button>
-                    <button type="button" style="position:relative; left:5px" (click)="openPages(user.ID, user.firstName, user.lastName)" class="btn btn-secondary">Pages</button>
+            <div class="w3-display-container">
+                <div ngbDropdown style="position:relative; left:920px; top:35px">   
+                <button id="options" class="btn-primary" style="position:absolute; height:30px; width:6%; bottom:36px; border-radius:3px" ngbDropdownToggle>Options</button>
+                    <div id="optDrop" style="position:absolute; height:90px; bottom:40px; left:0px; width:19%" class="dropdown-menu dropdown-menu-right" aria-labelledby="options">
+                        <button type="button" style="position:relative; left:5px; margin-bottom:5px" (click)="resetPassword(user.ID)" class="btn btn-secondary">Reset Password</button>
+                        <button type="button" style="position:relative; left:5px" (click)="openPages(user.ID, user.firstName, user.lastName)" class="btn btn-secondary">Pages</button>
+                    </div>
                 </div>
             </div>
             <div ngbDropdown style="position:relative; left:1000px; top:35px">

@@ -23,7 +23,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { PageComponent } from '../page/page.component'
 import { PageConfigComponent } from '../page/pageconfig.component'
 import { Md5 } from 'ts-md5/dist/md5'
-import * as pHash from 'password-hash-and-salt'
+import pHash = require('password-hash-and-salt')
 import * as jwt from 'jsonwebtoken'
 //import { hash } from 'bcrypt'
 //import {hash, genSalt} from "bcrypt/bcrypt.js"
