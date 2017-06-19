@@ -29,7 +29,6 @@ public userID: number;
 
     ngOnInit() {
        this.getAllItems(this.userID);
-        
     }
 
     public getAllItems(userid): void {

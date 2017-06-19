@@ -18,7 +18,7 @@ export class HeaderComponent {
     @Input() user: User
     //@Input() isHome = false; //Not currently being used
     @Input() screenCode = 0; //1 for home (map) screen, 2 for admin menu screen, 3 for user settings screen
-    @Input() isOpen = false;
+    @Input() isOpen: boolean;
 
     public menu_toggle(sCode) {
         switch(sCode) {
@@ -37,6 +37,7 @@ export class HeaderComponent {
         }
     }
 
+    
 
     //Code 1
     public home_toggle() {

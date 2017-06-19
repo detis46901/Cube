@@ -2,25 +2,43 @@
 <div style="width:100%">
     <!-- Displays user layers-->
     <div class="row" style="position:relative; bottom:3px; left:40px">
-        <div class="col-md-1" style="left:15px">
+        <div class="col-md-1">
             <h4>Name</h4>
         </div>
-        <div class="col-md-2" style="left:35px">
-            <h4>Type</h4>
+
+        <div class="col-md-1">
+            <div class="row">
+                <div class="col-md-2 col-md-offset-1">
+                    <h4>Type</h4>
+                </div>
+            </div>
         </div>
-        <div class="col-md-2" style="right:45px">
-            <h4>URL</h4>
+
+        <div class="col-md-2">
+            <div class="row">
+                <div class="col-md-2 col-md-offset-3">
+                    <h4>URL</h4>
+                </div>
+            </div>
         </div>
-        <div class="col-md-1" style="right:5px">
+
+        <div class="col-md-1 col-md-offset-1">
             <h4>Identity</h4>
         </div>
-        <div class="col-md-2" style="left:15px">
+
+        <div class="col-md-1">
             <h4>Format</h4>
         </div>
-        <div class="col-md-1" style="right:68px">
-            <h4>Description</h4>
+
+        <div class="col-md-1">
+            <div class="row">
+                <div class="col-md-2 col-md-offset-3">
+                    <h4>Description</h4>
+                </div>
+            </div>
         </div>
-        <div class="col-md-3">
+
+        <div class="col-md-3 col-md-offset-1">
             <!-- Display modal: create new layer; Redirect to: layernew component via opennew()-->
             <button class="btn btn-primary" style="position:relative; top:5px; right:40px" (click)="opennew()">Create Layer</button>
             <div ngbDropdown style="position:absolute; left:90px; top:10px">   

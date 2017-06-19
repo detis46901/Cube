@@ -291,6 +291,7 @@ export class MapComponent {
         console.log(flag)
 
         let kmlMap = this._map
+        let polyTest: any;
         let runLayer: any;
         let maxZoom = 10;
 
@@ -301,7 +302,7 @@ export class MapComponent {
         }
 
         if(!flag) {
-            console.log("if")         
+            console.log("if")   
             
             //Uses defined variable "observer" to subscribe to the wfsservice loadWFS observable, which finds the given URL below on Geoserver
             this.wfsservice.loadKML(URL)
@@ -311,9 +312,16 @@ export class MapComponent {
             runLayer = omnivore.kml(URL).on('ready', function() {
                 kmlMap.fitBounds(runLayer.getBounds(), maxZoom);
             })
+
+            //6/19/17
+            /*.bindPopup(function (layer) {
+                return layer
+                //return layer.Document.Folder.Placemark.ExtendedData
+            })*/
+            .bindPopup("I am useless!")
             .addTo(kmlMap);
 
-            console.log(runLayer)
+            console.log(omnivore.kml(URL))
 
             this.kmlFlag = true
         }
