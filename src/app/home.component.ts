@@ -20,6 +20,7 @@ public isHome = true;
 public myItems: any;
 public token: string;
 public userID: number;
+public isOpen: boolean;
 
     constructor(private dataService: Api2Service) {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -38,5 +39,9 @@ public userID: number;
                 error => console.log(error),
                 () => console.log(this.user.email));
             
+    }
+
+    openListener(open: boolean) {
+        this.isOpen = open;
     }
 }

@@ -1,16 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
+import { Observable } from 'rxjs';
+import { SidenavService } from "../../_services/sidenav.service"
 
 @Component({
     selector: 'sidenav',
     templateUrl: './sidenav.component.html',
-    styleUrls: ['sidenav.component.css']
+    styleUrls: ['sidenav.component.css'],
+    providers: [SidenavService]
 })
 export class SideNavComponent { 
-    public w3_close() {
+
+    constructor(private sidenavService: SidenavService){}
+
+    public hideMenu() {
+        this.onclick()
         document.getElementById("mySidenav").style.width = "0";
-        document.getElementById("place-input").style.marginLeft = "15px";
-        document.getElementById("goto").style.marginLeft = "315px";
-        document.getElementById("add-marker").style.marginLeft = "360px";
-        document.getElementById("remove-marker").style.marginLeft = "400px";
+        document.getElementById("place-input").style.left = "15px";
+        document.getElementById("goto").style.left = "15px";
+        document.getElementById("add-marker").style.left = "15px";
+        document.getElementById("remove-marker").style.left = "15px";
+        console.log(this.sidenavService.getOpen())
+    }
+
+    public onclick() {
+        this.sidenavService.setFalse();
+        console.log(this.sidenavService.getOpen())
     }
 }

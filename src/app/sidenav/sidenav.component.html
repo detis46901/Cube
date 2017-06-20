@@ -1,36 +1,14 @@
-<!--
-<script>
-// Get the Sidenav
-var mySidenav = document.getElementById("mySidenav");
-
-// Get the DIV with overlay effect
-var overlayBg = document.getElementById("myOverlay");
-
-// Toggle between showing and hiding the sidenav, and add overlay effect
-// These might need to be in the ts file (probably should be, but how to implement)
-function w3_open() {
-    if (mySidenav.style.display === 'block') {
-        mySidenav.style.display = 'none';
-        overlayBg.style.display = "none";
-    } else {
-        mySidenav.style.display = 'block';
-        overlayBg.style.display = "block";
-    }
-}
-
-// Close the sidenav with the close button
-function w3_close() {
-    document.getElementById("mySidenav").style.width = "0";
-}
-
-</script>
--->
-<!--Sidenav data-->
-<nav class="w3-sidenav w3-collapse w3-animate-left" style="width:0px;background-color: rgba(255,255,255,.6);top:50px; bottom:200px" id="mySidenav">
-<div class="w3-container w3-row">
-    <div class="w3-col s4">
-        <button id="btnHide" type="button" class="btn btn-primary w3-tiny" (click)="w3_close()">Hide</button>
+<nav class="w3-sidenav w3-collapse w3-animate-left" style="width:250px;background-color: rgba(255,255,255,.6);top:50px; bottom:200px" id="mySidenav">
+<div class="row">
+    <div class="col-md-1 col-md-offset-9">
+        <div class="row">
+            <div class="col-md-1 col-md-offset-9">
+                <i class="fa fa-close" (click)="hideMenu()"></i>
+            </div>
+        </div>
     </div>
 </div>
 
-<!--"width:250px;background-color: rgba(255,255,255,.7);top:43px; bottom:200px"-->
+<div class="col-md-12" style="position:absolute; bottom:300px"><hr>
+    <marker-data></marker-data>
+</div>

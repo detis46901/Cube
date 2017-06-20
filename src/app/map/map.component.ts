@@ -241,10 +241,25 @@ export class MapComponent {
 
     public opengeo (flag, URL) {
         console.log(flag)
+        let foo = Array();
 
         function onEach (feature, layer) {
             //layer.bindPopup(geojson features)
-            layer.bindPopup("Hello")
+            //console.log(feature.properties.ELEVATION)
+            foo.push()
+            console.log(feature.properties[1])
+            console.log(JSON.stringify(feature.properties))
+            layer.bindPopup('<p>Elevation: '+feature.properties.ELEVATION+
+                            '<br>Location: '+feature.properties.LOCATION+
+                            '<br>Number: '+feature.properties.NUMBER_+
+                            '<br>Reference: '+feature.properties.REFERANCE+
+                            '<br>Benchmark Type: '+feature.properties.BM_TYPE+
+                            '<br>W Street: '+feature.properties.W_STREET+
+                            '<br>S Street: '+feature.properties.S_STREET+
+                            '<br>Y: '+feature.properties.Y+
+                            '<br>X: '+feature.properties.X+
+                            '<br>Found Set: '+feature.properties.Found_Set+'</p>');
+            //layer.bindPopup("I am useless!")
         }
         var myStyle = {
             "color": '#ff0000',
@@ -258,12 +273,11 @@ export class MapComponent {
         var observer = {
             next: function(value) {
                 console.log(value)
-                thisLayer = L.geoJSON(value)
-                L.geoJSON(value, {
+                var layerGroup = L.geoJSON(value, {
                     onEachFeature: onEach,
                     style: function(value) {
                         return myStyle;
-                    } //not working
+                    }
                 }).addTo(geoMap)
             }
         }
@@ -310,7 +324,7 @@ export class MapComponent {
 
             //6/9/17
             runLayer = omnivore.kml(URL).on('ready', function() {
-                kmlMap.fitBounds(runLayer.getBounds(), maxZoom);
+                kmlMap.fitBounds(runLayer.getBounds());
             })
 
             //6/19/17

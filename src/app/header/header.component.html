@@ -9,13 +9,17 @@
 <!--<button *ngIf="screenCode == 1" id="vData" class="w3-btn w3-hover-text-blue" (click)="home_toggle()"><i class="fa fa-bars"></i> &nbsp;Toggle Menu</button>
 <button *ngIf="screenCode == 2" id="vData" class="w3-btn w3-hover-text-blue" (click)="admin_toggle()"><i class="fa fa-bars"></i> &nbsp;Toggle Menu</button>
 <button *ngIf="screenCode == 3" id="vData" class="w3-btn w3-hover-text-blue" (click)="user_toggle()"><i class="fa fa-bars"></i> &nbsp;Toggle Menu</button>-->
-<div ngbDropdown class="d-inline-block" style="background-color:black">
-    <button id="viewBtn" type="button" style="position:absolute;height:25px;width:100px;left:250px;top:0px;background-color:black" class="w3-btn w3-hover-text-blue" ngbDropdownToggle (click)="dropView()"><i class="fa fa-bars"></i> View</button>
-    <div class="dropdown-menu dropdown-menu-left" style="position:relative;top:40px;left:50px" aria-labelledby="dropdownMenu1">
-        <button id="vData" style="position:relative" (click)="menu_toggle(screenCode)" class="w3-btn w3-hover-text-blue">Toggle Menu</button>
+
+
+
+<div ngbDropdown class="d-inline-block" style="z-index:-1;position:relative;background-color:black">
+    <button id="viewBtn" type="button" style="position:absolute;height:25px;width:100px;left:220px;top:0px;background-color:black" class="w3-btn w3-hover-text-blue" ngbDropdownToggle><i class="fa fa-bars"></i> View</button>
+    <div class="dropdown-menu dropdown-menu-left" style="z-index:-1;position:absolute;top:40px;left:235px;width:80px" aria-labelledby="dropdownMenu1">
+        <button id="vData" style="position:relative;right:200px" (click)="menu_toggle(screenCode)" class="w3-btn w3-hover-text-blue">Toggle Menu</button>
     </div>
 </div>
-<!--<button id="vData" class="w3-btn w3-hover-text-blue" (click)="menu_toggle(screenCode)"><i class="fa fa-bars"></i> &nbsp;View</button>-->
+<!--<button style="position:absolute;left:600px"(click)="showCons()">click</button>
+<button id="vData" class="w3-btn w3-hover-text-blue" (click)="menu_toggle(screenCode)"><i class="fa fa-bars"></i> &nbsp;View</button>-->
 
 <span class="w3-right">
 <a href="/logout" id="logoutBtn" title="Logout" class="w3-hover-none w3-xlarge w3-hover-text-blue w3-show-inline-block"><i class="fa fa-power-off" aria-hidden="true"></i></a>
