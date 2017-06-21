@@ -2,7 +2,7 @@
 // <reference path='../../../typings/leaflet-omnivore.d.ts'/>
 
 //Import statements
-import { ElementRef, Component, ViewChild } from '@angular/core';
+import { ElementRef, Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MapService } from "./services/map.service";
 import { WFSService } from "./services/wfs.service";
 import { Location } from "./core/location.class";
@@ -12,22 +12,25 @@ import { MarkerComponent } from "./marker/marker.component";
 import { LayerPermissionService } from "../../_services/layerpermission.service"
 import { LayerAdminService } from "../../_services/layeradmin.service"
 import { UserPageService } from '../../_services/user-page.service'
+import { SidenavService } from '../../_services/sidenav.service'
 import { LayerPermission, LayerAdmin, UserPageLayer, ControlLayers } from "../../_models/layer.model";
 import { UserPage } from '../../_models/user-model';
 import { UserPageLayerService } from '../../_services/user-page-layer.service'
 import { Http, Response, Headers } from '@angular/http'
 import { Observable } from 'rxjs/Observable';
 
-//6/8/17
-//import omnivore = require('leaflet-omnivore');
-
 @Component({
   selector: 'map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css']
+  styleUrls: ['./map.component.css'],
+  //providers: [Http, ElementRef, MapService, WFSService, GeocodingService, LayerPermissionService, LayerAdminService, UserPageService, UserPageLayerService, SidenavService]
+  providers: [SidenavService]
 })
 
 export class MapComponent {
+
+    //@Output() geoData: EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
+
     //Token and current user, Working on changing the token format to JWT once hashing is operational
     public token: string;
     public userID: number;
@@ -36,7 +39,7 @@ export class MapComponent {
     @ViewChild(MarkerComponent) markerComponent: MarkerComponent;
 
     //Constructor, elementref is for use in ngAfterViewInit to test the geoJSON file. the rest are necessary for map component to work.
-    constructor(private _http: Http, private elementRef: ElementRef, private mapService: MapService, private wfsservice: WFSService, private geocoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http:Http) {
+    constructor(private _http: Http, private elementRef: ElementRef, private mapService: MapService, private wfsservice: WFSService, private geocoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http:Http, private sidenavService: SidenavService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
@@ -49,11 +52,11 @@ export class MapComponent {
     //Class variables
     public _map: L.Map;
     
-    
 
     //GeoJSON testing variables
     public geoFlag = false;
     public geoURL = "http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&styles=Kokomo:point&typeName=Kokomo:Bench_Marks&srsName=EPSG:4326&maxFeatures=150&outputFormat=application%2Fjson";
+    public geoURL2 = 'http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&styles=Kokomo:point&typeName=Kokomo:Cabinets&srsName=EPSG:4326&maxFeatures=50&outputFormat=application%2Fjson'
     public geoTest: any;
 
     public kmlFlag = false;
@@ -241,15 +244,58 @@ export class MapComponent {
 
     public opengeo (flag, URL) {
         console.log(flag)
-        let foo = Array();
 
+        var myIcon = L.icon({
+            iconUrl: './avatar2.png',
+            iconSize: [38, 95],
+            iconAnchor: [22, 94],
+            popupAnchor: [-3, -76],
+        })
+
+
+        let props = Array();
+        let len: number;
+        //let sideService = this.sidenavService;
+
+        //Function that maps GeoJSON data to corresponding marker click events, and extrapolates feature's property names from JSON
         function onEach (feature, layer) {
-            //layer.bindPopup(geojson features)
-            //console.log(feature.properties.ELEVATION)
-            foo.push()
-            console.log(feature.properties[1])
-            console.log(JSON.stringify(feature.properties))
-            layer.bindPopup('<p>Elevation: '+feature.properties.ELEVATION+
+            let exec: any;
+            let data = '<p>';
+
+            //First iteration exclusive
+            if(props[0] == null) {
+                props = JSON.stringify(feature.properties).split(',')
+                len = props.length
+                props[0] = props[0].substr(1)
+                props[len-1] = props[len-1].substring(0,props[len-1].indexOf('}'))
+
+                //Cleanup property names array values to simple plain-text string values
+                for(var i=0; i<len; i++) {
+                    props[i]=props[i].substring(1,props[i].indexOf('"', 1))
+                    console.log(props[i])
+                }
+
+                //this.geoData.emit(props)
+                //this.sidenavService.setGeoData(props);
+
+                //Configure the window of data to be displayed in popup currently, later on in sideNav
+                
+                console.log(data)
+            }
+
+            for(var i=0; i<len; i++) {
+                exec = eval("feature.properties." + props[i])
+                //if(i==0){console.log(exec)}
+                data = data + props[i] + ": " + exec + "<br>"
+            }
+            data = data + "</p>"
+
+            //console.log(layer.getLatLng())
+            //layer.setIcon(myIcon)
+            layer.bindPopup(data)
+
+        }
+        /*layer.bindPopup('<p>Elevation: '+feature.properties.ELEVATION+
                             '<br>Location: '+feature.properties.LOCATION+
                             '<br>Number: '+feature.properties.NUMBER_+
                             '<br>Reference: '+feature.properties.REFERANCE+
@@ -258,13 +304,11 @@ export class MapComponent {
                             '<br>S Street: '+feature.properties.S_STREET+
                             '<br>Y: '+feature.properties.Y+
                             '<br>X: '+feature.properties.X+
-                            '<br>Found Set: '+feature.properties.Found_Set+'</p>');
-            //layer.bindPopup("I am useless!")
-        }
-        var myStyle = {
-            "color": '#ff0000',
-            "weight": 5
-        }
+                            '<br>Found Set: '+feature.properties.Found_Set+'</p>');*/ 
+        /*var myStyle = {
+            "color": '#ffff00',
+            "weight": 50
+        }*/
 
         var geoMap = this._map;
         var thisLayer = this.currentlayer
@@ -274,11 +318,13 @@ export class MapComponent {
             next: function(value) {
                 console.log(value)
                 var layerGroup = L.geoJSON(value, {
-                    onEachFeature: onEach,
-                    style: function(value) {
+                    onEachFeature: onEach
+                    /*style: function(value) {
                         return myStyle;
-                    }
-                }).addTo(geoMap)
+                    }*/
+                })
+                
+                .addTo(geoMap)
             }
         }
 

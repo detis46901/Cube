@@ -1,22 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import * as rx from 'rxjs'
+import { SidenavService } from '../../_services/sidenav.service'
 
 @Component({
   selector: 'marker-data',
   templateUrl: './marker-data.component.html',
-  styleUrls: ['./marker-data.component.css']
+  styleUrls: ['./marker-data.component.css'],
+  providers: [SidenavService]
 })
 export class MarkerDataComponent implements OnInit {
 
-  private features: Array<any> =  ["feature 1","feature 2","feature 3","feature 4"]//probably will have to be an Observer
+  private features = this.sidenavService.getGeoData();
+  private subject = new rx.Subject();
 
-  constructor() {}
+  constructor(private sidenavService: SidenavService) {}
 
   ngOnInit() {
   }
 
-  public getFeatures() {
-    this.features = ["features 1","feature 2","feature 3","feature 4"]
+  public getFeatures(feats: Array<string>) {
+    this.features = this.sidenavService.getGeoData();
   }
 
 }

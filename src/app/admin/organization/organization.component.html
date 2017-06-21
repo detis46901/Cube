@@ -6,7 +6,7 @@
             </tr>
 
             <!-- List departments-->
-            <tr *ngFor="let department of departments" (click)="departmentClick(department)">
+            <tr *ngFor="let department of departments" (click)="departmentClick(department)"> <!--Probably change to onFocus()-->
                 <td><form class="form-inline">
                     <div class="form-group" style="width:100%">
                         <label for="exdepartment"><i (click)="deleteDepartment(department.ID)" class="fa fa-times" aria-hidden="true"></i></label><!-- This needs to delete its groups and roles-->
