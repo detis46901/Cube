@@ -58,6 +58,10 @@ export class MapComponent {
     public geoURL = "http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&styles=Kokomo:point&typeName=Kokomo:Bench_Marks&srsName=EPSG:4326&maxFeatures=150&outputFormat=application%2Fjson";
     public geoURL2 = 'http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&styles=Kokomo:point&typeName=Kokomo:Cabinets&srsName=EPSG:4326&maxFeatures=50&outputFormat=application%2Fjson'
     public geoTest: any;
+    public geoLayerGroup: any;
+    public geoArray: Array<L.Layer> = []
+    public geoProp: Array<any>;
+    public curMarker: any;
 
     public kmlFlag = false;
     public kmlURL = "http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/wms?service=wms&request=GetMap&version=1.1.1&format=application/vnd.google-earth.kml+xml&layers=Kokomo:Bench_Marks&styles=point&height=2048&width=2048&transparent=false&srs=EPSG:4326&format_options=AUTOFIT:true;KMATTR:true;KMPLACEMARK:false;KMSCORE:60;MODE:refresh;SUPEROVERLAY:false&BBOX=-87,40,-86,41"
@@ -82,13 +86,35 @@ export class MapComponent {
 
 
     ngOnChanges() {
-        console.log('map changed');
+        console.log('on changes');
+    }
+
+    ngDoCheck() {
+        console.log('do check');
+
     }
 
     //Angular component initialization
     ngOnInit() {
         this.setPage();
     }
+
+    ngAfterContentChecked() {
+        //console.log('after content check')
+    }
+
+    ngAfterViewInit() {
+        //this.markerComponent.Initialize();
+        var s = document.createElement("script");
+        s.type = "text/javascript";
+        s.src = "../../assets/stations.js";
+        this.elementRef.nativeElement.appendChild(s);
+        console.log('ngAfterViewInit');
+    };
+
+    ngOnDestroy() {
+        console.log('ngOnDestroy')
+    };
     
     //Takes results from getDefaultPage and sets the page based on result
     public setPage(): void {
@@ -255,15 +281,21 @@ export class MapComponent {
 
         let props = Array();
         let len: number;
+        let array = Array();
+        let j: JSON;
         //let sideService = this.sidenavService;
 
         //Function that maps GeoJSON data to corresponding marker click events, and extrapolates feature's property names from JSON
         function onEach (feature, layer) {
             let exec: any;
             let data = '<p>';
+            
 
             //First iteration exclusive
             if(props[0] == null) {
+                console.log(feature)
+                console.log(feature['properties'])
+                console.log(layer)
                 props = JSON.stringify(feature.properties).split(',')
                 len = props.length
                 props[0] = props[0].substr(1)
@@ -280,7 +312,7 @@ export class MapComponent {
 
                 //Configure the window of data to be displayed in popup currently, later on in sideNav
                 
-                console.log(data)
+                
             }
 
             for(var i=0; i<len; i++) {
@@ -292,8 +324,13 @@ export class MapComponent {
 
             //console.log(layer.getLatLng())
             //layer.setIcon(myIcon)
+            //console.log(data)
+            //array.push(layer)
+            array.push(feature['properties'])
             layer.bindPopup(data)
-
+            this.geoProp = props;
+            //console.log(this.geoProp)
+            
         }
         /*layer.bindPopup('<p>Elevation: '+feature.properties.ELEVATION+
                             '<br>Location: '+feature.properties.LOCATION+
@@ -316,17 +353,33 @@ export class MapComponent {
         //observer variable used in GeoJSON subscription, function parameter after value in L.geoJSON uses onEachFeature to allow clicking of features
         var observer = {
             next: function(value) {
-                console.log(value)
-                var layerGroup = L.geoJSON(value, {
+                this.geoLayerGroup = L.geoJSON(value, {
                     onEachFeature: onEach
                     /*style: function(value) {
                         return myStyle;
                     }*/
                 })
-                
+                //.getLayerId()
+                .on('click', function() {
+                    //this.curMarker = this.ID
+                    //this.features = features that are given from thie geojson id
+                    //save these specific featuresand emit to be rendered in marker-data
+                    //this.geoLayerGroup.getLayerId()
+                    //Need to obtain marker information from this click event...
+                    console.log('hi')
+                    
+                })
                 .addTo(geoMap)
+                this.geoArray = this.geoLayerGroup.getLayers()
+                console.log(this.geoLayerGroup.getLayerId(this.geoArray[1]))
+                console.log(this.geoArray[1].feature.properties)
+                //layerGroup.
+                //this.geoArray.push(value)
+                //console.log(this.geoArray)
             }
+        
         }
+        console.log(observer)
 
         //Add geoJSON if none exists yet
         if(!flag) {
@@ -345,6 +398,13 @@ export class MapComponent {
             this.setUserPageLayers(this.defaultpage)
             this.geoFlag = false
         }
+
+        this.geoArray = array
+
+        console.log(array)
+        console.log(this.geoArray)
+        //console.log(this.geoArray[0].feature)
+        //console.log(this.geoArray["0"].feature)
     }
 
     public openkml (flag, URL) {
@@ -397,16 +457,4 @@ export class MapComponent {
     public loadjson() {
         console.log(this.objects) //Undefined here as well as in openjson
     }
-
-    ngAfterViewInit() {
-        //this.markerComponent.Initialize();
-        var s = document.createElement("script");
-        s.type = "text/javascript";
-        s.src = "../../assets/stations.js";
-        this.elementRef.nativeElement.appendChild(s);
-        console.log('ngAfterViewInit');
-    };
-    ngOnDestroy() {
-        console.log('ngOnDestroy')
-    };
 }

@@ -8,10 +8,8 @@
 	background-image: -webkit-linear-gradient(top, #99ccff, #4d88ff);
 	background-image: -o-linear-gradient(top, #99ccff, #4d88ff);
 	background-image: linear-gradient(to bottom, #99ccff, #4d88ff);
-    position: absolute;
+    position: absolute; /*6/22/17- make this dynamic*/
     height: 100%;
-    left: 0px;
-    top: 50px;
     width: 100%;
 }
 

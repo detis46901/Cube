@@ -29,7 +29,7 @@ export class SidenavService {
         return isOpen;
     }
 
-    public getGeoData() {
+    public getGeoData() { //= (): Observable<>
         console.log(geoData)
         return geoData;
     }

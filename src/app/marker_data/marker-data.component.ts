@@ -17,9 +17,10 @@ export class MarkerDataComponent implements OnInit {
   constructor(private sidenavService: SidenavService) {}
 
   ngOnInit() {
+      this.getFeatures()
   }
 
-  public getFeatures(feats: Array<string>) {
+  public getFeatures() {
     this.features = this.sidenavService.getGeoData();
   }
 

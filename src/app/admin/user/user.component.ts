@@ -207,29 +207,29 @@ export class UserComponent implements OnInit{
             })
     }
 
- private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
+    private getDismissReason(reason: any): string {
+        if (reason === ModalDismissReasons.ESC) {
+        return 'by pressing ESC';
+        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+        return 'by clicking on a backdrop';
+        } else {
+        return  `with: ${reason}`;
+        }
     }
-  }
 
     public openPages(userID, firstName, lastName) {
-    const modalRef = this.modalService.open(PageComponent)
-       modalRef.componentInstance.userID = userID;
-       modalRef.componentInstance.firstName = firstName;
-       modalRef.componentInstance.lastName = lastName;
-       modalRef.result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-      this.getUserPageItems();
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      this.getUserPageItems();
-    });;
-    console.log("openpermission from layernew")
+        const modalRef = this.modalService.open(PageComponent)
+        modalRef.componentInstance.userID = userID;
+        modalRef.componentInstance.firstName = firstName;
+        modalRef.componentInstance.lastName = lastName;
+        modalRef.result.then((result) => {
+            this.closeResult = `Closed with: ${result}`;
+            this.getUserPageItems();
+        }, (reason) => {
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+            this.getUserPageItems();
+        });;
+        console.log("openpermission from layernew")
     }
 
     public getUserPageItems(): void {
@@ -243,16 +243,17 @@ export class UserComponent implements OnInit{
 
     public openPageConfig(pageID, userID) {
         console.log("userID = " + userID)
-    const modalRef = this.modalService.open(PageConfigComponent)
-       modalRef.componentInstance.pageID = pageID;
-       modalRef.componentInstance.userID = userID,
-       modalRef.result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-      this.getUserPageItems();
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      this.getUserPageItems();
-    });;
-    console.log("openpermission from layernew")
+        console.log("pageID = " + pageID)
+        const modalRef = this.modalService.open(PageConfigComponent)
+        modalRef.componentInstance.pageID = pageID;
+        modalRef.componentInstance.userID = userID,
+        modalRef.result.then((result) => {
+            this.closeResult = `Closed with: ${result}`;
+            this.getUserPageItems();
+        }, (reason) => {
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+            this.getUserPageItems();
+        });;
+        console.log("openpermission from layernew")
     }
 }

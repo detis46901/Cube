@@ -63,6 +63,7 @@
             <option>WMS</option>
             <option>KML-Link</option>
             <option>KML-Drive</option>
+            <option>GeoJSON</option>
         </select>
         <input id="exlayerurl" name="exlayerurl" title="{{layeradmin.layerURL}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:20%" [(ngModel)] = "layeradmin.layerURL" type="text" (change)="updateLayer(layeradmin)">
         <input id="exlayerident" name="exlayerident" title="{{layeradmin.layerIdent}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
