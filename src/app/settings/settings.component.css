@@ -12,14 +12,14 @@
     width: 100%;
 }
 
-#user_bg:after {
+/*#user_bg:after {
     content: "\f007";
     font-family: FontAwesome;
     font-size: 400px;
     color: #cce6ff;
     left: 560px;
     position: absolute;
-}
+}*/
 
 #settings_nav {
     position:absolute;

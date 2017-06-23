@@ -59,9 +59,10 @@ export class MapComponent {
     public geoURL2 = 'http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&styles=Kokomo:point&typeName=Kokomo:Cabinets&srsName=EPSG:4326&maxFeatures=50&outputFormat=application%2Fjson'
     public geoTest: any;
     public geoLayerGroup: any;
-    public geoArray: Array<L.Layer> = []
+    public geoArray: Array<L.Layer>
     public geoProp: Array<any>;
     public curMarker: any;
+    public markerArr: Array<L.Marker>;
 
     public kmlFlag = false;
     public kmlURL = "http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/wms?service=wms&request=GetMap&version=1.1.1&format=application/vnd.google-earth.kml+xml&layers=Kokomo:Bench_Marks&styles=point&height=2048&width=2048&transparent=false&srs=EPSG:4326&format_options=AUTOFIT:true;KMATTR:true;KMPLACEMARK:false;KMSCORE:60;MODE:refresh;SUPEROVERLAY:false&BBOX=-87,40,-86,41"
@@ -90,7 +91,7 @@ export class MapComponent {
     }
 
     ngDoCheck() {
-        console.log('do check');
+        //console.log('do check'); //this is the one to use if doing it this way
 
     }
 
@@ -186,7 +187,8 @@ export class MapComponent {
         console.log(this.wfsFeed)                                                                                                                                                               
         //this.openkml();
 
-        
+        this.mapService.map = this._map
+        this.markerComponent.Initialize()
     }   
 
     //This method sets flags for use with the "Layers in Map Component" map.component.html control in order to determine
@@ -271,6 +273,8 @@ export class MapComponent {
     public opengeo (flag, URL) {
         console.log(flag)
 
+        //this.markerComponent.
+
         var myIcon = L.icon({
             iconUrl: './avatar2.png',
             iconSize: [38, 95],
@@ -328,6 +332,7 @@ export class MapComponent {
             //array.push(layer)
             array.push(feature['properties'])
             layer.bindPopup(data)
+            //layer.getPopup()
             this.geoProp = props;
             //console.log(this.geoProp)
             
@@ -349,6 +354,8 @@ export class MapComponent {
 
         var geoMap = this._map;
         var thisLayer = this.currentlayer
+        var foo = Array();
+        let lg;
         
         //observer variable used in GeoJSON subscription, function parameter after value in L.geoJSON uses onEachFeature to allow clicking of features
         var observer = {
@@ -360,19 +367,46 @@ export class MapComponent {
                     }*/
                 })
                 //.getLayerId()
-                .on('click', function() {
-                    //this.curMarker = this.ID
-                    //this.features = features that are given from thie geojson id
-                    //save these specific featuresand emit to be rendered in marker-data
-                    //this.geoLayerGroup.getLayerId()
-                    //Need to obtain marker information from this click event...
-                    console.log('hi')
-                    
-                })
+                
                 .addTo(geoMap)
-                this.geoArray = this.geoLayerGroup.getLayers()
-                console.log(this.geoLayerGroup.getLayerId(this.geoArray[1]))
-                console.log(this.geoArray[1].feature.properties)
+                let g = this.geoLayerGroup.getLayers()
+                console.log(g)
+                let len = g.length
+
+                let m = Array<L.Marker>()
+                function f(arr) {
+                    for (let i=0; i<len; i++) {
+                        //foo.push(this.geoLayerGroup.getLayer(this.geoLayerGroup.getLayerId(this.geoArray[i])).features.properties)
+                        //if (this.geoArray[i].getPopup().isOpen()) console.log('open')
+                        //console.log(arr[i]._popup._content)
+                        //console.log(arr[i].getPopup().isOpen())
+                        let curMark = L.marker(g[i].latlng)
+                        curMark.on('click', function() {
+                            console.log('hello')
+                        })
+                        m.push(curMark)
+                    }
+                    console.log(m)
+                }
+                
+                //Proto 2
+                
+                //6/23/17 this seems to actually get an ID representation of the layer being clicked
+                for (let i=0; i<g.length; i++) {
+                    g[i].on('click', function(g) {
+                        console.log(g[i]._latlng)
+                    })
+                }
+                
+                //this.map.on('click', f())
+                
+                
+                console.log(this.geoLayerGroup.getLayerId(g[1]))
+                //g[0].openPopup(g[0].getPopup())
+                //console.log(g[0].getPopup())
+                //console.log(g[1].feature.properties)
+                console.log(g[0])
+                console.log(m[0])
                 //layerGroup.
                 //this.geoArray.push(value)
                 //console.log(this.geoArray)
@@ -399,12 +433,14 @@ export class MapComponent {
             this.geoFlag = false
         }
 
-        this.geoArray = array
+        //this.geoArray = array
 
         console.log(array)
         console.log(this.geoArray)
         //console.log(this.geoArray[0].feature)
         //console.log(this.geoArray["0"].feature)
+
+        //let mark = L.Marker(this.geoArray
     }
 
     public openkml (flag, URL) {

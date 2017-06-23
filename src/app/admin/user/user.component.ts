@@ -31,8 +31,8 @@ import * as jwt from 'jsonwebtoken'
 @Component({
   selector: 'user',
   templateUrl: './user.component.html',
-  providers: [Api2Service, RoleService, UserPageService, LayerPermissionService, UserPageLayerService, Configuration, PagePipe, NumFilterPipe]
-  //styleUrls: ['./app.component.css', './styles/w3.css'],
+  providers: [Api2Service, RoleService, UserPageService, LayerPermissionService, UserPageLayerService, Configuration, PagePipe, NumFilterPipe],
+  styleUrls: ['./user.component.less'],
 })
 
 export class UserComponent implements OnInit{
