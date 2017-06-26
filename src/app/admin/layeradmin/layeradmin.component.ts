@@ -123,6 +123,7 @@ export class LayerAdminComponent implements OnInit{
     }*/
 
     opendelete(layer_id) {
+        //6/26/17 - const modalRef = this.modalService.open(OpenDeleteComponent)
         /*this.confDelService.resetDelete()
         this.currLayer.ID = layer_id
         console.log(this.objCode, this.currLayer.ID)

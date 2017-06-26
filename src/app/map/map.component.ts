@@ -36,6 +36,7 @@ export class MapComponent {
     public userID: number;
     public headers: Headers;
 
+    //In tandem with or independent of MarkerData below.
     @Output() MarkerDataOutput: EventEmitter<string> = new EventEmitter<string>();
     
     @ViewChild(MarkerComponent) markerComponent: MarkerComponent;
@@ -65,6 +66,8 @@ export class MapComponent {
     public geoProp: Array<any>;
     public curMarker: any;
     public markerArr: Array<L.Marker>;
+
+    //6/26/17 - Used to store the popup content of a marker upon a click event, to be sent to sideNav.
     public MarkerData: string;
 
     public kmlFlag = false;
@@ -274,118 +277,69 @@ export class MapComponent {
             () => (console.log(this.objects), this.loadjson())) //This is getting nothing
     }
 
+    //6/26/17 - Once operational, move to marker.component
     public opengeo (flag, URL) {
-        var myIcon = L.icon({
-            iconUrl: './avatar2.png',
-            iconSize: [38, 95],
-            iconAnchor: [22, 94],
-            popupAnchor: [-3, -76],
-        })
+        //class variables
+        var props = Array();
+        var len: number;
+        var array = Array();
+        var geoMap = this._map;
+        var thisLayer = this.currentlayer
+        var markerData: string = "";
+        var markerList = Array();
+        var emit = this.emitOnClick(markerData);
 
-        let clickFlag = false;
-        let props = Array();
-        let len: number;
-        let array = Array();
-        let j: JSON;
-        //let sideService = this.sidenavService;
-
-        //Function that maps GeoJSON data to corresponding marker click events, and extrapolates feature's property names from JSON
+        //Binds popup information to each marker
         function onEach (feature, layer) {
             let exec: any;
             let data = '<p>';
-            
 
-            //First iteration exclusive
+            //First iteration exclusive, cleanup property names array values (Column names, if you will) to simple plain-text string values
             if(props[0] == null) {
-                console.log(feature)
-                console.log(feature['properties'])
-                console.log(layer)
                 props = JSON.stringify(feature.properties).split(',')
                 len = props.length
                 props[0] = props[0].substr(1)
                 props[len-1] = props[len-1].substring(0,props[len-1].indexOf('}'))
-
-                //Cleanup property names array values to simple plain-text string values
                 for(var i=0; i<len; i++) {
                     props[i]=props[i].substring(1,props[i].indexOf('"', 1))
-                    console.log(props[i])
+                    //console.log(props[i])
                 }
-
-                //this.geoData.emit(props)
-                //this.sidenavService.setGeoData(props);
-
-                //Configure the window of data to be displayed in popup currently, later on in sideNav
-                
-                
             }
 
             for(var i=0; i<len; i++) {
                 exec = eval("feature.properties." + props[i])
-                //if(i==0){console.log(exec)}
                 data = data + props[i] + ": " + exec + "<br>"
             }
-            data = data + "</p>"
-            //console.log(data)
 
-            //console.log(layer.getLatLng())
-            //layer.setIcon(myIcon)
-            //console.log(data)
-            //array.push(layer)
+            data = data + "</p>"
             array.push(feature['properties'])
             layer.bindPopup(data)
-            //layer.getPopup()
-            this.geoProp = props;
-            //console.log(this.geoProp)
-            
+            this.geoProp = props;        
         }
-
-        var geoMap = this._map;
-        var thisLayer = this.currentlayer
-        let markerData: string;
-        let lg;
-        let g;
         
         //observer variable used in GeoJSON subscription, function parameter after value in L.geoJSON uses onEachFeature to allow clicking of features
         var observer = {
             next: function(value) {
                 this.geoLayerGroup = L.geoJSON(value, {
                     onEachFeature: onEach
-                    /*style: function(value) {
-                        return myStyle;
-                    }*/
-                })
-                //.getLayerId()
-                
+                }) 
                 .addTo(geoMap)
-                g = this.geoLayerGroup.getLayers()
-                console.log(g)
-                let len = g.length
 
-                let m = Array<L.Marker>()
-                function f(arr) {
-                    for (let i=0; i<len; i++) {
-                        //foo.push(this.geoLayerGroup.getLayer(this.geoLayerGroup.getLayerId(this.geoArray[i])).features.properties)
-                        //if (this.geoArray[i].getPopup().isOpen()) console.log('open')
-                        //console.log(arr[i]._popup._content)
-                        //console.log(arr[i].getPopup().isOpen())
-                        let curMark = L.marker(g[i].latlng)
-                        curMark.on('click', function() {
-                            console.log('hello')
-                        })
-                        m.push(curMark)
-                    }
-                    console.log(m)
-                }
+                markerList = this.geoLayerGroup.getLayers()
+                console.log(markerList) 
                 
-                //Proto 2
-                
-                //6/23/17 this seems to actually get an ID representation of the layer being clicked
-                for (let i=0; i<g.length; i++) {
-                    g[i].on('click', function(g) {
-                        this.MarkerData = g.target._popup._content
-                        console.log(this.MarkerData)
+                //6/26/17 - Within this block is where an event may be fired, or a reaction may be made from a specific marker click
+                for (let i=0; i<markerList.length; i++) {
+                    markerList[i].on('click', function(markerList) {
+                        markerData = markerList.target._popup._content
                         //clickFlag = true;
-                        //this.foo();
+
+                        //6/26/17 - tried to assign a global function to a variable with function level scope to solve problem below
+                        emit;
+                        //emit(markerData)
+                        //this.emitOnClick(markerData)
+
+                        //6/26/17 - This line cannot work because it does not have proper scope via "this" keyword
                         this.MarkerDataOutput.emit(markerData)
                         // put the contents of the console.log into the sidenav component
                         // will also need to cancel the popup event.  May be 
@@ -394,9 +348,8 @@ export class MapComponent {
             }
         
         }
-        console.log(observer)
 
-        //Add geoJSON if none exists yet
+        //Add geoJSON if it isn't already on the map
         if(!flag) {
             console.log("if")         
             
@@ -412,21 +365,26 @@ export class MapComponent {
             this.setUserPageLayers(this.defaultpage)
             this.geoFlag = false
         }
-
-        console.log(array)
-        console.log(this.geoArray)
         
         console.log(!this.MarkerData)
         
-        if (clickFlag) {
+        //6/26/17 - Probably will not be used, assumed that if a flag was changed by a marker click that it could be reacted to from this statement,
+        //proving not to be true. The difficulty with this process is that in order to handle a marker click, logic must be used from outside the scope
+        //of opengeo(), because there must be event handling that occurs independent of the opengeo() button being pressed. Handlers must be developed
+        //to be used from a click of a marker once it is rendered, in tandem with popup functionality.
+        /*if (clickFlag) {
             console.log(this.MarkerData)
             this.MarkerDataOutput.emit(this.MarkerData)
             this.foo()
-        }
+        }*/
+
+        console.log(this.MarkerData)
     }
 
-    public foo() {
-        console.log("bar")
+    //6/26/17 - Created this function and tried to call from for loop within var "observe" definition
+    public emitOnClick(mData: string) {
+        console.log(mData)
+        //this.MarkerDataOutput.emit(mData)
     }
 
     public openkml (flag, URL) {
