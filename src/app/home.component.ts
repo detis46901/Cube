@@ -20,6 +20,7 @@ public isHome = true;
 public myItems: any;
 public token: string;
 public userID: number;
+public markerdata: string;
 public isOpen: boolean;
 
     constructor(private dataService: Api2Service) {
@@ -30,6 +31,7 @@ public isOpen: boolean;
 
     ngOnInit() {
        this.getAllItems(this.userID);
+       this.markerdata = "Marker Data Input" //Get this from sideNav using a listener? perhaps observable or data binding
     }
 
     public getAllItems(userid): void {

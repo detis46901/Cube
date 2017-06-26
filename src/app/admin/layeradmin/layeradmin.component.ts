@@ -107,8 +107,23 @@ export class LayerAdminComponent implements OnInit{
         });
     }
 
+    /*openPages(userID, firstName, lastName) {
+        const modalRef = this.modalService.open(PageComponent)
+        modalRef.componentInstance.userID = userID;
+        modalRef.componentInstance.firstName = firstName;
+        modalRef.componentInstance.lastName = lastName;
+        modalRef.result.then((result) => {
+            this.closeResult = `Closed with: ${result}`;
+            this.getUserPageItems();
+        }, (reason) => {
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+            this.getUserPageItems();
+        });;
+        console.log("openpermission from layernew")
+    }*/
+
     opendelete(layer_id) {
-        this.confDelService.resetDelete()
+        /*this.confDelService.resetDelete()
         this.currLayer.ID = layer_id
         console.log(this.objCode, this.currLayer.ID)
 
@@ -116,7 +131,7 @@ export class LayerAdminComponent implements OnInit{
         console.log(this.confDelService.getVars())
 
         this.modalService.open(ConfirmdeleteComponent);
-        console.log(this.confDelService.delete_obj)
+        console.log(this.confDelService.delete_obj) Commented out as of 6/26/17*/
 
         //Something here with $event probably
 

@@ -35,6 +35,8 @@ export class MapComponent {
     public token: string;
     public userID: number;
     public headers: Headers;
+
+    @Output() MarkerDataOutput: EventEmitter<string> = new EventEmitter<string>();
     
     @ViewChild(MarkerComponent) markerComponent: MarkerComponent;
 
@@ -63,6 +65,7 @@ export class MapComponent {
     public geoProp: Array<any>;
     public curMarker: any;
     public markerArr: Array<L.Marker>;
+    public MarkerData: string;
 
     public kmlFlag = false;
     public kmlURL = "http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/wms?service=wms&request=GetMap&version=1.1.1&format=application/vnd.google-earth.kml+xml&layers=Kokomo:Bench_Marks&styles=point&height=2048&width=2048&transparent=false&srs=EPSG:4326&format_options=AUTOFIT:true;KMATTR:true;KMPLACEMARK:false;KMSCORE:60;MODE:refresh;SUPEROVERLAY:false&BBOX=-87,40,-86,41"
@@ -97,6 +100,7 @@ export class MapComponent {
 
     //Angular component initialization
     ngOnInit() {
+        //this.MarkerData = "Marker data placeholder"
         this.setPage();
     }
 
@@ -271,10 +275,6 @@ export class MapComponent {
     }
 
     public opengeo (flag, URL) {
-        console.log(flag)
-
-        //this.markerComponent.
-
         var myIcon = L.icon({
             iconUrl: './avatar2.png',
             iconSize: [38, 95],
@@ -282,7 +282,7 @@ export class MapComponent {
             popupAnchor: [-3, -76],
         })
 
-
+        let clickFlag = false;
         let props = Array();
         let len: number;
         let array = Array();
@@ -325,6 +325,7 @@ export class MapComponent {
                 data = data + props[i] + ": " + exec + "<br>"
             }
             data = data + "</p>"
+            //console.log(data)
 
             //console.log(layer.getLatLng())
             //layer.setIcon(myIcon)
@@ -337,25 +338,12 @@ export class MapComponent {
             //console.log(this.geoProp)
             
         }
-        /*layer.bindPopup('<p>Elevation: '+feature.properties.ELEVATION+
-                            '<br>Location: '+feature.properties.LOCATION+
-                            '<br>Number: '+feature.properties.NUMBER_+
-                            '<br>Reference: '+feature.properties.REFERANCE+
-                            '<br>Benchmark Type: '+feature.properties.BM_TYPE+
-                            '<br>W Street: '+feature.properties.W_STREET+
-                            '<br>S Street: '+feature.properties.S_STREET+
-                            '<br>Y: '+feature.properties.Y+
-                            '<br>X: '+feature.properties.X+
-                            '<br>Found Set: '+feature.properties.Found_Set+'</p>');*/ 
-        /*var myStyle = {
-            "color": '#ffff00',
-            "weight": 50
-        }*/
 
         var geoMap = this._map;
         var thisLayer = this.currentlayer
-        var foo = Array();
+        let markerData: string;
         let lg;
+        let g;
         
         //observer variable used in GeoJSON subscription, function parameter after value in L.geoJSON uses onEachFeature to allow clicking of features
         var observer = {
@@ -369,7 +357,7 @@ export class MapComponent {
                 //.getLayerId()
                 
                 .addTo(geoMap)
-                let g = this.geoLayerGroup.getLayers()
+                g = this.geoLayerGroup.getLayers()
                 console.log(g)
                 let len = g.length
 
@@ -394,22 +382,15 @@ export class MapComponent {
                 //6/23/17 this seems to actually get an ID representation of the layer being clicked
                 for (let i=0; i<g.length; i++) {
                     g[i].on('click', function(g) {
-                        console.log(g[i]._latlng)
+                        this.MarkerData = g.target._popup._content
+                        console.log(this.MarkerData)
+                        //clickFlag = true;
+                        //this.foo();
+                        this.MarkerDataOutput.emit(markerData)
+                        // put the contents of the console.log into the sidenav component
+                        // will also need to cancel the popup event.  May be 
                     })
                 }
-                
-                //this.map.on('click', f())
-                
-                
-                console.log(this.geoLayerGroup.getLayerId(g[1]))
-                //g[0].openPopup(g[0].getPopup())
-                //console.log(g[0].getPopup())
-                //console.log(g[1].feature.properties)
-                console.log(g[0])
-                console.log(m[0])
-                //layerGroup.
-                //this.geoArray.push(value)
-                //console.log(this.geoArray)
             }
         
         }
@@ -428,19 +409,24 @@ export class MapComponent {
 
         //remove geoJSON layer from map if it exists on map
         else {
-            //this._map.removeLayer(thisLayer)
             this.setUserPageLayers(this.defaultpage)
             this.geoFlag = false
         }
 
-        //this.geoArray = array
-
         console.log(array)
         console.log(this.geoArray)
-        //console.log(this.geoArray[0].feature)
-        //console.log(this.geoArray["0"].feature)
+        
+        console.log(!this.MarkerData)
+        
+        if (clickFlag) {
+            console.log(this.MarkerData)
+            this.MarkerDataOutput.emit(this.MarkerData)
+            this.foo()
+        }
+    }
 
-        //let mark = L.Marker(this.geoArray
+    public foo() {
+        console.log("bar")
     }
 
     public openkml (flag, URL) {

@@ -11,7 +11,7 @@ import { SidenavService } from '../../_services/sidenav.service'
 })
 export class MarkerDataComponent implements OnInit {
 
-  private features = this.sidenavService.getGeoData();
+  private features //= this.sidenavService.getGeoData();
   private subject = new rx.Subject();
 
   constructor(private sidenavService: SidenavService) {}
@@ -21,7 +21,8 @@ export class MarkerDataComponent implements OnInit {
   }
 
   public getFeatures() {
-    this.features = this.sidenavService.getGeoData();
+    //this.features = this.sidenavService.getGeoData();
+    this.features = "Hello"
   }
 
 }

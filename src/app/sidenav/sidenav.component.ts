@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SidenavService } from "../../_services/sidenav.service"
 
@@ -9,8 +9,9 @@ import { SidenavService } from "../../_services/sidenav.service"
     providers: [SidenavService]
 })
 export class SideNavComponent { 
-
+    
     constructor(private sidenavService: SidenavService){}
+    @Input() markerdata: string
 
     public hideMenu() {
         this.onclick()

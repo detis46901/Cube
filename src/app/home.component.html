@@ -1,3 +1,3 @@
 <header [user]="user" [screenCode]="screen"></header>
-<sidenav></sidenav>
-<map></map>
+<map (MarkerDataOutput)="markerdata = $event"></map>
+<sidenav [markerdata]="markerdata"></sidenav>
