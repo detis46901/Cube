@@ -340,7 +340,7 @@ export class MapComponent {
                         //this.emitOnClick(markerData)
 
                         //6/26/17 - This line cannot work because it does not have proper scope via "this" keyword
-                        this.MarkerDataOutput.emit(markerData)
+                        //this.MarkerDataOutput.emit(markerData)
                         // put the contents of the console.log into the sidenav component
                         // will also need to cancel the popup event.  May be 
                     })

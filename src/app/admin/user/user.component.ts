@@ -25,8 +25,8 @@ import { PageConfigComponent } from '../page/pageconfig.component'
 import { Md5 } from 'ts-md5/dist/md5'
 import pHash = require('password-hash-and-salt')
 import * as jwt from 'jsonwebtoken'
-//import { hash } from 'bcrypt'
-//import {hash, genSalt} from "bcrypt/bcrypt.js"
+/*import { hash } from 'bcrypt'
+import {hash, genSalt} from "bcrypt/bcrypt.js"*/
 
 @Component({
   selector: 'user',

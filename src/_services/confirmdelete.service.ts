@@ -29,13 +29,11 @@ export class ConfirmdeleteService {
         //return [this.objectCode, this.code_ID]
     }
 
-    delete() {
+    delete() {//: Observable<boolean> {
         this.delete_obj = true;
+        //let foo: Observable<boolean> = this.delete_obj
         console.log(this.delete_obj)
-        return this.delete_obj;
-        /*this.source = Observable.create(observer => {
-        observer.next(this.delete_obj)
-        })*/
+        //return this.delete_obj;
     }
 
     resetDelete() {

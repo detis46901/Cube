@@ -13,6 +13,7 @@ import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmdeleteService } from '../../../_services/confirmdelete.service';
 import { Observable } from 'rxjs/Observable';
+import { confirmDelete } from '../../../_models/confDel.model'
 
 @Component({
   selector: 'layeradmin',
@@ -26,8 +27,8 @@ export class LayerAdminComponent implements OnInit{
     public deleteThis = false;
     public flag = false;
 
+    //objCode values refer to the admin menu tab the user is on, so the openConfDel procedure knows what to interpolate based on what it's deleting
     private objCode = 2
-    public btnId = document.getElementById('btnOpenDel')
 
     closeResult: string;
     public user = new User;
@@ -107,32 +108,57 @@ export class LayerAdminComponent implements OnInit{
         });
     }
 
-    /*openPages(userID, firstName, lastName) {
-        const modalRef = this.modalService.open(PageComponent)
-        modalRef.componentInstance.userID = userID;
-        modalRef.componentInstance.firstName = firstName;
-        modalRef.componentInstance.lastName = lastName;
+    //openConfDel(objectCode, objectID, objectName) {
+    openConfDel(layer) {
+        this.confDelService.resetDelete()
+        console.log(this.confDelService.delete_obj)
+        console.log(this.objCode)
+        console.log(layer)
+        console.log(layer.ID)
+        console.log(layer.layerName)
+
+        let callback;
+
+        const modalRef = this.modalService.open(ConfirmdeleteComponent)
+
+        modalRef.componentInstance.objCode = this.objCode
+        modalRef.componentInstance.objID = layer.ID
+        modalRef.componentInstance.objName = layer.layerName
+
         modalRef.result.then((result) => {
             this.closeResult = `Closed with: ${result}`;
-            this.getUserPageItems();
+            console.log(this.confDelService.delete_obj)
+            this.getLayerItems();
         }, (reason) => {
             this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-            this.getUserPageItems();
-        });;
-        console.log("openpermission from layernew")
-    }*/
+            console.log(this.confDelService.delete_obj)
+            this.getLayerItems();
+        });
 
-    opendelete(layer_id) {
-        //6/26/17 - const modalRef = this.modalService.open(OpenDeleteComponent)
-        /*this.confDelService.resetDelete()
-        this.currLayer.ID = layer_id
-        console.log(this.objCode, this.currLayer.ID)
+        function confirmDelete (callback) {
+            console.log()
+        }
 
-        this.confDelService.setVars(this.objCode, this.currLayer.ID)
-        console.log(this.confDelService.getVars())
+        /*6/27/17 let foo = document.getElementById("confDelClick")
 
-        this.modalService.open(ConfirmdeleteComponent);
-        console.log(this.confDelService.delete_obj) Commented out as of 6/26/17*/
+        console.log(foo)
+
+        //6/27/17 Either this or the observable way is probably best. consider reactiveX subject as well. this is also key for marker stuff 
+        foo.addEventListener("click", function(){console.log("button click on nconfDel modal fire event listened to by layeradmin")})
+
+        var observer = {
+            next: //this.deleteLayer(objectID) //Cannot be accessed from within "function(value)" parameter for "next:"
+            function(value) {
+                this.
+                console.log(value)
+            }
+        }
+
+        Observable.fromEvent(foo, 'click')
+            .subscribe(observer)*/
+
+        //this.modalService.open(ConfirmdeleteComponent);
+        //console.log(this.confDelService.delete_obj) Commented out as of 6/26/17*/
 
         //Something here with $event probably
 
@@ -239,8 +265,10 @@ export class LayerAdminComponent implements OnInit{
                 console.log(result);
                 this.getLayerItems();
             })
+
     }
 
+    //step 2 6/27/17
     public sortNameAsc() {
         
     }

@@ -56,7 +56,7 @@
     </div>    
     <form class="form-inline" #e="ngForm" style="position:relative; left:20px" *ngFor="let layeradmin of layeradmins">
         <!--<i (click)="deleteLayer(layeradmin.ID)" class="fa fa-times" aria-hidden="true"></i>-->
-        <i id="btnOpenDel" class="fa fa-times" (click)="setFlag(layeradmin.ID)"></i><!--Use [(ngClass])?-->
+        <i id="btnOpenDel" class="fa fa-times" (click)="openConfDel(layeradmin)"></i><!--Use [(ngClass])?-->
         <input id="exlayername" ngModel required name="exlayername" title="{{layeradmin.layerName}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
         <select id="exlayertype" ngModel required name="exlayertype" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerType" type="text" (blur)="updateLayer(layeradmin)">
             <option>PostGIS</option>
@@ -67,13 +67,13 @@
         </select>
         <input id="exlayerurl" name="exlayerurl" title="{{layeradmin.layerURL}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:20%" [(ngModel)] = "layeradmin.layerURL" type="text" (change)="updateLayer(layeradmin)">
         <input id="exlayerident" name="exlayerident" title="{{layeradmin.layerIdent}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
-        <input id="exlayerformat" name="exlayerformat" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerFormat" type="text" (change)="updateLayer(layeradmin)">            
+        <input id="exlayerformat" name="exlayerformat" title="{{layeradmin.layerFormat}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerFormat" type="text" (change)="updateLayer(layeradmin)">            
         <input id="exlayerdescription" ngModel required name="exlayerdescription" title="{{layeradmin.layerDescription}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:20%" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)">
 
         <!-- Display modal: users that have permissions with specific layer; Redirect to: layerpermission component via openpermission()-->
         <button class="btn btn-outline-primary" title="Open layer permissions" (click)="openpermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>
     </form>
-    <confirmdelete *ngIf="flag===true" (clicked)="onClicked($event)"></confirmdelete>
+    <!--<confirmdelete *ngIf="flag===true" (clicked)="onClicked($event)"></confirmdelete>-->
 </div>        
 
 
