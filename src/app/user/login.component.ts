@@ -37,16 +37,19 @@ export class LoginComponent implements OnInit {
             .subscribe(result => {
                 if (result > 0 ) {
                     // login successful
+                    console.log(result)
                     this.router.navigate(['/']); //may want to change this so it redirects to a url with the user's ID in it
                 } else {
                     // login failed
-                    this.error = 'Username or password is incorrect';
+                    console.log(result)
+                    this.model.password="";
+                    this.error = 'Username or password is incorrect.';
                     this.loading = false;
                 }
             });
     }
 
-    public getAllItems(userID): void {
+    getAllItems(userID): void {
          this.dataService
             .GetSingle(userID)
             .subscribe((data:User) => this.user = data,

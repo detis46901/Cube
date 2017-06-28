@@ -9,6 +9,8 @@ export class DefaultsComponent implements OnInit {
 
   constructor() { }
 
+  public menuOn: boolean;
+
   ngOnInit() {
   }
 

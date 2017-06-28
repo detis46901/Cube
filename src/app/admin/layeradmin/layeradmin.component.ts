@@ -18,8 +18,8 @@ import { confirmDelete } from '../../../_models/confDel.model'
 @Component({
   selector: 'layeradmin',
   templateUrl: './layeradmin.component.html',
-  providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, NgbActiveModal]
-  //styleUrls: ['./app.component.css', './styles/w3.css'],
+  providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, NgbActiveModal],
+  styleUrls: ['./layeradmin.component.less'],
 })
 
 export class LayerAdminComponent implements OnInit{
@@ -108,6 +108,7 @@ export class LayerAdminComponent implements OnInit{
         });
     }
 
+    //6/27/17
     //openConfDel(objectCode, objectID, objectName) {
     openConfDel(layer) {
         this.confDelService.resetDelete()
@@ -268,25 +269,30 @@ export class LayerAdminComponent implements OnInit{
 
     }
 
-    //step 2 6/27/17
-    public sortNameAsc() {
-        
+    //6/28/17
+    public SortAZ() {
+        let list = this.layeradmins
+        for (let i=0; i<list.length; i++) {
+            let temp = list[i].layerName
+            
+        }
+        console.log(this.layeradmins[0])
     }
 
-    public sortNameDesc() {
-        
+    public SortZA() {
+        console.log("foobar")
     }
 
-    public sortType() {
-        
+    public SortType() {
+        console.log("foobar")
     }
 
-    public sortOldToNew() {
-        
+    public SortOldNew() {
+        console.log("foobar")
     }
 
-    public sortNewToOld() {
-        
+    public SortNewOld() {
+        console.log("foobar")
     }
 }
 

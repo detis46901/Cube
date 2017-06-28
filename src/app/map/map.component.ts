@@ -18,6 +18,7 @@ import { UserPage } from '../../_models/user-model';
 import { UserPageLayerService } from '../../_services/user-page-layer.service'
 import { Http, Response, Headers } from '@angular/http'
 import { Observable } from 'rxjs/Observable';
+import {Map, MouseEvent, Marker} from "leaflet";
 
 @Component({
   selector: 'map',
@@ -37,8 +38,8 @@ export class MapComponent {
     public headers: Headers;
 
     //In tandem with or independent of MarkerData below.
-    @Output() MarkerDataOutput: EventEmitter<string> = new EventEmitter<string>();
-    
+    @Output() MarkerDataOutput = new EventEmitter<string>();
+        
     @ViewChild(MarkerComponent) markerComponent: MarkerComponent;
 
     //Constructor, elementref is for use in ngAfterViewInit to test the geoJSON file. the rest are necessary for map component to work.
@@ -92,6 +93,7 @@ export class MapComponent {
     public wfsFeed: any
 
 
+    
     ngOnChanges() {
         console.log('on changes');
     }
@@ -105,6 +107,8 @@ export class MapComponent {
     ngOnInit() {
         //this.MarkerData = "Marker data placeholder"
         this.setPage();
+       
+       
     }
 
     ngAfterContentChecked() {
@@ -196,6 +200,10 @@ export class MapComponent {
 
         this.mapService.map = this._map
         this.markerComponent.Initialize()
+        this.mapService.map.on("click", (e: MouseEvent) => {
+           console.log("Fired")
+           
+        });
     }   
 
     //This method sets flags for use with the "Layers in Map Component" map.component.html control in order to determine
@@ -277,6 +285,10 @@ export class MapComponent {
             () => (console.log(this.objects), this.loadjson())) //This is getting nothing
     }
 
+    public openpopup() {
+        console.log ("openpopup")
+    }
+
     //6/26/17 - Once operational, move to marker.component
     public opengeo (flag, URL) {
         //class variables
@@ -284,10 +296,14 @@ export class MapComponent {
         var len: number;
         var array = Array();
         var geoMap = this._map;
-        var thisLayer = this.currentlayer
+        var thisLayer;
         var markerData: string = "";
         var markerList = Array();
         var emit = this.emitOnClick(markerData);
+        let em: any;
+        let layerGroup: any;
+        let clickFlag = false;
+        
 
         //Binds popup information to each marker
         function onEach (feature, layer) {
@@ -318,36 +334,47 @@ export class MapComponent {
         }
         
         //observer variable used in GeoJSON subscription, function parameter after value in L.geoJSON uses onEachFeature to allow clicking of features
-        var observer = {
+        let observer = {
             next: function(value) {
-                this.geoLayerGroup = L.geoJSON(value, {
+                layerGroup = L.geoJSON(value, {
                     onEachFeature: onEach
                 }) 
                 .addTo(geoMap)
 
-                markerList = this.geoLayerGroup.getLayers()
-                console.log(markerList) 
+                let markerList = layerGroup.getLayers() 
                 
                 //6/26/17 - Within this block is where an event may be fired, or a reaction may be made from a specific marker click
                 for (let i=0; i<markerList.length; i++) {
                     markerList[i].on('click', function(markerList) {
-                        markerData = markerList.target._popup._content
-                        //clickFlag = true;
+                        //this.MarkerDataOutput.emit(markerList.target._popup._content)
+                        clickFlag = true;
+                        em = markerList.target._popup._content;
+                        thisLayer = markerList[i]
 
-                        //6/26/17 - tried to assign a global function to a variable with function level scope to solve problem below
-                        emit;
-                        //emit(markerData)
-                        //this.emitOnClick(markerData)
+                        Observable.create(function(data) {
+                            data.next(markerList.target._popup.content)
+                        })
+                    })
 
-                        //6/26/17 - This line cannot work because it does not have proper scope via "this" keyword
-                        //this.MarkerDataOutput.emit(markerData)
-                        // put the contents of the console.log into the sidenav component
-                        // will also need to cancel the popup event.  May be 
+                    markerList[i].on('mouseup', function(markerList) {
+                        console.log(em)
+                    })
+                    
+                }
+
+
+                for (let i=0; i<markerList.length; i++) {
+                    markerList[i].on('mouseup', function(markerList) {
+                        console.log(thisLayer)
                     })
                 }
             }
         
         }
+
+        console.log(em)
+        console.log(thisLayer)
+        this.MarkerDataOutput.emit(em)
 
         //Add geoJSON if it isn't already on the map
         if(!flag) {
@@ -365,20 +392,6 @@ export class MapComponent {
             this.setUserPageLayers(this.defaultpage)
             this.geoFlag = false
         }
-        
-        console.log(!this.MarkerData)
-        
-        //6/26/17 - Probably will not be used, assumed that if a flag was changed by a marker click that it could be reacted to from this statement,
-        //proving not to be true. The difficulty with this process is that in order to handle a marker click, logic must be used from outside the scope
-        //of opengeo(), because there must be event handling that occurs independent of the opengeo() button being pressed. Handlers must be developed
-        //to be used from a click of a marker once it is rendered, in tandem with popup functionality.
-        /*if (clickFlag) {
-            console.log(this.MarkerData)
-            this.MarkerDataOutput.emit(this.MarkerData)
-            this.foo()
-        }*/
-
-        console.log(this.MarkerData)
     }
 
     //6/26/17 - Created this function and tried to call from for loop within var "observe" definition

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 var isOpen: boolean;
 var geoData: Array<string>;
+var markerData: string;
 
 @Injectable()
 export class SidenavService {
@@ -24,13 +25,22 @@ export class SidenavService {
         console.log(data)
     }
 
-    public getOpen() {
+    public setMarkerData(data: string) {
+        markerData = data;
+        console.log(data)
+    }
+
+    public getOpen(): boolean {
         //console.log(this.isOpen)
         return isOpen;
     }
 
-    public getGeoData() { //= (): Observable<>
+    public getGeoData(): Array<string> { //= (): Observable<>
         console.log(geoData)
         return geoData;
+    }
+
+    public getMarkerData(): string {
+        return markerData;
     }
 }   

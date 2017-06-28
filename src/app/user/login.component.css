@@ -54,3 +54,8 @@ hr {
     width: 490px;
     margin-left: 15px;
 }
+
+#errMessage {
+    width: 80%;
+    text-align: center;
+}

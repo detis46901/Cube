@@ -9,8 +9,8 @@ import { User } from '../../../_models/user-model'
 @Component({
   selector: 'password',
   templateUrl: './password.component.html',
-  providers: [Api2Service, Configuration]
-  //styleUrls: ['./app.component.css', './styles/w3.css'],
+  providers: [Api2Service, Configuration],
+  styleUrls: ['./password.component.less'],
 })
 
 export class PasswordComponent implements OnInit{

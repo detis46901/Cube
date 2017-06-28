@@ -97,8 +97,9 @@ export class ConfirmdeleteComponent implements OnInit {
   }
 
 	public deleteObject() {
-		this.delFlag = false;
-		this.delFlag = this.confDelService.delete()
+		//6/27/17
+		//this.delFlag = false;
+		//this.delFlag = this.confDelService.delete()
 		this.source = Observable.create(observer => {
         observer.next(this.confDelService.delete_obj)
         })

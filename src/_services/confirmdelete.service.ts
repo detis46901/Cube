@@ -29,6 +29,7 @@ export class ConfirmdeleteService {
         //return [this.objectCode, this.code_ID]
     }
 
+    //6/27/17
     delete() {//: Observable<boolean> {
         this.delete_obj = true;
         //let foo: Observable<boolean> = this.delete_obj
