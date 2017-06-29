@@ -1,8 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Api2Service } from '../../api2.service';
 import { Configuration } from '../../../_api/api.constants'
-import { RoleService } from '../../../_services/role.service'
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Http, Headers, Response } from '@angular/http';
 import { User } from '../../../_models/user-model'
 
@@ -20,7 +18,7 @@ export class PasswordComponent implements OnInit{
     public userID: string;
     public user = new User;
 
-    constructor(private api2service: Api2Service, private roleservice: RoleService, private modalService: NgbModal, private dataService: Api2Service) {
+    constructor(private dataService: Api2Service) {
        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
           this.token = currentUser && currentUser.token;
           this.userID = currentUser && currentUser.userid; 
