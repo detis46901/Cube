@@ -5,7 +5,6 @@
 import { ElementRef, Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MapService } from "./services/map.service";
 import { WFSService } from "./services/wfs.service";
-import { WFSMarker } from "../../_models/wfs.model";
 import { Location } from "./core/location.class";
 import { GeocodingService } from "./services/geocoding.service";
 import { NavigatorComponent } from "./navigator/navigator.component";
@@ -68,7 +67,6 @@ export class MapComponent {
     public geoProp: Array<any>;
     public curMarker: any;
     public markerArr: Array<L.Marker>;
-    public wfsmarker: Array<WFSMarker>;
 
     //6/26/17 - Used to store the popup content of a marker upon a click event, to be sent to sideNav.
     public MarkerData: string;
@@ -291,21 +289,21 @@ export class MapComponent {
         console.log ("openpopup")
     }
 
-    public openWFS(flag, URL) {
-        console.log("openWFS Started")
-        this.wfsservice.getWFS(URL)
-            .subscribe(res => this.wfsmarker = res)
-            //6/30/2017 Do something right here with assigning things to onClick of featureGroup
-        console.log("openWFS ending")
-    }
-    
     //6/26/17 - Once operational, move to marker.component
     public opengeo (flag, URL) {
-        let geoMap = this._map;
-        let featureGroup: any; 
-        let markerList: any;
-        let props: Array<any> = [];
-        let len: any;
+        //class variables
+        var props = Array();
+        var len: number;
+        var array = Array();
+        var geoMap = this._map;
+        var thisLayer;
+        var markerData: string = "";
+        var markerList = Array();
+        var emit = this.emitOnClick(markerData);
+        let em: any;
+        let layerGroup: any;
+        let clickFlag = false;
+        
 
         //Binds popup information to each marker
         function onEach (feature, layer) {
@@ -320,37 +318,86 @@ export class MapComponent {
                 props[len-1] = props[len-1].substring(0,props[len-1].indexOf('}'))
                 for(var i=0; i<len; i++) {
                     props[i]=props[i].substring(1,props[i].indexOf('"', 1))
+                    //console.log(props[i])
                 }
             }
+
             for(var i=0; i<len; i++) {
                 exec = eval("feature.properties." + props[i])
                 data = data + props[i] + ": " + exec + "<br>"
             }
+
             data = data + "</p>"
+            array.push(feature['properties'])
             layer.bindPopup(data)
+            this.geoProp = props;        
         }
         
-        //6/30/17 This is probably what needs the most work to continue
+        //observer variable used in GeoJSON subscription, function parameter after value in L.geoJSON uses onEachFeature to allow clicking of features
         let observer = {
             next: function(value) {
-                value.addTo(geoMap)
+                layerGroup = L.geoJSON(value, {
+                    onEachFeature: onEach
+                }) 
+                .addTo(geoMap)
+
+                let markerList = layerGroup.getLayers() 
+                
+                //6/26/17 - Within this block is where an event may be fired, or a reaction may be made from a specific marker click
+                for (let i=0; i<markerList.length; i++) {
+                    markerList[i].on('click', function(markerList) {
+                        //this.MarkerDataOutput.emit(markerList.target._popup._content)
+                        clickFlag = true;
+                        em = markerList.target._popup._content;
+                        thisLayer = markerList[i]
+
+                        Observable.create(function(data) {
+                            data.next(markerList.target._popup.content)
+                        })
+                    })
+
+                    markerList[i].on('mouseup', function(markerList) {
+                        console.log(em)
+                    })
+                    
+                }
+
+
+                for (let i=0; i<markerList.length; i++) {
+                    markerList[i].on('mouseup', function(markerList) {
+                        console.log(thisLayer)
+                    })
+                }
             }
+        
         }
 
+        console.log(em)
+        console.log(thisLayer)
+        this.MarkerDataOutput.emit(em)
+
         //Add geoJSON if it isn't already on the map
-        if(!flag) {      
-            /*console.log(this.wfsservice.getWFS(URL).subscribe(observer))
-            featureGroup = this.wfsservice.getWFS(URL).subscribe(observer)*/
-            console.log(this.wfsservice.getWFSLayers(URL))
-            featureGroup = this.wfsservice.getWFSLayers(URL).subscribe(observer)
+        if(!flag) {
+            console.log("if")         
+            
+            //Uses defined variable "observer" to subscribe to the wfsservice loadWFS observable, which finds the given URL below on Geoserver
+            this.wfsservice.loadWFS(URL)
+                //.subscribe(observer)
+
             this.geoFlag = true
         }
+
         //remove geoJSON layer from map if it exists on map
         else {
-            //geoMap.removeLayer(getLayerId(featureGroup))
             this.setUserPageLayers(this.defaultpage)
             this.geoFlag = false
         }
+    }
+
+    //6/26/17 - Created this function and tried to call from for loop within var "observe" definition
+    public emitOnClick(mData: string) {
+        console.log(mData)
+        //this.MarkerDataOutput.emit(mData)
     }
 
     public openkml (flag, URL) {

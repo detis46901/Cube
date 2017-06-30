@@ -9,6 +9,9 @@
     /*-webkit-text-fill-color: rgb(66, 147, 255); Something to think about*/
 }
 
+#inboxBtn, #logoffBtn, #settingsBtn {
+    right: 25px;
+}
 /*a {
     -webkit-text-fill-color: rgb(66, 147, 255); Something to think about
 }*/
