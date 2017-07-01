@@ -293,10 +293,11 @@ export class MapComponent {
 
     public openWFS(flag, URL) {
         console.log("openWFS Started")
-        this.wfsservice.getWFS(URL)
-            .subscribe(res => this.wfsmarker = res)
+        this.wfsservice.getWFSLayers(URL)
+            .subscribe(res => {console.log (res), res.addTo(this.mapService.map), console.log("layer created")})
             //6/30/2017 Do something right here with assigning things to onClick of featureGroup
-        console.log("openWFS ending")
+
+        
     }
     
     //6/26/17 - Once operational, move to marker.component

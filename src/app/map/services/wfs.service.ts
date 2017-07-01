@@ -3,6 +3,7 @@ import {Location} from "../core/location.class";
 import {Injectable} from "@angular/core";
 import {Observable} from 'rxjs'
 import {WFSMarker} from '../../../_models/wfs.model'
+import {Map, MouseEvent, Marker} from "leaflet";
 
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mergeMap";
@@ -64,20 +65,30 @@ export class WFSService {
     getWFSLayers(path: string) {
         let markers: Array<WFSMarker> = []
         let features: Array<L.Layer> = []
+        let prop: string;
+        let props: Array<any> = [];
+        let exec: any;
+        let data = '<p>';
         let featureGroup;
+        let len: number;
 
         return this.http.get(path, {headers: this.headers})
             .map( (responseData) => {
                 return responseData.json();
         })
         .map((markers: Array<any>) => {
-            console.log(markers)
-            console.log(markers["features"][0])
-
+            
             //6/3017 - In order to get the right features from the array, this is the correct syntax for referencing.
             for (let i=0; i<markers["features"].length; i++) {
-                let tempLatLng = L.latLng(markers["features"][i].geometry.coordinates[0], markers["features"][i].geometry.coordinates[1])
+                for(var j=0; j<len; j++) {
+                    console.log(j)
+                exec = eval("feature.properties." + props[j])
+                data = data + props[j] + ": " + exec + "<br>"
+                 }
+                 data = data + "</p>"
+                let tempLatLng = L.latLng(markers["features"][i].geometry.coordinates[1], markers["features"][i].geometry.coordinates[0])
                 let tempMarker = L.marker(tempLatLng)
+                tempMarker.bindPopup(JSON.stringify(markers["features"][0]["properties"])) //Make this look better
                 features.push(tempMarker)
                 console.log(tempMarker)
                 //featureArray.push(markers["features"][i])
