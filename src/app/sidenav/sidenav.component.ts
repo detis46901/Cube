@@ -9,9 +9,14 @@ import { SidenavService } from "../../_services/sidenav.service"
     providers: [SidenavService]
 })
 export class SideNavComponent { 
-    
     constructor(private sidenavService: SidenavService){}
-    @Input() markerdata: string
+    @Input() bottom : string
+    @Input() popup : string
+
+    ngOnInit() {
+       console.log(this.bottom)
+       //this.bottomtx = "Set from something"
+    }
 
     public hideMenu() {
         this.onclick()

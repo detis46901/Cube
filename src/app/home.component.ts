@@ -5,12 +5,13 @@ import { Api2Service } from './api2.service';
 import { User } from '../_models/user-model'
 import { Configuration } from '../_api/api.constants'
 import { SidenavService} from '../_services/sidenav.service'
+import { WFSService } from './map/services/wfs.service'
 
 @Component({
   selector: 'app-root',
   templateUrl: './home.component.html',
   //styleUrls: ['./app.component.css', './styles/w3.css'],
-  providers: [SidenavService]
+  providers: [SidenavService, WFSService]
 })
 export class HomeComponent {
 
@@ -25,16 +26,23 @@ export class HomeComponent {
     public markerdata: string;
     public isOpen: boolean;
     public temp;
+    public bottomtx= new String
+    public popuptx = new String
 
-    constructor(private dataService: Api2Service, private sidenavService: SidenavService) {
+    constructor(private dataService: Api2Service, private sidenavService: SidenavService, private WFSservice: WFSService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userid; 
+        this.userID = currentUser && currentUser.userid;
+        sidenavService.bottomText$.subscribe(tx => this.bottomtx = tx)
+        WFSservice.popupText$.subscribe(tx2 => this.popuptx = tx2)
+        
     }
 
     ngOnInit() {
        this.getAllItems(this.userID);
        this.markerdata = "" //Get this from sideNav using a listener? perhaps observable or data binding
+       this.bottomtx = "bottom from Service"
+       this.popuptx = "popup from Service"
     }
 
     ngDoCheck() {

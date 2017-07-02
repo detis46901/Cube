@@ -9,7 +9,16 @@ var markerData: string;
 @Injectable()
 export class SidenavService {
     //private isOpen: boolean;
-
+    // Observable string sources
+    private bottomText = new Subject<string>();
+    bottomText$ = this.bottomText.asObservable();
+    //missionConfirmed$ = this.missionConfirmedSource.asObservable();
+  
+     // Service message commands
+   
+    fillbottom(bottom: string) {
+        this.bottomText.next(bottom);
+    }
     public setFalse() {
         //console.log(this.isOpen)
         isOpen = false;
