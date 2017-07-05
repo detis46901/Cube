@@ -14,43 +14,62 @@
             </div>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-1">
             <div class="row">
-                <div class="col-md-2 col-md-offset-3">
+                <div class="col-md-2 col-md-offset-5">
                     <h4>URL</h4>
                 </div>
             </div>
         </div>
 
         <div class="col-md-1 col-md-offset-1">
-            <h4>Identity</h4>
-        </div>
-
-        <div class="col-md-1">
-            <h4>Format</h4>
+            <div class="row">
+                <div class="col-md-1 col-md-offset-2">
+                    <h4>Identity</h4>
+                </div>
+            </div>
         </div>
 
         <div class="col-md-1">
             <div class="row">
-                <div class="col-md-2 col-md-offset-3">
+                <div class="col-md-1 col-md-offset-5">
+                    <h4>Format</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1">
+            <div class="row">
+                <div class="col-md-1 col-md-offset-7">
                     <h4>Description</h4>
                 </div>
             </div>
         </div>
 
+        <div class="col-md-1">
+            <div class="row">
+                <div class="col-md-1 col-md-offset-10">
+                    <h4>Geometry</h4>
+                </div>
+            </div>
+        </div>
 
         <div class="col-md-3 col-md-offset-1">
-            <!-- Display modal: create new layer; Redirect to: layernew component via opennew()-->
-            <button id="createLayerBtn" class="btn-primary" (click)="opennew()">Create Layer</button>
-            <div ngbDropdown style="position:absolute; left:90px; top:10px">   
-                <button id="sortBtn" type="button" class="btn-primary" ngbDropdownToggle>Sort Layers</button>
-                <div id="sortDrop" class="dropdown-menu dropdown-menu-right" aria-labelledby="options">
-                    <button id="sortAZ" type="button" class="btn btn-secondary" (click)="SortAZ()">Name (Ascending)</button>
-                    <button id="sortZA" type="button" class="btn btn-secondary" (click)="SortZA()">Name (Descending)</button>
-                    <button id="sortType" type="button" class="btn btn-secondary" (click)="SortType()">Type</button>
-                    <button id="sortOldNew" type="button" class="btn btn-secondary" (click)="SortOldNew()">Old to New</button><br>
-                    <button id="sortNewOld" type="button" class="btn btn-secondary" (click)="SortNewOld()">New to Old</button>
-                </div>
+            <div class="row">
+                <!--<div class="col-md-11 col-md-offset-1">-->
+                    <button id="createLayerBtn" class="btn-primary" (click)="opennew()" style="left:12px">Create Layer</button>
+                    <div ngbDropdown style="position:absolute; left:128px; top:10px; width:31%">   
+                        <button id="sortBtn" type="button" class="btn-primary" ngbDropdownToggle>Sort Layers</button>
+                        <div id="sortDrop" class="dropdown-menu dropdown-menu-right" aria-labelledby="options">
+                            <button id="sortAZ" type="button" class="btn btn-secondary" (click)="SortAZ()">Name (Ascending)</button>
+                            <button id="sortZA" type="button" class="btn btn-secondary" (click)="SortZA()">Name (Descending)</button>
+                            <button id="sortType" type="button" class="btn btn-secondary" (click)="SortType()">Type</button>
+                            <button id="sortOldNew" type="button" class="btn btn-secondary" (click)="SortOldNew()">Old to New</button><br>
+                            <button id="sortNewOld" type="button" class="btn btn-secondary" (click)="SortNewOld()">New to Old</button><br>
+                            <button id="sortGeom" type="button" class="btn btn-secondary" (click)="SortGeom()">Geometry</button>
+                        </div>
+                    </div>
+                
             </div>
             <!--<button id="sort" type="button" style="position:absolute;height:25px;width:100px;left:90px;top:8px" class="btn-primary" (click)="sortPages()">Sort Layers</button>Probably a ngbdropdown-->
         </div>
@@ -66,13 +85,14 @@
             <option>KML-Drive</option>
             <option>GeoJSON</option>
         </select>
-        <input id="exlayerurl" name="exlayerurl" title="{{layeradmin.layerURL}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:20%" [(ngModel)] = "layeradmin.layerURL" type="text" (change)="updateLayer(layeradmin)">
+        <input id="exlayerurl" name="exlayerurl" title="{{layeradmin.layerURL}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:15%" [(ngModel)] = "layeradmin.layerURL" type="text" (change)="updateLayer(layeradmin)">
         <input id="exlayerident" name="exlayerident" title="{{layeradmin.layerIdent}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
         <input id="exlayerformat" name="exlayerformat" title="{{layeradmin.layerFormat}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerFormat" type="text" (change)="updateLayer(layeradmin)">            
-        <input id="exlayerdescription" ngModel required name="exlayerdescription" title="{{layeradmin.layerDescription}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:20%" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)">
+        <input id="exlayerdescription" ngModel required name="exlayerdescription" title="{{layeradmin.layerDescription}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)">
+        <input id="exlayergeom" ngModel required name="exlayergeom" title="{{layeradmin.layerGeom}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerGeom" type="text" (blur)="updateLayer(layeradmin)">
 
         <!-- Display modal: users that have permissions with specific layer; Redirect to: layerpermission component via openpermission()-->
-        <button class="btn btn-outline-primary" title="Open layer permissions" (click)="openpermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>
+        <button class="btn btn-outline-primary" style="width:16%" title="Open layer permissions" (click)="openpermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>
     </form>
     <!--<confirmdelete *ngIf="flag===true" (clicked)="onClicked($event)"></confirmdelete>-->
 </div>        

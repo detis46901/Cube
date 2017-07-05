@@ -10,8 +10,8 @@
 
 <div class="w3-display-topright" style="top:43px">
     <button class="btn btn-primary" style="position:relative; right:10px; top:20px" (click)="openkml(kmlFlag, kmlURL)">KML</button>
-    <button class="btn btn-primary" style="position:relative; right:10px; top:20px" (click)="opengeo(geoFlag, geoURL)">GeoJSON_BM test</button>
-    <button class="btn btn-primary" style="position:relative; right:10px; top:20px" (click)="openWFS(geoFlag, geoURL2)">GeoJSON_C test</button>
+    <button class="btn btn-primary" style="position:relative; right:10px; top:20px" (click)="openWFS(geoFlag, geoURL)">GeoJSON_BM test</button>
+    <button class="btn btn-primary" style="position:relative; right:10px; top:20px" (click)="openWFS(geoFlag, geoURL)">GeoJSON_C test</button>
 
     <div ngbDropdown class="d-inline-block">
         <button class="btn btn-outline-primary" style="position:absolute;right:83px" id="dropdownMenu1" ngbDropdownToggle>{{currPage}}</button><!--Perhaps using ngIf, interpolate the active page name as the button text if a page is selected-->

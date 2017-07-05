@@ -6,6 +6,7 @@ export class LayerAdmin {
     layerIdent: string;
     layerFormat: string;
     layerDescription: string;
+    layerGeom: string;
 }
 
 export class LayerPermission {
@@ -27,6 +28,7 @@ export class UserPageLayer {
     layerAdminID: number;
     layer_admin: LayerAdmin;
     layerShown: boolean;
+    featureGroupObject?: L.FeatureGroup
 }
 
 export class ControlLayers {

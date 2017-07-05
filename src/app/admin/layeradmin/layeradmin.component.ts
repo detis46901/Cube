@@ -100,7 +100,7 @@ export class LayerAdminComponent implements OnInit{
     opennew() {
         console.log ("opennew")
         this.userperm = "A user"
-        this.modalService.open(LayerNewComponent).result.then((result) => {
+        this.modalService.open(LayerNewComponent, 'lg').result.then((result) => {
           this.closeResult = `Closed with: ${result}`;
           this.getLayerItems();
         }, (reason) => {
@@ -207,15 +207,16 @@ export class LayerAdminComponent implements OnInit{
         this.newlayeradmin.layerType = "";
         this.newlayeradmin.layerIdent = "";
         this.newlayeradmin.layerFormat = "";
+        this.newlayeradmin.layerGeom = "";
     }
 
     public getLayerItems(): void {
         this.layerAdminService
             .GetAll()
-            .subscribe((data:LayerAdmin[]) => this.layeradmins = data,
+            .subscribe((data:LayerAdmin[]) => {this.layeradmins = data,
                 error => console.log(error),
                 () => console.log()
-                );
+            });
         this.sortedOldToNew = this.layeradmins
         console.log(this.layeradmins)
     }
@@ -292,6 +293,10 @@ export class LayerAdminComponent implements OnInit{
     }
 
     public SortNewOld() {
+        console.log("foobar")
+    }
+
+    public SortGeom() {
         console.log("foobar")
     }
 }

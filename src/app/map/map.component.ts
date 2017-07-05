@@ -26,23 +26,15 @@ import {Map, MouseEvent, Marker} from "leaflet";
   selector: 'map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
-  //providers: [Http, ElementRef, MapService, WFSService, GeocodingService, LayerPermissionService, LayerAdminService, UserPageService, UserPageLayerService, SidenavService]
-  //sproviders: [WFSService]
 })
 
 export class MapComponent {
-
-    //@Output() geoData: EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
 
     //Token and current user, Working on changing the token format to JWT once hashing is operational
     public token: string;
     public userID: number;
     public headers: Headers;
-    //public subscription: Subscription;
     public popuptx: string = ""
-
-    //In tandem with or independent of MarkerData below.
-    //@Output() MarkerDataOutput = new EventEmitter<string>();
         
     @ViewChild(MarkerComponent) markerComponent: MarkerComponent;
 
@@ -61,12 +53,12 @@ export class MapComponent {
 
     //Class variables
     public _map: L.Map;
-    
 
     //GeoJSON testing variables
     public geoFlag = false;
     public geoURL = "http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&styles=Kokomo:point&typeName=Kokomo:Bench_Marks&srsName=EPSG:4326&maxFeatures=150&outputFormat=application%2Fjson";
     public geoURL2 = 'http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&styles=Kokomo:point&typeName=Kokomo:Cabinets&srsName=EPSG:4326&maxFeatures=50&outputFormat=application%2Fjson'
+    public geoURLWMS = "http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/wms?service=WMS&version=1.1.0&request=GetMap&layers=Kokomo:Bench_Marks&styles=&bbox=184144.95491078153,1888976.6503463583,221117.617793215,1918974.7383329805&width=768&height=623&srs=EPSG:2965&format=image%2Fpng"
     public geoTest: any;
     public geoLayerGroup: any;
     public geoArray: Array<L.Layer>
@@ -74,13 +66,6 @@ export class MapComponent {
     public curMarker: any;
     public markerArr: Array<L.Marker>;
     public wfsmarker: Array<WFSMarker>;
-
-    //6/26/17 - Used to store the popup content of a marker upon a click event, to be sent to sideNav.
-   // public MarkerData: string;
-
-    //public kmlFlag = false;
-    //public kmlURL = "http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/wms?service=wms&request=GetMap&version=1.1.1&format=application/vnd.google-earth.kml+xml&layers=Kokomo:Bench_Marks&styles=point&height=2048&width=2048&transparent=false&srs=EPSG:4326&format_options=AUTOFIT:true;KMATTR:true;KMPLACEMARK:false;KMSCORE:60;MODE:refresh;SUPEROVERLAY:false&BBOX=-87,40,-86,41"
-    
 
     //Database information
     public layers: MapService;
@@ -95,45 +80,24 @@ export class MapComponent {
     public overlays: any;
     public currPage: any
 
-    //objects is used in the openjson() method
-    // public objects: any
-    // 
-    public wfsFeed: any
-
-
-    
     ngOnChanges() {
-        
     }
 
     ngDoCheck() {
-        //console.log('do check'); //this is the one to use if doing it this way
-
     }
 
     //Angular component initialization
     ngOnInit() {
-        //this.MarkerData = "Marker data placeholder"
-        this.setPage();
-       
-       
+        this.setPage();       
     }
 
     ngAfterContentChecked() {
-        //console.log('after content check')
     }
 
     ngAfterViewInit() {
-        //this.markerComponent.Initialize();
-        // var s = document.createElement("script");
-        // s.type = "text/javascript";
-        // s.src = "../../assets/stations.js";
-        // this.elementRef.nativeElement.appendChild(s);
-        // console.log('ngAfterViewInit');
     };
 
     ngOnDestroy() {
-        // console.log('ngOnDestroy')
     };
     
     //Takes results from getDefaultPage and sets the page based on result
@@ -148,38 +112,27 @@ export class MapComponent {
 
     //Currently this logic seems flawed. Whatever the last page that is set as default will be selected, consider a break statement within the if block
     public getDefaultPage() {
-        //console.log(this.userpages)
         for (let userpage of this.userpages) {
             if (userpage.default == true) {
                 this.defaultpage = userpage
             }
         }
-        //console.log (this.defaultpage)
         this.getUserPageLayers(this.defaultpage)
     } 
 
     //Gets data from the userpagelayers table based on the user that is accessing, and calls init_map() to intitialize the map
     public getUserPageLayers(page): void {
-        //console.log("get pageID = " + page.ID)
         this.userPageLayerService
             .GetPageLayers(page.ID)
             .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
                 error => console.log(error),
                 () =>  this.init_map()
             );
-        //this.addLayers()      
     }
 
     public init_map() {
-        //this.typeTest()
         this.currPage = this.defaultpage.page
-        //console.log("map init started")
-        //console.log(this.userpagelayers)
-        //this.currPage = "Pages in Map"
-
         this.setFlags()
-        //console.log('Flags array: ' + this.userpagelayers[0].layerShown)
-
         this._map = L.map("mapid", {
             zoomControl: false,
             center: L.latLng(40.4864, -86.1336),
@@ -187,31 +140,12 @@ export class MapComponent {
             minZoom: 4,
             maxZoom: 18,
             layers: [this.mapService.baseMaps.OpenStreetMap]
-        });       
-
-        
-
+        });               
         L.control.zoom({ position: "bottomright" }).addTo(this._map);
         L.control.scale().addTo(this._map);
         this.mapService.map = this._map;
-        console.log(this._map)
-
-        //var url = 'http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetMap&typeName=Kokomo:point&srsName=ESPG:4326&outputFormat=application%2Fjson'
-
-        //this.opengeo(this.geoURL)
-        //this.openkml(this.geoURL)
-
-        /*this.wfsservice.loadKML("http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&styles=Kokomo:point&typeName=Kokomo:Bench_Marks&srsName=EPSG:4326&maxFeatures=150&outputFormat=application%2Fjson")
-        .subscribe(observerK)*/
-        console.log(this.wfsFeed)                                                                                                                                                               
-        //this.openkml();
-
         this.mapService.map = this._map
         this.markerComponent.Initialize()
-        // this.mapService.map.on("click", (e: MouseEvent) => {
-        //    console.log("Fired")
-           
-        // });
     }   
 
     //This method sets flags for use with the "Layers in Map Component" map.component.html control in order to determine
@@ -247,22 +181,15 @@ export class MapComponent {
 
     //loadLayers will load during map init and load the layers that should come on by themselves with the "layerON" property set (in userpagelayers)
     public loadLayers() {
-        
     }
 
-    /*public typeTest() {
-        let x: omnivore.SomeType = omnivore.someVar.a;
-        console.log(x.count)
-    }*/
-
     //Reads index of layer in dropdown, layeradmin, and if it is shown or not. Needs to remove a layer if a new one is selected
-    public toggleLayers(index, layers, checked) {
+    toggleLayers(index, layers, checked) {
         console.log(layers)
         this.layeradmin = layers
-        //console.log (this.layeradmin)
-        //console.log (checked)
-        //console.log (index)
-    
+        let fg: any;
+
+
         if (checked == true) {
             //It may make sense to implement this using 'LayerGroup'
             this.currentlayer = (L.tileLayer.wms(this.layeradmin.layerURL, {
@@ -273,141 +200,33 @@ export class MapComponent {
             console.log(L.tileLayer.wms(this.layeradmin.layerURL, {layers: this.layeradmin.layerIdent,
             format: this.layeradmin.layerFormat,
             transparent: true,}))
+            this.openWFS(this.geoFlag,  this.layeradmin.layerURL + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + this.layeradmin.layerIdent + "&srsName=EPSG:4326&outputFormat=application%2Fjson", index)
+            //console.log(this.layeradmin.layerURL + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + this.layeradmin.layerIdent + "&srsName=EPSG:4326&outputFormat=application%2Fjson")
             this.userpagelayers[index].layerShown = false
-            
         }
 
         else { 
             console.log (checked)
             this._map.removeLayer(this.currentlayer)
-            //console.log(this.currentlayer)
+            console.log(this.userpagelayers[index])
+            this._map.removeLayer(this.userpagelayers[index].featureGroupObject)
             this.userpagelayers[index].layerShown = true
         }
     }
 
-    // public openjson (URL) {
-    //     console.log("openjson started")
-    //     this.http.get(URL)
-    //         .map((response) => <any>response.json())
-    //         .subscribe(data => this.objects = data, 
-    //         () => (console.log(this.objects), this.loadjson())) //This is getting nothing
-    // }
-
-    public openWFS(flag, URL) {
+    public openWFS(flag, URL, index) {
         console.log("openWFS Started")
+        let myIcon = L.icon({iconUrl: 'my-icon.png', iconSize: [5, 5]});
         this.wfsservice.getWFSLayers(URL)
-            .subscribe(res => {this.renderWFS(res)})
+            .subscribe(res => {
+                res.addTo(this.mapService.map)
+                this.userpagelayers[index].featureGroupObject = res
+            })
+
+        this._map.on('click', (event: MouseEvent) => {
+                    this.wfsservice.popupText.next("");
+                    console.log("fired")
+                    })
             //6/30/2017 Do something right here with assigning things to onClick of featureGroup        
     }
-    
-    public renderWFS(layergroup: L.FeatureGroup) {
-        layergroup.addTo(this.mapService.map)
-        //this.wfsservice.fillbottom("Loading markers")
-    }
-
-    //6/26/17 - Once operational, move to marker.component
-    // public opengeo (flag, URL) {
-    //     let geoMap = this._map;
-    //     let featureGroup: any; 
-    //     let markerList: any;
-    //     let props: Array<any> = [];
-    //     let len: any;
-
-    //     //Binds popup information to each marker
-    //     function onEach (feature, layer) {
-    //         let exec: any;
-    //         let data = '<p>';
-
-    //         //First iteration exclusive, cleanup property names array values (Column names, if you will) to simple plain-text string values
-    //         if(props[0] == null) {
-    //             props = JSON.stringify(feature.properties).split(',')
-    //             len = props.length
-    //             props[0] = props[0].substr(1)
-    //             props[len-1] = props[len-1].substring(0,props[len-1].indexOf('}'))
-    //             for(var i=0; i<len; i++) {
-    //                 props[i]=props[i].substring(1,props[i].indexOf('"', 1))
-    //             }
-    //         }
-    //         for(var i=0; i<len; i++) {
-    //             exec = eval("feature.properties." + props[i])
-    //             data = data + props[i] + ": " + exec + "<br>"
-    //         }
-    //         data = data + "</p>"
-    //         layer.bindPopup(data)
-    //     }
-        
-    //     //6/30/17 This is probably what needs the most work to continue
-    //     let observer = {
-    //         next: function(value) {
-    //             value.addTo(geoMap)
-    //         }
-    //     }
-
-    //     //Add geoJSON if it isn't already on the map
-    //     if(!flag) {      
-    //         /*console.log(this.wfsservice.getWFS(URL).subscribe(observer))
-    //         featureGroup = this.wfsservice.getWFS(URL).subscribe(observer)*/
-    //         console.log(this.wfsservice.getWFSLayers(URL))
-    //         featureGroup = this.wfsservice.getWFSLayers(URL).subscribe(observer)
-    //         this.geoFlag = true
-    //     }
-    //     //remove geoJSON layer from map if it exists on map
-    //     else {
-    //         //geoMap.removeLayer(getLayerId(featureGroup))
-    //         this.setUserPageLayers(this.defaultpage)
-    //         this.geoFlag = false
-    //     }
-    // }
-
-
-    // public openkml (flag, URL) {
-    //     console.log(flag)
-
-    //     let kmlMap = this._map
-    //     let polyTest: any;
-    //     let runLayer: any;
-    //     let maxZoom = 10;
-
-    //     var observer = {
-    //             next: function(value) {
-    //             console.log(value)
-    //         }
-    //     }
-
-    //     if(!flag) {
-    //         console.log("if")   
-            
-    //         //Uses defined variable "observer" to subscribe to the wfsservice loadWFS observable, which finds the given URL below on Geoserver
-    //         this.wfsservice.loadKML(URL)
-    //             .subscribe(observer)
-
-    //         //6/9/17
-    //         runLayer = omnivore.kml(URL).on('ready', function() {
-    //             kmlMap.fitBounds(runLayer.getBounds());
-    //         })
-
-    //         //6/19/17
-    //         /*.bindPopup(function (layer) {
-    //             return layer
-    //             //return layer.Document.Folder.Placemark.ExtendedData
-    //         })*/
-    //         .bindPopup("I am useless!")
-    //         .addTo(kmlMap);
-
-    //         console.log(omnivore.kml(URL))
-
-    //         this.kmlFlag = true
-    //     }
-
-    //     //remove geoJSON layer from map if it exists on map
-    //     else {
-    //         //this._map.removeLayer(thisLayer)
-    //         this.setUserPageLayers(this.defaultpage)
-    //         this.kmlFlag = false
-    //     }
-    // }
-
-    // public loadjson() {
-    //     console.log(this.objects) //Undefined here as well as in openjson
-    // }
 }

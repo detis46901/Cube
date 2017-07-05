@@ -9,3 +9,7 @@ export class WFSMarker {
       this.lng = lng;
     }
 }
+
+export interface FeatProps {
+    [name: string]: any;
+}
