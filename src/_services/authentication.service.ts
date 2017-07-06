@@ -11,7 +11,7 @@ export class AuthenticationService {
     public JWT: string;
 
     constructor(private http: Http) { //need to implement JWT here
-        var CryptoJS = require("crypto-js") //Required to use CryptoJS
+        //var CryptoJS = require("crypto-js") //Required to use CryptoJS
         //var jwt = require('jsonwebtoken')
 
         // set token if saved in local storage    

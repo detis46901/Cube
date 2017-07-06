@@ -381,7 +381,7 @@ export class MapComponent {
             console.log("if")         
             
             //Uses defined variable "observer" to subscribe to the wfsservice loadWFS observable, which finds the given URL below on Geoserver
-            this.wfsservice.loadWFS(URL)
+            //this.wfsservice.loadWFS(URL)
                 //.subscribe(observer)
 
             this.geoFlag = true
@@ -418,8 +418,8 @@ export class MapComponent {
             console.log("if")   
             
             //Uses defined variable "observer" to subscribe to the wfsservice loadWFS observable, which finds the given URL below on Geoserver
-            this.wfsservice.loadKML(URL)
-                .subscribe(observer)
+            //this.wfsservice.loadKML(URL)
+               // .subscribe(observer)
 
             //6/9/17
             runLayer = omnivore.kml(URL).on('ready', function() {

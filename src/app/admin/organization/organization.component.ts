@@ -10,16 +10,16 @@ import { RoleService } from '../../../_services/role.service'
 import { Department, Group, Role } from '../../../_models/organization.model'
 import { FilterPipe } from '../../../_pipes/rowfilter.pipe'
 import { NumFilterPipe } from '../../../_pipes/numfilter.pipe'
+import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component'
 
 @Component({
   selector: 'organization',
   templateUrl: './organization.component.html',
-  providers: [Api2Service, Configuration, FilterPipe, NumFilterPipe]
+  providers: [Api2Service, Configuration, FilterPipe, NumFilterPipe, NgbModal]
   //styleUrls: ['./app.component.css', './styles/w3.css'],
 })
 export class OrganizationComponent implements OnInit{
-
-    private objCode = 3
 
     public user = new User;
     public department = new Department;
@@ -38,7 +38,7 @@ export class OrganizationComponent implements OnInit{
     public newdepartment: string;
 
 
-    constructor(private departmentService: DepartmentService, private groupService: GroupService, private roleService: RoleService) {
+    constructor(private departmentService: DepartmentService, private groupService: GroupService, private roleService: RoleService, private modalService: NgbModal) {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
@@ -157,6 +157,38 @@ export class OrganizationComponent implements OnInit{
                 console.log(result);
                 this.getRoleItems();
             })
+    }
+
+    //type: department=1, group=2, role=3
+    openConfDel(org, type: number) {
+        const modalRef = this.modalService.open(ConfirmdeleteComponent)
+        modalRef.componentInstance.objCode = type
+        modalRef.componentInstance.objID = org.ID
+
+        switch(type) {
+            //department
+            case 1: {
+                modalRef.componentInstance.objName = org.department
+                break
+            }
+            //group
+            case 2: {
+                modalRef.componentInstance.objName = org.group
+                break
+            }
+            //role
+            case 3: {
+                modalRef.componentInstance.objName = org.role
+                break
+            }
+        }
+
+        /*modalRef.result.then((result) => {
+            this.deleteUser(user.ID)
+            this.getUserPageItems();
+        }, (reason) => {
+            this.getUserPageItems();
+        });*/
     }
 
     //This should also delete all rows for which: group(departmentID) == departmentID, but before deletion of those groups, logging the IDs from those

@@ -13,7 +13,7 @@
         <div class="column">
             <div class="form-group">
                 <div class="col-md-1">
-                    <label style="position:absolute;top:3px" for="newlayername">Name</label>
+                    <label id="nameLabel" for="newlayername">Name</label>
                 </div>
                 <div class="col-md-4">
                     <input id="newlayername" name="newlayername" required #newlayerinput [(ngModel)] = "newlayeradmin.layerName" type="text" placeholder="Layer Name">
@@ -21,11 +21,15 @@
             </div>
 
             <div class="form-group">
-                <div class="col-md-2">
-                    <label style="position:absolute;left:55px;top:3px" for="newlayerformat">Format</label>
+                <div class="col-md-1 col-md-offset-1">
+                    <label id="formatLabel" for="newlayerformat">Format</label>
                 </div>
                 <div class="col-md-5">
-                    <input id="newlayerformat" name="newlayerformat" #newlayerformatinput [(ngModel)] = "newlayeradmin.layerFormat" type="text" placeholder="Layer Format">
+                    <select id="newlayerformat" name="newlayerformat" class="form-control input-sm col-sm" [(ngModel)] = "newlayeradmin.layerFormat" required type="text">
+                    <option>image/png</option>
+                    <option>image/jpg</option>
+                    <option>image/jpeg</option>
+                    </select>
                 </div>
             </div>      
         </div>
@@ -35,25 +39,25 @@
         <div class="column">
             <div class="form-group">
                 <div class="col-md-1">
-                    <label style="position:absolute;top:3px;left:25px" for="newlayertype">Type</label>
+                    <label id="identLabel" for="newlayerident">Identity</label>
                 </div>
                 <div class="col-md-4">
-                    <select style="position:absolute;height:26px;width:180px;top:1px" id="newlayertype" name="newlayertype" class="form-control input-sm col-sm" [(ngModel)] = "newlayeradmin.layerType" required type="text" placeholder="Layer Type">
+                    <input id="newlayerident" name="newlayerident" #newlayeridentinput [(ngModel)] = "newlayeradmin.layerIdent" type="text" placeholder="Layer Identity">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-1 col-md-offset-1">
+                    <label id="typeLabel" for="newlayertype">Type</label>
+                </div>
+                <div class="col-md-4">
+                    <select id="newlayertype" name="newlayertype" class="form-control input-sm col-sm" [(ngModel)] = "newlayeradmin.layerType" required type="text" placeholder="Layer Type">
                     <option>PostGIS</option>
                     <option>WMS</option>
                     <option>KML-Link</option>
                     <option>KML-Drive</option>
                     <option>GeoJSON</option>
                     </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-md-2">
-                    <label style="position:absolute;left:55px;top:3x" for="newlayerident">Identity</label>
-                </div>
-                <div class="col-md-4">
-                    <input id="newlayerident" name="newlayerident" #newlayeridentinput [(ngModel)] = "newlayeradmin.layerIdent" type="text" placeholder="Layer Identity">
                 </div>
             </div>
         </div>
@@ -63,7 +67,7 @@
         <div class="column">
             <div class="form-group">
                 <div class="col-md-1">
-                    <label style="position:absolute;top:3px;left:30px" for="newlayerurl">URL</label>
+                    <label id="urlLabel" for="newlayerurl">URL</label>
                 </div>
                 <div class="col-md-4">
                     <input id="newlayerurl" name="newlayerurl" #newlayerurlinput [(ngModel)] = "newlayeradmin.layerURL" type="text" placeholder="Layer URL">
@@ -71,13 +75,18 @@
             </div>
 
             <div class="form-group">
-                <div class="col-md-2">
-                    <label style="position:absolute;left:30px;top:3px" for="newlayerdescription">Description</label> <!-- This is getting clipped off by its input box-->
+                <div class="col-md-1 col-md-offset-1">
+                    <label id="geomLabel" for="newlayergeom">Geometry</label>
                 </div>
-                <div class="col-md-5">
-                    <input id="newlayerdescription" name="newlayerdescription" required #newlayerdescriptioninput [(ngModel)] = "newlayeradmin.layerDescription" type="text" placeholder="Description">
+                <div class="col-md-4">
+                    <select id="newlayergeom" name="newlayergeom" class="form-control input-sm col-sm" [(ngModel)] = "newlayeradmin.layerGeom" required type="text">
+                    <option>Point</option>
+                    <option>Polyline</option>
+                    <option>Polygon</option>
+                    <option>Coverage</option>
+                    </select>
                 </div>
-            </div>
+            </div>   
         </div>
         <br>
 
@@ -85,10 +94,10 @@
         <div class="column">
             <div class="form-group">
                 <div class="col-md-1">
-                    <label style="position:absolute;top:3px;right:8px" for="newlayerurl">Geometry</label>
+                    <label id="descriptionLabel" for="newlayerdescription">Description</label> <!-- This is getting clipped off by its input box-->
                 </div>
-                <div class="col-md-4">
-                    <input id="newlayergeom" name="newlayergeom" #newlayergeominput [(ngModel)] = "newlayeradmin.layerGeom" type="text" placeholder="Layer Geometry">
+                <div class="col-md-5">
+                    <input id="newlayerdescription" name="newlayerdescription" #newlayerdescriptioninput [(ngModel)] = "newlayeradmin.layerDescription" type="text" placeholder="Description">
                 </div>
             </div>
         </div>

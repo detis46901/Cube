@@ -99,6 +99,7 @@ export class WFSService {
                 //7/05/17 - on click function block for displaing marker information in sidenav
                 tempMarker.on('click', (event: MouseEvent) => {
                     this.popupText.next(data[i]);
+                    console.log(this.popupText)
                     tempMarker.closePopup()
                     })
                 features.push(tempMarker)

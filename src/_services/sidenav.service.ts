@@ -15,10 +15,7 @@ export class SidenavService {
     //missionConfirmed$ = this.missionConfirmedSource.asObservable();
   
      // Service message commands
-   
-    fillbottom(bottom: string) {
-        this.bottomText.next(bottom);
-    }
+    
     public setFalse() {
         //console.log(this.isOpen)
         isOpen = false;

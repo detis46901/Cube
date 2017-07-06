@@ -27,14 +27,14 @@ export class HomeComponent {
     public isOpen: boolean;
     public temp;
     public bottomtx= new String
-    public popuptx = new String
+    public popuptx: string
 
     constructor(private dataService: Api2Service, private sidenavService: SidenavService, private WFSservice: WFSService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
-        sidenavService.bottomText$.subscribe(tx => this.bottomtx = tx)
-        WFSservice.popupText$.subscribe(tx2 => this.popuptx = tx2)
+        //sidenavService.bottomText$.subscribe(result => this.bottomtx = result) //7/6/17 not necessary 
+        WFSservice.popupText$.subscribe(result => this.popuptx = result)
         
     }
 
@@ -45,13 +45,13 @@ export class HomeComponent {
        this.popuptx = "popup from Service"
     }
 
-    ngDoCheck() {
+    /*ngDoCheck() {
         if (this.markerdata != "" && this.markerdata != this.temp){
             this.temp = this.markerdata
             console.log(this.markerdata)
             this.sidenavService.setMarkerData(this.markerdata)
         }
-    }
+    }*/
 
     getAllItems(userid): void {
          this.dataService

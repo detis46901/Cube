@@ -19,24 +19,27 @@ import { UserPage } from '../../../_models/user-model';
 import { Department, Group, Role } from '../../../_models/organization.model'
 import { PagePipe } from '../../../_pipes/rowfilter2.pipe'
 import { NumFilterPipe } from '../../../_pipes/numfilter.pipe'
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component'
 import { PageComponent } from '../page/page.component'
 import { PageConfigComponent } from '../page/pageconfig.component'
 import { Md5 } from 'ts-md5/dist/md5'
 import pHash = require('password-hash-and-salt')
 import * as jwt from 'jsonwebtoken'
+
 /*import { hash } from 'bcrypt'
 import {hash, genSalt} from "bcrypt/bcrypt.js"*/
 
 @Component({
   selector: 'user',
   templateUrl: './user.component.html',
-  providers: [Api2Service, RoleService, UserPageService, LayerPermissionService, UserPageLayerService, Configuration, PagePipe, NumFilterPipe],
+  providers: [Api2Service, RoleService, UserPageService, LayerPermissionService, UserPageLayerService, Configuration, PagePipe, NumFilterPipe, NgbModal],
   styleUrls: ['./user.component.less'],
 })
 
 export class UserComponent implements OnInit{
 
+    //Confirm Delete Modal
     private objCode = 1
 
     closeResult: string;
@@ -73,12 +76,6 @@ export class UserComponent implements OnInit{
        this.getRoleItems();
        this.initNewUser();
        this.getUserPageItems()
-       //this.getGroupItems();
-       //this.getRoleItems();
-       console.log(this.users)
-
-       
-        
     }
 
     initNewUser(): void {
@@ -91,7 +88,7 @@ export class UserComponent implements OnInit{
         this.newuser.password = "";
     }
 
-    public getUserItems(): void {
+    getUserItems(): void {
          this.api2service
             .GetAll()
             .subscribe((data:User[]) => this.users = data,
@@ -102,7 +99,7 @@ export class UserComponent implements OnInit{
         console.log(this.users) //this returns nothing
     }
 
-    public getRoleItems(): void {
+    getRoleItems(): void {
          this.roleservice
             .GetAll()
             .subscribe((data:Role[]) => this.roles = data,
@@ -112,10 +109,10 @@ export class UserComponent implements OnInit{
     }   
 
 
-    public addUser(newuser) {
+    addUser(newuser) {
         this.newuser = newuser
 
-        var preHash = "Monday01"
+        /*var preHash = "Monday01"
         var salt = 'secret'
         var hashedpw = ""
 
@@ -138,7 +135,7 @@ export class UserComponent implements OnInit{
                 }       
             })
         })
-        console.log(hashedpw)
+        console.log(hashedpw)*/
 
 
         console.log(this.newuser.password)
@@ -152,7 +149,7 @@ export class UserComponent implements OnInit{
 
         console.log(Md5.hashStr(newuser.password)) //works
         
-        this.newuser.password = (Md5.hashStr("Monday01")).toString() //works
+        //this.newuser.password = (Md5.hashStr("Monday01")).toString() //works
         console.log(newuser.password)
 
         console.log(newuser)
@@ -166,7 +163,7 @@ export class UserComponent implements OnInit{
             })
     }
 
-    public updateUser(user) {
+    updateUser(user) {
         this.api2service
             .Update(user)
             .subscribe(result => { //result is empty, layeradmins isn't
@@ -176,7 +173,7 @@ export class UserComponent implements OnInit{
     }
 
     //rename to change password, add a modal that will ask what new password should be
-    public resetPassword(userID, password) {
+    resetPassword(userID, password) {
         this.api2service
             .GetSingle(userID)
             .subscribe(result => {
@@ -192,12 +189,12 @@ export class UserComponent implements OnInit{
             })
     }
 
-    public changePassword() {
+    changePassword() {
         
     }
 
     //Also delete all user_pages(userID) == userID, user_page_layers(userID), layer_permissions(userID)
-    public deleteUser(userID) {
+    deleteUser(userID) {
         console.log(userID)
         this.api2service
             .Delete(userID)
@@ -207,17 +204,7 @@ export class UserComponent implements OnInit{
             })
     }
 
-    private getDismissReason(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-        return 'by pressing ESC';
-        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-        return 'by clicking on a backdrop';
-        } else {
-        return  `with: ${reason}`;
-        }
-    }
-
-    public openPages(userID, firstName, lastName) {
+    openPages(userID, firstName, lastName) {
         const modalRef = this.modalService.open(PageComponent)
         modalRef.componentInstance.userID = userID;
         modalRef.componentInstance.firstName = firstName;
@@ -232,7 +219,31 @@ export class UserComponent implements OnInit{
         console.log("openpermission from layernew")
     }
 
-    public getUserPageItems(): void {
+    openConfDel(user) {
+        const modalRef = this.modalService.open(ConfirmdeleteComponent)
+        modalRef.componentInstance.objCode = this.objCode
+        modalRef.componentInstance.objID = user.ID
+        modalRef.componentInstance.objName = user.lastName + ', ' + user.firstName
+
+        modalRef.result.then((result) => {
+            this.deleteUser(user.ID)
+            this.getUserPageItems();
+        }, (reason) => {
+            this.getUserPageItems();
+        });
+    }
+
+    getDismissReason(reason: any): string {
+        if (reason === ModalDismissReasons.ESC) {
+        return 'by pressing ESC';
+        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+        return 'by clicking on a backdrop';
+        } else {
+        return  `with: ${reason}`;
+        }
+    }
+
+    getUserPageItems(): void {
          this.userpageService
             .GetAll()
             .subscribe((data:UserPage[]) => this.userpages = data,
@@ -241,7 +252,7 @@ export class UserComponent implements OnInit{
                 );
     }
 
-    public openPageConfig(pageID, userID) {
+    openPageConfig(pageID, userID) {
         console.log("userID = " + userID)
         console.log("pageID = " + pageID)
         const modalRef = this.modalService.open(PageConfigComponent)

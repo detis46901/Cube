@@ -24,9 +24,6 @@ import { confirmDelete } from '../../../_models/confDel.model'
 
 export class LayerAdminComponent implements OnInit{
 
-    public deleteThis = false;
-    public flag = false;
-
     //objCode values refer to the admin menu tab the user is on, so the openConfDel procedure knows what to interpolate based on what it's deleting
     private objCode = 2
 
@@ -41,7 +38,6 @@ export class LayerAdminComponent implements OnInit{
     public token: string;
     public userID: number;
     public userperm: string;
-    public confDel = false;
 
     sortedNameAsc: any;
     sortedNameDesc: any;
@@ -52,35 +48,11 @@ export class LayerAdminComponent implements OnInit{
     constructor(private layerAdminService: LayerAdminService, private modalService: NgbModal, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private confDelService: ConfirmdeleteService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userid; 
+        this.userID = currentUser && currentUser.userid;
     }
 
     ngOnInit() {
-       this.getLayerItems();
-       console.log(this.flag)
-       //console.log(this.layeradmins.layer)
-       //this.getGroupItems();
-       //this.getRoleItems();
-        
-    }
-
-    onClicked(deleteFlag) {
-        this.deleteThis = deleteFlag
-        console.log(this.deleteThis)
-        console.log(this.confDelService.getVars())
-        console.log(this.currLayer.ID)
-        this.deleteLayer(this.currLayer.ID)
-    }
-
-    setFlag(layer_id) {
-        this.confDelService.resetDelete()
-        this.currLayer.ID = layer_id
-        console.log(this.objCode, this.currLayer.ID)
-
-        this.confDelService.setVars(this.objCode, this.currLayer.ID)
-        console.log(this.confDelService.getVars())
-        this.flag = true
-        console.log(this.flag)
+       this.getLayerItems();       
     }
 
     //Open permissions modal on request from "Layers"
@@ -108,89 +80,21 @@ export class LayerAdminComponent implements OnInit{
         });
     }
 
-    //6/27/17
-    //openConfDel(objectCode, objectID, objectName) {
     openConfDel(layer) {
-        this.confDelService.resetDelete()
-        console.log(this.confDelService.delete_obj)
-        console.log(this.objCode)
-        console.log(layer)
-        console.log(layer.ID)
-        console.log(layer.layerName)
-
-        let callback;
-
         const modalRef = this.modalService.open(ConfirmdeleteComponent)
-
         modalRef.componentInstance.objCode = this.objCode
         modalRef.componentInstance.objID = layer.ID
         modalRef.componentInstance.objName = layer.layerName
 
         modalRef.result.then((result) => {
-            this.closeResult = `Closed with: ${result}`;
-            console.log(this.confDelService.delete_obj)
+            this.deleteLayer(layer.ID)
             this.getLayerItems();
         }, (reason) => {
-            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-            console.log(this.confDelService.delete_obj)
             this.getLayerItems();
         });
-
-        function confirmDelete (callback) {
-            console.log()
-        }
-
-        /*6/27/17 let foo = document.getElementById("confDelClick")
-
-        console.log(foo)
-
-        //6/27/17 Either this or the observable way is probably best. consider reactiveX subject as well. this is also key for marker stuff 
-        foo.addEventListener("click", function(){console.log("button click on nconfDel modal fire event listened to by layeradmin")})
-
-        var observer = {
-            next: //this.deleteLayer(objectID) //Cannot be accessed from within "function(value)" parameter for "next:"
-            function(value) {
-                this.
-                console.log(value)
-            }
-        }
-
-        Observable.fromEvent(foo, 'click')
-            .subscribe(observer)*/
-
-        //this.modalService.open(ConfirmdeleteComponent);
-        //console.log(this.confDelService.delete_obj) Commented out as of 6/26/17*/
-
-        //Something here with $event probably
-
-        /*var deleteObserver = {
-            next: function(flag) {
-                console.log(flag);
-            }
-        }
-
-        Observable.fromEvent(this.btnId, 'click')
-            .subscribe(deleteObserver);
-        
-        if(this.confDelService.delete_obj) {
-            console.log("true delete")
-            //this.deleteLayer(layer_id)
-            //this.confDelService.resetDelete()
-        }
-
-        var subscription = this.confDelService.source.subscribe(
-            x => console.log('next: ', x)
-        );*/
-        
-        //subscription.dispose();
     }
 
-    /*opendelete(layer_id) {
-        this.currLayer.ID = layer_id
-        this.confDel = true
-    }*/
-
-    private getDismissReason(reason: any): string {
+    getDismissReason(reason: any): string {
       if (reason === ModalDismissReasons.ESC) {
         return 'by pressing ESC';
       } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
@@ -210,7 +114,7 @@ export class LayerAdminComponent implements OnInit{
         this.newlayeradmin.layerGeom = "";
     }
 
-    public getLayerItems(): void {
+    getLayerItems(): void {
         this.layerAdminService
             .GetAll()
             .subscribe((data:LayerAdmin[]) => {this.layeradmins = data,
@@ -221,7 +125,7 @@ export class LayerAdminComponent implements OnInit{
         console.log(this.layeradmins)
     }
 
-    public updateLayer(layer) {
+    updateLayer(layer) {
         this.layerAdminService
             .Update(layer)
             .subscribe(result => {
@@ -232,7 +136,7 @@ export class LayerAdminComponent implements OnInit{
 
      //The way this deletes permissions and layers when a layer is deleted should be implemented with any deletion that involves dependents
      //Should in theory delete entire row: layer(layerid), layer_permissions(layerid), and user_page_layers(layerid)
-     public deleteLayer(layerID) {
+     deleteLayer(layerID) {
         console.log(layerID)
 
         //non-functional
@@ -271,7 +175,7 @@ export class LayerAdminComponent implements OnInit{
     }
 
     //6/28/17
-    public SortAZ() {
+    SortAZ() {
         let list = this.layeradmins
         for (let i=0; i<list.length; i++) {
             let temp = list[i].layerName
@@ -280,23 +184,23 @@ export class LayerAdminComponent implements OnInit{
         console.log(this.layeradmins[0])
     }
 
-    public SortZA() {
+    SortZA() {
         console.log("foobar")
     }
 
-    public SortType() {
+    SortType() {
         console.log("foobar")
     }
 
-    public SortOldNew() {
+    SortOldNew() {
         console.log("foobar")
     }
 
-    public SortNewOld() {
+    SortNewOld() {
         console.log("foobar")
     }
 
-    public SortGeom() {
+    SortGeom() {
         console.log("foobar")
     }
 }

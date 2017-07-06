@@ -18,6 +18,8 @@ export class SideNavComponent {
        //this.bottomtx = "Set from something"
     }
 
+    //ngDoCheck() {console.log(this.popup)}
+
     public hideMenu() {
         this.onclick()
         document.getElementById("mySidenav").style.width = "0";
@@ -32,4 +34,5 @@ export class SideNavComponent {
         this.sidenavService.setFalse();
         console.log(this.sidenavService.getOpen())
     }
+
 }

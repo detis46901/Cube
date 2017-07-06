@@ -48,7 +48,8 @@
         <form style="position:relative; left:20px" class="form-inline" #e="ngForm" *ngFor="let user of users">
             <div class="row">
                 <div class="col-md-12" style="height:34px">
-                    <i (click)="deleteUser(user.ID)" class="fa fa-times" aria-hidden="true"></i>
+                    <!--<i (click)="deleteUser(user.ID)" class="fa fa-times" aria-hidden="true"></i>-->
+                    <i id="btnOpenDelUser" class="fa fa-times" (click)="openConfDel(user)"></i>
                     <input id="exuserfirstname" ngModel required name="exuserfirstname" class="form-control" [(ngModel)] = "user.firstName" type="text" (blur)="updateUser(user)" (change)="updateUser(user)">
                     <input id="exuserlastname" ngModel required name="exuserlastname" class="form-control" [(ngModel)] = "user.lastName" type="text" (blur)="updateUser(user)" (change)="updateUser(user)">
                     <select id="exuserrole" ngModel required name="exuserrole" class="form-control" [(ngModel)] = "user.roleID" #role="ngModel" type="text" (blur)="updateUser(user)" (change)="updateUser(user)">

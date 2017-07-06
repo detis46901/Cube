@@ -8,8 +8,8 @@
 
         <div class="col-md-1">
             <div class="row">
-                <div class="col-md-2 col-md-offset-2">
-                    <h4>Type</h4>
+                <div class="col-md-1 col-md-offset-2">
+                    <h4>Identity</h4>
                 </div>
             </div>
         </div>
@@ -20,12 +20,12 @@
                     <h4>URL</h4>
                 </div>
             </div>
-        </div>
+        </div> 
 
         <div class="col-md-1 col-md-offset-1">
             <div class="row">
                 <div class="col-md-1 col-md-offset-2">
-                    <h4>Identity</h4>
+                    <h4>Description</h4>
                 </div>
             </div>
         </div>
@@ -40,11 +40,11 @@
 
         <div class="col-md-1">
             <div class="row">
-                <div class="col-md-1 col-md-offset-7">
-                    <h4>Description</h4>
+                <div class="col-md-2 col-md-offset-7">
+                    <h4>Type</h4>
                 </div>
             </div>
-        </div>
+        </div>       
 
         <div class="col-md-1">
             <div class="row">
@@ -76,8 +76,16 @@
     </div> 
     <form class="form-inline" #e="ngForm" style="position:relative; left:20px" *ngFor="let layeradmin of layeradmins">
         <!--<i (click)="deleteLayer(layeradmin.ID)" class="fa fa-times" aria-hidden="true"></i>-->
-        <i id="btnOpenDel" class="fa fa-times" (click)="openConfDel(layeradmin)"></i><!--Use [(ngClass])?-->
+        <i id="btnOpenDelLayer" class="fa fa-times" (click)="openConfDel(layeradmin)"></i>
         <input id="exlayername" ngModel required name="exlayername" title="{{layeradmin.layerName}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
+        <input id="exlayerident" required name="exlayerident" title="{{layeradmin.layerIdent}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
+        <input id="exlayerurl" required name="exlayerurl" title="{{layeradmin.layerURL}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:15%" [(ngModel)] = "layeradmin.layerURL" type="text" (change)="updateLayer(layeradmin)">
+        <input id="exlayerdescription" ngModel name="exlayerdescription" title="{{layeradmin.layerDescription}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)">            
+        <select id="exlayerformat" ngModel required name="exlayerformat" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerFormat" type="text" (blur)="updateLayer(layeradmin)">
+            <option>image/png</option>
+            <option>image/jpg</option>
+            <option>image/jpeg</option>
+        </select>
         <select id="exlayertype" ngModel required name="exlayertype" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerType" type="text" (blur)="updateLayer(layeradmin)">
             <option>PostGIS</option>
             <option>WMS</option>
@@ -85,12 +93,12 @@
             <option>KML-Drive</option>
             <option>GeoJSON</option>
         </select>
-        <input id="exlayerurl" name="exlayerurl" title="{{layeradmin.layerURL}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:15%" [(ngModel)] = "layeradmin.layerURL" type="text" (change)="updateLayer(layeradmin)">
-        <input id="exlayerident" name="exlayerident" title="{{layeradmin.layerIdent}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
-        <input id="exlayerformat" name="exlayerformat" title="{{layeradmin.layerFormat}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerFormat" type="text" (change)="updateLayer(layeradmin)">            
-        <input id="exlayerdescription" ngModel required name="exlayerdescription" title="{{layeradmin.layerDescription}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)">
-        <input id="exlayergeom" ngModel required name="exlayergeom" title="{{layeradmin.layerGeom}}" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerGeom" type="text" (blur)="updateLayer(layeradmin)">
-
+        <select id="exlayergeom" ngModel required name="exlayergeom" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:10%" [(ngModel)] = "layeradmin.layerGeom" type="text" (blur)="updateLayer(layeradmin)">
+            <option>Point</option>
+            <option>Polyline</option>
+            <option>Polygon</option>
+            <option>Coverage</option>
+        </select>
         <!-- Display modal: users that have permissions with specific layer; Redirect to: layerpermission component via openpermission()-->
         <button class="btn btn-outline-primary" style="width:16%" title="Open layer permissions" (click)="openpermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>
     </form>
