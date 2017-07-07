@@ -8,6 +8,9 @@
         </div>
         <div class="modal-body">
             <p>Are you sure you want to delete {{objName}}?</p>
+            <div *ngIf="dependentWarning">
+                <p><b>Deleting this object will delete its dependents.</b></p>
+            </div>
         </div>
         <div class="modal-footer">
             <button id="confDelClick" type="button" class="btn btn-secondary" (click)="onClick()">Delete</button><button class="btn btn-outline-primary" (click)="onClose()">No</button>

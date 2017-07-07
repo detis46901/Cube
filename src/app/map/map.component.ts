@@ -80,28 +80,13 @@ export class MapComponent {
     public overlays: any;
     public currPage: any
 
-    ngOnChanges() {
-    }
-
-    ngDoCheck() {
-    }
-
     //Angular component initialization
     ngOnInit() {
         this.setPage();       
     }
-
-    ngAfterContentChecked() {
-    }
-
-    ngAfterViewInit() {
-    };
-
-    ngOnDestroy() {
-    };
     
     //Takes results from getDefaultPage and sets the page based on result
-    public setPage(): void {
+    setPage(): void {
         this.userPageService
             .GetSome(this.userID)
             .subscribe((data:UserPage[]) => this.userpages = data,
@@ -111,7 +96,7 @@ export class MapComponent {
     }
 
     //Currently this logic seems flawed. Whatever the last page that is set as default will be selected, consider a break statement within the if block
-    public getDefaultPage() {
+    getDefaultPage() {
         for (let userpage of this.userpages) {
             if (userpage.default == true) {
                 this.defaultpage = userpage
@@ -121,7 +106,7 @@ export class MapComponent {
     } 
 
     //Gets data from the userpagelayers table based on the user that is accessing, and calls init_map() to intitialize the map
-    public getUserPageLayers(page): void {
+    getUserPageLayers(page): void {
         this.userPageLayerService
             .GetPageLayers(page.ID)
             .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
@@ -130,7 +115,7 @@ export class MapComponent {
             );
     }
 
-    public init_map() {
+    init_map() {
         this.currPage = this.defaultpage.page
         this.setFlags()
         this._map = L.map("mapid", {
@@ -150,14 +135,14 @@ export class MapComponent {
 
     //This method sets flags for use with the "Layers in Map Component" map.component.html control in order to determine
     //Which layers are currently active, so they can be turned on or off at will with the corresponding dropdown selection.
-    public setFlags() {
+    setFlags() {
         for (let x of this.userpagelayers) {
             x.layerShown = x.layerON
         }
     }   
         
     //Gets userpagelayers by page.ID, changes pages
-    public setUserPageLayers(page): void {
+    setUserPageLayers(page): void {
         this.currPage = page.page
         console.log(this.currPage)
         console.log("set pageID = " + page.ID)
@@ -169,7 +154,7 @@ export class MapComponent {
             );
     }
         
-    public changePages(): void {
+    changePages(): void {
         console.log('Flags array: ' + this.userpagelayers[0].layerShown)
         this.setFlags();
         this.mapService.map.eachLayer(function (removelayer) {removelayer.remove()})
@@ -180,29 +165,30 @@ export class MapComponent {
     }
 
     //loadLayers will load during map init and load the layers that should come on by themselves with the "layerON" property set (in userpagelayers)
-    public loadLayers() {
+    loadLayers() {
     }
 
     //Reads index of layer in dropdown, layeradmin, and if it is shown or not. Needs to remove a layer if a new one is selected
     toggleLayers(index, layers, checked) {
         console.log(layers)
         this.layeradmin = layers
-        let fg: any;
-
 
         if (checked == true) {
             //It may make sense to implement this using 'LayerGroup'
+            //This shows the image, but does not add the interactive layer.
             this.currentlayer = (L.tileLayer.wms(this.layeradmin.layerURL, {
             layers: this.layeradmin.layerIdent,
             format: this.layeradmin.layerFormat,
             transparent: true,
             })).addTo(this._map)
-            console.log(L.tileLayer.wms(this.layeradmin.layerURL, {layers: this.layeradmin.layerIdent,
-            format: this.layeradmin.layerFormat,
-            transparent: true,}))
-            this.openWFS(this.geoFlag,  this.layeradmin.layerURL + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + this.layeradmin.layerIdent + "&srsName=EPSG:4326&outputFormat=application%2Fjson", index)
-            //console.log(this.layeradmin.layerURL + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + this.layeradmin.layerIdent + "&srsName=EPSG:4326&outputFormat=application%2Fjson")
+            //console.log(L.tileLayer.wms(this.layeradmin.layerURL, {layers: this.layeradmin.layerIdent, format: this.layeradmin.layerFormat, transparent: true,}))
+
+            //this is what adds the interactive layer to the image, discriminates based on geometry type.
+            //this.discriminateGeom(this.layeradmin.layerGeom, index)
+            this.openWFS(this.layeradmin.layerGeom, this.layeradmin.layerURL + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + this.layeradmin.layerIdent + "&srsName=EPSG:4326&outputFormat=application%2Fjson", index)
             this.userpagelayers[index].layerShown = false
+
+            //console.log(this.layeradmin.layerURL + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + this.layeradmin.layerIdent + "&srsName=EPSG:4326&outputFormat=application%2Fjson")
         }
 
         else { 
@@ -214,19 +200,66 @@ export class MapComponent {
         }
     }
 
-    public openWFS(flag, URL, index) {
-        console.log("openWFS Started")
+    openWFS(geometry, URL, index) {
         let myIcon = L.icon({iconUrl: 'my-icon.png', iconSize: [5, 5]});
-        this.wfsservice.getWFSLayers(URL)
-            .subscribe(res => {
-                res.addTo(this.mapService.map)
-                this.userpagelayers[index].featureGroupObject = res
-            })
-
-        this._map.on('click', (event: MouseEvent) => {
-                    this.wfsservice.popupText.next("");
-                    console.log("fired")
+        switch(geometry) {
+            case "Point": {
+                this.wfsservice.getPointLayers(URL)
+                    .subscribe(res => {
+                        res.addTo(this.mapService.map)
+                        this.userpagelayers[index].featureGroupObject = res
                     })
+                break
+            }
+            case "Polyline": {
+                this.wfsservice.getPolylineLayers(URL)
+                    .subscribe(res => {
+                        res.addTo(this.mapService.map)
+                        this.userpagelayers[index].featureGroupObject = res
+                    })
+                break
+            }
+            case "Polygon": {
+                this.wfsservice.getPolygonLayers(URL)
+                break
+            }
+            case "Coverage": {
+                this.wfsservice.getCoverageLayers(URL)
+                break
+            }
+            default: {
+                alert("Invalid Geometry type: " + geometry)
+            }
+        }
+        
+        this._map.on('click', (event: MouseEvent) => {
+            this.wfsservice.popupText.next("Click a layer for details.");
+            console.log("fired")
+            })
             //6/30/2017 Do something right here with assigning things to onClick of featureGroup        
     }
+
+    /*discriminateGeom(geometry, index) {
+        switch(geometry) {
+            case "Point": {
+                this.openWFS(this.layeradmin.layerURL + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + this.layeradmin.layerIdent + "&srsName=EPSG:4326&outputFormat=application%2Fjson", index)
+                break
+            }
+            case "Polyline": {
+
+                break
+            }
+            case "Polygon": {
+
+                break
+            }
+            case "Coverage": {
+
+                break
+            }
+            default: {
+                alert("Invalid Geometry type.")
+            }
+        }
+    }*/
 }

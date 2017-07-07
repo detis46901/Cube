@@ -18,6 +18,7 @@ export class ConfirmdeleteComponent implements OnInit {
 	@Input() objID;
 	@Input() objName;
 	objectType: string;
+	dependentWarning: boolean = false;
 
 	closeResult: string;
 	public token: string;
@@ -27,14 +28,12 @@ export class ConfirmdeleteComponent implements OnInit {
 		var currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.token = currentUser && currentUser.token;
 		this.userID = currentUser && currentUser.userid;
+
 	}
 
 	ngOnInit() {
 		//currently the object codes will align as follows: Users-1, Layers-2, Organization-3
 		switch(this.objCode) {
-			case 0:
-				//throw error for no identified object
-				break
 			case 1:
 				this.objectType = "User"
 				break
@@ -43,12 +42,17 @@ export class ConfirmdeleteComponent implements OnInit {
 				break
 			case 3:
 				this.objectType = "Department"
+				this.dependentWarning = true;
 				break
 			case 4:
 				this.objectType = "Group"
+				this.dependentWarning = true;
 				break
 			case 5:
 				this.objectType = "Role"
+				break
+			default: 
+				alert("Invalid Object Code: " + this.objCode)
 				break
 		}
 	}

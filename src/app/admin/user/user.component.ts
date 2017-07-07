@@ -83,9 +83,14 @@ export class UserComponent implements OnInit{
         this.newuser.lastName = "";
         this.newuser.roleID = null;
         this.newuser.active = true;
-        this.newuser.email = "";
+        this.newuser.email = ' '
         this.newuser.administrator = false;
         this.newuser.password = "";
+    }
+
+    clearInputs(): void {
+        this.newuser.email = ""
+        this.newuser.password = ""
     }
 
     getUserItems(): void {
@@ -111,32 +116,6 @@ export class UserComponent implements OnInit{
 
     addUser(newuser) {
         this.newuser = newuser
-
-        /*var preHash = "Monday01"
-        var salt = 'secret'
-        var hashedpw = ""
-
-        //password('Monday01').hash(salt, hash)
-
-        //password('Monday01').hash(function(salt, hash) {
-        pHash(preHash).hash(function(error, hash) {
-            console.log(hash)
-            if(error)
-                throw new Error('Hash error')
-            hashedpw = hash
-
-            pHash('hack').verifyAgainst(hashedpw, function(error, verified) {
-                if(error)
-                    throw new Error('Hack error')
-                if(!verified) {
-                    console.log('hack attempt')
-                } else {
-                    console.log('The secret is')
-                }       
-            })
-        })
-        console.log(hashedpw)*/
-
 
         console.log(this.newuser.password)
         if (this.newuser.password == "") {

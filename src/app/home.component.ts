@@ -10,7 +10,7 @@ import { WFSService } from './map/services/wfs.service'
 @Component({
   selector: 'app-root',
   templateUrl: './home.component.html',
-  //styleUrls: ['./app.component.css', './styles/w3.css'],
+  styleUrls: ['./home.component.less'],
   providers: [SidenavService, WFSService]
 })
 export class HomeComponent {
@@ -23,38 +23,24 @@ export class HomeComponent {
     public myItems: any;
     public token: string;
     public userID: number;
-    public markerdata: string;
     public isOpen: boolean;
-    public temp;
-    public bottomtx= new String
     public popuptx: string
 
     constructor(private dataService: Api2Service, private sidenavService: SidenavService, private WFSservice: WFSService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
-        //sidenavService.bottomText$.subscribe(result => this.bottomtx = result) //7/6/17 not necessary 
         WFSservice.popupText$.subscribe(result => this.popuptx = result)
         
     }
 
     ngOnInit() {
        this.getAllItems(this.userID);
-       this.markerdata = "" //Get this from sideNav using a listener? perhaps observable or data binding
-       this.bottomtx = "bottom from Service"
-       this.popuptx = "popup from Service"
+       this.popuptx = "Click a layer for details."
     }
 
-    /*ngDoCheck() {
-        if (this.markerdata != "" && this.markerdata != this.temp){
-            this.temp = this.markerdata
-            console.log(this.markerdata)
-            this.sidenavService.setMarkerData(this.markerdata)
-        }
-    }*/
-
     getAllItems(userid): void {
-         this.dataService
+        this.dataService
             .GetSingle(userid)
             .subscribe((data:User) => this.user = data,
                 error => console.log(error),
@@ -65,7 +51,4 @@ export class HomeComponent {
         this.isOpen = open;
     }
 
-    foo() {
-        console.log(this.markerdata)
-    }
 }

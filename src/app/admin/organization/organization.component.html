@@ -6,11 +6,12 @@
             </tr>
 
             <!-- List departments-->
-            <tr *ngFor="let department of departments" (click)="departmentClick(department)"> <!--Probably change to onFocus()-->
+            <tr *ngFor="let department of departments">
                 <td><form class="form-inline">
                     <div class="form-group" style="width:100%">
-                        <label for="exdepartment"><i id="btnOpenDelDep" class="fa fa-times" (click)="openConfDel(org, 1)"></i></label><!-- This needs to delete its groups and roles-->
-                        <input id="exdepartment" name="exdepartment" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; width:90%" #editdepartmentinput [(ngModel)] = "department.department" type="text" (blur)="updateDepartment(department)">
+                        <!--<label for="exdepartment"><i (click)="deleteDepartment(department.ID)" class="fa fa-times" aria-hidden="true"></i></label>-->
+                        <label for="btnOpenDelDep"><i id="btnOpenDelDep" class="fa fa-times" (click)="openConfDel(department, 3)"></i></label><!-- This needs to delete its groups and roles-->
+                        <input ng-focus="foo = foo + 1" (click)="departmentClick(department)"id="exdepartment" name="exdepartment" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; width:90%" #editdepartmentinput [(ngModel)] = "department.department" type="text" (blur)="updateDepartment(department)">
                     </div>
                 </form></td>
             </tr>
@@ -25,11 +26,12 @@
             </tr>
 
             <!-- List groups by department-->
-            <tr *ngFor="let group of groups" (click)="groupClick(group)">
+            <tr *ngFor="let group of groups">
                 <td *ngIf="filterGroup(group.departmentID)"><form class="form-inline">
                     <div class="form-group" style="width:100%">
-                        <label for="exgroup" *ngIf="filterGroup(group.departmentID)"><i id="btnOpenDelGroup" class="fa fa-times" (click)="openConfDel(org, 2)"></i></label>
-                        <input id="exgroup" name="exgroup" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px;  width:90%" #editgroupinput [(ngModel)] = "group.group" type="text" (blur)="updateGroup(group)">
+                        <!--<label for="exgroup" *ngIf="filterGroup(group.departmentID)"><i (click)="deleteGroup(group.ID)" class="fa fa-times" aria-hidden="true"></i></label>-->
+                        <label for="btnOpenDelGroup" *ngIf="filterGroup(group.departmentID)"><i id="btnOpenDelGroup" class="fa fa-times" (click)="openConfDel(group, 4)"></i></label>
+                        <input ng-focus="" (click)="groupClick(group)" id="exgroup" name="exgroup" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px;  width:90%" #editgroupinput [(ngModel)] = "group.group" type="text" (blur)="updateGroup(group)">
                     </div>
                 </form></td>
             </tr>
@@ -47,7 +49,8 @@
             <tr *ngFor="let role of roles">
                 <td *ngIf="filterRole(role.groupID)"><form class="form-inline">
                     <div class="form-group" style="width:100%">
-                        <label for="exrole" *ngIf="filterRole(role.groupID)"><i id="btnOpenDelRole" class="fa fa-times" (click)="openConfDel(org, 3)"></i></label>
+                        <!--<label for="exrole" *ngIf="filterRole(role.groupID)"><i (click)="deleteRole(role.ID)" class="fa fa-times" aria-hidden="true"></i></label>-->
+                        <label for="btnOpenDelRole" *ngIf="filterRole(role.groupID)"><i id="btnOpenDelRole" class="fa fa-times" (click)="openConfDel(role, 5)"></i></label>
                         <input id="exrole" name="exrole" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px;  width:90%" #editroleinput [(ngModel)] = "role.role" type="text" (blur)="updateRole(role)">
                     </div>
                 </form></td>
@@ -57,3 +60,5 @@
         </table>
     </div>
 </div>
+
+<template ngbModalContainer></template>

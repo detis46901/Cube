@@ -1,18 +1,8 @@
 <div id="mapid"></div>
 <navigator></navigator>
 <marker></marker>
-<!--<sidenav [markerdata]="MarkerData"></sidenav>-->
 
-<div>
-    <!--<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png"/> this works-->
-    <!--<img src="avatar2.png"/> Doesn't work-->
-</div>
-
-<div class="w3-display-topright" style="top:43px">
-    <button class="btn btn-primary" style="position:relative; right:10px; top:20px" (click)="openkml(kmlFlag, kmlURL)">KML</button>
-    <button class="btn btn-primary" style="position:relative; right:10px; top:20px" (click)="openWFS(geoFlag, geoURL)">GeoJSON_BM test</button>
-    <button class="btn btn-primary" style="position:relative; right:10px; top:20px" (click)="openWFS(geoFlag, geoURL)">GeoJSON_C test</button>
-
+<div class="col-md-2 col-md-offset-10" style="bottom:10px">
     <div ngbDropdown class="d-inline-block">
         <button class="btn btn-outline-primary" style="position:absolute;right:83px" id="dropdownMenu1" ngbDropdownToggle>{{currPage}}</button><!--Perhaps using ngIf, interpolate the active page name as the button text if a page is selected-->
         <div class="dropdown-menu dropdown-menu-right" style="position:absolute;top:60px" aria-labelledby="dropdownMenu1">
@@ -33,5 +23,6 @@
         </div>
     </div>
 </div>
+
 
 <!--<input type="checkbox" [(ngModel)]="userpagelayer.layerON" (change)="updateUserPageLayer(userpagelayer)"> {{userpagelayer.layer_admin.layerName}}-->

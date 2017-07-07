@@ -36,6 +36,7 @@ export class OrganizationComponent implements OnInit{
     public showgroup: boolean;
     public showrole: boolean;
     public newdepartment: string;
+    public foo = 0;
 
 
     constructor(private departmentService: DepartmentService, private groupService: GroupService, private roleService: RoleService, private modalService: NgbModal) {
@@ -84,6 +85,7 @@ export class OrganizationComponent implements OnInit{
         this.showgroup = true;  
         //console.log('departmentID=' + dept.rowID)
         this.selecteddepartment = dept
+        console.log(this.foo)
     }
 
      public groupClick(group) {
@@ -164,21 +166,27 @@ export class OrganizationComponent implements OnInit{
         const modalRef = this.modalService.open(ConfirmdeleteComponent)
         modalRef.componentInstance.objCode = type
         modalRef.componentInstance.objID = org.ID
-
+        
         switch(type) {
             //department
-            case 1: {
+            case 3: {
                 modalRef.componentInstance.objName = org.department
+                console.log(org.department)
                 break
             }
             //group
-            case 2: {
+            case 4: {
                 modalRef.componentInstance.objName = org.group
                 break
             }
             //role
-            case 3: {
+            case 5: {
                 modalRef.componentInstance.objName = org.role
+                break
+            }
+
+            default: {
+                alert("Object Type code invalid.")
                 break
             }
         }
