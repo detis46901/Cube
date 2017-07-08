@@ -94,7 +94,7 @@ export class WFSService {
 
     //Can probably get this into the method above, and group them all together. They share a great deal of logic, could be divided through conditionals
     getPolylineLayers(path: string) {
-        let polylineOptions = {color:'blue', weight:6, opacity:0.9};
+        let polylineOptions = {color:'blue', weight:6, opacity:0};
         let props, len, exec, polylineGroup;
         let data = Array<any>();
         let polylist: Array<L.Layer> = [];
@@ -146,7 +146,7 @@ export class WFSService {
 
                         let polyline = L.polyline(polylinePoints, polylineOptions);
                         polyline.bindPopup(JSON.stringify(markers["features"][i]["properties"]))
-
+                        
                         polyline.on('click', (event: MouseEvent) => {
                             this.popupText.next(data[i]);
                             polyline.closePopup()

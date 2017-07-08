@@ -224,7 +224,7 @@ export class MapComponent {
                 break
             }
             case "Coverage": {
-                this.wfsservice.getCoverageLayers(URL)
+                //this.wfsservice.getCoverageLayers(URL)
                 break
             }
             default: {

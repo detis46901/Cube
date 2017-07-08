@@ -17,7 +17,7 @@
             <div *ngFor="let userpagelayer of userpagelayers" class="btn-group" data-toggle="buttons">
                 <!-- Should these be checkboxes in appearance?-->
                 <label class="btn btn-primary" (click)="toggleLayers(userpagelayers.indexOf(userpagelayer), userpagelayer.layer_admin, userpagelayer.layerShown)" [class.active]="userpagelayer.layerShown">
-                    <input type="checkbox" [(ngModel)]="userpagelayer.layerON" (change)="updateUserPageLayer(userpagelayer)"> {{userpagelayer.layer_admin.layerName}}
+                    <input type="checkbox" [(ngModel)]="userpagelayer.layerOn" (change)="updateUserPageLayer(userpagelayer)"> {{userpagelayer.layer_admin.layerName}}
                 </label><br>
             </div>
         </div>
