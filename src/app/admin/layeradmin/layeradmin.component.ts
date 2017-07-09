@@ -72,7 +72,7 @@ export class LayerAdminComponent implements OnInit{
     opennew() {
         console.log ("opennew")
         this.userperm = "A user"
-        this.modalService.open(LayerNewComponent, 'lg').result.then((result) => {
+        this.modalService.open(LayerNewComponent).result.then((result) => {
           this.closeResult = `Closed with: ${result}`;
           this.getLayerItems();
         }, (reason) => {

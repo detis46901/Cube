@@ -1,4 +1,4 @@
-/// <reference path='../../../typings/leaflet.d.ts'/>
+// <reference path='../../../typings/leaflet.d.ts'/>
 // <reference path='../../../typings/leaflet-omnivore.d.ts'/>
 
 //Import statements
@@ -14,7 +14,7 @@ import { LayerPermissionService } from "../../_services/layerpermission.service"
 import { LayerAdminService } from "../../_services/layeradmin.service"
 import { UserPageService } from '../../_services/user-page.service'
 import { SidenavService } from '../../_services/sidenav.service'
-import { LayerPermission, LayerAdmin, UserPageLayer, ControlLayers } from "../../_models/layer.model";
+import { LayerPermission, LayerAdmin, UserPageLayer } from "../../_models/layer.model";
 import { UserPage } from '../../_models/user-model';
 import { UserPageLayerService } from '../../_services/user-page-layer.service'
 import { Http, Response, Headers } from '@angular/http'

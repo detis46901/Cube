@@ -30,8 +30,3 @@ export class UserPageLayer {
     layerShown: boolean;
     featureGroupObject?: L.FeatureGroup
 }
-
-export class ControlLayers {
-    name: string;
-    URL: L.WMS
-}
