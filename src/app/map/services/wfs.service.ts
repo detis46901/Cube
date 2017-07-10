@@ -168,4 +168,12 @@ export class WFSService {
     getCoverageLayers(URL) {
 
     }
+    getfeatureinfo(URL) {
+        return this.http.get(URL, {headers: this.headers})
+            .map( (responseData) => {
+                console.log(responseData)
+                this.popupText.next(responseData['_body'])
+                return responseData['_body'];
+            })
+    }
 }

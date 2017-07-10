@@ -185,7 +185,8 @@ export class MapComponent {
 
             //this is what adds the interactive layer to the image, discriminates based on geometry type.
             //this.discriminateGeom(this.layeradmin.layerGeom, index)
-            this.openWFS(this.layeradmin.layerGeom, this.layeradmin.layerURL + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + this.layeradmin.layerIdent + "&srsName=EPSG:4326&outputFormat=application%2Fjson", index)
+            //this.openWFS(this.layeradmin.layerGeom, this.layeradmin.layerURL + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + this.layeradmin.layerIdent + "&srsName=EPSG:4326&outputFormat=application%2Fjson", index)
+            this.openFeatureInfo();
             this.userpagelayers[index].layerShown = false
 
             //console.log(this.layeradmin.layerURL + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + this.layeradmin.layerIdent + "&srsName=EPSG:4326&outputFormat=application%2Fjson")
@@ -200,42 +201,59 @@ export class MapComponent {
         }
     }
 
+    //this needs to be set up for every layer
+    openFeatureInfo() {
+        console.log("openFeatureInfo")
+        let ms_url="http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/wms";
+        this._map.on('click', (event: MouseEvent) => {
+            console.log("fired")
+            let BBOX = this._map.getBounds().toBBoxString();
+            let WIDTH = this._map.getSize().x;
+            let HEIGHT = this._map.getSize().y;
+            let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
+            let Y = this._map.layerPointToContainerPoint(event.layerPoint).y;
+            var URL = ms_url + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS=Kokomo:Pipes&QUERY_LAYERS=Kokomo:Pipes&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
+            console.log(URL)
+            this.wfsservice.getfeatureinfo(URL)
+                .subscribe((data: any) => console.log(data))
+            })
+    }
     openWFS(geometry, URL, index) {
         let myIcon = L.icon({iconUrl: 'my-icon.png', iconSize: [5, 5]});
-        switch(geometry) {
-            case "Point": {
-                this.wfsservice.getPointLayers(URL)
-                    .subscribe(res => {
-                        res.addTo(this.mapService.map)
-                        this.userpagelayers[index].featureGroupObject = res
-                    })
-                break
-            }
-            case "Polyline": {
-                this.wfsservice.getPolylineLayers(URL)
-                    .subscribe(res => {
-                        res.addTo(this.mapService.map)
-                        this.userpagelayers[index].featureGroupObject = res
-                    })
-                break
-            }
-            case "Polygon": {
-                this.wfsservice.getPolygonLayers(URL)
-                break
-            }
-            case "Coverage": {
-                //this.wfsservice.getCoverageLayers(URL)
-                break
-            }
-            default: {
-                alert("Invalid Geometry type: " + geometry)
-            }
-        }
+        // switch(geometry) {
+        //     case "Point": {
+        //         this.wfsservice.getPointLayers(URL)
+        //             .subscribe(res => {
+        //                 res.addTo(this.mapService.map)
+        //                 this.userpagelayers[index].featureGroupObject = res
+        //             })
+        //         break
+        //     }
+        //     case "Polyline": {
+        //         this.wfsservice.getPolylineLayers(URL)
+        //             .subscribe(res => {
+        //                 res.addTo(this.mapService.map)
+        //                 this.userpagelayers[index].featureGroupObject = res
+        //             })
+        //         break
+        //     }
+        //     case "Polygon": {
+        //         this.wfsservice.getPolygonLayers(URL)
+        //         break
+        //     }
+        //     case "Coverage": {
+        //         //this.wfsservice.getCoverageLayers(URL)
+        //         break
+        //     }
+        //     default: {
+        //         alert("Invalid Geometry type: " + geometry)
+        //     }
+        // }
         
-        this._map.on('click', (event: MouseEvent) => {
-            this.wfsservice.popupText.next("Click a layer for details.");
-            console.log("fired")
-            })
+        // this._map.on('click', (event: MouseEvent) => {
+        //     this.wfsservice.popupText.next("Click a layer for details.");
+        //     console.log("fired")
+        //     })
             //6/30/2017 Do something right here with assigning things to onClick of featureGroup        
     }
 
