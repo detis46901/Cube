@@ -212,12 +212,14 @@ export class MapComponent {
             let HEIGHT = this._map.getSize().y;
             let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
             let Y = this._map.layerPointToContainerPoint(event.layerPoint).y;
+            console.log(this._map.layerPointToContainerPoint(event.layerPoint).y)
             var URL = ms_url + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS=Kokomo:Pipes&QUERY_LAYERS=Kokomo:Pipes&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
             console.log(URL)
             this.wfsservice.getfeatureinfo(URL)
                 .subscribe((data: any) => console.log(data))
-            })
+        })
     }
+
     openWFS(geometry, URL, index) {
         let myIcon = L.icon({iconUrl: 'my-icon.png', iconSize: [5, 5]});
         // switch(geometry) {
