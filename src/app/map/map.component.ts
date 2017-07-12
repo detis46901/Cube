@@ -74,6 +74,8 @@ export class MapComponent {
     public layeradmins: Array<LayerAdmin>;
     public userpagelayers: Array<UserPageLayer>; 
     public userpages: any; 
+    public currIdent: any;
+    public layerList: Array<L.Layer> = [];
 
     public defaultpage: any; 
     public currentlayer: L.Layer;
@@ -117,7 +119,6 @@ export class MapComponent {
 
     init_map() {
         this.currPage = this.defaultpage.page
-        this.setFlags()
         this._map = L.map("mapid", {
             zoomControl: false,
             center: L.latLng(40.4864, -86.1336),
@@ -131,6 +132,8 @@ export class MapComponent {
         this.mapService.map = this._map;
         this.mapService.map = this._map
         this.markerComponent.Initialize()
+        this.loadLayers();
+        this.setFlags()
     }   
 
     //This method sets flags for use with the "Layers in Map Component" map.component.html control in order to determine
@@ -139,7 +142,7 @@ export class MapComponent {
         for (let x of this.userpagelayers) {
             x.layerShown = x.layerON
         }
-    }   
+    }
         
     //Gets userpagelayers by page.ID, changes pages
     setUserPageLayers(page): void {
@@ -166,39 +169,36 @@ export class MapComponent {
 
     //loadLayers will load during map init and load the layers that should come on by themselves with the "layerON" property set (in userpagelayers)
     loadLayers() {
+        let temp = this.userpagelayers
+        for (let i=0; i<temp.length; i++) {
+            if (temp[i].layerON) {
+                this.toggleLayers(i,temp[i].layer_admin,false)
+            }
+        }
     }
 
     //Reads index of layer in dropdown, layeradmin, and if it is shown or not. Needs to remove a layer if a new one is selected
-    toggleLayers(index, layers, checked) {
-        console.log(layers)
-        this.layeradmin = layers
+    toggleLayers(index, layer, checked) {
 
-        if (checked == true) {
-            //It may make sense to implement this using 'LayerGroup'
-            //This shows the image, but does not add the interactive layer.
-            this.currentlayer = (L.tileLayer.wms(this.layeradmin.layerURL, {
-            layers: this.layeradmin.layerIdent,
-            format: this.layeradmin.layerFormat,
-            transparent: true,
+        if (checked == false) {
+            this.currentlayer = (L.tileLayer.wms(layer.layerURL, {
+                layers: layer.layerIdent,
+                format: layer.layerFormat,
+                transparent: true,
             })).addTo(this._map)
-            //console.log(L.tileLayer.wms(this.layeradmin.layerURL, {layers: this.layeradmin.layerIdent, format: this.layeradmin.layerFormat, transparent: true,}))
 
-            //this is what adds the interactive layer to the image, discriminates based on geometry type.
-            //this.discriminateGeom(this.layeradmin.layerGeom, index)
-            //this.openWFS(this.layeradmin.layerGeom, this.layeradmin.layerURL + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + this.layeradmin.layerIdent + "&srsName=EPSG:4326&outputFormat=application%2Fjson", index)
+            this.layerList[index] = this.currentlayer
+            this.currIdent = layer.layerIdent
+
             this.openFeatureInfo();
-            this.userpagelayers[index].layerShown = false
-
-            //console.log(this.layeradmin.layerURL + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + this.layeradmin.layerIdent + "&srsName=EPSG:4326&outputFormat=application%2Fjson")
+            this.userpagelayers[index].layerShown = true
         }
 
         else { 
-            console.log (checked)
-            this._map.removeLayer(this.currentlayer)
-            console.log(this.userpagelayers[index])
-            this._map.removeLayer(this.userpagelayers[index].featureGroupObject)
-            this.userpagelayers[index].layerShown = true
+            this.layerList[index].removeFrom(this._map)
+            this.userpagelayers[index].layerShown = false
         }
+        for(let i of this.userpagelayers){console.log(i.layerShown)}
     }
 
     //this needs to be set up for every layer
@@ -211,9 +211,10 @@ export class MapComponent {
             let WIDTH = this._map.getSize().x;
             let HEIGHT = this._map.getSize().y;
             let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
-            let Y = this._map.layerPointToContainerPoint(event.layerPoint).y;
+            let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
+            let IDENT = this.currIdent
             console.log(this._map.layerPointToContainerPoint(event.layerPoint).y)
-            var URL = ms_url + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS=Kokomo:Pipes&QUERY_LAYERS=Kokomo:Pipes&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
+            var URL = ms_url + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
             console.log(URL)
             this.wfsservice.getfeatureinfo(URL)
                 .subscribe((data: any) => console.log(data))
