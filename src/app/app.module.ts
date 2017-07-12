@@ -65,6 +65,7 @@ import { NumFilterPipe } from '../_pipes/numfilter.pipe';
 import { ConfirmdeleteService } from '../_services/confirmdelete.service';
 import { WFSService } from '../app/map/services/wfs.service';
 import { MarkerDataComponent } from './marker_data/marker-data.component';
+import { LayerControlsComponent } from './map/layer-controls/layer-controls.component';
 
 @NgModule({
   declarations: [
@@ -100,7 +101,8 @@ import { MarkerDataComponent } from './marker_data/marker-data.component';
     BoundariesComponent,
     NotificationsComponent,
     GeoserverComponent,
-    MarkerDataComponent
+    MarkerDataComponent,
+    LayerControlsComponent
   ],
 
   entryComponents: [LayerNewComponent, LayerPermissionComponent, PageComponent, PageConfigComponent, ConfirmdeleteComponent],

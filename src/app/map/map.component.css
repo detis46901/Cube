@@ -6,14 +6,31 @@
     z-index:-1
   }
 
-#dropdownMenu1 {
+#dropdownMenu1, #dropdownMenu2 {
     border: 2px solid rgb(26, 117, 255);
     margin: 25px 15px 0 0;
+    position:absolute;
+    top:26px;
+    height:30px;
+    right:100px;
+    background-color: whitesmoke;
+    -webkit-text-fill-color: black;
 }
 
-#dropdownMenu2 {
-    border: 2px solid rgb(26, 117, 255);
-    margin: 5px 15px 0 0;
+#dropdownMenu1 {
+    top:40px;
+    right:180px;
+}
+
+#ddM1, #ddM2 {
+    position:absolute;
+    top:80px;
+    right:60px;
+}
+
+#ddM1 {
+    top:95px;
+    right:145px;
 }
 
 p {

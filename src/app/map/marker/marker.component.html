@@ -1,13 +1,11 @@
-<!--<div class="row">
-    <div class="col-md-2 col-md-offset-3">-->
-        <div style="z-index:0; position:relative;">
-            <button style="position:absolute; left:265px"id="add-marker" class="btn btn-secondary on-map" [class.btn-primary]="editing"
-                    title="Add Marker" (click)="toggleEditing()" btnCheckbox>
-                <i class="fa fa-map-marker fa"></i>
-            </button>
+<div style="position:absolute;z-index:0;top:51px">
+    <button id="add-marker" class="btn btn-secondary on-map" [class.btn-primary]="editing"
+            title="Add Marker" (click)="toggleEditing()" btnCheckbox>
+        <i class="fa fa-map-marker fa"></i>
+    </button>
 
-            <button style="position:absolute; left:265px"id="remove-marker" class="btn btn-secondary on-map" [class.btn-primary]="removing"
-                    title="Remove Marker" (click)="toggleRemoving()" btnCheckbox>
-                <i class="fa fa-trash fa"></i>
-            </button>
-        </div>
+    <button id="remove-marker" class="btn btn-secondary on-map" [class.btn-primary]="removing"
+            title="Remove Marker" (click)="toggleRemoving()" btnCheckbox>
+        <i class="fa fa-trash fa"></i>
+    </button>
+</div>

@@ -171,10 +171,30 @@ export class WFSService {
 
     getfeatureinfo(URL) {
         return this.http.get(URL, {headers: this.headers})
-            .map( (responseData) => {
-                console.log(responseData['_body'])
-                this.popupText.next(responseData['_body'])
-                return responseData['_body'];
+            .map((responseData) => {
+                let temp: string = responseData['_body']
+                if (temp.startsWith("<table")) {
+                    console.log("caught")
+                    let formattedHead: string = "";
+                    let formattedData: string = "";
+
+                    let headArray = temp.split("<th")
+                    for (let i=1; i<headArray.length; i++) {
+                        let temp = headArray[i].substring(headArray[i].indexOf("<"))
+                        formattedHead = formattedHead + temp.split("<")[0] + "\n"
+                    } 
+                    console.log(formattedHead)
+
+                    //7/12/17
+                    /*while(there are still <th> tags) {
+                        take substring of text between <th> OR <th > AND </th> and add (with line-break) to formattedHead
+                    }
+                    while(there are still <td> tags) {
+                        take substring of text between <td> AND </td> and add (with line-break) to formattedData
+                    }*/
+                }
+                this.popupText.next(temp)
+                return temp;
             })
     }
 }

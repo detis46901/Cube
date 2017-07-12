@@ -5,7 +5,7 @@ import { SidenavService } from "../../_services/sidenav.service"
 @Component({
     selector: 'header',
     templateUrl: './header.component.html',
-    styleUrls: ['header.component.css'],
+    styleUrls: ['header.component.less'],
     providers: [SidenavService]
 })
 export class HeaderComponent { 
@@ -63,17 +63,17 @@ export class HeaderComponent {
             document.getElementById("goto").style.position = "absolute";
             document.getElementById("goto").style.left = "265px";
             document.getElementById("add-marker").style.position = "absolute";
-            document.getElementById("add-marker").style.left = "265px";
+            document.getElementById("add-marker").style.left = "280px";
             document.getElementById("remove-marker").style.position = "absolute";
-            document.getElementById("remove-marker").style.left = "265px";
+            document.getElementById("remove-marker").style.left = "320px";
             this.sidenavService.setTrue();
         }
         else {
             document.getElementById("mySidenav").style.width = "0";
             document.getElementById("place-input").style.left = "15px";
             document.getElementById("goto").style.left = "15px";
-            document.getElementById("add-marker").style.left = "15px";
-            document.getElementById("remove-marker").style.left = "15px";
+            document.getElementById("add-marker").style.left = "30px";
+            document.getElementById("remove-marker").style.left = "70px";
             this.sidenavService.setFalse();
         }
         //this.isOpen = !this.isOpen

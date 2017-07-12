@@ -1,31 +1,17 @@
-<!-- Top container (Same for every page)-->
 <div id="headerBar" class="col-md-12 w3-black w3-large w3-padding" style="z-index:1">
+    <div id="welcome">Welcome, <strong><a title="Return Home" class="w3-hover-text-blue" routerLink="home">{{user.firstName}} {{user.lastName}}</a></strong></div>
 
-<!-- User welcome, username is hyperlink that redirects to home page.-->
-<span id="welcome">Welcome, <strong><a title="Return Home" class="w3-hover-text-blue" routerLink="home">{{user.firstName}} {{user.lastName}}</a></strong></span>
-<!--<span>Welcome, <strong><a title="Return Home" class="w3-hover-text-blue" routerLink="home">{{isHome}}</a></strong></span>-->
-<!--ngIf here for only seeing this button on home page->
-<button *ngIf="isHome" id="vData" class="w3-btn w3-hover-text-blue" (click)="w3_open_close()"><i class="fa fa-bars"></i> &nbsp;Toggle Pane</button>-->
-<!--<button *ngIf="screenCode == 1" id="vData" class="w3-btn w3-hover-text-blue" (click)="home_toggle()"><i class="fa fa-bars"></i> &nbsp;Toggle Menu</button>
-<button *ngIf="screenCode == 2" id="vData" class="w3-btn w3-hover-text-blue" (click)="admin_toggle()"><i class="fa fa-bars"></i> &nbsp;Toggle Menu</button>
-<button *ngIf="screenCode == 3" id="vData" class="w3-btn w3-hover-text-blue" (click)="user_toggle()"><i class="fa fa-bars"></i> &nbsp;Toggle Menu</button>-->
-
-
-
-<div ngbDropdown class="d-inline-block" style="z-index:-1;position:relative;background-color:black">
-    <button id="viewBtn" type="button" style="position:absolute;height:25px;width:100px;left:220px;top:0px;background-color:black" class="w3-btn w3-hover-text-blue" ngbDropdownToggle><i class="fa fa-bars"></i> View</button>
-    <div class="dropdown-menu dropdown-menu-left" style="z-index:-1;position:absolute;top:40px;left:235px;width:80px" aria-labelledby="dropdownMenu1">
-        <button id="vData" style="position:relative;right:200px" (click)="menu_toggle(screenCode)" class="w3-btn w3-hover-text-blue">Toggle Menu</button>
+    <div ngbDropdown class="d-inline-block" style="z-index:-1;position:relative;background-color:black">
+        <button id="viewBtn" type="button" class="w3-btn w3-hover-text-blue" ngbDropdownToggle><i class="fa fa-bars"></i> View</button>
+        <div id="viewMenu" class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenu1">
+            <button id="vData" (click)="menu_toggle(screenCode)" class="w3-btn w3-hover-text-blue">Toggle Menu</button>
+        </div>
     </div>
-</div>
-<!--<button style="position:absolute;left:600px"(click)="showCons()">click</button>
-<button id="vData" class="w3-btn w3-hover-text-blue" (click)="menu_toggle(screenCode)"><i class="fa fa-bars"></i> &nbsp;View</button>-->
 
-<span class="w3-right">
-<a id="inboxBtn" title="Inbox" class="w3-hover-none w3-xlarge w3-hover-text-blue w3-show-inline-block"><i class="fa fa-envelope" aria-hidden="true"></i></a>
-<a id="logoffBtn" href="/logout" id="logoutBtn" title="Logout" class="w3-hover-none w3-xlarge w3-hover-text-blue w3-show-inline-block"><i class="fa fa-power-off" aria-hidden="true"></i></a>
-<a id="settingsBtn" href="/settings" id="settings" title="Settings" class="w3-xlarge w3-hover-text-blue w3-show-inline-block"><i class="fa fa-cog"></i></a>
-<a *ngIf="user.administrator" id="admin" style="position:relative;bottom:3px" title="Admin Menu" class="w3-btn w3-orange w3-tiny w3-border w3-border-orange w3-round-large w3-text-white" href="\admin">Admin</a></span>
-<!--<a *ngIf="!user.administrator" class ="w3-btn w3-blue w3-tiny w3-padding-2 w3-border w3-border-blue w3-round-large w3-text-white" href="\user_settings">Settings</a>-->
-<!--<img src="/src/assets/images/avatar2.png" class="w3-circle w3-margin-right" style="width:24px"></span> <!-Error here-->
+    <span class="w3-right">
+        <a id="inboxBtn" title="Inbox" class="w3-hover-none w3-xlarge w3-hover-text-blue w3-show-inline-block"><i class="fa fa-envelope" aria-hidden="true"></i></a>
+        <a id="logoffBtn" href="/logout" id="logoutBtn" title="Logout" class="w3-hover-none w3-xlarge w3-hover-text-blue w3-show-inline-block"><i class="fa fa-power-off" aria-hidden="true"></i></a>
+        <a id="settingsBtn" href="/settings" id="settings" title="Settings" class="w3-xlarge w3-hover-text-blue w3-show-inline-block"><i class="fa fa-cog"></i></a>
+        <a *ngIf="user.administrator" id="admin" style="position:relative;bottom:3px" title="Admin Menu" class="w3-btn w3-orange w3-tiny w3-border w3-border-orange w3-round-large w3-text-white" href="\admin">Admin</a>
+    </span>
 </div>

@@ -20,7 +20,7 @@ import { UserPageLayerService } from '../../_services/user-page-layer.service'
 import { Http, Response, Headers } from '@angular/http'
 import { Observable } from 'rxjs/Observable';
 import { Subscription }   from 'rxjs/Subscription';
-import {Map, MouseEvent, Marker} from "leaflet";
+import { Map, MouseEvent, Marker } from "leaflet";
 
 @Component({
   selector: 'map',
@@ -82,6 +82,8 @@ export class MapComponent {
     public overlays: any;
     public currPage: any
 
+    public count = 0;
+
     //Angular component initialization
     ngOnInit() {
         this.setPage();       
@@ -130,8 +132,7 @@ export class MapComponent {
         L.control.zoom({ position: "bottomright" }).addTo(this._map);
         L.control.scale().addTo(this._map);
         this.mapService.map = this._map;
-        this.mapService.map = this._map
-        this.markerComponent.Initialize()
+        //this.markerComponent.Initialize() //7/12/17 FIX
         this.loadLayers();
         this.setFlags()
     }   
@@ -179,108 +180,78 @@ export class MapComponent {
 
     //Reads index of layer in dropdown, layeradmin, and if it is shown or not. Needs to remove a layer if a new one is selected
     toggleLayers(index, layer, checked) {
-
         if (checked == false) {
             this.currentlayer = (L.tileLayer.wms(layer.layerURL, {
                 layers: layer.layerIdent,
                 format: layer.layerFormat,
                 transparent: true,
             })).addTo(this._map)
-
             this.layerList[index] = this.currentlayer
             this.currIdent = layer.layerIdent
-
             this.openFeatureInfo();
             this.userpagelayers[index].layerShown = true
         }
-
         else { 
             this.layerList[index].removeFrom(this._map)
             this.userpagelayers[index].layerShown = false
         }
-        for(let i of this.userpagelayers){console.log(i.layerShown)}
     }
 
     //this needs to be set up for every layer
     openFeatureInfo() {
-        console.log("openFeatureInfo")
         let ms_url="http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/wms";
         this._map.on('click', (event: MouseEvent) => {
-            console.log("fired")
             let BBOX = this._map.getBounds().toBBoxString();
             let WIDTH = this._map.getSize().x;
             let HEIGHT = this._map.getSize().y;
             let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
             let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
             let IDENT = this.currIdent
-            console.log(this._map.layerPointToContainerPoint(event.layerPoint).y)
             var URL = ms_url + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
-            console.log(URL)
             this.wfsservice.getfeatureinfo(URL)
                 .subscribe((data: any) => console.log(data))
         })
+        this._map.on('mousemove', (event: MouseEvent) => {
+            //change cursor here?
+        })
     }
 
-    openWFS(geometry, URL, index) {
+    /*openWFS(geometry, URL, index) {
         let myIcon = L.icon({iconUrl: 'my-icon.png', iconSize: [5, 5]});
-        // switch(geometry) {
-        //     case "Point": {
-        //         this.wfsservice.getPointLayers(URL)
-        //             .subscribe(res => {
-        //                 res.addTo(this.mapService.map)
-        //                 this.userpagelayers[index].featureGroupObject = res
-        //             })
-        //         break
-        //     }
-        //     case "Polyline": {
-        //         this.wfsservice.getPolylineLayers(URL)
-        //             .subscribe(res => {
-        //                 res.addTo(this.mapService.map)
-        //                 this.userpagelayers[index].featureGroupObject = res
-        //             })
-        //         break
-        //     }
-        //     case "Polygon": {
-        //         this.wfsservice.getPolygonLayers(URL)
-        //         break
-        //     }
-        //     case "Coverage": {
-        //         //this.wfsservice.getCoverageLayers(URL)
-        //         break
-        //     }
-        //     default: {
-        //         alert("Invalid Geometry type: " + geometry)
-        //     }
-        // }
-        
-        // this._map.on('click', (event: MouseEvent) => {
-        //     this.wfsservice.popupText.next("Click a layer for details.");
-        //     console.log("fired")
-        //     })
-            //6/30/2017 Do something right here with assigning things to onClick of featureGroup        
-    }
-
-    /*discriminateGeom(geometry, index) {
         switch(geometry) {
             case "Point": {
-                this.openWFS(this.layeradmin.layerURL + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + this.layeradmin.layerIdent + "&srsName=EPSG:4326&outputFormat=application%2Fjson", index)
+                this.wfsservice.getPointLayers(URL)
+                    .subscribe(res => {
+                        res.addTo(this.mapService.map)
+                        this.userpagelayers[index].featureGroupObject = res
+                    })
                 break
             }
             case "Polyline": {
-
+                this.wfsservice.getPolylineLayers(URL)
+                    .subscribe(res => {
+                        res.addTo(this.mapService.map)
+                        this.userpagelayers[index].featureGroupObject = res
+                    })
                 break
             }
             case "Polygon": {
-
+                this.wfsservice.getPolygonLayers(URL)
                 break
             }
             case "Coverage": {
-
+                //this.wfsservice.getCoverageLayers(URL)
                 break
             }
             default: {
-                alert("Invalid Geometry type.")
+                alert("Invalid Geometry type: " + geometry)
             }
         }
+        
+        this._map.on('click', (event: MouseEvent) => {
+            this.wfsservice.popupText.next("Click a layer for details.");
+            console.log("fired")
+            })
+            //6/30/2017 Do something right here with assigning things to onClick of featureGroup        
     }*/
 }

@@ -1,4 +1,4 @@
-<div class="row" style="z-index:0; position:relative">
+<div class="row" style="z-index:0; position:absolute;top:50px">
     <div class="col-md-6">
         <input style="position:absolute; left:265px" id="place-input" class="on-map" type="text" placeholder="Enter a place to go..."
         [(ngModel)]="address" (keyup.enter)="goto()">
@@ -7,5 +7,4 @@
             <i class="fa fa-arrow-right fa"></i>
         </button>
     </div>
-    <!--</div>-->
 </div>
