@@ -43,8 +43,8 @@ export class HomeComponent {
         this.dataService
             .GetSingle(userid)
             .subscribe((data:User) => this.user = data,
-                error => console.log(error),
-                () => console.log(this.user.email));     
+                error => console.log(error));//,
+                //() => console.log(this.user.email));     
     }
 
     openListener(open: boolean) {

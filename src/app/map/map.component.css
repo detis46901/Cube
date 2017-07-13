@@ -3,7 +3,7 @@
     top:43px;
     bottom:0;
     width:100%;
-    z-index:-1
+    z-index:-1;
   }
 
 #dropdownMenu1, #dropdownMenu2 {
@@ -35,4 +35,16 @@
 
 p {
     font-size: 102;
+}
+
+.leaflet-container.pointer-enabled {
+    cursor:pointer
+}
+
+.leaflet-container.grabbing-enabled {
+    cursor:grabbing
+}
+
+.leaflet-container.grab-enabled {
+    cursor:grab
 }

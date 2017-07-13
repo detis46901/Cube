@@ -37,8 +37,8 @@ public myItems: any;
          this.dataService
             .GetAll()
             .subscribe((data:User[]) => this.myItems = data,
-                error => console.log(error),
-                () => console.log(this.myItems[0].firstName));
+                error => console.log(error));//,
+                //() => console.log(this.myItems[0].firstName));
             
     }
 }

@@ -33,7 +33,7 @@ export class WFSService {
     }
 
     
-     //Updated 7/02/17: Loads and renders a WFS layer
+    //Not used
     getPointLayers(path: string) {
         let features: Array<L.Layer> = [];
         let props: Array<any> = [];
@@ -92,7 +92,7 @@ export class WFSService {
             });
     }
 
-    //Can probably get this into the method above, and group them all together. They share a great deal of logic, could be divided through conditionals
+    //Not used
     getPolylineLayers(path: string) {
         let polylineOptions = {color:'blue', weight:6, opacity:0};
         let props, len, exec, polylineGroup;
@@ -161,39 +161,38 @@ export class WFSService {
             });
     }
 
-    getPolygonLayers(URL) {
-
-    }
-
-    getCoverageLayers(URL) {
-
-    }
-
-    getfeatureinfo(URL) {
+    getfeatureinfo(URL, mouseDown: boolean) {
         return this.http.get(URL, {headers: this.headers})
             .map((responseData) => {
                 let temp: string = responseData['_body']
+
+                //This "if" block captures layer features with no pre-formatted "content.ftl" file
                 if (temp.startsWith("<table")) {
-                    console.log("caught")
-                    let formattedHead: string = "";
-                    let formattedData: string = "";
-
+                    let formattedHead: Array<string> = [];
+                    let formattedData: Array<string> = [];
                     let headArray = temp.split("<th")
-                    for (let i=1; i<headArray.length; i++) {
-                        let temp = headArray[i].substring(headArray[i].indexOf("<"))
-                        formattedHead = formattedHead + temp.split("<")[0] + "\n"
-                    } 
-                    console.log(formattedHead)
+                    let dataArray = temp.split("<td")
 
-                    //7/12/17
-                    /*while(there are still <th> tags) {
-                        take substring of text between <th> OR <th > AND </th> and add (with line-break) to formattedHead
+                    //Fill arrays with table heading values and data values of each, respectively
+                    for (let i=1; i<headArray.length; i++) {
+                        let temp = headArray[i].substring(headArray[i].indexOf(">")+1,headArray[i].indexOf("<"))
+                        formattedHead[i-1] = temp
                     }
-                    while(there are still <td> tags) {
-                        take substring of text between <td> AND </td> and add (with line-break) to formattedData
-                    }*/
+                    for (let i=1; i<dataArray.length; i++) {
+                        let temp = dataArray[i].substring(dataArray[i].indexOf(">")+1,dataArray[i].indexOf("<"))
+                        formattedData[i-1] = temp
+                    }
+
+                    //Create final string product to be displayed in HTML on sidenav
+                    temp = "<h4>" + formattedData[0] + "</h4><br>"
+                    for (let i=1; i<formattedData.length; i++) {
+                        temp = temp + "<b>" + formattedHead[i] + ":</b> " + formattedData[i] + "<br>"
+                    }
                 }
-                this.popupText.next(temp)
+
+                //7/13/17 This allows click events to create sidenav popup information, while allowing mousemove events to change the cursor icon to a pointing hand without updating popup.
+                if (!mouseDown)
+                    {this.popupText.next(temp)}
                 return temp;
             })
     }

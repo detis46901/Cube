@@ -21,20 +21,20 @@ export class UserPageService {
     }
  
     public GetAll = (): Observable<UserPage[]> => {
-        console.log(this.actionUrl)
+        //console.log(this.actionUrl)
         return this._http.get(this.actionUrl + 'list')
             .map((response: Response) => <UserPage[]>response.json())
 //            .catch(this.handleError);
     }
  
     public GetSome = (userid): Observable<UserPage[]> => {
-        console.log(this.actionUrl + 'list?userID=' + userid)
+        //console.log(this.actionUrl + 'list?userID=' + userid)
         return this._http.get(this.actionUrl + 'list?userID=' + userid)
             .map((response: Response) => <UserPage[]>response.json())
 //            .catch(this.handleError);
     }
     public GetDefault = (userid): Observable<UserPage[]> => {
-        console.log(this.actionUrl + 'default?userID=' + userid)
+        //console.log(this.actionUrl + 'default?userID=' + userid)
         return this._http.get(this.actionUrl + 'default?userID=' + userid)
             .map((response: Response) => <UserPage[]>response.json())
 //            .catch(this.handleError);

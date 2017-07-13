@@ -48,7 +48,7 @@ export class MapComponent {
         this.headers.append('Content-Type', 'application/json');
         this.headers.append('Accept', 'application/json');
         wfsservice.popupText$.subscribe(tx => this.popuptx = tx)
-
+        //sidenavService.activeLayer$.subscribe(l => this.currIdent = l) 7/13/17 current Active Layer for sidenav information output
     }
 
     //Class variables
@@ -66,6 +66,7 @@ export class MapComponent {
     public curMarker: any;
     public markerArr: Array<L.Marker>;
     public wfsmarker: Array<WFSMarker>;
+    public getFeatureData: any;
 
     //Database information
     public layers: MapService;
@@ -132,9 +133,18 @@ export class MapComponent {
         L.control.zoom({ position: "bottomright" }).addTo(this._map);
         L.control.scale().addTo(this._map);
         this.mapService.map = this._map;
-        //this.markerComponent.Initialize() //7/12/17 FIX
+
+        try {
+            this.markerComponent.Initialize();
+        }
+
+        catch(err) {
+            console.log(err)
+        }
+
+        //this.markerComponent.Initialize();
         this.loadLayers();
-        this.setFlags()
+        this.setFlags();
     }   
 
     //This method sets flags for use with the "Layers in Map Component" map.component.html control in order to determine
@@ -200,20 +210,45 @@ export class MapComponent {
     //this needs to be set up for every layer
     openFeatureInfo() {
         let ms_url="http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/wms";
-        this._map.on('click', (event: MouseEvent) => {
+        /*this._map.on('drag', (event: MouseEvent) => {
+            L.DomUtil.addClass(this._map.getContainer(),'grabbing-enabled')
+        })
+
+        this._map.on('mouseup', (event: MouseEvent) => {
+            L.DomUtil.removeClass(this._map.getContainer(),'grabbing-enabled')
+        })*/
+
+        this._map.on('click', (event: MouseEvent) => { 
             let BBOX = this._map.getBounds().toBBoxString();
             let WIDTH = this._map.getSize().x;
             let HEIGHT = this._map.getSize().y;
+            let IDENT = this.currIdent
             let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
             let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
-            let IDENT = this.currIdent
-            var URL = ms_url + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
-            this.wfsservice.getfeatureinfo(URL)
-                .subscribe((data: any) => console.log(data))
+            let URL = ms_url + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
+            this.wfsservice.getfeatureinfo(URL, false)
+                .subscribe((data: any) => this.getFeatureData = data)
         })
+
         this._map.on('mousemove', (event: MouseEvent) => {
-            //change cursor here?
-        })
+            let BBOX = this._map.getBounds().toBBoxString();
+            let WIDTH = this._map.getSize().x;
+            let HEIGHT = this._map.getSize().y;
+            let IDENT = this.currIdent
+            let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
+            let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
+            let URL = ms_url + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
+            this.wfsservice.getfeatureinfo(URL, true)
+                .subscribe((data: any) => {
+                    if (data.length > 18) {
+                        L.DomUtil.addClass(this._map.getContainer(),'pointer-enabled')
+                    }
+                    else {
+                        L.DomUtil.removeClass(this._map.getContainer(),'pointer-enabled')
+                    }
+                })
+            
+        })   
     }
 
     /*openWFS(geometry, URL, index) {

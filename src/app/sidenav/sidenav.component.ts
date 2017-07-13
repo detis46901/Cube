@@ -14,25 +14,14 @@ export class SideNavComponent {
     @Input() popup : string
 
     ngOnInit() {
-       console.log(this.bottom)
-       //this.bottomtx = "Set from something"
     }
 
-    //ngDoCheck() {console.log(this.popup)}
-
     public hideMenu() {
-        this.onclick()
+        this.sidenavService.setFalse();
         document.getElementById("mySidenav").style.width = "0";
         document.getElementById("place-input").style.left = "15px";
         document.getElementById("goto").style.left = "15px";
-        document.getElementById("add-marker").style.left = "15px";
-        document.getElementById("remove-marker").style.left = "15px";
-        console.log(this.sidenavService.getOpen())
+        document.getElementById("add-marker").style.left = "30px";
+        document.getElementById("remove-marker").style.left = "70px";
     }
-
-    public onclick() {
-        this.sidenavService.setFalse();
-        console.log(this.sidenavService.getOpen())
-    }
-
 }

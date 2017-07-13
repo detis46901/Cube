@@ -21,15 +21,15 @@ export class Api2Service {
     }
  
     public GetAll = (): Observable<User[]> => {
-        console.log(this.actionUrl + 'list')
-        console.log(this._http.get(this.actionUrl + 'list')
-            .map((response: Response) => <User[]>response.json()))
+        //console.log(this.actionUrl + 'list')
+        //console.log(this._http.get(this.actionUrl + 'list').map((response: Response) => <User[]>response.json()))
 
         return this._http.get(this.actionUrl + 'list')
             .map((response: Response) => <User[]>response.json())
 //            .catch(this.handleError);
     }
 
+    //To fix faulty get user list procedure
     /*public GetSome = (userid): Observable<User[]> => {
         
     }*/

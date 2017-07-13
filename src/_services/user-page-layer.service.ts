@@ -21,28 +21,28 @@ export class UserPageLayerService {
     }
  
     public GetAll = (): Observable<UserPageLayer[]> => {
-        console.log(this.actionUrl)
+//        console.log(this.actionUrl)
         return this._http.get(this.actionUrl + 'list')
             .map((response: Response) => <UserPageLayer[]>response.json())
 //            .catch(this.handleError);
     }
 
     public GetSome = (pageid): Observable<UserPageLayer[]> => {
-        console.log(this.actionUrl + 'list?pageID=' + pageid)
+//        console.log(this.actionUrl + 'list?pageID=' + pageid)
         return this._http.get(this.actionUrl + 'list?pageID=' + pageid)
             .map((response: Response) => <UserPageLayer[]>response.json())
 //            .catch(this.handleError);
     }
 
     public GetPageLayers = (pageid): Observable<UserPageLayer[]> => {
-        console.log(this.actionUrl + 'getpagelayers?pageID=' + pageid)
+//        console.log(this.actionUrl + 'getpagelayers?pageID=' + pageid)
         return this._http.get(this.actionUrl + 'getpagelayers?pageID=' + pageid)
             .map((response: Response) => <UserPageLayer[]>response.json())
 //            .catch(this.handleError);
     }
 
     public GetUserLayer = (userid): Observable<UserPageLayer[]> => {
-        console.log(this.actionUrl + 'userlist?userid=' + userid)
+//        console.log(this.actionUrl + 'userlist?userid=' + userid)
         return this._http.get(this.actionUrl + 'userlist?userid=' + userid)
             .map((response: Response) => <UserPageLayer[]>response.json())
 //            .catch(this.handleError);
