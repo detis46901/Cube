@@ -43,7 +43,6 @@ export class MapComponent {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
-
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
         this.headers.append('Accept', 'application/json');
@@ -81,9 +80,29 @@ export class MapComponent {
     public defaultpage: any; 
     public currentlayer: L.Layer;
     public overlays: any;
-    public currPage: any
+    public currPage: any = "None"
 
     public count = 0;
+
+    
+    // Order of events (onload):
+    // ngOnInit()
+    // setPage()
+    // getDefaultPage()
+    // getUserPageLayers()
+    // init_map()
+    // loadLayers()
+    //     toggleLayers()
+    //         openFeatureInfo()
+    //             getfeatureinfo()
+    // setFlags()
+
+    // Order of events (changePages)
+    // setUserPageLayers(userpage)
+    // getUserPageLayers()
+    // changePages()
+    // setFlags()
+
 
     //Angular component initialization
     ngOnInit() {
@@ -121,6 +140,9 @@ export class MapComponent {
     }
 
     init_map() {
+        console.log (this.currPage)
+        if (this.currPage === "None") {
+        console.log ("Initializing Map")
         this.currPage = this.defaultpage.page
         this._map = L.map("mapid", {
             zoomControl: false,
@@ -142,7 +164,7 @@ export class MapComponent {
         catch(err) {
             console.log(err)
         }
-
+        }
         //this.markerComponent.Initialize();
         this.loadLayers();
         this.setFlags();
@@ -159,17 +181,19 @@ export class MapComponent {
     //Gets userpagelayers by page.ID, changes pages
     setUserPageLayers(page): void {
         this.currPage = page.page
+        this.cleanPage()
         console.log(this.currPage)
         console.log("set pageID = " + page.ID)
-        this.userPageLayerService
-            .GetPageLayers(page.ID)
-            .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
-                error => console.log(error),
-                () => this.changePages()
-            );
+        this.getUserPageLayers(page)
+        // this.userPageLayerService
+        //     .GetPageLayers(page.ID)
+        //     .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
+        //         error => console.log(error),
+        //         () => {console.log(this.userpagelayers); this.cleanPage()}
+        //     );
     }
         
-    changePages(): void {
+    cleanPage(): void {
         console.log('Flags array: ' + this.userpagelayers[0].layerShown)
         this.setFlags();
         this.mapService.map.eachLayer(function (removelayer) {removelayer.remove()})
@@ -185,6 +209,7 @@ export class MapComponent {
     loadLayers() {
         let temp = this.userpagelayers
         for (let i=0; i<temp.length; i++) {
+            console.log(temp[i])
             if (temp[i].layerON) {
                 this.toggleLayers(i,temp[i].layer_admin,false)
             }
@@ -193,10 +218,15 @@ export class MapComponent {
 
     //Reads index of layer in dropdown, layeradmin, and if it is shown or not. Needs to remove a layer if a new one is selected
     toggleLayers(index, layer, checked) {
+        console.log(layer)
+        let zindex = 1000
         if (checked == false) {
+            if (layer.layerGeom == "Coverage") {zindex = 500}
+            console.log(layer.layerIdent, layer.layerGeom, zindex)
             this.currentlayer = (L.tileLayer.wms(layer.layerURL, {
                 minZoom: 4,
                 maxZoom: 20,
+                zIndex: zindex,
                 layers: layer.layerIdent,
                 format: layer.layerFormat,
                 transparent: true,
