@@ -127,11 +127,12 @@ export class MapComponent {
             center: L.latLng(40.4864, -86.1336),
             zoom: 12,
             minZoom: 4,
-            maxZoom: 18,
+            maxZoom: 20,
             layers: [this.mapService.baseMaps.OpenStreetMap]
         });               
         L.control.zoom({ position: "bottomright" }).addTo(this._map);
         L.control.scale().addTo(this._map);
+       L.control.layers(this.mapService.baseMaps, this.mapService.overlays).addTo(this._map);
         this.mapService.map = this._map;
 
         try {
@@ -174,6 +175,8 @@ export class MapComponent {
         this.mapService.map.eachLayer(function (removelayer) {removelayer.remove()})
         console.log(this.mapService.baseMaps)
         this.mapService.map.addLayer(L.tileLayer("http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
+            minZoom: 4,
+            maxZoom: 21,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
         }))
     }
@@ -192,6 +195,8 @@ export class MapComponent {
     toggleLayers(index, layer, checked) {
         if (checked == false) {
             this.currentlayer = (L.tileLayer.wms(layer.layerURL, {
+                minZoom: 4,
+                maxZoom: 20,
                 layers: layer.layerIdent,
                 format: layer.layerFormat,
                 transparent: true,
