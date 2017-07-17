@@ -18,12 +18,12 @@ import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bo
 @Component({
   selector: 'page',
   templateUrl: './pageconfig.component.html',
-  providers: [Api2Service, Configuration, FilterPipe, NumFilterPipe, UserPageLayerService]
+  providers: [Api2Service, Configuration, FilterPipe, NumFilterPipe, UserPageLayerService, UserPageService]
   //styleUrls: ['./app.component.css', './styles/w3.css'],
 })
 export class PageConfigComponent implements OnInit{
-@Input () pageID;
-@Input () userID;
+@Input() pageID;
+@Input() userID;
 
 public user = new User;
 public userpagelayer = new UserPageLayer;
@@ -37,7 +37,7 @@ public layers: any;
 public page: string;
 
 
-    constructor(private userpagelayerService: UserPageLayerService, private layerpermissionService: LayerPermissionService, public activeModal: NgbActiveModal) {
+    constructor(private userpagelayerService: UserPageLayerService, private userpageService: UserPageService, private layerpermissionService: LayerPermissionService, public activeModal: NgbActiveModal) {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         //this.userID = currentUser && currentUser.userid; 
@@ -46,6 +46,7 @@ public page: string;
     ngOnInit() {
        this.getUserPageLayers();
        this.getLayers();
+       this.getUserPage(this.pageID)
     // need to get all layers this user has access to
 
     }
@@ -59,6 +60,16 @@ public page: string;
                 () =>  console.log(this.userpagelayers)
                 );
            
+    }
+
+    public getUserPage(pageID): void {
+        this.userpageService
+            .GetSingle(pageID)
+            .subscribe((data) => this.selecteduserpage = data,
+                error => console.log(error),
+                () =>  console.log(this.selecteduserpage.page)
+                );
+            //{{selecteduserpage.page}} in HTML
     }
 
     public getLayers() {

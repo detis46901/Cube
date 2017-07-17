@@ -14,8 +14,8 @@ import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bo
 @Component({
   selector: 'page',
   templateUrl: './page.component.html',
-  providers: [Api2Service, Configuration, FilterPipe, NumFilterPipe]
-  //styleUrls: ['./app.component.css', './styles/w3.css'],
+  providers: [Api2Service, Configuration, FilterPipe, NumFilterPipe],
+  styleUrls: ['./page.component.scss'],
 })
 export class PageComponent implements OnInit{
 @Input () userID;
@@ -44,12 +44,12 @@ public newuserpage: string;
     }
 
     public getUserPageItems(): void {
-         this.userpageService
-            .GetSome(this.userID)
-            .subscribe((data:UserPage[]) => this.userpages = data,
-                error => console.log(error),
-                () => console.log(this.userpages[0].page)
-                );
+        this.userpageService
+        .GetSome(this.userID)
+        .subscribe((data:UserPage[]) => this.userpages = data,
+            error => console.log(error)
+            );
+        console.log(this.userpages)
     }
 
    public addUserPage(newuserpage) {

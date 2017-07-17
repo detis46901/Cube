@@ -9,7 +9,7 @@ import { Configuration } from '../../_api/api.constants'
   selector: 'app-root',
   templateUrl: './admin.component.html',
   providers: [Api2Service, Configuration],
-  styleUrls: ['./admin.component.less'],
+  styleUrls: ['./admin.component.scss'],
 })
 export class AdminComponent {
     //screen code (see home.component.html)

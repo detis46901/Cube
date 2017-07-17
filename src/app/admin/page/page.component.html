@@ -1,36 +1,52 @@
 <div class="modal-header">
-    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <h4 class="modal-title">{{firstName}} {{lastName}}'s Pages</h4>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-        <div class="col-md-1" style="position:relative; left:15px">            
-            <h4>Pages</h4>
+    <div class="row" style="width:100%">
+        <div class="col-md-11">
+            <h4 class="modal-title">{{firstName}} {{lastName}}'s Pages</h4>
         </div>
-        <div class="col-md-1" style="position:relative; left:255px">
-            <h4>Active</h4>
+        <div class="col-md-1">
+            <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-        <div class="col-md-1" style="position:relative; left:280px">
-            <h4>Default</h4>
-        </div>
-        <div class="col-md-1" style="position:relative; left:320px">
-            <h4>Order</h4>
-        </div>
-       
-        <form class="form-inline" *ngFor="let userpage of userpages" style="position:relative; left:15px">
-            <div class="form-group" style="width:100%;">
-                <label for="exuserpage"><i (click)="deleteUserPage(userpage.ID)" class="fa fa-times" aria-hidden="true"></i></label>
-                <input id="exuserpage" name="exuserpage" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; margin-bottom:3px; width:45%" #edituserpageinput [(ngModel)] = "userpage.page" type="text" (blur)="updateUserPage(userpage)">
-                <input id="exuserpageactive" name="exuserpageactive" class="form-check-input" style="border-color: rgba(255,255,255,0); width:15%; position:relative" [(ngModel)] = "userpage.active" type="checkbox" (change)="updateUserPage(userpage)">
-                <input id="exuserpagedefault" name="exuserpagedefault" class="form-check-input" style="border-color: rgba(255,255,255,0); width:10%; position:relative; margin-right:35px" [(ngModel)] = "userpage.default" type="checkbox" (change)="updateUserPage(userpage)">
-                <i class="fa fa-arrow-up" aria-hidden="true"></i>
-                <i class="fa fa-arrow-down" aria-hidden="true"></i>
-            </div>
-        </form> 
+    </div>
+</div>
 
-        <input id="newuserpage" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:45%; position:relative; left:30px; top:10px; height:34px" #newuserpageinput [(ngModel)] = "newuserpage" type="text" placeholder="New Page" (keyup.enter)="addUserPage(newuserpage); newuserpageinput.value=''" aria-describedby="userpageHelpBlock"><br>
-        <div id="userpageHelpBlock" class="form-text form-muted" style="position:relative; left:30px; top:10px; margin-bottom:15px">Press enter to create a page.</div>       
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-5">       
+                <div class="col-md-4">     
+                    <h4>Pages</h4>
+                </div>
+            </div>
+            <div class="col-md-1 col-md-offset-1">
+                <h4>Active</h4>
+            </div>
+            <div class="col-md-2">
+                <div class="col-md-2">
+                    <h4>Default</h4>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="col-md-1">
+                    <h4>Order</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <form class="form-inline" *ngFor="let userpage of userpages" style="position:relative; left:15px">
+                <div class="form-group" style="width:100%;">
+                    <label for="exuserpage"><i (click)="deleteUserPage(userpage.ID)" class="fa fa-times" aria-hidden="true"></i></label>
+                    <input id="exuserpage" name="exuserpage" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; margin-bottom:3px; width:45%" #edituserpageinput [(ngModel)] = "userpage.page" type="text" (blur)="updateUserPage(userpage)">
+                    <input id="exuserpageactive" name="exuserpageactive" class="form-check-input" style="border-color: rgba(255,255,255,0); width:15%; position:relative" [(ngModel)] = "userpage.active" type="checkbox" (change)="updateUserPage(userpage)">
+                    <input id="exuserpagedefault" name="exuserpagedefault" class="form-check-input" style="border-color: rgba(255,255,255,0); width:10%; position:relative; margin-right:35px" [(ngModel)] = "userpage.default" type="checkbox" (change)="updateUserPage(userpage)">
+                    <i class="fa fa-arrow-up" style="margin-right:5px;" aria-hidden="true"></i>
+                    <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                </div>
+            </form> 
+            <input id="newuserpage" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:45%; position:relative; left:5%; top:10px; height:34px" #newuserpageinput [(ngModel)] = "newuserpage" type="text" placeholder="New Page" (keyup.enter)="addUserPage(newuserpage); newuserpageinput.value=''" aria-describedby="userpageHelpBlock"><br>
+            <div id="userpageHelpBlock" class="form-text form-muted" style="position:relative; left:5%; top:10px; margin-bottom:15px">Press enter to create a page.</div>       
+        </div>
     </div>
 </div>

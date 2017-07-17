@@ -2,7 +2,7 @@
     <div class="container-fluid pull-right">
         <div class="row">
             <div class="col-md-12">
-  <ngb-tabset type="pills" destroyOnHide="true" class="btn btn-sm btn-secondary" style="background: rgba(255, 255, 255, 0.5)" >
+  <ngb-tabset type="pills" destroyOnHide="true" class="btn btn-secondary" style="background: rgba(255, 255, 255, 0.5)" >
       <ngb-tab>
            <ng-template ngbTabTitle><i class="fa fa-times" aria-hidden="true"></i></ng-template>
           <ng-template ngbTabContent></ng-template>
@@ -10,7 +10,7 @@
   <ngb-tab title="{{currPage}}">
     <ng-template ngbTabContent>
       <div *ngFor = "let userpage of userpages" data-toggle="buttons">
-          <div> <label (click) = "setUserPageLayers(userpage)" class="btn btn-sm btn-secondary pull-right">{{userpage.page}}</label><br><br></div></div>
+          <div> <label (click) = "setUserPageLayers(userpage)" class="btn btn-secondary pull-right">{{userpage.page}}</label><br><br></div></div>
     </ng-template>
   </ngb-tab>
   <ngb-tab >
@@ -25,10 +25,10 @@
             <ul *ngFor="let userpagelayer of userpagelayers" data-toggle="buttons" class="push-right">
                <li style="list-style-type:none" class="push-right"> 
             
-                    <button class="btn btn-sm btn-secondary pull-right" (click)="toggleLayers(userpagelayers.indexOf(userpagelayer), userpagelayer, userpagelayer.layerShown)" [class.active]="userpagelayer.layerShown">
+                    <button class="btn btn-secondary pull-right" (click)="toggleLayers(userpagelayers.indexOf(userpagelayer), userpagelayer, userpagelayer.layerShown)" [class.active]="userpagelayer.layerShown">
                         {{userpagelayer.layer_admin.layerName}}
                     </button>
-                     <input class="push-right" type="radio" [(ngModel)]="currLayer" [value]="userpagelayer" name="curlayerradio" (click)="setCurrentLayer(userpagelayer)">
+                     <!----><input class="push-right" type="radio" [disabled]= "!userpagelayer.layerShown" [(ngModel)]="currLayer" [value]="userpagelayer" name="curlayerradio" (click)="setCurrentLayer(userpagelayer)">
                  </li>   
               
             </ul>

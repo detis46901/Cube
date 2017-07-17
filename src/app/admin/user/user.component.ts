@@ -34,7 +34,7 @@ import {hash, genSalt} from "bcrypt/bcrypt.js"*/
   selector: 'user',
   templateUrl: './user.component.html',
   providers: [Api2Service, RoleService, UserPageService, LayerPermissionService, UserPageLayerService, Configuration, PagePipe, NumFilterPipe, NgbModal],
-  styleUrls: ['./user.component.less'],
+  styleUrls: ['./user.component.scss'],
 })
 
 export class UserComponent implements OnInit{

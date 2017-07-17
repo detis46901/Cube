@@ -18,13 +18,11 @@ export class LoginComponent implements OnInit {
     loading = false;
     error = '';
  
-    constructor(
-        private router: Router,
-        private authenticationService: AuthenticationService,
-        private dataService: Api2Service) { }
+    constructor(private router: Router, private authenticationService: AuthenticationService, private dataService: Api2Service) {
+    }
  
     ngOnInit() {
-        // reset login status
+        //reset login status
         this.authenticationService.logout();
     }
  
@@ -32,7 +30,7 @@ export class LoginComponent implements OnInit {
         this.loading = true;
         console.log(this.model.username)
         //console.log(Md5.hashStr(this.model.password).toString())
-        this.model.password = Md5.hashStr(this.model.password).toString() //This works fine in conjunction with user.component.ts.addUser, but existing users can't login if this is left on
+        this.model.password = Md5.hashStr(this.model.password).toString()
         this.authenticationService.login(this.model.username, this.model.password)
             .subscribe(result => {
                 if (result > 0 ) {

@@ -3,6 +3,7 @@ import { Api2Service } from '../../api2.service';
 import { Configuration } from '../../../_api/api.constants'
 import { Http, Headers, Response } from '@angular/http';
 import { User } from '../../../_models/user-model'
+import { Md5 } from 'ts-md5/dist/md5'
 
 @Component({
   selector: 'password',
@@ -17,6 +18,7 @@ export class PasswordComponent implements OnInit{
     public token: string;
     public userID: string;
     public user = new User;
+    public error;
 
     constructor(private dataService: Api2Service) {
        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -28,8 +30,13 @@ export class PasswordComponent implements OnInit{
        
     }
 
+    login() {
+        console.log(Md5.hashStr(this.model.password).toString())
+        this.model.password = Md5.hashStr(this.model.password).toString()
+    }
+
     //It would be wise to implement sending an email for password reset, or allowing a user to choose security questions
-    public getUserItems(userID): void {
+    getUserItems(userID): void {
         this.dataService
         .GetSingle(userID)
         .subscribe((data:User) => this.user = data,
