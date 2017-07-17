@@ -35,7 +35,7 @@ export class MapComponent {
     public userID: number;
     public headers: Headers;
     public popuptx: string = ""
-        
+          
     @ViewChild(MarkerComponent) markerComponent: MarkerComponent;
 
     //Constructor, elementref is for use in ngAfterViewInit to test the geoJSON file. the rest are necessary for map component to work.
@@ -72,15 +72,16 @@ export class MapComponent {
     public layerpermissions: any;
     public layeradmin = new LayerAdmin;
     public layeradmins: Array<LayerAdmin>;
-    public userpagelayers: Array<UserPageLayer>; 
+    public userpagelayers: Array<UserPageLayer>;
+    public currLayer: UserPageLayer; 
     public userpages: any; 
-    public currIdent: any;
     public layerList: Array<L.Layer> = [];
 
     public defaultpage: any; 
-    public currentlayer: L.Layer;
+    public turnonlayer: L.Layer;
     public overlays: any;
     public currPage: any = "None"
+    public currLayerName: string = "Layer"
 
     public count = 0;
 
@@ -154,7 +155,7 @@ export class MapComponent {
         });               
         L.control.zoom({ position: "bottomright" }).addTo(this._map);
         L.control.scale().addTo(this._map);
-       L.control.layers(this.mapService.baseMaps, this.mapService.overlays).addTo(this._map);
+       //L.control.layers(this.mapService.baseMaps, this.mapService.overlays).addTo(this._map);
         this.mapService.map = this._map;
 
         try {
@@ -211,34 +212,68 @@ export class MapComponent {
         for (let i=0; i<temp.length; i++) {
             console.log(temp[i])
             if (temp[i].layerON) {
-                this.toggleLayers(i,temp[i].layer_admin,false)
+                this.toggleLayers(i,temp[i],false)
             }
         }
     }
 
+    setCurrentLayer(layer) {
+        console.log('Setting Current Layer')
+        console.log(layer)
+        for (let x of this.userpagelayers) {
+            console.log(x)
+            if (x == layer) {
+                console.log("Found Layer!")
+                if (x.layerShown === true) {
+                    console.log("Layer is shown")
+                this.currLayerName = x.layer_admin.layerName
+                this._map.off('click')
+                this._map.on('click', (event: MouseEvent) => { 
+            let BBOX = this._map.getBounds().toBBoxString();
+            let WIDTH = this._map.getSize().x;
+            let HEIGHT = this._map.getSize().y;
+            let IDENT = x.layer_admin.layerIdent
+            let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
+            let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
+            let URL = x.layer_admin.layerURL + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
+            console.log(URL)
+            this.wfsservice.getfeatureinfo(URL, false)
+                .subscribe((data: any) => this.getFeatureData = data)
+        })
+            }}
+        }
+    }
+
     //Reads index of layer in dropdown, layeradmin, and if it is shown or not. Needs to remove a layer if a new one is selected
-    toggleLayers(index, layer, checked) {
+    toggleLayers(index, layer: UserPageLayer, checked) {
         console.log(layer)
         let zindex = 1000
         if (checked == false) {
-            if (layer.layerGeom == "Coverage") {zindex = 500}
-            console.log(layer.layerIdent, layer.layerGeom, zindex)
-            this.currentlayer = (L.tileLayer.wms(layer.layerURL, {
+            if (layer.layer_admin.layerGeom == "Coverage") {zindex = 500}
+            console.log(layer.layer_admin.layerIdent, layer.layer_admin.layerGeom, zindex)
+            this.turnonlayer = (L.tileLayer.wms(layer.layer_admin.layerURL, {
                 minZoom: 4,
                 maxZoom: 20,
                 zIndex: zindex,
-                layers: layer.layerIdent,
-                format: layer.layerFormat,
+                layers: layer.layer_admin.layerIdent,
+                format: layer.layer_admin.layerFormat,
                 transparent: true,
             })).addTo(this._map)
-            this.layerList[index] = this.currentlayer
-            this.currIdent = layer.layerIdent
+            this.layerList[index] = this.turnonlayer
+            console.log(layer.layer_admin.ID)
+            this.currLayer = layer
+            this.currLayerName = layer.layer_admin.layerName
             this.openFeatureInfo();
             this.userpagelayers[index].layerShown = true
         }
         else { 
             this.layerList[index].removeFrom(this._map)
             this.userpagelayers[index].layerShown = false
+            if (this.currLayer == layer) {
+                this._map.off('click')
+                console.log("Current Layer Turning Off")
+                this.currLayer = null
+                this.currLayerName = "No Current"} 
         }
     }
 
@@ -257,7 +292,7 @@ export class MapComponent {
             let BBOX = this._map.getBounds().toBBoxString();
             let WIDTH = this._map.getSize().x;
             let HEIGHT = this._map.getSize().y;
-            let IDENT = this.currIdent
+            let IDENT = this.currLayer.layer_admin.layerIdent
             let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
             let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
             let URL = ms_url + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
@@ -265,25 +300,25 @@ export class MapComponent {
                 .subscribe((data: any) => this.getFeatureData = data)
         })
 
-        this._map.on('mousemove', (event: MouseEvent) => {
-            let BBOX = this._map.getBounds().toBBoxString();
-            let WIDTH = this._map.getSize().x;
-            let HEIGHT = this._map.getSize().y;
-            let IDENT = this.currIdent
-            let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
-            let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
-            let URL = ms_url + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
-            this.wfsservice.getfeatureinfo(URL, true)
-                .subscribe((data: any) => {
-                    if (data.length > 18) {
-                        L.DomUtil.addClass(this._map.getContainer(),'pointer-enabled')
-                    }
-                    else {
-                        L.DomUtil.removeClass(this._map.getContainer(),'pointer-enabled')
-                    }
-                })
+        // this._map.on('mousemove', (event: MouseEvent) => {
+        //     let BBOX = this._map.getBounds().toBBoxString();
+        //     let WIDTH = this._map.getSize().x;
+        //     let HEIGHT = this._map.getSize().y;
+        //     let IDENT = this.currIdent
+        //     let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
+        //     let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
+        //     let URL = ms_url + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
+        //     this.wfsservice.getfeatureinfo(URL, true)
+        //         .subscribe((data: any) => {
+        //             if (data.length > 18) {
+        //                 L.DomUtil.addClass(this._map.getContainer(),'pointer-enabled')
+        //             }
+        //             else {
+        //                 L.DomUtil.removeClass(this._map.getContainer(),'pointer-enabled')
+        //             }
+        //         })
             
-        })   
+        // })   
     }
 
     /*openWFS(geometry, URL, index) {

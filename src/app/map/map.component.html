@@ -1,24 +1,46 @@
 <div id="mapid"></div>
-<div class="row">
-    <div class="col-md-2 col-md-offset-9" style="bottom:10px">
-        <div ngbDropdown class="d-inline-block">
-            <button class="btn btn-outline-primary" id="dropdownMenu1" ngbDropdownToggle>{{currPage}}</button><!--Perhaps using ngIf, interpolate the active page name as the button text if a page is selected-->
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1" id="ddM1">
-                <!-- Should these be checkboxes in appearance?-->
-                <button *ngFor = "let userpage of userpages" (click) = "setUserPageLayers(userpage)" class="dropdown-item btn btn-primary">{{userpage.page}}</button>
-            </div>
-        </div>
-        
-        <div ngbDropdown class="d-inline-block"><!--Excluding this and wrapping both buttons in the <div ngbDropdown> tag above is how to unbind them, but it screw up the pages button-->
-            <button class="btn btn-outline-primary" id="dropdownMenu2" ngbDropdownToggle>Layers</button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2" id="ddM2">
-                <div *ngFor="let userpagelayer of userpagelayers" class="btn-group" data-toggle="buttons">
-                    <!-- Should these be checkboxes in appearance?-->
-                    <label class="btn btn-primary" (click)="toggleLayers(userpagelayers.indexOf(userpagelayer), userpagelayer.layer_admin, userpagelayer.layerShown)" [class.active]="userpagelayer.layerON">
-                        <input type="checkbox" [(ngModel)]="userpagelayer.layerShown" (change)="updateUserPageLayer(userpagelayer)"> X {{userpagelayer.layer_admin.layerName}}
-                    </label><br>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="container-fluid pull-right">
+        <div class="row">
+            <div class="col-md-12">
+  <ngb-tabset type="pills" destroyOnHide="true" class="btn btn-sm btn-secondary" style="background: rgba(255, 255, 255, 0.5)" >
+      <ngb-tab>
+           <ng-template ngbTabTitle><i class="fa fa-times" aria-hidden="true"></i></ng-template>
+          <ng-template ngbTabContent></ng-template>
+        </ngb-tab>
+  <ngb-tab title="{{currPage}}">
+    <ng-template ngbTabContent>
+      <div *ngFor = "let userpage of userpages" data-toggle="buttons">
+          <div> <label (click) = "setUserPageLayers(userpage)" class="btn btn-sm btn-secondary pull-right">{{userpage.page}}</label><br><br></div></div>
+    </ng-template>
+  </ngb-tab>
+  <ngb-tab >
+      <ng-template ngbTabTitle>{{currLayerName}}</ng-template>
+      <ng-template ngbTabContent>Layer Settings</ng-template>
+  </ngb-tab>
+  <ngb-tab>
+    <ng-template ngbTabTitle><i class="fa fa-caret-down" aria-hidden="true"></i></ng-template>
+    <ng-template ngbTabContent>
+        <form #f="ngForm">
+            
+            <ul *ngFor="let userpagelayer of userpagelayers" data-toggle="buttons" class="push-right">
+               <li style="list-style-type:none" class="push-right"> 
+            
+                    <button class="btn btn-sm btn-secondary pull-right" (click)="toggleLayers(userpagelayers.indexOf(userpagelayer), userpagelayer, userpagelayer.layerShown)" [class.active]="userpagelayer.layerShown">
+                        {{userpagelayer.layer_admin.layerName}}
+                    </button>
+                     <input class="push-right" type="radio" [(ngModel)]="currLayer" [value]="userpagelayer" name="curlayerradio" (click)="setCurrentLayer(userpagelayer)">
+                 </li>   
+              
+            </ul>
+        </form>
+    </ng-template>
+  </ngb-tab>
+  <ngb-tab title="Modules" [disabled]="true">
+    <ng-template ngbTabContent>
+      <p>Layer edit content.</p>
+    </ng-template>
+  </ngb-tab>
+</ngb-tabset>
+</div>
+</div>
 </div>
