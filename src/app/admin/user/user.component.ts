@@ -45,7 +45,7 @@ export class UserComponent implements OnInit{
     closeResult: string;
     public user = new User;
     public newuser = new User;
-    public userpage = new UserPage;
+    public userpage: any;
     public userpages: any;
     public department = new Department;
     public users: any;
@@ -202,7 +202,7 @@ export class UserComponent implements OnInit{
         const modalRef = this.modalService.open(ConfirmdeleteComponent)
         modalRef.componentInstance.objCode = this.objCode
         modalRef.componentInstance.objID = user.ID
-        modalRef.componentInstance.objName = user.lastName + ', ' + user.firstName
+        modalRef.componentInstance.objName = user.firstName + " " + user.lastName
 
         modalRef.result.then((result) => {
             this.deleteUser(user.ID)
@@ -228,15 +228,34 @@ export class UserComponent implements OnInit{
             .subscribe((data:UserPage[]) => this.userpages = data,
                 error => console.log(error),
                 () => console.log('User Page Items Loaded')
-                );
+            );
+        console.log(this.userpages)
+    }
+
+    getUserPageItem(pageID) {
+        this.userpageService
+            .GetSingle(pageID)
+            .subscribe((data:UserPage) => this.userpage = data.page,
+                error => console.log(error),
+                () =>  console.log(this.userpage)
+            );
+        console.log(this.userpage)
+    }
+
+    onEditPageLayerClick(pageID, userID) {
+        this.getUserPageItem(pageID)
+        this.openPageConfig(pageID, userID)
     }
 
     openPageConfig(pageID, userID) {
         console.log("userID = " + userID)
         console.log("pageID = " + pageID)
+
         const modalRef = this.modalService.open(PageConfigComponent)
         modalRef.componentInstance.pageID = pageID;
-        modalRef.componentInstance.userID = userID,
+        modalRef.componentInstance.userID = userID;
+        console.log("Next line: assigning modal input to this.userpage")
+        modalRef.componentInstance.pageName = this.userpage;
         modalRef.result.then((result) => {
             this.closeResult = `Closed with: ${result}`;
             this.getUserPageItems();

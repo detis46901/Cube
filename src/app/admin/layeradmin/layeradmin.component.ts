@@ -19,7 +19,7 @@ import { confirmDelete } from '../../../_models/confDel.model'
   selector: 'layeradmin',
   templateUrl: './layeradmin.component.html',
   providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, NgbActiveModal],
-  styleUrls: ['./layeradmin.component.less'],
+  styleUrls: ['./layeradmin.component.scss'],
 })
 
 export class LayerAdminComponent implements OnInit{
@@ -175,33 +175,44 @@ export class LayerAdminComponent implements OnInit{
     }
 
     //6/28/17
-    SortAZ() {
-        let list = this.layeradmins
+    orderAZ() {
+        let indexList: Array<number> = [];
+        let list, temp = this.layeradmins
         for (let i=0; i<list.length; i++) {
-            let temp = list[i].layerName
-            
+            temp[i] = list[i].layerName    
         }
-        console.log(this.layeradmins[0])
     }
 
-    SortZA() {
-        console.log("foobar")
-    }
+    sortLayers(code: string) {
+        let indexList: Array<number> = [];
+        let list = this.layeradmins;
+        let temp: Array<any> = [];
 
-    SortType() {
-        console.log("foobar")
-    }
-
-    SortOldNew() {
-        console.log("foobar")
-    }
-
-    SortNewOld() {
-        console.log("foobar")
-    }
-
-    SortGeom() {
-        console.log("foobar")
+        switch(code) {
+            case('AZ'):
+                for (let i=0; i<list.length; i++) {
+                    temp[i] = list[i].layerName
+                }
+                temp.sort()
+                //7/19/17 for array, this.layeradmin[i] = list element where list[i].layername matches temp[i]
+                console.log(temp)
+                break;
+            case('ZA'):
+                break;
+            case('TYPE'):
+                break;
+            case('OLD_NEW'):
+                break;
+            case('NEW_OLD'):
+                break;
+            case('GEOM'):
+                break;
+            case('SERVER'):
+                break;
+            default:
+                alert('"' + code + '" is not a valid code.')
+                break;                    
+        }
     }
 }
 

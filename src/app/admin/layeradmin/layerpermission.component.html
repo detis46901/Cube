@@ -5,45 +5,79 @@
        described for the "New Layer" modal style recommendation. They should be separated.
       -The listed users need to be aligned with the "User" labelled control. This control is offset and looks awkward.-->
 
-<!-- This defines the modal that pops up after a "Permissions" click event from "Layers" control-->
-  <div class="modal-header">
-    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <h4 class="modal-title">{{layerName}} - Permissions</h4>
-  </div>
-  <div class="modal-body">
+<div class="modal-header">
+    <div class="row" style="width:100%">
+        <div class="col-md-11">
+            <h4 class="modal-title">{{layerName}} Permissions</h4>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="close" style="position:relative; top:8px;" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-body">
+    <!--7/19/17 New changes, making the data tabular etc.-->
+    <!--<div class="row" style="position:relative;">
+        <table class="table" style="width:100%">
+            <tr>
+                <div class="col-md-2">
+                    <h4>Users</h4>
+                </div>
+                <div class="col-md-5 col-md-offset-5">
+                    <div class="col-md-8 col-md-offset-3">
+                        <h4>Edit Rights</h4>
+                    </div>
+                </div>
+            </tr>
+            <tr *ngFor="let layerpermission of layerpermissions">
+                <td>
+                    <form class="form-inline" style="width:100%">
+                        <div class="form-group" style="width:60%">
+                            <label for="exusername"><i (click)="deleteLayerPermission(layerpermission.ID)" class="fa fa-times" style="position:relative; margin-right:5px;" aria-hidden="true"></i></label>
+                            {{layerpermission.layer_admin.layerName}}
+                        </div>
+                        <input id="exuseredit" class="form-check-input" style="position:relative; left:20%; border-color: rgba(255,255,255,0); width:5%;" [(ngModel)] = "layerpermission.edit" type="checkbox"> <!-(change)="updateUserPageLayer(userpagelayer)"->
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>-->
+
+    <!--7/19/17 Reworking, this below is the preserved code from earlier in this day.-->
     <form class="form-inline" #f="ngForm" *ngFor="let layerpermission of layerpermissions">
-    <div class="form-group">
-                <i (click)="deleteLayerPermission(layerpermission.ID)" class="fa fa-times" aria-hidden="true"></i>
-     <select id="user" name="user" class="form-control" [(ngModel)] = "layerpermission.userID" required type="text" (blur)="updateLayerPermission(layerpermission)"  >
+        <div class="form-group">
+            <i (click)="deleteLayerPermission(layerpermission.ID)" class="fa fa-times" style="margin-right:5px;" aria-hidden="true"></i>
+            <select id="user" name="user" class="form-control" [(ngModel)] = "layerpermission.userID" required type="text" (blur)="updateLayerPermission(layerpermission)"  >
+            <option [value]="user.ID" *ngFor="let user of users">
+            {{user.firstName}} {{user.lastName}}
+            </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="checkbox" name="layerpermissionedit" [(ngModel)]="layerpermission.edit" (change)="updateLayerPermission(layerpermission)"> Edit
+        </div>
+    </form> 
+
+    <form class="form-inline" #f="ngForm" (ngSubmit)="addLayerPermission(newlayerpermission)">
+        <div class="form-group">
+            <label for="user">User</label>
+            <select id="user" name="user" class="form-control" [(ngModel)] = "newlayerpermission.userID" required type="text">
                 <option [value]="user.ID" *ngFor="let user of users">
                     {{user.firstName}} {{user.lastName}}
                 </option>
-    </select>
-    </div>
-    <div class="form-group">
-    <label class="btn btn-primary" [class.active]="layerpermission.edit">
-    <input type="checkbox" name="layerpermissionedit" [(ngModel)]="layerpermission.edit" (change)="updateLayerPermission(layerpermission)"> Edit </label>
-    </div>
-</form> 
+            </select>
+        </div>
+        <div class="form-group">
+            
+            <input type="checkbox" name="newlayerpermissionedit" [(ngModel)]="newlayerpermission.edit"> Edit 
+        </div>
+        <button class="btn btn-outline-primary" type="submit" [disabled]="!f.valid">Add Permission</button>
+    </form>
+</div>
 
-<form class="form-inline" #f="ngForm" (ngSubmit)="addLayerPermission(newlayerpermission)">
-    <div class="form-group">
-     <label for="user">User</label>
-     <select id="user" name="user" class="form-control" [(ngModel)] = "newlayerpermission.userID" required type="text">
-                <option [value]="user.ID" *ngFor="let user of users">
-                    {{user.firstName}} {{user.lastName}}
-                </option>
-    </select>
-    </div>
-    <div class="form-group">
-    <label class="btn btn-primary" [class.active]="newlayerpermission.edit">
-    <input type="checkbox" name="newlayerpermissionedit" [(ngModel)]="newlayerpermission.edit"> Edit </label>
-    </div>
-    <button class="btn btn-outline-primary" type="submit" [disabled]="!f.valid">Add Permission</button>
-</form> 
-
-  <div class="modal-footer">
+<div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="activeModal.close('Close click')">Close</button>
-  </div>
+</div>

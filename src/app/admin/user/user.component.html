@@ -14,10 +14,8 @@
         </div>
 
         <div class="col-md-1">
-            <div class="row">
-                <div class="col-md-8">
-                    <h4>Role</h4>
-                </div>
+            <div style="position:relative; right:33%">
+                <h4>Role</h4>
             </div>
         </div>
 
@@ -47,7 +45,7 @@
     </div>
     
     <form style="position:relative; left:20px" class="form-inline" #e="ngForm" *ngFor="let user of users">
-        <i id="btnOpenDelUser" class="fa fa-times" (click)="openConfDel(user)"></i>
+        <i id="btnOpenDelUser" class="fa fa-times" style="margin-right:5px" (click)="openConfDel(user)"></i>
         <input id="exuserfirstname" ngModel required name="exuserfirstname" class="form-control" [(ngModel)] = "user.firstName" type="text" (blur)="updateUser(user)" (change)="updateUser(user)">
         <input id="exuserlastname" ngModel required name="exuserlastname" class="form-control" [(ngModel)] = "user.lastName" type="text" (blur)="updateUser(user)" (change)="updateUser(user)">
         <select id="exuserrole" ngModel required name="exuserrole" class="form-control" [(ngModel)] = "user.roleID" #role="ngModel" type="text" (blur)="updateUser(user)" (change)="updateUser(user)">
@@ -71,7 +69,7 @@
             <div ngbDropdown style="position:relative">
                 <button id="AdminUserEdit" class="btn btn-primary" ngbDropdownToggle>Edit Layers</button>
                     <div id="editDrop" class="dropdown-menu" aria-labelledby="dropdownMenu3">
-                        <button id="openConfig" *ngFor="let userpage of (userpages | pagefilter: (user.ID))" type="button" (click)="openPageConfig(userpage.ID, user.ID)" class="btn btn-secondary">{{userpage.page}}</button><br>
+                        <button id="openConfig" *ngFor="let userpage of (userpages | pagefilter: (user.ID))" type="button" (click)="onEditPageLayerClick(userpage.ID, user.ID)" class="btn btn-secondary">{{userpage.page}}</button><br>
                     </div>
             </div>
         </div>
@@ -80,7 +78,7 @@
     
     <div style="position:absolute; left:35px">Create New User</div><br>
     <form #f="ngForm" style="position:relative; left:20px" class="form-inline" (ngSubmit)="addUser(newuser)" autocomplete="off">
-        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        <i class="fa fa-arrow-right" style="margin-right:5px" aria-hidden="true"></i>
         <input id="newuserfirstname" name="newuserfirstname" required #newuserfirstnameinput [(ngModel)] = "newuser.firstName" type="text" placeholder="First Name">
         <input id="newuserlastname" name="newuserlastname" required #newuserlastnameinput [(ngModel)] = "newuser.lastName" type="text" placeholder="Last Name">
         <select id="newuserrole" name="newuserrole" name="exuserrole" class="form-control" required #role="ngModel" [(ngModel)] = "newuser.roleID" type="text" (blur)="updateUser(user)">

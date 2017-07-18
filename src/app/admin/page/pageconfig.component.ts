@@ -24,6 +24,7 @@ import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bo
 export class PageConfigComponent implements OnInit{
 @Input() pageID;
 @Input() userID;
+@Input() pageName;
 
 public user = new User;
 public userpagelayer = new UserPageLayer;
@@ -37,28 +38,26 @@ public layers: any;
 public page: string;
 
 
-    constructor(private userpagelayerService: UserPageLayerService, private userpageService: UserPageService, private layerpermissionService: LayerPermissionService, public activeModal: NgbActiveModal) {
+    constructor(private userpagelayerService: UserPageLayerService, private modalService: NgbModal, private userpageService: UserPageService, private layerpermissionService: LayerPermissionService, public activeModal: NgbActiveModal) {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         //this.userID = currentUser && currentUser.userid; 
     }
 
     ngOnInit() {
-       this.getUserPageLayers();
-       this.getLayers();
-       this.getUserPage(this.pageID)
-    // need to get all layers this user has access to
-
+        console.log(this.pageName)
+        this.getUserPageLayers();
+        this.getLayers();    
     }
 
     public getUserPageLayers(): void {
         console.log("pageID = " + this.pageID)
-         this.userpagelayerService
+        this.userpagelayerService
             .GetPageLayers(this.pageID)
             .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
                 error => console.log(error),
                 () =>  console.log(this.userpagelayers)
-                );
+            );
            
     }
 
@@ -111,5 +110,20 @@ public page: string;
                 this.getUserPageLayers();
             })
     }
+
+    //confirmDelete for the layers within the page config modal?
+    /*openConfDel(layer) {
+        const modalRef = this.modalService.open(ConfirmdeleteComponent)
+        modalRef.componentInstance.objCode = this.objCode
+        modalRef.componentInstance.objID = layer.ID
+        modalRef.componentInstance.objName = layer.layerName
+
+        modalRef.result.then((result) => {
+            this.deleteLayer(layer.ID)
+            this.getLayerItems();
+        }, (reason) => {
+            this.getLayerItems();
+        });
+    }*/
 
 }

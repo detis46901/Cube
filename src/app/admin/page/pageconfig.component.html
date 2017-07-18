@@ -1,7 +1,7 @@
 <div class="modal-header">
     <div class="row" style="width:100%">
         <div class="col-md-11">
-            <h4 class="modal-title">Page: {{this.selecteduserpage}}</h4>
+            <h3 class="modal-title" style="position:relative; right:3.5%">Page: {{pageName}}</h3>
         </div>
         <div class="col-md-1">
             <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
@@ -15,14 +15,20 @@
     <div class="row" style="position:relative;">
         <table class="table" style="width:100%">
             <tr>
-                <th><h4>Layers</h4></th>
-                <th style="position:relative; right:10%"><h4>Default On</h4></th>
+                <div class="col-md-2">
+                    <h4>Layers</h4>
+                </div>
+                <div class="col-md-5 col-md-offset-5">
+                    <div class="col-md-8 col-md-offset-3">
+                        <h4>Default On</h4>
+                    </div>
+                </div>
             </tr>
             <tr *ngFor="let userpagelayer of userpagelayers">
                 <td>
                     <form class="form-inline" style="width:100%">
-                        <div class="form-group" style="width:80%">
-                            <label for="exuserpagelayer"><i (click)="deleteUserPageLayer(userpagelayer.ID)" class="fa fa-times" aria-hidden="true"></i></label>
+                        <div class="form-group" style="width:60%">
+                            <label for="exuserpagelayer"><i (click)="deleteUserPageLayer(userpagelayer.ID)" class="fa fa-times" style="position:relative; margin-right:5px;" aria-hidden="true"></i></label>
                             {{userpagelayer.layer_admin.layerName}}
                         </div>
                         <input id="exuserpagelayeron" name="exuserpagelayeron" class="form-check-input" style="position:relative; left:20%; border-color: rgba(255,255,255,0); width:5%;" [(ngModel)] = "userpagelayer.layerON" type="checkbox" (change)="updateUserPageLayer(userpagelayer)">
@@ -31,7 +37,7 @@
             </tr>
         </table>
 
-        <form class="form-inline" #f="ngForm" style="position:relative; left:20px; bottom:10px"(ngSubmit)="addUserPageLayer(newuserpagelayer)">
+        <form class="form-inline" #f="ngForm" style="position:relative; left:4%"(ngSubmit)="addUserPageLayer(newuserpagelayer)">
             <select id="layer" name="layer" class="form-control" [(ngModel)] = "newuserpagelayer.layerAdminID" required type="text">
                 <option [value]="layerpermission.layer_admin['ID']" *ngFor="let layerpermission of layerpermissions">
                     {{layerpermission.layer_admin['layerName']}}

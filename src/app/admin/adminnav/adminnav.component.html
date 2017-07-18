@@ -1,12 +1,12 @@
-<table class="table"><tr><th>
-<a [routerLink]="['/admin']" routerLinkActive="active">Admin Home<br></a></th></tr>
-<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['user']}}]" routerLinkActive="active">Users</a></td></tr>
-<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['organization']}}]" routerLinkActive="active">Organization</a></td></tr>
-<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['module']}}]" routerLinkActive="active">Modules</a></td></tr>
-<!--<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['pages']}}]" routerLinkActive="active">Pages</a></td></tr>-->
-<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['layer']}}]" routerLinkActive="active">Layers</a></td></tr>
-<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['default']}}]" routerLinkActive="active">Defaults</a></td></tr>
-<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['boundary']}}]" routerLinkActive="active">Boundaries</a></td></tr>
-<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['notification']}}]" routerLinkActive="active">Notifications</a></td></tr>
-<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['geoserver']}}]" routerLinkActive="active">Geoserver</a></td></tr>
+<table class="table">
+    <tr><th><a [routerLink]="['/admin']" routerLinkActive="active"><h4>Admin Home<br></h4></a></th></tr>
+    <tr><td><a [routerLink]="['/admin', {outlets: {admin: ['geoserver']}}]" routerLinkActive="active"><h5>Servers</h5></a></td></tr>
+    <tr><td><a [routerLink]="['/admin', {outlets: {admin: ['user']}}]" routerLinkActive="active"><h5>Users</h5></a></td></tr>
+    <tr><td><a [routerLink]="['/admin', {outlets: {admin: ['layer']}}]" routerLinkActive="active"><h5>Layers</h5></a></td></tr>
+    <tr><td><a [routerLink]="['/admin', {outlets: {admin: ['organization']}}]" routerLinkActive="active"><h5>Organization</h5></a></td></tr>
+    <tr><td><a [routerLink]="['/admin', {outlets: {admin: ['module']}}]" routerLinkActive="active"><h5>Modules</h5></a></td></tr>
+    <!--<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['pages']}}]" routerLinkActive="active"><h5>Pages</h5></a></td></tr>-->
+    <tr><td><a [routerLink]="['/admin', {outlets: {admin: ['default']}}]" routerLinkActive="active"><h5>Defaults</h5></a></td></tr>
+    <tr><td><a [routerLink]="['/admin', {outlets: {admin: ['boundary']}}]" routerLinkActive="active"><h5>Boundaries</h5></a></td></tr>
+    <tr><td><a [routerLink]="['/admin', {outlets: {admin: ['notification']}}]" routerLinkActive="active"><h5>Notifications</h5></a></td></tr>
 </table>
