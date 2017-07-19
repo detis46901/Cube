@@ -18,8 +18,8 @@ import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bo
 @Component({
   selector: 'page',
   templateUrl: './pageconfig.component.html',
-  providers: [Api2Service, Configuration, FilterPipe, NumFilterPipe, UserPageLayerService, UserPageService]
-  //styleUrls: ['./app.component.css', './styles/w3.css'],
+  providers: [Api2Service, Configuration, FilterPipe, NumFilterPipe, UserPageLayerService, UserPageService],
+  styleUrls: ['./pageconfig.component.scss'],
 })
 export class PageConfigComponent implements OnInit{
 @Input() pageID;

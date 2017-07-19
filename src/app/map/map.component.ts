@@ -25,7 +25,7 @@ import { Map, MouseEvent, Marker } from "leaflet";
 @Component({
   selector: 'map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css'],
+  styleUrls: ['./map.component.scss'],
 })
 
 export class MapComponent {
@@ -81,7 +81,7 @@ export class MapComponent {
     public turnonlayer: L.Layer;
     public overlays: any;
     public currPage: any = "None"
-    public currLayerName: string = "Layer"
+    public currLayerName: string = "No Active Layer"
 
     public count = 0;
 
@@ -140,35 +140,54 @@ export class MapComponent {
             );
     }
 
+    updateUserPageLayer(userpage) {
+        this.userPageLayerService
+            .Update(userpage)
+            .subscribe(result => {
+                console.log(result);
+                //this.getUserPageLayers();
+            })
+    }
+
+    getUserPageItems(): void {
+        this.userPageService
+        .GetSome(this.userID)
+        .subscribe((data:UserPage[]) => this.userpages = data,
+            error => console.log(error)
+            );
+        console.log(this.userpages)
+    }
+
     init_map() {
         console.log (this.currPage)
         if (this.currPage === "None") {
-        console.log ("Initializing Map")
-        this.currPage = this.defaultpage.page
-        this._map = L.map("mapid", {
-            zoomControl: false,
-            center: L.latLng(40.4864, -86.1336),
-            zoom: 12,
-            minZoom: 4,
-            maxZoom: 20,
-            layers: [this.mapService.baseMaps.OpenStreetMap]
-        });               
-        L.control.zoom({ position: "bottomright" }).addTo(this._map);
-        L.control.scale().addTo(this._map);
-       //L.control.layers(this.mapService.baseMaps, this.mapService.overlays).addTo(this._map);
-        this.mapService.map = this._map;
+            console.log ("Initializing Map")
+            this.currPage = this.defaultpage.page
+            this._map = L.map("mapid", {
+                zoomControl: false,
+                center: L.latLng(40.4864, -86.1336),
+                zoom: 12,
+                minZoom: 4,
+                maxZoom: 20,
+                layers: [this.mapService.baseMaps.OpenStreetMap]
+            });               
+            L.control.zoom({ position: "bottomright" }).addTo(this._map);
+            L.control.scale().addTo(this._map);
+            //L.control.layers(this.mapService.baseMaps, this.mapService.overlays).addTo(this._map);
+            this.mapService.map = this._map;
 
-        try {
-            this.markerComponent.Initialize();
-        }
+            try {
+                this.markerComponent.Initialize();
+            }
 
-        catch(err) {
-            console.log(err)
-        }
+            catch(err) {
+                console.log(err)
+            }
         }
         //this.markerComponent.Initialize();
         this.loadLayers();
         this.setFlags();
+        
     }   
 
     //This method sets flags for use with the "Layers in Map Component" map.component.html control in order to determine
@@ -186,6 +205,7 @@ export class MapComponent {
         console.log(this.currPage)
         console.log("set pageID = " + page.ID)
         this.getUserPageLayers(page)
+        this.currLayerName = "No Active Layer"
         // this.userPageLayerService
         //     .GetPageLayers(page.ID)
         //     .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
@@ -217,40 +237,45 @@ export class MapComponent {
         }
     }
 
-    setCurrentLayer(layer) {
-        console.log('Setting Current Layer')
-        console.log(layer)
+    setCurrentLayer(index, layer, checked) {
+        //let x = this.userpagelayers
+        //let x = layer
         for (let x of this.userpagelayers) {
-            console.log(x)
             if (x == layer) {
                 console.log("Found Layer!")
                 if (x.layerShown === true) {
                     console.log("Layer is shown")
-                this.currLayerName = x.layer_admin.layerName
-                this._map.off('click')
-                this._map.on('click', (event: MouseEvent) => { 
-            let BBOX = this._map.getBounds().toBBoxString();
-            let WIDTH = this._map.getSize().x;
-            let HEIGHT = this._map.getSize().y;
-            let IDENT = x.layer_admin.layerIdent
-            let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
-            let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
-            let URL = x.layer_admin.layerURL + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
-            console.log(URL)
-            this.wfsservice.getfeatureinfo(URL, false)
-                .subscribe((data: any) => this.getFeatureData = data)
-        })
-            }}
+                    this.currLayerName = x.layer_admin.layerName
+                    this._map.off('click')
+                    this._map.on('click', (event: MouseEvent) => { 
+                        let BBOX = this._map.getBounds().toBBoxString();
+                        let WIDTH = this._map.getSize().x;
+                        let HEIGHT = this._map.getSize().y;
+                        let IDENT = x.layer_admin.layerIdent
+                        let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
+                        let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
+                        let URL = x.layer_admin.layerURL + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
+                        console.log(URL)
+                        this.wfsservice.getfeatureinfo(URL, false)
+                        .subscribe((data: any) => this.getFeatureData = data)
+                    })
+                }
+            }
+        }
+
+        if(!checked) {
+            this.toggleLayers(index, layer, checked)
         }
     }
 
     //Reads index of layer in dropdown, layeradmin, and if it is shown or not. Needs to remove a layer if a new one is selected
     toggleLayers(index, layer: UserPageLayer, checked) {
-        console.log(layer)
         let zindex = 1000
+        let allLayersOff = true;
+        let nextActive: any;
+
         if (checked == false) {
             if (layer.layer_admin.layerGeom == "Coverage") {zindex = 500}
-            console.log(layer.layer_admin.layerIdent, layer.layer_admin.layerGeom, zindex)
             this.turnonlayer = (L.tileLayer.wms(layer.layer_admin.layerURL, {
                 minZoom: 4,
                 maxZoom: 20,
@@ -260,7 +285,6 @@ export class MapComponent {
                 transparent: true,
             })).addTo(this._map)
             this.layerList[index] = this.turnonlayer
-            console.log(layer.layer_admin.ID)
             this.currLayer = layer
             this.currLayerName = layer.layer_admin.layerName
             this.openFeatureInfo();
@@ -269,11 +293,23 @@ export class MapComponent {
         else { 
             this.layerList[index].removeFrom(this._map)
             this.userpagelayers[index].layerShown = false
-            if (this.currLayer == layer) {
-                this._map.off('click')
-                console.log("Current Layer Turning Off")
+            for (let i of this.userpagelayers) {
+                if (i.layerON) {
+                    nextActive = i;
+                    allLayersOff = false;
+                    break;
+                }
+            }
+            this._map.off('click')
+
+            if (this.currLayer == layer && allLayersOff) {
                 this.currLayer = null
-                this.currLayerName = "No Current"} 
+                this.currLayerName = "No Current"
+            }
+            else if (this.currLayer == layer && !allLayersOff) {
+                this.currLayer = nextActive
+                this.currLayerName = nextActive.layer_admin.layerName
+            }
         }
     }
 
