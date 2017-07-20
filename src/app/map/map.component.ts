@@ -145,7 +145,7 @@ export class MapComponent {
             .Update(userpage)
             .subscribe(result => {
                 console.log(result);
-                //this.getUserPageLayers();
+                this.getUserPageLayers(userpage);
             })
     }
 
@@ -199,7 +199,7 @@ export class MapComponent {
     }
         
     //Gets userpagelayers by page.ID, changes pages
-    setUserPageLayers(page): void {
+    setUserPageLayers(page): void { //This does not update the layer control properly 7/19/17
         this.currPage = page.page
         this.cleanPage()
         console.log(this.currPage)
