@@ -1,0 +1,38 @@
+<div style="position:relative;  top:15px;"class="row">
+    <div class="col-md-3">
+        <div class="col-md-8 col-md-offset-1">
+            <h4>Instance Name</h4>
+        </div>
+    </div>
+
+    <div class="col-md-5 col-md-offset-1">
+        <div class="col-md-4 col-md-offset-1">
+            <h4>URL</h4>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="col-md-9 col-md-offset-1">
+            <h4>Server Type</h4>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="position:relative; left:3%; width:100%; top:15px;">
+    <form style="width:100%" class="form-inline" #e="ngForm" *ngFor="let server of servers">
+        <!--<i id="btnOpenDelLayer" class="fa fa-times" style="position:relative; margin-right:5px" (click)="openConfDel(layeradmin)"></i>-->   
+        <div class="col-md-2">
+            <input id="exservername" style="width:100%" ngModel required name="exservername" title="{{server.serverName}}" class="form-control" [(ngModel)]="server.serverName" type="text">
+        </div>
+        <div class="col-md-6">
+            <input id="exserverurl" style="width:100%" ngModel required name="exserverurl" title="{{server.serverURL}}" class="form-control" [(ngModel)]="server.serverURL" type="text">
+        </div>
+        <div class="col-md-4">
+            <select id="exservertype" style="width:100%; height:34px;" ngModel required name="exservertype" class="form-control" [(ngModel)]="server.serverType" type="text">
+                <option>Geoserver</option>
+                <option>PostGIS</option>
+            </select>
+        </div>
+    </form>
+    <br>
+</div>

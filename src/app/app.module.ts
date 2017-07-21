@@ -43,7 +43,7 @@ import { ModulesComponent } from './admin/modules/modules.component';
 import { DefaultsComponent } from './admin/defaults/defaults.component';
 import { BoundariesComponent } from './admin/boundaries/boundaries.component';
 import { NotificationsComponent } from './admin/notifications/notifications.component'
-import { GeoserverComponent } from './admin/geoserver/geoserver.component';
+import { ServerComponent } from './admin/servers/server.component';
 
 import { ConfirmdeleteComponent } from './admin/confirmdelete/confirmdelete.component';
 
@@ -66,6 +66,7 @@ import { ConfirmdeleteService } from '../_services/confirmdelete.service';
 import { WFSService } from '../app/map/services/wfs.service';
 import { MarkerDataComponent } from './marker_data/marker-data.component';
 import { LayerControlsComponent } from './map/layer-controls/layer-controls.component';
+import { ServernewComponent } from './admin/servers/servernew.component';
 
 @NgModule({
   declarations: [
@@ -100,9 +101,10 @@ import { LayerControlsComponent } from './map/layer-controls/layer-controls.comp
     DefaultsComponent,
     BoundariesComponent,
     NotificationsComponent,
-    GeoserverComponent,
+    ServerComponent,
     MarkerDataComponent,
-    LayerControlsComponent
+    LayerControlsComponent,
+    ServernewComponent
   ],
 
   entryComponents: [LayerNewComponent, LayerPermissionComponent, PageComponent, PageConfigComponent, ConfirmdeleteComponent],

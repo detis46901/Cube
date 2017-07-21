@@ -11,6 +11,8 @@ import { LayerPermissionComponent } from './layerpermission.component';
 import { LayerNewComponent } from './layernew.component'
 import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component'
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ServerService } from '../../../_services/server.service'
+import { Server } from '../../../_models/server.model'
 import { ConfirmdeleteService } from '../../../_services/confirmdelete.service';
 import { Observable } from 'rxjs/Observable';
 import { confirmDelete } from '../../../_models/confDel.model'
@@ -18,7 +20,7 @@ import { confirmDelete } from '../../../_models/confDel.model'
 @Component({
   selector: 'layeradmin',
   templateUrl: './layeradmin.component.html',
-  providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, NgbActiveModal],
+  providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, NgbActiveModal, ServerService],
   styleUrls: ['./layeradmin.component.scss'],
 })
 
@@ -38,6 +40,8 @@ export class LayerAdminComponent implements OnInit{
     public token: string;
     public userID: number;
     public userperm: string;
+    public server: Server;
+    public servers: Array<Server>;
 
     sortedNameAsc: any;
     sortedNameDesc: any;
@@ -45,14 +49,16 @@ export class LayerAdminComponent implements OnInit{
     sortedOldToNew: any;
     sortedNewToOld: any;
 
-    constructor(private layerAdminService: LayerAdminService, private modalService: NgbModal, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private confDelService: ConfirmdeleteService) {
+    constructor(private layerAdminService: LayerAdminService, private modalService: NgbModal, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private confDelService: ConfirmdeleteService, private serverService: ServerService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
     }
 
     ngOnInit() {
-       this.getLayerItems();       
+       this.getLayerItems();     
+       console.log(this.servers)
+       console.log(this.layeradmins) 
     }
 
     //Open permissions modal on request from "Layers"
@@ -64,7 +70,7 @@ export class LayerAdminComponent implements OnInit{
           this.closeResult = `Closed with: ${result}`;
         }, (reason) => {
           this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        });;
+        });
         console.log("openpermission from layernew")
       }
 
@@ -81,6 +87,7 @@ export class LayerAdminComponent implements OnInit{
     }
 
     openConfDel(layer) {
+        console.log(this.servers, this.layeradmins)
         const modalRef = this.modalService.open(ConfirmdeleteComponent)
         modalRef.componentInstance.objCode = this.objCode
         modalRef.componentInstance.objID = layer.ID
@@ -107,7 +114,7 @@ export class LayerAdminComponent implements OnInit{
     initNewLayer(): void {
         this.newlayeradmin.layerName = "";
         this.newlayeradmin.layerDescription = "";
-        this.newlayeradmin.layerURL = "";
+        this.newlayeradmin.serverID = null;
         this.newlayeradmin.layerType = "";
         this.newlayeradmin.layerIdent = "";
         this.newlayeradmin.layerFormat = "";
@@ -119,10 +126,19 @@ export class LayerAdminComponent implements OnInit{
             .GetAll()
             .subscribe((data:LayerAdmin[]) => {this.layeradmins = data,
                 error => console.log(error),
-                () => console.log()
+                () => this.getServers()
             });
         this.sortedOldToNew = this.layeradmins
         console.log(this.layeradmins)
+    }
+
+    getServers() {
+        this.serverService
+            .GetAll()
+            .subscribe((data:Server[]) => this.servers = data,
+                error => console.log(error),
+                () => console.log(this.servers)
+            );
     }
 
     updateLayer(layer) {
@@ -132,6 +148,10 @@ export class LayerAdminComponent implements OnInit{
                 console.log(result); //this returns the correct result, a populated object
                 this.getLayerItems();
             })
+    }
+
+    updateServer(server) {
+        //this.serverService
     }
 
      //The way this deletes permissions and layers when a layer is deleted should be implemented with any deletion that involves dependents

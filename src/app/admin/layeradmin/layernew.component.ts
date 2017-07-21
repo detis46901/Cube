@@ -6,28 +6,31 @@ import { User } from '../../../_models/user-model'
 import { Configuration } from '../../../_api/api.constants'
 import { LayerAdminService } from '../../../_services/layeradmin.service';
 import { LayerPermissionService } from '../../../_services/layerpermission.service';
+import { ServerService } from '../../../_services/server.service';
 import { LayerAdmin, LayerPermission } from '../../../_models/layer.model'
-import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import { Server } from '../../../_models/server.model'
+import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LayerPermissionComponent } from './layerpermission.component'
 
 
 @Component({
   selector: 'layernew',
   templateUrl: './layernew.component.html',
-  styleUrls: ['./layernew.component.less'],
-  providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService],
+  styleUrls: ['./layernew.component.scss'],
+  providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService, ServerService],
 })
 export class LayerNewComponent implements OnInit{
 
 closeResult: string;
 public newlayeradmin = new LayerAdmin;
+public newlayerserver = new Server;
 public token: string;
 public userID: number;
 public userperm: string;
 public layeradmin = new LayerAdmin;
 
 
-    constructor(private modalService: NgbModal, private layerAdminService: LayerAdminService, public activeModal: NgbActiveModal) {
+    constructor(private modalService: NgbModal, private layerAdminService: LayerAdminService, public activeModal: NgbActiveModal, private serverService: ServerService) {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
@@ -37,7 +40,16 @@ public layeradmin = new LayerAdmin;
        //console.log(this.layeradmins.layer)
        //this.getGroupItems();
        //this.getRoleItems();
-        
+    }
+
+getServer(serverID) {
+        console.log(serverID)
+        this.serverService
+            .GetSingle(serverID)
+            .subscribe((data) => this.newlayerserver = data,
+                error => console.log(error),
+                () => console.log(this.newlayerserver)
+            );
     }
 
 open(content) {

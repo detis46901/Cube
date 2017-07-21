@@ -10,7 +10,7 @@ import { ModulesComponent } from './admin/modules/modules.component';
 import { DefaultsComponent } from './admin/defaults/defaults.component';
 import { BoundariesComponent } from './admin/boundaries/boundaries.component';
 import { NotificationsComponent } from './admin/notifications/notifications.component';
-import { GeoserverComponent } from './admin/geoserver/geoserver.component';
+import { ServerComponent } from './admin/servers/server.component';
 import { adminPagesComponent } from './admin/adminpages/adminpages.component'
 import { AuthGuard } from '../_guards/auth.guard';
 import { AdminGuard } from '../_guards/admin.guard';
@@ -37,7 +37,7 @@ const appRoutes: Routes = [
         { path: 'default', component: DefaultsComponent, outlet: 'admin'},
         { path: 'boundary', component: BoundariesComponent, outlet: 'admin'},
         { path: 'notification', component: NotificationsComponent, outlet: 'admin'},
-        { path: 'geoserver', component: GeoserverComponent, outlet: 'admin'}
+        { path: 'server', component: ServerComponent, outlet: 'admin'}
     ]},    //Admin Settings screen
     
     // otherwise redirect to home

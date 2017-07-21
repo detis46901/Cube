@@ -26,9 +26,9 @@
                 </div>
                 <div class="col-md-5">
                     <select id="newlayerformat" name="newlayerformat" class="form-control input-sm col-sm" [(ngModel)] = "newlayeradmin.layerFormat" required type="text">
-                    <option>image/png</option>
-                    <option>image/jpg</option>
-                    <option>image/jpeg</option>
+                        <option>image/png</option>
+                        <option>image/jpg</option>
+                        <option>image/jpeg</option>
                     </select>
                 </div>
             </div>      
@@ -67,10 +67,14 @@
         <div class="column">
             <div class="form-group">
                 <div class="col-md-1">
-                    <label id="urlLabel" for="newlayerurl">URL</label>
+                    <!--<label id="urlLabel" for="newlayerurl">URL</label>-->
+                    <label id="serverIdLabel" for="newlayerserver">Server</label>
                 </div>
                 <div class="col-md-4">
-                    <input id="newlayerurl" name="newlayerurl" #newlayerurlinput [(ngModel)] = "newlayeradmin.layerURL" type="text" placeholder="Layer URL">
+                    <!--<input id="newlayerserver" name="newlayerserver" #newlayerserverinput [(ngModel)] = "newlayeradmin.layerURL" type="text" placeholder="Layer URL">-->
+                    <select id="newlayerserver" class="form-control input-sm col-sm" name="newlayerserver" [(ngModel)] = "newlayerserver" class="form-control input-sm col-sm" required type="text">
+                        <option>Kokomo Foster</option>
+                    </select>
                 </div>
             </div>
 

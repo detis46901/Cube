@@ -2,7 +2,7 @@ export class LayerAdmin {
     ID: number;
     layerName: string;
     layerType: string;
-    layerURL: string;
+    serverID: number;
     layerIdent: string;
     layerFormat: string;
     layerDescription: string;

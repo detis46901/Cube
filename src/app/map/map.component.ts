@@ -14,7 +14,9 @@ import { LayerPermissionService } from "../../_services/layerpermission.service"
 import { LayerAdminService } from "../../_services/layeradmin.service"
 import { UserPageService } from '../../_services/user-page.service'
 import { SidenavService } from '../../_services/sidenav.service'
+import { ServerService } from '../../_services/server.service'
 import { LayerPermission, LayerAdmin, UserPageLayer } from "../../_models/layer.model";
+import { Server } from "../../_models/server.model";
 import { UserPage } from '../../_models/user-model';
 import { UserPageLayerService } from '../../_services/user-page-layer.service'
 import { Http, Response, Headers } from '@angular/http'
@@ -26,6 +28,7 @@ import { Map, MouseEvent, Marker } from "leaflet";
   selector: 'map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
+  providers: [ServerService]
 })
 
 export class MapComponent {
@@ -39,7 +42,7 @@ export class MapComponent {
     @ViewChild(MarkerComponent) markerComponent: MarkerComponent;
 
     //Constructor, elementref is for use in ngAfterViewInit to test the geoJSON file. the rest are necessary for map component to work.
-    constructor(private _http: Http, private elementRef: ElementRef, private mapService: MapService, private wfsservice: WFSService, private geocoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http:Http, private sidenavService: SidenavService) {
+    constructor(private _http: Http, private elementRef: ElementRef, private mapService: MapService, private wfsservice: WFSService, private geocoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sidenavService: SidenavService, private serverService: ServerService ) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
@@ -76,6 +79,8 @@ export class MapComponent {
     public currLayer: UserPageLayer; 
     public userpages: any; 
     public layerList: Array<L.Layer> = [];
+    public server: Server;
+    public servers: Array<Server>;
 
     public defaultpage: any; 
     public turnonlayer: L.Layer;
@@ -136,7 +141,26 @@ export class MapComponent {
             .GetPageLayers(page.ID)
             .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
                 error => console.log(error),
-                () =>  this.init_map()
+                () =>  this.getServers()
+            );
+    }
+
+    getServer(serverID) {
+        console.log(serverID)
+        this.serverService
+            .GetSingle(serverID)
+            .subscribe((data) => this.server = data,
+                error => console.log(error),
+                () => console.log(this.server)
+            );
+    }
+
+    getServers() {
+        this.serverService
+            .GetAll()
+            .subscribe((data) => this.servers = data,
+                error => console.log(error),
+                () => this.init_map()
             );
     }
 
@@ -200,6 +224,7 @@ export class MapComponent {
         
     //Gets userpagelayers by page.ID, changes pages
     setUserPageLayers(page): void { //This does not update the layer control properly 7/19/17
+
         this.currPage = page.page
         this.cleanPage()
         console.log(this.currPage)
@@ -232,14 +257,13 @@ export class MapComponent {
         for (let i=0; i<temp.length; i++) {
             console.log(temp[i])
             if (temp[i].layerON) {
-                this.toggleLayers(i,temp[i],false)
+                this.toggleLayers(i,temp[i], false)
             }
         }
     }
 
-    setCurrentLayer(index, layer, checked) {
-        //let x = this.userpagelayers
-        //let x = layer
+    setCurrentLayer(index, layer: UserPageLayer, checked) {
+        this.getServer(layer.layer_admin.serverID)
         for (let x of this.userpagelayers) {
             if (x == layer) {
                 console.log("Found Layer!")
@@ -254,7 +278,7 @@ export class MapComponent {
                         let IDENT = x.layer_admin.layerIdent
                         let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
                         let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
-                        let URL = x.layer_admin.layerURL + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
+                        let URL = this.server.serverURL + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
                         console.log(URL)
                         this.wfsservice.getfeatureinfo(URL, false)
                         .subscribe((data: any) => this.getFeatureData = data)
@@ -266,17 +290,25 @@ export class MapComponent {
         if(!checked) {
             this.toggleLayers(index, layer, checked)
         }
+        console.log(this.server)
     }
 
     //Reads index of layer in dropdown, layeradmin, and if it is shown or not. Needs to remove a layer if a new one is selected
     toggleLayers(index, layer: UserPageLayer, checked) {
+        console.log(layer.layer_admin.serverID)
         let zindex = 1000
         let allLayersOff = true;
         let nextActive: any;
+        let server;
+        //this.getServer(layer.layer_admin.serverID)
+        for (let i of this.servers) {
+            if (i.ID == layer.layer_admin.serverID) {server = i}
+        }
+        console.log(this.server)
 
         if (checked == false) {
             if (layer.layer_admin.layerGeom == "Coverage") {zindex = 500}
-            this.turnonlayer = (L.tileLayer.wms(layer.layer_admin.layerURL, {
+            this.turnonlayer = (L.tileLayer.wms(server.serverURL, {
                 minZoom: 4,
                 maxZoom: 20,
                 zIndex: zindex,
