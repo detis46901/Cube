@@ -79,7 +79,7 @@
         <i id="btnOpenDelLayer" class="fa fa-times" style="position:relative; margin-right:5px" (click)="openConfDel(layeradmin)"></i>
         <input id="exlayername" ngModel required name="exlayername" title="{{layeradmin.layerName}}" class="form-control" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
         <input id="exlayerident" required name="exlayerident" title="{{layeradmin.layerIdent}}" class="form-control" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
-        <input id="exserver" required name="exserver" title="{{servers[layeradmin.serverID][serverName]}}" class="form-control" style="width:15%" [(ngModel)] = "servers[layeradmin.serverID][serverName]" type="text">
+        <!--This errors out and screws up modal popups on page--><!--<input id="exserver" required name="exserver" title="{{servers[layeradmin.serverID].serverName}}" class="form-control" style="width:15%" [(ngModel)] = "servers[layeradmin.serverID].serverName" type="text">-->
         <input id="exlayerdescription" ngModel name="exlayerdescription" title="{{layeradmin.layerDescription}}" class="form-control" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)">            
         <select id="exlayerformat" ngModel required name="exlayerformat" class="form-control" [(ngModel)] = "layeradmin.layerFormat" type="text" (blur)="updateLayer(layeradmin)">
             <option>image/png</option>
