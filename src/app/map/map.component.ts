@@ -148,7 +148,7 @@ export class MapComponent {
     getServer(serverID) {
         console.log(serverID)
         this.serverService
-            .GetSingle(serverID)
+            .GetOne(serverID)
             .subscribe((data) => this.server = data,
                 error => console.log(error),
                 () => console.log(this.server)
@@ -295,12 +295,18 @@ export class MapComponent {
 
     //Reads index of layer in dropdown, layeradmin, and if it is shown or not. Needs to remove a layer if a new one is selected
     toggleLayers(index, layer: UserPageLayer, checked) {
-        console.log(layer.layer_admin.serverID)
         let zindex = 1000
         let allLayersOff = true;
         let nextActive: any;
         let server;
-        //this.getServer(layer.layer_admin.serverID)
+
+        //7/24/17
+        /*layer userpagelayer returns attributes, one of which is of type LayerAdmin:
+        .layer_admin LayerAdmin returns attributes, one of which is of type Server:
+        .server.serverURL Server has attribute serverUrl. This is theoretically possible to do all within http request.
+        (preferred way of doing this)*/
+        //Replace block below with this ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        this.getServer(layer.layer_admin.serverID)
         for (let i of this.servers) {
             if (i.ID == layer.layer_admin.serverID) {server = i}
         }
@@ -308,7 +314,7 @@ export class MapComponent {
 
         if (checked == false) {
             if (layer.layer_admin.layerGeom == "Coverage") {zindex = 500}
-            this.turnonlayer = (L.tileLayer.wms(server.serverURL, {
+            this.turnonlayer = (L.tileLayer.wms(server.serverURL, { //will not be server.serverURL exactly like this, once code above is changed
                 minZoom: 4,
                 maxZoom: 20,
                 zIndex: zindex,

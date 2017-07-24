@@ -21,70 +21,67 @@ import { LayerPermissionComponent } from './layerpermission.component'
 })
 export class LayerNewComponent implements OnInit{
 
-closeResult: string;
-public newlayeradmin = new LayerAdmin;
-public newlayerserver = new Server;
-public token: string;
-public userID: number;
-public userperm: string;
-public layeradmin = new LayerAdmin;
-
+    public closeResult: string;
+    public newlayeradmin = new LayerAdmin;
+    public newlayerserver = new Server;
+    public servers: Array<Server>;
+    public token: string;
+    public userID: number;
+    public userperm: string;
+    public layeradmin = new LayerAdmin;
 
     constructor(private modalService: NgbModal, private layerAdminService: LayerAdminService, public activeModal: NgbActiveModal, private serverService: ServerService) {
-      var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userid; 
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            this.token = currentUser && currentUser.token;
+            this.userID = currentUser && currentUser.userid; 
     }
 
     ngOnInit() {
-       //console.log(this.layeradmins.layer)
-       //this.getGroupItems();
-       //this.getRoleItems();
+       this.getServers()
     }
 
-getServer(serverID) {
-        console.log(serverID)
+    getServers() {
+        console.log("get servers")
         this.serverService
-            .GetSingle(serverID)
-            .subscribe((data) => this.newlayerserver = data,
+            .GetAll()
+            .subscribe((data) => this.servers = data,
                 error => console.log(error),
-                () => console.log(this.newlayerserver)
+                () => console.log(this.servers)
             );
     }
 
-open(content) {
-    console.log("layernew open(content)")
-    this.userperm = "A user"
-    this.modalService.open(content, {size:'lg'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
-  }
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
+    open(content) {
+        console.log("layernew open(content)")
+        this.userperm = "A user"
+        this.modalService.open(content, {size:'lg'}).result.then((result) => {
+            this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
     }
-  }
 
-openpermission(layerid, layername) {
-    const modalRef = this.modalService.open(LayerPermissionComponent)
-       modalRef.componentInstance.layerID = layerid
-       modalRef.componentInstance.layerName = layername
+    getDismissReason(reason: any): string {
+        if (reason === ModalDismissReasons.ESC) {
+            return 'by pressing ESC';
+        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+            return 'by clicking on a backdrop';
+        } else {
+            return  `with: ${reason}`;
+        }
+    }
+
+    openpermission(layerid, layername) {
+        const modalRef = this.modalService.open(LayerPermissionComponent)
+        modalRef.componentInstance.layerID = layerid
+        modalRef.componentInstance.layerName = layername
         modalRef.result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
-    console.log("openpermission from layernew")
-  }
+            this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
+    }
 
-  public addLayer(newlayer) {
+    addLayer(newlayer) {
         this.layeradmin = newlayer;
         this.layerAdminService
             .Add(this.layeradmin)

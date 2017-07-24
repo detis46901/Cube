@@ -22,7 +22,7 @@
     margin-bottom:5px
 }
 
-#exlayername, #exlayerident, #exlayerurl, #exlayerdescription, #exlayerformat, #exlayertype, #exlayergeom {
+#exlayername, #exlayerident, #exlayerurl, #exlayerdescription, #exlayerformat, #exlayertype, #exlayergeom, #exlayerserver {
     border-color: rgba(255,255,255,0); 
     border:ridge; 
     border-width:2px; 
@@ -38,5 +38,8 @@
     height:32px;
     border-color: black;
     border-width: 1px;
+}
 
+h4 {
+    color:black;
 }

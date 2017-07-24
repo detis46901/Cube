@@ -72,8 +72,10 @@
                 </div>
                 <div class="col-md-4">
                     <!--<input id="newlayerserver" name="newlayerserver" #newlayerserverinput [(ngModel)] = "newlayeradmin.layerURL" type="text" placeholder="Layer URL">-->
-                    <select id="newlayerserver" class="form-control input-sm col-sm" name="newlayerserver" [(ngModel)] = "newlayerserver" class="form-control input-sm col-sm" required type="text">
-                        <option>Kokomo Foster</option>
+                   <!--7/24/17 copy this block over to layeradmin--> <select id="newlayerserver" class="form-control input-sm col-sm" name="newlayerserver" [(ngModel)] = "newlayeradmin.serverID" class="form-control input-sm col-sm" required type="number">
+                        <option [value]="server.ID" *ngFor="let server of servers">
+                        {{server.serverName}}
+                        </option>
                     </select>
                 </div>
             </div>

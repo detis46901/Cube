@@ -21,7 +21,7 @@ import { confirmDelete } from '../../../_models/confDel.model'
   selector: 'layeradmin',
   templateUrl: './layeradmin.component.html',
   providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, NgbActiveModal, ServerService],
-  styleUrls: ['./layeradmin.component.scss'],
+  styleUrls: ['./layeradmin.component.scss']
 })
 
 export class LayerAdminComponent implements OnInit{
@@ -64,12 +64,12 @@ export class LayerAdminComponent implements OnInit{
     //Open permissions modal on request from "Layers"
     openpermission(layerid, layername) {
         const modalRef = this.modalService.open(LayerPermissionComponent)
-          modalRef.componentInstance.layerID = layerid
-          modalRef.componentInstance.layerName = layername
-            modalRef.result.then((result) => {
-          this.closeResult = `Closed with: ${result}`;
+        modalRef.componentInstance.layerID = layerid
+        modalRef.componentInstance.layerName = layername
+        modalRef.result.then((result) => {
+            this.closeResult = `Closed with: ${result}`;
         }, (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         });
         console.log("openpermission from layernew")
       }
@@ -79,10 +79,10 @@ export class LayerAdminComponent implements OnInit{
         console.log ("opennew")
         this.userperm = "A user"
         this.modalService.open(LayerNewComponent).result.then((result) => {
-          this.closeResult = `Closed with: ${result}`;
-          this.getLayerItems();
+            this.closeResult = `Closed with: ${result}`;
+            this.getLayerItems();
         }, (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         });
     }
 
@@ -102,13 +102,15 @@ export class LayerAdminComponent implements OnInit{
     }
 
     getDismissReason(reason: any): string {
-      if (reason === ModalDismissReasons.ESC) {
-        return 'by pressing ESC';
-      } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-        return 'by clicking on a backdrop';
-      } else {
-        return  `with: ${reason}`;
-      }
+        if (reason === ModalDismissReasons.ESC) {
+            return 'by pressing ESC';
+        } 
+        else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+            return 'by clicking on a backdrop';
+        } 
+        else {
+            return  `with: ${reason}`;
+        }
     }
 
     initNewLayer(): void {

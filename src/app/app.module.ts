@@ -66,7 +66,7 @@ import { ConfirmdeleteService } from '../_services/confirmdelete.service';
 import { WFSService } from '../app/map/services/wfs.service';
 import { MarkerDataComponent } from './marker_data/marker-data.component';
 import { LayerControlsComponent } from './map/layer-controls/layer-controls.component';
-import { ServernewComponent } from './admin/servers/servernew.component';
+import { ServerNewComponent } from './admin/servers/servernew.component';
 
 @NgModule({
   declarations: [
@@ -104,10 +104,10 @@ import { ServernewComponent } from './admin/servers/servernew.component';
     ServerComponent,
     MarkerDataComponent,
     LayerControlsComponent,
-    ServernewComponent
+    ServerNewComponent
   ],
 
-  entryComponents: [LayerNewComponent, LayerPermissionComponent, PageComponent, PageConfigComponent, ConfirmdeleteComponent],
+  entryComponents: [LayerNewComponent, LayerPermissionComponent, PageComponent, PageConfigComponent, ConfirmdeleteComponent, ServerNewComponent],
 
   imports: [
     BrowserModule,

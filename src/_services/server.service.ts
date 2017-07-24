@@ -30,7 +30,7 @@ export class ServerService {
 //            .catch(this.handleError);
     }
  
-    public GetSingle = (id: number): Observable<Server> => {
+    public GetOne = (id: number): Observable<Server> => {
         console.log(this.actionUrl + 'one?rowid=' + id)
 
         return this._http.get(this.actionUrl + 'one?rowid=' + id)
@@ -63,6 +63,12 @@ export class ServerService {
     public Delete = (id: number): Observable<Response> => {
         return this._http.delete(this.actionUrl + 'delete?rowID=' + id)
  //           .catch(this.handleError);
+    }
+
+    public getCapabilities(serv: Server, options) {
+        let actionURL: string = serv.serverURL + '/wms?request=getCapabilities'
+        return this._http.get(actionURL, options)
+            .map((response: Response) => response.text())
     }
  
     private handleError(error: Response) {

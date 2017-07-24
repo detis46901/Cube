@@ -2,11 +2,11 @@ export class LayerAdmin {
     ID: number;
     layerName: string;
     layerType: string;
-    serverID: number;
     layerIdent: string;
     layerFormat: string;
     layerDescription: string;
     layerGeom: string;
+    serverID: number;
 }
 
 export class LayerPermission {
