@@ -66,9 +66,23 @@ export class ServerService {
     }
 
     public getCapabilities(serv: Server, options) {
-        let actionURL: string = serv.serverURL + '/wms?request=getCapabilities'
+        let actionURL: string = serv.serverURL + '/wms?request=getCapabilities&service=WMS'
+        console.log(this._http.get(actionURL, options)
+                .map((response: Response) => response.text()))
+
+        /*fetch(this.actionUrl).then(function(response) {
+            if(response.ok) {
+                return this._http.get(actionURL, options)
+                    .map((response: Response) => response.text())
+            }
+            throw new Error('Requested resource could not complete.\nPlease ensure the following URL is correct.\n' + actionURL)
+        }).then(function(url) {
+
+        })*/
+        
         return this._http.get(actionURL, options)
             .map((response: Response) => response.text())
+      
     }
  
     private handleError(error: Response) {

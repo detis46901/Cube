@@ -16,21 +16,24 @@ export class ServerComponent implements OnInit {
     public options;
 
     public servers: Array<Server>;
-    public serverName: string = 'placeholder';
-    public serverURL: string = 'placeholder';
-    public serverType: string = 'placeholder';
 
+    public layerArray;
+    public nameArray: Array<string> = []
+    public formatArray: Array<string> = []
+
+    public displayLayers: boolean;
     public closeResult: string;
 
     constructor(private _http: Http, private serverService: ServerService, private modalService: NgbModal, private activeModal: NgbActiveModal) {
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
         this.headers.append('Accept', 'application/json');
-        this.options = new RequestOptions({ headers: this.headers });
+        this.options = new RequestOptions({headers:this.headers});
     }
 
     ngOnInit() {
         this.getServers()
+        this.displayLayers = false;
     }
 
     getServers() {
@@ -42,13 +45,16 @@ export class ServerComponent implements OnInit {
             );
     }
 
-    /*getCapabilities(serv: Server, options) {
-        let actionURL: string = serv.serverURL + '/wms?request=getCapabilities'
-        return this._http.get(actionURL, options)
-            .map((response: Response) => response.json())
-    }*/
+    clearArrays() {
+        this.layerArray = [];        
+        this.nameArray = [];
+        this.formatArray = [];
+    }
 
     getRequest(serv) {
+        this.clearArrays()
+
+        this.displayLayers = true;
         this.serverService.getCapabilities(serv, this.options)
             .subscribe((response: string) =>
                 this.parseResponse(response)
@@ -56,23 +62,19 @@ export class ServerComponent implements OnInit {
     }
 
     parseResponse(res: string) {
-        let layerArray: Array<string> = []
-        let nameArray: Array<string> = []
-        let formatArray: Array<string> = []
+        let list = res.split('<Layer')
+        list.shift()
+        list.shift()
+        //this.layerArray = [2, list.length-1]
 
-        layerArray = res.split('<Layer')
-        layerArray.shift()
-        layerArray.shift()
-
-        for (let i of layerArray) {
-            nameArray.push(i.substr(i.indexOf('<Name>') + 6, (i.indexOf('</Name>') - (i.indexOf('<Name>') + 6))))
-            formatArray.push(i.substr(i.indexOf('<Format>') + 8, (i.indexOf('</Format>') - (i.indexOf('<Format>') + 8))))
+        for (let i of list) {
+            let name = i.substr(i.indexOf('<Name>') + 6, (i.indexOf('</Name>') - (i.indexOf('<Name>') + 6)))
+            let format = i.substr(i.indexOf('<Format>') + 8, (i.indexOf('</Format>') - (i.indexOf('<Format>') + 8)))
+            this.nameArray.push(name)
+            this.formatArray.push(format)
+            //this.layerArray[0, i]: = name
+            //this.layerArray[1, i] = format
         }
-
-        console.log(nameArray)
-        console.log(formatArray)
-        
-        
     }
 
     openServerNew() {

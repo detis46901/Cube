@@ -39,11 +39,27 @@
     </form>
     <br>
 </div>
+<div style="position:absolute; height:25px;"></div>
 
 <hr style="width:100%; position:relative; top:25px; border-width:3px; border-color:black;">
+<div class="row" style="position:relative; top:25px;">
+    <div class="col-md-3 col-md-offset-2">
+        <h4>Name</h4>
+    </div>
+    <div class="col-md-3 col-md-offset-2"> 
+        <h4>Format</h4>
+    </div>
+</div>
 
-<p style="position:relative; top:30px; left:10px; font-size:14px;">
-    Add a component to display layer results by making the parseResponse() method emit an observable to a listener in the new component.<br>
-    This component will be added as a selector and will update based on the "Layer" button click, and will have a similar relationship to<br>
-    Map component and Sidenav component (The popup info that is displayed by clicking on a layer) The html will have an observer as input I think.<br>
-</p>
+<div *ngFor="let layer of nameArray" style="position:relative; top:20px; left:10px;">
+    <div *ngIf="displayLayers">
+        <div class="row">
+            <div class="col-md-3 col-md-offset-2">
+                <h5>{{layer}}</h5>
+            </div>
+            <div class="col-md-3 col-md-offset-2"> 
+                <h5>{{formatArray[nameArray.indexOf(layer)]}}</h5>
+            </div>
+        </div>
+    </div>
+</div>
