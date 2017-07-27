@@ -24,7 +24,7 @@ import { confirmDelete } from '../../../_models/confDel.model'
   styleUrls: ['./layeradmin.component.scss']
 })
 
-export class LayerAdminComponent implements OnInit{
+export class LayerAdminComponent implements OnInit {
 
     //objCode values refer to the admin menu tab the user is on, so the openConfDel procedure knows what to interpolate based on what it's deleting
     private objCode = 2
@@ -57,8 +57,7 @@ export class LayerAdminComponent implements OnInit{
 
     ngOnInit() {
        this.getLayerItems();     
-       console.log(this.servers)
-       console.log(this.layeradmins) 
+       this.getServers();
     }
 
     //Open permissions modal on request from "Layers"
@@ -127,8 +126,7 @@ export class LayerAdminComponent implements OnInit{
         this.layerAdminService
             .GetAll()
             .subscribe((data:LayerAdmin[]) => {this.layeradmins = data,
-                error => console.log(error),
-                () => this.getServers()
+                error => console.log(error)
             });
         this.sortedOldToNew = this.layeradmins
         console.log(this.layeradmins)
@@ -137,9 +135,7 @@ export class LayerAdminComponent implements OnInit{
     getServers() {
         this.serverService
             .GetAll()
-            .subscribe((data:Server[]) => this.servers = data,
-                error => console.log(error),
-                () => console.log(this.servers)
+            .subscribe((data:Server[]) => this.servers = data
             );
     }
 

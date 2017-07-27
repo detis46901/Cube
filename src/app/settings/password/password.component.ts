@@ -14,7 +14,8 @@ import { Md5 } from 'ts-md5/dist/md5'
 
 export class PasswordComponent implements OnInit{
 
-    public model: any = {};
+    public oldPw: string = "";
+    public newPw: string = "";
     public token: string;
     public userID: string;
     public user = new User;
@@ -27,12 +28,29 @@ export class PasswordComponent implements OnInit{
     }
 
     ngOnInit() {
-       
+       this.getUserItems(this.userID)
     }
 
-    login() {
-        console.log(Md5.hashStr(this.model.password).toString())
-        this.model.password = Md5.hashStr(this.model.password).toString()
+    changePW() {
+        console.log(this.oldPw)
+        console.log(this.newPw)
+
+        this.oldPw = Md5.hashStr(this.oldPw).toString()
+        this.newPw = Md5.hashStr(this.newPw).toString()
+
+        if (this.oldPw == this.user.password) {
+            this.user.password = this.newPw
+            this.dataService
+            .Update(this.user) //this method doesn't work the way it's intended to
+            /*.subscribe((response:User) =>
+                () => console.log(response)
+            )*/
+        }
+        else {
+            alert("Incorrect Password.")
+        }
+        this.oldPw = "";
+        this.newPw = "";
     }
 
     //It would be wise to implement sending an email for password reset, or allowing a user to choose security questions

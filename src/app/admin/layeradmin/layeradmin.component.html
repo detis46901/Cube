@@ -16,7 +16,7 @@
 
         <div class="col-md-1">
             <div class="row">
-                <div class="col-md-2 col-md-offset-2">
+                <div class="col-md-2 col-md-offset-4">
                     <h4>Server</h4>
                 </div>
             </div>
@@ -24,7 +24,7 @@
 
         <div class="col-md-1">
             <div class="row">
-                <div class="col-md-1">
+                <div class="col-md-1 col-md-offset-6">
                     <h4>Description</h4>
                 </div>
             </div>
@@ -32,15 +32,15 @@
 
         <div class="col-md-1">
             <div class="row">
-                <div class="col-md-1 col-md-offset-3">
+                <div class="col-md-1 col-md-offset-8">
                     <h4>Format</h4>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-1">
+        <div class="col-md-2">
             <div class="row">
-                <div class="col-md-2 col-md-offset-5">
+                <div class="col-md-1 col-md-offset-5">
                     <h4>Type</h4>
                 </div>
             </div>
@@ -48,7 +48,7 @@
 
         <div class="col-md-1">
             <div class="row">
-                <div class="col-md-1 col-md-offset-7">
+                <div class="col-md-1 col-md-offset-1">
                     <h4>Geometry</h4>
                 </div>
             </div>
@@ -79,7 +79,6 @@
         <i id="btnOpenDelLayer" class="fa fa-times" style="position:relative; margin-right:5px" (click)="openConfDel(layeradmin)"></i>
         <input id="exlayername" ngModel required name="exlayername" title="{{layeradmin.layerName}}" class="form-control" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
         <input id="exlayerident" required name="exlayerident" title="{{layeradmin.layerIdent}}" class="form-control" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
-       <input id="exserver" required name="exserver" title="{{layeradmin.serverID.serverName}}" class="form-control" style="width:15%" [(ngModel)] = "layeradmin.serverID.ID" type="text">-->
         <select id="exlayerserver" name="exlayerserver" [(ngModel)] = "layeradmin.serverID" required type="number">
             <option [value]="server.ID" *ngFor="let server of servers">
                 {{server.serverName}}

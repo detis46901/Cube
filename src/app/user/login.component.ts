@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
  
 import { AuthenticationService } from '../../_services/authentication.service';
- import { Api2Service } from '../api2.service';
- import { User } from '../../_models/user-model'
- import { Md5 } from 'ts-md5/dist/md5'
+import { Api2Service } from '../api2.service';
+import { User } from '../../_models/user-model'
+import { Md5 } from 'ts-md5/dist/md5'
 
 @Component({
     //moduleId: module.id, (why does this not need to be there???)
