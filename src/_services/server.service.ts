@@ -44,8 +44,9 @@ export class ServerService {
 //            .catch(this.handleError);
     }
  
-    public Add = (Server: Server): Observable<Server> => {
-        let toAdd = JSON.stringify(Server);
+    public Add = (server: Server): Observable<Server> => {
+        console.log(server)
+        let toAdd = JSON.stringify(server);
         console.log('Server.service ' + toAdd)
         return this._http.post(this.actionUrl + 'create', toAdd, { headers: this.headers })
             .map((response: Response) => <Server>response.json())

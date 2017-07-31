@@ -51,6 +51,9 @@ export class ConfirmdeleteComponent implements OnInit {
 			case 5:
 				this.objectType = "Role"
 				break
+			case 6:
+				this.objectType = "Server"
+				break
 			default: 
 				alert("Invalid Object Code: " + this.objCode)
 				break

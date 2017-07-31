@@ -20,6 +20,10 @@ import { LayerPermissionComponent } from './layerpermission.component'
   providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService, ServerService],
 })
 export class LayerNewComponent implements OnInit{
+    @Input() layerName;
+    @Input() layerIdent;
+    @Input() layerServer;
+    @Input() layerFormat;
 
     public closeResult: string;
     public newlayeradmin = new LayerAdmin;

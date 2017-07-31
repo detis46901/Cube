@@ -18,19 +18,25 @@ export class ServerNewComponent implements OnInit {
     constructor(private modalService: NgbModal, private activeModal: NgbActiveModal, private serverService: ServerService) {}
 
     ngOnInit() {
-        // this.newserver.serverName = ''
-        // this.newserver.serverType = ''
-        // this.newserver.serverURL = ''
+        this.newserver.serverName = ''
+        this.newserver.serverType = ''
+        this.newserver.serverURL = ''
     }
 
     addServer() {
-        //this.server;
-
+        console.log(this.newserver)
         this.serverService
-            .Add(this.server)
+            .Add(this.newserver)
             .subscribe(result => {
+                
                 this.activeModal.close('Next click');
             })      
+    }
+
+    closeThis() {
+        console.log(this.activeModal)
+        this.activeModal.dismiss()
+        console.log("foo")
     }
 
 }

@@ -3,7 +3,10 @@ import { ServerService } from '../../../_services/server.service'
 import { Server } from '../../../_models/server.model'
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ServerNewComponent } from'./servernew.component'
-import { Http, Response, RequestOptions, Headers } from '@angular/http'
+import { Http, Response, RequestOptions, Headers } from '@angular/http';
+import { ConfirmdeleteService } from '../../../_services/confirmdelete.service';
+import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component';
+import { LayerNewComponent } from '../layeradmin/layernew.component';
 
 @Component({
     selector: 'server',
@@ -14,6 +17,8 @@ import { Http, Response, RequestOptions, Headers } from '@angular/http'
 export class ServerComponent implements OnInit {
     public headers;
     public options;
+    public objCode = 6;
+    public toCreate: boolean = false;
 
     public servers: Array<Server>;
 
@@ -24,7 +29,7 @@ export class ServerComponent implements OnInit {
     public displayLayers: boolean;
     public closeResult: string;
 
-    constructor(private _http: Http, private serverService: ServerService, private modalService: NgbModal, private activeModal: NgbActiveModal) {
+    constructor(private _http: Http, private serverService: ServerService, private modalService: NgbModal, private activeModal: NgbActiveModal, private confDelService: ConfirmdeleteService) {
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
         this.headers.append('Accept', 'application/json');
@@ -34,14 +39,13 @@ export class ServerComponent implements OnInit {
     ngOnInit() {
         this.getServers()
         this.displayLayers = false;
+        console.log(this.activeModal)
     }
 
     getServers() {
         this.serverService
             .GetAll()
-            .subscribe((data) => this.servers = data,
-                error => console.log(error),
-                () => console.log(this.servers)
+            .subscribe((data) => this.servers = data
             );
     }
 
@@ -49,16 +53,16 @@ export class ServerComponent implements OnInit {
         this.layerArray = [];        
         this.nameArray = [];
         this.formatArray = [];
+        this.displayLayers = false;
     }
 
     getRequest(serv) {
         this.clearArrays()
-
-        this.displayLayers = true;
-        this.serverService.getCapabilities(serv, this.options)
-            .subscribe((response: string) =>
-                this.parseResponse(response)
-            );
+            this.displayLayers = true;
+            this.serverService.getCapabilities(serv, this.options)
+                .subscribe((response: string) =>
+                    this.parseResponse(response)
+                );
     }
 
     parseResponse(res: string) {
@@ -77,14 +81,50 @@ export class ServerComponent implements OnInit {
         }
     }
 
-    openServerNew() {
-        this.modalService.open(ServerNewComponent, {size:'sm'}).result.then((result) => {
-            console.log(result)
-            this.closeResult = `Closed with: ${result}`;
-            //this.getServerItems();
+    openConfDel(server) {
+        const modalRef = this.modalService.open(ConfirmdeleteComponent)
+        modalRef.componentInstance.objCode = this.objCode
+        modalRef.componentInstance.objID = server.ID
+        modalRef.componentInstance.objName = server.serverName
+
+        modalRef.result.then((result) => {
+            this.deleteServer(server.ID)
+            this.getServers();
         }, (reason) => {
-            console.log(reason);
-            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+            this.getServers();
+        });
+    }
+
+    deleteServer(serverID) {
+        this.serverService
+            .Delete(serverID)
+            .subscribe(result => {
+                this.getServers();
+            })
+    }
+
+    createLayer(index) {
+        const modalRef = this.modalService.open(LayerNewComponent)
+
+        //not really working yet 7/31/17
+        modalRef.componentInstance.layerName = this.nameArray[index]
+        modalRef.componentInstance.layerIdent = this.nameArray[index]
+        modalRef.componentInstance.layerFormat = this.formatArray[index]
+
+        modalRef.result.then((result) => {
+            this.getServers();
+        }, (reason) => {
+            this.getServers();
+        });
+    }
+
+    openServerNew() {
+        const modalRef = this.modalService.open(ServerNewComponent, {size:'sm'})
+
+        modalRef.result.then((result) => {
+            this.getServers();
+        }, (reason) => {
+            this.getServers();
         });
     }
 

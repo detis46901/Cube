@@ -1,4 +1,4 @@
-<div style="position:relative;  top:10px;"class="row">
+<div style="position:relative; top:10px; left:10px;"class="row">
     <div class="col-md-3">
         <div class="col-md-8 col-md-offset-1">
             <h4>Instance Name</h4>
@@ -9,7 +9,7 @@
         <h4>Server Type</h4>
     </div>
 
-    <div class="col-md-4" style="position:relative; right:6%">
+    <div class="col-md-3" style="position:relative; right:6%">
         <h4>URL</h4>
     </div>
 
@@ -20,7 +20,7 @@
 
 <div class="row" style="position:relative; left:3%; width:100%; top:15px;">
     <form style="width:100%" class="form-inline" #e="ngForm" *ngFor="let server of servers">
-        <!--<i id="btnOpenDelLayer" class="fa fa-times" style="position:relative; margin-right:5px" (click)="openConfDel(layeradmin)"></i>-->   
+        <i id="btnOpenDelLayerServer" class="fa fa-times" style="position:relative; margin-right:5px" (click)="openConfDel(server)"></i>
         <div class="col-md-2">
             <input id="exservername" style="width:100%" ngModel required name="exservername" title="{{server.serverName}}" class="form-control" [(ngModel)]="server.serverName" type="text">
         </div>
@@ -42,24 +42,42 @@
 <div style="position:absolute; height:25px;"></div>
 
 <hr style="width:100%; position:relative; top:25px; border-width:3px; border-color:black;">
-<div class="row" style="position:relative; top:25px;">
-    <div class="col-md-3 col-md-offset-2">
-        <h4>Name</h4>
+<!--<div *ngIf="displayLayers" class="row" style="position:relative; top:25px; margin-bottom:10px;">
+    <div class="col-md-3 col-md-offset-2" style="position:relative; left:2%">
+        <h3>Name</h3>
     </div>
-    <div class="col-md-3 col-md-offset-2"> 
-        <h4>Format</h4>
+    <div class="col-md-3" style="position:relative; left:1%"> 
+        <h3>Format</h3>
+    </div>
+    <div>
+        <h3></h3>
     </div>
 </div>
 
 <div *ngFor="let layer of nameArray" style="position:relative; top:20px; left:10px;">
     <div *ngIf="displayLayers">
-        <div class="row">
+        <div class="row" style="margin-bottom:5px">
             <div class="col-md-3 col-md-offset-2">
                 <h5>{{layer}}</h5>
             </div>
-            <div class="col-md-3 col-md-offset-2"> 
+            <div class="col-md-1"> 
                 <h5>{{formatArray[nameArray.indexOf(layer)]}}</h5>
             </div>
         </div>
     </div>
+</div>-->
+<div *ngIf="displayLayers" style="position:relative; top:25px; margin-bottom:10px;">
+    <table style="width:80%; position:relative; left:10%">
+        <tr style="width:100%;">
+            <th style="width:40%"><h2>Name</h2></th>
+            <th><h2 style="position:relative; top:7px">Format</h2><button type="button" class="close" aria-label="Close" style="position:relative; color:black; left:30%; bottom:16px;" (click)="clearArrays()">&times;</button></th>
+            <!--<th><h3 style="position:relative; top:7.5px;">Create Layer</h3></th>-->
+        </tr>
+        <tr *ngFor="let layer of nameArray">
+            <td><h4>{{layer}}</h4></td>
+            <td><h4>{{formatArray[nameArray.indexOf(layer)]}}</h4></td>
+            <!--<td><input type='radio' name="create" value="toCreate"></td>-->
+            <td><button (click)="createLayer(nameArray.indexOf(layer))">Create Layer</button></td>
+        </tr>
+    </table>
 </div>

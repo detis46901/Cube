@@ -16,7 +16,7 @@
                     <label id="nameLabel" for="newlayername">Name</label>
                 </div>
                 <div class="col-md-4">
-                    <input id="newlayername" name="newlayername" required #newlayerinput [(ngModel)] = "newlayeradmin.layerName" type="text" placeholder="Layer Name">
+                    <input id="newlayername" value="{{layerName}}"name="newlayername" required #newlayerinput [(ngModel)] = "newlayeradmin.layerName" type="text" placeholder="Layer Name">
                 </div>
             </div>
 
@@ -42,7 +42,7 @@
                     <label id="identLabel" for="newlayerident">Identity</label>
                 </div>
                 <div class="col-md-4">
-                    <input id="newlayerident" name="newlayerident" #newlayeridentinput [(ngModel)] = "newlayeradmin.layerIdent" type="text" placeholder="Layer Identity">
+                    <input id="newlayerident" value="{{layerIdent}}" name="newlayerident" #newlayeridentinput [(ngModel)] = "newlayeradmin.layerIdent" type="text" placeholder="Layer Identity">
                 </div>
             </div>
 
@@ -72,9 +72,9 @@
                 </div>
                 <div class="col-md-4">
                     <!--<input id="newlayerserver" name="newlayerserver" #newlayerserverinput [(ngModel)] = "newlayeradmin.layerURL" type="text" placeholder="Layer URL">-->
-                   <!--7/24/17 copy this block over to layeradmin--> <select id="newlayerserver" class="form-control input-sm col-sm" name="newlayerserver" [(ngModel)] = "newlayeradmin.serverID" class="form-control input-sm col-sm" required type="number">
+                    <select id="newlayerserver" class="form-control input-sm col-sm" name="newlayerserver" [(ngModel)] = "newlayeradmin.serverID" class="form-control input-sm col-sm" required type="number">
                         <option [value]="server.ID" *ngFor="let server of servers">
-                        {{server.serverName}}
+                            {{server.serverName}}
                         </option>
                     </select>
                 </div>
@@ -85,7 +85,7 @@
                     <label id="geomLabel" for="newlayergeom">Geometry</label>
                 </div>
                 <div class="col-md-4">
-                    <select id="newlayergeom" name="newlayergeom" class="form-control input-sm col-sm" [(ngModel)] = "newlayeradmin.layerGeom" required type="text">
+                    <select id="newlayergeom" name="newlayergeom" class="form-control input-sm col-sm" [(ngModel)]="newlayeradmin.layerGeom" required type="text">
                     <option>Point</option>
                     <option>Polyline</option>
                     <option>Polygon</option>
