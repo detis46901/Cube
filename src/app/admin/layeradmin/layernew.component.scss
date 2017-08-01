@@ -1,21 +1,28 @@
-#newlayername, #newlayerident, #newlayerurl, #newlayerdescription, #newlayerformat, #newlayertype, #newlayergeom {
+input, select {
     position:absolute;
     left:30px;
-    /*Is overridden by html*/
+    width:134px;
+    height:24px;
+    margin-bottom:8px;
 }
 
-#newlayertype, #newlayergeom, #newlayerformat {
-    position:absolute;
-    height:26px;
-    width:180px;
-    top:1px
-}
-
-#urlLabel, #nameLabel, #identLabel, #descriptionLabel, #formatLabel, #typeLabel, #geomLabel {
+label {
     position:relative;
     direction:rtl;
     left:38px;
     top:3px;
+}
+
+/*#newlayerdescription, #newlayertype, #newlayergeom, {
+    left:30px;
+}
+
+#descriptionLabel, #typeLabel, #geomLabel {
+    left:38px;
+}*/
+
+h4 {
+    color:black;
 }
 
 /*#formatLabel, #typeLabel, #geomLabel {

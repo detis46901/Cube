@@ -47,18 +47,24 @@ public page: string;
     ngOnInit() {
         console.log(this.pageName)
         this.getUserPageLayers();
-        this.getLayers();    
+        this.getLayers();
+        console.log(this.layerpermissions)
+        console.log(this.userpagelayers)
+        console.log(this.pageID.toString() + ' ' + this.userID.toString() + ' ' + this.pageName)    
     }
 
     public getUserPageLayers(): void {
         console.log("pageID = " + this.pageID)
         this.userpagelayerService
             .GetPageLayers(this.pageID)
-            .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
-                error => console.log(error),
-                () =>  console.log(this.userpagelayers)
-            );
+            .subscribe((data:UserPageLayer[]) => this.setUserPageLayers(data));
+        
            
+    }
+
+        //8/1/17 This is all messed up, the same modal object comes up for both users currently
+    public setUserPageLayers(UPL): void {
+        this.userpagelayers = UPL
     }
 
     public getUserPage(pageID): void {
@@ -74,12 +80,15 @@ public page: string;
     public getLayers() {
         this.layerpermissionService
             .GetUserLayer(this.userID)
-            .subscribe((data:LayerPermission[]) => this.layerpermissions = data,
-                error => console.log(error),
-            () => console.log(this.layerpermissions[0].layer_admin['layerName']))
+            .subscribe((data:LayerPermission[]) => this.setLayerPerm(data));
     }
 
-   public addUserPageLayer(newuserpage) {
+    public setLayerPerm(LP) {
+        this.layerpermissions = LP
+        console.log(LP)
+    }
+
+    public addUserPageLayer(newuserpage) {
         this.newuserpagelayer.userPageID = this.pageID ;
         this.newuserpagelayer.userID = this.userID ;
         this.newuserpagelayer.layerON = true;

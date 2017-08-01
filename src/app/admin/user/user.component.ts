@@ -232,30 +232,25 @@ export class UserComponent implements OnInit{
         console.log(this.userpages)
     }
 
-    getUserPageItem(pageID) {
+    getUserPageItem(pageID, userID) {
+        let pName;
         this.userpageService
             .GetSingle(pageID)
-            .subscribe((data:UserPage) => this.userpage = data.page,
+            .subscribe((data:UserPage) => pName = data.page,
                 error => console.log(error),
-                () =>  console.log(this.userpage)
+                () =>  this.openPageConfig(pageID, userID, pName)
             );
         console.log(this.userpage)
     }
 
-    onEditPageLayerClick(pageID, userID) {
-        this.getUserPageItem(pageID)
-        this.openPageConfig(pageID, userID)
-    }
-
-    openPageConfig(pageID, userID) {
+    openPageConfig(pageID, userID, name) {
         console.log("userID = " + userID)
         console.log("pageID = " + pageID)
 
         const modalRef = this.modalService.open(PageConfigComponent)
         modalRef.componentInstance.pageID = pageID;
         modalRef.componentInstance.userID = userID;
-        console.log("Next line: assigning modal input to this.userpage")
-        modalRef.componentInstance.pageName = this.userpage;
+        modalRef.componentInstance.pageName = name;
         modalRef.result.then((result) => {
             this.closeResult = `Closed with: ${result}`;
             this.getUserPageItems();

@@ -21,6 +21,7 @@ export class ServerComponent implements OnInit {
     public toCreate: boolean = false;
 
     public servers: Array<Server>;
+    public currServer: Server;
 
     public layerArray;
     public nameArray: Array<string> = []
@@ -57,6 +58,7 @@ export class ServerComponent implements OnInit {
     }
 
     getRequest(serv) {
+        this.currServer = serv;
         this.clearArrays()
             this.displayLayers = true;
             this.serverService.getCapabilities(serv, this.options)
@@ -105,11 +107,14 @@ export class ServerComponent implements OnInit {
 
     createLayer(index) {
         const modalRef = this.modalService.open(LayerNewComponent)
+        console.log(this.nameArray[index] + this.formatArray[index])
+        console.log(this.currServer.serverName)
 
         //not really working yet 7/31/17
         modalRef.componentInstance.layerName = this.nameArray[index]
         modalRef.componentInstance.layerIdent = this.nameArray[index]
         modalRef.componentInstance.layerFormat = this.formatArray[index]
+        modalRef.componentInstance.layerServer = this.currServer
 
         modalRef.result.then((result) => {
             this.getServers();

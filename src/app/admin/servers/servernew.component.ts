@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ServerService } from '../../../_services/server.service'
 import { Server } from '../../../_models/server.model'
 
@@ -29,14 +29,7 @@ export class ServerNewComponent implements OnInit {
             .Add(this.newserver)
             .subscribe(result => {
                 
-                this.activeModal.close('Next click');
+                this.activeModal.close();
             })      
     }
-
-    closeThis() {
-        console.log(this.activeModal)
-        this.activeModal.dismiss()
-        console.log("foo")
-    }
-
 }

@@ -69,7 +69,7 @@
             <div ngbDropdown style="position:relative">
                 <button id="AdminUserEdit" class="btn btn-primary" ngbDropdownToggle>Edit Layers</button>
                     <div id="editDrop" class="dropdown-menu" aria-labelledby="dropdownMenu3">
-                        <button id="openConfig" *ngFor="let userpage of (userpages | pagefilter: (user.ID))" type="button" (click)="onEditPageLayerClick(userpage.ID, user.ID)" class="btn btn-secondary">{{userpage.page}}</button><br>
+                        <button id="openConfig" *ngFor="let userpage of (userpages | pagefilter: (user.ID))" type="button" (click)="getUserPageItem(userpage.ID, user.ID)" class="btn btn-secondary">{{userpage.page}}</button><br>
                     </div>
             </div>
         </div>

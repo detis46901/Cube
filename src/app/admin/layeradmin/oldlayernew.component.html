@@ -4,7 +4,7 @@
         <h4 class="modal-title">Create New Layer</h4>
     </div>
     <div class="col-md-1 col-md-offset-6">
-        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -20,17 +20,17 @@
                     <label id="nameLabel" for="newlayername">Name</label>
                 </div>
                 <div class="col-md-4">
-                    <input id="newlayername" name="newlayername" class="form-control input-sm col-sm" value="{{layerName}}" required [(ngModel)]="newlayeradmin.layerName" type="text">
+                    <input id="newlayername" value="{{layerName}}"name="newlayername" required #newlayerinput [(ngModel)] = "newlayeradmin.layerName" type="text" placeholder="Layer Name">
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-md-1">
-                    <label id="descriptionLabel" for="newlayerdescription">Description</label>
+                <div class="col-md-1 col-md-offset-1">
+                    <label id="descriptionLabel" for="newlayerdescription">Description</label> <!-- This is getting clipped off by its input box-->
                 </div>
                 <div class="col-md-4">
-                    <input id="newlayerdescription" name="newlayerdescription" class="form-control input-sm col-sm"  [(ngModel)] = "newlayeradmin.layerDescription" type="text">
-                </div>
+                    <input id="newlayerdescription" class="form-control input-sm col-sm" name="newlayerdescription" #newlayerdescriptioninput [(ngModel)] = "newlayeradmin.layerDescription" type="text">
+                </div> 
             </div>      
         </div>
         <br>
@@ -41,23 +41,22 @@
                 <div class="col-md-1">
                     <label id="identLabel" for="newlayerident">Identity</label>
                 </div>
-                <div class="col-md-4">  
-                    <input *ngIf="layerServer == null" id="newlayerident" name="newlayerident" class="form-control input-sm col-sm"  [(ngModel)] = "newlayeradmin.layerIdent" type="text">
-                    <input *ngIf="layerServer != null" id="newlayerident2" class="form-control input-sm col-sm" type="text" value="{{layerIdent}}" readonly>
+                <div class="col-md-4">
+                    <input id="newlayerident" value="{{layerIdent}}" name="newlayerident" #newlayeridentinput [(ngModel)] = "newlayeradmin.layerIdent" type="text" placeholder="Layer Identity">
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-md-1">
+                <div class="col-md-1 col-md-offset-1">
                     <label id="typeLabel" for="newlayertype">Type</label>
                 </div>
-                <div style="margin-bottom:10px;" class="col-md-4">
+                <div class="col-md-4">
                     <select id="newlayertype" name="newlayertype" class="form-control input-sm col-sm" [(ngModel)] = "newlayeradmin.layerType" required type="text" placeholder="Layer Type">
-                        <option>PostGIS</option>
-                        <option>WMS</option>
-                        <option>KML-Link</option>
-                        <option>KML-Drive</option>
-                        <option>GeoJSON</option>
+                    <option>PostGIS</option>
+                    <option>WMS</option>
+                    <option>KML-Link</option>
+                    <option>KML-Drive</option>
+                    <option>GeoJSON</option>
                     </select>
                 </div>
             </div>
@@ -67,33 +66,30 @@
         <!--Row 3-->
         <div class="column">
             <div class="form-group">
-                <div *ngIf="layerServer == null" class="col-md-1">
-                    <label id="serverLabel" for="newlayerserver">Server</label>
+                <div class="col-md-1">
+                    <!--<label id="urlLabel" for="newlayerurl">URL</label>-->
+                    <label id="serverIdLabel" for="newlayerserver">Server</label>
                 </div>
-                <div *ngIf="layerServer != null" class="col-md-1">
-                    <label id="serverLabelText" for="newlayerservertext">Server</label>
-                </div>
-
                 <div class="col-md-4">
-                    <select *ngIf="layerServer == null" id="newlayerserver" name="newLayerServer" [(ngModel)] = "newlayeradmin.serverID" class="form-control input-sm col-sm" required type="number">
+                    <!--<input id="newlayerserver" name="newlayerserver" #newlayerserverinput [(ngModel)] = "newlayeradmin.layerURL" type="text" placeholder="Layer URL">-->
+                    <select id="newlayerserver" class="form-control input-sm col-sm" name="newlayerserver" [(ngModel)] = "newlayeradmin.serverID" class="form-control input-sm col-sm" required type="number">
                         <option [value]="server.ID" *ngFor="let server of servers">
                             {{server.serverName}}
                         </option>
                     </select>
-                    <input *ngIf="layerServer != null" id="newlayerservertext" class="form-control input-sm col-sm" value="{{layerServer.serverName}}" type="text" readonly>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-md-1">
+                <div class="col-md-1 col-md-offset-1">
                     <label id="geomLabel" for="newlayergeom">Geometry</label>
                 </div>
                 <div class="col-md-4">
                     <select id="newlayergeom" name="newlayergeom" class="form-control input-sm col-sm" [(ngModel)]="newlayeradmin.layerGeom" required type="text">
-                        <option>Point</option>
-                        <option>Polyline</option>
-                        <option>Polygon</option>
-                        <option>Coverage</option>
+                    <option>Point</option>
+                    <option>Polyline</option>
+                    <option>Polygon</option>
+                    <option>Coverage</option>
                     </select>
                 </div>
             </div>   
@@ -103,20 +99,15 @@
         <!--Row 4-->
         <div class="column">
             <div class="form-group">
-                <div *ngIf="layerFormat == null" class="col-md-1">
+                <div class="col-md-1">
                     <label id="formatLabel" for="newlayerformat">Format</label>
                 </div>
-                <div *ngIf="layerFormat != null" class="col-md-1">
-                    <label id="formatLabel" for="newlayerformattext">Format</label>
-                </div>
-
-                <div style="margin-bottom:10px;" class="col-md-4">
-                    <select *ngIf="layerFormat == null" id="newlayerformat" name="newLayerFormat" class="form-control input-sm col-sm" [(ngModel)] = "newlayeradmin.layerFormat" required type="text">
+                <div class="col-md-4">
+                    <select id="newlayerformat" name="newlayerformat" class="form-control input-sm col-sm" [(ngModel)] = "newlayeradmin.layerFormat" required type="text">
                         <option>image/png</option>
                         <option>image/jpg</option>
                         <option>image/jpeg</option>
                     </select>
-                    <input *ngIf="layerFormat != null" id="newlayerformattext"  type="text" class="form-control input-sm col-sm"  required value="{{layerFormat}}" readonly>
                 </div>
             </div>
         </div>

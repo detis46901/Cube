@@ -9,7 +9,7 @@ import { LayerPermissionService } from '../../../_services/layerpermission.servi
 import { ServerService } from '../../../_services/server.service';
 import { LayerAdmin, LayerPermission } from '../../../_models/layer.model'
 import { Server } from '../../../_models/server.model'
-import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { LayerPermissionComponent } from './layerpermission.component'
 
 
@@ -25,6 +25,11 @@ export class LayerNewComponent implements OnInit{
     @Input() layerServer;
     @Input() layerFormat;
 
+    //Set to true in ngOnInit() if inputs are read from the server screen, thus the server screen is calling this modal
+    public serverCalled: boolean = false;
+
+    public modalRef: NgbModalRef
+
     public closeResult: string;
     public newlayeradmin = new LayerAdmin;
     public newlayerserver = new Server;
@@ -34,7 +39,7 @@ export class LayerNewComponent implements OnInit{
     public userperm: string;
     public layeradmin = new LayerAdmin;
 
-    constructor(private modalService: NgbModal, private layerAdminService: LayerAdminService, public activeModal: NgbActiveModal, private serverService: ServerService) {
+    constructor(private modalService: NgbModal, private layerAdminService: LayerAdminService, private activeModal: NgbActiveModal, private serverService: ServerService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
             this.token = currentUser && currentUser.token;
             this.userID = currentUser && currentUser.userid; 
@@ -42,6 +47,10 @@ export class LayerNewComponent implements OnInit{
 
     ngOnInit() {
        this.getServers()
+       if(this.layerName!=null && this.layerIdent!=null && this.layerFormat!=null && this.layerServer!=null) {
+            this.serverCalled = true;
+       }
+       //console.log(this.layerName + this.layerIdent + this.layerFormat + this.layerServer)
     }
 
     getServers() {
@@ -86,7 +95,15 @@ export class LayerNewComponent implements OnInit{
     }
 
     addLayer(newlayer) {
-        this.layeradmin = newlayer;
+        if(this.serverCalled) {
+            this.layeradmin = newlayer;
+            this.layeradmin.serverID = this.layerServer.ID;
+            this.layeradmin.layerName = this.layerName;
+            this.layeradmin.layerIdent = this.layerIdent;
+            this.layeradmin.layerFormat = this.layerFormat;
+        }
+
+        console.log(this.layeradmin)
         this.layerAdminService
             .Add(this.layeradmin)
             .subscribe(result => {
