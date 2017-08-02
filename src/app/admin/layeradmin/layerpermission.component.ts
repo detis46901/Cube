@@ -1,7 +1,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-import { Api2Service } from '../../api2.service';
+import { UserService } from '../../../_services/user.service';
 import { User } from '../../../_models/user-model'
 import { Configuration } from '../../../_api/api.constants'
 import { LayerAdminService } from '../../../_services/layeradmin.service';
@@ -13,7 +13,7 @@ import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bo
 @Component({
   selector: 'layerpermission',
   templateUrl: './layerpermission.component.html',
-  providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService]
+  providers: [UserService, Configuration, LayerAdminService, LayerPermissionService]
 })
 export class LayerPermissionComponent implements OnInit{
 @Input () layerID;
@@ -26,7 +26,7 @@ public token: string;
 public userID: number;
 public userperm: string;
 
-    constructor(private modalService: NgbModal, private layerPermissionService: LayerPermissionService, public activeModal: NgbActiveModal, private api2service: Api2Service) {
+    constructor(private modalService: NgbModal, private layerPermissionService: LayerPermissionService, public activeModal: NgbActiveModal, private userService: UserService) {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
@@ -77,7 +77,7 @@ open(content) {
     }
 
     public getUserItems(): void {
-         this.api2service
+         this.userService
             .GetAll()
             .subscribe((data:User[]) => this.users = data,
                 error => console.log(error),

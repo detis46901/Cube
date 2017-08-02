@@ -20,7 +20,6 @@ import { routing } from './app.routing'
 //import { fakeBackendProvider } from '../_helpers/fake-backend';
 //import { MockBackend, MockConnection } from '@angular/http/testing';
 import { BaseRequestOptions } from '@angular/http';
-import { Api2Service } from './api2.service'
 import { AuthGuard } from '../_guards/auth.guard';
 import { AdminGuard } from '../_guards/admin.guard';
 import { AuthenticationService} from '../_services/authentication.service';
@@ -125,7 +124,7 @@ import { ServerNewComponent } from './admin/servers/servernew.component';
     //routes
   ],
   providers: [
-    Api2Service, 
+    UserService, 
     MapService, 
     GeocodingService, 
     AuthGuard, 

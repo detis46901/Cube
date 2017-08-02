@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-import { Api2Service } from '../../api2.service';
+import { UserService } from '../../../_services/user.service';
 import { User } from '../../../_models/user-model';
 import { Configuration } from '../../../_api/api.constants';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';

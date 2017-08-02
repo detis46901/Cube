@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
  
 import { AuthenticationService } from '../../_services/authentication.service';
-import { Api2Service } from '../api2.service';
+import { UserService } from '../../_services/user.service';
 import { User } from '../../_models/user-model'
 import { Md5 } from 'ts-md5/dist/md5'
 
@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
     loading = false;
     error = '';
  
-    constructor(private router: Router, private authenticationService: AuthenticationService, private dataService: Api2Service) {
+    constructor(private router: Router, private authenticationService: AuthenticationService, private dataService: UserService) {
     }
  
     ngOnInit() {

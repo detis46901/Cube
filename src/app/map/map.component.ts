@@ -146,13 +146,13 @@ export class MapComponent {
     }
 
     getServer(serverID) {
-        console.log(serverID)
         this.serverService
             .GetOne(serverID)
-            .subscribe((data) => this.server = data,
-                error => console.log(error),
-                () => console.log(this.server)
-            );
+            .subscribe((data) => this.setServer(data));
+    }
+
+    setServer(serv: Server) {
+        this.server = serv
     }
 
     getServers() {
@@ -211,7 +211,6 @@ export class MapComponent {
         //this.markerComponent.Initialize();
         this.loadLayers();
         this.setFlags();
-        
     }   
 
     //This method sets flags for use with the "Layers in Map Component" map.component.html control in order to determine
@@ -263,7 +262,6 @@ export class MapComponent {
     }
 
     setCurrentLayer(index, layer: UserPageLayer, checked) {
-        this.getServer(layer.layer_admin.serverID)
         for (let x of this.userpagelayers) {
             if (x == layer) {
                 console.log("Found Layer!")
@@ -310,7 +308,9 @@ export class MapComponent {
         for (let i of this.servers) {
             if (i.ID == layer.layer_admin.serverID) {server = i}
         }
-        console.log(this.server)
+        console.log(server)
+        console.log(checked)
+        console.log(layer)
 
         if (checked == false) {
             if (layer.layer_admin.layerGeom == "Coverage") {zindex = 500}
@@ -322,6 +322,7 @@ export class MapComponent {
                 format: layer.layer_admin.layerFormat,
                 transparent: true,
             })).addTo(this._map)
+            console.log(this.turnonlayer)
             this.layerList[index] = this.turnonlayer
             this.currLayer = layer
             this.currLayerName = layer.layer_admin.layerName

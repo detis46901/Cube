@@ -1,7 +1,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-import { Api2Service } from '../../api2.service';
+import { UserService } from '../../../_services/user.service';
 import { User } from '../../../_models/user-model'
 import { Configuration } from '../../../_api/api.constants'
 import { UserPageService } from '../../../_services/user-page.service'
@@ -14,7 +14,7 @@ import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bo
 @Component({
   selector: 'page',
   templateUrl: './page.component.html',
-  providers: [Api2Service, Configuration, FilterPipe, NumFilterPipe],
+  providers: [UserService, Configuration, FilterPipe, NumFilterPipe],
   styleUrls: ['./page.component.scss'],
 })
 export class PageComponent implements OnInit{

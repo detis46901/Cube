@@ -6,7 +6,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 //import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Http, Headers, Response } from '@angular/http';
-import { Api2Service } from '../../api2.service';
+import { UserService } from '../../../_services/user.service';
 import { User } from '../../../_models/user-model'
 import { Configuration } from '../../../_api/api.constants'
 import { DepartmentService } from '../../../_services/department.service'
@@ -33,7 +33,7 @@ import {hash, genSalt} from "bcrypt/bcrypt.js"*/
 @Component({
   selector: 'user',
   templateUrl: './user.component.html',
-  providers: [Api2Service, RoleService, UserPageService, LayerPermissionService, UserPageLayerService, Configuration, PagePipe, NumFilterPipe, NgbModal],
+  providers: [UserService, RoleService, UserPageService, LayerPermissionService, UserPageLayerService, Configuration, PagePipe, NumFilterPipe, NgbModal],
   styleUrls: ['./user.component.scss'],
 })
 
@@ -64,7 +64,7 @@ export class UserComponent implements OnInit{
     public uList = [];
 
 
-    constructor(private api2service: Api2Service, private roleservice: RoleService, private modalService: NgbModal, private userpageService: UserPageService, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService) {
+    constructor(private userService: UserService, private roleservice: RoleService, private modalService: NgbModal, private userpageService: UserPageService, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService) {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
       console.log(currentUser)
         this.token = currentUser && currentUser.token;
@@ -94,7 +94,7 @@ export class UserComponent implements OnInit{
     }
 
     getUserItems(): void {
-         this.api2service
+         this.userService
             .GetAll()
             .subscribe((data:User[]) => this.users = data,
                 error => console.log(error),
@@ -133,7 +133,7 @@ export class UserComponent implements OnInit{
 
         console.log(newuser)
 
-        this.api2service
+        this.userService
             .Add(this.newuser)
             .subscribe(result => {
                 console.log(result);
@@ -143,7 +143,7 @@ export class UserComponent implements OnInit{
     }
 
     updateUser(user) {
-        this.api2service
+        this.userService
             .Update(user)
             .subscribe(result => { //result is empty, layeradmins isn't
                 console.log(result); //This gets an empty object
@@ -153,13 +153,13 @@ export class UserComponent implements OnInit{
 
     //rename to change password, add a modal that will ask what new password should be
     resetPassword(userID, password) {
-        this.api2service
+        this.userService
             .GetSingle(userID)
             .subscribe(result => {
                 console.log(result);
                 this.user = result;
                 this.user.password = "Monday01"
-                this.api2service
+                this.userService
                     .Update(this.user)
                     .subscribe(result => {
                         this.getUserItems();
@@ -175,7 +175,7 @@ export class UserComponent implements OnInit{
     //Also delete all user_pages(userID) == userID, user_page_layers(userID), layer_permissions(userID)
     deleteUser(userID) {
         console.log(userID)
-        this.api2service
+        this.userService
             .Delete(userID)
             .subscribe(result => {
                 console.log(result);

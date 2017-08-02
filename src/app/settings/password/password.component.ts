@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Api2Service } from '../../api2.service';
+import { UserService } from '../../../_services/user.service';
 import { Configuration } from '../../../_api/api.constants'
 import { Http, Headers, Response } from '@angular/http';
 import { User } from '../../../_models/user-model'
@@ -8,7 +8,7 @@ import { Md5 } from 'ts-md5/dist/md5'
 @Component({
   selector: 'password',
   templateUrl: './password.component.html',
-  providers: [Api2Service, Configuration],
+  providers: [UserService, Configuration],
   styleUrls: ['./password.component.less'],
 })
 
@@ -21,7 +21,7 @@ export class PasswordComponent implements OnInit{
     public user = new User;
     public error;
 
-    constructor(private dataService: Api2Service) {
+    constructor(private dataService: UserService) {
        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
           this.token = currentUser && currentUser.token;
           this.userID = currentUser && currentUser.userid; 
@@ -64,7 +64,7 @@ export class PasswordComponent implements OnInit{
     }
 
     /*public updateUser(user) {
-        this.api2service
+        this.userService
             .Update(user)
             .subscribe(result => {
                 console.log(result);

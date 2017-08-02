@@ -1,13 +1,13 @@
 // app.component.ts
 import { Component, OnInit } from '@angular/core';
-import { Api2Service } from './api2.service';
+import { UserService } from '../_services/user.service';
 import { User } from '../_models/user-model'
 import { Configuration } from '../_api/api.constants'
 
 
 @Component({
   selector: 'app-root',
-  providers: [Api2Service, Configuration],
+  providers: [UserService, Configuration],
 
   template: `
   <div>     
@@ -22,7 +22,7 @@ export class AppComponent {
 public user = new User;
 public myItems: any;
 
-    constructor(private dataService: Api2Service) {
+    constructor(private dataService: UserService) {
 
      //this.dataService.GetSingle(1).subscribe(user => {console.log(user)})
     }

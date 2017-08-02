@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-import { Api2Service } from '../../api2.service';
+import { UserService } from '../../../_services/user.service';
 import { User } from '../../../_models/user-model'
 import { Configuration } from '../../../_api/api.constants'
 import { LayerAdminService } from '../../../_services/layeradmin.service';
@@ -20,7 +20,7 @@ import { confirmDelete } from '../../../_models/confDel.model'
 @Component({
   selector: 'layeradmin',
   templateUrl: './layeradmin.component.html',
-  providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, NgbActiveModal, ServerService],
+  providers: [UserService, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, NgbActiveModal, ServerService],
   styleUrls: ['./layeradmin.component.scss']
 })
 

@@ -1,7 +1,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-import { Api2Service } from '../../api2.service';
+import { UserService } from '../../../_services/user.service';
 import { User } from '../../../_models/user-model'
 import { Configuration } from '../../../_api/api.constants'
 import { DepartmentService } from '../../../_services/department.service'
@@ -16,7 +16,7 @@ import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component
 @Component({
   selector: 'organization',
   templateUrl: './organization.component.html',
-  providers: [Api2Service, Configuration, FilterPipe, NumFilterPipe, NgbModal]
+  providers: [UserService, Configuration, FilterPipe, NumFilterPipe, NgbModal]
   //styleUrls: ['./app.component.css', './styles/w3.css'],
 })
 export class OrganizationComponent implements OnInit{

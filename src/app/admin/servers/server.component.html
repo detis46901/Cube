@@ -22,16 +22,16 @@
     <form style="width:100%" class="form-inline" #e="ngForm" *ngFor="let server of servers">
         <i id="btnOpenDelLayerServer" class="fa fa-times" style="position:relative; margin-right:5px" (click)="openConfDel(server)"></i>
         <div class="col-md-2">
-            <input id="exservername" style="width:100%" ngModel required name="exservername" title="{{server.serverName}}" class="form-control" [(ngModel)]="server.serverName" type="text">
+            <input id="exservername" style="width:100%" ngModel required name="exservername" title="{{server.serverName}}" class="form-control" [(ngModel)]="server.serverName" type="text" (blur)="updateServer(server)">
         </div>
         <div class="col-md-2">
-            <select id="exservertype" style="width:100%; height:34px;" ngModel required name="exservertype" class="form-control" [(ngModel)]="server.serverType" type="text">
+            <select id="exservertype" style="width:100%; height:34px;" ngModel required name="exservertype" class="form-control" [(ngModel)]="server.serverType" type="text" (blur)="updateServer(server)">
                 <option>Geoserver</option>
                 <option>PostGIS</option>
             </select>
         </div>
         <div class="col-md-5">
-            <input id="exserverurl" style="width:100%" ngModel required name="exserverurl" title="{{server.serverURL}}" class="form-control" [(ngModel)]="server.serverURL" type="text">
+            <input id="exserverurl" style="width:100%" ngModel required name="exserverurl" title="{{server.serverURL}}" class="form-control" [(ngModel)]="server.serverURL" type="text" (blur)="updateServer(server)">
         </div>
         <div class="col-md-1">
             <button id="getRequestBtn" style="height:28px;" (click)="getRequest(server)">Layers</button>

@@ -1,7 +1,7 @@
 
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-import { Api2Service } from './api2.service';
+import { UserService } from '../_services/user.service';
 import { User } from '../_models/user-model'
 import { Configuration } from '../_api/api.constants'
 import { SidenavService} from '../_services/sidenav.service'
@@ -26,7 +26,7 @@ export class HomeComponent {
     public isOpen: boolean;
     public popuptx: string
 
-    constructor(private dataService: Api2Service, private sidenavService: SidenavService, private WFSservice: WFSService) {
+    constructor(private dataService: UserService, private sidenavService: SidenavService, private WFSservice: WFSService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;

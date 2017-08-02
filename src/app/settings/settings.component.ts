@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { Api2Service } from '../api2.service';
+import { UserService } from '../../_services/user.service';
 import { Configuration } from '../../_api/api.constants';
 import { User } from '../../_models/user-model'
 
 @Component({
   selector: 'app-root',
   templateUrl: './settings.component.html',
-  providers: [Api2Service, Configuration],
+  providers: [UserService, Configuration],
   styleUrls: ['./settings.component.css'],
 })
 
@@ -19,7 +19,7 @@ export class SettingsComponent{
     public token: string;
     public userID: number;
 
-    constructor(private dataService: Api2Service) {
+    constructor(private dataService: UserService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 

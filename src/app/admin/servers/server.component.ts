@@ -105,6 +105,14 @@ export class ServerComponent implements OnInit {
             })
     }
 
+    updateServer(server) {
+        this.serverService
+            .Update(server)
+            .subscribe(result => {
+                this.getServers();
+            })
+    }
+
     createLayer(index) {
         const modalRef = this.modalService.open(LayerNewComponent)
         console.log(this.nameArray[index] + this.formatArray[index])

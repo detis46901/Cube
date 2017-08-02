@@ -1,7 +1,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-import { Api2Service } from '../../api2.service';
+import { UserService } from '../../../_services/user.service';
 import { User } from '../../../_models/user-model'
 import { Configuration } from '../../../_api/api.constants'
 import { LayerAdminService } from '../../../_services/layeradmin.service';
@@ -17,7 +17,7 @@ import { LayerPermissionComponent } from './layerpermission.component'
   selector: 'layernew',
   templateUrl: './layernew.component.html',
   styleUrls: ['./layernew.component.scss'],
-  providers: [Api2Service, Configuration, LayerAdminService, LayerPermissionService, ServerService],
+  providers: [UserService, Configuration, LayerAdminService, LayerPermissionService, ServerService],
 })
 export class LayerNewComponent implements OnInit{
     @Input() layerName;
