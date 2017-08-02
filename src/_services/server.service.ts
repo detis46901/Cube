@@ -20,19 +20,13 @@ export class ServerService {
         this.headers.append('Accept', 'application/json');
     }
  
-    public GetAll = (): Observable<Server[]> => {
-        console.log(this.actionUrl + 'list')
-        console.log(this._http.get(this.actionUrl + 'list')
-            .map((response: Response) => <Server[]>response.json()))
-            
+    public GetAll = (): Observable<Server[]> => {           
         return this._http.get(this.actionUrl + 'list')
             .map((response: Response) => <Server[]>response.json())
 //            .catch(this.handleError);
     }
  
     public GetOne = (id: number): Observable<Server> => {
-        console.log(this.actionUrl + 'one?rowid=' + id)
-
         return this._http.get(this.actionUrl + 'one?rowid=' + id)
             .map((response: Response) => <Server>response.json())
 //            .catch(this.handleError);
@@ -45,18 +39,13 @@ export class ServerService {
     }
  
     public Add = (server: Server): Observable<Server> => {
-        console.log(server)
-        let toAdd = JSON.stringify(server);
-        console.log('Server.service ' + toAdd)
-        return this._http.post(this.actionUrl + 'create', toAdd, { headers: this.headers })
+        return this._http.post(this.actionUrl + 'create', JSON.stringify(server), { headers: this.headers })
             .map((response: Response) => <Server>response.json())
  //           .catch(this.handleError);
     }
  
     public Update = (itemToUpdate: Server): Observable<Server> => {
-        console.log(this._http.put(this.actionUrl + '/update', JSON.stringify(itemToUpdate), { headers: this.headers })
-            .map((response: Response) => <Server>response.json()))
-        return this._http.put(this.actionUrl + '/update', JSON.stringify(itemToUpdate), { headers: this.headers })
+        return this._http.put(this.actionUrl + 'update', JSON.stringify(itemToUpdate), { headers: this.headers })
             .map((response: Response) => <Server>response.json())
  //           .catch(this.handleError);
     }
@@ -68,8 +57,7 @@ export class ServerService {
 
     public getCapabilities(serv: Server, options) {
         let actionURL: string = serv.serverURL + '/wms?request=getCapabilities&service=WMS'
-        console.log(this._http.get(actionURL, options)
-                .map((response: Response) => response.text()))
+
 
         /*fetch(this.actionUrl).then(function(response) {
             if(response.ok) {

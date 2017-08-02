@@ -32,7 +32,6 @@ import { Map, MouseEvent, Marker } from "leaflet";
 })
 
 export class MapComponent {
-
     //Token and current user, Working on changing the token format to JWT once hashing is operational
     public token: string;
     public userID: number;
@@ -308,13 +307,15 @@ export class MapComponent {
         for (let i of this.servers) {
             if (i.ID == layer.layer_admin.serverID) {server = i}
         }
-        console.log(server)
+        console.log(server.serverURL)
         console.log(checked)
-        console.log(layer)
+        console.log(layer.layer_admin.layerIdent)
+        console.log(layer.layer_admin.layerFormat)
+
 
         if (checked == false) {
             if (layer.layer_admin.layerGeom == "Coverage") {zindex = 500}
-            this.turnonlayer = (L.tileLayer.wms(server.serverURL, { //will not be server.serverURL exactly like this, once code above is changed
+            this.turnonlayer = (L.tileLayer.wms(/*server.serverURL*/'http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows/', { //will not be server.serverURL exactly like this, once code above is changed
                 minZoom: 4,
                 maxZoom: 20,
                 zIndex: zindex,

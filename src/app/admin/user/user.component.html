@@ -46,16 +46,16 @@
     
     <form style="position:relative; left:20px" class="form-inline" #e="ngForm" *ngFor="let user of users">
         <i id="btnOpenDelUser" class="fa fa-times" style="margin-right:5px" (click)="openConfDel(user)"></i>
-        <input id="exuserfirstname" ngModel required name="exuserfirstname" class="form-control" [(ngModel)] = "user.firstName" type="text" (blur)="updateUser(user)" (change)="updateUser(user)">
-        <input id="exuserlastname" ngModel required name="exuserlastname" class="form-control" [(ngModel)] = "user.lastName" type="text" (blur)="updateUser(user)" (change)="updateUser(user)">
-        <select id="exuserrole" ngModel required name="exuserrole" class="form-control" [(ngModel)] = "user.roleID" #role="ngModel" type="text" (blur)="updateUser(user)" (change)="updateUser(user)">
+        <input id="exuserfirstname" ngModel required name="exuserfirstname" class="form-control" [(ngModel)] = "user.firstName" type="text" (blur)="updateUser(user)">
+        <input id="exuserlastname" ngModel required name="exuserlastname" class="form-control" [(ngModel)] = "user.lastName" type="text" (blur)="updateUser(user)">
+        <select id="exuserrole" ngModel required name="exuserrole" class="form-control" [(ngModel)] = "user.roleID" #role="ngModel" type="text" (blur)="updateUser(user)">
             <option *ngFor="let role of roles" [value]="role.ID">
                 {{role.role}}
             </option>
         </select>
-        <input id="exuseremail" ngModel required name="exuseremail" title="{{user.email}}" class="form-control" [(ngModel)] = "user.email" type="text" (blur)="updateUser(user)" (change)="updateUser(user)">
-        <input id="exuseractive" name="exuseractive" class="form-check-input" [(ngModel)] = "user.active" type="checkbox" (change)="updateUser(user)">
-        <input id="exuseradministrator" name="exuseradministrator" class="form-check-input" [(ngModel)] = "user.administrator" type="checkbox" (change)="updateUser(user)">
+        <input id="exuseremail" ngModel required name="exuseremail" title="{{user.email}}" class="form-control" [(ngModel)] = "user.email" type="text" (blur)="updateUser(user)">
+        <input id="exuseractive" name="exuseractive" class="form-check-input" [(ngModel)] = "user.active" type="checkbox" (blur)="updateUser(user)">
+        <input id="exuseradministrator" name="exuseradministrator" class="form-check-input" [(ngModel)] = "user.administrator" type="checkbox" (blur)="updateUser(user)">
 
         <div class="row" style="position:relative;width:22%;left:2%">
             <div ngbDropdown style="position:relative">
@@ -81,7 +81,7 @@
         <i class="fa fa-arrow-right" style="margin-right:5px" aria-hidden="true"></i>
         <input id="newuserfirstname" name="newuserfirstname" required #newuserfirstnameinput [(ngModel)] = "newuser.firstName" type="text" placeholder="First Name">
         <input id="newuserlastname" name="newuserlastname" required #newuserlastnameinput [(ngModel)] = "newuser.lastName" type="text" placeholder="Last Name">
-        <select id="newuserrole" name="newuserrole" name="exuserrole" class="form-control" required #role="ngModel" [(ngModel)] = "newuser.roleID" type="text" (blur)="updateUser(user)">
+        <select id="newuserrole" name="newuserrole" name="exuserrole" class="form-control" required #role="ngModel" [(ngModel)] = "newuser.roleID" type="text">
             <option *ngFor="let role of roles" [value]="role.ID">
                 {{role.role}}
             </option>

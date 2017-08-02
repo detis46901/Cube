@@ -20,11 +20,7 @@ export class LayerAdminService {
         this.headers.append('Accept', 'application/json');
     }
  
-    public GetAll = (): Observable<LayerAdmin[]> => {
-        console.log(this.actionUrl + 'list')
-        console.log(this._http.get(this.actionUrl + 'list')
-            .map((response: Response) => <LayerAdmin[]>response.json()))
-            
+    public GetAll = (): Observable<LayerAdmin[]> => {            
         return this._http.get(this.actionUrl + 'list')
             .map((response: Response) => <LayerAdmin[]>response.json())
 //            .catch(this.handleError);
@@ -43,17 +39,13 @@ export class LayerAdminService {
     }
  
     public Add = (LayerAdmin: LayerAdmin): Observable<LayerAdmin> => {
-        let toAdd = JSON.stringify(LayerAdmin);
-        console.log('LayerAdmin.service ' + toAdd)
-        return this._http.post(this.actionUrl + 'create', toAdd, { headers: this.headers })
+        return this._http.post(this.actionUrl + 'create', JSON.stringify(LayerAdmin), { headers: this.headers })
             .map((response: Response) => <LayerAdmin>response.json())
  //           .catch(this.handleError);
     }
  
     public Update = (itemToUpdate: LayerAdmin): Observable<LayerAdmin> => {
-        console.log(this._http.put(this.actionUrl + '/update', JSON.stringify(itemToUpdate), { headers: this.headers })
-            .map((response: Response) => <LayerAdmin>response.json()))
-        return this._http.put(this.actionUrl + '/update', JSON.stringify(itemToUpdate), { headers: this.headers })
+        return this._http.put(this.actionUrl + 'update', JSON.stringify(itemToUpdate), { headers: this.headers })
             .map((response: Response) => <LayerAdmin>response.json())
  //           .catch(this.handleError);
     }
