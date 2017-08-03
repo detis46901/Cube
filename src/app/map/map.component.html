@@ -15,7 +15,7 @@
                         </div>
                         <br><hr>
                         <div *ngFor="let userpage of userpages" style="position:relative; left:4%" data-toggle="buttons">
-                            <label (click)="setUserPageLayers(userpage)" style="margin-right:3px; margin-bottom:3px;" class="btn btn-secondary pull-left">{{userpage.page}}</label>    
+                            <label (click)="resetUserPageLayers(userpage)" style="margin-right:3px; margin-bottom:3px;" class="btn btn-secondary pull-left">{{userpage.page}}</label>    
                         </div>
                     </ng-template>
                 </ngb-tab>

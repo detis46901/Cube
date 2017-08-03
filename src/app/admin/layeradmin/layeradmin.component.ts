@@ -62,7 +62,7 @@ export class LayerAdminComponent implements OnInit {
 
     //Open permissions modal on request from "Layers"
     openpermission(layerid, layername) {
-        const modalRef = this.modalService.open(LayerPermissionComponent)
+        const modalRef = this.modalService.open(LayerPermissionComponent, {size:'sm'})
         modalRef.componentInstance.layerID = layerid
         modalRef.componentInstance.layerName = layername
         modalRef.result.then((result) => {

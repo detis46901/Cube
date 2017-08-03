@@ -74,7 +74,7 @@ export class MapComponent {
     public layerpermissions: any;
     public layeradmin = new LayerAdmin;
     public layeradmins: Array<LayerAdmin>;
-    public userpagelayers: Array<UserPageLayer>;
+    public userpagelayers: Array<UserPageLayer> = [];
     public currLayer: UserPageLayer; 
     public userpages: any; 
     public layerList: Array<L.Layer> = [];
@@ -111,16 +111,16 @@ export class MapComponent {
 
     //Angular component initialization
     ngOnInit() {
-        this.setPage();       
+        this.getPage();       
     }
     
     //Takes results from getDefaultPage and sets the page based on result
-    setPage(): void {
+    getPage(): void {
         this.userPageService
             .GetSome(this.userID)
             .subscribe((data:UserPage[]) => this.userpages = data,
-            error => console.log(error),
-            () => this.getDefaultPage()
+                error => console.log(error),
+                () => this.getDefaultPage()
             );
     }
 
@@ -131,6 +131,7 @@ export class MapComponent {
                 this.defaultpage = userpage
             }
         }
+        console.log(this.defaultpage.ID)
         this.getUserPageLayers(this.defaultpage)
     } 
 
@@ -142,6 +143,19 @@ export class MapComponent {
                 error => console.log(error),
                 () =>  this.getServers()
             );
+    }
+
+    setUserPageLayers(UPL): void {
+        console.log(UPL)
+        console.log(this.currPage)
+        let temp: UserPageLayer[] = [];
+        for (let layer of UPL) {
+            if (layer.userID == this.userID && layer.userPageID == this.currPage.ID) {
+                temp.push(layer)
+            }
+        }
+        console.log(temp)
+        this.userpagelayers = temp;
     }
 
     getServer(serverID) {
@@ -182,7 +196,8 @@ export class MapComponent {
     }
 
     init_map() {
-        console.log (this.currPage)
+        
+        console.log (this.userpagelayers)
         if (this.currPage === "None") {
             console.log ("Initializing Map")
             this.currPage = this.defaultpage.page
@@ -210,6 +225,8 @@ export class MapComponent {
         //this.markerComponent.Initialize();
         this.loadLayers();
         this.setFlags();
+        L.DomUtil.addClass(this._map.getContainer(),'default-enabled');
+        //this.setUserPageLayers(this.userpagelayers)
     }   
 
     //This method sets flags for use with the "Layers in Map Component" map.component.html control in order to determine
@@ -221,13 +238,15 @@ export class MapComponent {
     }
         
     //Gets userpagelayers by page.ID, changes pages
-    setUserPageLayers(page): void { //This does not update the layer control properly 7/19/17
+    resetUserPageLayers(page): void { //This does not update the layer control properly 7/19/17
 
         this.currPage = page.page
         this.cleanPage()
         console.log(this.currPage)
         console.log("set pageID = " + page.ID)
         this.getUserPageLayers(page)
+        //this.setUserPageLayers(page)
+        console.log(this.userpagelayers)
         this.currLayerName = "No Active Layer"
         // this.userPageLayerService
         //     .GetPageLayers(page.ID)
@@ -314,15 +333,13 @@ export class MapComponent {
 
 
         if (checked == false) {
-            if (layer.layer_admin.layerGeom == "Coverage") {zindex = 500}
-            this.turnonlayer = (L.tileLayer.wms(/*server.serverURL*/'http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows/', { //will not be server.serverURL exactly like this, once code above is changed
-                minZoom: 4,
-                maxZoom: 20,
-                zIndex: zindex,
+            if (layer.layer_admin.layerGeom == "Coverage") {zindex = 0}
+
+            this.turnonlayer = (L.tileLayer.wms(server.serverURL + "/wms", {
                 layers: layer.layer_admin.layerIdent,
                 format: layer.layer_admin.layerFormat,
                 transparent: true,
-            })).addTo(this._map)
+            }).addTo(this._map))
             console.log(this.turnonlayer)
             this.layerList[index] = this.turnonlayer
             this.currLayer = layer

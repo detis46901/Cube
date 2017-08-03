@@ -184,7 +184,7 @@ export class WFSService {
                     }
 
                     //Create final string product to be displayed in HTML on sidenav
-                    temp = "<h4>" + formattedData[0] + "</h4><br>"
+                    temp = "<h3>" + formattedData[0] + "</h3><br>"
                     for (let i=1; i<formattedData.length; i++) {
                         temp = temp + "<b>" + formattedHead[i] + ":</b> " + formattedData[i] + "<br>"
                     }

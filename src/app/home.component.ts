@@ -10,7 +10,7 @@ import { WFSService } from './map/services/wfs.service'
 @Component({
   selector: 'app-root',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.less'],
+  styleUrls: ['./home.component.scss'],
   providers: [SidenavService, WFSService]
 })
 export class HomeComponent {

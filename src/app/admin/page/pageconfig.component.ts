@@ -30,7 +30,7 @@ public user = new User;
 public userpagelayer = new UserPageLayer;
 public newuserpagelayer = new UserPageLayer;
 public layerpermissions: any;
-public userpagelayers: any;
+public userpagelayers: UserPageLayer[] = [];
 public token: string;
 public selecteduserpage: UserPage;
 public newuserpage: string;
@@ -64,7 +64,13 @@ public page: string;
 
         //8/1/17 This is all messed up, the same modal object comes up for both users currently
     public setUserPageLayers(UPL): void {
-        this.userpagelayers = UPL
+        this.userpagelayers = [];
+        for (let layer of UPL) {
+            if (layer.userPageID == this.pageID) {
+                console.log("foo")
+                this.userpagelayers.push(layer)
+            }
+        }
     }
 
     public getUserPage(pageID): void {
@@ -112,10 +118,10 @@ public page: string;
     }
 
     public deleteUserPageLayer(userpageID) {
+        
         this.userpagelayerService
             .Delete(userpageID)
             .subscribe(result => {
-                console.log(result);
                 this.getUserPageLayers();
             })
     }

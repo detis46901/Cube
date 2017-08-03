@@ -5,7 +5,7 @@ import { SidenavService } from "../../_services/sidenav.service"
 @Component({
     selector: 'sidenav',
     templateUrl: './sidenav.component.html',
-    styleUrls: ['sidenav.component.css'],
+    styleUrls: ['sidenav.component.scss'],
     providers: [SidenavService]
 })
 export class SideNavComponent { 
@@ -23,5 +23,17 @@ export class SideNavComponent {
         document.getElementById("goto").style.left = "15px";
         document.getElementById("add-marker").style.left = "30px";
         document.getElementById("remove-marker").style.left = "70px";
+    }
+
+    drawLineClick() {
+
+    }
+
+    drawPointClick() {
+
+    }
+
+    drawPolygonClick() {
+        
     }
 }

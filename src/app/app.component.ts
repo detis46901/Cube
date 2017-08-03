@@ -8,14 +8,14 @@ import { Configuration } from '../_api/api.constants'
 @Component({
   selector: 'app-root',
   providers: [UserService, Configuration],
-
   template: `
   <div>     
     <router-outlet></router-outlet>
     <br />  
   <br />   
   </div>
-  `  
+  `,
+  styleUrls: ["./app.component.scss"]  
 })
 export class AppComponent {
 
