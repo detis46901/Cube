@@ -1,13 +1,13 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-import { UserService } from '../../../_services/user.service';
-import { User } from '../../../_models/user-model'
-import { Configuration } from '../../../_api/api.constants'
-import { UserPageService } from '../../../_services/user-page.service'
-import { UserPage } from '../../../_models/user-model'
-import { FilterPipe } from '../../../_pipes/rowfilter.pipe'
-import { NumFilterPipe } from '../../../_pipes/numfilter.pipe'
+import { UserService } from '../../../../_services/user.service';
+import { User } from '../../../../_models/user-model'
+import { Configuration } from '../../../../_api/api.constants'
+import { UserPageService } from '../../../../_services/user-page.service'
+import { UserPage } from '../../../../_models/user-model'
+import { FilterPipe } from '../../../../_pipes/rowfilter.pipe'
+import { NumFilterPipe } from '../../../../_pipes/numfilter.pipe'
 import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -18,16 +18,16 @@ import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bo
   styleUrls: ['./page.component.scss'],
 })
 export class PageComponent implements OnInit{
-@Input () userID;
-@Input () firstName;
-@Input () lastName;
+    @Input () userID;
+    @Input () firstName;
+    @Input () lastName;
 
-public user = new User;
-public userpage = new UserPage;
-public userpages: any;
-public token: string;
-public selecteduserpage: UserPage;
-public newuserpage: string;
+    public user = new User;
+    public userpage = new UserPage;
+    public userpages: any;
+    public token: string;
+    public selecteduserpage: UserPage;
+    public newuserpage: string;
 
 
     constructor(private userpageService: UserPageService, public activeModal: NgbActiveModal) {
@@ -46,16 +46,33 @@ public newuserpage: string;
     public getUserPageItems(): void {
         this.userpageService
         .GetSome(this.userID)
-        .subscribe((data:UserPage[]) => this.userpages = data,
+        .subscribe((data:UserPage[]) => this.orderUserPages(data),
             error => console.log(error)
             );
         console.log(this.userpages)
     }
 
-   public addUserPage(newuserpage) {
+    orderUserPages(up) {
+        this.userpages = up;
+        /*console.log(up)
+        let temp: number[] = []
+        for (let x of up) {
+            temp.push(x.pageOrder)
+        }
+        for (let i=0; i<up.length; i++) {
+            console.log(temp[i])
+            console.log(up[temp[i]])
+            this.userpages[i] = up[temp[i]];
+        }
+        console.log(up[2])
+        console.log(this.userpages)*/
+    }
+
+    public addUserPage(newuserpage) {
         this.userpage.page = newuserpage;
         this.userpage.userID = this.userID
         this.userpage.active = true;
+        this.userpage.pageOrder = this.userpages.length
         console.log(this.userpage.page, this.userpage.active);
         this.userpageService
             .Add(this.userpage)
@@ -82,6 +99,28 @@ public newuserpage: string;
                 console.log(result);
                 this.getUserPageItems();
             })
+    }
+
+    onClose() {
+        console.log(this.userpages)
+        let count= 0;
+        for (let x of this.userpages) {
+            x.pageOrder = count;
+            this.updateUserPage(x)
+            count = count+1
+        }
+        this.activeModal.close()
+    }
+
+    radio(up) {
+        for (let x of this.userpages) {
+            if (x == up) {
+                continue;
+            }
+            else {
+                x.default = false;
+            }
+        }
     }
 
 }

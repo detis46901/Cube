@@ -33,8 +33,8 @@ import { SettingsNavComponent } from './settings/settingsnav/settingsnav.compone
 import { OrganizationComponent } from './admin/organization/organization.component';
 import { LayerAdminComponent} from './admin/layeradmin/layeradmin.component';
 import { LayerPermissionComponent} from './admin/layeradmin/layerpermission.component';
-import { PageComponent} from './admin/page/page.component';
-import { PageConfigComponent} from './admin/page/pageconfig.component';
+import { PageComponent} from './admin/user/page/page.component';
+import { PageConfigComponent} from './admin/user/pageconfig/pageconfig.component';
 import { LayerNewComponent } from './admin/layeradmin/layernew.component';
 import { UserComponent } from './admin/user/user.component';
 import { adminPagesComponent } from './admin/adminpages/adminpages.component';
@@ -66,6 +66,8 @@ import { WFSService } from '../app/map/services/wfs.service';
 import { MarkerDataComponent } from './marker_data/marker-data.component';
 import { LayerControlsComponent } from './map/layer-controls/layer-controls.component';
 import { ServerNewComponent } from './admin/servers/servernew.component';
+import { NewMapComponent } from './map/new-map.component';
+import { ChangePasswordComponent } from './admin/user/changepassword/changepassword.component';
 
 @NgModule({
   declarations: [
@@ -103,10 +105,12 @@ import { ServerNewComponent } from './admin/servers/servernew.component';
     ServerComponent,
     MarkerDataComponent,
     LayerControlsComponent,
-    ServerNewComponent
+    ServerNewComponent,
+    NewMapComponent,
+    ChangePasswordComponent
   ],
 
-  entryComponents: [LayerNewComponent, LayerPermissionComponent, PageComponent, PageConfigComponent, ConfirmdeleteComponent, ServerNewComponent],
+  entryComponents: [LayerNewComponent, ChangePasswordComponent, LayerPermissionComponent, PageComponent, PageConfigComponent, ConfirmdeleteComponent, ServerNewComponent],
 
   imports: [
     BrowserModule,

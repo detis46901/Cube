@@ -56,23 +56,11 @@ export class MapComponent {
     public _map: L.Map;
 
     //GeoJSON testing variables
-    public geoFlag = false;
-    public geoURL = "http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&styles=Kokomo:point&typeName=Kokomo:Bench_Marks&srsName=EPSG:4326&maxFeatures=150&outputFormat=application%2Fjson";
-    public geoURL2 = 'http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/ows?service=WFS&version=1.1.0&request=GetFeature&styles=Kokomo:point&typeName=Kokomo:Cabinets&srsName=EPSG:4326&maxFeatures=50&outputFormat=application%2Fjson'
-    public geoURLWMS = "http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/wms?service=WMS&version=1.1.0&request=GetMap&layers=Kokomo:Bench_Marks&styles=&bbox=184144.95491078153,1888976.6503463583,221117.617793215,1918974.7383329805&width=768&height=623&srs=EPSG:2965&format=image%2Fpng"
-    public geoTest: any;
-    public geoLayerGroup: any;
-    public geoArray: Array<L.Layer>
-    public geoProp: Array<any>;
-    public curMarker: any;
-    public markerArr: Array<L.Marker>;
-    public wfsmarker: Array<WFSMarker>;
+
     public getFeatureData: any;
 
     //Database information
-    public layers: MapService;
-    public layerpermissions: any;
-    public layeradmin = new LayerAdmin;
+
     public layeradmins: Array<LayerAdmin>;
     public userpagelayers: Array<UserPageLayer> = [];
     public currLayer: UserPageLayer; 
@@ -86,11 +74,13 @@ export class MapComponent {
     public overlays: any;
     public currPage: any = "None"
     public currLayerName: string = "No Active Layer"
+    public noLayers: boolean;
 
     public count = 0;
 
     
-    // Order of events (onload):
+    // ORDER OF EVENTS ON COMPONENT INITIALIZATION:
+    //
     // ngOnInit()
     // setPage()
     // getDefaultPage()
@@ -145,27 +135,10 @@ export class MapComponent {
             );
     }
 
-    setUserPageLayers(UPL): void {
-        console.log(UPL)
-        console.log(this.currPage)
-        let temp: UserPageLayer[] = [];
-        for (let layer of UPL) {
-            if (layer.userID == this.userID && layer.userPageID == this.currPage.ID) {
-                temp.push(layer)
-            }
-        }
-        console.log(temp)
-        this.userpagelayers = temp;
-    }
-
     getServer(serverID) {
         this.serverService
             .GetOne(serverID)
-            .subscribe((data) => this.setServer(data));
-    }
-
-    setServer(serv: Server) {
-        this.server = serv
+            .subscribe((data) => this.server = data);
     }
 
     getServers() {
@@ -238,22 +211,12 @@ export class MapComponent {
     }
         
     //Gets userpagelayers by page.ID, changes pages
-    resetUserPageLayers(page): void { //This does not update the layer control properly 7/19/17
-
+    setUserPageLayers(page): void {
         this.currPage = page.page
         this.cleanPage()
-        console.log(this.currPage)
-        console.log("set pageID = " + page.ID)
         this.getUserPageLayers(page)
-        //this.setUserPageLayers(page)
-        console.log(this.userpagelayers)
         this.currLayerName = "No Active Layer"
-        // this.userPageLayerService
-        //     .GetPageLayers(page.ID)
-        //     .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
-        //         error => console.log(error),
-        //         () => {console.log(this.userpagelayers); this.cleanPage()}
-        //     );
+        this.noLayers = true;
     }
         
     cleanPage(): void {
@@ -282,10 +245,11 @@ export class MapComponent {
     setCurrentLayer(index, layer: UserPageLayer, checked) {
         for (let x of this.userpagelayers) {
             if (x == layer) {
-                console.log("Found Layer!")
+                console.log(x)
                 if (x.layerShown === true) {
                     console.log("Layer is shown")
                     this.currLayerName = x.layer_admin.layerName
+                    this.noLayers = false;
                     this._map.off('click')
                     this._map.on('click', (event: MouseEvent) => { 
                         let BBOX = this._map.getBounds().toBBoxString();
@@ -306,6 +270,7 @@ export class MapComponent {
         if(!checked) {
             this.toggleLayers(index, layer, checked)
         }
+        
         console.log(this.server)
     }
 
@@ -333,7 +298,7 @@ export class MapComponent {
 
 
         if (checked == false) {
-            if (layer.layer_admin.layerGeom == "Coverage") {zindex = 0}
+            if (layer.layer_admin.layerGeom == "Coverage") {zindex = -50}
 
             this.turnonlayer = (L.tileLayer.wms(server.serverURL + "/wms", {
                 layers: layer.layer_admin.layerIdent,
@@ -344,7 +309,8 @@ export class MapComponent {
             this.layerList[index] = this.turnonlayer
             this.currLayer = layer
             this.currLayerName = layer.layer_admin.layerName
-            this.openFeatureInfo();
+            this.noLayers = false;
+            this.openFeatureInfo(server);
             this.userpagelayers[index].layerShown = true
         }
         else { 
@@ -361,26 +327,18 @@ export class MapComponent {
 
             if (this.currLayer == layer && allLayersOff) {
                 this.currLayer = null
-                this.currLayerName = "No Current"
+                this.currLayerName = "No Active Layer"
+                this.noLayers = true;
             }
             else if (this.currLayer == layer && !allLayersOff) {
                 this.currLayer = nextActive
                 this.currLayerName = nextActive.layer_admin.layerName
+                this.noLayers = false;
             }
         }
     }
 
-    //this needs to be set up for every layer
-    openFeatureInfo() {
-        let ms_url="http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/wms";
-        /*this._map.on('drag', (event: MouseEvent) => {
-            L.DomUtil.addClass(this._map.getContainer(),'grabbing-enabled')
-        })
-
-        this._map.on('mouseup', (event: MouseEvent) => {
-            L.DomUtil.removeClass(this._map.getContainer(),'grabbing-enabled')
-        })*/
-
+    openFeatureInfo(serv: Server) {
         this._map.on('click', (event: MouseEvent) => { 
             let BBOX = this._map.getBounds().toBBoxString();
             let WIDTH = this._map.getSize().x;
@@ -388,68 +346,9 @@ export class MapComponent {
             let IDENT = this.currLayer.layer_admin.layerIdent
             let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
             let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
-            let URL = ms_url + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
+            let URL = serv.serverURL + '/wms?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
             this.wfsservice.getfeatureinfo(URL, false)
                 .subscribe((data: any) => this.getFeatureData = data)
         })
-
-        // this._map.on('mousemove', (event: MouseEvent) => {
-        //     let BBOX = this._map.getBounds().toBBoxString();
-        //     let WIDTH = this._map.getSize().x;
-        //     let HEIGHT = this._map.getSize().y;
-        //     let IDENT = this.currIdent
-        //     let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
-        //     let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
-        //     let URL = ms_url + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
-        //     this.wfsservice.getfeatureinfo(URL, true)
-        //         .subscribe((data: any) => {
-        //             if (data.length > 18) {
-        //                 L.DomUtil.addClass(this._map.getContainer(),'pointer-enabled')
-        //             }
-        //             else {
-        //                 L.DomUtil.removeClass(this._map.getContainer(),'pointer-enabled')
-        //             }
-        //         })
-            
-        // })   
     }
-
-    /*openWFS(geometry, URL, index) {
-        let myIcon = L.icon({iconUrl: 'my-icon.png', iconSize: [5, 5]});
-        switch(geometry) {
-            case "Point": {
-                this.wfsservice.getPointLayers(URL)
-                    .subscribe(res => {
-                        res.addTo(this.mapService.map)
-                        this.userpagelayers[index].featureGroupObject = res
-                    })
-                break
-            }
-            case "Polyline": {
-                this.wfsservice.getPolylineLayers(URL)
-                    .subscribe(res => {
-                        res.addTo(this.mapService.map)
-                        this.userpagelayers[index].featureGroupObject = res
-                    })
-                break
-            }
-            case "Polygon": {
-                this.wfsservice.getPolygonLayers(URL)
-                break
-            }
-            case "Coverage": {
-                //this.wfsservice.getCoverageLayers(URL)
-                break
-            }
-            default: {
-                alert("Invalid Geometry type: " + geometry)
-            }
-        }
-        
-        this._map.on('click', (event: MouseEvent) => {
-            this.wfsservice.popupText.next("Click a layer for details.");
-            console.log("fired")
-            })
-            //6/30/2017 Do something right here with assigning things to onClick of featureGroup        
-    }*/
 }

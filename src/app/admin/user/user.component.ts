@@ -21,8 +21,9 @@ import { PagePipe } from '../../../_pipes/rowfilter2.pipe'
 import { NumFilterPipe } from '../../../_pipes/numfilter.pipe'
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component'
-import { PageComponent } from '../page/page.component'
-import { PageConfigComponent } from '../page/pageconfig.component'
+import { PageComponent } from './page/page.component'
+import { PageConfigComponent } from './pageconfig/pageconfig.component'
+import { ChangePasswordComponent } from './changepassword/changepassword.component'
 import { Md5 } from 'ts-md5/dist/md5'
 import pHash = require('password-hash-and-salt')
 import * as jwt from 'jsonwebtoken'
@@ -75,7 +76,7 @@ export class UserComponent implements OnInit{
        this.getUserItems();
        this.getRoleItems();
        this.initNewUser();
-       this.getUserPageItems()
+       this.getUserPageItems();
     }
 
     initNewUser(): void {
@@ -83,7 +84,7 @@ export class UserComponent implements OnInit{
         this.newuser.lastName = "";
         this.newuser.roleID = null;
         this.newuser.active = true;
-        this.newuser.email = ' '
+        this.newuser.email = ' ';
         this.newuser.administrator = false;
         this.newuser.password = "";
     }
@@ -116,39 +117,53 @@ export class UserComponent implements OnInit{
 
     addUser(newuser) {
         this.newuser = newuser
+        let errorFlag = false;
 
-        console.log(this.newuser.password)
-        if (this.newuser.password == "") {
-            this.newuser.password = Md5.hashStr('Monday01').toString()
+        for(let x of this.users) {
+            if (this.newuser.email === x.email) {
+                errorFlag = true;
+                this.clearInputs();
+                alert(x.email + " is already taken.")
+            }
         }
 
-        else {
-            this.newuser.password = Md5.hashStr(this.newuser.password).toString()
+        if (errorFlag == false) {
+            if (this.newuser.password == "") {
+                this.newuser.password = Md5.hashStr('Monday01').toString()
+            }
+
+            else {
+                this.newuser.password = Md5.hashStr(this.newuser.password).toString()
+            }
+
+            this.userService
+                .Add(this.newuser)
+                .subscribe(result => {
+                    console.log(result);
+                    this.getUserItems();
+                    this.initNewUser();
+                })
         }
-
-        console.log(Md5.hashStr(newuser.password)) //works
-        
-        //this.newuser.password = (Md5.hashStr("Monday01")).toString() //works
-        console.log(newuser.password)
-
-        console.log(newuser)
-
-        this.userService
-            .Add(this.newuser)
-            .subscribe(result => {
-                console.log(result);
-                this.getUserItems();
-                this.initNewUser();
-            })
     }
 
     updateUser(user) {
-        this.userService
-            .Update(user)
-            .subscribe(result => { //result is empty, layeradmins isn't
-                console.log(result); //This gets an empty object
-                this.getUserItems();
-            })
+        let errorFlag = false;
+        for(let x of this.users) {
+            if (user.email === x.email) {
+                errorFlag = true;
+                this.clearInputs();
+                alert(x.email + " is already taken.")
+            }
+        }
+
+        if (errorFlag == false) {
+            this.userService
+                .Update(user)
+                .subscribe(result => { //result is empty, layeradmins isn't
+                    console.log(result); //This gets an empty object
+                    this.getUserItems();
+                })
+        }
     }
 
     //rename to change password, add a modal that will ask what new password should be
@@ -169,7 +184,15 @@ export class UserComponent implements OnInit{
     }
 
     changePassword() {
-        
+        const modalRef = this.modalService.open(ChangePasswordComponent)
+        modalRef.componentInstance.userID = this.userID;
+        modalRef.result.then((result) => {
+            this.closeResult = `Closed with: ${result}`;
+            this.getUserPageItems();
+        }, (reason) => {
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+            this.getUserPageItems();
+        });
     }
 
     //Also delete all user_pages(userID) == userID, user_page_layers(userID), layer_permissions(userID)
@@ -194,7 +217,7 @@ export class UserComponent implements OnInit{
         }, (reason) => {
             this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
             this.getUserPageItems();
-        });;
+        });
         console.log("openpermission from layernew")
     }
 

@@ -1,18 +1,18 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-import { UserService } from '../../../_services/user.service';
-import { User } from '../../../_models/user-model'
-import { Configuration } from '../../../_api/api.constants'
-import { UserPageService } from '../../../_services/user-page.service'
-import { LayerPermissionService } from '../../../_services/layerpermission.service'
-import { UserPageLayerService } from '../../../_services/user-page-layer.service'
-import { UserPage } from '../../../_models/user-model'
-import { UserPageLayer } from '../../../_models/layer.model'
-import { LayerPermission } from '../../../_models/layer.model'
-import { FilterPipe } from '../../../_pipes/rowfilter.pipe'
-import { NumFilterPipe } from '../../../_pipes/numfilter.pipe'
-import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import { UserService } from '../../../../_services/user.service';
+import { User } from '../../../../_models/user-model'
+import { Configuration } from '../../../../_api/api.constants'
+import { UserPageService } from '../../../../_services/user-page.service'
+import { LayerPermissionService } from '../../../../_services/layerpermission.service'
+import { UserPageLayerService } from '../../../../_services/user-page-layer.service'
+import { UserPage } from '../../../../_models/user-model'
+import { UserPageLayer } from '../../../../_models/layer.model'
+import { LayerPermission } from '../../../../_models/layer.model'
+import { FilterPipe } from '../../../../_pipes/rowfilter.pipe'
+import { NumFilterPipe } from '../../../../_pipes/numfilter.pipe'
+import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -21,21 +21,21 @@ import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bo
   providers: [UserService, Configuration, FilterPipe, NumFilterPipe, UserPageLayerService, UserPageService],
   styleUrls: ['./pageconfig.component.scss'],
 })
-export class PageConfigComponent implements OnInit{
-@Input() pageID;
-@Input() userID;
-@Input() pageName;
+export class PageConfigComponent implements OnInit {
+    @Input() pageID;
+    @Input() userID;
+    @Input() pageName;
 
-public user = new User;
-public userpagelayer = new UserPageLayer;
-public newuserpagelayer = new UserPageLayer;
-public layerpermissions: any;
-public userpagelayers: UserPageLayer[] = [];
-public token: string;
-public selecteduserpage: UserPage;
-public newuserpage: string;
-public layers: any;
-public page: string;
+    public user = new User;
+    public userpagelayer = new UserPageLayer;
+    public newuserpagelayer = new UserPageLayer;
+    public layerpermissions: any;
+    public userpagelayers: UserPageLayer[] = [];
+    public token: string;
+    public selecteduserpage: UserPage;
+    public newuserpage: string;
+    public layers: any;
+    public page: string;
 
 
     constructor(private userpagelayerService: UserPageLayerService, private modalService: NgbModal, private userpageService: UserPageService, private layerpermissionService: LayerPermissionService, public activeModal: NgbActiveModal) {

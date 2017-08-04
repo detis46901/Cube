@@ -61,8 +61,8 @@
             <div ngbDropdown style="position:relative">
                 <button id="AdminUserOptions" class="btn btn-primary" ngbDropdownToggle>Options</button>
                 <div id="optDrop" class="dropdown-menu" aria-labelledby="options">
-                    <button type="button" style="position:relative; left:5px" (click)="resetPassword(user.ID)" class="btn btn-secondary">Reset Password</button>
-                    <button type="button" style="position:relative; left:5px" (click)="openPages(user.ID, user.firstName, user.lastName)" class="btn btn-secondary">Pages</button>
+                    <button type="button" (click)="changePassword(user.ID)" class="btn btn-secondary">Change Password</button>
+                    <button type="button" (click)="openPages(user.ID, user.firstName, user.lastName)" class="btn btn-secondary">Pages</button>
                 </div>
             </div>
             

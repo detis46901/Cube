@@ -40,14 +40,23 @@
 </div>
 
 <div id="pageConfigFooter" class="modal-footer">
-    <div class="row" style="width:43%; align-content:flex-end">
-        <form class="form-inline" #f="ngForm" (ngSubmit)="addUserPageLayer(newuserpagelayer)">
-            <select id="layer" name="layer" class="form-control" [(ngModel)] = "newuserpagelayer.layerAdminID" required type="text">
-                <option [value]="layerpermission.layer_admin['ID']" *ngFor="let layerpermission of layerpermissions">
-                    {{layerpermission.layer_admin['layerName']}}
-                </option>
-            </select>
-            <button class="btn btn-outline-primary" style="margin-left:5px;" type="submit" [disabled]="!f.valid">Add</button>
-        </form>
-    </div>
+    <form class="form-inline" #f="ngForm" (ngSubmit)="addUserPageLayer(newuserpagelayer)">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-2" style="margin-right:25px;">
+                <select id="layer" name="layer" class="form-control" [(ngModel)] = "newuserpagelayer.layerAdminID" required type="text">
+                    <option [value]="layerpermission.layer_admin['ID']" *ngFor="let layerpermission of layerpermissions">
+                        {{layerpermission.layer_admin['layerName']}}
+                    </option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-outline-primary" style="margin-left:5px;" type="submit" [disabled]="!f.valid">Add</button>
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-outline-primary" (click)="activeModal.close()">Close</button>
+            </div>
+        </div>
+    </form>
 </div>
