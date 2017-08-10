@@ -19,6 +19,12 @@ import { routing } from './app.routing'
 // used to create fake backend
 //import { fakeBackendProvider } from '../_helpers/fake-backend';
 //import { MockBackend, MockConnection } from '@angular/http/testing';
+
+//material imports
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MdRadioModule} from '@angular/material';
+
+
 import { BaseRequestOptions } from '@angular/http';
 import { AuthGuard } from '../_guards/auth.guard';
 import { AdminGuard } from '../_guards/admin.guard';
@@ -124,7 +130,10 @@ import { ChangePasswordComponent } from './admin/user/changepassword/changepassw
         path: 'home',
         component: HomeComponent
       }
-    ])
+    ]),
+    //material modules
+    BrowserAnimationsModule,
+    MdRadioModule
     //routes
   ],
   providers: [

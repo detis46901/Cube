@@ -117,11 +117,13 @@ export class MapComponent {
     //Currently this logic seems flawed. Whatever the last page that is set as default will be selected, consider a break statement within the if block
     getDefaultPage() {
         for (let userpage of this.userpages) {
-            if (userpage.default == true) {
+            console.log ("Userpage = " + userpage.page)
+            console.log ("Default = " + userpage.default)
+            if (userpage.default === true) {
                 this.defaultpage = userpage
             }
         }
-        console.log(this.defaultpage.ID)
+        console.log("Default Page = " + this.defaultpage.page)
         this.getUserPageLayers(this.defaultpage)
     } 
 

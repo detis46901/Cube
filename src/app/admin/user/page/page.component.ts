@@ -28,6 +28,7 @@ export class PageComponent implements OnInit{
     public token: string;
     public selecteduserpage: UserPage;
     public newuserpage: string;
+    public selectedPage: number;
 
 
     constructor(private userpageService: UserPageService, public activeModal: NgbActiveModal) {
@@ -46,14 +47,39 @@ export class PageComponent implements OnInit{
     public getUserPageItems(): void {
         this.userpageService
         .GetSome(this.userID)
-        .subscribe((data:UserPage[]) => this.orderUserPages(data),
+        .subscribe((data:UserPage[]) => this.setDefaultPage(data),
             error => console.log(error)
             );
-        console.log(this.userpages)
+        //console.log(this.userpages)
+    }
+    
+    setDefaultPage(userpages) {
+        this.userpages = userpages 
+        for (let userpage of userpages) {
+            if (userpage.default == true) {this.selectedPage = userpage.ID}
+        }
+        console.log("updating default userpage")
+        console.log(this.selectedPage)
     }
 
-    orderUserPages(up) {
+    updateDefaultPage(userpage) {
+        for (let tempage of this.userpages) {
+            if (tempage.default == true) {
+                tempage.default = false
+                this.updateUserPage(tempage)
+            }
+        }
+        for (let tempage of this.userpages) {
+            if (tempage.ID == userpage.ID) {
+                tempage.default = true
+                this.updateUserPage(tempage)
+            }
+        }
+
+    }
+    orderUserPages(up) { //this should order the pages
         this.userpages = up;
+        console.log(this.userpages)
         /*console.log(up)
         let temp: number[] = []
         for (let x of up) {
@@ -92,6 +118,8 @@ export class PageComponent implements OnInit{
             })
     }
 
+    
+
     public deleteUserPage(userpageID) {
         this.userpageService
             .Delete(userpageID)
@@ -114,13 +142,12 @@ export class PageComponent implements OnInit{
 
     radio(up) {
         for (let x of this.userpages) {
+            x.default = false
             if (x == up) {
-                continue;
+                x.default = true;
+                console.log("setting true")
+                this.updateUserPage(x)              
             }
-            else {
-                x.default = false;
-            }
-        }
     }
-
+    }
 }

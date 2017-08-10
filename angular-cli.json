@@ -51,7 +51,7 @@
     "prefixInterfaces": false,
     "serve": {
       "port": 4200,
-      "host": "foster2.cityofkokomo.org"
+      "host": "localhost"
     },
     "inline": {
       "style": false,
