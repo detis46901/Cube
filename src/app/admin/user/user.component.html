@@ -58,20 +58,25 @@
         <input id="exuseradministrator" name="exuseradministrator" class="form-check-input" [(ngModel)] = "user.administrator" type="checkbox" (blur)="updateUser(user)">
 
         <div class="row" style="position:relative;width:22%;left:2%">
-            <div ngbDropdown style="position:relative">
-                <button id="AdminUserOptions" class="btn btn-primary" ngbDropdownToggle>Options</button>
-                <div id="optDrop" class="dropdown-menu" aria-labelledby="options">
-                    <button type="button" (click)="changePassword(user.ID)" class="btn btn-secondary">Change Password</button>
-                    <button type="button" (click)="openPages(user.ID, user.firstName, user.lastName)" class="btn btn-secondary">Pages</button>
-                </div>
-            </div>
-            
-            <div ngbDropdown style="position:relative">
-                <button id="AdminUserEdit" class="btn btn-primary" ngbDropdownToggle>Edit Layers</button>
-                    <div id="editDrop" class="dropdown-menu" aria-labelledby="dropdownMenu3">
-                        <button id="openConfig" *ngFor="let userpage of (userpages | pagefilter: (user.ID))" type="button" (click)="getUserPageItem(userpage.ID, user.ID)" class="btn btn-secondary">{{userpage.page}}</button><br>
-                    </div>
-            </div>
+                <button md-button [mdMenuTriggerFor]="menu">
+                    Options
+                </button>
+                <md-menu #menu="mdMenu">
+                    <button md-menu-item (click)="changePassword(user.ID)">
+                        <span>Change Password</span>
+                    </button>
+                    <button md-menu-item (click)="openPages(user.ID, user.firstName, user.lastName)">
+                        <span>Pages</span>
+                    </button>
+                </md-menu>
+                <button md-button [mdMenuTriggerFor]="menu2">
+                    Edit Layers
+                </button>
+                <md-menu #menu2="mdMenu">
+                    <button md-menu-item id="openConfig" *ngFor="let userpage of (userpages | pagefilter: (user.ID))" (click)="getUserPageItem(userpage.ID, user.ID)">
+                        <span>{{userpage.page}}</span>
+                    </button>
+                </md-menu>
         </div>
     </form>      
     <br>

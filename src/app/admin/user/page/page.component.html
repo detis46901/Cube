@@ -4,7 +4,7 @@
             <h4 class="modal-title">{{firstName}} {{lastName}}'s Pages</h4>
         </div>
         <div class="col-md-1">
-            <button type="button" class="close" aria-label="Close" (click)="onClose()">
+            <button md-dialog-close type="button" class="close" aria-label="Close" (click)="onClose()">
             <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -55,6 +55,6 @@
 
 <div class="modal-footer">
     <div class="col-md-2 col-md-offset-9">
-        <button class="btn btn-outline-primary" (click)="onClose()">Close</button>
+        <button md-dialog-close class="btn btn-outline-primary" (click)="onClose()">Close</button>
     </div>
 </div>

@@ -27,6 +27,7 @@ import { ChangePasswordComponent } from './changepassword/changepassword.compone
 import { Md5 } from 'ts-md5/dist/md5'
 import pHash = require('password-hash-and-salt')
 import * as jwt from 'jsonwebtoken'
+import {MdDialog, MdDialogRef} from '@angular/material';
 
 /*import { hash } from 'bcrypt'
 import {hash, genSalt} from "bcrypt/bcrypt.js"*/
@@ -65,7 +66,7 @@ export class UserComponent implements OnInit{
     public uList = [];
 
 
-    constructor(private userService: UserService, private roleservice: RoleService, private modalService: NgbModal, private userpageService: UserPageService, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService) {
+    constructor(private userService: UserService, private roleservice: RoleService, private modalService: NgbModal, private userpageService: UserPageService, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, public dialog: MdDialog) {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
       console.log(currentUser)
         this.token = currentUser && currentUser.token;
@@ -184,14 +185,18 @@ export class UserComponent implements OnInit{
     }
 
     changePassword() {
-        const modalRef = this.modalService.open(ChangePasswordComponent)
-        modalRef.componentInstance.userID = this.userID;
-        modalRef.result.then((result) => {
-            this.closeResult = `Closed with: ${result}`;
-            this.getUserPageItems();
-        }, (reason) => {
-            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-            this.getUserPageItems();
+        // const modalRef = this.modalService.open(ChangePasswordComponent)
+        // modalRef.componentInstance.userID = this.userID;
+        // modalRef.result.then((result) => {
+        //     this.closeResult = `Closed with: ${result}`;
+        //     this.getUserPageItems();
+        // }, (reason) => {
+        //     this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        //     this.getUserPageItems();
+        // });
+        let dialogRef = this.dialog.open(ChangePasswordComponent);
+        dialogRef.afterClosed().subscribe(result => {
+        this.getDismissReason = result;
         });
     }
 
@@ -207,18 +212,28 @@ export class UserComponent implements OnInit{
     }
 
     openPages(userID, firstName, lastName) {
-        const modalRef = this.modalService.open(PageComponent)
-        modalRef.componentInstance.userID = userID;
-        modalRef.componentInstance.firstName = firstName;
-        modalRef.componentInstance.lastName = lastName;
-        modalRef.result.then((result) => {
-            this.closeResult = `Closed with: ${result}`;
-            this.getUserPageItems();
-        }, (reason) => {
-            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-            this.getUserPageItems();
+        // const modalRef = this.modalService.open(PageComponent)
+        // modalRef.componentInstance.userID = userID;
+        // modalRef.componentInstance.firstName = firstName;
+        // modalRef.componentInstance.lastName = lastName;
+        // modalRef.result.then((result) => {
+        //     this.closeResult = `Closed with: ${result}`;
+        //     this.getUserPageItems();
+        // }, (reason) => {
+        //     this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        //     this.getUserPageItems();
+        // });
+        // console.log("openpermission from layernew")
+
+        let dialogRef = this.dialog.open(PageComponent);
+        dialogRef.componentInstance.userID = userID;
+        dialogRef.componentInstance.firstName = firstName;
+        dialogRef.componentInstance.lastName = lastName;
+        dialogRef.afterClosed().subscribe(result => {
+        this.getDismissReason = result;
+        console.log(this.getDismissReason)
+        this.getUserPageItems();
         });
-        console.log("openpermission from layernew")
     }
 
     openConfDel(user) {
@@ -267,20 +282,28 @@ export class UserComponent implements OnInit{
     }
 
     openPageConfig(pageID, userID, name) {
-        console.log("userID = " + userID)
-        console.log("pageID = " + pageID)
+        // console.log("userID = " + userID)
+        // console.log("pageID = " + pageID)
 
-        const modalRef = this.modalService.open(PageConfigComponent)
-        modalRef.componentInstance.pageID = pageID;
-        modalRef.componentInstance.userID = userID;
-        modalRef.componentInstance.pageName = name;
-        modalRef.result.then((result) => {
-            this.closeResult = `Closed with: ${result}`;
-            this.getUserPageItems();
-        }, (reason) => {
-            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-            this.getUserPageItems();
-        });;
-        console.log("openpermission from layernew")
+        // const modalRef = this.modalService.open(PageConfigComponent)
+        // modalRef.componentInstance.pageID = pageID;
+        // modalRef.componentInstance.userID = userID;
+        // modalRef.componentInstance.pageName = name;
+        // modalRef.result.then((result) => {
+        //     this.closeResult = `Closed with: ${result}`;
+        //     this.getUserPageItems();
+        // }, (reason) => {
+        //     this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        //     this.getUserPageItems();
+        // });;
+        // console.log("openpermission from layernew")
+        let dialogRef = this.dialog.open(PageConfigComponent);
+        dialogRef.componentInstance.pageID = pageID;
+        dialogRef.componentInstance.userID = userID;
+        dialogRef.componentInstance.pageName = name;
+        dialogRef.afterClosed().subscribe(result => {
+        this.getDismissReason = result;
+        console.log(this.getDismissReason)
+        this.getUserPageItems(); });
     }
 }

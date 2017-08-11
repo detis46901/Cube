@@ -9,6 +9,7 @@ import { UserPage } from '../../../../_models/user-model'
 import { FilterPipe } from '../../../../_pipes/rowfilter.pipe'
 import { NumFilterPipe } from '../../../../_pipes/numfilter.pipe'
 import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {MdDialog, MdDialogRef} from '@angular/material';
 
 
 @Component({
@@ -31,7 +32,7 @@ export class PageComponent implements OnInit{
     public selectedPage: number;
 
 
-    constructor(private userpageService: UserPageService, public activeModal: NgbActiveModal) {
+    constructor(private userpageService: UserPageService) {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         //this.userID = currentUser && currentUser.userid; 
@@ -137,7 +138,7 @@ export class PageComponent implements OnInit{
             this.updateUserPage(x)
             count = count+1
         }
-        this.activeModal.close()
+        //this.activeModal.close()
     }
 
     radio(up) {

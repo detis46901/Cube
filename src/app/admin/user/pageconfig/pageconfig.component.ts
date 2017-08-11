@@ -13,6 +13,7 @@ import { LayerPermission } from '../../../../_models/layer.model'
 import { FilterPipe } from '../../../../_pipes/rowfilter.pipe'
 import { NumFilterPipe } from '../../../../_pipes/numfilter.pipe'
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import {MdDialog, MdDialogRef} from '@angular/material';
 
 
 @Component({
@@ -38,7 +39,7 @@ export class PageConfigComponent implements OnInit {
     public page: string;
 
 
-    constructor(private userpagelayerService: UserPageLayerService, private modalService: NgbModal, private userpageService: UserPageService, private layerpermissionService: LayerPermissionService, public activeModal: NgbActiveModal) {
+    constructor(private userpagelayerService: UserPageLayerService, private modalService: NgbModal, private userpageService: UserPageService, private layerpermissionService: LayerPermissionService) {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         //this.userID = currentUser && currentUser.userid; 

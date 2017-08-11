@@ -23,6 +23,11 @@ import { routing } from './app.routing'
 //material imports
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MdRadioModule} from '@angular/material';
+import {MdMenuModule} from '@angular/material';
+import {MdIconModule} from '@angular/material';
+import {MdDialogModule} from '@angular/material';
+import {MdSelectModule} from '@angular/material';
+import {MdCheckboxModule} from '@angular/material';
 
 
 import { BaseRequestOptions } from '@angular/http';
@@ -133,7 +138,12 @@ import { ChangePasswordComponent } from './admin/user/changepassword/changepassw
     ]),
     //material modules
     BrowserAnimationsModule,
-    MdRadioModule
+    MdRadioModule,
+    MdMenuModule,
+    MdIconModule,
+    MdDialogModule,
+    MdSelectModule,
+    MdCheckboxModule
     //routes
   ],
   providers: [

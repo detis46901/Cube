@@ -260,7 +260,7 @@ export class MapComponent {
                         let IDENT = x.layer_admin.layerIdent
                         let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
                         let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
-                        let URL = this.server.serverURL + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
+                        let URL = this.server.serverURL + '/wms?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
                         console.log(URL)
                         this.wfsservice.getfeatureinfo(URL, false)
                         .subscribe((data: any) => this.getFeatureData = data)
