@@ -25,7 +25,7 @@ export class ConfirmdeleteComponent implements OnInit {
 	public token: string;
 	public userID: number;
 
-	constructor(private modalService: NgbModal, public activeModal: NgbActiveModal, private confDelService: ConfirmdeleteService, public dialog: MdDialog) {
+	constructor(private confDelService: ConfirmdeleteService, public dialog: MdDialog) {
 		var currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.token = currentUser && currentUser.token;
 		this.userID = currentUser && currentUser.userid;
@@ -62,20 +62,12 @@ export class ConfirmdeleteComponent implements OnInit {
 	}
 
 	onClick() {
-		this.activeModal.close()
+		//this.activeModal.close()
 	}
 
 	onClose() {
-		this.activeModal.dismiss()
+		//this.activeModal.dismiss()
 	}
-
-	open(content) {
-    this.modalService.open(content, {size:'sm'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
-  }
 
 	private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {

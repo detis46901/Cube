@@ -240,7 +240,7 @@ export class UserComponent implements OnInit{
     }
 
     openConfDel(user) {
-        const modalRef = this.modalService.open(ConfirmdeleteComponent)
+        /*const modalRef = this.modalService.open(ConfirmdeleteComponent)
         modalRef.componentInstance.objCode = this.objCode
         modalRef.componentInstance.objID = user.ID
         modalRef.componentInstance.objName = user.firstName + " " + user.lastName
@@ -250,10 +250,9 @@ export class UserComponent implements OnInit{
             this.getUserPageItems();
         }, (reason) => {
             this.getUserPageItems();
-        });
+        });*/
 
-        //8/28/17 trying to use this just creates a vertical bar on the left side of the screen.
-        /*let dialogRef = this.dialog.open(ConfirmdeleteComponent, {height: '300px', width: '400px'})
+        let dialogRef = this.dialog.open(ConfirmdeleteComponent)
         dialogRef.componentInstance.objCode = this.objCode
         dialogRef.componentInstance.objID = user.ID
         dialogRef.componentInstance.objName = user.firstName + " " + user.lastName
@@ -262,7 +261,7 @@ export class UserComponent implements OnInit{
             this.getDismissReason = result;
             console.log(this.getDismissReason)
             this.getUserPageItems();
-        })*/
+        })
         
     }
 
