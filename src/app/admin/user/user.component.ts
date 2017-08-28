@@ -149,11 +149,15 @@ export class UserComponent implements OnInit{
 
     updateUser(user) {
         let errorFlag = false;
+        console.log (this.users)
         for(let x of this.users) {
             if (user.email === x.email) {
-                errorFlag = true;
-                this.clearInputs();
-                alert(x.email + " is already taken.")
+                console.log("user.email = " + user.email)
+                console.log("x.email = " + x.email)
+                //This needs to be fixed so you can't create multiple users with the same email address.
+                //errorFlag = true;
+                //this.clearInputs();
+                //alert(x.email + " is already taken.")
             }
         }
 

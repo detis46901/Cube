@@ -32,8 +32,8 @@ export class ServerComponent implements OnInit {
 
     constructor(private _http: Http, private serverService: ServerService, private modalService: NgbModal, private activeModal: NgbActiveModal, private confDelService: ConfirmdeleteService) {
         this.headers = new Headers();
-        this.headers.append('Content-Type', 'application/json');
-        this.headers.append('Accept', 'application/json');
+        this.headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        this.headers.append('Accept', 'text/plain');
         this.options = new RequestOptions({headers:this.headers});
     }
 

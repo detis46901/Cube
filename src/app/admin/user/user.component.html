@@ -46,7 +46,7 @@
     
     <form style="position:relative; left:20px" class="form-inline" #e="ngForm" *ngFor="let user of users">
         <i id="btnOpenDelUser" class="fa fa-times" style="margin-right:5px" (click)="openConfDel(user)"></i>
-        <input id="exuserfirstname" ngModel required name="exuserfirstname" class="form-control" [(ngModel)] = "user.firstName" type="text" (blur)="updateUser(user)">
+        <input mdInput id="exuserfirstname" ngModel required name="exuserfirstname" class="form-control" [(ngModel)] = "user.firstName" (blur)="updateUser(user)">
         <input id="exuserlastname" ngModel required name="exuserlastname" class="form-control" [(ngModel)] = "user.lastName" type="text" (blur)="updateUser(user)">
         <select id="exuserrole" ngModel required name="exuserrole" class="form-control" [(ngModel)] = "user.roleID" #role="ngModel" type="text" (blur)="updateUser(user)">
             <option *ngFor="let role of roles" [value]="role.ID">

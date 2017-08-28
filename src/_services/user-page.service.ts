@@ -53,7 +53,7 @@ export class UserPageService {
  
     public Add = (UserPage: UserPage): Observable<UserPage> => {
         let toAdd = JSON.stringify(UserPage);
-        //console.log('UserPage.service ' + toAdd)
+        console.log('UserPage.service ' + toAdd)
         return this._http.post(this.actionUrl + 'create', toAdd, { headers: this.headers })
             .map((response: Response) => <UserPage>response.json())
  //           .catch(this.handleError);

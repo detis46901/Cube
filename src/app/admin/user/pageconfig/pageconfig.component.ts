@@ -47,8 +47,8 @@ export class PageConfigComponent implements OnInit {
 
     ngOnInit() {
         console.log(this.pageName)
-        this.getUserPageLayers();
-        this.getLayers();
+        this.getUserPageLayers();  //Gets all the layers for this page
+        this.getLayers(); //Gets all the permitted layers
         console.log(this.layerpermissions)
         console.log(this.userpagelayers)
         console.log(this.pageID.toString() + ' ' + this.userID.toString() + ' ' + this.pageName)    
@@ -58,21 +58,19 @@ export class PageConfigComponent implements OnInit {
         console.log("pageID = " + this.pageID)
         this.userpagelayerService
             .GetPageLayers(this.pageID)
-            .subscribe((data:UserPageLayer[]) => this.setUserPageLayers(data));
-        
-           
+            .subscribe((data:UserPageLayer[]) => {this.userpagelayers = data; console.log(this.userpagelayers)});  
     }
 
-        //8/1/17 This is all messed up, the same modal object comes up for both users currently
-    public setUserPageLayers(UPL): void {
-        this.userpagelayers = [];
-        for (let layer of UPL) {
-            if (layer.userPageID == this.pageID) {
-                console.log("foo")
-                this.userpagelayers.push(layer)
-            }
-        }
-    }
+    //     //8/1/17 This is all messed up, the same modal object comes up for both users currently
+    // public setUserPageLayers(UPL): void {
+    //     this.userpagelayers = [];
+    //     for (let layer of UPL) {
+    //         if (layer.userPageID == this.pageID) {
+    //             console.log("foo")
+    //             this.userpagelayers.push(layer)
+    //         }
+    //     }
+    // }
 
     public getUserPage(pageID): void {
         this.userpageService
@@ -87,7 +85,7 @@ export class PageConfigComponent implements OnInit {
     public getLayers() {
         this.layerpermissionService
             .GetUserLayer(this.userID)
-            .subscribe((data:LayerPermission[]) => this.setLayerPerm(data));
+            .subscribe((data:LayerPermission[]) => {this.layerpermissions = data; console.log(this.layerpermissions)});
     }
 
     public setLayerPerm(LP) {

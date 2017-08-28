@@ -56,8 +56,13 @@ export class ServerService {
     }
 
     public getCapabilities(serv: Server, options) {
-        let actionURL: string = serv.serverURL + '/wms?request=getCapabilities&service=WMS'
-
+        let actionURL: string
+        console.log(serv)
+        switch(serv.serverType) {
+            case "Geoserver": actionURL = serv.serverURL + '/wms?request=getCapabilities&service=WMS'; break
+            case "ArcGIS": actionURL = serv.serverURL + '/wms?f=pjson'; break
+        }
+        let res: string
 
         /*fetch(this.actionUrl).then(function(response) {
             if(response.ok) {
@@ -68,9 +73,10 @@ export class ServerService {
         }).then(function(url) {
 
         })*/
+        console.log (actionURL)
         
         return this._http.get(actionURL, options)
-            .map((response: Response) => response.text())
+            .map((response: Response) => res = response.text())
       
     }
  

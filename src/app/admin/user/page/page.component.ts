@@ -96,10 +96,12 @@ export class PageComponent implements OnInit{
     }
 
     public addUserPage(newuserpage) {
+        console.log("addUserPage")
         this.userpage.page = newuserpage;
         this.userpage.userID = this.userID
         this.userpage.active = true;
         this.userpage.pageOrder = this.userpages.length
+        this.userpage.default = false
         console.log(this.userpage.page, this.userpage.active);
         this.userpageService
             .Add(this.userpage)

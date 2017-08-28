@@ -28,6 +28,7 @@ import {MdIconModule} from '@angular/material';
 import {MdDialogModule} from '@angular/material';
 import {MdSelectModule} from '@angular/material';
 import {MdCheckboxModule} from '@angular/material';
+import {MdInputModule} from '@angular/material';
 
 
 import { BaseRequestOptions } from '@angular/http';
@@ -143,7 +144,8 @@ import { ChangePasswordComponent } from './admin/user/changepassword/changepassw
     MdIconModule,
     MdDialogModule,
     MdSelectModule,
-    MdCheckboxModule
+    MdCheckboxModule,
+    MdInputModule
     //routes
   ],
   providers: [

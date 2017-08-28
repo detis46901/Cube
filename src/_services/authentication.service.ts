@@ -3,20 +3,24 @@ import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map'
 import { User } from '../_models/user-model';
+import { Configuration } from '../_api/api.constants';
+
 //import * as CryptoJS from 'crypto-js'
 
 @Injectable()
 export class AuthenticationService {
     public token: string;
     public JWT: string;
+    private actionUrl: string;
 
-    constructor(private http: Http) { //need to implement JWT here
+    constructor(private http: Http, private _configuration: Configuration) { //need to implement JWT here
         //var CryptoJS = require("crypto-js") //Required to use CryptoJS
         //var jwt = require('jsonwebtoken')
 
         // set token if saved in local storage    
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
+        this.actionUrl = _configuration.ServerWithApiUrl + 'authenticate';
 
         /*if(currentUser != null) {
             var header = {
@@ -52,7 +56,8 @@ export class AuthenticationService {
         //console.log('http://foster2.cityofkokomo.org:5000/api/authenticate', { email: username, password: password })
 
         //Insert hash here, and send hash to authenticate password
-        return this.http.post('http://foster2.cityofkokomo.org:5000/api/authenticate', { email: username, password: password })
+        
+        return this.http.post(this.actionUrl, { email: username, password: password })
             .map((response: Response) => {
                 console.log(response)
                 // login successful if there's a jwt token in the response

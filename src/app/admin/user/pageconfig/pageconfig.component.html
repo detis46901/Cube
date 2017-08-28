@@ -45,8 +45,8 @@
             <div class="col-md-4 col-md-offset-2" style="margin-right:25px;">
             
                 <md-select placeholder="Layers" [(ngModel)] = "newuserpagelayer.layerAdminID" required name="layer">
-                    <md-option [value]="layerpermission.layer_admin['ID']" *ngFor="let layerpermission of layerpermissions">
-                        {{layerpermission.layer_admin['layerName']}}
+                    <md-option [value]="layerpermission.ID" *ngFor="let layerpermission of layerpermissions">
+                        {{layerpermission.layer_admin.layerName}}
                     </md-option>
                 </md-select>
             </div>

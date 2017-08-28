@@ -107,6 +107,7 @@ export class LayerNewComponent implements OnInit{
         this.layerAdminService
             .Add(this.layeradmin)
             .subscribe(result => {
+                console.log(result)
                 this.activeModal.close('Next click'); this.openpermission(result.ID, this.layeradmin.layerName)
             })      
     }
