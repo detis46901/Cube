@@ -29,7 +29,7 @@
 
         <div class="col-md-2">
             <div class="row">
-                <div class="col-md-2 col-md-offset-10">
+                <div class="col-md-1 col-md-offset-11">
                     <h4>Active</h4>
                 </div>
             </div>
@@ -63,10 +63,10 @@
                 </button>
                 <md-menu #menu="mdMenu">
                     <button md-menu-item (click)="changePassword(user.ID)">
-                        <span>Change Password</span>
+                        <h5>Change Password</h5>
                     </button>
                     <button md-menu-item (click)="openPages(user.ID, user.firstName, user.lastName)">
-                        <span>Pages</span>
+                        <h5>Pages</h5>
                     </button>
                 </md-menu>
                 <button md-button [mdMenuTriggerFor]="menu2">
@@ -74,7 +74,7 @@
                 </button>
                 <md-menu #menu2="mdMenu">
                     <button md-menu-item id="openConfig" *ngFor="let userpage of (userpages | pagefilter: (user.ID))" (click)="getUserPageItem(userpage.ID, user.ID)">
-                        <span>{{userpage.page}}</span>
+                        <h5>{{userpage.page}}</h5>
                     </button>
                 </md-menu>
         </div>

@@ -67,8 +67,8 @@ export class UserComponent implements OnInit{
 
 
     constructor(private userService: UserService, private roleservice: RoleService, private modalService: NgbModal, private userpageService: UserPageService, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, public dialog: MdDialog) {
-      var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-      console.log(currentUser)
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        console.log(currentUser)
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
     }
@@ -114,7 +114,6 @@ export class UserComponent implements OnInit{
                 //() => console.log(this.roles[0].role)
                 );
     }   
-
 
     addUser(newuser) {
         this.newuser = newuser
@@ -234,9 +233,9 @@ export class UserComponent implements OnInit{
         dialogRef.componentInstance.firstName = firstName;
         dialogRef.componentInstance.lastName = lastName;
         dialogRef.afterClosed().subscribe(result => {
-        this.getDismissReason = result;
-        console.log(this.getDismissReason)
-        this.getUserPageItems();
+            this.getDismissReason = result;
+            console.log(this.getDismissReason)
+            this.getUserPageItems();
         });
     }
 
@@ -252,6 +251,19 @@ export class UserComponent implements OnInit{
         }, (reason) => {
             this.getUserPageItems();
         });
+
+        //8/28/17 trying to use this just creates a vertical bar on the left side of the screen.
+        /*let dialogRef = this.dialog.open(ConfirmdeleteComponent, {height: '300px', width: '400px'})
+        dialogRef.componentInstance.objCode = this.objCode
+        dialogRef.componentInstance.objID = user.ID
+        dialogRef.componentInstance.objName = user.firstName + " " + user.lastName
+
+        dialogRef.afterClosed().subscribe(result => {
+            this.getDismissReason = result;
+            console.log(this.getDismissReason)
+            this.getUserPageItems();
+        })*/
+        
     }
 
     getDismissReason(reason: any): string {

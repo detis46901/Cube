@@ -16,6 +16,7 @@ import { Server } from '../../../_models/server.model'
 import { ConfirmdeleteService } from '../../../_services/confirmdelete.service';
 import { Observable } from 'rxjs/Observable';
 import { confirmDelete } from '../../../_models/confDel.model'
+import {MdDialog, MdDialogRef} from '@angular/material';
 
 @Component({
   selector: 'layeradmin',
@@ -49,7 +50,7 @@ export class LayerAdminComponent implements OnInit {
     sortedOldToNew: any;
     sortedNewToOld: any;
 
-    constructor(private layerAdminService: LayerAdminService, private modalService: NgbModal, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private confDelService: ConfirmdeleteService, private serverService: ServerService) {
+    constructor(private layerAdminService: LayerAdminService, private modalService: NgbModal, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private confDelService: ConfirmdeleteService, private serverService: ServerService, public dialog: MdDialog) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
@@ -71,6 +72,16 @@ export class LayerAdminComponent implements OnInit {
             this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         });
         console.log("openpermission from layernew")
+
+        //8/28/17 trying to use this just creates a vertical bar on the left side of the screen.
+        /*let dialogRef = this.dialog.open(LayerPermissionComponent);
+        dialogRef.componentInstance.layerID = layerid;
+        dialogRef.componentInstance.layerName = layername;
+        dialogRef.afterClosed().subscribe(result => {
+            this.getDismissReason = result;
+            console.log(this.getDismissReason)
+            //this.getUserPageItems();
+        });*/
       }
 
     //Open create new layer modal on request from "Layers"

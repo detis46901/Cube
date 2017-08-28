@@ -8,8 +8,8 @@ import { UserPageService } from '../../../../_services/user-page.service'
 import { UserPage } from '../../../../_models/user-model'
 import { FilterPipe } from '../../../../_pipes/rowfilter.pipe'
 import { NumFilterPipe } from '../../../../_pipes/numfilter.pipe'
-import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {MdDialog, MdDialogRef} from '@angular/material';
+import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { MdDialog, MdDialogRef } from '@angular/material';
 
 
 @Component({
@@ -18,7 +18,8 @@ import {MdDialog, MdDialogRef} from '@angular/material';
   providers: [UserService, Configuration, FilterPipe, NumFilterPipe],
   styleUrls: ['./page.component.scss'],
 })
-export class PageComponent implements OnInit{
+
+export class PageComponent implements OnInit {
     @Input () userID;
     @Input () firstName;
     @Input () lastName;
@@ -33,19 +34,19 @@ export class PageComponent implements OnInit{
 
 
     constructor(private userpageService: UserPageService) {
-      var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         //this.userID = currentUser && currentUser.userid; 
     }
 
     ngOnInit() {
-       this.getUserPageItems();
-       //this.getGroupItems();
-       //this.getRoleItems();
+        this.getUserPageItems();
+        //this.getGroupItems();
+        //this.getRoleItems();
         
     }
 
-    public getUserPageItems(): void {
+    getUserPageItems(): void {
         this.userpageService
         .GetSome(this.userID)
         .subscribe((data:UserPage[]) => this.setDefaultPage(data),
@@ -64,6 +65,7 @@ export class PageComponent implements OnInit{
     }
 
     updateDefaultPage(userpage) {
+        console.log(userpage.default)
         for (let tempage of this.userpages) {
             if (tempage.default == true) {
                 tempage.default = false
@@ -76,8 +78,9 @@ export class PageComponent implements OnInit{
                 this.updateUserPage(tempage)
             }
         }
-
+        console.log(userpage.default)
     }
+
     orderUserPages(up) { //this should order the pages
         this.userpages = up;
         console.log(this.userpages)
@@ -95,7 +98,7 @@ export class PageComponent implements OnInit{
         console.log(this.userpages)*/
     }
 
-    public addUserPage(newuserpage) {
+    addUserPage(newuserpage) {
         console.log("addUserPage")
         this.userpage.page = newuserpage;
         this.userpage.userID = this.userID
@@ -111,7 +114,7 @@ export class PageComponent implements OnInit{
             })      
     }
 
-    public updateUserPage(userpage) {
+    updateUserPage(userpage) {
         console.log(userpage)
         this.userpageService
             .Update(userpage)
@@ -121,9 +124,7 @@ export class PageComponent implements OnInit{
             })
     }
 
-    
-
-    public deleteUserPage(userpageID) {
+    deleteUserPage(userpageID) {
         this.userpageService
             .Delete(userpageID)
             .subscribe(result => {
@@ -149,8 +150,8 @@ export class PageComponent implements OnInit{
             if (x == up) {
                 x.default = true;
                 console.log("setting true")
-                this.updateUserPage(x)              
+                this.updateUserPage(x)
             }
-    }
+        }
     }
 }

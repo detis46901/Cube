@@ -6,6 +6,7 @@ import { Configuration } from '../../../_api/api.constants';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmdeleteService } from '../../../_services/confirmdelete.service';
 import { Observable } from 'rxjs';
+import {MdDialog, MdDialogRef} from '@angular/material';
 
 @Component({
   selector: 'confirmdelete',
@@ -24,7 +25,7 @@ export class ConfirmdeleteComponent implements OnInit {
 	public token: string;
 	public userID: number;
 
-	constructor(private modalService: NgbModal, public activeModal: NgbActiveModal, private confDelService: ConfirmdeleteService) {
+	constructor(private modalService: NgbModal, public activeModal: NgbActiveModal, private confDelService: ConfirmdeleteService, public dialog: MdDialog) {
 		var currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.token = currentUser && currentUser.token;
 		this.userID = currentUser && currentUser.userid;
