@@ -12,10 +12,12 @@ import { FilterPipe } from '../../../_pipes/rowfilter.pipe'
 import { NumFilterPipe } from '../../../_pipes/numfilter.pipe'
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component'
+import { MdDialog, MdDialogRef } from '@angular/material';
 
 @Component({
   selector: 'organization',
   templateUrl: './organization.component.html',
+  styleUrls: ['./organization.component.scss'],
   providers: [UserService, Configuration, FilterPipe, NumFilterPipe, NgbModal]
   //styleUrls: ['./app.component.css', './styles/w3.css'],
 })
@@ -39,7 +41,7 @@ export class OrganizationComponent implements OnInit{
     public foo = 0;
 
 
-    constructor(private departmentService: DepartmentService, private groupService: GroupService, private roleService: RoleService, private modalService: NgbModal) {
+    constructor(private departmentService: DepartmentService, private groupService: GroupService, private roleService: RoleService, private dialog: MdDialog) {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
@@ -47,9 +49,6 @@ export class OrganizationComponent implements OnInit{
 
     ngOnInit() {
        this.getDepartmentItems();
-       //this.getGroupItems();
-       //this.getRoleItems();
-        
     }
 
     public getDepartmentItems(): void {
@@ -163,25 +162,25 @@ export class OrganizationComponent implements OnInit{
 
     //type: department=1, group=2, role=3
     openConfDel(org, type: number) {
-        const modalRef = this.modalService.open(ConfirmdeleteComponent)
-        modalRef.componentInstance.objCode = type
-        modalRef.componentInstance.objID = org.ID
+        const dialogRef = this.dialog.open(ConfirmdeleteComponent)
+        dialogRef.componentInstance.objCode = type
+        dialogRef.componentInstance.objID = org.ID
         
         switch(type) {
             //department
             case 3: {
-                modalRef.componentInstance.objName = org.department
+                dialogRef.componentInstance.objName = org.department
                 console.log(org.department)
                 break
             }
             //group
             case 4: {
-                modalRef.componentInstance.objName = org.group
+                dialogRef.componentInstance.objName = org.group
                 break
             }
             //role
             case 5: {
-                modalRef.componentInstance.objName = org.role
+                dialogRef.componentInstance.objName = org.role
                 break
             }
 
@@ -191,12 +190,12 @@ export class OrganizationComponent implements OnInit{
             }
         }
 
-        /*modalRef.result.then((result) => {
-            this.deleteUser(user.ID)
-            this.getUserPageItems();
-        }, (reason) => {
-            this.getUserPageItems();
-        });*/
+        dialogRef.afterClosed().subscribe(result => {
+            if(result) {
+                //delete the correct items.
+            }
+            this.getDepartmentItems(); 
+        });
     }
 
     //This should also delete all rows for which: group(departmentID) == departmentID, but before deletion of those groups, logging the IDs from those

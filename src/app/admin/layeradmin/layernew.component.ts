@@ -11,6 +11,7 @@ import { LayerAdmin, LayerPermission } from '../../../_models/layer.model'
 import { Server } from '../../../_models/server.model'
 import { NgbModal, ModalDismissReasons, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { LayerPermissionComponent } from './layerpermission.component'
+import { MdDialog, MdDialogRef } from '@angular/material';
 
 
 @Component({
@@ -28,7 +29,6 @@ export class LayerNewComponent implements OnInit{
     //Set to true in ngOnInit() if inputs are read from the server screen, thus the server screen is calling this modal
     public serverCalled: boolean = false;
 
-    public modalRef: NgbModalRef
 
     public closeResult: string;
     public newlayeradmin = new LayerAdmin;
@@ -39,7 +39,7 @@ export class LayerNewComponent implements OnInit{
     public userperm: string;
     public layeradmin = new LayerAdmin;
 
-    constructor(private modalService: NgbModal, private layerAdminService: LayerAdminService, private activeModal: NgbActiveModal, private serverService: ServerService) {
+    constructor(private layerAdminService: LayerAdminService, private dialog: MdDialog, private serverService: ServerService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
             this.token = currentUser && currentUser.token;
             this.userID = currentUser && currentUser.userid; 
@@ -63,15 +63,15 @@ export class LayerNewComponent implements OnInit{
             );
     }
 
-    open(content) {
-        console.log("layernew open(content)")
-        this.userperm = "A user"
-        this.modalService.open(content, {size:'lg'}).result.then((result) => {
-            this.closeResult = `Closed with: ${result}`;
-        }, (reason) => {
-            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        });
-    }
+    // open(content) {
+    //     console.log("layernew open(content)")
+    //     this.userperm = "A user"
+    //     this.modalService.open(content, {size:'lg'}).result.then((result) => {
+    //         this.closeResult = `Closed with: ${result}`;
+    //     }, (reason) => {
+    //         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    //     });
+    // }
 
     getDismissReason(reason: any): string {
         if (reason === ModalDismissReasons.ESC) {
@@ -84,19 +84,18 @@ export class LayerNewComponent implements OnInit{
     }
 
     openpermission(layerid, layername) {
-        const modalRef = this.modalService.open(LayerPermissionComponent)
-        modalRef.componentInstance.layerID = layerid
-        modalRef.componentInstance.layerName = layername
-        modalRef.result.then((result) => {
-            this.closeResult = `Closed with: ${result}`;
-        }, (reason) => {
-            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        const dialogRef = this.dialog.open(LayerPermissionComponent)
+        dialogRef.componentInstance.layerID = layerid
+        dialogRef.componentInstance.layerName = layername
+        dialogRef.afterClosed().subscribe(result => {
+            this.getDismissReason = result;
         });
     }
 
     addLayer(newlayer) {
+        console.log(newlayer)
+        this.layeradmin = newlayer;
         if(this.serverCalled) {
-            this.layeradmin = newlayer;
             this.layeradmin.serverID = this.layerServer.ID;
             this.layeradmin.layerName = this.layerName;
             this.layeradmin.layerIdent = this.layerIdent;
@@ -108,7 +107,7 @@ export class LayerNewComponent implements OnInit{
             .Add(this.layeradmin)
             .subscribe(result => {
                 console.log(result)
-                this.activeModal.close('Next click'); this.openpermission(result.ID, this.layeradmin.layerName)
+                this.dialog.closeAll()
             })      
     }
 }

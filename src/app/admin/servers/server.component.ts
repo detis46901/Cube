@@ -7,12 +7,13 @@ import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { ConfirmdeleteService } from '../../../_services/confirmdelete.service';
 import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component';
 import { LayerNewComponent } from '../layeradmin/layernew.component';
+import { MdDialog, MdDialogRef } from '@angular/material';
 
 @Component({
     selector: 'server',
     templateUrl: './server.component.html',
     styleUrls: ['./server.component.scss'],
-    providers: [ServerService, NgbModal, NgbActiveModal]
+    providers: [ServerService]
 })
 export class ServerComponent implements OnInit {
     public headers;
@@ -30,7 +31,7 @@ export class ServerComponent implements OnInit {
     public displayLayers: boolean;
     public closeResult: string;
 
-    constructor(private _http: Http, private serverService: ServerService, private modalService: NgbModal, private activeModal: NgbActiveModal, private confDelService: ConfirmdeleteService) {
+    constructor(private _http: Http, private serverService: ServerService, private dialog: MdDialog, private confDelService: ConfirmdeleteService) {
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         this.headers.append('Accept', 'text/plain');
@@ -40,13 +41,13 @@ export class ServerComponent implements OnInit {
     ngOnInit() {
         this.getServers()
         this.displayLayers = false;
-        console.log(this.activeModal)
     }
 
     getServers() {
         this.serverService
             .GetAll()
-            .subscribe((data) => this.servers = data
+            .subscribe(
+                (data) => this.servers = data
             );
     }
 
@@ -71,29 +72,26 @@ export class ServerComponent implements OnInit {
         let list = res.split('<Layer')
         list.shift()
         list.shift()
-        //this.layerArray = [2, list.length-1]
 
         for (let i of list) {
             let name = i.substr(i.indexOf('<Name>') + 6, (i.indexOf('</Name>') - (i.indexOf('<Name>') + 6)))
             let format = i.substr(i.indexOf('<Format>') + 8, (i.indexOf('</Format>') - (i.indexOf('<Format>') + 8)))
             this.nameArray.push(name)
             this.formatArray.push(format)
-            //this.layerArray[0, i]: = name
-            //this.layerArray[1, i] = format
         }
     }
 
     openConfDel(server) {
-        const modalRef = this.modalService.open(ConfirmdeleteComponent)
-        modalRef.componentInstance.objCode = this.objCode
-        modalRef.componentInstance.objID = server.ID
-        modalRef.componentInstance.objName = server.serverName
+        const dialogRef = this.dialog.open(ConfirmdeleteComponent)
+        dialogRef.componentInstance.objCode = this.objCode
+        dialogRef.componentInstance.objID = server.ID
+        dialogRef.componentInstance.objName = server.serverName
 
-        modalRef.result.then((result) => {
-            this.deleteServer(server.ID)
-            this.getServers();
-        }, (reason) => {
-            this.getServers();
+        dialogRef.afterClosed().subscribe(result => {
+            if(result == true) {
+                this.deleteServer(server.ID)
+            }
+            this.getServers()
         });
     }
 
@@ -114,30 +112,23 @@ export class ServerComponent implements OnInit {
     }
 
     createLayer(index) {
-        const modalRef = this.modalService.open(LayerNewComponent)
-        console.log(this.nameArray[index] + this.formatArray[index])
-        console.log(this.currServer.serverName)
+        const dialogRef = this.dialog.open(LayerNewComponent, {height:'38%', width:'28%'})
 
-        //not really working yet 7/31/17
-        modalRef.componentInstance.layerName = this.nameArray[index]
-        modalRef.componentInstance.layerIdent = this.nameArray[index]
-        modalRef.componentInstance.layerFormat = this.formatArray[index]
-        modalRef.componentInstance.layerServer = this.currServer
+        dialogRef.componentInstance.layerName = this.nameArray[index]
+        dialogRef.componentInstance.layerIdent = this.nameArray[index]
+        dialogRef.componentInstance.layerFormat = this.formatArray[index]
+        dialogRef.componentInstance.layerServer = this.currServer
 
-        modalRef.result.then((result) => {
-            this.getServers();
-        }, (reason) => {
-            this.getServers();
+        dialogRef.afterClosed().subscribe(result => {
+            this.getDismissReason = result;
         });
     }
 
     openServerNew() {
-        const modalRef = this.modalService.open(ServerNewComponent, {size:'sm'})
+        const dialogRef = this.dialog.open(ServerNewComponent, {height:'40%', width:'20%'});
 
-        modalRef.result.then((result) => {
-            this.getServers();
-        }, (reason) => {
-            this.getServers();
+        dialogRef.afterClosed().subscribe(result => {
+            this.getServers()
         });
     }
 

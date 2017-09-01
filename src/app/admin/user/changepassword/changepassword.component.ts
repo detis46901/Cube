@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { MdDialog, MdDialogRef } from '@angular/material';
 
 @Component({
     selector: 'changepassword',
@@ -10,7 +11,7 @@ import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-
 export class ChangePasswordComponent implements OnInit {
     @Input() userID;
 
-    constructor() { }
+    constructor(private dialog: MdDialog) { }
 
     ngOnInit() {
     }

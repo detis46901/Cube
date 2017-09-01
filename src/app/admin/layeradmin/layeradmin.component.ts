@@ -16,12 +16,12 @@ import { Server } from '../../../_models/server.model'
 import { ConfirmdeleteService } from '../../../_services/confirmdelete.service';
 import { Observable } from 'rxjs/Observable';
 import { confirmDelete } from '../../../_models/confDel.model'
-import {MdDialog, MdDialogRef} from '@angular/material';
+import { MdDialog, MdDialogRef } from '@angular/material';
 
 @Component({
   selector: 'layeradmin',
   templateUrl: './layeradmin.component.html',
-  providers: [UserService, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, NgbActiveModal, ServerService],
+  providers: [UserService, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, ServerService],
   styleUrls: ['./layeradmin.component.scss']
 })
 
@@ -50,7 +50,7 @@ export class LayerAdminComponent implements OnInit {
     sortedOldToNew: any;
     sortedNewToOld: any;
 
-    constructor(private layerAdminService: LayerAdminService, private modalService: NgbModal, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private confDelService: ConfirmdeleteService, private serverService: ServerService, public dialog: MdDialog) {
+    constructor(private layerAdminService: LayerAdminService, private dialog: MdDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private confDelService: ConfirmdeleteService, private serverService: ServerService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
@@ -63,51 +63,51 @@ export class LayerAdminComponent implements OnInit {
 
     //Open permissions modal on request from "Layers"
     openpermission(layerid, layername) {
-        const modalRef = this.modalService.open(LayerPermissionComponent, {size:'sm'})
-        modalRef.componentInstance.layerID = layerid
-        modalRef.componentInstance.layerName = layername
-        modalRef.result.then((result) => {
-            this.closeResult = `Closed with: ${result}`;
-        }, (reason) => {
-            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        });
-        console.log("openpermission from layernew")
+        // const modalRef = this.modalService.open(LayerPermissionComponent, {size:'sm'})
+        // modalRef.componentInstance.layerID = layerid
+        // modalRef.componentInstance.layerName = layername
+        // modalRef.result.then((result) => {
+        //     this.closeResult = `Closed with: ${result}`;
+        // }, (reason) => {
+        //     this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        // });
+        // console.log("openpermission from layernew")
 
-        //8/28/17 trying to use this just creates a vertical bar on the left side of the screen.
-        /*let dialogRef = this.dialog.open(LayerPermissionComponent);
+        const dialogRef = this.dialog.open(LayerPermissionComponent, {height:'46%', width:'22%'});
         dialogRef.componentInstance.layerID = layerid;
         dialogRef.componentInstance.layerName = layername;
         dialogRef.afterClosed().subscribe(result => {
             this.getDismissReason = result;
             console.log(this.getDismissReason)
-            //this.getUserPageItems();
-        });*/
+        });
       }
 
     //Open create new layer modal on request from "Layers"
     opennew() {
         console.log ("opennew")
         this.userperm = "A user"
-        this.modalService.open(LayerNewComponent).result.then((result) => {
-            this.closeResult = `Closed with: ${result}`;
+        const dialogRef = this.dialog.open(LayerNewComponent, {height:'40%', width:'25%'});
+        dialogRef.afterClosed().subscribe(result => {
+            this.getDismissReason = result;
+            console.log(this.getDismissReason)
             this.getLayerItems();
-        }, (reason) => {
-            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         });
     }
 
     openConfDel(layer) {
         console.log(this.servers, this.layeradmins)
-        const modalRef = this.modalService.open(ConfirmdeleteComponent)
-        modalRef.componentInstance.objCode = this.objCode
-        modalRef.componentInstance.objID = layer.ID
-        modalRef.componentInstance.objName = layer.layerName
+        const dialogRef = this.dialog.open(ConfirmdeleteComponent, {
+            
+        })
+        dialogRef.componentInstance.objCode = this.objCode
+        dialogRef.componentInstance.objID = layer.ID
+        dialogRef.componentInstance.objName = layer.layerName
 
-        modalRef.result.then((result) => {
-            this.deleteLayer(layer.ID)
-            this.getLayerItems();
-        }, (reason) => {
-            this.getLayerItems();
+        dialogRef.afterClosed().subscribe(result => {
+            if(result) {
+                console.log(result)
+                this.deleteLayer(layer.ID)
+            }           
         });
     }
 

@@ -8,7 +8,7 @@ import { LayerAdminService } from '../../../_services/layeradmin.service';
 import { LayerPermissionService } from '../../../_services/layerpermission.service';
 import { LayerAdmin, LayerPermission } from '../../../_models/layer.model'
 import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-
+import { MdDialog, MdDialogRef } from '@angular/material';
 
 @Component({
   selector: 'layerpermission',
@@ -26,7 +26,7 @@ public token: string;
 public userID: number;
 public userperm: string;
 
-    constructor(private modalService: NgbModal, private layerPermissionService: LayerPermissionService, public activeModal: NgbActiveModal, private userService: UserService) {
+    constructor(private layerPermissionService: LayerPermissionService, private userService: UserService, private dialog: MdDialog) {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid; 
@@ -46,15 +46,6 @@ initNewPermission(): void {
         this.newlayerpermission.userID = 0;
         console.log(this.newlayerpermission.userID)
     }
-
-open(content) {
-    this.userperm = "A user"
-    this.modalService.open(content, {size:'lg'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
-  }
 
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {

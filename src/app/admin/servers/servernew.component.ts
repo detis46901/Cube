@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbModal, ModalDismissReasons, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ServerService } from '../../../_services/server.service'
 import { Server } from '../../../_models/server.model'
+import {MdDialog, MdDialogRef} from '@angular/material';
 
 @Component({
   selector: 'servernew',
   templateUrl: './servernew.component.html',
   styleUrls: ['./servernew.component.scss'],
-  providers: [ServerService, NgbModal, NgbActiveModal]
+  providers: [ServerService]
 })
 
 export class ServerNewComponent implements OnInit {
@@ -15,7 +15,7 @@ export class ServerNewComponent implements OnInit {
     public server = new Server;
     public newserver = new Server;
 
-    constructor(private modalService: NgbModal, private activeModal: NgbActiveModal, private serverService: ServerService) {}
+    constructor(public dialog: MdDialog, private serverService: ServerService) {}
 
     ngOnInit() {
         this.newserver.serverName = ''
@@ -29,7 +29,7 @@ export class ServerNewComponent implements OnInit {
             .Add(this.newserver)
             .subscribe(result => {
                 
-                this.activeModal.close();
+                this.dialog.closeAll();
             })      
     }
 }

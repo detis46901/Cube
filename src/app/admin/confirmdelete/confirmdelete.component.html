@@ -6,7 +6,7 @@
             <h4 class="modal-title">Delete {{objectType}}</h4>
         </div>
         <div class="col-md-2">
-            <button type="button" class="close" style="position:relative; top:5px" (click)="activeModal.dismiss()">&times;</button>
+            <button type="button" class="close" style="position:relative; top:5px" (click)="dialog.closeAll()">&times;</button>
         </div>
     </div>
 </div>
@@ -17,5 +17,8 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button id="confDelClick" type="button" class="btn btn-secondary" (click)="onClick()">Delete</button><button class="btn btn-outline-primary" (click)="onClose()">No</button>
+    <md-dialog-actions>
+        <button [md-dialog-close]="true" id="confDelClick" type="button" class="btn btn-secondary">Delete</button>
+        <button md-dialog-close class="btn btn-outline-primary">No</button>
+    </md-dialog-actions>
 </div>

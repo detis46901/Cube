@@ -11,8 +11,8 @@
             <h4 class="modal-title">{{layerName}} Permissions</h4>
         </div>
         <div class="col-md-2">
-            <button type="button" class="close" style="position:relative; top:4px;" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+            <button type="button" class="close" style="position:relative; top:4px;" aria-label="Close" (click)="dialog.closeAll()">
+                <span aria-hidden="true">&times;</span>
             </button>
         </div>
     </div>
@@ -41,25 +41,22 @@
         <h5>New Permission</h5>
     </div>
 
-    <form class="form-inline" #f="ngForm"  style="position:absolute; width:100%" (ngSubmit)="addLayerPermission(newlayerpermission)">
-        <div class="form-group" style="margin-left:40px;">
+    <form class="form-inline" #f="ngForm" style="position:relative; width:100%; right:49%;" (ngSubmit)="addLayerPermission(newlayerpermission)">
+        <div class="form-group">
             <label for="user" style="margin-right:10px">User</label>
             <select id="user" name="user" class="form-control" [(ngModel)] = "newlayerpermission.userID" required type="text">
                 <option [value]="user.ID" *ngFor="let user of users">
                     {{user.firstName}} {{user.lastName}}
                 </option>
             </select>
+            <input type="checkbox" name="newlayerpermissionedit" style="margin-left:46px; position:relative; bottom:3px" [(ngModel)]="newlayerpermission.edit"> Edit 
         </div>
 
-        <div class="form-group" style="margin-bottom:7px; margin-left:44px;">
-            <input type="checkbox" name="newlayerpermissionedit" [(ngModel)]="newlayerpermission.edit"> Edit 
-        </div>
-
-        <div class="row" style="margin-top:15px; margin-bottom:0px; width:100%">
-            <div class="col-md-3 col-md-offset-5" style="left:15px; position:relative;">
-                <button type="button" class="btn btn-secondary" (click)="activeModal.close('Close click')">Close</button>
+        <div class="row" style="margin-top:25px; width:100%; position:relative; left:45%">
+            <div class="col-md-3 col-md-offset-1">
+                <button type="button" class="btn btn-secondary" (click)="dialog.closeAll()">Close</button>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 col-md-offset-2">
                 <button class="btn btn-outline-primary" type="submit" [disabled]="!f.valid">Add Permission</button>
             </div>
         </div>

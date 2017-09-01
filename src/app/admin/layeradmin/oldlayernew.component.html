@@ -4,7 +4,7 @@
         <h4 class="modal-title">Create New Layer</h4>
     </div>
     <div class="col-md-1 col-md-offset-6">
-        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <button type="button" class="close" aria-label="Close" (click)="dialog.closeAll()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -117,6 +117,6 @@
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-secondary text-center" (click)="activeModal.close('Close click')">Close</button>
+    <button type="button" class="btn btn-secondary text-center" (click)="dialog.closeAll()">Close</button>
     <button class="btn btn-outline-primary text-center" (click)="addLayer(newlayeradmin)" [disabled]="!f.valid">Add Layer</button>
 </div>

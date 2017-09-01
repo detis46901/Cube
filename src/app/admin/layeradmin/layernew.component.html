@@ -1,10 +1,10 @@
 <!-- This defines the modal that pops up after a "Create New Layer" click event from "Layers" control-->
-<div class="modal-header" style="width:100%">
-    <div class="col-md-4">
+<div class="modal-header">
+    <div class="col-md-6">
         <h4 class="modal-title">Create New Layer</h4>
     </div>
-    <div class="col-md-1 col-md-offset-6">
-        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <div class="col-md-1 col-md-offset-5">
+        <button type="button" class="close" aria-label="Close" (click)="dialog.closeAll()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -15,7 +15,7 @@
 
         <!--Row 1-->
         <div class="column">
-            <div class="form-group">
+            <div id="nameBlock" class="form-group">
                 <div class="col-md-1">
                     <label id="nameLabel" for="newlayername">Name</label>
                 </div>
@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div id="descBlock" class="form-group">
                 <div class="col-md-1">
                     <label id="descriptionLabel" for="newlayerdescription">Description</label>
                 </div>
@@ -37,7 +37,7 @@
 
         <!--Row 2-->
         <div class="column">
-            <div class="form-group">
+            <div id="idBlock" class="form-group">
                 <div class="col-md-1">
                     <label id="identLabel" for="newlayerident">Identity</label>
                 </div>
@@ -47,7 +47,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div id="typeBlock" class="form-group">
                 <div class="col-md-1">
                     <label id="typeLabel" for="newlayertype">Type</label>
                 </div>
@@ -66,7 +66,7 @@
 
         <!--Row 3-->
         <div class="column">
-            <div class="form-group">
+            <div id="servBlock" class="form-group">
                 <div *ngIf="layerServer == null" class="col-md-1">
                     <label id="serverLabel" for="newlayerserver">Server</label>
                 </div>
@@ -84,7 +84,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div id="geomBlock" class="form-group">
                 <div class="col-md-1">
                     <label id="geomLabel" for="newlayergeom">Geometry</label>
                 </div>
@@ -102,7 +102,7 @@
 
         <!--Row 4-->
         <div class="column">
-            <div class="form-group">
+            <div id="formBlock" class="form-group">
                 <div *ngIf="layerFormat == null" class="col-md-1">
                     <label id="formatLabel" for="newlayerformat">Format</label>
                 </div>
@@ -126,6 +126,8 @@
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-secondary text-center" (click)="activeModal.close('Close click')">Close</button>
-    <button class="btn btn-outline-primary text-center" (click)="addLayer(newlayeradmin)" [disabled]="!f.valid">Add Layer</button>
+    <md-dialog-actions>
+        <button type="button" class="btn btn-secondary text-center" (click)="dialog.closeAll()">Close</button>
+        <button class="btn btn-outline-primary text-center" (click)="addLayer(newlayeradmin)" [disabled]="!f.valid">Add Layer</button>
+    </md-dialog-actions>
 </div>

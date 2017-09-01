@@ -75,61 +75,39 @@
     </div>
 
     <div style="margin-top:12px;">
-    <form class="form-inline" #e="ngForm" style="position:relative; left:20px;" *ngFor="let layeradmin of layeradmins">
-        <i id="btnOpenDelLayer" class="fa fa-times" style="position:relative; margin-right:5px" (click)="openConfDel(layeradmin)"></i>
-        <input id="exlayername" ngModel required name="exlayername" title="{{layeradmin.layerName}}" class="form-control" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
-        <input id="exlayerident" required name="exlayerident" title="{{layeradmin.layerIdent}}" class="form-control" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
-        <select id="exlayerserver" name="exlayerserver" [(ngModel)] = "layeradmin.serverID" required type="number">
-            <option [value]="server.ID" *ngFor="let server of servers">
-                {{server.serverName}}
-            </option>
-        </select>
-        <input id="exlayerdescription" ngModel name="exlayerdescription" title="{{layeradmin.layerDescription}}" class="form-control" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)">            
-        <select id="exlayerformat" ngModel required name="exlayerformat" class="form-control" [(ngModel)] = "layeradmin.layerFormat" type="text" (blur)="updateLayer(layeradmin)">
-            <option>image/png</option>
-            <option>image/jpg</option>
-            <option>image/jpeg</option>
-        </select>
+        <form class="form-inline" #e="ngForm" style="position:relative; left:20px;" *ngFor="let layeradmin of layeradmins">
+            <i id="btnOpenDelLayer" class="fa fa-times" style="position:relative; margin-right:5px" (click)="openConfDel(layeradmin)"></i>
+            <input id="exlayername" ngModel required name="exlayername" title="{{layeradmin.layerName}}" class="form-control" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
+            <input id="exlayerident" required name="exlayerident" title="{{layeradmin.layerIdent}}" class="form-control" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
+            <select id="exlayerserver" name="exlayerserver" [(ngModel)] = "layeradmin.serverID" required type="number">
+                <option [value]="server.ID" *ngFor="let server of servers">
+                    {{server.serverName}}
+                </option>
+            </select>
+            <input id="exlayerdescription" ngModel name="exlayerdescription" title="{{layeradmin.layerDescription}}" class="form-control" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)">            
+            <select id="exlayerformat" ngModel required name="exlayerformat" class="form-control" [(ngModel)] = "layeradmin.layerFormat" type="text" (blur)="updateLayer(layeradmin)">
+                <option>image/png</option>
+                <option>image/jpg</option>
+                <option>image/jpeg</option>
+            </select>
 
-        <select id="exlayertype" ngModel required name="exlayertype" class="form-control" [(ngModel)] = "layeradmin.layerType" type="text" (blur)="updateLayer(layeradmin)">
-            <option>PostGIS</option>
-            <option>WMS</option>
-            <option>KML-Link</option>
-            <option>KML-Drive</option>
-            <option>GeoJSON</option>
-        </select>
-        <select id="exlayergeom" ngModel required name="exlayergeom" class="form-control" [(ngModel)] = "layeradmin.layerGeom" type="text" (blur)="updateLayer(layeradmin)">
-            <option>Point</option>
-            <option>Polyline</option>
-            <option>Polygon</option>
-            <option>Coverage</option>
-        </select>
+            <select id="exlayertype" ngModel required name="exlayertype" class="form-control" [(ngModel)] = "layeradmin.layerType" type="text" (blur)="updateLayer(layeradmin)">
+                <option>PostGIS</option>
+                <option>WMS</option>
+                <option>KML-Link</option>
+                <option>KML-Drive</option>
+                <option>GeoJSON</option>
+            </select>
+            <select id="exlayergeom" ngModel required name="exlayergeom" class="form-control" [(ngModel)] = "layeradmin.layerGeom" type="text" (blur)="updateLayer(layeradmin)">
+                <option>Point</option>
+                <option>Polyline</option>
+                <option>Polygon</option>
+                <option>Coverage</option>
+            </select>
 
-        <button id="exlayerperm" class="btn btn-primary" title="Open layer permissions" (click)="openpermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>
-    </form>
+            <button id="exlayerperm" class="btn btn-primary" title="Open layer permissions" (click)="openpermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>
+        </form>
     </div>
 </div>        
 
-
-
 <ng-template ngbModalContainer></ng-template>
-
-<!-- Not used-->
-<!--<ng-template #content let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <h4 class="modal-title">Permissions</h4>
-  </div>
-  <div class="modal-body">
-    <p>One fine body&hellip;</p>
-    <p>{{userperm}}</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
-  </div>
-</ng-template>
-<template #content let-c="close" let-d="dismiss"></template>-->
-
-<!--{{closeResult}} -Debugging: Not necessary for now-->

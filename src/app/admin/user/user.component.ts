@@ -27,7 +27,7 @@ import { ChangePasswordComponent } from './changepassword/changepassword.compone
 import { Md5 } from 'ts-md5/dist/md5'
 import pHash = require('password-hash-and-salt')
 import * as jwt from 'jsonwebtoken'
-import {MdDialog, MdDialogRef} from '@angular/material';
+import { MdDialog, MdDialogRef } from '@angular/material';
 
 /*import { hash } from 'bcrypt'
 import {hash, genSalt} from "bcrypt/bcrypt.js"*/
@@ -240,29 +240,17 @@ export class UserComponent implements OnInit{
     }
 
     openConfDel(user) {
-        /*const modalRef = this.modalService.open(ConfirmdeleteComponent)
-        modalRef.componentInstance.objCode = this.objCode
-        modalRef.componentInstance.objID = user.ID
-        modalRef.componentInstance.objName = user.firstName + " " + user.lastName
-
-        modalRef.result.then((result) => {
-            this.deleteUser(user.ID)
-            this.getUserPageItems();
-        }, (reason) => {
-            this.getUserPageItems();
-        });*/
-
-        let dialogRef = this.dialog.open(ConfirmdeleteComponent)
+        const dialogRef = this.dialog.open(ConfirmdeleteComponent)
         dialogRef.componentInstance.objCode = this.objCode
         dialogRef.componentInstance.objID = user.ID
         dialogRef.componentInstance.objName = user.firstName + " " + user.lastName
 
         dialogRef.afterClosed().subscribe(result => {
-            this.getDismissReason = result;
-            console.log(this.getDismissReason)
+            if(result) {
+                this.deleteUser(user.ID)
+            }
             this.getUserPageItems();
         })
-        
     }
 
     getDismissReason(reason: any): string {
@@ -317,8 +305,7 @@ export class UserComponent implements OnInit{
         dialogRef.componentInstance.userID = userID;
         dialogRef.componentInstance.pageName = name;
         dialogRef.afterClosed().subscribe(result => {
-        this.getDismissReason = result;
-        console.log(this.getDismissReason)
-        this.getUserPageItems(); });
+            this.getUserPageItems(); 
+        });
     }
 }

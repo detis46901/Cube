@@ -81,7 +81,7 @@
     </form>      
     <br>
     
-    <div style="position:absolute; left:35px">Create New User</div><br>
+    <p style="position:absolute; left:35px">Create New User</p><br>
     <form #f="ngForm" style="position:relative; left:20px" class="form-inline" (ngSubmit)="addUser(newuser)" autocomplete="off">
         <i class="fa fa-arrow-right" style="margin-right:5px" aria-hidden="true"></i>
         <input id="newuserfirstname" name="newuserfirstname" required #newuserfirstnameinput [(ngModel)] = "newuser.firstName" type="text" placeholder="First Name">

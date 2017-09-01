@@ -11,7 +11,7 @@ import {MdDialog, MdDialogRef} from '@angular/material';
 @Component({
   selector: 'confirmdelete',
   templateUrl: './confirmdelete.component.html',
-  styleUrls: ['./confirmdelete.component.css'],
+  styleUrls: ['./confirmdelete.component.scss'] //, '../../../styles/style.scss']
 })
 export class ConfirmdeleteComponent implements OnInit {
 

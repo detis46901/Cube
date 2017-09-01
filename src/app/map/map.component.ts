@@ -186,7 +186,10 @@ export class MapComponent {
             });               
             L.control.zoom({ position: "bottomright" }).addTo(this._map);
             L.control.scale().addTo(this._map);
-            //L.control.layers(this.mapService.baseMaps, this.mapService.overlays).addTo(this._map);
+
+            //This is the control that allows changing of base map from openstreetmaps to esri, cartodb, or mapbox
+            //L.control.layers(this.mapService.baseMaps, this.mapService.overlays, {position: "bottomright"}).addTo(this._map);
+
             this.mapService.map = this._map;
 
             try {

@@ -10,7 +10,6 @@ import 'rxjs/add/operator/map';
 export class MapService {
     public map: Map;
     public baseMaps: any;
-    public overlays: any;
     public jsonlayer: any;
   
     constructor(private http:Http) {
@@ -30,15 +29,6 @@ export class MapService {
                 attribution: 'From Mapbox and the City of Kokomo'
             })
         };
-        this.overlays = {
-            Geoserver: L.tileLayer("http://foster2.cityofkokomo.org:8080/geoserver/Kokomo/wfs", {
-                layers: 'Kokomo:Pipes',
-                format: 'image/png',
-                transparent: true,
-                outputFormat: 'application/json'
-            })
-        };
-
     }
 
     disableMouseEvent(elementId: string) {
