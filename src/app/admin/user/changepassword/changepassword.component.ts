@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MdDialog, MdDialogRef, MdInputModule} from '@angular/material';
 
 @Component({
     selector: 'changepassword',
@@ -17,6 +17,6 @@ export class ChangePasswordComponent implements OnInit {
 
     ngOnInit() {
     }
-    
+
 
 }

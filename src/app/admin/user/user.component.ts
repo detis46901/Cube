@@ -196,7 +196,7 @@ export class UserComponent implements OnInit{
         //     this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         //     this.getUserPageItems();
         // });
-        let dialogRef = this.dialog.open(ChangePasswordComponent, {height:'250px', width:'400px'});
+        let dialogRef = this.dialog.open(ChangePasswordComponent, {height:'300px', width:'400px'});
         dialogRef.afterClosed().subscribe(result => {
         this.getDismissReason = result;
         });
