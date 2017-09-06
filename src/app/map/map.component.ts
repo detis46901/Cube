@@ -229,7 +229,7 @@ export class MapComponent {
         this.setFlags();
         this.mapService.map.eachLayer(function (removelayer) {removelayer.remove()})
         console.log(this.mapService.baseMaps)
-        this.mapService.map.addLayer(L.tileLayer("http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
+        this.mapService.map.addLayer(L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
             minZoom: 4,
             maxZoom: 21,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
@@ -254,6 +254,10 @@ export class MapComponent {
                 if (x.layerShown === true) {
                     console.log("Layer is shown")
                     this.currLayerName = x.layer_admin.layerName
+                    this.getServer(layer.layer_admin.serverID)
+                    for (let i of this.servers) {
+                        if (i.ID == layer.layer_admin.serverID) {this.server = i}
+                    }
                     this.noLayers = false;
                     this._map.off('click')
                     this._map.on('click', (event: MouseEvent) => { 
@@ -276,7 +280,7 @@ export class MapComponent {
             this.toggleLayers(index, layer, checked)
         }
         
-        console.log(this.server)
+        console.log(this.currLayer.layer_admin.layerName)
     }
 
     //Reads index of layer in dropdown, layeradmin, and if it is shown or not. Needs to remove a layer if a new one is selected
