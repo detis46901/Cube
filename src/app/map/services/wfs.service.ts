@@ -23,8 +23,8 @@ export class WFSService {
         this.http = http;
 
         this.headers = new Headers();
-        this.headers.append('Content-Type', 'application/json');
-        this.headers.append('Accept', 'application/json');
+        this.headers.append('Content-Type', 'application/json'); //maybe it should be text/plain.  Most servers don't allow the application/json.  But text/plain fails on Geoserver
+        this.headers.append('Accept', 'application/json');  //same as above
 
         this.styleHead = new Headers();
         this.styleHead.append('Content-Type', 'application/vnd.ogc.sld+xml')
