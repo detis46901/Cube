@@ -19,9 +19,7 @@
                     <h4>Layers</h4>
                 </div>
                 <div class="col-md-5 col-md-offset-4">
-
-                        <h4>Default On</h4>
-
+                    <h4>Default On</h4>
                 </div>
             </tr>
             <tr *ngFor="let userpagelayer of userpagelayers">
@@ -31,7 +29,9 @@
                             <label for="exuserpagelayer"><i (click)="deleteUserPageLayer(userpagelayer.ID)" class="fa fa-times" style="position:relative; margin-right:5px;" aria-hidden="true"></i></label>
                             {{userpagelayer.layer_admin.layerName}}
                         </div>
-                        <md-checkbox id="exuserpagelayeron" name="exuserpagelayeron" class="form-check-input" style="position:relative; left:20%; border-color: rgba(255,255,255,0); width:5%;" [(ngModel)]="userpagelayer.layerON" (change)="updateUserPageLayer(userpagelayer)"></md-checkbox>
+                        <!--This checkbox object doesn't work correctly.-->
+                        <!--<md-checkbox id="exuserpagelayeron" name="exuserpagelayeron" class="form-check-input" style="position:relative; left:20%; border-color: rgba(255,255,255,0); width:5%;" [(ngModel)]="userpagelayer.layerON" (change)="updateUserPageLayer(userpagelayer)"></md-checkbox>-->
+                        <input id="exuserpagelayeron" name="exuserpagelayeron" class="form-check-input" style="position:relative; left:20%; border-color: rgba(255,255,255,0); width:5%;" [(ngModel)]="userpagelayer.layerON" type="checkbox" (change)="updateUserPageLayer(userpagelayer)">
                     </section>
                 </td>
             </tr>

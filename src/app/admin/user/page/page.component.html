@@ -35,20 +35,20 @@
         </div>
 
           <div class="col-md-12">
-             <md-radio-group class="example-radio-group" [(ngModel)]="selectedPage">
-            <form class="form-inline" *ngFor="let userpage of userpages" style="position:relative; left:15px">
-                <div class="form-group" style="width:100%;">
-                    <label id="x" for="exuserpage"><i (click)="deleteUserPage(userpage.ID)" class="fa fa-times" aria-hidden="true"></i></label>
-                    <input id="exuserpage" name="exuserpage" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; margin-bottom:3px; width:45%" #edituserpageinput [(ngModel)] = "userpage.page" type="text">
-                    <input id="exuserpageactive" name="exuserpageactive" class="form-check-input" style="border-color: rgba(255,255,255,0); width:15%; position:relative" [(ngModel)] = "userpage.active" type="checkbox" >
-                    <md-radio-button id="exDef" radioGroup = "example-radio-group" [(ngModel)] = "userpage.default" [name]="userpage.ID" class="example-radio-button" (change)="updateDefaultPage(userpage)" [value]="userpage.ID" ngDefaultControl>{{userpage.default}}</md-radio-button>
-                    <i id="orderUp" class="fa fa-arrow-up" style="margin-right:5px;" aria-hidden="true"></i>
-                    <i id="orderDown" class="fa fa-arrow-down" aria-hidden="true"></i>
-                </div>
-            </form> 
-            <input id="newuserpage" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:45%; position:relative; left:4%; top:10px; height:34px" #newuserpageinput [(ngModel)] = "newuserpage" type="text" placeholder="New Page" (keyup.enter)="addUserPage(newuserpage); newuserpageinput.value=''" aria-describedby="userpageHelpBlock"><br>
-            <div id="userpageHelpBlock" class="form-text form-muted" style="position:relative; left:4%; top:10px; margin-bottom:15px">Press enter to create a page.</div>       
-             </md-radio-group>
+            <md-radio-group class="example-radio-group" [(ngModel)]="selectedPage">
+                <form class="form-inline" *ngFor="let userpage of userpages" style="position:relative; left:15px">
+                    <div class="form-group" style="width:100%;">
+                        <label id="x" for="exuserpage"><i (click)="deleteUserPage(userpage.ID)" class="fa fa-times" aria-hidden="true"></i></label>
+                        <input id="exuserpage" name="exuserpage" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; margin-bottom:3px; width:45%" #edituserpageinput [(ngModel)] = "userpage.page" type="text">
+                        <input id="exuserpageactive" name="exuserpageactive" class="form-check-input" style="border-color: rgba(255,255,255,0); width:15%; position:relative" [(ngModel)] = "userpage.active" type="checkbox" >
+                        <md-radio-button [id]="userpage" radioGroup = "example-radio-group" [(ngModel)] = "userpage.default" [name]="userpage.ID" class="example-radio-button" (change)="updateDefaultPage(userpage)" [value]="userpage" ngDefaultControl>{{userpage.default}}</md-radio-button>
+                        <i id="orderUp" class="fa fa-arrow-up" style="margin-right:5px;" aria-hidden="true"></i>
+                        <i id="orderDown" class="fa fa-arrow-down" aria-hidden="true"></i>
+                    </div>
+                </form>
+                <input id="newuserpage" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:45%; position:relative; left:4%; top:10px; height:34px" #newuserpageinput [(ngModel)] = "newuserpage" type="text" placeholder="New Page" (keyup.enter)="addUserPage(newuserpage); newuserpageinput.value=''" aria-describedby="userpageHelpBlock"><br>
+                <div id="userpageHelpBlock" class="form-text form-muted" style="position:relative; left:4%; top:10px; margin-bottom:15px">Press enter to create a page.</div>       
+            </md-radio-group>
         </div>
     </div>
 </div>

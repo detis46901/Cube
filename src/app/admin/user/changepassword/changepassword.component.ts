@@ -11,9 +11,12 @@ import { MdDialog, MdDialogRef } from '@angular/material';
 export class ChangePasswordComponent implements OnInit {
     @Input() userID;
 
-    constructor(private dialog: MdDialog) { }
+    constructor(private dialog: MdDialog) { 
+
+    }
 
     ngOnInit() {
     }
+    
 
 }

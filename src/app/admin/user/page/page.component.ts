@@ -58,14 +58,17 @@ export class PageComponent implements OnInit {
     setDefaultPage(userpages) {
         this.userpages = userpages 
         for (let userpage of userpages) {
-            if (userpage.default == true) {this.selectedPage = userpage.ID}
+            if (userpage.default == true) {
+                this.selectedPage = userpage.ID
+            }
         }
-        console.log("updating default userpage")
+        //console.log("updating default userpage")
         console.log(this.selectedPage)
     }
 
+    //This moves all the entries around like the order arrows should be doing...
     updateDefaultPage(userpage) {
-        console.log(userpage.default)
+        console.log(userpage.page) //This log statement proves the wrong radio is selected when one is clicked
         for (let tempage of this.userpages) {
             if (tempage.default == true) {
                 tempage.default = false
@@ -78,7 +81,7 @@ export class PageComponent implements OnInit {
                 this.updateUserPage(tempage)
             }
         }
-        console.log(userpage.default)
+        //console.log(userpage.default)
     }
 
     orderUserPages(up) { //this should order the pages
@@ -115,11 +118,11 @@ export class PageComponent implements OnInit {
     }
 
     updateUserPage(userpage) {
-        console.log(userpage)
+        //console.log(userpage)
         this.userpageService
             .Update(userpage)
             .subscribe(result => {
-                console.log(result);
+                //console.log(result);
                 this.getUserPageItems();
             })
     }

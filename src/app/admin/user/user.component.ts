@@ -25,8 +25,6 @@ import { PageComponent } from './page/page.component'
 import { PageConfigComponent } from './pageconfig/pageconfig.component'
 import { ChangePasswordComponent } from './changepassword/changepassword.component'
 import { Md5 } from 'ts-md5/dist/md5'
-import pHash = require('password-hash-and-salt')
-import * as jwt from 'jsonwebtoken'
 import { MdDialog, MdDialogRef } from '@angular/material';
 
 /*import { hash } from 'bcrypt'
@@ -81,13 +79,14 @@ export class UserComponent implements OnInit{
     }
 
     initNewUser(): void {
-        this.newuser.firstName = "";
-        this.newuser.lastName = "";
+        this.newuser.firstName = "First name";
+        this.newuser.lastName = "Last name";
         this.newuser.roleID = null;
         this.newuser.active = true;
-        this.newuser.email = ' ';
+        this.newuser.email = 'Email';
         this.newuser.administrator = false;
         this.newuser.password = "";
+        
     }
 
     clearInputs(): void {
@@ -197,7 +196,7 @@ export class UserComponent implements OnInit{
         //     this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         //     this.getUserPageItems();
         // });
-        let dialogRef = this.dialog.open(ChangePasswordComponent);
+        let dialogRef = this.dialog.open(ChangePasswordComponent, {height:'250px', width:'400px'});
         dialogRef.afterClosed().subscribe(result => {
         this.getDismissReason = result;
         });

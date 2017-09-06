@@ -24,11 +24,11 @@
         "../node_modules/font-awesome/css/font-awesome.min.css",
         "../src/styles/_variables.scss"
       ],
-      /*"stylePreprocessorOptions": {
+      "stylePreprocessorOptions": {
         "includePaths": [
           "../node_modules"
         ]
-      },*/
+      },
       "scssPaths": ["styles"],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
