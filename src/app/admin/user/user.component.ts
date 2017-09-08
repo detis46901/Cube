@@ -25,7 +25,7 @@ import { PageComponent } from './page/page.component'
 import { PageConfigComponent } from './pageconfig/pageconfig.component'
 import { ChangePasswordComponent } from './changepassword/changepassword.component'
 import { Md5 } from 'ts-md5/dist/md5'
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MdDialog, MdDialogRef, MD_DIALOG_DATA} from '@angular/material';
 
 /*import { hash } from 'bcrypt'
 import {hash, genSalt} from "bcrypt/bcrypt.js"*/
@@ -186,19 +186,16 @@ export class UserComponent implements OnInit{
             })
     }
 
-    changePassword() {
-        // const modalRef = this.modalService.open(ChangePasswordComponent)
-        // modalRef.componentInstance.userID = this.userID;
-        // modalRef.result.then((result) => {
-        //     this.closeResult = `Closed with: ${result}`;
-        //     this.getUserPageItems();
-        // }, (reason) => {
-        //     this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        //     this.getUserPageItems();
-        // });
-        let dialogRef = this.dialog.open(ChangePasswordComponent, {height:'300px', width:'400px'});
+    changePassword(uID) {
+        console.log(uID)
+        let dialogRef = this.dialog.open(ChangePasswordComponent, {
+            height: '250px', 
+            width: '400px',
+            data: {userID: uID}
+        });
+        
         dialogRef.afterClosed().subscribe(result => {
-        this.getDismissReason = result;
+            this.getDismissReason = result;
         });
     }
 
