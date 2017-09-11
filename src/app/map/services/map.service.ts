@@ -1,6 +1,8 @@
 import {Injectable} from "@angular/core";
 //import {Location} from "../core/location.class";
-import {Map} from "leaflet";
+import * as L from "leaflet";
+
+
 import {Http, Response } from "@angular/http";
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -8,7 +10,7 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class MapService {
-    public map: Map;
+    public map: L.Map;
     public baseMaps: any;
     public jsonlayer: any;
   
@@ -31,7 +33,7 @@ export class MapService {
         };
     }
 
-    disableMouseEvent(elementId: string) {
+    disableLeafletMouseEvent(elementId: string) {
         let element = <HTMLElement>document.getElementById(elementId);
 
         L.DomEvent.disableClickPropagation(element);

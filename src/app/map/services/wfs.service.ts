@@ -4,7 +4,7 @@ import {Injectable} from "@angular/core";
 import {Observable} from 'rxjs'
 import { Subject } from 'rxjs/Subject';
 import {WFSMarker } from '../../../_models/wfs.model'
-import "leaflet";
+import * as L from "leaflet";
 
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mergeMap";
@@ -80,7 +80,7 @@ export class WFSService {
                     tempMarker.bindPopup(JSON.stringify(markers["features"][i]["properties"]))
 
                     //7/05/17 - on click function block for displaying marker information in sidenav
-                    tempMarker.on('click', (event: MouseEvent) => {
+                    tempMarker.on('click', (event: L.LeafletMouseEvent) => {
                         this.popupText.next(data[i]);
                         console.log(this.popupText)
                         tempMarker.closePopup()
@@ -147,7 +147,7 @@ export class WFSService {
                         let polyline = L.polyline(polylinePoints, polylineOptions);
                         polyline.bindPopup(JSON.stringify(markers["features"][i]["properties"]))
                         
-                        polyline.on('click', (event: MouseEvent) => {
+                        polyline.on('click', (event: L.LeafletMouseEvent) => {
                             this.popupText.next(data[i]);
                             polyline.closePopup()
                         })

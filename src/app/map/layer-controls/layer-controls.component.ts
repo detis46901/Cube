@@ -18,7 +18,7 @@ import { UserPageLayerService } from '../../../_services/user-page-layer.service
 import { Http, Response, Headers } from '@angular/http'
 import { Observable } from 'rxjs/Observable';
 import { Subscription }   from 'rxjs/Subscription';
-import { Map, MouseEvent, Marker } from "leaflet";
+import * as L from "leaflet";
 
 @Component({
   selector: 'layer-controls',
@@ -175,7 +175,7 @@ export class LayerControlsComponent {
                     console.log("Layer is shown")
                     this.currLayerName = x.layer_admin.layerName
                     this._map.off('click')
-                    this._map.on('click', (event: MouseEvent) => { 
+                    this._map.on('click', (event: L.LeafletMouseEvent) => { 
                         let BBOX = this._map.getBounds().toBBoxString();
                         let WIDTH = this._map.getSize().x;
                         let HEIGHT = this._map.getSize().y;
@@ -258,7 +258,7 @@ export class LayerControlsComponent {
     }
 
     openFeatureInfo(serv: Server) {
-        this._map.on('click', (event: MouseEvent) => { 
+        this._map.on('click', (event: L.LeafletMouseEvent) => { 
             let BBOX = this._map.getBounds().toBBoxString();
             let WIDTH = this._map.getSize().x;
             let HEIGHT = this._map.getSize().y;

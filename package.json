@@ -55,7 +55,6 @@
     "ts-helpers": "^1.1.1",
     "ts-md5": "^1.2.0",
     "typeorm": "0.1.0-alpha.31",
-    "typescript": "^2.3.4",
     "zone.js": "^0.6.26"
   },
   "devDependencies": {

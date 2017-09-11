@@ -2,7 +2,7 @@ import {Component} from "@angular/core";
 import {GeocodingService} from "../services/geocoding.service";
 import {MapService} from "../services/map.service";
 import {Location} from "../core/location.class";
-import {Map} from "leaflet";
+import * as L from "leaflet";
 
 @Component({
     selector: "navigator",
@@ -13,15 +13,15 @@ import {Map} from "leaflet";
 export class NavigatorComponent {
     address: string;
 
-    private map: Map;
+    private map: L.Map;
 
     constructor(private geocoder: GeocodingService, private mapService: MapService) {
         this.address = "";
     }
 
     ngOnInit() {
-        this.mapService.disableMouseEvent("goto");
-        this.mapService.disableMouseEvent("place-input");
+        this.mapService.disableLeafletMouseEvent("goto");
+        this.mapService.disableLeafletMouseEvent("place-input");
         this.map = this.mapService.map;
     }
 

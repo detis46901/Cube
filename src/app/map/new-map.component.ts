@@ -18,7 +18,7 @@ import { UserPageLayerService } from '../../_services/user-page-layer.service'
 import { Http, Response, Headers } from '@angular/http'
 import { Observable } from 'rxjs/Observable';
 import { Subscription }   from 'rxjs/Subscription';
-import { Map, MouseEvent, Marker } from "leaflet";
+import * as L from "leaflet";
 
 @Component({
   selector: 'new-map',

@@ -1,7 +1,6 @@
 import {Component} from "@angular/core";
 import {MapService} from "../services/map.service";
-import {Map, MouseEvent, Marker} from "leaflet";
-
+import * as L from "leaflet";
 
 @Component({
     selector: "marker",
@@ -13,7 +12,7 @@ export class MarkerComponent {
     editing: boolean;
     removing: boolean;
     markerCount: number;
-    map: Map;
+    map: L.Map;
 
     geoFlag: boolean;
     geoArray: Array<any>;
@@ -26,12 +25,12 @@ export class MarkerComponent {
     }
 
     ngOnInit() {
-        //this.mapService.disableMouseEvent("add-marker");
-        //this.mapService.disableMouseEvent("remove-marker");
+        //this.mapService.disableLeafletMouseEvent("add-marker");
+        //this.mapService.disableLeafletMouseEvent("remove-marker");
     }
 
     Initialize() {
-        this.mapService.map.on("click", (e: MouseEvent) => {
+        this.mapService.map.on("click", (e: L.LeafletMouseEvent) => {
             if (this.editing) {
                 let marker = L.marker(e.latlng, {
                    /* icon: L.icon({
@@ -49,7 +48,7 @@ export class MarkerComponent {
 
                 this.markerCount += 1;
 
-                marker.on("click", (event: MouseEvent) => {
+                marker.on("click", (event: L.LeafletMouseEvent) => {
                     if (this.removing) {
                         this.mapService.map.removeLayer(marker);
                         this.markerCount -= 1;
