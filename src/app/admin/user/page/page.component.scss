@@ -1,7 +1,29 @@
-#orderUp {
-    margin-left:9%;
+#exuserpageactive {
+    position: relative;
+    right: 15px;
 }
 
-#x {
-    margin-right:5px;
+#exuserpagedefault {
+    position: relative;
+    left: 45px;
+    margin-right: 153px;
+}
+
+#newuserpage {
+    border-color: rgba(255,255,255,0); 
+    border:ridge; 
+    border-width:2px; 
+    border-radius:4px; 
+    width:45%; 
+    position:relative; 
+    left:31px; 
+    top:10px; 
+    height:34px
+}
+
+#userpageHelpBlock {
+    position:relative; 
+    left:33px; 
+    top:10px; 
+    margin-bottom:15px
 }

@@ -6,19 +6,21 @@
             <h4 class="modal-title">Delete {{objectType}}</h4>
         </div>
         <div class="col-md-2">
-            <button type="button" class="close" style="position:relative; top:5px" (click)="dialog.closeAll()">&times;</button>
+            <md-dialog-actions>
+                <button id="CDX" class="close" md-dialog-close>&times;</button>
+            </md-dialog-actions>
         </div>
     </div>
 </div>
 <div class="modal-body">
-    <p style="position:relative; left:4%">Are you sure you want to permanently delete "{{objName}}"?</p>
+    <p>Are you sure you want to permanently delete "{{objName}}"?</p>
     <div *ngIf="dependentWarning">
         <p><b>Deleting this object will delete its dependents.</b></p>
     </div>
 </div>
 <div class="modal-footer">
     <md-dialog-actions>
-        <button [md-dialog-close]="true" id="confDelClick" type="button" class="btn btn-secondary">Delete</button>
-        <button md-dialog-close class="btn btn-outline-primary">No</button>
+        <button [md-dialog-close]="true" id="confDelClick" type="button" class="btn btn-outline-primary">Delete</button>
+        <button md-dialog-close autofocus class="btn btn-outline-primary">No</button>
     </md-dialog-actions>
 </div>

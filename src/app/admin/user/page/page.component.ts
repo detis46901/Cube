@@ -9,7 +9,8 @@ import { UserPage } from '../../../../_models/user-model'
 import { FilterPipe } from '../../../../_pipes/rowfilter.pipe'
 import { NumFilterPipe } from '../../../../_pipes/numfilter.pipe'
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MdDialog, MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
+import { ConfirmdeleteComponent } from '../../confirmdelete/confirmdelete.component';
 
 
 @Component({
@@ -24,6 +25,9 @@ export class PageComponent implements OnInit {
     @Input () firstName;
     @Input () lastName;
 
+    //for confirm delete dialog
+    private objCode = 7;
+
     public user = new User;
     public userpage = new UserPage;
     public userpages: any;
@@ -33,7 +37,7 @@ export class PageComponent implements OnInit {
     public selectedPage: number;
 
 
-    constructor(private userpageService: UserPageService) {
+    constructor(private userpageService: UserPageService, private dialog: MdDialog) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         //this.userID = currentUser && currentUser.userid; 
@@ -46,7 +50,7 @@ export class PageComponent implements OnInit {
         
     }
 
-    getUserPageItems(): void {
+    private getUserPageItems(): void {
         this.userpageService
         .GetSome(this.userID)
         .subscribe((data:UserPage[]) => this.setDefaultPage(data),
@@ -55,7 +59,7 @@ export class PageComponent implements OnInit {
         //console.log(this.userpages)
     }
     
-    setDefaultPage(userpages) {
+    private setDefaultPage(userpages) {
         this.userpages = userpages 
         for (let userpage of userpages) {
             if (userpage.default == true) {
@@ -66,9 +70,8 @@ export class PageComponent implements OnInit {
         console.log(this.selectedPage)
     }
 
-    //This moves all the entries around like the order arrows should be doing...
-    updateDefaultPage(userpage) {
-        console.log(userpage.page) //This log statement proves the wrong radio is selected when one is clicked
+    private updateDefaultPage(userpage) {
+        console.log(userpage.page)
         for (let tempage of this.userpages) {
             if (tempage.default == true) {
                 tempage.default = false
@@ -84,7 +87,7 @@ export class PageComponent implements OnInit {
         //console.log(userpage.default)
     }
 
-    orderUserPages(up) { //this should order the pages
+    private orderUserPages(up) { //this should order the pages
         this.userpages = up;
         console.log(this.userpages)
         /*console.log(up)
@@ -101,7 +104,7 @@ export class PageComponent implements OnInit {
         console.log(this.userpages)*/
     }
 
-    addUserPage(newuserpage) {
+    private addUserPage(newuserpage) {
         console.log("addUserPage")
         this.userpage.page = newuserpage;
         this.userpage.userID = this.userID
@@ -117,7 +120,7 @@ export class PageComponent implements OnInit {
             })      
     }
 
-    updateUserPage(userpage) {
+    private updateUserPage(userpage) {
         //console.log(userpage)
         this.userpageService
             .Update(userpage)
@@ -127,7 +130,21 @@ export class PageComponent implements OnInit {
             })
     }
 
-    deleteUserPage(userpageID) {
+    private openConfDel(userpage) {
+        const dialogRef = this.dialog.open(ConfirmdeleteComponent);
+        dialogRef.componentInstance.objCode = this.objCode;
+        dialogRef.componentInstance.objID = userpage.ID;
+        dialogRef.componentInstance.objName = userpage.page;
+
+        dialogRef.afterClosed().subscribe(result => {
+            if(result) {
+                this.deleteUserPage(userpage.ID)
+            }
+            this.getUserPageItems();
+        })
+    }
+
+    private deleteUserPage(userpageID) {
         this.userpageService
             .Delete(userpageID)
             .subscribe(result => {
@@ -136,7 +153,7 @@ export class PageComponent implements OnInit {
             })
     }
 
-    onClose() {
+    private onClose() {
         console.log(this.userpages)
         let count= 0;
         for (let x of this.userpages) {
@@ -147,14 +164,31 @@ export class PageComponent implements OnInit {
         //this.activeModal.close()
     }
 
-    radio(up) {
+    private radio(userpage) {
         for (let x of this.userpages) {
             x.default = false
-            if (x == up) {
+            if (x == userpage) {
                 x.default = true;
                 console.log("setting true")
                 this.updateUserPage(x)
             }
         }
+    }
+
+    private moveUp(userpage) {
+        //console.log(userpage)
+        let temp = userpage.pageOrder;
+        for (let x of this.userpages) {
+            if (x.pageOrder == temp-1) {
+                x.pageOrder = temp;
+                userpage.pageOrder = temp-1;
+            }
+        }
+        console.log(userpage.pageOrder);
+        this.getUserPageItems();
+    }
+
+    private moveDown(userpage) {
+        //console.log(userpage)
     }
 }

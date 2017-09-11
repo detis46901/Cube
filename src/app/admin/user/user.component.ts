@@ -20,7 +20,7 @@ import { Department, Group, Role } from '../../../_models/organization.model'
 import { PagePipe } from '../../../_pipes/rowfilter2.pipe'
 import { NumFilterPipe } from '../../../_pipes/numfilter.pipe'
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component'
+import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component';
 import { PageComponent } from './page/page.component'
 import { PageConfigComponent } from './pageconfig/pageconfig.component'
 import { ChangePasswordComponent } from './changepassword/changepassword.component'
@@ -64,7 +64,7 @@ export class UserComponent implements OnInit{
     public uList = [];
 
 
-    constructor(private userService: UserService, private roleservice: RoleService, private modalService: NgbModal, private userpageService: UserPageService, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, public dialog: MdDialog) {
+    constructor(private userService: UserService, private roleservice: RoleService, private modalService: NgbModal, private userpageService: UserPageService, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private dialog: MdDialog) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         console.log(currentUser)
         this.token = currentUser && currentUser.token;

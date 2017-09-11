@@ -36,28 +36,31 @@ export class ConfirmdeleteComponent implements OnInit {
 		//currently the object codes will align as follows: Users-1, Layers-2, Organization-3
 		switch(this.objCode) {
 			case 1:
-				this.objectType = "User"
-				break
+				this.objectType = "User";
+				break;
 			case 2:
-				this.objectType = "Layer"
-				break
+				this.objectType = "Layer";
+				break;
 			case 3:
-				this.objectType = "Department"
+				this.objectType = "Department";
 				this.dependentWarning = true;
-				break
+				break;
 			case 4:
-				this.objectType = "Group"
+				this.objectType = "Group";
 				this.dependentWarning = true;
-				break
+				break;
 			case 5:
-				this.objectType = "Role"
-				break
+				this.objectType = "Role";
+				break;
 			case 6:
-				this.objectType = "Server"
-				break
+				this.objectType = "Server";
+				break;
+			case 7:
+				this.objectType = "Page";
+				break;
 			default: 
-				alert("Invalid Object Code: " + this.objCode)
-				break
+				alert("Invalid Object Code: " + this.objCode);
+				break;
 		}
 	}
 
