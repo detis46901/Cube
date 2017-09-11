@@ -41,7 +41,7 @@
                         <label id="x" for="exuserpage"><i (click)="deleteUserPage(userpage.ID)" class="fa fa-times" aria-hidden="true"></i></label>
                         <input id="exuserpage" name="exuserpage" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; margin-bottom:3px; width:45%" #edituserpageinput [(ngModel)] = "userpage.page" type="text">
                         <input id="exuserpageactive" name="exuserpageactive" class="form-check-input" style="border-color: rgba(255,255,255,0); width:15%; position:relative" [(ngModel)] = "userpage.active" type="checkbox" >
-                        <md-radio-button [id]="userpage" radioGroup = "example-radio-group" [(ngModel)] = "userpage.default" [name]="userpage.ID" class="example-radio-button" (change)="updateDefaultPage(userpage)" [value]="userpage" ngDefaultControl>{{userpage.default}}</md-radio-button>
+                        <md-radio-button radioGroup = "example-radio-group" [name]="userpage.ID" class="example-radio-button" (click)="updateDefaultPage(userpage)" [value]="userpage.ID">{{userpage.page}}</md-radio-button>
                         <i id="orderUp" class="fa fa-arrow-up" style="margin-right:5px;" aria-hidden="true"></i>
                         <i id="orderDown" class="fa fa-arrow-down" aria-hidden="true"></i>
                     </div>
