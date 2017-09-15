@@ -73,7 +73,7 @@ export class LayerAdminComponent implements OnInit {
         // });
         // console.log("openpermission from layernew")
 
-        const dialogRef = this.dialog.open(LayerPermissionComponent, {height:'440px', width:'350px'});
+        const dialogRef = this.dialog.open(LayerPermissionComponent, {height:'460px', width:'350px'});
         dialogRef.componentInstance.layerID = layerid;
         dialogRef.componentInstance.layerName = layername;
         dialogRef.afterClosed().subscribe(result => {

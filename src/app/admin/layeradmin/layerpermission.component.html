@@ -11,7 +11,7 @@
             <h4 class="modal-title">{{layerName}} Permissions</h4>
         </div>
         <div class="col-md-2">
-            <button type="button" class="close" style="position:relative; top:4px;" aria-label="Close" (click)="dialog.closeAll()">
+            <button id="exitMod" type="button" class="close" aria-label="Close" (click)="dialog.closeAll()">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -22,7 +22,7 @@
     <h5 style="position:relative; left:15px;">Current Permissions</h5><br>
     <form class="form-inline" #f="ngForm" *ngFor="let layerpermission of layerpermissions">
         <div class="form-group" style="margin-bottom:5px;">
-            <i (click)="deleteLayerPermission(layerpermission.ID)" class="fa fa-times" style="margin-right:10px; margin-left:15px;" aria-hidden="true"></i>
+            <i id="delUserPerm" (click)="deleteLayerPermission(layerpermission.ID)" class="fa fa-times" aria-hidden="true"></i>
             <!--Change this to bold text labels, not controls-->
             <select id="user" name="user" style="margin-right:5px;" class="form-control" [(ngModel)] = "layerpermission.userID" required type="text" (blur)="updateLayerPermission(layerpermission)"  >
                 <option [value]="user.ID" *ngFor="let user of users">
@@ -39,7 +39,7 @@
         <h5>New Permission</h5>
     </div>
 
-    <form class="form-inline" #f="ngForm" style="position:relative; width:100%; right:49%;" (ngSubmit)="addLayerPermission(newlayerpermission)">
+    <form class="form-inline" #f="ngForm" (ngSubmit)="addLayerPermission(newlayerpermission)">
         <div class="form-group">
             <label for="user" style="margin-right:10px">User</label>
             <select id="user" name="user" class="form-control" [(ngModel)] = "newlayerpermission.userID" required type="text">
