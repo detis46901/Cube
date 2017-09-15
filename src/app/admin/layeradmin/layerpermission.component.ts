@@ -13,6 +13,7 @@ import { MdDialog, MdDialogRef } from '@angular/material';
 @Component({
   selector: 'layerpermission',
   templateUrl: './layerpermission.component.html',
+  styleUrls: ['./layerpermission.component.scss'],
   providers: [UserService, Configuration, LayerAdminService, LayerPermissionService]
 })
 export class LayerPermissionComponent implements OnInit{

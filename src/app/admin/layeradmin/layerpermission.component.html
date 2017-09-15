@@ -20,7 +20,7 @@
 
 <div class="modal-body">
     <h5 style="position:relative; left:15px;">Current Permissions</h5><br>
-    <form class="form-inline" #f="ngForm" style="margin-left:10px;" *ngFor="let layerpermission of layerpermissions">
+    <form class="form-inline" #f="ngForm" *ngFor="let layerpermission of layerpermissions">
         <div class="form-group" style="margin-bottom:5px;">
             <i (click)="deleteLayerPermission(layerpermission.ID)" class="fa fa-times" style="margin-right:10px; margin-left:15px;" aria-hidden="true"></i>
             <!--Change this to bold text labels, not controls-->
@@ -29,8 +29,6 @@
                     {{user.firstName}} {{user.lastName}}
                 </option>
             </select>
-        </div>
-        <div class="form-group" style="margin-bottom:7px; margin-left:40px;">
             <input type="checkbox" name="layerpermissionedit" [(ngModel)]="layerpermission.edit" (change)="updateLayerPermission(layerpermission)"> Edit
         </div>
     </form>
