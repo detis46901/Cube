@@ -23,13 +23,16 @@ export class ServerComponent implements OnInit {
 
     public servers: Array<Server>;
     public currServer: Server;
+    public workingserverURL: string;
 
     public layerArray;
     public nameArray: Array<string> = []
     public formatArray: Array<string> = []
 
     public displayLayers: boolean;
+    public displayFolders: boolean;
     public closeResult: string;
+    public path: Array<string> = []
 
     constructor(private _http: Http, private serverService: ServerService, private dialog: MdDialog, private confDelService: ConfirmdeleteService) {
         this.headers = new Headers();
@@ -68,6 +71,27 @@ export class ServerComponent implements OnInit {
                 );
     }
 
+    getLayers(serv, folder) {
+        let path: string = ""
+        this.currServer = serv;
+        this.clearArrays()
+        this.displayFolders = true;
+        this.serverService.getFolders(serv, path, this.options)
+            .subscribe((response: string) =>
+                {this.parseLayers(response, folder); console.log("done")}
+            );
+    }
+
+    parseLayers(res: string, folder) {
+        this.path.push
+        let list = JSON.parse(res)
+        console.log (list.folders)
+            for (let i of list.folders) {
+            let name = i
+            this.nameArray.push(name)
+            }
+    }
+
     parseResponse(res: string) {
         let list = res.split('<Layer')
         list.shift()
@@ -81,6 +105,15 @@ export class ServerComponent implements OnInit {
         }
     }
 
+    followFolder(folder) {
+        let path: string = "/" + folder
+        this.clearArrays()
+        this.displayFolders = true;
+        this.serverService.getFolders(this.currServer, path, this.options)
+            .subscribe((response: string) =>
+                {this.parseLayers(response, folder); console.log("done")}
+            );
+    }
     openConfDel(server) {
         const dialogRef = this.dialog.open(ConfirmdeleteComponent)
         dialogRef.componentInstance.objCode = this.objCode
