@@ -60,8 +60,35 @@ export class ServerService {
         console.log(serv)
         switch(serv.serverType) {
             case "Geoserver": actionURL = serv.serverURL + '/wms?request=getCapabilities&service=WMS'; break
-            case "ArcGIS": actionURL = serv.serverURL + '/wms?f=pjson'; break
+            case "ArcGIS": actionURL = serv.serverURL + 'f=pjson'; break
         }
+    
+        let res: string
+
+        /*fetch(this.actionUrl).then(function(response) {
+            if(response.ok) {
+                return this._http.get(actionURL, options)
+                    .map((response: Response) => response.text())
+            }
+            throw new Error('Requested resource could not complete.\nPlease ensure the following URL is correct.\n' + actionURL)
+        }).then(function(url) {
+
+        })*/
+        console.log (actionURL)
+        
+        return this._http.get(actionURL, options)
+            .map((response: Response) => res = response.text())
+      
+    }
+
+    public getFolders(serv: Server, path, options) {
+        let actionURL: string
+        console.log(serv)
+        switch(serv.serverType) {
+            case "Geoserver": actionURL = serv.serverURL + '/wms?request=getCapabilities&service=WMS'; break
+            case "ArcGIS": actionURL = serv.serverURL + path + '?f=pjson'; break
+        }
+    
         let res: string
 
         /*fetch(this.actionUrl).then(function(response) {
