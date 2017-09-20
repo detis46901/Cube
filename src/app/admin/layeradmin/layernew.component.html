@@ -52,13 +52,15 @@
                     <label id="typeLabel" for="newlayertype">Type</label>
                 </div>
                 <div style="margin-bottom:10px;" class="col-md-4">
-                    <select id="newlayertype" name="newlayertype" class="form-control input-sm col-sm" [(ngModel)] = "newlayeradmin.layerType" required type="text" placeholder="Layer Type">
+                    <select *ngIf="layerType == null" id="newlayertype" value="{{layerType}}" name="newlayertype" class="form-control input-sm col-sm" [(ngModel)] = "newlayeradmin.layerType" required type="text" placeholder="Layer Type">
                         <option>PostGIS</option>
+                        <option>MapServer</option>
                         <option>WMS</option>
                         <option>KML-Link</option>
                         <option>KML-Drive</option>
                         <option>GeoJSON</option>
                     </select>
+                    <input *ngIf="layerType != null" id="newlayertype2" class="form-control input-sm col-sm" value="{{layerType}}" readonly>
                 </div>
             </div>
         </div>
@@ -66,21 +68,13 @@
 
         <!--Row 3-->
         <div class="column">
-            <div id="servBlock" class="form-group">
-                <div *ngIf="layerServer == null" class="col-md-1">
-                    <label id="serverLabel" for="newlayerserver">Server</label>
+            <div id="serviceBlock" class="form-group">
+                <div class="col-md-1">
+                    <label id="serviceLabel" for="newlayerservice">Service</label>
                 </div>
-                <div *ngIf="layerServer != null" class="col-md-1">
-                    <label id="serverLabelText" for="newlayerservertext">Server</label>
-                </div>
-
-                <div class="col-md-4">
-                    <select *ngIf="layerServer == null" id="newlayerserver" name="newLayerServer" [(ngModel)] = "newlayeradmin.serverID" class="form-control input-sm col-sm" required type="number">
-                        <option [value]="server.ID" *ngFor="let server of servers">
-                            {{server.serverName}}
-                        </option>
-                    </select>
-                    <input *ngIf="layerServer != null" id="newlayerservertext" class="form-control input-sm col-sm" value="{{layerServer.serverName}}" type="text" readonly>
+                <div class="col-md-4">  
+                    <input *ngIf="layerServer == null" id="newlayerservice" name="newlayerservice" class="form-control input-sm col-sm"  [(ngModel)] = "newlayeradmin.layerService" type="text">
+                    <input *ngIf="layerServer != null" id="newlayerident2" class="form-control input-sm col-sm" type="text" value="{{layerService}}" readonly>
                 </div>
             </div>
 
@@ -102,6 +96,23 @@
 
         <!--Row 4-->
         <div class="column">
+            <div id="servBlock" class="form-group">
+                <div *ngIf="layerServer == null" class="col-md-1">
+                    <label id="serverLabel" for="newlayerserver">Server</label>
+                </div>
+                <div *ngIf="layerServer != null" class="col-md-1">
+                    <label id="serverLabelText" for="newlayerservertext">Server</label>
+                </div>
+
+                <div class="col-md-4">
+                    <select *ngIf="layerServer == null" id="newlayerserver" name="newLayerServer" [(ngModel)] = "newlayeradmin.serverID" class="form-control input-sm col-sm" required type="number">
+                        <option [value]="server.ID" *ngFor="let server of servers">
+                            {{server.serverName}}
+                        </option>
+                    </select>
+                    <input *ngIf="layerServer != null" id="newlayerservertext" class="form-control input-sm col-sm" value="{{layerServer.serverName}}" type="text" readonly>
+                </div>
+            </div>
             <div id="formBlock" class="form-group">
                 <div *ngIf="layerFormat == null" class="col-md-1">
                     <label id="formatLabel" for="newlayerformat">Format</label>
@@ -110,7 +121,7 @@
                     <label id="formatLabel" for="newlayerformattext">Format</label>
                 </div>
 
-                <div style="margin-bottom:10px;" class="col-md-4">
+                <div style="margin-bottom:10px;" class="col-md-5">
                     <select *ngIf="layerFormat == null" id="newlayerformat" name="newLayerFormat" class="form-control input-sm col-sm" [(ngModel)] = "newlayeradmin.layerFormat" required type="text">
                         <option>image/png</option>
                         <option>image/jpg</option>

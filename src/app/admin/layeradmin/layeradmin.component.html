@@ -17,6 +17,14 @@
         <div class="col-md-1">
             <div class="row">
                 <div class="col-md-2 col-md-offset-4">
+                    <h4>Service</h4>
+                </div>
+            </div>
+        </div> 
+
+        <div class="col-md-1">
+            <div class="row">
+                <div class="col-md-2 col-md-offset-4">
                     <h4>Server</h4>
                 </div>
             </div>
@@ -38,7 +46,7 @@
             </div>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-1">
             <div class="row">
                 <div class="col-md-1 col-md-offset-5">
                     <h4>Type</h4>
@@ -79,6 +87,7 @@
             <i id="btnOpenDelLayer" class="fa fa-times" style="position:relative; margin-right:5px" (click)="openConfDel(layeradmin)"></i>
             <input id="exlayername" ngModel required name="exlayername" title="{{layeradmin.layerName}}" class="form-control" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
             <input id="exlayerident" required name="exlayerident" title="{{layeradmin.layerIdent}}" class="form-control" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
+            <input id="exlayerservice" required name="exlayerservice" title="{{layeradmin.layerService}}" class="form-control" [(ngModel)] = "layeradmin.layerService" type="text" (change)="updateLayer(layeradmin)">
             <select id="exlayerserver" name="exlayerserver" [(ngModel)] = "layeradmin.serverID" required type="number">
                 <option [value]="server.ID" *ngFor="let server of servers">
                     {{server.serverName}}
@@ -93,6 +102,7 @@
 
             <select id="exlayertype" ngModel required name="exlayertype" class="form-control" [(ngModel)] = "layeradmin.layerType" type="text" (blur)="updateLayer(layeradmin)">
                 <option>PostGIS</option>
+                <option>MapServer</option>
                 <option>WMS</option>
                 <option>KML-Link</option>
                 <option>KML-Drive</option>

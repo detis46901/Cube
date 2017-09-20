@@ -25,8 +25,9 @@ export class ServerComponent implements OnInit {
     public currServer: Server;
     public workingserverURL: string;
 
-    public layerArray;
-    public nameArray: Array<string> = []
+    public layerArray: Array<string> = []
+    public folderArray: Array<string> = []
+    public serviceArray: Array<string> = []
     public formatArray: Array<string> = []
 
     public displayLayers: boolean;
@@ -56,7 +57,7 @@ export class ServerComponent implements OnInit {
 
     clearArrays() {
         this.layerArray = [];        
-        this.nameArray = [];
+        this.folderArray = [];
         this.formatArray = [];
         this.displayLayers = false;
     }
@@ -85,11 +86,24 @@ export class ServerComponent implements OnInit {
     parseLayers(res: string, folder) {
         this.path.push
         let list = JSON.parse(res)
+        if (list.folders) {
         console.log (list.folders)
             for (let i of list.folders) {
-            let name = i
-            this.nameArray.push(name)
+            this.folderArray.push(i)
             }
+        }
+        if (list.services) {
+        console.log (list.services)
+            for (let i of list.services) {
+                this.serviceArray.push(i)
+            }
+        }
+        if (list.layers) {
+            console.log (list.layers)
+            for (let i of list.layers) {
+                this.layerArray.push(i)
+            }
+        }
     }
 
     parseResponse(res: string) {
@@ -100,16 +114,18 @@ export class ServerComponent implements OnInit {
         for (let i of list) {
             let name = i.substr(i.indexOf('<Name>') + 6, (i.indexOf('</Name>') - (i.indexOf('<Name>') + 6)))
             let format = i.substr(i.indexOf('<Format>') + 8, (i.indexOf('</Format>') - (i.indexOf('<Format>') + 8)))
-            this.nameArray.push(name)
+            this.folderArray.push(name)
             this.formatArray.push(format)
         }
     }
 
-    followFolder(folder) {
-        let path: string = "/" + folder
+    WMSRequest(folder, type) {
+        console.log('folder = ' + folder)
+        if (type=="service") {this.path.push("/" + folder)}
+        if (type=="layer") {this.path.push("/" + folder + "/MapServer")}
         this.clearArrays()
         this.displayFolders = true;
-        this.serverService.getFolders(this.currServer, path, this.options)
+        this.serverService.getFolders(this.currServer, this.path[this.path.length-1], this.options)
             .subscribe((response: string) =>
                 {this.parseLayers(response, folder); console.log("done")}
             );
@@ -146,10 +162,10 @@ export class ServerComponent implements OnInit {
 
     createLayer(index) {
         const dialogRef = this.dialog.open(LayerNewComponent, {height:'38%', width:'28%'})
-
-        dialogRef.componentInstance.layerName = this.nameArray[index]
-        dialogRef.componentInstance.layerIdent = this.nameArray[index]
-        dialogRef.componentInstance.layerFormat = this.formatArray[index]
+        console.log(this.serviceArray[index]["name"])
+        dialogRef.componentInstance.layerIdent = "0"
+        dialogRef.componentInstance.layerService = this.serviceArray[index]["name"]
+        dialogRef.componentInstance.layerType = this.serviceArray[index]["type"]
         dialogRef.componentInstance.layerServer = this.currServer
 
         dialogRef.afterClosed().subscribe(result => {

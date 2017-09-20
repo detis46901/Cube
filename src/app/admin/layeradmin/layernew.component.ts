@@ -21,10 +21,11 @@ import { MdDialog, MdDialogRef } from '@angular/material';
   providers: [UserService, Configuration, LayerAdminService, LayerPermissionService, ServerService],
 })
 export class LayerNewComponent implements OnInit{
-    @Input() layerName;
+    @Input() layerService
     @Input() layerIdent;
     @Input() layerServer;
     @Input() layerFormat;
+    @Input() layerType;
 
     //Set to true in ngOnInit() if inputs are read from the server screen, thus the server screen is calling this modal
     public serverCalled: boolean = false;
@@ -47,8 +48,10 @@ export class LayerNewComponent implements OnInit{
 
     ngOnInit() {
        this.getServers()
-       if(this.layerName!=null && this.layerIdent!=null && this.layerFormat!=null && this.layerServer!=null) {
+       console.log (this.layerIdent)
+       if(this.layerIdent!=null && this.layerType!=null && this.layerServer!=null) {
             this.serverCalled = true;
+            console.log("ServerCalled")
        }
        //console.log(this.layerName + this.layerIdent + this.layerFormat + this.layerServer)
     }
@@ -96,10 +99,12 @@ export class LayerNewComponent implements OnInit{
         console.log(newlayer)
         this.layeradmin = newlayer;
         if(this.serverCalled) {
+            console.log("serverCalled")
             this.layeradmin.serverID = this.layerServer.ID;
-            this.layeradmin.layerName = this.layerName;
+            this.layeradmin.layerService = this.layerService
             this.layeradmin.layerIdent = this.layerIdent;
-            this.layeradmin.layerFormat = this.layerFormat;
+            this.layeradmin.layerType = this.layerType;
+            console.log(this.layeradmin)
         }
 
         console.log(this.layeradmin)

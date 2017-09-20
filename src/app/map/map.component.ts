@@ -283,12 +283,28 @@ export class MapComponent {
         console.log(this.currLayer.layer_admin.layerName)
     }
 
+    formLayerRequest (layer: UserPageLayer) {
+        let server: Server;
+        this.getServer(layer.layer_admin.serverID)
+        for (let i of this.servers) {
+            if (i.ID == layer.layer_admin.serverID) {server = i}
+        }
+        switch (layer.layer_admin.layerType){
+            case ("MapServer"): {
+                console.log("Mapserver Layer")
+                let norest: string = server.serverURL.split("/rest/")[0] + "/" + server.serverURL.split("/rest/")[1]
+                let url: string = norest + "/" + layer.layer_admin.layerService + "/MapServer/WMSServer"
+                console.log(url)
+                return url
+            }
+        }
+    }
     //Reads index of layer in dropdown, layeradmin, and if it is shown or not. Needs to remove a layer if a new one is selected
     toggleLayers(index, layer: UserPageLayer, checked) {
         let zindex = 1000
         let allLayersOff = true;
         let nextActive: any;
-        let server;
+        this.formLayerRequest(layer)
 
         //7/24/17
         /*layer userpagelayer returns attributes, one of which is of type LayerAdmin:
@@ -296,30 +312,32 @@ export class MapComponent {
         .server.serverURL Server has attribute serverUrl. This is theoretically possible to do all within http request.
         (preferred way of doing this)*/
         //Replace block below with this ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        this.getServer(layer.layer_admin.serverID)
-        for (let i of this.servers) {
-            if (i.ID == layer.layer_admin.serverID) {server = i}
-        }
-        console.log(server.serverURL)
+        
         console.log(checked)
         console.log(layer.layer_admin.layerIdent)
         console.log(layer.layer_admin.layerFormat)
 
-
+        //form URL
+        let url: string = this.formLayerRequest(layer)
         if (checked == false) {
             if (layer.layer_admin.layerGeom == "Coverage") {zindex = -50}
-
-            this.turnonlayer = (L.tileLayer.wms(server.serverURL + "/wms", {
-                layers: layer.layer_admin.layerIdent,
-                format: layer.layer_admin.layerFormat,
-                transparent: true,
-            }).addTo(this._map))
+           
+            this.turnonlayer = (L.tileLayer.wms(url, {
+                     layers: layer.layer_admin.layerIdent,
+                     format: "image/png",
+                     transparent: true,
+                 }).addTo(this._map))
+            // this.turnonlayer = (L.tileLayer.wms(server.serverURL, {
+            //     layers: layer.layer_admin.layerIdent,
+            //     format: layer.layer_admin.layerFormat,
+            //     transparent: true,
+            // }).addTo(this._map))
             console.log(this.turnonlayer)
             this.layerList[index] = this.turnonlayer
             this.currLayer = layer
             this.currLayerName = layer.layer_admin.layerName
             this.noLayers = false;
-            this.openFeatureInfo(server);
+            //this.openFeatureInfo(server);
             this.userpagelayers[index].layerShown = true
         }
         else { 
