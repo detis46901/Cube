@@ -6,11 +6,10 @@ import { Configuration } from '../_api/api.constants';
  
 @Injectable()
 export class ParentService {
-    private actionUrl: string;
-    private headers: Headers;
+    protected actionUrl: string;
+    protected headers: Headers;
  
-    constructor(private _http: Http, private configuration: Configuration) {
-        this.actionUrl = configuration.serverWithApiUrl + 'server/';
+    constructor(protected _http: Http, protected configuration: Configuration) {
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
         this.headers.append('Accept', 'application/json');
@@ -51,7 +50,7 @@ export class ParentService {
             .catch(this.handleError);
     }
  
-    private handleError(error: Response) {
+    protected handleError(error: Response) {
         console.error(error);
         return Observable.throw(error.json().error || 'any error');
     }

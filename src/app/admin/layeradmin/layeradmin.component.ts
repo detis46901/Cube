@@ -36,7 +36,7 @@ export class LayerAdminComponent implements OnInit {
     public newlayeradmin = new LayerAdmin;
     public newlayerpermission = new LayerPermission;
     public layerpermission: any;
-    public layeradmins: any;
+    public layeradmins: LayerAdmin[];
     public token: string;
     public userID: number;
     public userperm: string;
