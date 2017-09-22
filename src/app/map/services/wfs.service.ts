@@ -3,7 +3,6 @@ import {Location} from "../core/location.class";
 import {Injectable} from "@angular/core";
 import {Observable} from 'rxjs'
 import { Subject } from 'rxjs/Subject';
-import {WFSMarker } from '../../../_models/wfs.model'
 import * as L from "leaflet";
 
 import "rxjs/add/operator/map";

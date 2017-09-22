@@ -17,7 +17,7 @@ export class LayerPermission {
     layerAdminID: number;
 }
 
-export class LayerClass extends LayerAdmin{
+export class LayerClass extends LayerAdmin {
     on: boolean;
 }
 
@@ -29,5 +29,5 @@ export class UserPageLayer {
     layerAdminID: number;
     layer_admin: LayerAdmin;
     layerShown: boolean;
-    featureGroupObject?: L.FeatureGroup
+    featureGroupObject?: L.FeatureGroup;
 }

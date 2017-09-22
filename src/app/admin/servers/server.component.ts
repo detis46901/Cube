@@ -4,7 +4,6 @@ import { Server } from '../../../_models/server.model'
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ServerNewComponent } from'./servernew.component'
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
-import { ConfirmdeleteService } from '../../../_services/confirmdelete.service';
 import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component';
 import { LayerNewComponent } from '../layeradmin/layernew.component';
 import { MdDialog, MdDialogRef } from '@angular/material';
@@ -35,7 +34,7 @@ export class ServerComponent implements OnInit {
     public closeResult: string;
     public path: Array<string> = []
 
-    constructor(private _http: Http, private serverService: ServerService, private dialog: MdDialog, private confDelService: ConfirmdeleteService) {
+    constructor(private _http: Http, private serverService: ServerService, private dialog: MdDialog) {
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         this.headers.append('Accept', 'text/plain');
@@ -161,8 +160,8 @@ export class ServerComponent implements OnInit {
     }
 
     createLayer(index) {
-        const dialogRef = this.dialog.open(LayerNewComponent, {height:'38%', width:'28%'})
-        console.log(this.serviceArray[index]["name"])
+        const dialogRef = this.dialog.open(LayerNewComponent, {height:'360px', width:'500px'})
+        console.log(this.serviceArray[index]["name"]) //error here
         dialogRef.componentInstance.layerIdent = "0"
         dialogRef.componentInstance.layerService = this.serviceArray[index]["name"]
         dialogRef.componentInstance.layerType = this.serviceArray[index]["type"]

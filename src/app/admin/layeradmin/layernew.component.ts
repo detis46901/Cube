@@ -2,7 +2,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { UserService } from '../../../_services/user.service';
-import { User } from '../../../_models/user-model'
+import { User } from '../../../_models/user.model'
 import { Configuration } from '../../../_api/api.constants'
 import { LayerAdminService } from '../../../_services/layeradmin.service';
 import { LayerPermissionService } from '../../../_services/layerpermission.service';

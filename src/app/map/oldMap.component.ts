@@ -25,7 +25,7 @@
         console.log('Flags array: ' + this.userpagelayers[0].layerShown)
         console.log(this.userpagelayers)
 
-        //let n = this.userpagelayers[0].layer_admin
+        //let n = this.userpagelayers[0].layerAdmin
         //let l = n.layerName
         //this.overlays = { [l] : L.tileLayer.wms(n.layerURL, { layers: n.layerIdent, format: n.layerFormat, transparent: true})}
 
@@ -34,37 +34,37 @@
 
         switch(this.userpagelayers.length) {
             case 1:
-                this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true})}
+                this.overlays = { [this.userpagelayers[0].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layerAdmin.layerURL, { layers: this.userpagelayers[0].layerAdmin.layerIdent, format: this.userpagelayers[0].layerAdmin.layerFormat, transparent: true})}
                 break
             case 2:
-                this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true})}
+                this.overlays = { [this.userpagelayers[0].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layerAdmin.layerURL, { layers: this.userpagelayers[0].layerAdmin.layerIdent, format: this.userpagelayers[0].layerAdmin.layerFormat, transparent: true}),
+                                [this.userpagelayers[1].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layerAdmin.layerURL, { layers: this.userpagelayers[1].layerAdmin.layerIdent, format: this.userpagelayers[1].layerAdmin.layerFormat, transparent: true})}
                 break
             case 3:
-                this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[2].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layer_admin.layerURL, { layers: this.userpagelayers[2].layer_admin.layerIdent, format: this.userpagelayers[2].layer_admin.layerFormat, transparent: true})}
+                this.overlays = { [this.userpagelayers[0].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layerAdmin.layerURL, { layers: this.userpagelayers[0].layerAdmin.layerIdent, format: this.userpagelayers[0].layerAdmin.layerFormat, transparent: true}),
+                                [this.userpagelayers[1].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layerAdmin.layerURL, { layers: this.userpagelayers[1].layerAdmin.layerIdent, format: this.userpagelayers[1].layerAdmin.layerFormat, transparent: true}),
+                                [this.userpagelayers[2].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layerAdmin.layerURL, { layers: this.userpagelayers[2].layerAdmin.layerIdent, format: this.userpagelayers[2].layerAdmin.layerFormat, transparent: true})}
                 break
             case 4:
-                this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[2].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layer_admin.layerURL, { layers: this.userpagelayers[2].layer_admin.layerIdent, format: this.userpagelayers[2].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[3].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[3].layer_admin.layerURL, { layers: this.userpagelayers[3].layer_admin.layerIdent, format: this.userpagelayers[3].layer_admin.layerFormat, transparent: true})}
+                this.overlays = { [this.userpagelayers[0].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layerAdmin.layerURL, { layers: this.userpagelayers[0].layerAdmin.layerIdent, format: this.userpagelayers[0].layerAdmin.layerFormat, transparent: true}),
+                                [this.userpagelayers[1].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layerAdmin.layerURL, { layers: this.userpagelayers[1].layerAdmin.layerIdent, format: this.userpagelayers[1].layerAdmin.layerFormat, transparent: true}),
+                                [this.userpagelayers[2].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layerAdmin.layerURL, { layers: this.userpagelayers[2].layerAdmin.layerIdent, format: this.userpagelayers[2].layerAdmin.layerFormat, transparent: true}),
+                                [this.userpagelayers[3].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[3].layerAdmin.layerURL, { layers: this.userpagelayers[3].layerAdmin.layerIdent, format: this.userpagelayers[3].layerAdmin.layerFormat, transparent: true})}
                 break
             case 5:
-                this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[2].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layer_admin.layerURL, { layers: this.userpagelayers[2].layer_admin.layerIdent, format: this.userpagelayers[2].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[3].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[3].layer_admin.layerURL, { layers: this.userpagelayers[3].layer_admin.layerIdent, format: this.userpagelayers[3].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[4].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[4].layer_admin.layerURL, { layers: this.userpagelayers[4].layer_admin.layerIdent, format: this.userpagelayers[4].layer_admin.layerFormat, transparent: true})}
+                this.overlays = { [this.userpagelayers[0].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layerAdmin.layerURL, { layers: this.userpagelayers[0].layerAdmin.layerIdent, format: this.userpagelayers[0].layerAdmin.layerFormat, transparent: true}),
+                                [this.userpagelayers[1].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layerAdmin.layerURL, { layers: this.userpagelayers[1].layerAdmin.layerIdent, format: this.userpagelayers[1].layerAdmin.layerFormat, transparent: true}),
+                                [this.userpagelayers[2].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layerAdmin.layerURL, { layers: this.userpagelayers[2].layerAdmin.layerIdent, format: this.userpagelayers[2].layerAdmin.layerFormat, transparent: true}),
+                                [this.userpagelayers[3].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[3].layerAdmin.layerURL, { layers: this.userpagelayers[3].layerAdmin.layerIdent, format: this.userpagelayers[3].layerAdmin.layerFormat, transparent: true}),
+                                [this.userpagelayers[4].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[4].layerAdmin.layerURL, { layers: this.userpagelayers[4].layerAdmin.layerIdent, format: this.userpagelayers[4].layerAdmin.layerFormat, transparent: true})}
                 break
             case 6:
-                this.overlays = { [this.userpagelayers[0].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layer_admin.layerURL, { layers: this.userpagelayers[0].layer_admin.layerIdent, format: this.userpagelayers[0].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[1].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layer_admin.layerURL, { layers: this.userpagelayers[1].layer_admin.layerIdent, format: this.userpagelayers[1].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[2].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layer_admin.layerURL, { layers: this.userpagelayers[2].layer_admin.layerIdent, format: this.userpagelayers[2].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[3].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[3].layer_admin.layerURL, { layers: this.userpagelayers[3].layer_admin.layerIdent, format: this.userpagelayers[3].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[4].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[4].layer_admin.layerURL, { layers: this.userpagelayers[4].layer_admin.layerIdent, format: this.userpagelayers[4].layer_admin.layerFormat, transparent: true}),
-                                [this.userpagelayers[5].layer_admin.layerName] : L.tileLayer.wms(this.userpagelayers[5].layer_admin.layerURL, { layers: this.userpagelayers[5].layer_admin.layerIdent, format: this.userpagelayers[5].layer_admin.layerFormat, transparent: true})}
+                this.overlays = { [this.userpagelayers[0].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[0].layerAdmin.layerURL, { layers: this.userpagelayers[0].layerAdmin.layerIdent, format: this.userpagelayers[0].layerAdmin.layerFormat, transparent: true}),
+                                [this.userpagelayers[1].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[1].layerAdmin.layerURL, { layers: this.userpagelayers[1].layerAdmin.layerIdent, format: this.userpagelayers[1].layerAdmin.layerFormat, transparent: true}),
+                                [this.userpagelayers[2].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[2].layerAdmin.layerURL, { layers: this.userpagelayers[2].layerAdmin.layerIdent, format: this.userpagelayers[2].layerAdmin.layerFormat, transparent: true}),
+                                [this.userpagelayers[3].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[3].layerAdmin.layerURL, { layers: this.userpagelayers[3].layerAdmin.layerIdent, format: this.userpagelayers[3].layerAdmin.layerFormat, transparent: true}),
+                                [this.userpagelayers[4].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[4].layerAdmin.layerURL, { layers: this.userpagelayers[4].layerAdmin.layerIdent, format: this.userpagelayers[4].layerAdmin.layerFormat, transparent: true}),
+                                [this.userpagelayers[5].layerAdmin.layerName] : L.tileLayer.wms(this.userpagelayers[5].layerAdmin.layerURL, { layers: this.userpagelayers[5].layerAdmin.layerIdent, format: this.userpagelayers[5].layerAdmin.layerFormat, transparent: true})}
                 break
         }
 
@@ -83,7 +83,7 @@
         this.overlays = { nexrad: n49}
         this.init_map()
         for (let i of this.userpagelayers) {
-            n = i.layer_admin
+            n = i.layerAdmin
             console.log(n.layerName)
             this.cl.name = n.layerName
             this.cl.URL = L.tileLayer.wms(n.layerURL, {layers: n.layerIdent, format: n.layerFormat, transparent: true})
@@ -116,7 +116,7 @@
         this.cls.push(n)
         this.q += 1;
         console.log(this.q)
-        let n = i.layer_admin
+        let n = i.layerAdmin
         let p = n.layerName
         console.log (p)
         this.layeron[this.q-1] = n.layerName

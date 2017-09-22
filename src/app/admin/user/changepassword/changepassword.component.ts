@@ -3,7 +3,7 @@ import { Http, Headers, Response } from '@angular/http';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { MdDialog, MdDialogRef, MdInputModule, MD_DIALOG_DATA} from '@angular/material';
 import { UserService } from '../../../../_services/user.service';
-import { User } from '../../../../_models/user-model';
+import { User } from '../../../../_models/user.model';
 import { genSalt, hash } from 'bcrypt'
 import { Md5 } from 'ts-md5/dist/md5'
 

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
  
 import { AuthenticationService } from '../../_services/authentication.service';
 import { UserService } from '../../_services/user.service';
-import { User } from '../../_models/user-model'
+import { User } from '../../_models/user.model'
 import { Md5 } from 'ts-md5/dist/md5'
 
 @Component({

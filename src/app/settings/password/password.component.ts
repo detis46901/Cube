@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { UserService } from '../../../_services/user.service';
 import { Configuration } from '../../../_api/api.constants'
 import { Http, Headers, Response } from '@angular/http';
-import { User } from '../../../_models/user-model'
+import { User } from '../../../_models/user.model'
 import { Md5 } from 'ts-md5/dist/md5'
 
 @Component({

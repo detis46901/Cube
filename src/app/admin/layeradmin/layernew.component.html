@@ -1,9 +1,9 @@
 <!-- This defines the modal that pops up after a "Create New Layer" click event from "Layers" control-->
 <div class="modal-header">
-    <div class="col-md-6">
+    <div class="col-md-9">
         <h4 class="modal-title">Create New Layer</h4>
     </div>
-    <div class="col-md-1 col-md-offset-5">
+    <div class="col-md-1 col-md-offset-2">
         <button type="button" class="close" aria-label="Close" (click)="dialog.closeAll()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -115,19 +115,19 @@
             </div>
             <div id="formBlock" class="form-group">
                 <div *ngIf="layerFormat == null" class="col-md-1">
-                    <label id="formatLabel" for="newlayerformat">Format</label>
+                    <label id="formatLabel" for="newLayerFormat">Format</label>
                 </div>
                 <div *ngIf="layerFormat != null" class="col-md-1">
-                    <label id="formatLabel" for="newlayerformattext">Format</label>
+                    <label id="formatLabel" for="newLayerFormatText">Format</label>
                 </div>
 
                 <div style="margin-bottom:10px;" class="col-md-5">
-                    <select *ngIf="layerFormat == null" id="newlayerformat" name="newLayerFormat" class="form-control input-sm col-sm" [(ngModel)] = "newlayeradmin.layerFormat" required type="text">
+                    <select *ngIf="layerFormat == null" id="newLayerFormat" name="newLayerFormat" class="form-control input-sm col-sm" [(ngModel)] = "newlayeradmin.layerFormat" required type="text">
                         <option>image/png</option>
                         <option>image/jpg</option>
                         <option>image/jpeg</option>
                     </select>
-                    <input *ngIf="layerFormat != null" id="newlayerformattext"  type="text" class="form-control input-sm col-sm"  required value="{{layerFormat}}" readonly>
+                    <input *ngIf="layerFormat != null" id="newLayerFormatText"  type="text" class="form-control input-sm col-sm"  required value="{{layerFormat}}" readonly>
                 </div>
             </div>
         </div>
@@ -136,7 +136,7 @@
     </form>
 </div>
 
-<div class="modal-footer">
+<div id="layerNewFooter" class="modal-footer">
     <md-dialog-actions>
         <button type="button" class="btn btn-secondary text-center" (click)="dialog.closeAll()">Close</button>
         <button class="btn btn-outline-primary text-center" (click)="addLayer(newlayeradmin)" [disabled]="!f.valid">Add Layer</button>

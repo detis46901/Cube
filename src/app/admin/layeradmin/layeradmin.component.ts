@@ -1,11 +1,11 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { UserService } from '../../../_services/user.service';
-import { User } from '../../../_models/user-model'
+import { User } from '../../../_models/user.model'
 import { Configuration } from '../../../_api/api.constants'
 import { LayerAdminService } from '../../../_services/layeradmin.service';
 import { LayerPermissionService } from '../../../_services/layerpermission.service';
-import { UserPageLayerService } from '../../../_services/user-page-layer.service';
+import { UserPageLayerService } from '../../../_services/userPageLayer.service';
 import { LayerAdmin, LayerPermission } from '../../../_models/layer.model';
 import { LayerPermissionComponent } from './layerpermission.component';
 import { LayerNewComponent } from './layernew.component'
@@ -13,7 +13,6 @@ import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ServerService } from '../../../_services/server.service'
 import { Server } from '../../../_models/server.model'
-import { ConfirmdeleteService } from '../../../_services/confirmdelete.service';
 import { Observable } from 'rxjs/Observable';
 import { confirmDelete } from '../../../_models/confDel.model'
 import { MdDialog, MdDialogRef } from '@angular/material';
@@ -50,7 +49,7 @@ export class LayerAdminComponent implements OnInit {
     sortedOldToNew: any;
     sortedNewToOld: any;
 
-    constructor(private layerAdminService: LayerAdminService, private dialog: MdDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private confDelService: ConfirmdeleteService, private serverService: ServerService) {
+    constructor(private layerAdminService: LayerAdminService, private dialog: MdDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
@@ -83,10 +82,10 @@ export class LayerAdminComponent implements OnInit {
       }
 
     //Open create new layer modal on request from "Layers"
-    opennew() {
+    private openNew() {
         console.log ("opennew")
         this.userperm = "A user"
-        const dialogRef = this.dialog.open(LayerNewComponent, {height:'40%', width:'25%'});
+        const dialogRef = this.dialog.open(LayerNewComponent, {height:'360px', width:'500px'});
         dialogRef.afterClosed().subscribe(result => {
             this.getDismissReason = result;
             console.log(this.getDismissReason)

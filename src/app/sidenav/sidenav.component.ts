@@ -13,11 +13,10 @@ export class SideNavComponent {
     @Input() bottom : string
     @Input() popup : string
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
 
     public hideMenu() {
-        this.sidenavService.setFalse();
+        this.sidenavService.toggleHidden();
         document.getElementById("mySidenav").style.width = "0";
         document.getElementById("place-input").style.left = "15px";
         document.getElementById("goto").style.left = "15px";

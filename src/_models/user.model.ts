@@ -10,8 +10,8 @@ export class User {
 }
 
 export class UserPage {
-    ID?: number;
-    userID?: number;
+    ID: number;
+    userID: number;
     page: string;
     pageOrder: number;
     default: boolean;

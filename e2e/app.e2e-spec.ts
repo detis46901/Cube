@@ -1,10 +1,10 @@
-import { CProjPage } from './app.po';
+import { CubePage } from './app.po';
 
 describe('c-proj App', function() {
-  let page: CProjPage;
+  let page: CubePage;
 
   beforeEach(() => {
-    page = new CProjPage();
+    page = new CubePage();
   });
 
   it('should display message saying app works', () => {

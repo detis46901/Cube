@@ -3,7 +3,6 @@ import { Http, Response, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
-export class LayerPermissionService {
+export class PasswordChangeService {
     constructor(private http: Http) {}
-
 }

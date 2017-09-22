@@ -2,47 +2,33 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 
-var isOpen: boolean;
-var geoData: Array<string>;
-var markerData: string;
+//Must be declared here in order to mitigate a bug where toggling sidenav via view dropdown doesn't work unless clicked twice.
+let isOpen: boolean = true;
+let geoData: Array<string>;
+let markerData: string;
 
 @Injectable()
 export class SidenavService {
-    //private isOpen: boolean;
-    // Observable string sources
     private bottomText = new Subject<string>();
-    bottomText$ = this.bottomText.asObservable();
-    //missionConfirmed$ = this.missionConfirmedSource.asObservable();
-  
-     // Service message commands
-    
-    public setFalse() {
-        //console.log(this.isOpen)
-        isOpen = false;
-    }
-    
-    public setTrue() {
-        //console.log(this.isOpen)
-        isOpen = true;
+    public bottomText$ = this.bottomText.asObservable();
+
+    public toggleHidden(): void {
+        isOpen = !isOpen;
     }
 
-    public setGeoData(data: Array<string>) {
+    public setGeoData(data: Array<string>): void {
         geoData = data;
-        console.log(data)
     }
 
-    public setMarkerData(data: string) {
+    public setMarkerData(data: string): void {
         markerData = data;
-        console.log(data)
     }
 
-    public getOpen(): boolean {
-        //console.log(this.isOpen)
+    public getHidden(): boolean {
         return isOpen;
     }
 
-    public getGeoData(): Array<string> { //= (): Observable<>
-        console.log(geoData)
+    public getGeoData(): Array<string> {
         return geoData;
     }
 

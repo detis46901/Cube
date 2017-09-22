@@ -2,10 +2,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { UserService } from '../../../../_services/user.service';
-import { User } from '../../../../_models/user-model'
+import { User } from '../../../../_models/user.model'
 import { Configuration } from '../../../../_api/api.constants'
-import { UserPageService } from '../../../../_services/user-page.service'
-import { UserPage } from '../../../../_models/user-model'
+import { UserPageService } from '../../../../_services/userPage.service'
+import { UserPage } from '../../../../_models/user.model'
 import { FilterPipe } from '../../../../_pipes/rowfilter.pipe'
 import { NumFilterPipe } from '../../../../_pipes/numfilter.pipe'
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';

@@ -1,6 +1,6 @@
 import { browser, element, by } from 'protractor';
 
-export class CProjPage {
+export class CubePage {
   navigateTo() {
     return browser.get('/');
   }

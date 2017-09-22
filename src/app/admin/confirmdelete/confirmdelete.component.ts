@@ -1,10 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { UserService } from '../../../_services/user.service';
-import { User } from '../../../_models/user-model';
+import { User } from '../../../_models/user.model';
 import { Configuration } from '../../../_api/api.constants';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmdeleteService } from '../../../_services/confirmdelete.service';
 import { Observable } from 'rxjs';
 import {MdDialog, MdDialogRef} from '@angular/material';
 
@@ -25,7 +24,7 @@ export class ConfirmdeleteComponent implements OnInit {
 	public token: string;
 	public userID: number;
 
-	constructor(private confDelService: ConfirmdeleteService, public dialog: MdDialog) {
+	constructor(public dialog: MdDialog) {
 		var currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.token = currentUser && currentUser.token;
 		this.userID = currentUser && currentUser.userid;

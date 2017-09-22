@@ -5,20 +5,19 @@
 import { ElementRef, Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MapService } from "./services/map.service";
 import { WFSService } from "./services/wfs.service";
-import { WFSMarker } from "../../_models/wfs.model";
 import { Location } from "./core/location.class";
 import { GeocodingService } from "./services/geocoding.service";
 import { NavigatorComponent } from "./navigator/navigator.component";
 import { MarkerComponent } from "./marker/marker.component";
 import { LayerPermissionService } from "../../_services/layerpermission.service"
 import { LayerAdminService } from "../../_services/layeradmin.service"
-import { UserPageService } from '../../_services/user-page.service'
+import { UserPageService } from '../../_services/userPage.service'
 import { SidenavService } from '../../_services/sidenav.service'
 import { ServerService } from '../../_services/server.service'
 import { LayerPermission, LayerAdmin, UserPageLayer } from "../../_models/layer.model";
 import { Server } from "../../_models/server.model";
-import { UserPage } from '../../_models/user-model';
-import { UserPageLayerService } from '../../_services/user-page-layer.service'
+import { UserPage } from '../../_models/user.model';
+import { UserPageLayerService } from '../../_services/userPageLayer.service'
 import { Http, Response, Headers } from '@angular/http'
 import { Observable } from 'rxjs/Observable';
 import { Subscription }   from 'rxjs/Subscription';
@@ -297,8 +296,12 @@ export class MapComponent {
                 console.log(url)
                 return url
             }
+            case ("Geoserver"): {
+                return ""
+            }
+            }
         }
-    }
+
     //Reads index of layer in dropdown, layeradmin, and if it is shown or not. Needs to remove a layer if a new one is selected
     toggleLayers(index, layer: UserPageLayer, checked) {
         let zindex = 1000

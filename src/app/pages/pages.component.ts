@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UserPageService } from '../../_services/user-page.service'
-import { UserPage } from '../../_models/user-model';
+import { UserPageService } from '../../_services/userPage.service'
+import { UserPage } from '../../_models/user.model';
 
 
 

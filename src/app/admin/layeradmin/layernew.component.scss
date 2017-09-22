@@ -13,29 +13,16 @@ label {
     top:3px;
 }
 
-/*#newlayerdescription, #newlayertype, #newlayergeom, {
-    left:30px;
-}
-
-#descriptionLabel, #typeLabel, #geomLabel {
-    left:38px;
-}*/
-
 h4 {
     color:black;
 }
 
-/*#formatLabel, #typeLabel, #geomLabel {
-    left:25px;
-    top:3px;
-}*/
-
-#nameBlock, #idBlock, #servBlock, #formBlock {
+#nameBlock, #idBlock, #servBlock, #serviceBlock {
     position:relative; 
     right:8%
 }
 
-#descBlock, #typeBlock, #geomBlock {
+#descBlock, #typeBlock, #geomBlock, #formBlock {
     position:relative; 
     left:8%
 }

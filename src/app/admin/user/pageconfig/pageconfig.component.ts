@@ -2,12 +2,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { UserService } from '../../../../_services/user.service';
-import { User } from '../../../../_models/user-model'
+import { User } from '../../../../_models/user.model'
 import { Configuration } from '../../../../_api/api.constants'
-import { UserPageService } from '../../../../_services/user-page.service'
+import { UserPageService } from '../../../../_services/userPage.service'
 import { LayerPermissionService } from '../../../../_services/layerpermission.service'
-import { UserPageLayerService } from '../../../../_services/user-page-layer.service'
-import { UserPage } from '../../../../_models/user-model'
+import { UserPageLayerService } from '../../../../_services/userPageLayer.service'
+import { UserPage } from '../../../../_models/user.model'
 import { UserPageLayer } from '../../../../_models/layer.model'
 import { LayerPermission } from '../../../../_models/layer.model'
 import { FilterPipe } from '../../../../_pipes/rowfilter.pipe'
