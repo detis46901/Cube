@@ -71,14 +71,16 @@ export class ServerService {
             .map((response: Response) => response.text());
     }
 
-    public getFolders(serv: Server, path: string, options: any): Observable<string> {
+    public getFolders(serv: Server, path: string, options: any, type:string): Observable<string> {
         let actionUrl: string
         switch(serv.serverType) {
             case "Geoserver": 
                 actionUrl = serv.serverURL + '/wms?request=getCapabilities&service=WMS'; 
                 break;
             case "ArcGIS": 
-                actionUrl = serv.serverURL + path + '?f=pjson'; 
+                if (type == "layer") {path = path + "/MapServer"}
+                actionUrl = serv.serverURL + "/" + path + '?f=pjson'; 
+                console.log("actionURL = " + actionUrl)
                 break;
         }     
         return this._http.get(actionUrl, options)

@@ -26,6 +26,7 @@ export class LayerNewComponent implements OnInit{
     @Input() layerServer;
     @Input() layerFormat;
     @Input() layerType;
+    @Input() layerName;
 
     //Set to true in ngOnInit() if inputs are read from the server screen, thus the server screen is calling this modal
     public serverCalled: boolean = false;
@@ -51,6 +52,7 @@ export class LayerNewComponent implements OnInit{
        console.log (this.layerIdent)
        if(this.layerIdent!=null && this.layerType!=null && this.layerServer!=null) {
             this.serverCalled = true;
+            this.newlayeradmin.layerName = this.layerName;
             console.log("ServerCalled")
        }
        //console.log(this.layerName + this.layerIdent + this.layerFormat + this.layerServer)

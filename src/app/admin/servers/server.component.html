@@ -103,8 +103,8 @@
             <th><h2 style="position:relative; top:7px">Format</h2><button type="button" class="close" aria-label="Close" style="position:relative; color:black; left:30%; bottom:16px;" (click)="clearArrays()">&times;</button></th>
             <!--<th><h3 style="position:relative; top:7.5px;">Create Layer</h3></th>-->
         </tr>
-        <tr *ngFor="let layer of serviceArray">
-            <td><h4><button (click)="WMSRequest(layer.name, 'layer')">{{layer.name}}</button></h4></td>
+        <tr *ngFor="let service of serviceArray">
+            <td><h4><button (click)="WMSRequest(service.name, 'layer')">{{service.name}}</button></h4></td>
             <td><h4>Format</h4></td>
             <!--<td><input type='radio' name="create" value="toCreate"></td>-->
         </tr>
@@ -114,7 +114,7 @@
                 <td><h4>{{layer.name}}</h4></td>
                 <td><h4>Format</h4></td>
                 <!--<td><input type='radio' name="create" value="toCreate"></td>-->
-                <td><button (click)="createLayer(layerArray.indexOf(layer))">Create Layer</button></td>
+                <td><button (click)="createLayer(layerArray.indexOf(layer), layer.name)">Create Layer</button></td>
         </tr>
     </table>
 </div>

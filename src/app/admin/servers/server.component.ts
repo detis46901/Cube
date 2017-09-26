@@ -32,7 +32,8 @@ export class ServerComponent implements OnInit {
     public displayLayers: boolean;
     public displayFolders: boolean;
     public closeResult: string;
-    public path: Array<string> = []
+    public path: string = ""
+    public activeService: number;
 
     constructor(private _http: Http, private serverService: ServerService, private dialog: MdDialog) {
         this.headers = new Headers();
@@ -76,14 +77,13 @@ export class ServerComponent implements OnInit {
         this.currServer = serv;
         this.clearArrays()
         this.displayFolders = true;
-        this.serverService.getFolders(serv, path, this.options)
+        this.serverService.getFolders(serv, path, this.options, "")
             .subscribe((response: string) =>
                 {this.parseLayers(response, folder); console.log("done")}
             );
     }
 
     parseLayers(res: string, folder) {
-        this.path.push
         let list = JSON.parse(res)
         if (list.folders) {
         console.log (list.folders)
@@ -118,15 +118,15 @@ export class ServerComponent implements OnInit {
         }
     }
 
-    WMSRequest(folder, type) {
-        console.log('folder = ' + folder)
-        if (type=="service") {this.path.push("/" + folder)}
-        if (type=="layer") {this.path.push("/" + folder + "/MapServer")}
+    WMSRequest(path, type) {
+        console.log('path = ' + path)
+        console.log('type = ' + type)
+        this.path = "/" + path
         this.clearArrays()
         this.displayFolders = true;
-        this.serverService.getFolders(this.currServer, this.path[this.path.length-1], this.options)
+        this.serverService.getFolders(this.currServer, this.path, this.options, type)
             .subscribe((response: string) =>
-                {this.parseLayers(response, folder); console.log("done")}
+                {this.parseLayers(response, this.path); console.log(this.path)}
             );
     }
     openConfDel(server) {
@@ -159,11 +159,13 @@ export class ServerComponent implements OnInit {
             })
     }
 
-    createLayer(index) {
+    createLayer(index, name) {
         const dialogRef = this.dialog.open(LayerNewComponent, {height:'360px', width:'500px'})
-        console.log(this.serviceArray[index]["name"]) //error here
-        dialogRef.componentInstance.layerIdent = "0"
-        dialogRef.componentInstance.layerService = this.serviceArray[index]["name"]
+        console.log(index)
+        console.log("layer name? " + name) //error here
+        dialogRef.componentInstance.layerName = name
+        dialogRef.componentInstance.layerIdent = index
+        dialogRef.componentInstance.layerService = this.path
         dialogRef.componentInstance.layerType = this.serviceArray[index]["type"]
         dialogRef.componentInstance.layerServer = this.currServer
 

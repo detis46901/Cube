@@ -161,9 +161,10 @@ export class WFSService {
     }
 
     getfeatureinfo(URL, mouseDown: boolean) {
-        return this.http.get(URL, {headers: this.headers})
+        return this.http.get(URL)
             .map((responseData) => {
                 let temp: string = responseData['_body']
+                console.log("temp=" + temp)
 
                 //This "if" block captures layer features with no pre-formatted "content.ftl" file
                 if (temp.startsWith("<table")) {
@@ -189,6 +190,16 @@ export class WFSService {
                     }
                 }
 
+                //This "if" block captures layer features from ArcGIS Servers
+                if (temp.includes("<FIELDS")) {
+                    let formattedHead: Array<string> = [];
+                    let formattedData: Array<string> = [];
+                    let temp1 = temp.split("<FIELDS ")
+                    let temp2 = temp1[1].split("></FIELDS>")
+                    let temp3 = temp2[0].replace(" ","<BR>")
+                    temp = temp3
+                    console.log (temp3)
+                }
                 //7/13/17 This allows click events to create sidenav popup information, while allowing mousemove events to change the cursor icon to a pointing hand without updating popup.
                 if (!mouseDown)
                     {this.popupText.next(temp)}

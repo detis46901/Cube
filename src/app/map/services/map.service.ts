@@ -17,7 +17,7 @@ export class MapService {
     constructor(private http:Http) {
         this.baseMaps = {
             OpenStreetMap: L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-                minZoom: 10,
+                minZoom: 4,
                 maxZoom: 20,
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
             }),

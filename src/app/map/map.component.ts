@@ -241,7 +241,8 @@ export class MapComponent {
         for (let i=0; i<temp.length; i++) {
             console.log(temp[i])
             if (temp[i].layerON) {
-                this.toggleLayers(i,temp[i], false)
+                //this.toggleLayers(i,temp[i], false)
+                this.setCurrentLayer(i, temp[i], false)
             }
         }
     }
@@ -266,16 +267,19 @@ export class MapComponent {
                         let IDENT = x.layer_admin.layerIdent
                         let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
                         let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
-                        let URL = this.server.serverURL + '/wms?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
+                        //let URL = "http://maps.indiana.edu/arcgis/services/Infrastructure/Railroads_Rail_Crossings_INDOT/MapServer/WMSServer?version=1.1.1&request=GetFeatureInfo&layers=0&styles=default&SRS=EPSG:4326&BBOX=-86.35185241699219,40.35387022893512,-85.91274261474611,40.62620049126207&width=1044&height=906&format=text/html&X=500&Y=400&query_layers=0"
+                        let URL = this.formLayerRequest(layer) + '?service=WMS&version=1.1.1&request=GetFeatureInfo&layers='+IDENT+'&query_layers='+IDENT+'&BBOX='+BBOX+'&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&FORMAT=text%2Fhtml&SRS=EPSG:4326&X='+X+'&Y='+Y;
                         console.log(URL)
                         this.wfsservice.getfeatureinfo(URL, false)
                         .subscribe((data: any) => this.getFeatureData = data)
+                        console.log (this.getFeatureData)
                     })
                 }
             }
         }
 
         if(!checked) {
+            console.log("Turning off layer" + layer.layer_admin.layerName)
             this.toggleLayers(index, layer, checked)
         }
         
@@ -361,13 +365,16 @@ export class MapComponent {
                 this.noLayers = true;
             }
             else if (this.currLayer == layer && !allLayersOff) {
+                //9/25/17: Needs to make the next layer the current layer.  Right now it just goes to the first one.
                 this.currLayer = nextActive
                 this.currLayerName = nextActive.layer_admin.layerName
+                this.setCurrentLayer(index, this.currLayer, true)  //sets the current layer if the current layer is turned off.
                 this.noLayers = false;
             }
         }
     }
 
+    //I don't think this is being used
     openFeatureInfo(serv: Server) {
         this._map.on('click', (event: L.LeafletMouseEvent) => { 
             let BBOX = this._map.getBounds().toBBoxString();
