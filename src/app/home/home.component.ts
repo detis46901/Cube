@@ -1,14 +1,14 @@
 
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-import { UserService } from '../../_services/user.service';
+import { UserService } from '../../_services/_user.service';
 import { User } from '../../_models/user.model'
 import { Configuration } from '../../_api/api.constants'
 import { SidenavService} from '../../_services/sidenav.service'
 import { WFSService } from '../map/services/wfs.service'
 
 @Component({
-  selector: 'app-root',
+  selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   providers: [SidenavService, WFSService]

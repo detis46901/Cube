@@ -1,16 +1,16 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-import { UserService } from '../../../../_services/user.service';
+import { UserService } from '../../../../_services/_user.service';
 import { User } from '../../../../_models/user.model'
 import { Configuration } from '../../../../_api/api.constants'
-import { UserPageService } from '../../../../_services/userPage.service'
+import { UserPageService } from '../../../../_services/_userPage.service'
 import { UserPage } from '../../../../_models/user.model'
 import { FilterPipe } from '../../../../_pipes/rowfilter.pipe'
 import { NumFilterPipe } from '../../../../_pipes/numfilter.pipe'
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { MdDialog, MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
-import { ConfirmdeleteComponent } from '../../confirmdelete/confirmdelete.component';
+import { ConfirmDeleteComponent } from '../../confirmDelete/confirmDelete.component';
 
 
 @Component({
@@ -131,7 +131,7 @@ export class PageComponent implements OnInit {
     }
 
     private openConfDel(userpage) {
-        const dialogRef = this.dialog.open(ConfirmdeleteComponent);
+        const dialogRef = this.dialog.open(ConfirmDeleteComponent);
         dialogRef.componentInstance.objCode = this.objCode;
         dialogRef.componentInstance.objID = userpage.ID;
         dialogRef.componentInstance.objName = userpage.page;

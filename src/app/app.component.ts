@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { UserService } from '../_services/user.service';
+import { Component } from '@angular/core';
+import { UserService } from '../_services/_user.service';
 import { User } from '../_models/user.model';
 import { Configuration } from '../_api/api.constants';
 
-@Component( {
-    selector: 'app-root',
+@Component({
+    selector: 'app',
     providers: [UserService, Configuration],
     template: `
     <div>     

@@ -1,18 +1,15 @@
 {
-  "compilerOptions": {
-    "baseUrl": "",
-    "declaration": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "lib": ["es6", "dom"],
-    "mapRoot": "./",
-    "module": "commonjs", //I've seen implementations with module as commonjs, might fix some things
-    "moduleResolution": "node",
-    "outDir": "../dist/out-tsc",
-    "sourceMap": true,
-    "target": "es5"
-   /* "typeRoots": [
-      "../node_modules/@types"
-    ]*/ //This may be preventing the typings folder from being used
-  }
+    "compilerOptions": {
+      "baseUrl": "",
+      "declaration": false,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "lib": ["es6", "dom"],
+      "mapRoot": "./",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "outDir": "../dist/out-tsc",
+      "sourceMap": true,
+      "target": "es5"
+    }
 }

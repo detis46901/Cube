@@ -1,4 +1,10 @@
 <div id="admin_bg"></div>
 <header [user]="user" [screenCode]="screen"></header>
-<div id="admin_nav"><adminnav></adminnav></div>
-<div style="position:absolute;left:230px;top:50px;right:0px"><router-outlet name="admin"></router-outlet></div>
+
+<div id="admin_nav">
+    <admin-nav></admin-nav>
+</div>
+
+<div id="adminRouter">
+    <router-outlet name="admin"></router-outlet>
+</div>

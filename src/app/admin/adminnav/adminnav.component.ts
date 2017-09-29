@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'adminnav',
-    templateUrl: './adminnav.component.html',
-    styleUrls: ['./adminnav.component.scss']
+    selector: 'admin-nav',
+    templateUrl: './adminNav.component.html',
+    styleUrls: ['./adminNav.component.scss']
 })
-export class AdminNavComponent { }
+
+export class AdminNavComponent {}

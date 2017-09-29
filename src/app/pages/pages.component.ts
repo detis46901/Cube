@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { UserPageService } from '../../_services/userPage.service'
+import { UserPageService } from '../../_services/_userPage.service'
 import { UserPage } from '../../_models/user.model';
 
 
 
 @Component({
-  selector: 'app-pages',
+  selector: 'pages',
   templateUrl: './pages.component.html'
 })
 export class PagesComponent implements OnInit{

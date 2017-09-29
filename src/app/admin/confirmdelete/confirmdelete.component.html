@@ -1,5 +1,3 @@
-<!--Confirms delete selection, is called by any component that has a delete request from the user, and verifies choice-->
-
 <div class="modal-header">
     <div class="row" style="width:100%">
         <div class="col-md-10">
@@ -12,12 +10,14 @@
         </div>
     </div>
 </div>
+
 <div class="modal-body">
     <p>Are you sure you want to permanently delete "{{objName}}"?</p>
     <div *ngIf="dependentWarning">
         <p><b>Deleting this object will delete its dependents.</b></p>
     </div>
 </div>
+
 <div class="modal-footer">
     <md-dialog-actions>
         <button [md-dialog-close]="true" id="confDelClick" type="button" class="btn btn-outline-primary">Delete</button>

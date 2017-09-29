@@ -6,21 +6,21 @@
 import { Component, Input, OnInit } from '@angular/core';
 //import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Http, Headers, Response } from '@angular/http';
-import { UserService } from '../../../_services/user.service';
+import { UserService } from '../../../_services/_user.service';
 import { User } from '../../../_models/user.model'
 import { Configuration } from '../../../_api/api.constants'
-import { DepartmentService } from '../../../_services/department.service'
-import { GroupService } from '../../../_services/group.service'
-import { RoleService } from '../../../_services/role.service'
-import { UserPageService } from '../../../_services/userPage.service'
-import { LayerPermissionService } from '../../../_services/layerpermission.service';
-import { UserPageLayerService } from '../../../_services/userPageLayer.service';
+import { DepartmentService } from '../../../_services/_department.service'
+import { GroupService } from '../../../_services/_group.service'
+import { RoleService } from '../../../_services/_role.service'
+import { UserPageService } from '../../../_services/_userPage.service'
+import { LayerPermissionService } from '../../../_services/_layerPermission.service';
+import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { UserPage } from '../../../_models/user.model';
 import { Department, Group, Role } from '../../../_models/organization.model'
 import { PagePipe } from '../../../_pipes/rowfilter2.pipe'
 import { NumFilterPipe } from '../../../_pipes/numfilter.pipe'
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component';
+import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
 import { PageComponent } from './page/page.component'
 import { PageConfigComponent } from './pageconfig/pageconfig.component'
 import { ChangePasswordComponent } from './changepassword/changepassword.component'
@@ -222,7 +222,7 @@ export class UserComponent implements OnInit{
         //     this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         //     this.getUserPageItems();
         // });
-        // console.log("openpermission from layernew")
+        // console.log("openpermission from layerNew")
 
         let dialogRef = this.dialog.open(PageComponent);
         dialogRef.componentInstance.userID = userID;
@@ -236,7 +236,7 @@ export class UserComponent implements OnInit{
     }
 
     openConfDel(user) {
-        const dialogRef = this.dialog.open(ConfirmdeleteComponent)
+        const dialogRef = this.dialog.open(ConfirmDeleteComponent)
         dialogRef.componentInstance.objCode = this.objCode
         dialogRef.componentInstance.objID = user.ID
         dialogRef.componentInstance.objName = user.firstName + " " + user.lastName
@@ -295,7 +295,7 @@ export class UserComponent implements OnInit{
         //     this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         //     this.getUserPageItems();
         // });;
-        // console.log("openpermission from layernew")
+        // console.log("openpermission from layerNew")
         let dialogRef = this.dialog.open(PageConfigComponent);
         dialogRef.componentInstance.pageID = pageID;
         dialogRef.componentInstance.userID = userID;

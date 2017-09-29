@@ -30,28 +30,28 @@ import { MdInputModule } from '@angular/material';
 import { LoginComponent } from './user/login.component';
 import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
-import { AdminNavComponent } from './admin/adminnav/adminnav.component';
+import { AdminNavComponent } from './admin/adminNav/adminNav.component';
 import { SettingsNavComponent } from './settings/settingsnav/settingsnav.component';
 import { OrganizationComponent } from './admin/organization/organization.component';
-import { LayerAdminComponent} from './admin/layeradmin/layeradmin.component';
-import { LayerPermissionComponent} from './admin/layeradmin/layerpermission.component';
+import { LayerAdminComponent} from './admin/layerAdmin/layerAdmin.component';
+import { LayerPermissionComponent} from './admin/layerAdmin/layerPermission/layerPermission.component';
 import { PageComponent} from './admin/user/page/page.component';
 import { PageConfigComponent} from './admin/user/pageconfig/pageconfig.component';
-import { LayerNewComponent } from './admin/layeradmin/layernew.component';
+import { LayerNewComponent } from './admin/layerAdmin/layerNew/layerNew.component';
 import { UserComponent } from './admin/user/user.component';
-import { adminPagesComponent } from './admin/adminpages/adminpages.component';
-import { ModulesComponent } from './admin/modules/modules.component';
-import { DefaultsComponent } from './admin/defaults/defaults.component';
-import { BoundariesComponent } from './admin/boundaries/boundaries.component';
-import { NotificationsComponent } from './admin/notifications/notifications.component';
-import { ServerComponent } from './admin/servers/server.component';
-import { ConfirmdeleteComponent } from './admin/confirmdelete/confirmdelete.component';
+import { AdminPageComponent } from './admin/adminPage/adminPage.component';
+import { ModuleComponent } from './admin/module/module.component';
+import { DefaultsComponent } from './admin/default/default.component';
+import { BoundaryComponent } from './admin/boundary/boundary.component';
+import { NotificationComponent } from './admin/notification/notification.component';
+import { ServerComponent } from './admin/server/server.component';
+import { ConfirmDeleteComponent } from './admin/confirmDelete/confirmDelete.component';
 import { SettingsComponent } from './settings/settings.component';
-import { UserPagesComponent } from './settings/user-pages/user-pages.component';
+import { UserPageComponent } from './settings/user-pages/user-pages.component';
 import { PasswordComponent } from './settings/password/password.component';
 import { MarkerDataComponent } from './marker_data/marker-data.component';
 import { LayerControlsComponent } from './map/layer-controls/layer-controls.component';
-import { ServerNewComponent } from './admin/servers/servernew.component';
+import { ServerNewComponent } from './admin/server/serverNew/serverNew.component';
 import { ChangePasswordComponent } from './admin/user/changepassword/changepassword.component';
 import { HeaderComponent } from './header/header.component';
 import { SideNavComponent } from './sidenav/sidenav.component';
@@ -62,16 +62,15 @@ import { NavigatorComponent } from '../app/map/navigator/navigator.component';
 import { PagesComponent } from './pages/pages.component';
 
 //Services
-import { DepartmentService } from '../_services/department.service';
-import { GroupService } from '../_services/group.service';
-import { RoleService } from '../_services/role.service';
-import { LayerAdminService } from '../_services/layeradmin.service';
-import { LayerPermissionService } from '../_services/layerpermission.service';
-import { UserPageLayerService } from '../_services/userPageLayer.service';
-import { UserPageService } from '../_services/userPage.service';
-import { WFSService } from '../app/map/services/wfs.service';
+import { DepartmentService } from '../_services/_department.service';
+import { GroupService } from '../_services/_group.service';
+import { RoleService } from '../_services/_role.service';
+import { LayerAdminService } from '../_services/_layerAdmin.service';
+import { LayerPermissionService } from '../_services/_layerPermission.service';
+import { UserPageLayerService } from '../_services/_userPageLayer.service';
+import { UserPageService } from '../_services/_userPage.service';
 import { AuthenticationService} from '../_services/authentication.service';
-import { UserService } from '../_services/user.service';
+import { UserService } from '../_services/_user.service';
 
 
 @NgModule ({
@@ -80,7 +79,7 @@ import { UserService } from '../_services/user.service';
         MapComponent,
         MarkerComponent,
         NavigatorComponent,
-        PagesComponent,
+        PageComponent,
         HeaderComponent,
         SideNavComponent,
         HomeComponent,
@@ -91,9 +90,9 @@ import { UserService } from '../_services/user.service';
         OrganizationComponent,
         LayerAdminComponent,
         UserComponent,
-        adminPagesComponent,
+        AdminPageComponent,
         SettingsComponent,
-        UserPagesComponent,
+        UserPageComponent,
         PasswordComponent,
         FilterPipe,
         NumFilterPipe,
@@ -102,11 +101,11 @@ import { UserService } from '../_services/user.service';
         PageComponent,
         PageConfigComponent,
         LayerNewComponent,
-        ConfirmdeleteComponent,
-        ModulesComponent,
+        ConfirmDeleteComponent,
+        ModuleComponent,
         DefaultsComponent,
-        BoundariesComponent,
-        NotificationsComponent,
+        BoundaryComponent,
+        NotificationComponent,
         ServerComponent,
         MarkerDataComponent,
         LayerControlsComponent,
@@ -120,7 +119,7 @@ import { UserService } from '../_services/user.service';
         LayerPermissionComponent, 
         PageComponent, 
         PageConfigComponent, 
-        ConfirmdeleteComponent,
+        ConfirmDeleteComponent,
         ServerNewComponent
     ],
 
@@ -163,7 +162,6 @@ import { UserService } from '../_services/user.service';
         UserPageLayerService,
         UserPageService,
         Configuration,
-        WFSService, 
         BaseRequestOptions
     ], 
 

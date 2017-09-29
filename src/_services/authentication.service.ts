@@ -2,7 +2,6 @@ import 'rxjs/add/operator/map';
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs';
-import { User } from '../_models/user.model';
 import { Configuration } from '../_api/api.constants';
 
 @Injectable()

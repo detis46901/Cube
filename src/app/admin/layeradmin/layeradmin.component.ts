@@ -1,56 +1,36 @@
-import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
-import { UserService } from '../../../_services/user.service';
-import { User } from '../../../_models/user.model'
-import { Configuration } from '../../../_api/api.constants'
-import { LayerAdminService } from '../../../_services/layeradmin.service';
-import { LayerPermissionService } from '../../../_services/layerpermission.service';
-import { UserPageLayerService } from '../../../_services/userPageLayer.service';
+import { Component, OnInit } from '@angular/core';
+import { UserService } from '../../../_services/_user.service';
+import { User } from '../../../_models/user.model';
+import { Configuration } from '../../../_api/api.constants';
+import { LayerAdminService } from '../../../_services/_layerAdmin.service';
+import { LayerPermissionService } from '../../../_services/_layerPermission.service';
+import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { LayerAdmin, LayerPermission } from '../../../_models/layer.model';
-import { LayerPermissionComponent } from './layerpermission.component';
-import { LayerNewComponent } from './layernew.component'
-import { ConfirmdeleteComponent } from '../confirmdelete/confirmdelete.component'
-import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ServerService } from '../../../_services/server.service'
-import { Server } from '../../../_models/server.model'
-import { Observable } from 'rxjs/Observable';
-import { confirmDelete } from '../../../_models/confDel.model'
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { LayerPermissionComponent } from './layerPermission/layerPermission.component';
+import { LayerNewComponent } from './layerNew/layerNew.component';
+import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
+import { ServerService } from '../../../_services/_server.service';
+import { Server } from '../../../_models/server.model';
+import { MdDialog } from '@angular/material';
 
 @Component({
-  selector: 'layeradmin',
-  templateUrl: './layeradmin.component.html',
-  providers: [UserService, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, ServerService],
-  styleUrls: ['./layeradmin.component.scss']
+    selector: 'layer-admin',
+    templateUrl: './layerAdmin.component.html',
+    providers: [UserService, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, ServerService],
+    styleUrls: ['./layerAdmin.component.scss']
 })
 
 export class LayerAdminComponent implements OnInit {
+    //objCode refers to the admin menu tab the user is on, so the openConfDel method knows what to interpolate based on what it's deleting
+    private objCode: number = 2;
+    private token: string;
+    private userID: number;
 
-    //objCode values refer to the admin menu tab the user is on, so the openConfDel procedure knows what to interpolate based on what it's deleting
-    private objCode = 2
-
-    closeResult: string;
-    public user = new User;
-    public currLayer = new LayerAdmin;
-    public layeradmin = new LayerAdmin;
-    public newlayeradmin = new LayerAdmin;
-    public newlayerpermission = new LayerPermission;
-    public layerpermission: any;
-    public layeradmins: LayerAdmin[];
-    public token: string;
-    public userID: number;
-    public userperm: string;
-    public server: Server;
-    public servers: Array<Server>;
-
-    sortedNameAsc: any;
-    sortedNameDesc: any;
-    sortedType: any;
-    sortedOldToNew: any;
-    sortedNewToOld: any;
+    private layerAdmins: LayerAdmin[];
+    private servers: Array<Server>;
 
     constructor(private layerAdminService: LayerAdminService, private dialog: MdDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService) {
-        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
     }
@@ -60,170 +40,74 @@ export class LayerAdminComponent implements OnInit {
        this.getServers();
     }
 
-    //Open permissions modal on request from "Layers"
-    openpermission(layerid, layername) {
-        // const modalRef = this.modalService.open(LayerPermissionComponent, {size:'sm'})
-        // modalRef.componentInstance.layerID = layerid
-        // modalRef.componentInstance.layerName = layername
-        // modalRef.result.then((result) => {
-        //     this.closeResult = `Closed with: ${result}`;
-        // }, (reason) => {
-        //     this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        // });
-        // console.log("openpermission from layernew")
+    private getLayerItems(): void {
+        this.layerAdminService
+            .GetAll()
+            .subscribe((data: LayerAdmin[]) => {
+                this.layerAdmins = data;
+                error => console.log(error);
+            });
+    }
 
+    private getServers(): void {
+        this.serverService
+            .GetAll()
+            .subscribe((data: Server[]) => this.servers = data);
+    }
+
+    private createLayer(): void {
+        const dialogRef = this.dialog.open(LayerNewComponent, {height:'360px', width:'500px'});
+        dialogRef.afterClosed().subscribe(result => this.getLayerItems());
+    }
+
+    private openPermission(layerid: number, layername: string): void {
         const dialogRef = this.dialog.open(LayerPermissionComponent, {height:'460px', width:'350px'});
         dialogRef.componentInstance.layerID = layerid;
         dialogRef.componentInstance.layerName = layername;
-        dialogRef.afterClosed().subscribe(result => {
-            this.getDismissReason = result;
-            console.log(this.getDismissReason)
-        });
-      }
+    }   
 
-    //Open create new layer modal on request from "Layers"
-    private openNew() {
-        console.log ("opennew")
-        this.userperm = "A user"
-        const dialogRef = this.dialog.open(LayerNewComponent, {height:'360px', width:'500px'});
-        dialogRef.afterClosed().subscribe(result => {
-            this.getDismissReason = result;
-            console.log(this.getDismissReason)
-            this.getLayerItems();
-        });
-    }
-
-    openConfDel(layer) {
-        console.log(this.servers, this.layeradmins)
-        const dialogRef = this.dialog.open(ConfirmdeleteComponent, {
-            
-        })
-        dialogRef.componentInstance.objCode = this.objCode
-        dialogRef.componentInstance.objID = layer.ID
-        dialogRef.componentInstance.objName = layer.layerName
-
+    private openConfDel(layer: LayerAdmin): void {
+        const dialogRef = this.dialog.open(ConfirmDeleteComponent);
+        dialogRef.componentInstance.objCode = this.objCode;
+        dialogRef.componentInstance.objID = layer.ID;
+        dialogRef.componentInstance.objName = layer.layerName;
         dialogRef.afterClosed().subscribe(result => {
             if(result) {
-                console.log(result)
-                this.deleteLayer(layer.ID)
+                this.deleteLayer(layer.ID);
             }           
         });
     }
 
-    getDismissReason(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-        } 
-        else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
-        } 
-        else {
-            return  `with: ${reason}`;
-        }
-    }
-
-    initNewLayer(): void {
-        this.newlayeradmin.layerName = "";
-        this.newlayeradmin.layerDescription = "";
-        this.newlayeradmin.serverID = null;
-        this.newlayeradmin.layerType = "";
-        this.newlayeradmin.layerIdent = "";
-        this.newlayeradmin.layerFormat = "";
-        this.newlayeradmin.layerGeom = "";
-    }
-
-    getLayerItems(): void {
-        this.layerAdminService
-            .GetAll()
-            .subscribe((data:LayerAdmin[]) => {this.layeradmins = data,
-                error => console.log(error)
-            });
-        this.sortedOldToNew = this.layeradmins
-        console.log(this.layeradmins)
-    }
-
-    getServers() {
-        this.serverService
-            .GetAll()
-            .subscribe((data:Server[]) => this.servers = data
-            );
-    }
-
-    updateLayer(layer) {
+    private updateLayer(layer: LayerAdmin): void {
         this.layerAdminService
             .Update(layer)
-            .subscribe(result => {
-                console.log(result); //this returns the correct result, a populated object
-                this.getLayerItems();
-            })
+            .subscribe(result => this.getLayerItems());
     }
 
-    updateServer(server) {
-        //this.serverService
-    }
-
-     //The way this deletes permissions and layers when a layer is deleted should be implemented with any deletion that involves dependents
-     //Should in theory delete entire row: layer(layerid), layer_permissions(layerid), and user_page_layers(layerid)
-     deleteLayer(layerID) {
-        console.log(layerID)
-
-        //non-functional
-        /*this.userPageLayerService
-            .GetSome(layerID) //this .getsome has to operate with a pageID not a layerID
-            .subscribe(result => {
-                for (let i of result) {
-                    this.userPageLayerService
-                    .Delete(i.ID)
-                    .subscribe(result => {
-                        console.log(result)
-                    })
-                }
-            })*/
-
+    //Should in theory delete layer including dependents: layer(layerid), layer_permissions(layerid), and user_page_layers(layerid)
+    private deleteLayer(layerID: number): void {
         this.layerPermissionService
             .GetSome(layerID)
             .subscribe(result => {
-                console.log(result)
                 for (let i of result) {
-                    this.layerPermissionService
-                    .Delete(i.ID)
-                    .subscribe(result => {
-                        console.log(result)
-                    })
+                    this.layerPermissionService.Delete(i.ID) //This does not currently delete layerPermission
                 }
-            })
+            });
 
         this.layerAdminService
             .Delete(layerID)
-            .subscribe(result => {
-                console.log(result);
-                this.getLayerItems();
-            })
-
+            .subscribe(result => this.getLayerItems())
     }
 
-    //6/28/17
-    orderAZ() {
+    //To be expanded to sort layers on display via html button press.
+    private sortLayers(code: string): void {
         let indexList: Array<number> = [];
-        let list, temp = this.layeradmins
-        for (let i=0; i<list.length; i++) {
-            temp[i] = list[i].layerName    
-        }
-    }
-
-    sortLayers(code: string) {
-        let indexList: Array<number> = [];
-        let list = this.layeradmins;
+        let list = this.layerAdmins;
         let temp: Array<any> = [];
 
         switch(code) {
             case('AZ'):
-                for (let i=0; i<list.length; i++) {
-                    temp[i] = list[i].layerName
-                }
-                temp.sort()
-                //7/19/17 for array, this.layeradmin[i] = list element where list[i].layername matches temp[i]
-                console.log(temp)
+                this.orderAZ();
                 break;
             case('ZA'):
                 break;
@@ -238,8 +122,16 @@ export class LayerAdminComponent implements OnInit {
             case('SERVER'):
                 break;
             default:
-                alert('"' + code + '" is not a valid code.')
+                alert('"' + code + '" is not a valid code.');
                 break;                    
+        }
+    }
+
+    private orderAZ(): void {
+        let indexList: Array<number> = [];
+        let list, temp = this.layerAdmins;
+        for (let i=0; i<list.length; i++) {
+            temp[i] = list[i].layerName;    
         }
     }
 }

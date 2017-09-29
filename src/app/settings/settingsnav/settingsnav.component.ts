@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'settingsnav',
+    selector: 'settings-nav',
     templateUrl: './settingsnav.component.html',
 })
 export class SettingsNavComponent { }

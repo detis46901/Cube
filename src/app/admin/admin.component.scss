@@ -1,7 +1,4 @@
 #admin_bg {
-    /*background-color:#cce6ff ;
-    color: blue;*/
-	/**background-color: #0044cc;*/
     background-image: linear-gradient(to bottom, #99ccff, #4d88ff);
     position: absolute;
     width: 100%;
@@ -21,11 +18,9 @@
     border-top-style: none;
 }
 
-/*#admin_bg:after {
-    content: "\f234";
-    font-family: FontAwesome;
-    font-size: 400px;
-    color: #b3daff;
-    
-    position: absolute;
-}*/
+#adminRouter {
+    position:absolute;
+    left:230px;
+    top:50px;
+    right:0px;
+}

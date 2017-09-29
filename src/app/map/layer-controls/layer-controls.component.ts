@@ -5,15 +5,15 @@ import { Location } from "../core/location.class";
 import { GeocodingService } from "../services/geocoding.service";
 import { NavigatorComponent } from "../navigator/navigator.component";
 import { MarkerComponent } from "../marker/marker.component";
-import { LayerPermissionService } from "../../../_services/layerpermission.service"
-import { LayerAdminService } from "../../../_services/layeradmin.service"
-import { UserPageService } from '../../../_services/userPage.service'
+import { LayerPermissionService } from "../../../_services/_layerPermission.service"
+import { LayerAdminService } from "../../../_services/_layerAdmin.service"
+import { UserPageService } from '../../../_services/_userPage.service'
 import { SidenavService } from '../../../_services/sidenav.service'
-import { ServerService } from '../../../_services/server.service'
+import { ServerService } from '../../../_services/_server.service'
 import { LayerPermission, LayerAdmin, UserPageLayer } from "../../../_models/layer.model";
 import { Server } from "../../../_models/server.model";
 import { UserPage } from '../../../_models/user.model';
-import { UserPageLayerService } from '../../../_services/userPageLayer.service'
+import { UserPageLayerService } from '../../../_services/_userPageLayer.service'
 import { Http, Response, Headers } from '@angular/http'
 import { Observable } from 'rxjs/Observable';
 import { Subscription }   from 'rxjs/Subscription';
@@ -96,7 +96,7 @@ export class LayerControlsComponent {
 
     getServer(serverID) {
         this.serverService
-            .GetOne(serverID)
+            .GetSingle(serverID)
             .subscribe((data) => this.server = data);
     }
 

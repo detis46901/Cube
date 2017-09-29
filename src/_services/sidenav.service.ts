@@ -7,6 +7,7 @@ let isOpen: boolean = true;
 let geoData: Array<string>;
 let markerData: string;
 
+
 @Injectable()
 export class SidenavService {
     private bottomText = new Subject<string>();

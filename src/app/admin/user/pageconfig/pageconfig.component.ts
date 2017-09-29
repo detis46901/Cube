@@ -1,12 +1,12 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-import { UserService } from '../../../../_services/user.service';
+import { UserService } from '../../../../_services/_user.service';
 import { User } from '../../../../_models/user.model'
 import { Configuration } from '../../../../_api/api.constants'
-import { UserPageService } from '../../../../_services/userPage.service'
-import { LayerPermissionService } from '../../../../_services/layerpermission.service'
-import { UserPageLayerService } from '../../../../_services/userPageLayer.service'
+import { UserPageService } from '../../../../_services/_userPage.service'
+import { LayerPermissionService } from '../../../../_services/_layerPermission.service'
+import { UserPageLayerService } from '../../../../_services/_userPageLayer.service'
 import { UserPage } from '../../../../_models/user.model'
 import { UserPageLayer } from '../../../../_models/layer.model'
 import { LayerPermission } from '../../../../_models/layer.model'
@@ -17,7 +17,7 @@ import {MdDialog, MdDialogRef} from '@angular/material';
 
 
 @Component({
-  selector: 'page',
+  selector: 'page-config',
   templateUrl: './pageconfig.component.html',
   providers: [UserService, Configuration, FilterPipe, NumFilterPipe, UserPageLayerService, UserPageService],
   styleUrls: ['./pageconfig.component.scss'],
@@ -127,7 +127,7 @@ export class PageConfigComponent implements OnInit {
 
     //confirmDelete for the layers within the page config modal?
     /*openConfDel(layer) {
-        const modalRef = this.modalService.open(ConfirmdeleteComponent)
+        const modalRef = this.modalService.open(ConfirmDeleteComponent)
         modalRef.componentInstance.objCode = this.objCode
         modalRef.componentInstance.objID = layer.ID
         modalRef.componentInstance.objName = layer.layerName

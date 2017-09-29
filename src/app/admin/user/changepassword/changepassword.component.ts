@@ -2,13 +2,13 @@ import { Component, Input, OnInit, Inject} from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { MdDialog, MdDialogRef, MdInputModule, MD_DIALOG_DATA} from '@angular/material';
-import { UserService } from '../../../../_services/user.service';
+import { UserService } from '../../../../_services/_user.service';
 import { User } from '../../../../_models/user.model';
 import { genSalt, hash } from 'bcrypt'
 import { Md5 } from 'ts-md5/dist/md5'
 
 @Component({
-    selector: 'changepassword',
+    selector: 'change-password',
     templateUrl: './changepassword.component.html',
     styleUrls: ['./changepassword.component.scss'],
     providers: [UserService]
