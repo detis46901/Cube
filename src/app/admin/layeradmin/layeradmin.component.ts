@@ -81,7 +81,9 @@ export class LayerAdminComponent implements OnInit {
     private updateLayer(layer: LayerAdmin): void {
         this.layerAdminService
             .Update(layer)
-            .subscribe(result => this.getLayerItems());
+            .subscribe(
+                result => this.getLayerItems()
+            );
     }
 
     //Should in theory delete layer including dependents: layer(layerid), layer_permissions(layerid), and user_page_layers(layerid)
@@ -96,7 +98,9 @@ export class LayerAdminComponent implements OnInit {
 
         this.layerAdminService
             .Delete(layerID)
-            .subscribe(result => this.getLayerItems())
+            .subscribe(
+                result => this.getLayerItems()
+            );
     }
 
     //To be expanded to sort layers on display via html button press.

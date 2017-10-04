@@ -1,10 +1,3 @@
-<!-- Consider some style changes: 
-      -The dropdown (combobox) controls that list each user should probably not be comboboxes, but static usernames.
-       The fact that every user with permission is listed already assures that one need not use this functionality.
-      -The current comboboxes (or future labels, etc.) and "Edit" checkbox contols should mimic the dual-column format
-       described for the "New Layer" modal style recommendation. They should be separated.
-      -The listed users need to be aligned with the "User" labelled control. This control is offset and looks awkward.-->
-
 <div class="modal-header">
     <div class="row" style="width:100%">
         <div class="col-md-10">
@@ -23,6 +16,7 @@
     <form class="form-inline" #f="ngForm" *ngFor="let layerpermission of layerpermissions">
         <div class="form-group" style="margin-bottom:5px;">
             <i id="delUserPerm" (click)="deleteLayerPermission(layerpermission.ID)" class="fa fa-times" aria-hidden="true"></i>
+            
             <!--Change this to bold text labels, not controls-->
             <select id="user" name="user" style="margin-right:5px;" class="form-control" [(ngModel)] = "layerpermission.userID" required type="text" (blur)="updateLayerPermission(layerpermission)"  >
                 <option [value]="user.ID" *ngFor="let user of users">

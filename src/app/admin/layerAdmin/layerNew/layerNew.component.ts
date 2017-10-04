@@ -22,13 +22,15 @@ export class LayerNewComponent implements OnInit {
     @Input() layerServer: Server;
     @Input() layerFormat: string;
     @Input() layerType: string;
+    @Input() layerName: string;
     private token: string;
     private userID: number;
 
     //Set to true in ngOnInit() if inputs are read from the server screen, thus determines if the server screen is calling this dialog
     private serverCalled: boolean = false;
 
-    private newLayerAdmin = new LayerAdmin; //if error in submission, set this to a new object (= new LayerAdmin)
+    //if error in submission, set this to a new object (= new LayerAdmin)
+    private newLayerAdmin = new LayerAdmin;
     private newLayerServer = new Server;
     private servers: Array<Server>;
     private layerAdmin = new LayerAdmin;
@@ -36,14 +38,14 @@ export class LayerNewComponent implements OnInit {
     constructor(private layerAdminService: LayerAdminService, private dialog: MdDialog, private serverService: ServerService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userid; 
+        this.userID = currentUser && currentUser.userid;
     }
 
     ngOnInit() {
-       this.getServers()
-       if(this.layerIdent!=null && this.layerType!=null && this.layerServer!=null) {
+        this.getServers();
+        if (this.layerIdent!=null && this.layerType!=null && this.layerServer!=null) {
             this.serverCalled = true;
-       }
+        }
     }
 
     private getServers(): void {
@@ -51,14 +53,16 @@ export class LayerNewComponent implements OnInit {
             .GetAll()
             .subscribe((data) => {
                 this.servers = data;
-                error => console.log(error);
+                error => {
+                    return console.log(error);
+                };
             });
     }
 
     private addLayer(newlayer: LayerAdmin): void {
         this.layerAdmin = newlayer;
 
-        if(this.serverCalled) {
+        if (this.serverCalled) {
             this.layerAdmin.serverID = this.layerServer.ID;
             this.layerAdmin.layerService = this.layerService;
             this.layerAdmin.layerIdent = this.layerIdent;
@@ -68,6 +72,8 @@ export class LayerNewComponent implements OnInit {
 
         this.layerAdminService
             .Add(this.layerAdmin)
-            .subscribe(result => this.dialog.closeAll());    
+            .subscribe(result => {
+                return this.dialog.closeAll();
+            });
     }
 }

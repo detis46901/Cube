@@ -77,7 +77,7 @@ export class ServerComponent implements OnInit {
         this.currServer = serv;
         this.clearArrays()
         this.displayFolders = true;
-        this.serverService.getFolders(serv, path, this.options, "")
+        this.serverService.getFolders(serv, path, this.options)
             .subscribe((response: string) =>
                 {this.parseLayers(response, folder); console.log("done")}
             );
@@ -124,7 +124,7 @@ export class ServerComponent implements OnInit {
         this.path = "/" + path
         this.clearArrays()
         this.displayFolders = true;
-        this.serverService.getFolders(this.currServer, this.path, this.options, type)
+        this.serverService.getFolders(this.currServer, this.path, this.options)
             .subscribe((response: string) =>
                 {this.parseLayers(response, this.path); console.log(this.path)}
             );

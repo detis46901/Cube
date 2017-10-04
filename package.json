@@ -74,6 +74,7 @@
     "protractor": "4.0.9",
     "ts-node": "1.2.1",
     "tslint": "3.13.0",
+    "typescript-eslint-parser": "^8.0.0",
     "webdriver-manager": "10.2.5"
   }
 }
