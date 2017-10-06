@@ -9,6 +9,8 @@
     },
     "parser": "typescript-eslint-parser",
     "rules": {
+        "no-unused-vars": 0,
+        "no-undef": 0,
         "indent": [
             "error",
             4
@@ -72,7 +74,7 @@
         "lines-around-comment": [
             "error",
             { "beforeBlockComment": true,
-              "beforeLineComment": true,
+              "beforeLineComment": false,
               "afterBlockComment": false,
               "afterLineComment": false }
         ],

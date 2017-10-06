@@ -36,7 +36,7 @@ import { OrganizationComponent } from './admin/organization/organization.compone
 import { LayerAdminComponent} from './admin/layerAdmin/layerAdmin.component';
 import { LayerPermissionComponent} from './admin/layerAdmin/layerPermission/layerPermission.component';
 import { PageComponent} from './admin/user/page/page.component';
-import { PageConfigComponent} from './admin/user/pageconfig/pageconfig.component';
+import { PageConfigComponent} from './admin/user/pageConfig/pageConfig.component';
 import { LayerNewComponent } from './admin/layerAdmin/layerNew/layerNew.component';
 import { UserComponent } from './admin/user/user.component';
 import { AdminPageComponent } from './admin/adminPage/adminPage.component';
@@ -52,7 +52,7 @@ import { PasswordComponent } from './settings/password/password.component';
 import { MarkerDataComponent } from './marker_data/marker-data.component';
 import { LayerControlsComponent } from './map/layer-controls/layer-controls.component';
 import { ServerNewComponent } from './admin/server/serverNew/serverNew.component';
-import { ChangePasswordComponent } from './admin/user/changepassword/changepassword.component';
+import { ChangePasswordComponent } from './admin/user/changePassword/changePassword.component';
 import { HeaderComponent } from './header/header.component';
 import { SideNavComponent } from './sidenav/sidenav.component';
 import { AppComponent } from './app.component';

@@ -1,49 +1,47 @@
-import { Component, Input, OnInit, Inject} from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
-import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, Inject} from '@angular/core';
 import { MdDialog, MdDialogRef, MdInputModule, MD_DIALOG_DATA} from '@angular/material';
 import { UserService } from '../../../../_services/_user.service';
 import { User } from '../../../../_models/user.model';
-import { genSalt, hash } from 'bcrypt'
-import { Md5 } from 'ts-md5/dist/md5'
+import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
     selector: 'change-password',
-    templateUrl: './changepassword.component.html',
-    styleUrls: ['./changepassword.component.scss'],
+    templateUrl: './changePassword.component.html',
+    styleUrls: ['./changePassword.component.scss'],
     providers: [UserService]
 })
+
 export class ChangePasswordComponent implements OnInit {
-    private userID: any;
-    private user: User;
+    private userID: number;
 
-    private oldPassword: string;
-    private oldHash: string;
-
-    private newPassword: string;
+    private user: User;   
+    private oldHash: string;  
     private newHash: string;
-
-    private confPassword: string;
     private confHash: string;
 
-    constructor(private dialog: MdDialog, private userService: UserService, @Inject(MD_DIALOG_DATA) public data: any) { 
+    //HTML variables
+    private oldPassword: string;
+    private newPassword: string;
+    private confPassword: string;
+
+    constructor(private dialog: MdDialog, private userService: UserService, @Inject(MD_DIALOG_DATA) private data: any) {
+        //Figure out what datatype "data" needs to be.
         this.userID = data.userID;
     }
 
     ngOnInit() {
-        this.getUserItems()
+        this.getUserItems();
     }
 
     private getUserItems(): void {
         this.userService
-           .GetSingle(this.userID)
-           .subscribe((data:User) => this.user = data,
-               error => console.log(error),
-               () => console.log(this.user)
-           );
+            .GetSingle(this.userID)
+            .subscribe((data:User) => {
+                this.user = data;
+            });
     }
 
-    private setHashes(Old:string, New:string, Conf:string) {
+    private setHashes(Old: string, New: string, Conf: string): void {
         //9/8/17 This is the closest to working, but still throws several npm errors with paths and dependencies. 
         /*let saltRounds = 10;
         hash(Old, saltRounds, function(err, hash) {
@@ -55,25 +53,20 @@ export class ChangePasswordComponent implements OnInit {
         this.oldHash = Md5.hashStr(Old).toString();
         this.newHash = Md5.hashStr(New).toString();
         this.confHash = Md5.hashStr(Conf).toString();
-        let bool = this.confirm(this.oldHash)
+        let bool = this.confirm(this.oldHash);
         if (this.confirm(this.oldHash)) {
-            console.log("success");
-            //this.compare();
+            console.log('success');
         }
     }
 
-    /** 
-     * Confirms that the hashed old password entered in dialog matches existing database hashed password. Returns true if it matches.
-     * @param {string} oldHash - Existing database password hash.
-     */
+    /**
+    * Confirms that the hashed old password entered in dialog matches existing database hashed password. Returns true if it matches.
+    */
     private confirm(oldHash:string): boolean {
-        if(oldHash == this.user.password)
+        if (oldHash == this.user.password) {
             return true;
-        else
+        } else {
             return false;
-    }
-
-    private compare() {
-
+        }
     }
 }

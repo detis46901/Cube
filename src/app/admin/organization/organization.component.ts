@@ -1,267 +1,242 @@
-
-import { Component, Input, OnInit } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../_services/_user.service';
-import { User } from '../../../_models/user.model'
-import { Configuration } from '../../../_api/api.constants'
-import { DepartmentService } from '../../../_services/_department.service'
-import { GroupService } from '../../../_services/_group.service'
-import { RoleService } from '../../../_services/_role.service'
-import { Department, Group, Role } from '../../../_models/organization.model'
-import { FilterPipe } from '../../../_pipes/rowfilter.pipe'
-import { NumFilterPipe } from '../../../_pipes/numfilter.pipe'
-import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component'
+import { User } from '../../../_models/user.model';
+import { DepartmentService } from '../../../_services/_department.service';
+import { GroupService } from '../../../_services/_group.service';
+import { RoleService } from '../../../_services/_role.service';
+import { Department, Group, Role } from '../../../_models/organization.model';
+import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
 import { MdDialog, MdDialogRef } from '@angular/material';
 
 @Component({
-  selector: 'organization',
-  templateUrl: './organization.component.html',
-  styleUrls: ['./organization.component.scss'],
-  providers: [UserService, Configuration, FilterPipe, NumFilterPipe, NgbModal]
-  //styleUrls: ['./app.component.css', './styles/w3.css'],
+    selector: 'organization',
+    templateUrl: './organization.component.html',
+    styleUrls: ['./organization.component.scss'],
+    providers: [UserService] //removed Configuration, FilterPipe, NumFilterPipe
 })
-export class OrganizationComponent implements OnInit{
 
-    public user = new User;
-    public department = new Department;
-    public departments: any;
-    public group = new Group;
-    public groups: Array<any>;
-    public role = new Role;
-    public newrole = new Role;
-    public roles: any;
-    public token: string;
-    public userID: number;
-    public selecteddepartment: Department;
-    public selectedgroup: Group;
-    public showgroup: boolean;
-    public showrole: boolean;
-    public newdepartment: string;
-    public foo = 0;
+export class OrganizationComponent implements OnInit {
+    private token: string;
+    private userID: number;
 
+    private department = new Department;
+    private departments: any;
+    private group = new Group;
+    private groups: Array<any>;
+    private role = new Role;
+    private roles: any;
+
+    private newRole = new Role;
+    private selectedDepartment: Department;
+    private selectedGroup: Group;
+    private showGroup: boolean;
+    private showRole: boolean;
+    private newDepartment: string;
 
     constructor(private departmentService: DepartmentService, private groupService: GroupService, private roleService: RoleService, private dialog: MdDialog) {
-      var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userid; 
+        this.userID = currentUser && currentUser.userid;
     }
 
     ngOnInit() {
-       this.getDepartmentItems();
+        this.getDepartmentItems();
     }
 
-    public getDepartmentItems(): void {
-         this.departmentService
+    private getDepartmentItems(): void {
+        this.departmentService
             .GetAll()
-            .subscribe((data:Department[]) => this.departments = data,
-                error => console.log(error),
-                //() => console.log(this.departments[0].department)
-                );
+            .subscribe((data:Department[]) => {
+                this.departments = data;
+            },
+            error => {
+                console.error(error);
+            });
     }
 
-    public getGroupItems(): void {
-         this.groupService
+    private getGroupItems(): void {
+        this.groupService
             .GetAll()
-            .subscribe((data:Group[]) => this.groups = data,
-                error => console.log(error),
-               // () => console.log(this.groups[0].group)
-                );
+            .subscribe((data:Group[]) => {
+                this.groups = data;
+            },
+            error => {
+                console.error(error);
+            });
     }
      
-     public getRoleItems(): void {
-         this.roleService
+    private getRoleItems(): void {
+        this.roleService
             .GetAll()
-            .subscribe((data:Role[]) => this.roles = data,
-                error => console.log(error),
-                //() => console.log(this.roles[0].role)
-                );
-    }   
-
-    public departmentClick(dept) {
-        this.getGroupItems()
-        this.showrole = false;
-        this.showgroup = true;  
-        //console.log('departmentID=' + dept.rowID)
-        this.selecteddepartment = dept
-        console.log(this.foo)
+            .subscribe((data:Role[]) => {
+                this.roles = data;
+            },
+            error => {
+                console.error(error);
+            });
     }
 
-     public groupClick(group) {
-        this.getRoleItems()
-        this.showrole = true;
-        console.log('groupID=' + group.ID)
-        this.selectedgroup = group 
+    private departmentClick(dept: Department): void {
+        this.getGroupItems();
+        this.showRole = false;
+        this.showGroup = true;
+        this.selectedDepartment = dept;
     }
 
-    public addDepartment(newdepartment) {
-        this.department.department = newdepartment;
+    private groupClick(group: Group): void {
+        this.getRoleItems();
+        this.showRole = true;
+        this.selectedGroup = group;
+    }
+
+    private addDepartment(newDepartment: string): void {
+        this.department.department = newDepartment;
         this.department.active = true;
-        console.log(this.department.department, this.department.active);
         this.departmentService
             .Add(this.department)
-            .subscribe(result => {
-                console.log(result);
+            .subscribe(() => {
                 this.getDepartmentItems();
-            })      
+            });
     }
 
-    public addGroup(newgroup) {
-        this.group.departmentID = this.selecteddepartment.ID;
-        this.group.group = newgroup;
+    private addGroup(newGroup: string): void {
+        this.group.departmentID = this.selectedDepartment.ID;
+        this.group.group = newGroup;
         this.group.active = true;
-        console.log(this.group.group, this.group.active);
         this.groupService
             .Add(this.group)
-            .subscribe(result => {
-                console.log(result);
+            .subscribe(() => {
                 this.getGroupItems();
-            })      
+            });
     }
 
-    public addRole(newrole) {
-        this.role.groupID = this.selectedgroup.ID;
-        this.role.role = newrole.role;
+    //10/6/17 Why does this need a passed object instead of string like ones above?
+    private addRole(newRole: Role): void {
+        this.role.groupID = this.selectedGroup.ID;
+        this.role.role = newRole.role;
         this.role.active = true;
-        console.log(this.role.groupID, this.role.role, this.role.active)
         this.roleService
             .Add(this.role)
-            .subscribe(result => {
-                console.log(result);
-                newrole.role = "";
+            .subscribe(() => {
                 this.getRoleItems();
-            })      
+            });
     }
 
-    public updateDepartment(department) {
+    private updateDepartment(department: Department): void {
         this.departmentService
             .Update(department)
-            .subscribe(result => {
-                console.log(result);
+            .subscribe(() => {
                 this.getDepartmentItems();
-            })
+            });
     }
 
-    public updateGroup(group) {
+    private updateGroup(group: Group): void {
         this.groupService
             .Update(group)
-            .subscribe(result => {
-                console.log(result);
+            .subscribe(() => {
                 this.getGroupItems();
-            })
+            });
     }
 
-    public updateRole(role) {
+    private updateRole(role: Role): void {
         this.roleService
             .Update(role)
-            .subscribe(result => {
-                console.log(result);
+            .subscribe(() => {
                 this.getRoleItems();
-            })
+            });
     }
 
-    //type: department=1, group=2, role=3
-    openConfDel(org, type: number) {
-        const dialogRef = this.dialog.open(ConfirmDeleteComponent)
-        dialogRef.componentInstance.objCode = type
-        dialogRef.componentInstance.objID = org.ID
+    private openConfDel(org: any, type: number): void {
+        const dialogRef = this.dialog.open(ConfirmDeleteComponent);
+        dialogRef.componentInstance.objCode = type;
+        dialogRef.componentInstance.objID = org.ID;
         
-        switch(type) {
+        switch (type) {
+            
             //department
             case 3: {
-                dialogRef.componentInstance.objName = org.department
-                console.log(org.department)
-                break
+                dialogRef.componentInstance.objName = org.department;
+                console.log(org.department);
+                break;
             }
+
             //group
             case 4: {
-                dialogRef.componentInstance.objName = org.group
-                break
+                dialogRef.componentInstance.objName = org.group;
+                break;
             }
+
             //role
             case 5: {
-                dialogRef.componentInstance.objName = org.role
-                break
+                dialogRef.componentInstance.objName = org.role;
+                break;
             }
 
             default: {
-                alert("Object Type code invalid.")
-                break
+                alert('Object Type code invalid.');
+                break;
             }
         }
 
         dialogRef.afterClosed().subscribe(result => {
-            if(result) {
+            if (result) {
                 //delete the correct items.
             }
-            this.getDepartmentItems(); 
+            this.getDepartmentItems();
         });
     }
 
-    //This should also delete all rows for which: group(departmentID) == departmentID, but before deletion of those groups, logging the IDs from those
-    //groups into an array and also deleting for which roles(groupID) == groupIDs to be deleted. This must be done in a cascade fashion.
-    public deleteDepartment(departmentID) {
-
-        //This currently deletes all group tables DO NOT USE
+    /*This should also delete all rows for which: group(departmentID) == departmentID, but before deletion of those groups, 
+    logging the IDs from those groups into an array and also deleting for which roles(groupID) == groupIDs to be deleted. 
+    This must be done in a cascade fashion.*/
+    private deleteDepartment(departmentID: number): void {
         this.groupService
             .GetSome(departmentID)
             .subscribe(result => {
                 for (let i of result) {
-                    //this.groupService
-                    //.Delete(i.ID)
-                    //.subscribe(result => {
-                        console.log(result)
-                    //})
                 }
-            })
+            });
 
         this.departmentService
             .Delete(departmentID)
-            .subscribe(result => {
-                console.log(result);
+            .subscribe(() => {
                 this.getDepartmentItems();
-            })
-        /*this.deleteGroup(2);
-        this.deleteRole(3); This hard-coding example works fine*/
+            });
     }
 
     //As above, so below
     //Delete any row for which role(groupID) == groupID
-    public deleteGroup(groupID) {
+    private deleteGroup(groupID: number): void {
         this.groupService
             .Delete(groupID)
-            .subscribe(result => {
-                console.log(result);
+            .subscribe(() => {
                 this.getGroupItems();
-            })
+            });
     }
     
-     //Delete all rows where any is true: Role.GroupID == GroupID where Group.DeptID == DepartmentID to delete
-     //Or where Role.GroupID == GroupID to delete
-     public deleteRole(roleID) {
+    //Delete all rows where any is true: Role.GroupID == GroupID where Group.DeptID == DepartmentID to delete
+    //Or where Role.GroupID == GroupID to delete
+    private deleteRole(roleID: number): void {
         this.roleService
             .Delete(roleID)
-            .subscribe(result => {
-                console.log(result);
+            .subscribe(() => {
                 this.getRoleItems();
-            })
+            });
     }
 
-    public filterGroup(departmentID) {
-        //console.log (departmentID, this.selecteddepartment.rowID)
-        if (departmentID == this.selecteddepartment.ID) {
-            return true 
+    private filterGroup(departmentID: number): boolean {
+        if (departmentID == this.selectedDepartment.ID) {
+            return true;
         } else {
-            return false
+            return false;
         }
     }
 
-     public filterRole(groupID) {
-        //console.log (groupID, this.selectedgroup.rowID)
-        if (groupID == this.selectedgroup.ID) {
-            return true 
+    private filterRole(groupID: number): boolean {
+        if (groupID == this.selectedGroup.ID) {
+            return true;
         } else {
-            return false
+            return false;
         }
     }
 }

@@ -15,14 +15,14 @@
                     </div>
                 </form></td>
             </tr>
-            <tr><td><input id="newdepartment" style="position:relative; left:15px; height:34px; border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:90%" #newdepartmentinput [(ngModel)] = "newdepartment" type="text" placeholder="New Department" (keyup.enter)="addDepartment(newdepartment); newdepartmentinput.value=''" aria-describedby="departmentHelpBlock"><br>
+            <tr><td><input id="newDepartment" style="position:relative; left:15px; height:34px; border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:90%" #newdepartmentinput [(ngModel)] = "newDepartment" type="text" placeholder="New Department" (keyup.enter)="addDepartment(newDepartment); newdepartmentinput.value=''" aria-describedby="departmentHelpBlock"><br>
             <p id="departmentHelpBlock" style="position:relative; left:15px" class="form-text form-muted">Press enter to create a department.</p></td></tr>
         </table>
     </div>
     <div class="col-md-4">
-        <table *ngIf="showgroup" class="table">
+        <table *ngIf="showGroup" class="table">
             <tr>
-                <th>{{selecteddepartment.department}} Groups</th>
+                <th>{{selectedDepartment.department}} Groups</th>
             </tr>
 
             <!-- List groups by department-->
@@ -40,9 +40,9 @@
         </table>
     </div>
     <div class="col-md-4">
-       <table *ngIf="showrole" class="table">
+       <table *ngIf="showRole" class="table">
             <tr>
-                <th>{{selectedgroup.group}} Roles</th>
+                <th>{{selectedGroup.group}} Roles</th>
             </tr>
 
             <!-- List roles by group-->
@@ -55,7 +55,7 @@
                     </div>
                 </form></td>
             </tr>
-            <tr><td><input id="newrole" style="position:relative; left:15px; height:34px; border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px;  width:90%" #newroleinput [(ngModel)] = "newrole.role" type="text" placeholder="New Role" name="newrole" (keyup.enter)="addRole(newrole); newroleinput.value=''" aria-describedby="roleHelpBlock"><br>
+            <tr><td><input id="newRole" style="position:relative; left:15px; height:34px; border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px;  width:90%" #newroleinput [(ngModel)] = "newRole.role" type="text" placeholder="New Role" name="newRole" (keyup.enter)="addRole(newRole); newroleinput.value=''" aria-describedby="roleHelpBlock"><br>
             <p id="roleHelpBlock" style="position:relative; left:15px" class="form-text form-muted">Press enter to create a role.</p></td></tr>
         </table>
     </div>

@@ -1,35 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { ServerService } from '../../../../_services/_server.service'
-import { Server } from '../../../../_models/server.model'
+import { ServerService } from '../../../../_services/_server.service';
+import { Server } from '../../../../_models/server.model';
 import { MdDialog, MdDialogRef } from '@angular/material';
 
 @Component({
-  selector: 'server-new',
-  templateUrl: './serverNew.component.html',
-  styleUrls: ['./serverNew.component.scss'],
-  providers: [ServerService]
+    selector: 'server-new',
+    templateUrl: './serverNew.component.html',
+    styleUrls: ['./serverNew.component.scss'],
+    providers: [ServerService]
 })
 
 export class ServerNewComponent implements OnInit {
+    private server = new Server;
+    private newserver = new Server;
 
-    public server = new Server;
-    public newserver = new Server;
-
-    constructor(public dialog: MdDialog, private serverService: ServerService) {}
+    constructor(private dialog: MdDialog, private serverService: ServerService) {}
 
     ngOnInit() {
-        this.newserver.serverName = ''
-        this.newserver.serverType = ''
-        this.newserver.serverURL = ''
+        this.newserver.serverName = '';
+        this.newserver.serverType = '';
+        this.newserver.serverURL = '';
     }
 
-    addServer() {
-        console.log(this.newserver)
+    private addServer(): void {
         this.serverService
             .Add(this.newserver)
             .subscribe(result => {
-                
                 this.dialog.closeAll();
-            })      
+            });
     }
 }

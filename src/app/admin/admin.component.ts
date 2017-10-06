@@ -32,8 +32,7 @@ export class AdminComponent {
         this.dataService
             .GetSingle(userid)
             .subscribe((data: User) => {
-                this.user = data,
-                error => console.log(error)
+                this.user = data
             });
     }
 }

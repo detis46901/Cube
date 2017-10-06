@@ -53,9 +53,6 @@ export class LayerNewComponent implements OnInit {
             .GetAll()
             .subscribe((data) => {
                 this.servers = data;
-                error => {
-                    return console.log(error);
-                };
             });
     }
 
@@ -73,7 +70,7 @@ export class LayerNewComponent implements OnInit {
         this.layerAdminService
             .Add(this.layerAdmin)
             .subscribe(result => {
-                return this.dialog.closeAll();
+                this.dialog.closeAll();
             });
     }
 }

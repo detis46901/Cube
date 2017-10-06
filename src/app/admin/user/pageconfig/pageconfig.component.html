@@ -29,6 +29,7 @@
                             <label for="exuserpagelayer"><i (click)="deleteUserPageLayer(userpagelayer.ID)" class="fa fa-times" style="position:relative; margin-right:5px;" aria-hidden="true"></i></label>
                             {{userpagelayer.layer_admin.layerName}}
                         </div>
+
                         <!--This checkbox object doesn't work correctly.-->
                         <!--<md-checkbox id="exuserpagelayeron" name="exuserpagelayeron" class="form-check-input" style="position:relative; left:20%; border-color: rgba(255,255,255,0); width:5%;" [(ngModel)]="userpagelayer.layerON" (change)="updateUserPageLayer(userpagelayer)"></md-checkbox>-->
                         <input id="exuserpagelayeron" name="exuserpagelayeron" class="form-check-input" style="position:relative; left:20%; border-color: rgba(255,255,255,0); width:5%;" [(ngModel)]="userpagelayer.layerON" type="checkbox" (change)="updateUserPageLayer(userpagelayer)">
@@ -43,7 +44,6 @@
     <form class="form-inline" #f="ngForm" (ngSubmit)="addUserPageLayer(newuserpagelayer)" style="margin-bottom:0px; position:relative; top:7px;">
         <div class="row">
             <div class="col-md-4 col-md-offset-2" style="margin-right:25px;">
-            
                 <md-select id="mdSel" placeholder="Layers" [(ngModel)] = "newuserpagelayer.layerAdminID" required name="layer" style="position:relative; bottom:10px;">
                     <md-option [value]="layerpermission.layerAdminID" *ngFor="let layerpermission of layerpermissions">
                         {{layerpermission.layer_admin.layerName}}

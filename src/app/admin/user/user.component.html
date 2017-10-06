@@ -73,7 +73,7 @@
                     Edit Layers
                 </button>
                 <md-menu #menu2="mdMenu">
-                    <button md-menu-item id="openConfig" *ngFor="let userpage of (userpages | pagefilter: (user.ID))" (click)="getUserPageItem(userpage.ID, user.ID)">
+                    <button md-menu-item id="openConfig" *ngFor="let userpage of (userPages | pagefilter: (user.ID))" (click)="getUserPageItem(userpage.ID, user.ID)">
                         <h5>{{userpage.page}}</h5>
                     </button>
                 </md-menu>
@@ -82,20 +82,20 @@
     <br>
     
     <p style="position:absolute; left:35px">Create New User</p><br>
-    <form #f="ngForm" style="position:relative; left:20px" class="form-inline" (ngSubmit)="addUser(newuser)" autocomplete="off">
+    <form #f="ngForm" style="position:relative; left:20px" class="form-inline" (ngSubmit)="addUser(newUser)" autocomplete="off">
         <i class="fa fa-arrow-right" style="margin-right:5px" aria-hidden="true"></i>
-        <input id="newuserfirstname" onClick="this.select();" name="newuserfirstname" required #newuserfirstnameinput [(ngModel)] = "newuser.firstName" type="text" placeholder="First Name">
-        <input id="newuserlastname" onClick="this.select();" name="newuserlastname" required #newuserlastnameinput [(ngModel)] = "newuser.lastName" type="text" placeholder="Last Name">
-        <select id="newuserrole" name="newuserrole" name="exuserrole" class="form-control" required #role="ngModel" [(ngModel)] = "newuser.roleID" type="text">
+        <input id="newuserfirstname" onClick="this.select();" name="newuserfirstname" required #newuserfirstnameinput [(ngModel)] = "newUser.firstName" type="text" placeholder="First Name">
+        <input id="newuserlastname" onClick="this.select();" name="newuserlastname" required #newuserlastnameinput [(ngModel)] = "newUser.lastName" type="text" placeholder="Last Name">
+        <select id="newuserrole" name="newuserrole" name="exuserrole" class="form-control" required #role="ngModel" [(ngModel)] = "newUser.roleID" type="text">
             <option *ngFor="let role of roles" [value]="role.ID">
                 {{role.role}}
             </option>
         </select>
 
-        <input id="newuseremail" onClick="this.select();" autocomplete="off" name="newuseremail" required #newuseremailinput [(ngModel)] = "newuser.email" type="text" placeholder="Email">
-        <input id="newuseractive" name="newuseractive" #newuseractiveinput [(ngModel)] = "newuser.active" type="checkbox" placeholder="Active" checked>
-        <input id="newuseradministrator" name="newuseradministrator" #newuseradministratorinput [(ngModel)] = "newuser.administrator" type="checkbox" placeholder="Administrator">
-        <input id="newuserpassword" onClick="this.select();" autocomplete="off" name="newuserpassword" #newuserpasswordinput [(ngModel)] = "newuser.password" type="password" placeholder="Password">
+        <input id="newuseremail" onClick="this.select();" autocomplete="off" name="newuseremail" required #newuseremailinput [(ngModel)] = "newUser.email" type="text" placeholder="Email">
+        <input id="newuseractive" name="newuseractive" #newuseractiveinput [(ngModel)] = "newUser.active" type="checkbox" placeholder="Active" checked>
+        <input id="newuseradministrator" name="newuseradministrator" #newuseradministratorinput [(ngModel)] = "newUser.administrator" type="checkbox" placeholder="Administrator">
+        <input id="newuserpassword" onClick="this.select();" autocomplete="off" name="newuserpassword" #newuserpasswordinput [(ngModel)] = "newUser.password" type="password" placeholder="Password">
         <button id="btnSub" type="submit" [disabled]="!f.valid">Submit</button>
     </form> 
 </div>

@@ -21,6 +21,7 @@ import { MdDialog } from '@angular/material';
 })
 
 export class LayerAdminComponent implements OnInit {
+
     //objCode refers to the admin menu tab the user is on, so the openConfDel method knows what to interpolate based on what it's deleting
     private objCode: number = 2;
     private token: string;
@@ -36,8 +37,8 @@ export class LayerAdminComponent implements OnInit {
     }
 
     ngOnInit() {
-       this.getLayerItems();     
-       this.getServers();
+        this.getLayerItems();
+        this.getServers();
     }
 
     private getLayerItems(): void {
@@ -45,26 +46,29 @@ export class LayerAdminComponent implements OnInit {
             .GetAll()
             .subscribe((data: LayerAdmin[]) => {
                 this.layerAdmins = data;
-                error => console.log(error);
             });
     }
 
     private getServers(): void {
         this.serverService
             .GetAll()
-            .subscribe((data: Server[]) => this.servers = data);
+            .subscribe((data: Server[]) => {
+                this.servers = data;
+            });
     }
 
     private createLayer(): void {
         const dialogRef = this.dialog.open(LayerNewComponent, {height:'360px', width:'500px'});
-        dialogRef.afterClosed().subscribe(result => this.getLayerItems());
+        dialogRef.afterClosed().subscribe(() => {
+            this.getLayerItems();
+        });
     }
 
     private openPermission(layerid: number, layername: string): void {
         const dialogRef = this.dialog.open(LayerPermissionComponent, {height:'460px', width:'350px'});
         dialogRef.componentInstance.layerID = layerid;
         dialogRef.componentInstance.layerName = layername;
-    }   
+    }
 
     private openConfDel(layer: LayerAdmin): void {
         const dialogRef = this.dialog.open(ConfirmDeleteComponent);
@@ -72,18 +76,18 @@ export class LayerAdminComponent implements OnInit {
         dialogRef.componentInstance.objID = layer.ID;
         dialogRef.componentInstance.objName = layer.layerName;
         dialogRef.afterClosed().subscribe(result => {
-            if(result) {
+            if (result) {
                 this.deleteLayer(layer.ID);
-            }           
+            }
         });
     }
 
     private updateLayer(layer: LayerAdmin): void {
         this.layerAdminService
             .Update(layer)
-            .subscribe(
-                result => this.getLayerItems()
-            );
+            .subscribe(() => {
+                this.getLayerItems();
+            });
     }
 
     //Should in theory delete layer including dependents: layer(layerid), layer_permissions(layerid), and user_page_layers(layerid)
@@ -92,15 +96,16 @@ export class LayerAdminComponent implements OnInit {
             .GetSome(layerID)
             .subscribe(result => {
                 for (let i of result) {
-                    this.layerPermissionService.Delete(i.ID) //This does not currently delete layerPermission
+                    //This does not currently delete layerPermission
+                    this.layerPermissionService.Delete(i.ID);
                 }
             });
 
         this.layerAdminService
             .Delete(layerID)
-            .subscribe(
-                result => this.getLayerItems()
-            );
+            .subscribe(() => {
+                this.getLayerItems();
+            });
     }
 
     //To be expanded to sort layers on display via html button press.
@@ -109,25 +114,25 @@ export class LayerAdminComponent implements OnInit {
         let list = this.layerAdmins;
         let temp: Array<any> = [];
 
-        switch(code) {
-            case('AZ'):
-                this.orderAZ();
-                break;
-            case('ZA'):
-                break;
-            case('TYPE'):
-                break;
-            case('OLD_NEW'):
-                break;
-            case('NEW_OLD'):
-                break;
-            case('GEOM'):
-                break;
-            case('SERVER'):
-                break;
-            default:
-                alert('"' + code + '" is not a valid code.');
-                break;                    
+        switch (code) {
+        case ('AZ'):
+            this.orderAZ();
+            break;
+        case ('ZA'):
+            break;
+        case ('TYPE'):
+            break;
+        case ('OLD_NEW'):
+            break;
+        case ('NEW_OLD'):
+            break;
+        case ('GEOM'):
+            break;
+        case ('SERVER'):
+            break;
+        default:
+            alert('"' + code + '" is not a valid code.');
+            break;
         }
     }
 
@@ -135,7 +140,7 @@ export class LayerAdminComponent implements OnInit {
         let indexList: Array<number> = [];
         let list, temp = this.layerAdmins;
         for (let i=0; i<list.length; i++) {
-            temp[i] = list[i].layerName;    
+            temp[i] = list[i].layerName;
         }
     }
 }

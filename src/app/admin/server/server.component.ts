@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ServerService } from '../../../_services/_server.service'
-import { Server } from '../../../_models/server.model'
-import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ServerNewComponent } from'./serverNew/serverNew.component'
-import { Http, Response, RequestOptions, Headers } from '@angular/http';
+import { ServerService } from '../../../_services/_server.service';
+import { Server } from '../../../_models/server.model';
+import { ServerNewComponent } from './serverNew/serverNew.component';
+import { Http, RequestOptions, Headers } from '@angular/http';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
 import { LayerNewComponent } from '../layerAdmin/layerNew/layerNew.component';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MdDialog } from '@angular/material';
 
 @Component({
     selector: 'server',
@@ -14,28 +13,27 @@ import { MdDialog, MdDialogRef } from '@angular/material';
     styleUrls: ['./server.component.scss'],
     providers: [ServerService]
 })
+
 export class ServerComponent implements OnInit {
-    public headers;
-    public options;
-    public objCode = 6;
-    public toCreate: boolean = false;
+    private objCode = 6;
+    private headers;
+    private options;
+    
+    private toCreate: boolean = false;
 
-    public servers: Array<Server>;
-    public currServer: Server;
-    public workingserverURL: string;
+    private servers: Array<Server>;
+    private currServer: Server;
 
-    public layerArray: Array<string> = []
-    public folderArray: Array<string> = []
-    public serviceArray: Array<string> = []
-    public formatArray: Array<string> = []
+    private layerArray: Array<string> = [];
+    private folderArray: Array<string> = [];
+    private serviceArray: Array<string> = [];
+    private formatArray: Array<string> = [];
 
-    public displayLayers: boolean;
-    public displayFolders: boolean;
-    public closeResult: string;
-    public path: string = ""
-    public activeService: number;
+    private displayLayers: boolean;
+    private displayFolders: boolean;
+    private path: string = '';
 
-    constructor(private _http: Http, private serverService: ServerService, private dialog: MdDialog) {
+    constructor(private serverService: ServerService, private dialog: MdDialog) {
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         this.headers.append('Accept', 'text/plain');
@@ -43,155 +41,134 @@ export class ServerComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.getServers()
+        this.getServers();
         this.displayLayers = false;
     }
 
-    getServers() {
+    private getServers(): void {
         this.serverService
             .GetAll()
-            .subscribe(
-                (data) => this.servers = data
-            );
+            .subscribe((data) => {
+                this.servers = data;
+            });
     }
 
-    clearArrays() {
-        this.layerArray = [];        
+    private clearArrays(): void {
+        this.layerArray = [];
         this.folderArray = [];
         this.formatArray = [];
         this.displayLayers = false;
     }
 
-    getRequest(serv) {
+    private getRequest(serv: Server): void {
         this.currServer = serv;
-        this.clearArrays()
-            this.displayLayers = true;
-            this.serverService.getCapabilities(serv, this.options)
-                .subscribe((response: string) =>
-                    this.parseResponse(response)
-                );
+        this.clearArrays();
+        this.displayLayers = true;
+
+        this.serverService.getCapabilities(serv, this.options)
+            .subscribe((response: string) => {
+                this.parseResponse(response);
+            });
     }
 
-    getLayers(serv, folder) {
-        let path: string = ""
+    private parseResponse(response: string): void {
+        //list is returned with two elements at indeces 0 and 1 that do not represent valid objects, and must be trimmed off via shift()
+        let list = response.split('<Layer');
+        list.shift();
+        list.shift();
+
+        for (let i of list) {
+            let name = i.substr(i.indexOf('<Name>') + 6, (i.indexOf('</Name>') - (i.indexOf('<Name>') + 6)));
+            let format = i.substr(i.indexOf('<Format>') + 8, (i.indexOf('</Format>') - (i.indexOf('<Format>') + 8)));
+            this.folderArray.push(name);
+            this.formatArray.push(format);
+        }
+    }
+
+    private getLayers(serv: Server): void {
+        let path: string = '';
         this.currServer = serv;
-        this.clearArrays()
+        this.clearArrays();
         this.displayFolders = true;
         this.serverService.getFolders(serv, path, this.options)
-            .subscribe((response: string) =>
-                {this.parseLayers(response, folder); console.log("done")}
-            );
+            .subscribe((result: string) => {
+                this.parseLayers(result);
+            });
     }
 
-    parseLayers(res: string, folder) {
-        let list = JSON.parse(res)
+    private parseLayers(response: string): void {
+        let list = JSON.parse(response);
         if (list.folders) {
-        console.log (list.folders)
             for (let i of list.folders) {
-            this.folderArray.push(i)
+                this.folderArray.push(i);
             }
         }
         if (list.services) {
-        console.log (list.services)
             for (let i of list.services) {
-                this.serviceArray.push(i)
+                this.serviceArray.push(i);
             }
         }
         if (list.layers) {
-            console.log (list.layers)
             for (let i of list.layers) {
-                this.layerArray.push(i)
+                this.layerArray.push(i);
             }
         }
     }
 
-    parseResponse(res: string) {
-        let list = res.split('<Layer')
-        list.shift()
-        list.shift()
-
-        for (let i of list) {
-            let name = i.substr(i.indexOf('<Name>') + 6, (i.indexOf('</Name>') - (i.indexOf('<Name>') + 6)))
-            let format = i.substr(i.indexOf('<Format>') + 8, (i.indexOf('</Format>') - (i.indexOf('<Format>') + 8)))
-            this.folderArray.push(name)
-            this.formatArray.push(format)
-        }
-    }
-
-    WMSRequest(path, type) {
-        console.log('path = ' + path)
-        console.log('type = ' + type)
-        this.path = "/" + path
-        this.clearArrays()
+    private WMSRequest(path: string): void {
+        this.path = '/' + path;
+        this.clearArrays();
         this.displayFolders = true;
         this.serverService.getFolders(this.currServer, this.path, this.options)
-            .subscribe((response: string) =>
-                {this.parseLayers(response, this.path); console.log(this.path)}
-            );
+            .subscribe((response: string) => {
+                this.parseLayers(response);
+            });
     }
-    openConfDel(server) {
-        const dialogRef = this.dialog.open(ConfirmDeleteComponent)
-        dialogRef.componentInstance.objCode = this.objCode
-        dialogRef.componentInstance.objID = server.ID
-        dialogRef.componentInstance.objName = server.serverName
+
+    private openConfDel(server: Server): void {
+        const dialogRef = this.dialog.open(ConfirmDeleteComponent);
+        dialogRef.componentInstance.objCode = this.objCode;
+        dialogRef.componentInstance.objID = server.ID;
+        dialogRef.componentInstance.objName = server.serverName;
 
         dialogRef.afterClosed().subscribe(result => {
-            if(result == true) {
-                this.deleteServer(server.ID)
+            if (result == true) {
+                this.deleteServer(server.ID);
             }
-            this.getServers()
+            this.getServers();
         });
     }
 
-    deleteServer(serverID) {
+    private deleteServer(serverID: number): void {
         this.serverService
             .Delete(serverID)
             .subscribe(result => {
                 this.getServers();
-            })
+            });
     }
 
-    updateServer(server) {
+    private updateServer(server: Server): void {
         this.serverService
             .Update(server)
             .subscribe(result => {
                 this.getServers();
-            })
+            });
     }
 
-    createLayer(index, name) {
-        const dialogRef = this.dialog.open(LayerNewComponent, {height:'360px', width:'500px'})
-        console.log(index)
-        console.log("layer name? " + name) //error here
-        dialogRef.componentInstance.layerName = name
-        dialogRef.componentInstance.layerIdent = index
-        dialogRef.componentInstance.layerService = this.path
-        dialogRef.componentInstance.layerType = this.serviceArray[index]["type"]
-        dialogRef.componentInstance.layerServer = this.currServer
-
-        dialogRef.afterClosed().subscribe(result => {
-            this.getDismissReason = result;
-        });
+    private createLayer(index: number, name: string): void {
+        const dialogRef = this.dialog.open(LayerNewComponent, {height:'360px', width:'500px'});
+        dialogRef.componentInstance.layerName = name;
+        dialogRef.componentInstance.layerIdent = (String)(index);
+        dialogRef.componentInstance.layerService = this.path;
+        dialogRef.componentInstance.layerType = this.serviceArray[index]['type'];
+        dialogRef.componentInstance.layerServer = this.currServer;
     }
 
-    openServerNew() {
+    private openServerNew(): void {
         const dialogRef = this.dialog.open(ServerNewComponent, {height:'40%', width:'20%'});
-
-        dialogRef.afterClosed().subscribe(result => {
-            this.getServers()
+        dialogRef.afterClosed()
+        .subscribe(result => {
+            this.getServers();
         });
-    }
-
-    getDismissReason(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-        } 
-        else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
-        } 
-        else {
-            return  `with: ${reason}`;
-        }
-    }
-    
+    }    
 }
