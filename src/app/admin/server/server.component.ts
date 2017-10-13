@@ -16,8 +16,8 @@ import { MatDialog } from '@angular/material';
 
 export class ServerComponent implements OnInit {
     private objCode = 6;
-    private headers;
-    private options;
+    private headers: Headers;
+    private options: RequestOptions;
     
     private toCreate: boolean = false;
 
@@ -37,7 +37,7 @@ export class ServerComponent implements OnInit {
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         this.headers.append('Accept', 'text/plain');
-        this.options = new RequestOptions({headers:this.headers});
+        this.options = new RequestOptions({headers: this.headers});
     }
 
     ngOnInit() {

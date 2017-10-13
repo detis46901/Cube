@@ -22,17 +22,15 @@
                     <h4>Default On</h4>
                 </div>
             </tr>
-            <tr *ngFor="let userpagelayer of userpagelayers">
+            <tr *ngFor="let userPageLayer of userPageLayers">
                 <td>
                     <section class="form-inline" style="width:100%">
                         <div class="form-group" style="width:60%">
-                            <label for="exuserpagelayer"><i (click)="deleteUserPageLayer(userpagelayer.ID)" class="fa fa-times" style="position:relative; margin-right:5px;" aria-hidden="true"></i></label>
-                            {{userpagelayer.layer_admin.layerName}}
+                            <label for="exuserpagelayer"><i (click)="deleteUserPageLayer(userPageLayer.ID)" class="fa fa-times" style="position:relative; margin-right:5px;" aria-hidden="true"></i></label>
+                            {{userPageLayer.layer_admin.layerName}}
                         </div>
 
-                        <!--This checkbox object doesn't work correctly.-->
-                        <!--<md-checkbox id="exuserpagelayeron" name="exuserpagelayeron" class="form-check-input" style="position:relative; left:20%; border-color: rgba(255,255,255,0); width:5%;" [(ngModel)]="userpagelayer.layerON" (change)="updateUserPageLayer(userpagelayer)"></md-checkbox>-->
-                        <input id="exuserpagelayeron" name="exuserpagelayeron" class="form-check-input" style="position:relative; left:20%; border-color: rgba(255,255,255,0); width:5%;" [(ngModel)]="userpagelayer.layerON" type="checkbox" (change)="updateUserPageLayer(userpagelayer)">
+                        <input id="exuserpagelayeron" name="exuserpagelayeron" class="form-check-input" style="position:relative; left:20%; border-color: rgba(255,255,255,0); width:5%;" [(ngModel)]="userPageLayer.layerON" type="checkbox" (change)="updateUserPageLayer(userPageLayer)">
                     </section>
                 </td>
             </tr>
@@ -41,12 +39,12 @@
 </div>
 
 <div id="pageConfigFooter" class="modal-footer">
-    <form class="form-inline" #f="ngForm" (ngSubmit)="addUserPageLayer(newuserpagelayer)" style="margin-bottom:0px; position:relative; top:7px;">
+    <form class="form-inline" #f="ngForm" (ngSubmit)="addUserPageLayer(newUserPageLayer)" style="margin-bottom:0px; position:relative; top:7px;">
         <div class="row">
             <div class="col-md-4 col-md-offset-2" style="margin-right:25px;">
-                <mat-select id="matSel" placeholder="Layers" [(ngModel)] = "newuserpagelayer.layerAdminID" required name="layer" style="position:relative; bottom:10px;">
-                    <mat-option [value]="layerpermission.layerAdminID" *ngFor="let layerpermission of layerpermissions">
-                        {{layerpermission.layer_admin.layerName}}
+                <mat-select id="matSel" placeholder="Layers" [(ngModel)] = "newUserPageLayer.layerAdminID" required name="layer" style="position:relative; bottom:10px;">
+                    <mat-option [value]="layerPermission.layerAdminID" *ngFor="let layerPermission of layerPermissions">
+                        {{layerPermission.layer_admin.layerName}}
                     </mat-option>
                 </mat-select>
             </div>

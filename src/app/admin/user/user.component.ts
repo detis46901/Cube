@@ -206,7 +206,7 @@ export class UserComponent implements OnInit {
     }
 
     private openPageConfig(pageID: number, userID: number, name: string): void {
-        let dialogRef = this.dialog.open(PageConfigComponent);
+        let dialogRef = this.dialog.open(PageConfigComponent, {width: '500px'});
         dialogRef.componentInstance.pageID = pageID;
         dialogRef.componentInstance.userID = userID;
         dialogRef.componentInstance.pageName = name;

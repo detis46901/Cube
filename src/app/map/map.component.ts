@@ -1,8 +1,4 @@
-//<reference path='../../../typings/leaflet.d.ts'/>
-//<reference path='../../../typings/leaflet-omnivore.d.ts'/>
-
-//Import statements
-import { ElementRef, Component, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MapService } from './services/map.service';
 import { WFSService } from './services/wfs.service';
 import { Location } from './core/location.class';
@@ -28,7 +24,7 @@ import * as L from 'leaflet';
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.scss'],
     providers: [ServerService]
-    })
+})
 
 export class MapComponent {
 
@@ -41,18 +37,16 @@ export class MapComponent {
     @ViewChild(MarkerComponent) markerComponent: MarkerComponent;
 
     //Constructor, elementref is for use in ngAfterViewInit to test the geoJSON file. the rest are necessary for map component to work.
-    constructor(private _http: Http, private elementRef: ElementRef, private mapService: MapService, private wfsservice: WFSService, private geocoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sidenavService: SidenavService, private serverService: ServerService ) {
+    constructor(private _http: Http, private mapService: MapService, private wfsService: WFSService, private geocoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sidenavService: SidenavService, private serverService: ServerService ) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
         this.headers.append('Accept', 'application/json');
-        wfsservice.popupText$.subscribe(tx => {
+        wfsService.popupText$.subscribe(tx => {
             return this.popuptx = tx;
         });
-
-        //sidenavService.activeLayer$.subscribe(l => this.currIdent = l) 7/13/17 current Active Layer for sidenav information output
     }
 
     //Class variables
@@ -304,7 +298,7 @@ export class MapComponent {
                         //let URL = "http://maps.indiana.edu/arcgis/services/Infrastructure/Railroads_Rail_Crossings_INDOT/MapServer/WMSServer?version=1.1.1&request=GetFeatureInfo&layers=0&styles=default&SRS=EPSG:4326&BBOX=-86.35185241699219,40.35387022893512,-85.91274261474611,40.62620049126207&width=1044&height=906&format=text/html&X=500&Y=400&query_layers=0"
                         let URL = this.formLayerRequest(layer) + '?service=WMS&version=1.1.1&request=GetFeatureInfo&layers='+IDENT+'&query_layers='+IDENT+'&BBOX='+BBOX+'&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&FORMAT=text%2Fhtml&SRS=EPSG:4326&X='+X+'&Y='+Y;
                         console.log(URL);
-                        this.wfsservice.getfeatureinfo(URL, false)
+                        this.wfsService.getfeatureinfo(URL, false)
                             .subscribe((data: any) => {
                                 return this.getFeatureData = data;
                             });
@@ -365,16 +359,17 @@ export class MapComponent {
         //form URL
         let url: string = this.formLayerRequest(layer);
         if (checked == false) {
+            console.log("err")
             if (layer.layer_admin.layerGeom == 'Coverage') {
                 zindex = -50;
             }
-           
-            this.turnonlayer = (L.tileLayer.wms(url, {
+            console.log("err")
+            this.turnonlayer = (L.tileLayer.wms(url, { //error somewhere in here
                 layers: layer.layer_admin.layerIdent,
                 format: 'image/png',
                 transparent: true
             }).addTo(this._map));
-
+            
             //this.turnonlayer = (L.tileLayer.wms(server.serverURL, {
             //layers: layer.layer_admin.layerIdent,
             //format: layer.layer_admin.layerFormat,
@@ -405,7 +400,6 @@ export class MapComponent {
                 this.currLayerName = 'No Active Layer';
                 this.noLayers = true;
             } else if (this.currLayer == layer && !allLayersOff) {
-
                 //9/25/17: Needs to make the next layer the current layer.  Right now it just goes to the first one.
                 this.currLayer = nextActive;
                 this.currLayerName = nextActive.layer_admin.layerName;
@@ -425,7 +419,7 @@ export class MapComponent {
             let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
             let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
             let URL = serv.serverURL + '/wms?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
-            this.wfsservice.getfeatureinfo(URL, false)
+            this.wfsService.getfeatureinfo(URL, false)
                 .subscribe((data: any) => {
                     return this.getFeatureData = data;
                 });

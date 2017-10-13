@@ -1,11 +1,8 @@
-
-import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { Component } from '@angular/core';
 import { UserService } from '../../_services/_user.service';
-import { User } from '../../_models/user.model'
-import { Configuration } from '../../_api/api.constants'
-import { SidenavService} from '../../_services/sidenav.service'
-import { WFSService } from '../map/services/wfs.service'
+import { User } from '../../_models/user.model';
+import { SidenavService} from '../../_services/sidenav.service';
+import { WFSService } from '../map/services/wfs.service';
 
 @Component({
   selector: 'home',
@@ -13,42 +10,34 @@ import { WFSService } from '../map/services/wfs.service'
   styleUrls: ['./home.component.scss'],
   providers: [SidenavService, WFSService]
 })
-export class HomeComponent {
 
-    //This is the "constant" (though not declared as such) that tells the header's toggle menu button which screen the user is on
+export class HomeComponent {
+    //This is the variable that tells the header's toggle menu button which screen the user is on
     private screen = 1;
 
-    public user = new User;
-    public isHome = true;
-    public myItems: any;
-    public token: string;
-    public userID: number;
-    public isOpen: boolean;
-    public popuptx: string
+    private user = new User;
+    private token: string;
+    private userID: number;
+    private popupText: string;
 
     constructor(private dataService: UserService, private sidenavService: SidenavService, private WFSservice: WFSService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
-        WFSservice.popupText$.subscribe(result => this.popuptx = result)
+        WFSservice.popupText$.subscribe(result => this.popupText = result);
         
     }
 
     ngOnInit() {
        this.getAllItems(this.userID);
-       this.popuptx = "Click a layer for details."
+       this.popupText = "Click a layer for details.";
     }
 
-    getAllItems(userid): void {
+    private getAllItems(userID: number): void {
         this.dataService
-            .GetSingle(userid)
-            .subscribe((data:User) => this.user = data,
-                error => console.log(error));//,
-                //() => console.log(this.user.email));     
+            .GetSingle(userID)
+            .subscribe((data: User) => {
+                this.user = data;
+            });
     }
-
-    openListener(open: boolean) {
-        this.isOpen = open;
-    }
-
 }

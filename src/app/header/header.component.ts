@@ -1,60 +1,46 @@
-import { Component, Input, Output, OnInit, Renderer2, EventEmitter } from '@angular/core';
-import { User } from '../../_models/user.model'
-import { SidenavService } from "../../_services/sidenav.service"
+import { Component, Input } from '@angular/core';
+import { User } from '../../_models/user.model';
+import { SidenavService } from "../../_services/sidenav.service";
 
 @Component({
     selector: 'header',
     templateUrl: './header.component.html',
-    styleUrls: ['header.component.less'],
+    styleUrls: ['header.component.scss'],
     providers: [SidenavService]
 })
+
 export class HeaderComponent { 
-    
+    @Input() user: User;
+    @Input() screenCode: number = 0; 
+    private isOpen: boolean;
+
     constructor(private sidenavService: SidenavService) {}
-    /*constructor(private renderer: Renderer2) {
-    }
-    onInit(element: HTMLElement){
-        this.renderer.createElement(element, )
-    } Maybe this is how to render the static pngs*/
 
-    @Input() user: User
-    //@Input() isHome = false; //Not currently being used
-    @Input() screenCode = 0; //1 for home (map) screen, 2 for admin menu screen, 3 for user settings screen
-    //@Output() open: EventEmitter<boolean> = new EventEmitter<boolean>();
-
-    public isOpen: boolean;
-
-    public menu_toggle(sCode) {
-        //console.log(this.sidenavService.getHidden()) //should be getting false after hit from line 27 of sidenav component
+    private menuToggle(sCode: number): void {
         if (this.sidenavService.getHidden() == null) {
             this.isOpen = true;
-        }
-        else {
+        } else {
             this.isOpen = this.sidenavService.getHidden();
         }
-        console.log(this.isOpen)
-        switch(sCode) {
-            case 0: 
-                //throw exception here for a call without a screen code (will default to 0 as assigned above)
-                break
-            case 1:
-                this.home_toggle()
-                break
-            case 2:
-                this.admin_toggle()
-                break
-            case 3:
-                this.user_toggle()
-                break
-        }
-    }
 
-    public showCons() {
-        console.log(this.sidenavService.getHidden())
+        switch(sCode) {
+            case 0:
+                //throw exception here for a call without a screen code (will default to 0 as assigned above)
+                break;
+            case 1:
+                this.homeToggle();
+                break;
+            case 2:
+                this.adminToggle();
+                break;
+            case 3:
+                this.userToggle();
+                break;
+        }
     }
 
     //Code 1
-    public home_toggle() {
+    private homeToggle(): void {
         if(!this.isOpen) {
             document.getElementById("mySidenav").style.display = "block";
             document.getElementById("mySidenav").style.width = "250px";
@@ -67,8 +53,7 @@ export class HeaderComponent {
             document.getElementById("remove-marker").style.position = "absolute";
             document.getElementById("remove-marker").style.left = "320px";
             this.sidenavService.toggleHidden();
-        }
-        else {
+        } else {
             document.getElementById("mySidenav").style.width = "0";
             document.getElementById("place-input").style.left = "15px";
             document.getElementById("goto").style.left = "15px";
@@ -76,47 +61,33 @@ export class HeaderComponent {
             document.getElementById("remove-marker").style.left = "70px";
             this.sidenavService.toggleHidden();
         }
-        //this.isOpen = !this.isOpen
-        //this.open.emit(this.isOpen)
-        this.isOpen = this.sidenavService.getHidden()
-        console.log(this.sidenavService.getHidden())
+
+        this.isOpen = this.sidenavService.getHidden();
     }
 
     //Code 2
-    public admin_toggle() {
+    public adminToggle() {
         if(!this.isOpen) {
             document.getElementById("admin_nav").style.display = "block";
             document.getElementById("admin_nav").style.width = "230px";
             this.sidenavService.toggleHidden();
-        }
-        else {
+        } else {
             document.getElementById("admin_nav").style.width = "0";
             document.getElementById("admin_nav").style.display = "none";
             this.sidenavService.toggleHidden();
         }
-        //this.isOpen = !this.isOpen
-        //this.open.emit(this.isOpen)
     }
 
     //Code 3
-    public user_toggle() {
+    public userToggle() {
         if(!this.isOpen) {
             document.getElementById("settings_nav").style.display = "block";
             document.getElementById("settings_nav").style.width = "230px";
             this.sidenavService.toggleHidden();
-        }
-        else {
+        } else {
             document.getElementById("settings_nav").style.width = "0";
             document.getElementById("settings_nav").style.display = "none";
             this.sidenavService.toggleHidden();
         }
-        //this.isOpen = !this.isOpen
-        //this.open.emit(this.isOpen)
     }
-
-    /*public w3_close() {
-        document.getElementById("mySidenav").style.width = "0";
-    }*/
 }
-
-//width:250px;background-color: rgba(255,255,255,.7);top:43px; bottom:200px (sidenav specs)

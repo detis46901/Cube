@@ -1,9 +1,0 @@
-<!-- Top container (Same for every page)-->
-<div class="w3-container w3-top w3-black w3-large w3-padding" style="z-index:1">
-<button class="w3-btn w3-hide-large w3-padding-0 w3-hover-text-grey" onclick="w3_open();"><i class="fa fa-bars"></i> &nbsp;View Data</button>
-<span>Welcome, <strong><a [routerLink]="home">{{user.firstName}} {{user.lastName}}</a></strong></span>
-<span class="w3-right">
-<a href="/logout" class="w3-hover-none w3-hover-text-blue w3-show-inline-block"><i class="fa fa-power-off" aria-hidden="true"></i></a>
-<a *ngIf="user.administrator" class="w3-btn w3-orange w3-tiny w3-padding-tiny w3-border w3-border-orange w3-round-large w3-text-white" href="\admin">Admin</a>
-<img src="../images/avatar2.png" class="w3-circle w3-margin-right" style="width:24px"></span>
-</div>
