@@ -5,7 +5,7 @@ import { ServerNewComponent } from './serverNew/serverNew.component';
 import { Http, RequestOptions, Headers } from '@angular/http';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
 import { LayerNewComponent } from '../layerAdmin/layerNew/layerNew.component';
-import { MdDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 
 @Component({
     selector: 'server',
@@ -33,7 +33,7 @@ export class ServerComponent implements OnInit {
     private displayFolders: boolean;
     private path: string = '';
 
-    constructor(private serverService: ServerService, private dialog: MdDialog) {
+    constructor(private serverService: ServerService, private dialog: MatDialog) {
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         this.headers.append('Accept', 'text/plain');

@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject} from '@angular/core';
-import { MdDialog, MdDialogRef, MdInputModule, MD_DIALOG_DATA} from '@angular/material';
+import { MatDialog, MatDialogRef, MatInputModule, MAT_DIALOG_DATA} from '@angular/material';
 import { UserService } from '../../../../_services/_user.service';
 import { User } from '../../../../_models/user.model';
 import { Md5 } from 'ts-md5/dist/md5';
@@ -24,7 +24,7 @@ export class ChangePasswordComponent implements OnInit {
     private newPassword: string;
     private confPassword: string;
 
-    constructor(private dialog: MdDialog, private userService: UserService, @Inject(MD_DIALOG_DATA) private data: any) {
+    constructor(private dialog: MatDialog, private userService: UserService, @Inject(MAT_DIALOG_DATA) private data: any) {
         //Figure out what datatype "data" needs to be.
         this.userID = data.userID;
     }

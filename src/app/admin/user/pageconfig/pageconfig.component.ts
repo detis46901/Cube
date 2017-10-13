@@ -9,7 +9,7 @@ import { UserPage } from '../../../../_models/user.model';
 import { UserPageLayer } from '../../../../_models/layer.model';
 import { LayerPermission } from '../../../../_models/layer.model';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import {MdDialog, MdDialogRef} from '@angular/material';
+import {MatDialog, MatDialogRef} from '@angular/material';
 
 
 @Component({

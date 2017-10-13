@@ -46,7 +46,7 @@
     
     <form style="position:relative; left:20px" class="form-inline" #e="ngForm" *ngFor="let user of users">
         <i id="btnOpenDelUser" class="fa fa-times" style="margin-right:5px" (click)="openConfDel(user)"></i>
-        <input mdInput id="exuserfirstname" ngModel required name="exuserfirstname" class="form-control" [(ngModel)] = "user.firstName" (blur)="updateUser(user)">
+        <input matInput id="exuserfirstname" ngModel required name="exuserfirstname" class="form-control" [(ngModel)] = "user.firstName" (blur)="updateUser(user)">
         <input id="exuserlastname" ngModel required name="exuserlastname" class="form-control" [(ngModel)] = "user.lastName" type="text" (blur)="updateUser(user)">
         <select id="exuserrole" ngModel required name="exuserrole" class="form-control" [(ngModel)] = "user.roleID" #role="ngModel" type="text" (blur)="updateUser(user)">
             <option *ngFor="let role of roles" [value]="role.ID">
@@ -58,25 +58,25 @@
         <input id="exuseradministrator" name="exuseradministrator" class="form-check-input" [(ngModel)] = "user.administrator" type="checkbox" (blur)="updateUser(user)">
 
         <div class="row" style="position:relative;width:22%;left:2%">
-                <button md-button [mdMenuTriggerFor]="menu">
-                    Options
+            <button mat-button [matMenuTriggerFor]="menu">
+                Options
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="changePassword(user.ID)">
+                    <h5>Change Password</h5>
                 </button>
-                <md-menu #menu="mdMenu">
-                    <button md-menu-item (click)="changePassword(user.ID)">
-                        <h5>Change Password</h5>
-                    </button>
-                    <button md-menu-item (click)="openPages(user.ID, user.firstName, user.lastName)">
-                        <h5>Pages</h5>
-                    </button>
-                </md-menu>
-                <button md-button [mdMenuTriggerFor]="menu2">
-                    Edit Layers
+                <button mat-menu-item (click)="openPages(user.ID, user.firstName, user.lastName)">
+                    <h5>Pages</h5>
                 </button>
-                <md-menu #menu2="mdMenu">
-                    <button md-menu-item id="openConfig" *ngFor="let userpage of (userPages | pagefilter: (user.ID))" (click)="getUserPageItem(userpage.ID, user.ID)">
-                        <h5>{{userpage.page}}</h5>
-                    </button>
-                </md-menu>
+            </mat-menu>
+            <button mat-button [matMenuTriggerFor]="menu2">
+                Edit Layers
+            </button>
+            <mat-menu #menu2="matMenu">
+                <button mat-menu-item id="openConfig" *ngFor="let userpage of (userPages | pagefilter: (user.ID))" (click)="getUserPageItem(userpage.ID, user.ID)">
+                    <h5>{{userpage.page}}</h5>
+                </button>
+            </mat-menu>
         </div>
     </form>      
     <br>

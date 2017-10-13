@@ -1,9 +1,7 @@
 {
   "project": {
-    "version": "1.0.0-beta.21",
     "name": "c-proj"
   },
-
   "apps": [
     {
       "root": "src",
@@ -17,7 +15,6 @@
       "test": "test.ts",
       "tsconfig": "tsconfig.json",
       "prefix": "app",
-      "mobile": false,
       "styles": [
         "styles.css",
         "../node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -29,7 +26,6 @@
           "../node_modules"
         ]
       },
-      "scssPaths": ["styles"],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
       "environments": {
@@ -38,9 +34,6 @@
       }
     }
   ],
-
-  "addons": [],
-  "packages": [],
   "e2e": {
     "protractor": {
       "config": "./protractor.conf.js"
@@ -53,22 +46,20 @@
   },
   "defaults": {
     "styleExt": "css",
-    "prefixInterfaces": false,
+    "class": {
+      "spec": false
+    },
+    "component": {
+      "spec": true,
+      "inlineStyle": false,
+      "inlineTemplate": false
+    },
     "serve": {
       "port": 4200,
       "host": "localhost"
-    },
-    "inline": {
-      "style": false,
-      "template": false
-    },
-    "spec": {
-      "class": false,
-      "component": true,
-      "directive": true,
-      "module": false,
-      "pipe": true,
-      "service": true
     }
+  },
+  "warnings": {
+    "typescriptMismatch": false
   }
 }

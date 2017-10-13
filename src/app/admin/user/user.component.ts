@@ -12,7 +12,7 @@ import { PageComponent } from './page/page.component';
 import { PageConfigComponent } from './pageConfig/pageConfig.component';
 import { ChangePasswordComponent } from './changePassword/changePassword.component';
 import { Md5 } from 'ts-md5/dist/md5';
-import { MdDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 
 @Component({
     selector: 'user',
@@ -34,7 +34,7 @@ export class UserComponent implements OnInit {
     private users: Array<User>;
     private roles: Array<Role>;
     
-    constructor(private userService: UserService, private roleService: RoleService, private userPageService: UserPageService, private dialog: MdDialog) {
+    constructor(private userService: UserService, private roleService: RoleService, private userPageService: UserPageService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;

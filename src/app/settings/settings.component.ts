@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { UserService } from '../../_services/_user.service';
 import { Configuration } from '../../_api/api.constants';
-import { User } from '../../_models/user.model'
+import { User } from '../../_models/user.model';
 
 @Component({
-  selector: 'settings',
-  templateUrl: './settings.component.html',
-  providers: [UserService, Configuration],
-  styleUrls: ['./settings.component.css'],
-})
+    selector: 'settings',
+    templateUrl: './settings.component.html',
+    providers: [UserService, Configuration],
+    styleUrls: ['./settings.component.css'],
+    })
 
 export class SettingsComponent{
     //Screen code (see home.component.ts)
@@ -20,21 +20,27 @@ export class SettingsComponent{
     public userID: number;
 
     constructor(private dataService: UserService) {
-        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userid; 
+        this.userID = currentUser && currentUser.userid;
     }
 
     ngOnInit() {
-       this.getAllItems(this.userID);        
+        this.getAllItems(this.userID);
     }
 
     public getAllItems(userid): void {
-         this.dataService
+        this.dataService
             .GetSingle(userid)
-            .subscribe((data:User) => this.user = data,
-                error => console.log(error),
-               () => console.log(this.user.email));
+            .subscribe((data:User) => {
+                return this.user = data;
+            },
+            error => {
+                return console.log(error);
+            },
+            () => {
+                return console.log(this.user.email);
+            });
             
     }
 }

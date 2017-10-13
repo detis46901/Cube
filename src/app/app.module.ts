@@ -18,13 +18,13 @@ import { NumFilterPipe } from '../_pipes/numfilter.pipe';
 
 //Angular Material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdRadioModule } from '@angular/material';
-import { MdMenuModule } from '@angular/material';
-import { MdIconModule } from '@angular/material';
-import { MdDialogModule } from '@angular/material';
-import { MdSelectModule } from '@angular/material';
-import { MdCheckboxModule } from '@angular/material';
-import { MdInputModule } from '@angular/material';
+import { MatRadioModule } from '@angular/material';
+import { MatMenuModule } from '@angular/material';
+import { MatIconModule } from '@angular/material';
+import { MatDialogModule } from '@angular/material';
+import { MatSelectModule } from '@angular/material';
+import { MatCheckboxModule } from '@angular/material';
+import { MatInputModule } from '@angular/material';
 
 //Components
 import { LoginComponent } from './user/login.component';
@@ -137,13 +137,13 @@ import { UserService } from '../_services/_user.service';
             }
         ]),
         BrowserAnimationsModule,
-        MdRadioModule,
-        MdMenuModule,
-        MdIconModule,
-        MdDialogModule,
-        MdSelectModule,
-        MdCheckboxModule,
-        MdInputModule
+        MatRadioModule,
+        MatMenuModule,
+        MatIconModule,
+        MatDialogModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        MatInputModule
     ],
 
     providers: [

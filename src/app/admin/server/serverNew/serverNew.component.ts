@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ServerService } from '../../../../_services/_server.service';
 import { Server } from '../../../../_models/server.model';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 
 @Component({
     selector: 'server-new',
@@ -14,7 +14,7 @@ export class ServerNewComponent implements OnInit {
     private server = new Server;
     private newserver = new Server;
 
-    constructor(private dialog: MdDialog, private serverService: ServerService) {}
+    constructor(private dialog: MatDialog, private serverService: ServerService) {}
 
     ngOnInit() {
         this.newserver.serverName = '';

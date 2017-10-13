@@ -5,7 +5,7 @@ import { Configuration } from '../../../../_api/api.constants';
 import { LayerAdminService } from '../../../../_services/_layerAdmin.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { LayerPermission } from '../../../../_models/layer.model';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 
 @Component({
     selector: 'layer-permission',
@@ -24,7 +24,7 @@ export class LayerPermissionComponent implements OnInit {
     private token: string;
     private userID: number;
 
-    constructor(private layerPermissionService: LayerPermissionService, private userService: UserService, private dialog: MdDialog) {
+    constructor(private layerPermissionService: LayerPermissionService, private userService: UserService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;

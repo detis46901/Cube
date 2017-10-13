@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { UserService } from '../../../../_services/_user.service';
 import { User, UserPage } from '../../../../_models/user.model';
 import { UserPageService } from '../../../../_services/_userPage.service';
-import { MdDialog, MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ConfirmDeleteComponent } from '../../confirmDelete/confirmDelete.component';
 
 @Component({
@@ -27,7 +27,7 @@ export class PageComponent implements OnInit {
     private newUserPage: string;
     private selectedPage: number;
 
-    constructor(private userpageService: UserPageService, private dialog: MdDialog) {
+    constructor(private userpageService: UserPageService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
     }

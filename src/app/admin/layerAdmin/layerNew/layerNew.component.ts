@@ -7,7 +7,7 @@ import { ServerService } from '../../../../_services/_server.service';
 import { LayerAdmin } from '../../../../_models/layer.model';
 import { Server } from '../../../../_models/server.model';
 import { LayerPermissionComponent } from '../layerPermission/layerPermission.component';
-import { MdDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 
 @Component({
     selector: 'layer-new',
@@ -35,7 +35,7 @@ export class LayerNewComponent implements OnInit {
     private servers: Array<Server>;
     private layerAdmin = new LayerAdmin;
 
-    constructor(private layerAdminService: LayerAdminService, private dialog: MdDialog, private serverService: ServerService) {
+    constructor(private layerAdminService: LayerAdminService, private dialog: MatDialog, private serverService: ServerService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;

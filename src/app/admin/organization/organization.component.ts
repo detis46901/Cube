@@ -6,7 +6,7 @@ import { GroupService } from '../../../_services/_group.service';
 import { RoleService } from '../../../_services/_role.service';
 import { Department, Group, Role } from '../../../_models/organization.model';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 
 @Component({
     selector: 'organization',
@@ -33,7 +33,7 @@ export class OrganizationComponent implements OnInit {
     private showRole: boolean;
     private newDepartment: string;
 
-    constructor(private departmentService: DepartmentService, private groupService: GroupService, private roleService: RoleService, private dialog: MdDialog) {
+    constructor(private departmentService: DepartmentService, private groupService: GroupService, private roleService: RoleService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
