@@ -10,8 +10,7 @@ let markerData: string;
 
 @Injectable()
 export class SidenavService {
-    private bottomText = new Subject<string>();
-    public bottomText$ = this.bottomText.asObservable();
+   private subject = new Subject<any>();
 
     public toggleHidden(): void {
         isOpen = !isOpen;
@@ -35,5 +34,19 @@ export class SidenavService {
 
     public getMarkerData(): string {
         return markerData;
+    }
+
+    sendMessage(message: string){
+        console.log("Arrived at sendMessage")
+        console.log(message)
+        this.subject.next({ text: message});
+    }
+
+    clearMessage() {
+        this.subject.next();
+    }
+
+    getMessage(): Observable<any>{
+        return this.subject.asObservable();
     }
 }   

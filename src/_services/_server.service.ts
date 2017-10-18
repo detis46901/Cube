@@ -30,13 +30,14 @@ export class ServerService extends ParentService {
             .map((response: Response) => response.text());
     }
 
-    public getFolders(serv: Server, path: string, options: any): Observable<string> {
+    public getFolders(serv: Server, path: string, type: string, options: any): Observable<string> {
         let actionUrl: string
         switch(serv.serverType) {
             case "Geoserver": 
                 actionUrl = serv.serverURL + '/wms?request=getCapabilities&service=WMS'; 
                 break;
             case "ArcGIS": 
+                if (type=="layer") {path += "/MapServer"}
                 actionUrl = serv.serverURL + path + '?f=pjson'; 
                 break;
         }     

@@ -64,12 +64,13 @@ export class LayerNewComponent implements OnInit {
             this.layerAdmin.layerService = this.layerService;
             this.layerAdmin.layerIdent = this.layerIdent;
             this.layerAdmin.layerType = this.layerType;
-            this.layerAdmin.layerFormat = this.layerFormat;
+            //this.layerAdmin.layerFormat = this.layerFormat;
         }
-
+        console.log(this.layerFormat)
         this.layerAdminService
             .Add(this.layerAdmin)
             .subscribe(result => {
+                console.log('result=' + JSON.stringify(result))
                 this.dialog.closeAll();
             });
     }

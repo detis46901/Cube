@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
         console.log(this.model.username)
         //console.log(Md5.hashStr(this.model.password).toString())
         this.model.password = Md5.hashStr(this.model.password).toString()
+        console.log(this.model.password)
         this.authenticationService.login(this.model.username, this.model.password)
             .subscribe(result => {
                 if (result > 0 ) {

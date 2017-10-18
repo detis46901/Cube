@@ -36,6 +36,8 @@ export class ParentService {
     }
  
     public Add = (toAdd: any): Observable<any> => {
+        console.log('adding a record.  Add to=' + JSON.stringify(toAdd))
+        console.log(this.actionUrl + 'create', JSON.stringify(toAdd), {headers: this.headers})
         return this._http.post(this.actionUrl + 'create', JSON.stringify(toAdd), {headers: this.headers})
             .map((response: Response) => <any>response.json())
             .catch(this.handleError);
@@ -48,7 +50,8 @@ export class ParentService {
     }
  
     public Delete = (id: number): Observable<Response> => {
-        return this._http.delete(this.actionUrl + 'delete?rowID=' + id)
+        console.log(this.actionUrl + 'delete?ID=' + id)
+        return this._http.delete(this.actionUrl + 'delete?ID=' + id)
             .catch(this.handleError);
     }
  

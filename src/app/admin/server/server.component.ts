@@ -29,7 +29,7 @@ export class ServerComponent implements OnInit {
     private serviceArray: Array<string> = [];
     private formatArray: Array<string> = [];
 
-    private displayLayers: boolean;
+    private displayGeoserverLayers: boolean;
     private displayFolders: boolean;
     private path: string = '';
 
@@ -42,7 +42,7 @@ export class ServerComponent implements OnInit {
 
     ngOnInit() {
         this.getServers();
-        this.displayLayers = false;
+        this.displayGeoserverLayers = false;
     }
 
     private getServers(): void {
@@ -57,21 +57,33 @@ export class ServerComponent implements OnInit {
         this.layerArray = [];
         this.folderArray = [];
         this.formatArray = [];
-        this.displayLayers = false;
+        this.displayGeoserverLayers = false;
     }
 
     private getRequest(serv: Server): void {
+        switch(serv.serverType) {
+            case "Geoserver": {
+                this.getGeoserver(serv)
+                break
+            }
+            case "ArcGIS": {
+                this.getLayers(serv)
+                break
+            }
+        }
+    }
+    private getGeoserver(serv: Server): void {
         this.currServer = serv;
         this.clearArrays();
-        this.displayLayers = true;
+        this.displayGeoserverLayers = true;
 
         this.serverService.getCapabilities(serv, this.options)
             .subscribe((response: string) => {
-                this.parseResponse(response);
+                this.parseGeoserver(response);
             });
     }
 
-    private parseResponse(response: string): void {
+    private parseGeoserver(response: string): void {
         //list is returned with two elements at indeces 0 and 1 that do not represent valid objects, and must be trimmed off via shift()
         let list = response.split('<Layer');
         list.shift();
@@ -90,7 +102,7 @@ export class ServerComponent implements OnInit {
         this.currServer = serv;
         this.clearArrays();
         this.displayFolders = true;
-        this.serverService.getFolders(serv, path, this.options)
+        this.serverService.getFolders(serv, path, "none", this.options)
             .subscribe((result: string) => {
                 this.parseLayers(result);
             });
@@ -115,12 +127,14 @@ export class ServerComponent implements OnInit {
         }
     }
 
-    private WMSRequest(path: string): void {
+    private WMSRequest(path: string, type: string): void {
+        console.log("WMSRequest " + path)
         this.path = '/' + path;
         this.clearArrays();
         this.displayFolders = true;
-        this.serverService.getFolders(this.currServer, this.path, this.options)
+        this.serverService.getFolders(this.currServer, this.path, type, this.options)
             .subscribe((response: string) => {
+                console.log(response)
                 this.parseLayers(response);
             });
     }
@@ -163,6 +177,16 @@ export class ServerComponent implements OnInit {
         dialogRef.componentInstance.layerType = this.serviceArray[index]['type'];
         dialogRef.componentInstance.layerServer = this.currServer;
     }
+
+    private createGeoserverLayer(name: string): void {
+        const dialogRef = this.dialog.open(LayerNewComponent, {height:'360px', width:'500px'});
+        dialogRef.componentInstance.layerName = name;
+        dialogRef.componentInstance.layerIdent = name;
+        dialogRef.componentInstance.layerService = "None";
+        dialogRef.componentInstance.layerType = "Geoserver";
+        dialogRef.componentInstance.layerServer = this.currServer;
+    }
+    
 
     private openServerNew(): void {
         const dialogRef = this.dialog.open(ServerNewComponent, {height:'40%', width:'20%'});

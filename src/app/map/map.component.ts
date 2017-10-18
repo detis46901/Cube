@@ -20,6 +20,7 @@ import { Subscription } from 'rxjs/Subscription';
 import * as L from 'leaflet';
 
 @Component({
+    moduleId: module.id,
     selector: 'map',
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.scss'],
@@ -120,13 +121,13 @@ export class MapComponent {
     //Currently this logic seems flawed. Whatever the last page that is set as default will be selected, consider a break statement within the if block
     getDefaultPage() {
         for (let userpage of this.userpages) {
-            console.log('Userpage = ' + userpage.page);
-            console.log('Default = ' + userpage.default);
+            //console.log('Userpage = ' + userpage.page);
+            //console.log('Default = ' + userpage.default);
             if (userpage.default === true) {
                 this.defaultpage = userpage;
             }
         }
-        console.log('Default Page = ' + this.defaultpage.page);
+        //console.log('Default Page = ' + this.defaultpage.page);
         this.getUserPageLayers(this.defaultpage);
     }
 
@@ -135,6 +136,7 @@ export class MapComponent {
         this.userPageLayerService
             .GetPageLayers(page.ID)
             .subscribe((data:UserPageLayer[]) => {
+                console.log('userpagelayers is set')
                 return this.userpagelayers = data;
             },
             error => {
@@ -144,14 +146,6 @@ export class MapComponent {
                 return this.getServers();
             }
             );
-    }
-
-    getServer(serverID) {
-        this.serverService
-            .GetSingle(serverID)
-            .subscribe((data) => {
-                return this.server = data;
-            });
     }
 
     getServers() {
@@ -167,6 +161,14 @@ export class MapComponent {
                 return this.init_map();
             }
             );
+    }
+
+    getServer(serverID) {
+        this.serverService
+            .GetSingle(serverID)
+            .subscribe((data) => {
+                return this.server = data;
+            });
     }
 
     updateUserPageLayer(userpage) {
@@ -247,6 +249,7 @@ export class MapComponent {
         
     cleanPage(): void {
         console.log('Flags array: ' + this.userpagelayers[0].layerShown);
+        this.clearMessage();
         this.setFlags();
         this.mapService.map.eachLayer(function (removelayer) {
             removelayer.remove();
@@ -261,21 +264,25 @@ export class MapComponent {
 
     //loadLayers will load during map init and load the layers that should come on by themselves with the "layerON" property set (in userpagelayers)
     loadLayers() {
+        console.log('Loading Layers')
         let temp = this.userpagelayers;
         for (let i=0; i<temp.length; i++) {
             console.log(temp[i]);
-            if (temp[i].layerON) {
-
+            if (temp[i].layerON == true) {
+                temp[i].layerShown = true
                 //this.toggleLayers(i,temp[i], false)
                 this.setCurrentLayer(i, temp[i], false);
             }
+        this.userpagelayers = temp
         }
     }
 
     setCurrentLayer(index, layer: UserPageLayer, checked) {
+        console.log('Setting Current Layer')
         for (let x of this.userpagelayers) {
             if (x == layer) {
-                console.log(x);
+                console.log("this is x = " + x.layer_admin.layerName)
+                console.log("layershown =  " + x.layerShown);
                 if (x.layerShown === true) {
                     console.log('Layer is shown');
                     this.currLayerName = x.layer_admin.layerName;
@@ -287,6 +294,7 @@ export class MapComponent {
                     }
                     this.noLayers = false;
                     this._map.off('click');
+                    console.log("creating click event")
                     this._map.on('click', (event: L.LeafletMouseEvent) => {
                         let BBOX = this._map.getBounds().toBBoxString();
                         let WIDTH = this._map.getSize().x;
@@ -296,13 +304,12 @@ export class MapComponent {
                         let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
 
                         //let URL = "http://maps.indiana.edu/arcgis/services/Infrastructure/Railroads_Rail_Crossings_INDOT/MapServer/WMSServer?version=1.1.1&request=GetFeatureInfo&layers=0&styles=default&SRS=EPSG:4326&BBOX=-86.35185241699219,40.35387022893512,-85.91274261474611,40.62620049126207&width=1044&height=906&format=text/html&X=500&Y=400&query_layers=0"
-                        let URL = this.formLayerRequest(layer) + '?service=WMS&version=1.1.1&request=GetFeatureInfo&layers='+IDENT+'&query_layers='+IDENT+'&BBOX='+BBOX+'&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&FORMAT=text%2Fhtml&SRS=EPSG:4326&X='+X+'&Y='+Y;
+                        let URL = this.formLayerRequest(layer) + '?service=WMS&version=1.1.1&request=GetFeatureInfo&layers='+IDENT+'&query_layers='+IDENT+'&BBOX='+BBOX+'&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG:4326&X='+X+'&Y='+Y;
                         console.log(URL);
                         this.wfsService.getfeatureinfo(URL, false)
                             .subscribe((data: any) => {
-                                return this.getFeatureData = data;
+                                this.sendMessage(data);
                             });
-                        console.log(this.getFeatureData);
                     });
                 }
             }
@@ -333,7 +340,9 @@ export class MapComponent {
             return url;
         }
         case ('Geoserver'): {
-            return '';
+            console.log('Geoserver Layer');
+                let url: string = server.serverURL + '/wms'
+            return url;
         }
         }
     }
@@ -353,17 +362,17 @@ export class MapComponent {
         //Replace block below with this ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         
         console.log(checked);
-        console.log(layer.layer_admin.layerIdent);
-        console.log(layer.layer_admin.layerFormat);
+        //console.log(layer.layer_admin.layerIdent);
+        //console.log(layer.layer_admin.layerFormat);
 
         //form URL
         let url: string = this.formLayerRequest(layer);
         if (checked == false) {
-            console.log("err")
+            console.log("Turning on")
             if (layer.layer_admin.layerGeom == 'Coverage') {
+                console.log ("This is a coverage layer")
                 zindex = -50;
             }
-            console.log("err")
             this.turnonlayer = (L.tileLayer.wms(url, { //error somewhere in here
                 layers: layer.layer_admin.layerIdent,
                 format: 'image/png',
@@ -383,19 +392,21 @@ export class MapComponent {
 
             //this.openFeatureInfo(server);
             this.userpagelayers[index].layerShown = true;
+            this.setCurrentLayer(index, this.currLayer, true);
         } else {
             this.layerList[index].removeFrom(this._map);
             this.userpagelayers[index].layerShown = false;
             for (let i of this.userpagelayers) {
+                allLayersOff = true
                 if (i.layerON) {
                     nextActive = i;
                     allLayersOff = false;
                     break;
                 }
             }
-            this._map.off('click');
-
-            if (this.currLayer == layer && allLayersOff) {
+            
+            if (this.currLayer == layer && allLayersOff == true) {
+                this._map.off('click');
                 this.currLayer = null;
                 this.currLayerName = 'No Active Layer';
                 this.noLayers = true;
@@ -410,19 +421,28 @@ export class MapComponent {
     }
 
     //I don't think this is being used
-    openFeatureInfo(serv: Server) {
-        this._map.on('click', (event: L.LeafletMouseEvent) => {
-            let BBOX = this._map.getBounds().toBBoxString();
-            let WIDTH = this._map.getSize().x;
-            let HEIGHT = this._map.getSize().y;
-            let IDENT = this.currLayer.layer_admin.layerIdent;
-            let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
-            let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
-            let URL = serv.serverURL + '/wms?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
-            this.wfsService.getfeatureinfo(URL, false)
-                .subscribe((data: any) => {
-                    return this.getFeatureData = data;
-                });
-        });
+    // openFeatureInfo(serv: Server) {
+    //     this._map.on('click', (event: L.LeafletMouseEvent) => {
+    //         let BBOX = this._map.getBounds().toBBoxString();
+    //         let WIDTH = this._map.getSize().x;
+    //         let HEIGHT = this._map.getSize().y;
+    //         let IDENT = this.currLayer.layer_admin.layerIdent;
+    //         let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
+    //         let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
+    //         let URL = serv.serverURL + '/wms?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
+    //         this.wfsService.getfeatureinfo(URL, false)
+    //             .subscribe((data: any) => {
+    //                 return this.getFeatureData = data;
+    //             });
+    //     });
+    // }
+    sendMessage(message: string): void {
+        message = message.split("<body>")[1]
+        this.sidenavService.sendMessage(message);
+    }
+
+    clearMessage(): void {
+        // clear message
+        this.sidenavService.clearMessage();
     }
 }

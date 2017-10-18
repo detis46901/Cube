@@ -12,9 +12,11 @@
                             <h5>Pages</h5>
                         </div>
                         <br><hr>
+                        <table>
                         <div *ngFor="let userpage of userpages" style="position:relative; left:4%" data-toggle="buttons">
-                            <label (click)="setUserPageLayers(userpage)" style="margin-right:3px; margin-bottom:3px;" class="btn btn-secondary pull-left">{{userpage.page}}</label>    
+                            <tr><td><label (click)="setUserPageLayers(userpage)" style="margin-right:3px; margin-bottom:3px;" class="btn btn-secondary pull-left">{{userpage.page}}</label></td></tr>
                         </div>
+                        </table>
                     </ng-template>
                 </ngb-tab>
 

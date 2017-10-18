@@ -36,7 +36,6 @@
         </div>
         <div class="col-md-1">
             <button id="getRequestBtn" style="height:28px;" (click)="getRequest(server)">Layers</button>
-            <button id="getRequestBtn2" style="height:28px;" (click)="getLayers(server)">New</button>
         </div>
     </form>
     <br>
@@ -68,7 +67,7 @@
         </div>
     </div>
 </div>-->
-<div *ngIf="displayLayers" style="position:relative; top:25px; margin-bottom:10px;">
+<div *ngIf="displayGeoserverLayers" style="position:relative; top:25px; margin-bottom:10px;">
     <table style="width:80%; position:relative; left:10%">
         <tr style="width:100%;">
             <th style="width:40%"><h2>Name</h2></th>
@@ -79,7 +78,7 @@
             <td><h4>{{layer}}</h4></td>
             <td><h4>{{formatArray[folderArray.indexOf(layer)]}}</h4></td>
             <!--<td><input type='radio' name="create" value="toCreate"></td>-->
-            <td><button (click)="createLayer(folderArray.indexOf(layer))">Create Layer</button></td>
+            <td><button (click)="createGeoserverLayer(layer)">Create Layer</button></td>
         </tr>
     </table>
 </div>

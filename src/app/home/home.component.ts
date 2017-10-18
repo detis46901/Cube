@@ -3,6 +3,7 @@ import { UserService } from '../../_services/_user.service';
 import { User } from '../../_models/user.model';
 import { SidenavService} from '../../_services/sidenav.service';
 import { WFSService } from '../map/services/wfs.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'home',
@@ -19,18 +20,20 @@ export class HomeComponent {
     private token: string;
     private userID: number;
     private popupText: string;
+    message: any;
+    subscription: Subscription;
 
     constructor(private dataService: UserService, private sidenavService: SidenavService, private WFSservice: WFSService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
-        WFSservice.popupText$.subscribe(result => this.popupText = result);
+        this.subscription = this.sidenavService.getMessage().subscribe(message => { this.message = message; });
         
     }
 
     ngOnInit() {
        this.getAllItems(this.userID);
-       this.popupText = "Click a layer for details.";
+       this.message = "Click a layer for details.";
     }
 
     private getAllItems(userID: number): void {

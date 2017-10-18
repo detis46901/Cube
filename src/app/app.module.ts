@@ -55,6 +55,7 @@ import { ServerNewComponent } from './admin/server/serverNew/serverNew.component
 import { ChangePasswordComponent } from './admin/user/changePassword/changePassword.component';
 import { HeaderComponent } from './header/header.component';
 import { SideNavComponent } from './sidenav/sidenav.component';
+import { FeatureDataComponent } from './sidenav/featuredata.component'
 import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
 import { MarkerComponent } from '../app/map/marker/marker.component';
@@ -82,6 +83,7 @@ import { UserService } from '../_services/_user.service';
         PageComponent,
         HeaderComponent,
         SideNavComponent,
+        FeatureDataComponent,
         HomeComponent,
         LoginComponent,
         AdminComponent,

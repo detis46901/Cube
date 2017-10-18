@@ -164,10 +164,11 @@ export class WFSService {
         return this.http.get(URL)
             .map((responseData) => {
                 let temp: string = responseData['_body']
-                console.log("temp=" + temp)
+                //console.log("temp=" + temp)
 
                 //This "if" block captures layer features with no pre-formatted "content.ftl" file
                 if (temp.startsWith("<table")) {
+                    console.log("Preformatted Geoserver")
                     let formattedHead: Array<string> = [];
                     let formattedData: Array<string> = [];
                     let headArray = temp.split("<th")
@@ -191,15 +192,22 @@ export class WFSService {
                 }
 
                 //This "if" block captures layer features from ArcGIS Servers
+                
                 if (temp.includes("<FIELDS")) {
+                    console.log('ArcGIS Data')
                     let formattedHead: Array<string> = [];
                     let formattedData: Array<string> = [];
                     let temp1 = temp.split("<FIELDS ")
                     let temp2 = temp1[1].split("></FIELDS>")
                     let temp3 = temp2[0].replace(" ","<BR>")
+                    let re = /'"'/gi
+                    temp3 = temp3.replace('\"'," ")
+                    //temp3 = temp3.replace('"'," ")
                     temp = temp3
                     console.log (temp3)
                 }
+
+                this.popupText.next(temp)
                 //7/13/17 This allows click events to create sidenav popup information, while allowing mousemove events to change the cursor icon to a pointing hand without updating popup.
                 if (!mouseDown)
                     {this.popupText.next(temp)}

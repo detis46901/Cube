@@ -5,12 +5,12 @@ import { SidenavService } from "../../_services/sidenav.service"
 
 @Component({
     moduleId: module.id,
-    selector: 'sidenav',
-    templateUrl: './sidenav.component.html',
-    styleUrls: ['sidenav.component.scss'],
+    selector: 'featuredata',
+    templateUrl: './featuredata.component.html',
+    styleUrls: ['featuredata.component.scss'],
     providers: [SidenavService]
 })
-export class SideNavComponent{ 
+export class FeatureDataComponent{ 
     constructor(private sidenavService: SidenavService){
          // subscribe to map component messages
     }
