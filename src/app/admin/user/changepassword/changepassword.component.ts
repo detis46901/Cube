@@ -13,50 +13,52 @@ import { Md5 } from 'ts-md5/dist/md5';
 
 export class ChangePasswordComponent implements OnInit {
     private userID: number;
-
     private user: User;   
-    private oldHash: string;  
-    private newHash: string;
-    private confHash: string;
-
-    //HTML variables
-    private oldPassword: string;
-    private newPassword: string;
-    private confPassword: string;
+    private oldPw: string = "";
+    private newPw: string = "";
+    private confPw: string = "";
 
     constructor(private dialog: MatDialog, private userService: UserService, @Inject(MAT_DIALOG_DATA) private data: any) {
-        //Figure out what datatype "data" needs to be.
         this.userID = data.userID;
     }
 
     ngOnInit() {
-        this.getUserItems();
+        this.getUserItems(this.userID);
     }
 
-    private getUserItems(): void {
+    private getUserItems(userID: number): void {
         this.userService
-            .GetSingle(this.userID)
+            .GetSingle(userID)
             .subscribe((data:User) => {
                 this.user = data;
             });
     }
 
-    private setHashes(Old: string, New: string, Conf: string): void {
-        //9/8/17 This is the closest to working, but still throws several npm errors with paths and dependencies. 
-        /*let saltRounds = 10;
-        hash(Old, saltRounds, function(err, hash) {
-            if(err) 
-                console.log(err)
-            oldHash = hash;
-        })*/
+    changePW() {
+        //console.log(this.oldPw);
+        //console.log(this.newPw);
+        //console.log(this.confPw);
 
-        this.oldHash = Md5.hashStr(Old).toString();
-        this.newHash = Md5.hashStr(New).toString();
-        this.confHash = Md5.hashStr(Conf).toString();
-        let bool = this.confirm(this.oldHash);
-        if (this.confirm(this.oldHash)) {
-            console.log('success');
+        this.oldPw = Md5.hashStr(this.oldPw).toString();
+        this.newPw = Md5.hashStr(this.newPw).toString();
+        this.confPw = Md5.hashStr(this.confPw).toString();
+
+        if (this.oldPw == this.user.password && this.newPw == this.confPw) {
+            this.user.password = this.newPw
+            this.userService
+                .Update(this.user)
+                .subscribe()
+            alert("Password successfully changed.")
+            this.dialog.closeAll();
+        } else if (this.oldPw == this.user.password && this.newPw != this.confPw) {
+            alert("New password does not match confirmation input.")
+        } else {
+            alert("Old password does not match database records.")
         }
+
+        this.oldPw = "";
+        this.newPw = "";
+        this.confPw = "";
     }
 
     /**

@@ -153,8 +153,8 @@ export class UserComponent implements OnInit {
 
     private changePassword(userID: number): void {
         let dialogRef = this.dialog.open(ChangePasswordComponent, {
-            height: '250px',
-            width: '400px',
+            height: '300px',
+            width: '450px',
             data: { userID: userID }
         });
     }
