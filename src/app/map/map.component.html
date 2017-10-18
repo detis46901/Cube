@@ -13,7 +13,7 @@
                         </div>
                         <br><hr>
                         <table>
-                        <div *ngFor="let userpage of userpages" style="position:relative; left:4%" data-toggle="buttons">
+                        <div *ngFor="let userpage of userPages" style="position:relative; left:4%" data-toggle="buttons">
                             <tr><td><label (click)="setUserPageLayers(userpage)" style="margin-right:3px; margin-bottom:3px;" class="btn btn-secondary pull-left">{{userpage.page}}</label></td></tr>
                         </div>
                         </table>
@@ -32,10 +32,10 @@
                             </div>
                             <br><hr>
 
-                            <ul *ngFor="let userpagelayer of userpagelayers" data-toggle="buttons">
-                                <input class="pull-left" type="radio" [(ngModel)]="currLayer" [value]="userpagelayer" name="currlayerradio" (click)="setCurrentLayer(userpagelayers.indexOf(userpagelayer), userpagelayer, userpagelayer.layerShown)">
+                            <ul *ngFor="let userpagelayer of userPageLayers" data-toggle="buttons">
+                                <input class="pull-left" type="radio" [(ngModel)]="currLayer" [value]="userpagelayer" name="currlayerradio" (click)="setCurrentLayer(userPageLayers.indexOf(userpagelayer), userpagelayer, userpagelayer.layerShown)">
                                 <div style="margin-left:45%;padding-right:70%">
-                                    <button class="btn btn-secondary push-right" (click)="toggleLayers(userpagelayers.indexOf(userpagelayer), userpagelayer, userpagelayer.layerShown)" [class.active]="userpagelayer.layerShown">
+                                    <button class="btn btn-secondary push-right" (click)="toggleLayers(userPageLayers.indexOf(userpagelayer), userpagelayer, userpagelayer.layerShown)" [class.active]="userpagelayer.layerShown">
                                         {{userpagelayer.layer_admin.layerName}}
                                     </button>
                                 </div>
