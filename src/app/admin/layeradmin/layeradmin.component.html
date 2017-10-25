@@ -65,6 +65,7 @@
         <div class="col-md-3 col-md-offset-1">
             <div class="row">
                 <button id="createLayerBtn" class="btn-primary" (click)="createLayer()">Create Layer</button>
+                <button id="createMyCubeBtn" class="btn-primary" (click)="createMyCube()">Create MyCube</button>
                 <div ngbDropdown>   
                     <button id="sortBtn" type="button" class="btn-primary" ngbDropdownToggle>Sort Layers</button>
                     <div id="sortDrop" class="dropdown-menu dropdown-menu-right" aria-labelledby="options">
@@ -99,6 +100,7 @@
                 <option>image/png</option>
                 <option>image/jpg</option>
                 <option>image/jpeg</option>
+                <option>None</option>
             </select>
 
             <select id="exlayertype" ngModel required name="exlayertype" class="form-control" [(ngModel)] = "layeradmin.layerType" type="text" (blur)="updateLayer(layeradmin)">
@@ -109,6 +111,7 @@
                 <option>KML-Link</option>
                 <option>KML-Drive</option>
                 <option>GeoJSON</option>
+                <option>MyCube</option>
             </select>
 
             <select id="exlayergeom" ngModel required name="exlayergeom" class="form-control" [(ngModel)] = "layeradmin.layerGeom" type="text" (blur)="updateLayer(layeradmin)">
@@ -116,6 +119,7 @@
                 <option>Polyline</option>
                 <option>Polygon</option>
                 <option>Coverage</option>
+                <option>None</option>
             </select>
 
             <button id="exlayerperm" class="btn btn-primary" title="Open layer permissions" (click)="openPermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>

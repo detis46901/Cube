@@ -1,11 +1,8 @@
-<div id="mapid"></div>
+<div id="mapid"><div leafletDraw [leafletDrawOption]="drawOption"></div></div>
 
 <button (click)="shown = !shown">Show/Hide Control</button>
 <div leaflet style="height: 400px;"
-     [leafletOptions]="options"
-     [leafletLayers]="layers"
-     (leafletMapReady)="onMapReady($event)">
-     
+     [leafletOptions]="options">
 
 	<div *ngIf="shown"
 	     leafletDraw

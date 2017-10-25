@@ -31,3 +31,8 @@ export class UserPageLayer {
     layerShown: boolean;
     featureGroupObject?: L.FeatureGroup;
 }
+
+export class MyCubeField {
+    field: string;
+    type: string;
+}

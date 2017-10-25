@@ -67,16 +67,14 @@ export class MapComponent {
         }
     };
     
-    private options =  {
-        zoomControl: false,
-        center: L.latLng(40.4864, -86.1336),
-        zoom: 12,
-        minZoom: 4,
-        maxZoom: 20,
-        layers: [this.mapService.baseMaps.OpenStreetMap]
-    };
+    private options = {
+		layers: [
+			L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: 'Open Street Map' })
+		],
+		zoom: 5,
+		center: L.latLng({ lat: 46.879966, lng: -121.726909 })
+	};
 
-    private layers: L.Layer []
     
     @ViewChild(PMMarkerComponent) pmmarkerComponent: PMMarkerComponent;
 
@@ -113,7 +111,7 @@ export class MapComponent {
 
     //Angular component initialization
     ngOnInit() {
-        //this.getPage();
+        this.getPage();
     }
     
     //Takes results from getDefaultPage and sets the page based on result
@@ -137,7 +135,6 @@ export class MapComponent {
             }
         }
         //console.log(this.defaultPage);
-        this.currPage = this.defaultPage.page;
         this.getUserPageLayers(this.defaultPage);
     }
 
@@ -157,61 +154,47 @@ export class MapComponent {
             .GetAll()
             .subscribe((data: Server[]) => {
                 this.servers = data;
-                //this.initMap();
+                this.initMap();
             });
     }
 
-    private onMapReady(map: L.Map) {
-        this._map = map
-        console.log("Map Ready")
-        
-        L.control.zoom({ position: 'bottomright' }).addTo(this._map);
-        L.control.scale().addTo(this._map);
-        this.mapService.map = this._map;
-        this.getPage()
+    private initMap(): void {      
+        if (this.currPage === 'None') {
+            console.log('Initializing Map');
+            this.currPage = this.defaultPage.page;
+            this._map = L.map('mapid', {
+                zoomControl: false,
+                center: L.latLng(40.4864, -86.1336),
+                zoom: 12,
+                minZoom: 4,
+                maxZoom: 20,
+                layers: [this.mapService.baseMaps.OpenStreetMap]
+            });
+            L.control.zoom({ position: 'bottomright' }).addTo(this._map);
+            L.control.scale().addTo(this._map);
+            this.mapService.map = this._map;
+
+            //This doesn't work yet
+            try {
+                
+                this.pmmarkerComponent.Initialize();
+                
+                
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        //this.markerComponent.Initialize();
         this.loadLayers();
         this.setFlags();
         L.DomUtil.addClass(this._map.getContainer(), 'default-enabled');
     }
 
-    // private initMap(): void {      
-    //     if (this.currPage === 'None') {
-    //         console.log('Initializing Map');
-    //         this.currPage = this.defaultPage.page;
-    //         this._map = L.map('mapid', {
-    //             zoomControl: false,
-    //             center: L.latLng(40.4864, -86.1336),
-    //             zoom: 12,
-    //             minZoom: 4,
-    //             maxZoom: 20,
-    //             layers: [this.mapService.baseMaps.OpenStreetMap]
-    //         });
-    //         L.control.zoom({ position: 'bottomright' }).addTo(this._map);
-    //         L.control.scale().addTo(this._map);
-    //         this.mapService.map = this._map;
-
-    //         //This doesn't work yet
-    //         try {
-                
-    //             this.pmmarkerComponent.Initialize();
-                
-                
-    //         } catch (err) {
-    //             console.log(err);
-    //         }
-    //     }
-
-    //     //this.markerComponent.Initialize();
-    //     this.loadLayers();
-    //     this.setFlags();
-    //     L.DomUtil.addClass(this._map.getContainer(), 'default-enabled');
-    // }
-
     //loadLayers will load during map init and load the layers that should come on by themselves with the "layerON" property set (in userPageLayers)
     private loadLayers(): void {
         console.log('Loading Layers')
         let temp = this.userPageLayers;
-        
         for (let i=0; i<temp.length; i++) {
             console.log(temp[i]);
             if (temp[i].layerON == true) {
@@ -228,12 +211,7 @@ export class MapComponent {
         let allLayersOff: boolean = true;
         let nextActive: UserPageLayer;
         let url: string = this.formLayerRequest(layer);
-        console.log('loading layers')
-        this.layers = [
-            L.circle([  40.507700, -86.153347 ], { radius: 5000 }),
-            L.polygon([[ 46.8, -121.85 ], [ 46.92, -121.92 ], [ 46.87, -121.8 ]]),
-            L.marker([ 46.879966, -121.726909 ])
-        ]
+
         if (checked == false) {
             console.log("Turning on");
             if (layer.layer_admin.layerGeom == 'Coverage') {
@@ -241,7 +219,6 @@ export class MapComponent {
                 zindex = -50;
             }
 
-           
             this.turnOnLayer = (L.tileLayer.wms(url, {
                 layers: layer.layer_admin.layerIdent,
                 format: 'image/png',

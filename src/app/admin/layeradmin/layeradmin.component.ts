@@ -5,10 +5,12 @@ import { Configuration } from '../../../_api/api.constants';
 import { LayerAdminService } from '../../../_services/_layerAdmin.service';
 import { LayerPermissionService } from '../../../_services/_layerPermission.service';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
+import { SQLService } from '../../../_services/sql.service'
 import { LayerAdmin, LayerPermission } from '../../../_models/layer.model';
 import { LayerPermissionComponent } from './layerPermission/layerPermission.component';
 import { LayerNewComponent } from './layerNew/layerNew.component';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
+import { newMyCubeComponent } from './myCubeLayer/newMyCube.component'
 import { ServerService } from '../../../_services/_server.service';
 import { Server } from '../../../_models/server.model';
 import { MatDialog } from '@angular/material';
@@ -16,7 +18,7 @@ import { MatDialog } from '@angular/material';
 @Component({
     selector: 'layer-admin',
     templateUrl: './layerAdmin.component.html',
-    providers: [UserService, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, ServerService],
+    providers: [UserService, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, ServerService, SQLService],
     styleUrls: ['./layerAdmin.component.scss']
 })
 
@@ -30,7 +32,7 @@ export class LayerAdminComponent implements OnInit {
     private layerAdmins: LayerAdmin[];
     private servers: Array<Server>;
 
-    constructor(private layerAdminService: LayerAdminService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService) {
+    constructor(private layerAdminService: LayerAdminService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
@@ -59,6 +61,13 @@ export class LayerAdminComponent implements OnInit {
 
     private createLayer(): void {
         const dialogRef = this.dialog.open(LayerNewComponent, {height:'360px', width:'500px'});
+        dialogRef.afterClosed().subscribe(() => {
+            this.getLayerItems();
+        });
+    }
+
+    private createMyCube(): void {
+        const dialogRef = this.dialog.open(newMyCubeComponent, {height:'360px', width:'500px'});
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });
@@ -102,10 +111,21 @@ export class LayerAdminComponent implements OnInit {
             });
 
         this.layerAdminService
+            .GetSingle(layerID)
+                .subscribe((result: LayerAdmin) => {
+                    if (result.layerType=='MyCube') {
+                        console.log('removing MyCube')
+                        this.sqlservice.deleteTable(result.ID)
+                        .subscribe((result)=> console.log(result))
+                    }
+                })
+            this.layerAdminService
             .Delete(layerID)
             .subscribe(() => {
                 this.getLayerItems();
             });
+
+
     }
 
     //To be expanded to sort layers on display via html button press.

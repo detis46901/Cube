@@ -1,0 +1,28 @@
+input, select {
+    position:absolute;
+    left:30px;
+    width:134px;
+    height:24px;
+    margin-bottom:8px;
+}
+
+label {
+    position:relative;
+    direction:rtl;
+    left:38px;
+    top:3px;
+}
+
+h4 {
+    color:black;
+}
+
+#nameBlock, #idBlock, #servBlock, #serviceBlock {
+    position:relative; 
+    right:8%
+}
+
+#descBlock, #typeBlock, #geomBlock, #formBlock {
+    position:relative; 
+    left:8%
+}

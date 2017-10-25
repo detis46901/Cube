@@ -2,6 +2,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpModule, JsonpModule } from '@angular/http';
 import { MapService } from './map/services/map.service';
@@ -38,6 +39,7 @@ import { LayerPermissionComponent} from './admin/layerAdmin/layerPermission/laye
 import { PageComponent} from './admin/user/page/page.component';
 import { PageConfigComponent} from './admin/user/pageConfig/pageConfig.component';
 import { LayerNewComponent } from './admin/layerAdmin/layerNew/layerNew.component';
+import { newMyCubeComponent } from './admin/layerAdmin/myCubeLayer/newMyCube.component';
 import { UserComponent } from './admin/user/user.component';
 import { AdminPageComponent } from './admin/adminPage/adminPage.component';
 import { ModuleComponent } from './admin/module/module.component';
@@ -59,6 +61,7 @@ import { FeatureDataComponent } from './sidenav/featuredata.component'
 import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
 import { MarkerComponent } from '../app/map/marker/marker.component';
+import { PMMarkerComponent } from '../app/map/marker/PMmarker.component'
 import { NavigatorComponent } from '../app/map/navigator/navigator.component';
 import { PagesComponent } from './pages/pages.component';
 
@@ -72,6 +75,10 @@ import { UserPageLayerService } from '../_services/_userPageLayer.service';
 import { UserPageService } from '../_services/_userPage.service';
 import { AuthenticationService} from '../_services/authentication.service';
 import { UserService } from '../_services/_user.service';
+import { SQLService } from '../_services/sql.service'
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
+
 
 
 @NgModule ({
@@ -79,6 +86,7 @@ import { UserService } from '../_services/_user.service';
         AppComponent,
         MapComponent,
         MarkerComponent,
+        PMMarkerComponent,
         NavigatorComponent,
         PageComponent,
         HeaderComponent,
@@ -103,6 +111,7 @@ import { UserService } from '../_services/_user.service';
         PageComponent,
         PageConfigComponent,
         LayerNewComponent,
+        newMyCubeComponent,
         ConfirmDeleteComponent,
         ModuleComponent,
         DefaultsComponent,
@@ -116,7 +125,8 @@ import { UserService } from '../_services/_user.service';
     ],
 
     entryComponents: [
-        LayerNewComponent, 
+        LayerNewComponent,
+        newMyCubeComponent,
         ChangePasswordComponent, 
         LayerPermissionComponent, 
         PageComponent, 
@@ -128,6 +138,7 @@ import { UserService } from '../_services/_user.service';
     imports: [
         BrowserModule,
         FormsModule,
+        CommonModule,
         HttpModule,
         JsonpModule,
         NgbModule.forRoot(),
@@ -145,7 +156,9 @@ import { UserService } from '../_services/_user.service';
         MatDialogModule,
         MatSelectModule,
         MatCheckboxModule,
-        MatInputModule
+        MatInputModule,
+        LeafletModule.forRoot(),
+        LeafletDrawModule.forRoot()
     ],
 
     providers: [
@@ -161,6 +174,7 @@ import { UserService } from '../_services/_user.service';
         RoleService, 
         LayerAdminService, 
         LayerPermissionService,
+        SQLService,
         UserPageLayerService,
         UserPageService,
         Configuration,

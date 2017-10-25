@@ -1,0 +1,88 @@
+<!-- This defines the modal that pops up after a "Create New Layer" click event from "Layers" control-->
+<div class="modal-header">
+    <div class="col-md-9">
+        <h4 class="modal-title">Create New MyCube Layer</h4>
+    </div>
+    <div class="col-md-1 col-md-offset-2">
+        <button type="button" class="close" aria-label="Close" (click)="dialog.closeAll()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+
+<div class="modal-body">
+    <form #f="ngForm" (ngSubmit)="addLayer(newLayerAdmin)">
+        
+        <!--Row 1-->
+        <div class="column">
+            <div id="nameBlock" class="form-group">
+                <div class="col-md-1">
+                    <label id="nameLabel" for="newlayername">Name</label>
+                </div>
+                <div class="col-md-4">
+                    <input id="newlayername" name="newlayername" class="form-control input-sm col-sm" value="{{layerName}}" required [(ngModel)]="newLayerAdmin.layerName" type="text">
+                </div>
+            </div>
+
+            <div id="descBlock" class="form-group">
+                <div class="col-md-1">
+                    <label id="descriptionLabel" for="newlayerdescription">Description</label>
+                </div>
+                <div class="col-md-4">
+                    <input id="newlayerdescription" name="newlayerdescription" class="form-control input-sm col-sm"  [(ngModel)] = "newLayerAdmin.layerDescription" type="text">
+                </div>
+            </div>      
+        </div>
+        <br>
+
+        <!--Row 3-->
+        <div *ngFor="let newLayerField of newLayerFields">
+            <div class="column">
+                   {{newLayerField.field}}
+                   {{newLayerField.type}}
+                    <div class="col-md-1">
+                        <p (click)="deleteField(newLayerFields.indexOf(newLayerField))"><i class="fa fa-times" aria-hidden="true"></i></p> 
+                    </div>
+            </div>
+        </div>
+        <br>
+        <br>
+            <div class="column">
+                <div id="fieldBlock1" class="form-group">
+                    <div class="col-md-1">
+                        <label id="fieldLabel" for="newlayerfield1">Field</label>
+                    </div>
+                    <div class="col-md-4">  
+                        <input id="newlayerfield1" name="newlayerfield1" class="form-control input-sm col-sm"  [(ngModel)] = "newLayerField1.field" type="text">
+                    </div>
+                </div>
+
+                <div id="typeBlock" class="form-group">
+                    <div class="col-md-1">
+                        <label id="typeLabel" for="newlayertype1">Type</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select id="newlayertype1" name="newlayertype1" class="form-control input-sm col-sm" [(ngModel)]="newLayerField1.type" required type="text">
+                            <option>boolean</option>
+                            <option>text</option>
+                            <option>integer</option>
+                            <option>double precision</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <p (click)="addField()"><i class="fa fa-arrow-down" aria-hidden="true"></i></p> 
+                    </div>
+                </div>
+            </div>
+        <br>
+        <br>
+        <br>
+    </form>
+</div>
+
+<div id="layerNewFooter" class="modal-footer">
+    <md-dialog-actions>
+        <button type="button" class="btn btn-secondary text-center" (click)="dialog.closeAll()">Close</button>
+        <button class="btn btn-outline-primary text-center" (click)="addLayer(newLayerAdmin)" [disabled]="!f.valid">Add Layer</button>
+    </md-dialog-actions>
+</div>

@@ -1383,6 +1383,9 @@ declare namespace L {
         locate(options?: LocateOptions): this;
         stopLocate(): this;
 
+        // pm Plugins
+        addControls(options?: any): any;
+
         // Properties
         boxZoom: Handler;
         doubleClickZoom: Handler;
