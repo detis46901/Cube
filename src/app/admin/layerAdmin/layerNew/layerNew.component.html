@@ -1,12 +1,14 @@
 <!-- This defines the modal that pops up after a "Create New Layer" click event from "Layers" control-->
 <div class="modal-header">
-    <div class="col-md-9">
-        <h4 class="modal-title">Create New Layer</h4>
-    </div>
-    <div class="col-md-1 col-md-offset-2">
-        <button type="button" class="close" aria-label="Close" (click)="dialog.closeAll()">
-            <span aria-hidden="true">&times;</span>
-        </button>
+    <div id="newLayerHeader" class="row">
+        <div class="col-md-9">
+            <h4 class="modal-title">Create New Layer</h4>
+        </div>
+        <div class="col-md-1 col-md-offset-2">
+            <button id="newLayerX" type="button" class="close" aria-label="Close" (click)="dialog.closeAll()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     </div>
 </div>
 
@@ -136,9 +138,9 @@
     </form>
 </div>
 
-<div id="layerNewFooter" class="modal-footer">
+<div id="newLayerFooter" class="modal-footer">
     <md-dialog-actions>
-        <button type="button" class="btn btn-secondary text-center" (click)="dialog.closeAll()">Close</button>
-        <button class="btn btn-outline-primary text-center" (click)="addLayer(newLayerAdmin)" [disabled]="!f.valid">Add Layer</button>
+        <button id="newLayerClose" type="button" class="btn btn-secondary text-center" (click)="dialog.closeAll()">Close</button>
+        <button id="newLayerAdd" class="btn btn-outline-primary text-center" (click)="addLayer(newLayerAdmin)" [disabled]="!f.valid">Add Layer</button>
     </md-dialog-actions>
 </div>

@@ -170,7 +170,7 @@ export class ServerComponent implements OnInit {
     }
 
     private createLayer(index: number, name: string): void {
-        const dialogRef = this.dialog.open(LayerNewComponent, {height:'360px', width:'500px'});
+        const dialogRef = this.dialog.open(LayerNewComponent, {height:'330px', width:'500px'});
         dialogRef.componentInstance.layerName = name;
         dialogRef.componentInstance.layerIdent = (String)(index);
         dialogRef.componentInstance.layerService = this.path;
@@ -189,7 +189,7 @@ export class ServerComponent implements OnInit {
     
 
     private openServerNew(): void {
-        const dialogRef = this.dialog.open(ServerNewComponent, {height:'40%', width:'20%'});
+        const dialogRef = this.dialog.open(ServerNewComponent, {height:'230px', width:'350px'});
         dialogRef.afterClosed()
         .subscribe(result => {
             this.getServers();

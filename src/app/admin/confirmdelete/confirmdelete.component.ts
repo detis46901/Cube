@@ -50,6 +50,7 @@ export class ConfirmDeleteComponent implements OnInit {
                 break;
             case 6:
                 this.objectType = "Server";
+                this.dependentWarning = true;
                 break;
             case 7:
                 this.objectType = "Page";

@@ -152,9 +152,7 @@ export class UserComponent implements OnInit {
     }
 
     private changePassword(userID: number): void {
-        let dialogRef = this.dialog.open(ChangePasswordComponent, {
-            height: '300px',
-            width: '450px',
+        let dialogRef = this.dialog.open(ChangePasswordComponent, {height: '285px', width: '310px',
             data: { userID: userID }
         });
     }
@@ -169,7 +167,7 @@ export class UserComponent implements OnInit {
     }
 
     private openPages(userID: number, firstName: string, lastName: string): void {
-        let dialogRef = this.dialog.open(PageComponent);
+        let dialogRef = this.dialog.open(PageComponent, {height: '350px', width: '700px'});
         dialogRef.componentInstance.userID = userID;
         dialogRef.componentInstance.firstName = firstName;
         dialogRef.componentInstance.lastName = lastName;

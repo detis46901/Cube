@@ -1,10 +1,10 @@
 <div class="modal-header">
-    <div class="row" style="width:100%">
+    <div id="pageHeader" class="row" style="width:100%">
         <div class="col-md-11">
-            <h4 class="modal-title">{{firstName}} {{lastName}}'s Pages</h4>
+            <h4 id="pageTitle" class="modal-title">{{firstName}} {{lastName}}'s Pages</h4>
         </div>
         <div class="col-md-1">
-            <button mat-dialog-close type="button" class="close" aria-label="Close" (click)="onClose()">
+            <button id="pageX" mat-dialog-close type="button" class="close" aria-label="Close" (click)="onClose()">
             <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -14,21 +14,23 @@
 <div class="modal-body">
     <div class="row">
         <div class="col-md-12">
-            <div class="col-md-5">       
+            <div class="col-md-2">       
                 <div class="col-md-4">     
                     <h4>Pages</h4>
                 </div>
             </div>
-            <div class="col-md-1 col-md-offset-1">
-                <h4>Active</h4>
-            </div>
-            <div class="col-md-2">
-                <div class="col-md-2 col-md-offset-5">
-                    <h4>Default</h4>
+            <div class="col-md-1 col-md-offset-2">
+                <div class="col-md-5 col-md-offset-2">
+                    <h4>Active</h4>
                 </div>
             </div>
             <div class="col-md-2">
-                <div class="col-md-1 col-md-offset-6">
+                <div class="col-md-1 col-md-offset-11">
+                    <h4>Default</h4>
+                </div>
+            </div>
+            <div class="col-md-2 col-md-offset-1">
+                <div class="col-md-1 col-md-offset-10">
                     <h4>Order</h4>
                 </div>
             </div>
@@ -39,22 +41,24 @@
                 <form class="form-inline" *ngFor="let userPage of userPages" style="position:relative; left:15px">
                     <div class="form-group" style="width:100%;">
                         <i id="x" (click)="openConfDel(userPage)" class="fa fa-times" aria-hidden="true"></i>
-                        <input id="exuserpage" name="exuserpage" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; margin-bottom:3px; width:45%" #edituserpageinput [(ngModel)] = "userPage.page" type="text">
+                        <input id="exuserpage" name="exuserpage" class="form-control" #edituserpageinput [(ngModel)] = "userPage.page" type="text">
                         <input id="exuserpageactive" name="exuserpageactive" class="form-check-input" style="border-color: rgba(255,255,255,0); width:15%; position:relative" [(ngModel)] = "userPage.active" type="checkbox" >
                         <mat-radio-button id="exuserpagedefault" radioGroup = "example-radio-group" [name]="userPage.ID" class="example-radio-button" (click)="updateDefaultPage(userPage)" [value]="userPage.ID"></mat-radio-button>
                         <i id="orderUp" class="fa fa-arrow-up" style="margin-right:5px;" aria-hidden="true" (click)="moveUp(userPage)"></i>
                         <i id="orderDown" class="fa fa-arrow-down" aria-hidden="true" (click)="moveDown(userPage)"></i>
                     </div>
                 </form>
-                <input id="newUserPage" #newuserpageinput [(ngModel)] = "newUserPage" type="text" placeholder="New Page" (keyup.enter)="addUserPage(newUserPage); newuserpageinput.value=''" aria-describedby="userpageHelpBlock"><br>
-                <div id="userpageHelpBlock" class="form-text form-muted">Press enter to create a page.</div>       
+                <div class="row">
+                    <input id="newUserPage" #newuserpageinput [(ngModel)] = "newUserPage" type="text" placeholder="New Page" (keyup.enter)="addUserPage(newUserPage); newuserpageinput.value=''" aria-describedby="userpageHelpBlock"><br>
+                    <div id="userpageHelpBlock" class="form-text form-muted">Press enter to create a page.</div>       
+                </div>
             </mat-radio-group>
         </div>
     </div>
 </div>
 
 <div class="modal-footer">
-    <div class="col-md-2 col-md-offset-9">
+    <div id="pageFooter" class="col-md-2 col-md-offset-9">
         <button mat-dialog-close class="btn btn-outline-primary" (click)="onClose()">Close</button>
     </div>
 </div>

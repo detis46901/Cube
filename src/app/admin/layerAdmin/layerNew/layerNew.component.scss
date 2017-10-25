@@ -1,3 +1,25 @@
+#newLayerHeader {
+    width:100%;
+    height:0px;
+    position:relative;
+    bottom:20px;
+}
+
+#newLayerFooter {
+    height:0px;
+}
+
+#newLayerX {
+    position:relative;
+    top:3px;
+}
+
+#newLayerClose, #newLayerAdd {
+    position:relative;
+    top:20px;
+    height:34px;
+}
+
 input, select {
     position:absolute;
     left:30px;

@@ -1,13 +1,13 @@
 <!-- This defines the modal that pops up after a "Create New Server" click event from "Servers" control-->
 <div id="createNewServer">
     <div class="modal-header">
-        <div class="row" style="width:100%">
+        <div id="newServTitle" class="row">
             <div class="col-md-10">
                 <h4 class="modal-title">Create New Server</h4>
             </div>
 
             <div class="col-md-1 col-md-offset-0">
-                <button type="button" class="close" aria-label="Close" (click)="dialog.closeAll()">
+                <button id="newServX" type="button" class="close" aria-label="Close" (click)="dialog.closeAll()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -18,7 +18,7 @@
         <form #f="ngForm" (ngSubmit)="addServer(newserver)" style="align-items:flex-end">
 
             <!--Row 1-->
-            <div class="row" style="width:100%">
+            <div id="newServR1" class="row">
                 <div class="form-group">
                     <div class="col-md-2 col-md-offset-1">
                         <label id="nameLabel" for="newservername">Name</label>
@@ -31,7 +31,7 @@
             <br>
 
             <!--Row 2-->
-            <div class="row" style="width:100%">
+            <div id="newServR2" class="row">
                 <div class="form-group">
                     <div class="col-md-2 col-md-offset-1">
                         <label id="typeLabel" for="newservertype">Type</label>
@@ -47,7 +47,7 @@
             <br>
 
             <!--Row 3-->
-            <div class="row" style="width:100%">
+            <div id="newServR3" class="row">
                 <div class="form-group">
                     <div class="col-md-2 col-md-offset-1">
                         <label id="urlLabel" for="newserverurl">URL</label>
@@ -61,7 +61,9 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary text-center" (click)="dialog.closeAll()">Close</button>
-        <button class="btn btn-outline-primary text-center" (click)="addServer()" [disabled]="!f.valid">Add Server</button>
+        <div id="newServTitle" class="row">
+            <button id="newServClose" type="button" class="btn btn-secondary text-center" (click)="dialog.closeAll()">Close</button>
+            <button id="newServAdd" class="btn btn-outline-primary text-center" (click)="addServer()" [disabled]="!f.valid">Add Server</button>
+        </div>
     </div>
 </div>
