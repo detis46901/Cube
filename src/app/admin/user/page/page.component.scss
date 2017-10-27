@@ -5,7 +5,7 @@
 #pageTitle {
     position: relative;
     bottom: 20px;
-    left: 15px;
+    right: 15px;
 }
 
 #pageX {
@@ -19,13 +19,13 @@
 
 #exuserpageactive {
     position: relative;
-    right: 15px;
+    right: 20px;
 }
 
 #exuserpagedefault {
     position: relative;
-    left: 45px;
-    margin-right: 153px;
+    margin-right: 45px;
+    top:3px;
 }
 
 #newuserpage {
@@ -40,17 +40,47 @@
     height:34px
 }
 
-#userpageHelpBlock {
-    position:relative; 
-    left:33px; 
-    top:10px; 
-    margin-bottom:15px
+#exuserpage, #newUserPage {
+    position:relative;
+    margin-bottom:5px;
+    width:150px;
+    height:34px;
 }
 
 #exuserpage {
-    border:ridge;
-    border-width:2px;
-    border-radius:4px;
-    margin-bottom:3px;
-    width:200px;
+    right:30px;
+}
+
+#x {
+    position:relative;
+    right:40px;
+    bottom:5px;
+}
+
+#orderUp, #orderDown {
+    position:relative;
+    bottom:3px;
+}
+
+#pageFooter {
+    position:absolute;
+    width:400px;
+}
+
+#newUserPage {
+    position:relative;
+    margin-top:25px;
+}
+
+#userpageHelpBlock {
+    position:relative; 
+    right:240px;
+    margin-top:100px;
+    width:100%;
+}
+
+#pageClose {
+    position:relative;
+    top:10px;
+    left:170px;
 }

@@ -1,4 +1,4 @@
-<div class="modal-header">
+<div id="permHeader" class="modal-header">
     <div class="row" style="width:100%">
         <div class="col-md-10">
             <h4 class="modal-title">{{layerName}} Permissions</h4>
@@ -12,7 +12,7 @@
 </div>
 
 <div class="modal-body">
-    <h5 style="position:relative; left:15px;">Current Permissions</h5><br>
+    <h5>Current Permissions</h5><br>
     <form class="form-inline" #f="ngForm" *ngFor="let layerPermission of layerPermissions">
         <div class="form-group" style="margin-bottom:5px;">
             <i id="delUserPerm" (click)="deleteLayerPermission(layerPermission.ID)" class="fa fa-times" aria-hidden="true"></i>
@@ -28,13 +28,11 @@
     </form>
 </div>
 
-<div class="modal-footer" style="width:100%">
-    <div class="row" style="width:100%; margin-left:15px; margin-bottom:100px;">
-        <h5>New Permission</h5>
-    </div>
+<div class="modal-footer">
+    <h5>New Permission</h5>
 
-    <form class="form-inline" #f="ngForm" (ngSubmit)="addLayerPermission(newLayerPermission)">
-        <div class="form-group">
+    <form id="permForm" class="form-inline" #f="ngForm" (ngSubmit)="addLayerPermission(newLayerPermission)">
+        <div id="permFormGroup" class="form-group">
             <label for="user" style="margin-right:10px">User</label>
             <select id="user" name="user" class="form-control" [(ngModel)] = "newLayerPermission.userID" required type="text">
                 <option [value]="user.ID" *ngFor="let user of users">
@@ -44,7 +42,7 @@
             <input type="checkbox" name="newLayerPermissionEdit" style="margin-left:46px; position:relative; bottom:3px" [(ngModel)]="newLayerPermission.edit"> Edit 
         </div>
 
-        <div class="row" style="margin-top:25px; width:100%; position:relative; left:45%">
+        <div class="row">
             <div class="col-md-3 col-md-offset-1">
                 <button type="button" class="btn btn-secondary" (click)="dialog.closeAll()">Close</button>
             </div>

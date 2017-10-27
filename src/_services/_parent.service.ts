@@ -49,7 +49,7 @@ export class ParentService {
             .catch(this.handleError);
     }
  
-    public Delete = (id: number): Observable<Response> => {
+    public Delete = (id: number): Observable<any> => {
         console.log(this.actionUrl + 'delete?ID=' + id)
         return this._http.delete(this.actionUrl + 'delete?ID=' + id)
             .catch(this.handleError);

@@ -1,3 +1,6 @@
+<!--Current known issues: delete page doesn't work, content that should be scrollable pushes footer down too low when too many pages exist.
+    pageconfig adds things in a very similar way, why does it work but this doesn't? There is probably one small change.-->
+
 <div class="modal-header">
     <div id="pageHeader" class="row" style="width:100%">
         <div class="col-md-11">
@@ -11,54 +14,43 @@
     </div>
 </div>
 
-<div class="modal-body">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="col-md-2">       
-                <div class="col-md-4">     
-                    <h4>Pages</h4>
-                </div>
-            </div>
-            <div class="col-md-1 col-md-offset-2">
-                <div class="col-md-5 col-md-offset-2">
-                    <h4>Active</h4>
-                </div>
-            </div>
+<mat-dialog-content>
+    <div id="pageBody" class="modal-body">
+        <div class="row">
             <div class="col-md-2">
-                <div class="col-md-1 col-md-offset-11">
-                    <h4>Default</h4>
-                </div>
+                <h4>Pages</h4>
+            </div>
+            <div class="col-md-1 col-md-offset-3">
+                <h4>Active</h4>
             </div>
             <div class="col-md-2 col-md-offset-1">
-                <div class="col-md-1 col-md-offset-10">
+                <h4>Default</h4>
+            </div>
+            <div class="col-md-2">
+                <div class="col-md-1 col-md-offset-2">
                     <h4>Order</h4>
                 </div>
             </div>
-        </div>
-
-          <div class="col-md-12">
+            <div class="col-md-12">
             <mat-radio-group class="example-radio-group" [(ngModel)]="selectedPage">
                 <form class="form-inline" *ngFor="let userPage of userPages" style="position:relative; left:15px">
                     <div class="form-group" style="width:100%;">
                         <i id="x" (click)="openConfDel(userPage)" class="fa fa-times" aria-hidden="true"></i>
-                        <input id="exuserpage" name="exuserpage" class="form-control" #edituserpageinput [(ngModel)] = "userPage.page" type="text">
+                        <input matInput id="exuserpage" name="exuserpage" class="form-control" #edituserpageinput [(ngModel)] = "userPage.page" type="text">
                         <input id="exuserpageactive" name="exuserpageactive" class="form-check-input" style="border-color: rgba(255,255,255,0); width:15%; position:relative" [(ngModel)] = "userPage.active" type="checkbox" >
                         <mat-radio-button id="exuserpagedefault" radioGroup = "example-radio-group" [name]="userPage.ID" class="example-radio-button" (click)="updateDefaultPage(userPage)" [value]="userPage.ID"></mat-radio-button>
                         <i id="orderUp" class="fa fa-arrow-up" style="margin-right:5px;" aria-hidden="true" (click)="moveUp(userPage)"></i>
                         <i id="orderDown" class="fa fa-arrow-down" aria-hidden="true" (click)="moveDown(userPage)"></i>
                     </div>
-                </form>
-                <div class="row">
-                    <input id="newUserPage" #newuserpageinput [(ngModel)] = "newUserPage" type="text" placeholder="New Page" (keyup.enter)="addUserPage(newUserPage); newuserpageinput.value=''" aria-describedby="userpageHelpBlock"><br>
-                    <div id="userpageHelpBlock" class="form-text form-muted">Press enter to create a page.</div>       
-                </div>
+                </form> 
             </mat-radio-group>
+            </div>
         </div>
     </div>
-</div>
+</mat-dialog-content>
 
-<div class="modal-footer">
-    <div id="pageFooter" class="col-md-2 col-md-offset-9">
-        <button mat-dialog-close class="btn btn-outline-primary" (click)="onClose()">Close</button>
-    </div>
+<div id="pageFooter" class="modal-footer">
+    <input matInput id="newUserPage" #newuserpageinput [(ngModel)]="newUserPage" type="text" placeholder="New Page" (keyup.enter)="addUserPage(newUserPage); newuserpageinput.value=''" aria-describedby="userpageHelpBlock"><br>       
+    <button mat-dialog-close id="pageClose" class="btn btn-outline-primary" (click)="onClose()">Close</button>
+    <p id="userpageHelpBlock" >'Enter' to create page.</p>
 </div>
