@@ -1,6 +1,6 @@
 <header [user]="user" [screenCode]="screen"></header>
 <map (MarkerDataOutput)="markerdata = $event"></map>
-<sidenav></sidenav>
-<featuredata [message]="message"></featuredata>
+<sidenav [mycubedata]="mycubedata"></sidenav>
+<featuredata [message]="message" style="right: 50px"></featuredata>
 <pmmarker></pmmarker>
 <navigator></navigator>

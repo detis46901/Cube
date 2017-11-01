@@ -12,4 +12,16 @@
 <div class="col-md-12" style="position:absolute; bottom:50px">
     <h4></h4>
     <hr>
+    <mat-card class="example-card" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 50px; padding:5px 5px 5px 5px;">
+            <mat-card-header>
+              <div mat-card-avatar class="example-header-image"></div>
+              <mat-card-title></mat-card-title>
+              <mat-card-subtitle></mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content *ngIf="mycubedata">
+                <div *ngIf="mycubedata"><button (click)='clearMessage()'><i class="fa fa-times" aria-hidden="true"></i></button><div [innerHTML]='mycubedata.text'></div></div>
+              
+            </mat-card-content>
+          </mat-card>
 </div>
+

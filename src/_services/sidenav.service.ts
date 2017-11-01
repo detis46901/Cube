@@ -11,6 +11,7 @@ let markerData: string;
 @Injectable()
 export class SidenavService {
    private subject = new Subject<any>();
+   private mycubesubject = new Subject<any>();
 
     public toggleHidden(): void {
         isOpen = !isOpen;
@@ -49,4 +50,19 @@ export class SidenavService {
     getMessage(): Observable<any>{
         return this.subject.asObservable();
     }
+
+    sendMyCubeData(message: JSON){
+        console.log("Arrived at sendMyCubeData")
+        console.log(message)
+        this.mycubesubject.next({ text: message});
+    }
+
+    clearMyCubeData() {
+        this.mycubesubject.next();
+    }
+
+    getMyCubeData(): Observable<any>{
+        return this.mycubesubject.asObservable();
+    }
+
 }   

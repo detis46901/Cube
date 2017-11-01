@@ -46,4 +46,18 @@ export class MapService {
             .map((response: Response) => <any>response.json())
             .subscribe(data => console.log(data))
         }
+
+    // public getMyCube (layerid): GeoJSON.GeoJsonObject {
+    //     let featureCollection: GeoJSON.Feature<any> = {
+    //         "type": "Feature",
+    //         "geometry": {
+    //           "type": "Point",
+    //           "coordinates": [-86.098556,  40.476944]
+    //         },
+    //         "properties": {
+    //           "name": "Dinagat Islands"
+    //         }
+    //       }
+    //     return featureCollection
+    // }
 }

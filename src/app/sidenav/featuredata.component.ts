@@ -38,4 +38,8 @@ export class FeatureDataComponent{
     drawPolygonClick() {
         
     }
+
+    private clearMessage(): void {
+        this.message = ""
+    }
 }

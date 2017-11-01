@@ -21,13 +21,16 @@ export class HomeComponent {
     private userID: number;
     private popupText: string;
     message: any;
+    mycubedata: any;
     subscription: Subscription;
+    mycubesubscription: Subscription;
 
     constructor(private dataService: UserService, private sidenavService: SidenavService, private WFSservice: WFSService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
         this.subscription = this.sidenavService.getMessage().subscribe(message => { this.message = message; });
+        this.mycubesubscription = this.sidenavService.getMyCubeData().subscribe(mycubedata => { this.mycubedata = mycubedata; });
         
     }
 

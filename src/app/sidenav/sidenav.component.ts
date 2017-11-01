@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter} from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { SidenavService } from "../../_services/sidenav.service"
@@ -10,13 +10,17 @@ import { SidenavService } from "../../_services/sidenav.service"
     styleUrls: ['sidenav.component.scss'],
     providers: [SidenavService]
 })
-export class SideNavComponent{ 
+export class SideNavComponent implements OnInit { 
     constructor(private sidenavService: SidenavService){
          // subscribe to map component messages
+         
+        } 
+    @Input() mycubedata: any;
+    
+    ngOnInit() {
+        let json = <JSON>this.mycubedata
+        console.log("SideName" + json.parse[0])
     }
-    @Input() message: any;
-
-    ngOnInit() {}
 
     public hideMenu() {
         this.sidenavService.toggleHidden();
@@ -37,5 +41,8 @@ export class SideNavComponent{
 
     drawPolygonClick() {
         
+    }
+    private clearMessage(): void {
+        this.mycubedata = ""
     }
 }
