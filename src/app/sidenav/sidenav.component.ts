@@ -15,11 +15,11 @@ export class SideNavComponent implements OnInit {
          // subscribe to map component messages
          
         } 
-    @Input() mycubedata: any;
+    @Input() myCubeData: any;
     
     ngOnInit() {
-        let json = <JSON>this.mycubedata
-        console.log("SideName" + json.parse[0])
+        let json = <JSON>this.myCubeData
+        //console.log("SideName" + json.parse[0])
     }
 
     public hideMenu() {
@@ -43,6 +43,6 @@ export class SideNavComponent implements OnInit {
         
     }
     private clearMessage(): void {
-        this.mycubedata = ""
+        this.myCubeData = ""
     }
 }

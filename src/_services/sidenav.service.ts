@@ -37,7 +37,7 @@ export class SidenavService {
         return markerData;
     }
 
-    sendMessage(message: string){
+    sendMessage(message: string) {
         console.log("Arrived at sendMessage")
         console.log(message)
         this.subject.next({ text: message});
@@ -47,11 +47,11 @@ export class SidenavService {
         this.subject.next();
     }
 
-    getMessage(): Observable<any>{
+    getMessage(): Observable<any> {
         return this.subject.asObservable();
     }
 
-    sendMyCubeData(message: JSON){
+    sendMyCubeData(message: JSON) {
         console.log("Arrived at sendMyCubeData")
         console.log(message)
         this.mycubesubject.next({ text: message});
@@ -61,7 +61,7 @@ export class SidenavService {
         this.mycubesubject.next();
     }
 
-    getMyCubeData(): Observable<any>{
+    getMyCubeData(): Observable<any> {
         return this.mycubesubject.asObservable();
     }
 

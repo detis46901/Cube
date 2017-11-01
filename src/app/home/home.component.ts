@@ -6,10 +6,10 @@ import { WFSService } from '../map/services/wfs.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
-  selector: 'home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
-  providers: [SidenavService, WFSService]
+    selector: 'home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss'],
+    providers: [SidenavService, WFSService]
 })
 
 export class HomeComponent {
@@ -20,18 +20,17 @@ export class HomeComponent {
     private token: string;
     private userID: number;
     private popupText: string;
-    message: any;
-    mycubedata: any;
-    subscription: Subscription;
-    mycubesubscription: Subscription;
+    private message: string;
+    private myCubeData: any;
+    private subscription: Subscription;
+    private myCubeSubscription: Subscription;
 
     constructor(private dataService: UserService, private sidenavService: SidenavService, private WFSservice: WFSService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
         this.subscription = this.sidenavService.getMessage().subscribe(message => { this.message = message; });
-        this.mycubesubscription = this.sidenavService.getMyCubeData().subscribe(mycubedata => { this.mycubedata = mycubedata; });
-        
+        this.myCubeSubscription = this.sidenavService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; });
     }
 
     ngOnInit() {
