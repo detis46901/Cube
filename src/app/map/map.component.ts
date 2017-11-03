@@ -9,7 +9,7 @@ import { PMMarkerComponent } from './marker/PMmarker.component';
 import { LayerPermissionService } from '../../_services/_layerPermission.service';
 import { LayerAdminService } from '../../_services/_layerAdmin.service';
 import { UserPageService } from '../../_services/_userPage.service';
-import { SidenavService } from '../../_services/sidenav.service';
+import { SideNavService } from '../../_services/sidenav.service';
 import { ServerService } from '../../_services/_server.service';
 import { LayerPermission, LayerAdmin, UserPageLayer, MyCubeField } from '../../_models/layer.model';
 import { Server } from '../../_models/server.model';
@@ -80,7 +80,7 @@ export class MapComponent {
 
     private layers: L.Layer []
 
-    constructor(private _http: Http, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private geoCoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sidenavService: SidenavService, private serverService: ServerService ) {
+    constructor(private _http: Http, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private geoCoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sideNavService: SideNavService, private serverService: ServerService ) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
@@ -229,7 +229,8 @@ export class MapComponent {
                 this.layerList[index] = L.geoJSON(data[0][0]['jsonb_build_object'])
                     .addTo(this._map)
                     .on('click', (event: any) => {
-                    this.sendMyCubeData(event.layer.feature.properties)
+                    //this.sendMyCubeData(event.layer.feature.properties)
+                    this.sideNavService.sendMyCubeData(event.layer.feature.properties);
                 })
             })
         this.setCurrentMyCube(index, layer, checked)
@@ -385,7 +386,7 @@ export class MapComponent {
 
    
 
-    private formLayerRequest (layer: UserPageLayer): string {
+    private formLayerRequest(layer: UserPageLayer): string {
         let server: Server;
         this.getServer(layer.layer_admin.serverID);
         for (let i of this.servers) {
@@ -394,7 +395,7 @@ export class MapComponent {
             }
         }
 
-        switch (layer.layer_admin.layerType){
+        switch (layer.layer_admin.layerType) {
             case ('MapServer'): {
                 console.log('Mapserver Layer');
                 let norest: string = server.serverURL.split('/rest/')[0] + '/' + server.serverURL.split('/rest/')[1];
@@ -404,7 +405,7 @@ export class MapComponent {
             }
             case ('Geoserver'): {
                 console.log('Geoserver Layer');
-                    let url: string = server.serverURL + '/wms'
+                let url: string = server.serverURL + '/wms'
                 return url;
             }
         }
@@ -412,20 +413,20 @@ export class MapComponent {
 
     private sendMessage(message: string): void {
         message = message.split("<body>")[1]
-        this.sidenavService.sendMessage(message);
+        this.sideNavService.sendMessage(message);
     }
 
     private clearMessage(): void {
-        this.sidenavService.clearMessage();
+        this.sideNavService.clearMessage();
     }
 
     private sendMyCubeData(message: JSON): void {
         let data: MyCubeField[]
         console.log(message["id"])
-        this.sidenavService.sendMyCubeData(message);
+        this.sideNavService.sendMyCubeData(message["id"]);
     }
 
     private clearMyCubeData(): void {
-        this.sidenavService.clearMyCubeData();
+        this.sideNavService.clearMyCubeData();
     }
 }

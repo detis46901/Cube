@@ -8,7 +8,7 @@ import { PMMarkerComponent } from './marker/PMmarker.component';
 import { LayerPermissionService } from '../../_services/_layerPermission.service';
 import { LayerAdminService } from '../../_services/_layerAdmin.service';
 import { UserPageService } from '../../_services/_userPage.service';
-import { SidenavService } from '../../_services/sidenav.service';
+import { SideNavService } from '../../_services/sidenav.service';
 import { ServerService } from '../../_services/_server.service';
 import { LayerPermission, LayerAdmin, UserPageLayer } from '../../_models/layer.model';
 import { Server } from '../../_models/server.model';
@@ -78,7 +78,7 @@ export class MapComponent {
     
     @ViewChild(PMMarkerComponent) pmmarkerComponent: PMMarkerComponent;
 
-    constructor(private _http: Http, private mapService: MapService, private wfsService: WFSService, private geoCoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sidenavService: SidenavService, private serverService: ServerService ) {
+    constructor(private _http: Http, private mapService: MapService, private wfsService: WFSService, private geoCoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sideNavService: SideNavService, private serverService: ServerService ) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
@@ -390,10 +390,10 @@ export class MapComponent {
 
     private sendMessage(message: string): void {
         message = message.split("<body>")[1]
-        this.sidenavService.sendMessage(message);
+        this.sideNavService.sendMessage(message);
     }
 
     private clearMessage(): void {
-        this.sidenavService.clearMessage();
+        this.sideNavService.clearMessage();
     }
 }

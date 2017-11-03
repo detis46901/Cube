@@ -1,17 +1,17 @@
 import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
-import { SidenavService } from "../../_services/sidenav.service"
+import { SideNavService } from "../../_services/sidenav.service"
 
 @Component({
     moduleId: module.id,
     selector: 'featuredata',
     templateUrl: './featuredata.component.html',
     styleUrls: ['featuredata.component.scss'],
-    providers: [SidenavService]
+    providers: [SideNavService]
 })
 export class FeatureDataComponent{ 
-    constructor(private sidenavService: SidenavService){
+    constructor(private sideNavService: SideNavService){
          // subscribe to map component messages
     }
     @Input() message: any;
@@ -19,7 +19,7 @@ export class FeatureDataComponent{
     ngOnInit() {}
 
     public hideMenu() {
-        this.sidenavService.toggleHidden();
+        this.sideNavService.toggleHidden();
         document.getElementById("mySidenav").style.width = "0";
         document.getElementById("place-input").style.left = "15px";
         document.getElementById("goto").style.left = "15px";

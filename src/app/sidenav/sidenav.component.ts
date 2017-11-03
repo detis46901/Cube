@@ -1,29 +1,41 @@
 import { Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
-import { SidenavService } from "../../_services/sidenav.service"
+import { SideNavService } from "../../_services/sidenav.service"
+import { LayerPermissionService } from "../../_services/_layerPermission.service"
 
 @Component({
     moduleId: module.id,
     selector: 'sidenav',
     templateUrl: './sidenav.component.html',
     styleUrls: ['sidenav.component.scss'],
-    providers: [SidenavService]
+    providers: [SideNavService, LayerPermissionService]
 })
 export class SideNavComponent implements OnInit { 
-    constructor(private sidenavService: SidenavService){
+    private flag = 0;
+    private token: string;
+    private userID: number;
+
+    constructor(private sideNavService: SideNavService, private layerPermissionService: LayerPermissionService) {
          // subscribe to map component messages
-         
-        } 
+         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+         this.token = currentUser && currentUser.token;
+         this.userID = currentUser && currentUser.userid;
+         console.log(currentUser)
+    } 
+
+    @Input() canEdit: boolean;
     @Input() myCubeData: any;
     
     ngOnInit() {
         let json = <JSON>this.myCubeData
         //console.log("SideName" + json.parse[0])
+        console.log(this.myCubeData)
+        console.log(this.userID)
     }
 
     public hideMenu() {
-        this.sidenavService.toggleHidden();
+        this.sideNavService.toggleHidden();
         document.getElementById("mySidenav").style.width = "0";
         document.getElementById("place-input").style.left = "15px";
         document.getElementById("goto").style.left = "15px";

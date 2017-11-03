@@ -4,6 +4,7 @@ As of 11/1/17, there are "hard" rules and "soft" rules that will be placed into 
 Hard rules should always be used for each new written component AS WELL AS changed in previous files.
 Soft rules should always be used for each new written component and may not require changes to previous files, mostly aesthetic/readability concerns.
 
+
 ###Hard Rules
 -The preferred naming convention for variables, methods, and file names is Camelcase (i.e. userPageLayer isntead of user_page_layer)
 -The preferred indentation style is 1TBS (or K&R in the general sense)

@@ -1,11 +1,16 @@
 <mat-card class="example-card" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 50px; padding:5px 5px 5px 5px;">
     <mat-card-header>
-      <div mat-card-avatar class="example-header-image"></div>
-      <mat-card-title></mat-card-title>
-      <mat-card-subtitle></mat-card-subtitle>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title></mat-card-title>
+        <mat-card-subtitle></mat-card-subtitle>
     </mat-card-header>
+
     <mat-card-content *ngIf="message">
-        <div *ngIf="message"><button (click)='clearMessage()'><i class="fa fa-times" aria-hidden="true"></i></button><div [innerHTML]='message.text'></div></div>
-      
+        <div *ngIf="message">
+            <button (click)='clearMessage()'>
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+            <div [innerHTML]='message.text'></div>
+        </div>
     </mat-card-content>
-  </mat-card>
+</mat-card>

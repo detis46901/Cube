@@ -9,7 +9,7 @@ let markerData: string;
 
 
 @Injectable()
-export class SidenavService {
+export class SideNavService {
    private subject = new Subject<any>();
    private mycubesubject = new Subject<any>();
 
@@ -40,7 +40,7 @@ export class SidenavService {
     sendMessage(message: string) {
         console.log("Arrived at sendMessage")
         console.log(message)
-        this.subject.next({ text: message});
+        this.subject.next({text:message});
     }
 
     clearMessage() {
@@ -52,9 +52,25 @@ export class SidenavService {
     }
 
     sendMyCubeData(message: JSON) {
-        console.log("Arrived at sendMyCubeData")
-        console.log(message)
-        this.mycubesubject.next({ text: message});
+        //console.log("Arrived at sendMyCubeData")
+        //console.log(JSON.stringify(message))
+
+        let t = "<h4>Feature Data</h4>";
+        let propList = new Array<string>()
+        let properties = JSON.stringify(message).split(",");
+        properties.shift();
+        console.log(properties[0].substring(1, properties[0].indexOf(":")-1))
+
+        for(let i=0; i<properties.length; i++) {
+            propList.push(properties[i].substring(1, properties[i].indexOf(":")-1));
+            t = t + propList[i] + ": " + message[propList[i]] + "<br>";
+        }
+
+        console.log(propList);
+        console.log(properties);
+        console.log(t);
+
+        this.mycubesubject.next({text: t});
     }
 
     clearMyCubeData() {

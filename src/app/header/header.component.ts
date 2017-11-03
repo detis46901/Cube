@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { User } from '../../_models/user.model';
-import { SidenavService } from "../../_services/sidenav.service";
+import { SideNavService } from "../../_services/sidenav.service";
 
 @Component({
     selector: 'header',
     templateUrl: './header.component.html',
     styleUrls: ['header.component.scss'],
-    providers: [SidenavService]
+    providers: [SideNavService]
 })
 
 export class HeaderComponent { 
@@ -14,13 +14,13 @@ export class HeaderComponent {
     @Input() screenCode: number = 0; 
     private isOpen: boolean;
 
-    constructor(private sidenavService: SidenavService) {}
+    constructor(private sideNavService: SideNavService) {}
 
     private menuToggle(sCode: number): void {
-        if (this.sidenavService.getHidden() == null) {
+        if (this.sideNavService.getHidden() == null) {
             this.isOpen = true;
         } else {
-            this.isOpen = this.sidenavService.getHidden();
+            this.isOpen = this.sideNavService.getHidden();
         }
 
         switch(sCode) {
@@ -52,17 +52,17 @@ export class HeaderComponent {
             document.getElementById("add-marker").style.left = "280px";
             document.getElementById("remove-marker").style.position = "absolute";
             document.getElementById("remove-marker").style.left = "320px";
-            this.sidenavService.toggleHidden();
+            this.sideNavService.toggleHidden();
         } else {
             document.getElementById("mySidenav").style.width = "0";
             document.getElementById("place-input").style.left = "15px";
             document.getElementById("goto").style.left = "15px";
             document.getElementById("add-marker").style.left = "30px";
             document.getElementById("remove-marker").style.left = "70px";
-            this.sidenavService.toggleHidden();
+            this.sideNavService.toggleHidden();
         }
 
-        this.isOpen = this.sidenavService.getHidden();
+        this.isOpen = this.sideNavService.getHidden();
     }
 
     //Code 2
@@ -70,11 +70,11 @@ export class HeaderComponent {
         if(!this.isOpen) {
             document.getElementById("admin_nav").style.display = "block";
             document.getElementById("admin_nav").style.width = "230px";
-            this.sidenavService.toggleHidden();
+            this.sideNavService.toggleHidden();
         } else {
             document.getElementById("admin_nav").style.width = "0";
             document.getElementById("admin_nav").style.display = "none";
-            this.sidenavService.toggleHidden();
+            this.sideNavService.toggleHidden();
         }
     }
 
@@ -83,11 +83,11 @@ export class HeaderComponent {
         if(!this.isOpen) {
             document.getElementById("settings_nav").style.display = "block";
             document.getElementById("settings_nav").style.width = "230px";
-            this.sidenavService.toggleHidden();
+            this.sideNavService.toggleHidden();
         } else {
             document.getElementById("settings_nav").style.width = "0";
             document.getElementById("settings_nav").style.display = "none";
-            this.sidenavService.toggleHidden();
+            this.sideNavService.toggleHidden();
         }
     }
 }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { UserService } from '../../_services/_user.service';
 import { User } from '../../_models/user.model';
-import { SidenavService} from '../../_services/sidenav.service';
+import { SideNavService} from '../../_services/sidenav.service';
 import { WFSService } from '../map/services/wfs.service';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
     selector: 'home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    providers: [SidenavService, WFSService]
+    providers: [SideNavService, WFSService]
 })
 
 export class HomeComponent {
@@ -25,12 +25,12 @@ export class HomeComponent {
     private subscription: Subscription;
     private myCubeSubscription: Subscription;
 
-    constructor(private dataService: UserService, private sidenavService: SidenavService, private WFSservice: WFSService) {
+    constructor(private dataService: UserService, private sideNavService: SideNavService, private WFSservice: WFSService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
-        this.subscription = this.sidenavService.getMessage().subscribe(message => { this.message = message; });
-        this.myCubeSubscription = this.sidenavService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; });
+        this.subscription = this.sideNavService.getMessage().subscribe(message => { this.message = message; });
+        this.myCubeSubscription = this.sideNavService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; });
     }
 
     ngOnInit() {

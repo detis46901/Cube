@@ -12,16 +12,23 @@
 <div class="col-md-12" style="position:absolute; bottom:50px">
     <h4></h4>
     <hr>
-    <mat-card class="example-card" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 50px; padding:5px 5px 5px 5px;">
-            <mat-card-header>
-              <div mat-card-avatar class="example-header-image"></div>
-              <mat-card-title></mat-card-title>
-              <mat-card-subtitle></mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-content *ngIf="myCubeData">
-                <div *ngIf="myCubeData"><button (click)='clearMessage()'><i class="fa fa-times" aria-hidden="true"></i></button><div [innerHTML]='myCubeData.text'></div></div>
-              
-            </mat-card-content>
-          </mat-card>
+    <mat-card id="featureCard" class="example-card">
+        <mat-card-header>
+            <div mat-card-avatar class="example-header-image"></div>
+            <mat-card-title></mat-card-title>
+            <mat-card-subtitle></mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            <div *ngIf="myCubeData"> <!--"myCubeData && !canEdit"-->
+                <i id="cardClose" class="fa fa-times" aria-hidden="true" (click)="clearMessage()"></i>
+                <div [innerHTML]='myCubeData.text'></div>
+            </div>
+
+            <div *ngIf="myCubeData && flag==999"> <!--"myCubeData && canEdit"-->
+                <!--Display data as input fields that can be modified by user-->
+            </div>
+        </mat-card-content>
+    </mat-card>
 </div>
 
