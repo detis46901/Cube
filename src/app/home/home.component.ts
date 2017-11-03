@@ -24,6 +24,8 @@ export class HomeComponent {
     private myCubeData: any;
     private subscription: Subscription;
     private myCubeSubscription: Subscription;
+    private editSubscription: Subscription;
+    private edit: boolean;
 
     constructor(private dataService: UserService, private sideNavService: SideNavService, private WFSservice: WFSService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -31,6 +33,8 @@ export class HomeComponent {
         this.userID = currentUser && currentUser.userid;
         this.subscription = this.sideNavService.getMessage().subscribe(message => { this.message = message; });
         this.myCubeSubscription = this.sideNavService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; });
+        this.editSubscription = this.sideNavService.getEdit().subscribe(data => {this.edit});
+        console.log(this.edit)
     }
 
     ngOnInit() {

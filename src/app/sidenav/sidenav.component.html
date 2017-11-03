@@ -20,12 +20,12 @@
         </mat-card-header>
 
         <mat-card-content>
-            <div *ngIf="myCubeData"> <!--"myCubeData && !canEdit"-->
+            <div *ngIf="myCubeData && !canEdit">
                 <i id="cardClose" class="fa fa-times" aria-hidden="true" (click)="clearMessage()"></i>
                 <div [innerHTML]='myCubeData.text'></div>
             </div>
 
-            <div *ngIf="myCubeData && flag==999"> <!--"myCubeData && canEdit"-->
+            <div *ngIf="myCubeData && canEdit">
                 <!--Display data as input fields that can be modified by user-->
             </div>
         </mat-card-content>

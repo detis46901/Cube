@@ -12,6 +12,7 @@ let markerData: string;
 export class SideNavService {
    private subject = new Subject<any>();
    private mycubesubject = new Subject<any>();
+   private edit = new Subject<boolean>();
 
     public toggleHidden(): void {
         isOpen = !isOpen;
@@ -81,4 +82,12 @@ export class SideNavService {
         return this.mycubesubject.asObservable();
     }
 
+    public setEdit(edit: boolean): void {
+        this.edit.next(edit);
+    }
+
+    public getEdit(): Observable<boolean> {
+        console.log(this.edit)
+        return this.edit.asObservable();
+    }
 }   

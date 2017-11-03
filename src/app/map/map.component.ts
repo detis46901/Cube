@@ -45,6 +45,8 @@ export class MapComponent {
     private layerList: Array<L.Layer> = [];
     private server: Server;
     private servers: Array<Server>;
+    private perm: LayerPermission;
+    private perms: LayerPermission[];
 
     private defaultPage: UserPage;
     private turnOnLayer: L.Layer;
@@ -80,7 +82,7 @@ export class MapComponent {
 
     private layers: L.Layer []
 
-    constructor(private _http: Http, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private geoCoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sideNavService: SideNavService, private serverService: ServerService ) {
+    constructor(private _http: Http, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private geoCoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sideNavService: SideNavService, private serverService: ServerService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
@@ -144,8 +146,17 @@ export class MapComponent {
             .GetAll()
             .subscribe((data: Server[]) => {
                 this.servers = data;
-                this.loadLayers();
+                this.getLayerPerms();
             });
+    }
+
+    private getLayerPerms(): void {
+        this.layerPermissionService
+            .GetUserLayer(this.userID)
+            .subscribe((data: LayerPermission[]) => {
+                this.perms = data;
+                this.loadLayers();
+            })
     }
    
     //loadLayers will load during map init and load the layers that should come on by themselves with the "layerON" property set (in userPageLayers)
@@ -158,8 +169,7 @@ export class MapComponent {
             if (temp[i].layerON == true) {
                 temp[i].layerShown = true;
                 this.toggleLayers(i,temp[i],false)
-            }
-            else {
+            } else {
                 temp[i].layerShown == false
             }
             this.userPageLayers = temp
@@ -224,7 +234,7 @@ export class MapComponent {
 
         console.log("loadMyCube: index=" + index + ",checked=" + checked)
         if (!checked) {
-        this.geojsonservice.GetAll(layer.layer_admin.ID)
+            this.geojsonservice.GetAll(layer.layer_admin.ID)
             .subscribe((data: GeoJSON.Feature<any>) => {
                 this.layerList[index] = L.geoJSON(data[0][0]['jsonb_build_object'])
                     .addTo(this._map)
@@ -233,15 +243,22 @@ export class MapComponent {
                     this.sideNavService.sendMyCubeData(event.layer.feature.properties);
                 })
             })
-        this.setCurrentMyCube(index, layer, checked)
-        this.sendMessage("<body>MyCube Selected</body>")
-        this.layerList[index] = this.turnOnLayer;
-        this.currLayer = layer;
-        this.currLayerName = layer.layer_admin.layerName;
-        this.noLayers = false;
-        this.userPageLayers[index].layerShown = true;
-        }
-        else {
+            this.setCurrentMyCube(index, layer, checked)
+            this.sendMessage("<body>MyCube Selected</body>")
+            this.layerList[index] = this.turnOnLayer;
+            this.currLayer = layer;
+            this.currLayerName = layer.layer_admin.layerName;
+            this.noLayers = false;
+            this.userPageLayers[index].layerShown = true;
+
+            for(let i=0; i<this.perms.length; i++) {
+                if(this.perms[i].layerAdminID == this.currLayer.layerAdminID) {
+                    this.perm = this.perms[i];
+                }
+            }
+            console.log(this.perm.edit)
+            this.sideNavService.setEdit(this.perm.edit);
+        } else {
             console.log("Removing Mycube: " + this.layerList[index])
             this.layerList[index].removeFrom(this._map);
             this.userPageLayers[index].layerShown = false;
