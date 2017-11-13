@@ -6,7 +6,7 @@ import { LayerAdminService } from '../../../_services/_layerAdmin.service';
 import { LayerPermissionService } from '../../../_services/_layerPermission.service';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { SQLService } from '../../../_services/sql.service'
-import { LayerAdmin, LayerPermission } from '../../../_models/layer.model';
+import { LayerAdmin, LayerPermission, UserPageLayer } from '../../../_models/layer.model';
 import { LayerPermissionComponent } from './layerPermission/layerPermission.component';
 import { LayerNewComponent } from './layerNew/layerNew.component';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
@@ -30,7 +30,7 @@ export class LayerAdminComponent implements OnInit {
     private userID: number;
 
     private layerAdmins: LayerAdmin[];
-    private servers: Array<Server>;
+    private servers: Server[];
 
     constructor(private layerAdminService: LayerAdminService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -86,6 +86,8 @@ export class LayerAdminComponent implements OnInit {
         dialogRef.componentInstance.objName = layer.layerName;
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                this.deletePermission(layer.ID);
+                this.deleteUPL(layer.ID);
                 this.deleteLayer(layer.ID);
             }
         });
@@ -99,34 +101,52 @@ export class LayerAdminComponent implements OnInit {
             });
     }
 
-    //Should in theory delete layer including dependents: layer(layerid), layer_permissions(layerid), and user_page_layers(layerid)
-    private deleteLayer(layerID: number): void {
+    private deletePermission(layerID: number) {
         this.layerPermissionService
-            .GetSome(layerID)
-            .subscribe(result => {
-                for (let i of result) {
-                    //This does not currently delete layerPermission
-                    this.layerPermissionService.Delete(i.ID);
+        .GetSome(layerID)
+        .subscribe(result => {
+            console.log(result)
+            for (let i of result) {
+                this.layerPermissionService
+                    .Delete(i.ID)
+                    .subscribe((res) => {});
+            }
+        });
+    }
+
+    private deleteUPL(layerID: number): void {
+        this.userPageLayerService
+        .GetByLayer(layerID)
+        .subscribe((res: UserPageLayer[]) => {
+            for(let i of res) {
+                this.userPageLayerService
+                    .Delete(i.ID)
+                    .subscribe((res) => {})
+            }
+        });
+
+    }
+
+    private deleteLayer(layerID: number): void {
+        this.layerAdminService
+            .GetSingle(layerID)
+            .subscribe((result: LayerAdmin) => {
+                if (result.layerType=='MyCube') {
+                    console.log('removing MyCube')
+                    this.sqlservice.deleteTable(result.ID)
+                    .subscribe((result)=> console.log(result))
                 }
             });
 
         this.layerAdminService
-            .GetSingle(layerID)
-                .subscribe((result: LayerAdmin) => {
-                    if (result.layerType=='MyCube') {
-                        console.log('removing MyCube')
-                        this.sqlservice.deleteTable(result.ID)
-                        .subscribe((result)=> console.log(result))
-                    }
-                })
-            this.layerAdminService
             .Delete(layerID)
-            .subscribe(() => {
-                this.getLayerItems();
-            });
-
-
+                .subscribe((res) => {
+                    console.log(res)
+                    this.getLayerItems();
+                });
     }
+
+     
 
     //To be expanded to sort layers on display via html button press.
     private sortLayers(code: string): void {

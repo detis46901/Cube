@@ -34,15 +34,8 @@ export class HomeComponent {
         this.userID = currentUser && currentUser.userid;
         this.subscription = this.sideNavService.getMessage().subscribe(message => { this.message = message; });
         this.myCubeSubscription = this.sideNavService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; });
-<<<<<<< HEAD
-
-        //Not sure if this is where the edit boolean should be set
-        this.editSubscription = this.sideNavService.getEdit().subscribe(data => {this.edit});
-        console.log(this.edit)
-=======
         this.editSubscription = this.sideNavService.getMyCubeConfig().subscribe(data => {this.myCubeConfig = data});
         console.log("this.message = " + this.message)
->>>>>>> c0cfec63a904492cc46726dc031b31c7bb10e1a6
     }
 
     ngOnInit() {

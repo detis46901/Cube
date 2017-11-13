@@ -27,4 +27,5 @@ export class LayerPermissionService extends ParentService {
             .map((response: Response) => <LayerPermission[]>response.json())
             .catch(this.handleError);
     }
+
 }

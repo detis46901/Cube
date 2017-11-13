@@ -17,7 +17,7 @@ export class UserPageLayerService extends ParentService {
     }
 
     public GetSome = (pageid): Observable<UserPageLayer[]> => {
-        return this._http.get(this.actionUrl + 'list?pageID=' + pageid)
+        return this._http.get(this.actionUrl + 'list?ID=' + pageid)
             .map((response: Response) => <UserPageLayer[]>response.json())
             .catch(this.handleError);
     }
@@ -28,8 +28,15 @@ export class UserPageLayerService extends ParentService {
             .catch(this.handleError);
     }
 
-    public GetUserLayer = (userid): Observable<UserPageLayer[]> => {
+    public GetUserLayers = (userid): Observable<UserPageLayer[]> => {
         return this._http.get(this.actionUrl + 'userlist?userid=' + userid)
+            .map((response: Response) => <UserPageLayer[]>response.json())
+            .catch(this.handleError);
+    }
+
+    public GetByLayer = (layerid): Observable<UserPageLayer[]> => {
+        console.log(this.actionUrl + 'getbylayer?layerid=' + layerid)
+        return this._http.get(this.actionUrl + 'getbylayer?layerAdminID=' + layerid)
             .map((response: Response) => <UserPageLayer[]>response.json())
             .catch(this.handleError);
     }
