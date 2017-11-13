@@ -21,9 +21,17 @@ export class SQLService {
             .map((response: Response) => <any[]>response.json())
             .catch(this.handleError);
     }
+
+    public GetSchema = (id:number): Observable<MyCubeField[]> => {
+        console.log(this.actionUrl + 'getschema?table=' + id)           
+        return this._http.get(this.actionUrl + 'getschema?table=' + id)
+            .map((response: Response) => <MyCubeField[]>response.json()[0])
+            .catch(this.handleError);
+    }
  
-    public GetSingle = (id: number): Observable<any> => {
-        return this._http.get(this.actionUrl + 'one?rowid=' + id)
+    public GetSingle = (table: number, id: string): Observable<any> => {
+        console.log(this.actionUrl + 'one?table=' + table + '&id=' + id)
+        return this._http.get(this.actionUrl + 'one?table=' + table + '&id=' + id)
             .map((response: Response) => <any>response.json())
             .catch(this.handleError);
     }
@@ -42,8 +50,9 @@ export class SQLService {
             .catch(this.handleError);
     }
  
-    public Update = (itemToUpdate: any): Observable<any> => {
-        return this._http.put(this.actionUrl + 'update', JSON.stringify(itemToUpdate), {headers: this.headers})
+    public Update = (table: number, id: string, field: string, type: string, value: any): Observable<any> => {
+        console.log(this.actionUrl + 'update?table=' + table + "&id=" + id + "&field=" + field + "&type=" + type + "&value=" + value)
+        return this._http.get(this.actionUrl + 'update?table=' + table + "&id=" + id + "&field=" + field + "&type=" + type + "&value=" + value, {headers: this.headers})
             .map((response: Response) => <any>response.json())
             .catch(this.handleError);
     }
