@@ -33,6 +33,8 @@ export class HomeComponent {
         this.userID = currentUser && currentUser.userid;
         this.subscription = this.sideNavService.getMessage().subscribe(message => { this.message = message; });
         this.myCubeSubscription = this.sideNavService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; });
+
+        //Not sure if this is where the edit boolean should be set
         this.editSubscription = this.sideNavService.getEdit().subscribe(data => {this.edit});
         console.log(this.edit)
     }

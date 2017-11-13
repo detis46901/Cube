@@ -163,12 +163,14 @@ export class OrganizationComponent implements OnInit {
             //group
             case 4: {
                 dialogRef.componentInstance.objName = org.group;
+                console.log(org.group)
                 break;
             }
 
             //role
             case 5: {
                 dialogRef.componentInstance.objName = org.role;
+                console.log(org.role)
                 break;
             }
 
