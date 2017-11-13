@@ -4,6 +4,7 @@ import { User } from '../../_models/user.model';
 import { SideNavService} from '../../_services/sidenav.service';
 import { WFSService } from '../map/services/wfs.service';
 import { Subscription } from 'rxjs/Subscription';
+import { MyCubeField, MyCubeConfig } from '../../_models/layer.model'
 
 @Component({
     selector: 'home',
@@ -21,11 +22,11 @@ export class HomeComponent {
     private userID: number;
     private popupText: string;
     private message: string;
-    private myCubeData: any;
+    private myCubeData: MyCubeField;
     private subscription: Subscription;
     private myCubeSubscription: Subscription;
     private editSubscription: Subscription;
-    private edit: boolean;
+    private myCubeConfig: MyCubeConfig;
 
     constructor(private dataService: UserService, private sideNavService: SideNavService, private WFSservice: WFSService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -33,8 +34,8 @@ export class HomeComponent {
         this.userID = currentUser && currentUser.userid;
         this.subscription = this.sideNavService.getMessage().subscribe(message => { this.message = message; });
         this.myCubeSubscription = this.sideNavService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; });
-        this.editSubscription = this.sideNavService.getEdit().subscribe(data => {this.edit});
-        console.log(this.edit)
+        this.editSubscription = this.sideNavService.getMyCubeConfig().subscribe(data => {this.myCubeConfig = data});
+        console.log("this.message = " + this.message)
     }
 
     ngOnInit() {

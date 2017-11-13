@@ -11,7 +11,7 @@ import { LayerAdminService } from '../../_services/_layerAdmin.service';
 import { UserPageService } from '../../_services/_userPage.service';
 import { SideNavService } from '../../_services/sidenav.service';
 import { ServerService } from '../../_services/_server.service';
-import { LayerPermission, LayerAdmin, UserPageLayer, MyCubeField } from '../../_models/layer.model';
+import { LayerPermission, LayerAdmin, UserPageLayer, MyCubeField, MyCubeConfig } from '../../_models/layer.model';
 import { Server } from '../../_models/server.model';
 import { UserPage } from '../../_models/user.model';
 import { UserPageLayerService } from '../../_services/_userPageLayer.service';
@@ -240,11 +240,12 @@ export class MapComponent {
                     .addTo(this._map)
                     .on('click', (event: any) => {
                     //this.sendMyCubeData(event.layer.feature.properties)
-                    this.sideNavService.sendMyCubeData(event.layer.feature.properties);
+                    this.sideNavService.setMyCubeConfig(layer.layer_admin.ID, this.perm.edit);
+                    this.sideNavService.sendMyCubeData(layer.layer_admin.ID, event.layer.feature.properties.ID, event.layer.feature.properties);
                 })
             })
             this.setCurrentMyCube(index, layer, checked)
-            this.sendMessage("<body>MyCube Selected</body>")
+            //this.sendMessage("<body>MyCube Selected</body>")
             this.layerList[index] = this.turnOnLayer;
             this.currLayer = layer;
             this.currLayerName = layer.layer_admin.layerName;
@@ -257,7 +258,7 @@ export class MapComponent {
                 }
             }
             console.log(this.perm.edit)
-            this.sideNavService.setEdit(this.perm.edit);
+            //this.sideNavService.setMyCubeConfig(layer.layer_admin.ID, this.perm.edit);
         } else {
             console.log("Removing Mycube: " + this.layerList[index])
             this.layerList[index].removeFrom(this._map);
@@ -440,7 +441,7 @@ export class MapComponent {
     private sendMyCubeData(message: JSON): void {
         let data: MyCubeField[]
         console.log(message["id"])
-        this.sideNavService.sendMyCubeData(message["id"]);
+        //this.sideNavService.sendMyCubeData(message["id"]);
     }
 
     private clearMyCubeData(): void {

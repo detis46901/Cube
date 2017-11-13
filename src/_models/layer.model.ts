@@ -35,4 +35,10 @@ export class UserPageLayer {
 export class MyCubeField {
     field: string;
     type: string;
+    value?: any;
+}
+
+export class MyCubeConfig {
+    table: number;
+    edit: boolean;
 }

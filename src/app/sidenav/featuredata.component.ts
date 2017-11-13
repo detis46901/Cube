@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { SideNavService } from "../../_services/sidenav.service"
+import { MyCubeField, MyCubeConfig }from "../../_models/layer.model"
+import { SQLService } from "../../_services/sql.service"
 
 @Component({
     moduleId: module.id,
@@ -11,10 +13,13 @@ import { SideNavService } from "../../_services/sidenav.service"
     providers: [SideNavService]
 })
 export class FeatureDataComponent{ 
-    constructor(private sideNavService: SideNavService){
+    constructor(private sideNavService: SideNavService, private sqlservice: SQLService){
          // subscribe to map component messages
     }
     @Input() message: any;
+    @Input() myCubeData: MyCubeField[];
+    @Input() myCubeConfig: MyCubeConfig;
+    @Input() canEdit: boolean;
 
     ngOnInit() {}
 
@@ -41,5 +46,17 @@ export class FeatureDataComponent{
 
     private clearMessage(): void {
         this.message = ""
+    }
+
+    private clearMyCubeData(): void {
+        this.message= ""
+    }
+
+    private updateMyCube(mycube: MyCubeField): void {
+        console.log(this.myCubeData[0].value)
+        console.log(mycube.value)
+        this.sqlservice
+            .Update(this.myCubeConfig.table, this.myCubeData[0].value, mycube.field, mycube.type, mycube.value)
+            .subscribe()
     }
 }
