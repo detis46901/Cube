@@ -146,7 +146,7 @@ export class ServerComponent implements OnInit {
         dialogRef.componentInstance.objName = server.serverName;
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result == true) {
+            if (result == this.objCode) {
                 this.deleteServer(server.ID);
             }
             this.getServers();

@@ -115,7 +115,7 @@ export class PageComponent implements OnInit {
 
         dialogRef.afterClosed()
         .subscribe(result => {
-            if (result) {
+            if (result == this.objCode) {
                 this.deleteUserPage(userPage.ID);
             }
             this.getUserPageItems();

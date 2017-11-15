@@ -35,7 +35,6 @@ export class UserPageLayerService extends ParentService {
     }
 
     public GetByLayer = (layerid): Observable<UserPageLayer[]> => {
-        console.log(this.actionUrl + 'getbylayer?layerid=' + layerid)
         return this._http.get(this.actionUrl + 'getbylayer?layerAdminID=' + layerid)
             .map((response: Response) => <UserPageLayer[]>response.json())
             .catch(this.handleError);

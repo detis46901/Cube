@@ -85,7 +85,7 @@ export class LayerAdminComponent implements OnInit {
         dialogRef.componentInstance.objID = layer.ID;
         dialogRef.componentInstance.objName = layer.layerName;
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result == this.objCode) {
                 this.deletePermission(layer.ID);
                 this.deleteUPL(layer.ID);
                 this.deleteLayer(layer.ID);

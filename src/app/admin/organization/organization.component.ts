@@ -181,8 +181,21 @@ export class OrganizationComponent implements OnInit {
         }
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                //delete the correct items.
+            if (result == type) {
+                switch (result) {
+                    case 3: {
+                        this.deleteDepartment(org.ID);
+                    }
+                    case 4: {
+                        this.deleteGroup(org.ID);
+                    }
+                    case 5: {
+                        this.deleteRole(org.ID);
+                    }
+                    default: {
+                        alert("Incorrect code.");
+                    }
+                }
             }
             this.getDepartmentItems();
         });
@@ -192,11 +205,15 @@ export class OrganizationComponent implements OnInit {
     logging the IDs from those groups into an array and also deleting for which roles(groupID) == groupIDs to be deleted. 
     This must be done in a cascade fashion.*/
     private deleteDepartment(departmentID: number): void {
+        let list = [];
+
         this.groupService
-            .GetSome(departmentID)
+            .GetByDept(departmentID)
             .subscribe(result => {
                 for (let i of result) {
+                    list.push(i)
                 }
+                
             });
 
         this.departmentService
