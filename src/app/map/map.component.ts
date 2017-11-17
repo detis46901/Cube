@@ -19,6 +19,7 @@ import { Http, Response, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { LeafletDirective, LeafletDirectiveWrapper } from '@asymmetrik/ngx-leaflet';
+import { LeafletDrawDirective, LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
 import * as L from 'leaflet';
 import 'leaflet-draw';
 import 'leaflet/dist/images/marker-shadow.png';
@@ -340,10 +341,8 @@ export class MapComponent {
             let shape = layer.toGeoJSON()
             console.log(shape)
             })
-        
-        
-
     }
+    
     //This method sets flags for use with the "Layers in Map Component" map.component.html control in order to determine
     //Which layers are currently active, so they can be turned on or off at will with the corresponding dropdown selection.
     private setFlags(): void {

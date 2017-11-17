@@ -15,8 +15,8 @@ export class GroupService extends ParentService {
         this.actionUrl = this.configuration.serverWithApiUrl + 'group/';
     }
  
-    public GetByDept = (deptid): Observable<Group[]> => {
-        return this._http.get(this.actionUrl + 'list?departmentID=' + deptid)
+    public GetByDept = (deptID): Observable<Group[]> => {
+        return this._http.get(this.actionUrl + 'list?departmentID=' + deptID)
             .map((response: Response) => <Group[]>response.json())
             .catch(this.handleError);
     }

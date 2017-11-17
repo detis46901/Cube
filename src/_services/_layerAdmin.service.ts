@@ -14,10 +14,4 @@ export class LayerAdminService extends ParentService {
         super(_http, configuration);
         this.actionUrl = this.configuration.serverWithApiUrl + 'LayerAdmin/';
     }
-
-    public Delete = (id: number): Observable<LayerAdmin> => {
-        console.log(this.actionUrl + 'delete?ID=' + id)
-        return this._http.delete(this.actionUrl + 'delete?ID=' + id)
-            .catch(this.handleError);
-    }
 }

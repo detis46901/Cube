@@ -182,15 +182,19 @@ export class OrganizationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result == type) {
+                console.log(result)
                 switch (result) {
                     case 3: {
                         this.deleteDepartment(org.ID);
+                        break;
                     }
                     case 4: {
                         this.deleteGroup(org.ID);
+                        break;
                     }
                     case 5: {
                         this.deleteRole(org.ID);
+                        break;
                     }
                     default: {
                         alert("Incorrect code.");
@@ -205,13 +209,13 @@ export class OrganizationComponent implements OnInit {
     logging the IDs from those groups into an array and also deleting for which roles(groupID) == groupIDs to be deleted. 
     This must be done in a cascade fashion.*/
     private deleteDepartment(departmentID: number): void {
-        let list = [];
+        let groupList = [];
 
         this.groupService
             .GetByDept(departmentID)
             .subscribe(result => {
                 for (let i of result) {
-                    list.push(i)
+                    groupList.push(i);
                 }
                 
             });
@@ -226,11 +230,46 @@ export class OrganizationComponent implements OnInit {
     //As above, so below
     //Delete any row for which role(groupID) == groupID
     private deleteGroup(groupID: number): void {
-        this.groupService
-            .Delete(groupID)
-            .subscribe(() => {
-                this.getGroupItems();
+        let roleList = Array<Role>();
+        let millis = 500;
+
+        //Scaling scope to allow function execution within setTimeout()
+        let _deleteRole = this.deleteRole;
+        let _roleService = this.roleService;
+        let _getRoleItems = this.getRoleItems;
+
+        this.roleService
+            .GetByGroup(groupID)
+            .subscribe(result => {
+                for (let i of result) {
+                    console.log(i)
+                    roleList.push(i);
+                }
             });
+
+        //Workaround to allow "catching up" from role data collection. Does not have proper scope for getRoleItens on marked line below.
+        setTimeout(function() {
+            for (let i=0; i<roleList.length; i++) {
+                console.log(i)
+                _roleService
+                    .Delete(roleList[i].ID)
+                    .subscribe((res) => {
+                        console.log(res)
+                        _getRoleItems(); //Here^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    })
+            }
+        }, millis)
+
+        // for (let i=0; i<roleList.length; i++) {
+        //     setTimeout(this.deleteRole(roleList[i].ID), millis)
+        // }
+        
+
+        // this.groupService
+        //     .Delete(groupID)
+        //     .subscribe(() => {
+        //         this.getGroupItems();
+        //     });
     }
     
     //Delete all rows where any is true: Role.GroupID == GroupID where Group.DeptID == DepartmentID to delete
@@ -238,7 +277,7 @@ export class OrganizationComponent implements OnInit {
     private deleteRole(roleID: number): void {
         this.roleService
             .Delete(roleID)
-            .subscribe(() => {
+            .subscribe((res) => {
                 this.getRoleItems();
             });
     }
