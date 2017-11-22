@@ -33,7 +33,7 @@ export class OrganizationComponent implements OnInit {
     private showRole: boolean;
     private newDepartment: string;
 
-    constructor(private departmentService: DepartmentService, private groupService: GroupService, private roleService: RoleService, private dialog: MatDialog) {
+    constructor(private departmentService: DepartmentService, private userService: UserService, private groupService: GroupService, private roleService: RoleService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
@@ -182,7 +182,6 @@ export class OrganizationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result == type) {
-                console.log(result)
                 switch (result) {
                     case 3: {
                         this.deleteDepartment(org.ID);
@@ -205,81 +204,230 @@ export class OrganizationComponent implements OnInit {
         });
     }
 
-    /*This should also delete all rows for which: group(departmentID) == departmentID, but before deletion of those groups, 
-    logging the IDs from those groups into an array and also deleting for which roles(groupID) == groupIDs to be deleted. 
-    This must be done in a cascade fashion.*/
+    //See "private deleteGroup(groupID: number): void" comments for more information on what is happening here. They use the same logic.
+    //deleteDepartment() simply goes one step further than deleteGroup().
+    //
+    //Operations occur in this order (see "remove____();"): [Nullify user.roleIDs => delete roles => delete groups => delete department]
+    //Considerations: millisecond value in setInterval may cause performance issues at a certain point, will have to see.
     private deleteDepartment(departmentID: number): void {
-        let groupList = [];
+        let count=0;
 
-        this.groupService
-            .GetByDept(departmentID)
-            .subscribe(result => {
-                for (let i of result) {
-                    groupList.push(i);
-                }
-                
-            });
+        var that = this;
+        let _userService = that.userService;
+        let _roleService = that.roleService;
+        let _groupService = that.groupService;
+        let _departmentService = that.departmentService;
 
-        this.departmentService
+        let roleList = Array<Role>();
+        let userList = Array<User>();
+        let groupList = Array<Group>();
+        let roleListLength;
+        let userListLength;
+        let groupListLength;
+
+        function removeUserRoles() {
+            for (let user of userList) {
+                user.roleID = null;
+                _userService
+                .Update(user)
+                .subscribe((result) => {
+                    console.log(result)
+                })
+            }
+        }
+        function removeGroupRoles() {
+            for (let role of roleList) {
+                _roleService
+                .Delete(role.ID)
+                .subscribe(() => {
+                    if(roleList.indexOf(role) == roleList.length-1) {
+                        _roleService
+                        .GetAll()
+                        .subscribe((data:Role[]) => {
+                            that.roles = data;
+                        })
+                    }
+                })
+            }
+        }
+        function removeGroups() {
+            for (let group of groupList) {
+                _groupService
+                .Delete(group.ID)
+                .subscribe(() => {
+                    if(groupList.indexOf(group) == groupList.length-1)
+                        _groupService
+                        .GetAll()
+                        .subscribe((data:Group[]) => {
+                            that.groups = data;
+                        })
+                });
+            }
+        }
+        function removeDepartment() {
+            _departmentService
             .Delete(departmentID)
             .subscribe(() => {
-                this.getDepartmentItems();
+                _departmentService
+                .GetAll()
+                .subscribe((data:Department[]) => {
+                    that.departments = data;
+                })
             });
+        }
+
+        _groupService
+        .GetByDept(departmentID)
+        .subscribe(result => {
+            console.log(result)
+            groupListLength = result.length;
+            for (let group of result) {
+                groupList.push(group);
+                _roleService
+                .GetByGroup(group.ID)
+                .subscribe(result => {
+                    roleListLength = result.length;
+                    for (let role of result) {
+                        roleList.push(role);
+                        _userService
+                        .GetByRole(role.ID)
+                        .subscribe((result) => {
+                            userListLength = result.length;
+                            for(let user of result) {
+                                userList.push(user);
+                            }
+                        })
+                    }
+                });
+            }
+        });
+            
+
+        var interval = setInterval(function() {
+            //*Debugging tool*
+            /*console.log("second " + count + ":\r\nRole_actual-" + roleList.length + " | Role_wanted-" + roleListLength +
+            "\r\nUser_actual-" + userList.length + " | User_wanted-" + userListLength +
+            "\r\nGroup_actual-" + groupList.length + " | Group_wanted-" + groupListLength + "\n")*/
+            if(roleList.length == roleListLength && userList.length == userListLength && groupList.length == groupListLength) {
+                removeUserRoles();
+                removeGroupRoles();
+                removeGroups();
+                removeDepartment();
+
+                clearInterval(interval);
+            }
+        }, 1)
     }
 
-    //As above, so below
-    //Delete any row for which role(groupID) == groupID
+    //This method seems like it exhibits low cohesion, but due to the setInterval workaround being in place, it is hard to make it more concise.
+    //Can this logic actually be defined somewhere else, or is the scope issue preventing that? (find: "//Too good to be true")
+    //
+    //Operations occur in this order: [Nullify user.roleIDs => delete roles => delete group]
     private deleteGroup(groupID: number): void {
+        //Scaling scope to allow function execution within setInterval()
+        var that = this;
+        let _userService = that.userService;
+        let _roleService = that.roleService;
+        let _groupService = that.groupService;
+
+        //roleList stores roles having a groupID that matches this function's groupID argument. roleListLength is defined at run-time below.
+        //Likewise, userList stores users having a roleID that matches any of the "to-be-deleted" roles.
         let roleList = Array<Role>();
-        let millis = 500;
-
-        //Scaling scope to allow function execution within setTimeout()
-        let _deleteRole = this.deleteRole;
-        let _roleService = this.roleService;
-        let _getRoleItems = this.getRoleItems;
-
-        this.roleService
-            .GetByGroup(groupID)
-            .subscribe(result => {
-                for (let i of result) {
-                    console.log(i)
-                    roleList.push(i);
-                }
-            });
-
-        //Workaround to allow "catching up" from role data collection. Does not have proper scope for getRoleItens on marked line below.
-        setTimeout(function() {
-            for (let i=0; i<roleList.length; i++) {
-                console.log(i)
-                _roleService
-                    .Delete(roleList[i].ID)
-                    .subscribe((res) => {
-                        console.log(res)
-                        _getRoleItems(); //Here^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                    })
+        let userList = Array<User>();
+        let roleListLength;
+        let userListLength;
+    
+        //Nullify "roleID" column for each row in "users" table that contains a roleID that is to be deleted.
+        function removeUserRoles() {
+            for (let user of userList) {
+                user.roleID = null;
+                _userService
+                .Update(user)
+                .subscribe((result) => {
+                    console.log(result)
+                })
             }
-        }, millis)
+        }
+        //Delete all rows in "roles" table that have a matching groupID of the group being deleted.
+        function removeGroupRoles() {
+            for (let role of roleList) {
+                _roleService
+                .Delete(role.ID)
+                .subscribe(() => {
+                    if(roleList.indexOf(role) == roleList.length-1) {
+                        _roleService
+                        .GetAll()
+                        .subscribe((data:Role[]) => {
+                            that.roles = data;
+                        })
+                    }
+                })
+            }
+        }
+        //After dependent objects are removed accordingly, finally delete row in "groups" table where groupID == groupID.
+        function removeGroup() {
+            _groupService
+            .Delete(groupID)
+            .subscribe(() => {
+                _groupService
+                .GetAll()
+                .subscribe((data:Group[]) => {
+                    that.groups = data;
+                })
+            });
+        }
 
-        // for (let i=0; i<roleList.length; i++) {
-        //     setTimeout(this.deleteRole(roleList[i].ID), millis)
-        // }
-        
+        //BEGIN FUNCTION PROCESSING
+        _roleService
+        .GetByGroup(groupID)
+        .subscribe(result => {
+            roleListLength = result.length;
 
-        // this.groupService
-        //     .Delete(groupID)
-        //     .subscribe(() => {
-        //         this.getGroupItems();
-        //     });
+            //Push each role from returned list into locally scoped "roleList", and check which users have that role to push them into "userList"
+            for (let role of result) {
+                roleList.push(role);
+                _userService
+                .GetByRole(role.ID)
+                .subscribe((result) => {
+                    userListLength = result.length;
+                    for(let user of result) {
+                        userList.push(user);
+                    }
+                })
+            }
+        });
+
+        var interval = setInterval(function() {
+            //This executes the if block once the locally scoped "roleList" and "userList" are filled correctly.
+            if(roleList.length == roleListLength && userList.length == userListLength) {
+                //These functions MUST be defined within deleteGroup(), or else "this" gets lost.
+                removeUserRoles();
+                removeGroupRoles();
+                removeGroup();
+
+                clearInterval(interval);
+            }
+        }, 1) //Interval is 1 millisecond. Therefore, conditional above is tested once per millisecond.
     }
     
-    //Delete all rows where any is true: Role.GroupID == GroupID where Group.DeptID == DepartmentID to delete
-    //Or where Role.GroupID == GroupID to delete
     private deleteRole(roleID: number): void {
+        this.userService
+        .GetByRole(roleID)
+        .subscribe((result) => {
+            for(let user of result) {
+                user.roleID = null;
+
+                this.userService
+                .Update(user)
+                .subscribe();
+            }
+        })
+
         this.roleService
-            .Delete(roleID)
-            .subscribe((res) => {
-                this.getRoleItems();
-            });
+        .Delete(roleID)
+        .subscribe((res) => {
+            this.getRoleItems();
+        });
     }
 
     private filterGroup(departmentID: number): boolean {
@@ -297,4 +445,22 @@ export class OrganizationComponent implements OnInit {
             return false;
         }
     }
+
+    //Too good to be true
+    //
+    // private removeGroupRoles(scope: any, roleList: Role[]) {
+    //     for (let i=0; i<roleList.length; i++) {
+    //         scope._roleService
+    //         .Delete(roleList[i].ID)
+    //         .subscribe(() => {
+    //             if(i == roleList.length-1) {
+    //                 scope._roleService
+    //                 .GetAll()
+    //                 .subscribe((data:Role[]) => {
+    //                     scope.roles = data;
+    //                 })
+    //             }
+    //         })
+    //     }
+    // }
 }

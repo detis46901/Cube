@@ -11,11 +11,11 @@
                     <div class="form-group" style="width:100%">
                         <!--<label for="exdepartment"><i (click)="deleteDepartment(department.ID)" class="fa fa-times" aria-hidden="true"></i></label>-->
                         <label for="btnOpenDelDep"><i id="btnOpenDelDep" class="fa fa-times" (click)="openConfDel(department, 3)"></i></label><!-- This needs to delete its groups and roles-->
-                        <input ng-focus="foo = foo + 1" (click)="departmentClick(department)"id="exdepartment" name="exdepartment" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; width:90%" #editdepartmentinput [(ngModel)] = "department.department" type="text" (blur)="updateDepartment(department)">
+                        <input matInput ng-focus="foo = foo + 1" (click)="departmentClick(department)"id="exdepartment" name="exdepartment" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; width:90%" #editdepartmentinput [(ngModel)] = "department.department" type="text" (blur)="updateDepartment(department)">
                     </div>
                 </form></td>
             </tr>
-            <tr><td><input id="newDepartment" style="position:relative; left:15px; height:34px; border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:90%" #newdepartmentinput [(ngModel)] = "newDepartment" type="text" placeholder="New Department" (keyup.enter)="addDepartment(newDepartment); newdepartmentinput.value=''" aria-describedby="departmentHelpBlock"><br>
+            <tr><td><input matInput id="newDepartment" style="position:relative; left:15px; height:34px; border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:90%" #newdepartmentinput [(ngModel)] = "newDepartment" type="text" placeholder="New Department" (keyup.enter)="addDepartment(newDepartment); newdepartmentinput.value=''" aria-describedby="departmentHelpBlock"><br>
             <p id="departmentHelpBlock" style="position:relative; left:15px" class="form-text form-muted">Press enter to create a department.</p></td></tr>
         </table>
     </div>
@@ -31,11 +31,11 @@
                     <div class="form-group" style="width:100%">
                         <!--<label for="exgroup" *ngIf="filterGroup(group.departmentID)"><i (click)="deleteGroup(group.ID)" class="fa fa-times" aria-hidden="true"></i></label>-->
                         <label for="btnOpenDelGroup" *ngIf="filterGroup(group.departmentID)"><i id="btnOpenDelGroup" class="fa fa-times" (click)="openConfDel(group, 4)"></i></label>
-                        <input ng-focus="" (click)="groupClick(group)" id="exgroup" name="exgroup" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px;  width:90%" #editgroupinput [(ngModel)] = "group.group" type="text" (blur)="updateGroup(group)">
+                        <input matInput ng-focus="" (click)="groupClick(group)" id="exgroup" name="exgroup" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px;  width:90%" #editgroupinput [(ngModel)] = "group.group" type="text" (blur)="updateGroup(group)">
                     </div>
                 </form></td>
             </tr>
-            <tr><td><input class="form-control" style="position:relative; left:15px; height:34px; border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:90%" #newgroupinput [(ngModel)] = "newgroup" type="text" placeholder="New Group" (keyup.enter)="addGroup(newgroup); newgroupinput.value=''" aria-describedby="groupHelpBlock"><br>
+            <tr><td><input matInput class="form-control" style="position:relative; left:15px; height:34px; border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:90%" #newgroupinput [(ngModel)] = "newgroup" type="text" placeholder="New Group" (keyup.enter)="addGroup(newgroup); newgroupinput.value=''" aria-describedby="groupHelpBlock"><br>
             <p id="groupHelpBlock" style="position:relative; left:15px; bottom:18px" class="form-text form-muted">Press enter to create a group.</p></td></tr>
         </table>
     </div>
@@ -51,11 +51,11 @@
                     <div class="form-group" style="width:100%">
                         <!--<label for="exrole" *ngIf="filterRole(role.groupID)"><i (click)="deleteRole(role.ID)" class="fa fa-times" aria-hidden="true"></i></label>-->
                         <label for="btnOpenDelRole" *ngIf="filterRole(role.groupID)"><i id="btnOpenDelRole" class="fa fa-times" (click)="openConfDel(role, 5)"></i></label>
-                        <input id="exrole" name="exrole" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px;  width:90%" #editroleinput [(ngModel)] = "role.role" type="text" (blur)="updateRole(role)">
+                        <input matInput id="exrole" name="exrole" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px;  width:90%" #editroleinput [(ngModel)] = "role.role" type="text" (blur)="updateRole(role)">
                     </div>
                 </form></td>
             </tr>
-            <tr><td><input id="newRole" style="position:relative; left:15px; height:34px; border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px;  width:90%" #newroleinput [(ngModel)] = "newRole.role" type="text" placeholder="New Role" name="newRole" (keyup.enter)="addRole(newRole); newroleinput.value=''" aria-describedby="roleHelpBlock"><br>
+            <tr><td><input matInput id="newRole" style="position:relative; left:15px; height:34px; border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px;  width:90%" #newroleinput [(ngModel)] = "newRole.role" type="text" placeholder="New Role" name="newRole" (keyup.enter)="addRole(newRole); newroleinput.value=''" aria-describedby="roleHelpBlock"><br>
             <p id="roleHelpBlock" style="position:relative; left:15px" class="form-text form-muted">Press enter to create a role.</p></td></tr>
         </table>
     </div>

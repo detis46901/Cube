@@ -4,6 +4,7 @@ import { Http, Response, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Configuration } from '../_api/api.constants';
 import { ParentService } from './_parent.service';
+import { User } from '../_models/user.model';
 
 @Injectable()
 export class UserService extends ParentService {
@@ -13,5 +14,11 @@ export class UserService extends ParentService {
     constructor(protected _http: Http, protected configuration: Configuration) {
         super(_http, configuration);
         this.actionUrl = this.configuration.serverWithApiUrl + 'users/';
+    }
+
+    public GetByRole = (roleID): Observable<User[]> => {
+        return this._http.get(this.actionUrl + 'getbyrole?roleID=' + roleID)
+            .map((response: Response) => <User[]>response.json())
+            .catch(this.handleError);
     }
 }
