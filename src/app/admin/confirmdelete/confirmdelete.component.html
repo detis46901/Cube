@@ -1,26 +1,19 @@
-<div class="modal-header">
-    <div class="row" style="width:100%">
-        <div class="col-md-10">
-            <h4 class="modal-title">Delete {{objectType}}</h4>
-        </div>
-        <div class="col-md-2">
-            <md-dialog-actions>
-                <button id="CDX" class="close" mat-dialog-close>&times;</button>
-            </md-dialog-actions>
-        </div>
+<div class="row" style="width:100%">
+    <div class="col-md-10">
+        <h4 mat-dialog-title>Delete {{objectType}}</h4>
+    </div>
+    <div class="col-md-2">
+        <button mat-button id="CDX" class="close" mat-dialog-close>&times;</button>
     </div>
 </div>
 
-<div class="modal-body">
-    <p>Are you sure you want to permanently delete "{{objName}}"?</p>
-    <div *ngIf="dependentWarning">
-        <p><b>Deleting this object will delete its dependents.</b></p>
-    </div>
-</div>
+<mat-dialog-content>Are you sure you want to permanently delete "{{objName}}"?</mat-dialog-content>
+<mat-dialog-content *ngIf="dependentWarning">
+    <b>Deleting this object will delete its dependents.</b>
+</mat-dialog-content>
 
-<div class="modal-footer">
-    <md-dialog-actions>
-        <button [mat-dialog-close]="objCode" id="confDelClick" type="button" class="btn btn-outline-primary">Delete</button>
-        <button mat-dialog-close autofocus class="btn btn-outline-primary">No</button>
-    </md-dialog-actions>
-</div>
+<hr>
+<mat-dialog-actions>
+    <button mat-button id="confDelClick" [mat-dialog-close]="objCode">Delete</button>
+    <button mat-button id="noClick" mat-dialog-close>No</button>
+</mat-dialog-actions>

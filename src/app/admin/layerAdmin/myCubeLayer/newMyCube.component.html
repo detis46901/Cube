@@ -1,18 +1,14 @@
 <!-- This defines the modal that pops up after a "Create New Layer" click event from "Layers" control-->
-<div class="modal-header">
+<div class="row">
     <div class="col-md-9">
-        <h4 class="modal-title">Create New MyCube Layer</h4>
+        <h4 mat-dialog-title>Create New MyCube Layer</h4>
     </div>
     <div class="col-md-1 col-md-offset-2">
-        <button type="button" class="close" aria-label="Close" (click)="dialog.closeAll()">
-            <span aria-hidden="true">&times;</span>
-        </button>
+        <button mat-dialog-close class="close">&times;</button>
     </div>
 </div>
 
-<div class="modal-body">
     <form #f="ngForm" (ngSubmit)="addLayer(newLayerAdmin)">
-        
         <!--Row 1-->
         <div class="column">
             <div id="nameBlock" class="form-group">
@@ -20,7 +16,7 @@
                     <label id="nameLabel" for="newlayername">Name</label>
                 </div>
                 <div class="col-md-4">
-                    <input id="newlayername" name="newlayername" class="form-control input-sm col-sm" value="{{layerName}}" required [(ngModel)]="newLayerAdmin.layerName" type="text">
+                    <input matInput id="newlayername" name="newlayername" class="form-control input-sm col-sm" value="{{layerName}}" required [(ngModel)]="newLayerAdmin.layerName" type="text">
                 </div>
             </div>
 
@@ -29,13 +25,13 @@
                     <label id="descriptionLabel" for="newlayerdescription">Description</label>
                 </div>
                 <div class="col-md-4">
-                    <input id="newlayerdescription" name="newlayerdescription" class="form-control input-sm col-sm"  [(ngModel)] = "newLayerAdmin.layerDescription" type="text">
+                    <input matInput id="newlayerdescription" name="newlayerdescription" class="form-control input-sm col-sm"  [(ngModel)] = "newLayerAdmin.layerDescription" type="text">
                 </div>
             </div>      
         </div>
         <br>
 
-        <!--Row 3-->
+        <!--Row 2-->
         <div *ngFor="let newLayerField of newLayerFields">
             <div class="column">
                    {{newLayerField.field}}
@@ -53,7 +49,7 @@
                         <label id="fieldLabel" for="newlayerfield1">Field</label>
                     </div>
                     <div class="col-md-4">  
-                        <input id="newlayerfield1" name="newlayerfield1" class="form-control input-sm col-sm"  [(ngModel)] = "newLayerField1.field" type="text">
+                        <input matInput id="newlayerfield1" name="newlayerfield1" class="form-control input-sm col-sm"  [(ngModel)] = "newLayerField1.field" type="text">
                     </div>
                 </div>
 
@@ -74,15 +70,11 @@
                     </div>
                 </div>
             </div>
-        <br>
-        <br>
-        <br>
     </form>
-</div>
 
-<div id="layerNewFooter" class="modal-footer">
+<div id="layerNewFooter">
     <md-dialog-actions>
-        <button type="button" class="btn btn-secondary text-center" (click)="dialog.closeAll()">Close</button>
-        <button class="btn btn-outline-primary text-center" (click)="addLayer(newLayerAdmin)" [disabled]="!f.valid">Add Layer</button>
+        <button mat-dialog-close>Close</button>
+        <button mat-button [disabled]="!f.valid" (click)="addLayer(newLayerAdmin)">Add Layer</button>
     </md-dialog-actions>
 </div>

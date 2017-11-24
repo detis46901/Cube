@@ -47,15 +47,15 @@
     <form style="position:relative; left:20px" class="form-inline" #e="ngForm" *ngFor="let user of users">
         <i id="btnOpenDelUser" class="fa fa-times" style="margin-right:5px" (click)="openConfDel(user)"></i>
         <input matInput id="exuserfirstname" ngModel required name="exuserfirstname" class="form-control" [(ngModel)] = "user.firstName" (blur)="updateUser(user)">
-        <input id="exuserlastname" ngModel required name="exuserlastname" class="form-control" [(ngModel)] = "user.lastName" type="text" (blur)="updateUser(user)">
+        <input matInput id="exuserlastname" ngModel required name="exuserlastname" class="form-control" [(ngModel)] = "user.lastName" type="text" (blur)="updateUser(user)">
         <select id="exuserrole" ngModel required name="exuserrole" class="form-control" [(ngModel)] = "user.roleID" #role="ngModel" type="text" (blur)="updateUser(user)">
             <option *ngFor="let role of roles" [value]="role.ID">
                 {{role.role}}
             </option>
         </select>
-        <input id="exuseremail" ngModel required name="exuseremail" title="{{user.email}}" class="form-control" [(ngModel)] = "user.email" type="text" (blur)="updateUser(user)">
-        <input id="exuseractive" name="exuseractive" class="form-check-input" [(ngModel)] = "user.active" type="checkbox" (blur)="updateUser(user)">
-        <input id="exuseradministrator" name="exuseradministrator" class="form-check-input" [(ngModel)] = "user.administrator" type="checkbox" (blur)="updateUser(user)">
+        <input matInput id="exuseremail" ngModel required name="exuseremail" title="{{user.email}}" class="form-control" [(ngModel)] = "user.email" type="text" (blur)="updateUser(user)">
+        <input type="checkbox" id="exuseractive" name="exuseractive" class="form-check-input" [(ngModel)] = "user.active" (blur)="updateUser(user)">
+        <input type="checkbox" id="exuseradministrator" name="exuseradministrator" class="form-check-input" [(ngModel)] = "user.administrator" (blur)="updateUser(user)">
 
         <div class="row" style="position:relative;width:22%;left:2%">
             <button mat-button [matMenuTriggerFor]="menu">
@@ -84,18 +84,18 @@
     <p style="position:absolute; left:35px">Create New User</p><br>
     <form #f="ngForm" style="position:relative; left:20px" class="form-inline" (ngSubmit)="addUser(newUser)" autocomplete="off">
         <i class="fa fa-arrow-right" style="margin-right:5px" aria-hidden="true"></i>
-        <input id="newuserfirstname" onClick="this.select();" name="newuserfirstname" required #newuserfirstnameinput [(ngModel)] = "newUser.firstName" type="text" placeholder="First Name">
-        <input id="newuserlastname" onClick="this.select();" name="newuserlastname" required #newuserlastnameinput [(ngModel)] = "newUser.lastName" type="text" placeholder="Last Name">
+        <input matInput id="newuserfirstname" onClick="this.select();" name="newuserfirstname" required #newuserfirstnameinput [(ngModel)] = "newUser.firstName" type="text" placeholder="First Name">
+        <input matInput id="newuserlastname" onClick="this.select();" name="newuserlastname" required #newuserlastnameinput [(ngModel)] = "newUser.lastName" type="text" placeholder="Last Name">
         <select id="newuserrole" name="newuserrole" name="exuserrole" class="form-control" required #role="ngModel" [(ngModel)] = "newUser.roleID" type="text">
             <option *ngFor="let role of roles" [value]="role.ID">
                 {{role.role}}
             </option>
         </select>
 
-        <input id="newuseremail" onClick="this.select();" autocomplete="off" name="newuseremail" required #newuseremailinput [(ngModel)] = "newUser.email" type="text" placeholder="Email">
-        <input id="newuseractive" name="newuseractive" #newuseractiveinput [(ngModel)] = "newUser.active" type="checkbox" placeholder="Active" checked>
-        <input id="newuseradministrator" name="newuseradministrator" #newuseradministratorinput [(ngModel)] = "newUser.administrator" type="checkbox" placeholder="Administrator">
-        <input id="newuserpassword" onClick="this.select();" autocomplete="off" name="newuserpassword" #newuserpasswordinput [(ngModel)] = "newUser.password" type="password" placeholder="Password">
+        <input matInput id="newuseremail" onClick="this.select();" autocomplete="off" name="newuseremail" required #newuseremailinput [(ngModel)] = "newUser.email" type="text" placeholder="Email">
+        <input type="checkbox" id="newuseractive" name="newuseractive" #newuseractiveinput [(ngModel)] = "newUser.active" placeholder="Active" checked>
+        <input type="checkbox" id="newuseradministrator" name="newuseradministrator" #newuseradministratorinput [(ngModel)] = "newUser.administrator" placeholder="Administrator">
+        <input matInput id="newuserpassword" onClick="this.select();" autocomplete="off" name="newuserpassword" #newuserpasswordinput [(ngModel)] = "newUser.password" type="password" placeholder="Password">
         <button id="btnSub" type="submit" [disabled]="!f.valid">Submit</button>
     </form> 
 </div>

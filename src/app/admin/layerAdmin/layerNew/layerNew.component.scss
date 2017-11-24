@@ -11,7 +11,7 @@
 
 #newLayerX {
     position:relative;
-    top:3px;
+    top:6px;
 }
 
 #newLayerClose, #newLayerAdd {
@@ -20,20 +20,20 @@
     height:34px;
 }
 
-input, select {
-    position:absolute;
-    left:30px;
-    width:134px;
-    height:24px;
-    margin-bottom:8px;
-}
+// input, select {
+//     position:absolute;
+//     left:30px;
+//     width:134px;
+//     height:24px;
+//     margin-bottom:8px;
+// }
 
-label {
-    position:relative;
-    direction:rtl;
-    left:38px;
-    top:3px;
-}
+// label {
+//     position:relative;
+//     direction:rtl;
+//     left:38px;
+//     top:3px;
+// }
 
 h4 {
     color:black;
@@ -41,10 +41,14 @@ h4 {
 
 #nameBlock, #idBlock, #servBlock, #serviceBlock {
     position:relative; 
-    right:8%
+    left:4%;
+    margin-bottom: 5px;
+    margin-top:0px;
 }
 
 #descBlock, #typeBlock, #geomBlock, #formBlock {
     position:relative; 
-    left:8%
+    left:12%;
+    margin-bottom: 5px;
+    margin-top:0px;
 }

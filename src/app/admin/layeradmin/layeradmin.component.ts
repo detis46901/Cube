@@ -60,7 +60,7 @@ export class LayerAdminComponent implements OnInit {
     }
 
     private createLayer(): void {
-        const dialogRef = this.dialog.open(LayerNewComponent, {height:'360px', width:'500px'});
+        const dialogRef = this.dialog.open(LayerNewComponent, {height:'450px', width:'500px'});
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });

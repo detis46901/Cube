@@ -28,7 +28,7 @@
                             <i (click)="deleteUserPageLayer(userPageLayer.ID)" class="fa fa-times" aria-hidden="true"></i>
                             {{userPageLayer.layer_admin.layerName}}
                         </div>
-                        <input id="exuserpagelayeron" name="exuserpagelayeron" class="form-check-input" style="position:relative; left:20%; border-color: rgba(255,255,255,0); width:5%;" [(ngModel)]="userPageLayer.layerON" type="checkbox" (change)="updateUserPageLayer(userPageLayer)">
+                        <input matInput id="exuserpagelayeron" name="exuserpagelayeron" class="form-check-input" style="position:relative; left:20%; border-color: rgba(255,255,255,0); width:5%;" [(ngModel)]="userPageLayer.layerON" type="checkbox" (change)="updateUserPageLayer(userPageLayer)">
                     </section>
                 </div>
             </form>

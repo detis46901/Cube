@@ -18,9 +18,9 @@
         <div *ngFor="let myCube of myCubeData">
                 <div *ngIf="myCubeData.type=='id'"></div>
                 <div *ngIf="myCube.type=='geom'"></div>
-                <div *ngIf="myCube.type=='integer'">{{myCube.field}}<input id="textinput" ngModel required name="textinput" title="{{myCube.field}}" class="form-control" [(ngModel)] = "myCube.value" type="text" (blur)="updateMyCube(myCube)"></div>
-                <div *ngIf="myCube.type=='boolean'">{{myCube.field}}<input id="textinput" ngModel required name="textinput" title="{{myCube.field}}" class="form-control" [(ngModel)] = "myCube.value" type="text" (blur)="updateMyCube(myCube)"></div>
-                <div *ngIf="myCube.type=='text'">{{myCube.field}}<input id="textinput" ngModel required name="textinput" title="{{myCube.field}}" class="form-control" [(ngModel)] = "myCube.value" type="text" (blur)="updateMyCube(myCube)"></div>
+                <div *ngIf="myCube.type=='integer'">{{myCube.field}}<input matInput id="textinput" ngModel required name="textinput" title="{{myCube.field}}" class="form-control" [(ngModel)] = "myCube.value" type="text" (blur)="updateMyCube(myCube)"></div>
+                <div *ngIf="myCube.type=='boolean'">{{myCube.field}}<input matInput id="textinput" ngModel required name="textinput" title="{{myCube.field}}" class="form-control" [(ngModel)] = "myCube.value" type="text" (blur)="updateMyCube(myCube)"></div>
+                <div *ngIf="myCube.type=='text'">{{myCube.field}}<input matInput id="textinput" ngModel required name="textinput" title="{{myCube.field}}" class="form-control" [(ngModel)] = "myCube.value" type="text" (blur)="updateMyCube(myCube)"></div>
             </div>    
     </mat-card-content>
 
