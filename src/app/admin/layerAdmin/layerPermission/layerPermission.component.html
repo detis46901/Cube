@@ -1,54 +1,41 @@
-<div id="permHeader" class="modal-header">
-    <div class="row" style="width:100%">
-        <div class="col-md-10">
-            <h4 class="modal-title">{{layerName}} Permissions</h4>
-        </div>
-        <div class="col-md-2">
-            <button id="exitMod" type="button" class="close" aria-label="Close" (click)="dialog.closeAll()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+<div id="permHeader" class="row">
+    <div class="col-md-10">
+        <h4 mat-dialog-title id="layerPermTitle">{{layerName}} Permissions</h4>
+    </div>
+    <div class="col-md-2">
+        <button mat-dialog-close id="layerPermX" class="close">&times;</button>
     </div>
 </div>
+<hr>
 
-<div class="modal-body">
-    <h5>Current Permissions</h5><br>
-    <form class="form-inline" #f="ngForm" *ngFor="let layerPermission of layerPermissions">
-        <div class="form-group" style="margin-bottom:5px;">
-            <i id="delUserPerm" (click)="deleteLayerPermission(layerPermission.ID)" class="fa fa-times" aria-hidden="true"></i>
-            
-            <!--Change this to bold text labels, not controls-->
-            <select id="user" name="user" style="margin-right:5px;" class="form-control" [(ngModel)] = "layerPermission.userID" required type="text" (blur)="updateLayerPermission(layerPermission)"  >
-                <option [value]="user.ID" *ngFor="let user of users">
-                    {{user.firstName}} {{user.lastName}}
-                </option>
-            </select>
-            <input type="checkbox" name="layerPermissionEdit" [(ngModel)]="layerPermission.edit" (change)="updateLayerPermission(layerPermission)"> Edit
-        </div>
-    </form>
-</div>
-
-<div class="modal-footer">
-    <h5>New Permission</h5>
-
-    <form id="permForm" class="form-inline" #f="ngForm" (ngSubmit)="addLayerPermission(newLayerPermission)">
-        <div id="permFormGroup" class="form-group">
-            <label for="user" style="margin-right:10px">User</label>
-            <select id="user" name="user" class="form-control" [(ngModel)] = "newLayerPermission.userID" required type="text">
-                <option [value]="user.ID" *ngFor="let user of users">
-                    {{user.firstName}} {{user.lastName}}
-                </option>
-            </select>
-            <input type="checkbox" name="newLayerPermissionEdit" style="margin-left:46px; position:relative; bottom:3px" [(ngModel)]="newLayerPermission.edit"> Edit 
-        </div>
-
-        <div class="row">
-            <div class="col-md-3 col-md-offset-1">
-                <button type="button" class="btn btn-secondary" (click)="dialog.closeAll()">Close</button>
+<mat-dialog-content>
+    <h5><b>Current Permissions</b></h5>
+    <mat-list id="layerPerm_exUserList" *ngFor="let perm of layerPermissions">
+        <mat-list-item>
+            <div class="row" style="margin-left:0px;">
+                <i id="delUserPerm" style="width:1px; position:relative; top:3px;" (click)="deleteLayerPermission(perm.ID)" class="fa fa-times" aria-hidden="true"></i>
+                <p style="width:210px">{{permNames[layerPermissions.indexOf(perm)]}}</p>
+                <mat-checkbox style="position:relative;" name="layerPermissionEdit" [(ngModel)]="perm.edit" (change)="updateLayerPermission(layerPermission)">Edit</mat-checkbox><br>
             </div>
-            <div class="col-md-3 col-md-offset-2">
-                <button class="btn btn-outline-primary" type="submit" [disabled]="!f.valid">Add Permission</button>
-            </div>
-        </div>
+        </mat-list-item>
+    </mat-list>
+    <hr>
+
+    <h5><b>New Permission</b></h5>
+    <form id="permForm" class="form-inline" #f="ngForm">
+        <mat-form-field style="width:200px; margin-right:20px">
+            <mat-select id="user" name="user" [(ngModel)] = "newLayerPermission.userID" required placeholder="User">
+                <mat-option [value]="user.ID" *ngFor="let user of users">
+                    {{user.firstName}} {{user.lastName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-checkbox name="newLayerPermissionEdit"[(ngModel)]="newLayerPermission.edit">Edit</mat-checkbox>
     </form>
-</div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-dialog-close id="layerPermClose">Close</button>
+    <button mat-button [disabled]="!f.valid" (click)="addLayerPermission(newLayerPermission)">Add Permission</button>
+</mat-dialog-actions>    

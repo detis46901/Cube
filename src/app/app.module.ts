@@ -26,9 +26,10 @@ import { MatDialogModule } from '@angular/material';
 import { MatSelectModule } from '@angular/material';
 import { MatCheckboxModule } from '@angular/material';
 import { MatInputModule } from '@angular/material';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatButtonModule} from '@angular/material/button';
-import {MatTableModule} from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatListModule } from '@angular/material'
 
 //Components
 import { LoginComponent } from './user/login.component';

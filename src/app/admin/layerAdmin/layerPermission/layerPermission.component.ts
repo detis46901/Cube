@@ -18,11 +18,12 @@ export class LayerPermissionComponent implements OnInit {
     @Input() layerID: number;
     @Input() layerName: string;
     private closeResult: string;
-    private users: User[];
+    private users = new Array<User>();
     private newLayerPermission = new LayerPermission;
-    private layerPermissions: LayerPermission[];
+    private layerPermissions = new Array<LayerPermission>();
     private token: string;
     private userID: number;
+    private permNames = new Array<string>();
 
     constructor(private layerPermissionService: LayerPermissionService, private userService: UserService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -32,27 +33,38 @@ export class LayerPermissionComponent implements OnInit {
 
     ngOnInit() {
         this.getPermissionItems();
+        console.log(this.permNames)
         this.getUserItems();
     }
 
     private getPermissionItems(): void {
         this.layerPermissionService
             .GetSome(this.layerID)
-            .subscribe(
-                (data:LayerPermission[]) => {
-                    this.layerPermissions = data;
-                },
-            );
+            .subscribe((data:LayerPermission[]) => {
+                this.layerPermissions = data;
+                for(let p of data) {
+                    this.userService
+                        .GetSingle(p.userID)
+                        .subscribe((u: User) => {
+                            this.permNames.push(u.firstName + " " + u.lastName);
+                            console.log(this.permNames[0])
+                        });
+                }
+                //this.getUserItems()    
+            });
     }
 
     private getUserItems(): void {
         this.userService
             .GetAll()
-            .subscribe(
-                (data:User[]) => {
-                    this.users = data;
-                }
-            );
+            .subscribe((data:User[]) => {
+                // for(let u of data) {
+                //     if(u.ID != this.layerPermissions[data.indexOf(u)].userID) {
+                //         this.users.push(u);
+                //     }
+                // }
+                this.users = data;
+            });
     }
     
     private initNewPermission(): void {
