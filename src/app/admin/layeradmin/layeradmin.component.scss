@@ -22,23 +22,23 @@
     margin-bottom:5px
 }
 
-#exlayername, #exlayerident, #exlayerurl, #exlayerdescription, #exlayerformat, #exlayertype, #exlayergeom, #exlayerserver {
-    border-color: rgba(255,255,255,0); 
-    border:ridge; 
-    border-width:2px; 
-    border-radius:4px; 
-    width:10%;
-    height:34px;
-}
+ #exlayername, #exlayerident, #exlayerurl, #exlayerdescription, #exlayerformat, #exlayertype, #exlayergeom, #exlayerserver {
+//     border-color: rgba(255,255,255,0); 
+//     border:ridge; 
+//     border-width:2px; 
+//     border-radius:4px; 
+     width:10%;
+//     height:34px;
+ }
 
-#exlayerperm {
-    position:relative;
-    width:13%;
-    left:5px;
-    height:32px;
-    border-color: black;
-    border-width: 1px;
-}
+// #exlayerperm {
+//     position:relative;
+//     width:13%;
+//     left:5px;
+//     height:32px;
+//     border-color: black;
+//     border-width: 1px;
+// }
 
 h4 {
     color:black;

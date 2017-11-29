@@ -83,47 +83,55 @@
     </div>
 
     <div style="margin-top:12px;">
+       <!-- This should be a material datatable and not a form -->
         <form class="form-inline" #e="ngForm" style="position:relative; left:20px;" *ngFor="let layeradmin of layerAdmins">
             <i id="btnOpenDelLayer" class="fa fa-times" style="position:relative; margin-right:5px" (click)="openConfDel(layeradmin)"></i>
-            <input matInput id="exlayername" ngModel required name="exlayername" title="{{layeradmin.layerName}}" class="form-control" [(ngModel)] = "layeradmin.layerName" type="text" (blur)="updateLayer(layeradmin)">
-            <input matInput id="exlayerident" required name="exlayerident" title="{{layeradmin.layerIdent}}" class="form-control" [(ngModel)] = "layeradmin.layerIdent" type="text" (change)="updateLayer(layeradmin)">
-            <input matInput id="exlayerservice" required name="exlayerservice" title="{{layeradmin.layerService}}" class="form-control" [(ngModel)] = "layeradmin.layerService" type="text" (change)="updateLayer(layeradmin)">
-            
-            <select id="exlayerserver" name="exlayerserver" [(ngModel)] = "layeradmin.serverID" required type="number">
-                <option [value]="server.ID" *ngFor="let server of servers">
+            <mat-form-field id="exlayername"><input matInput ngModel required placeholder="Name" name="exlayername" title="{{layeradmin.layerName}}" [(ngModel)] = "layeradmin.layerName" (blur)="updateLayer(layeradmin)"></mat-form-field>
+            <mat-form-field id="exlayerident"><input matInput  required placeholder="Identity" name="exlayerident" title="{{layeradmin.layerIdent}}" [(ngModel)] = "layeradmin.layerIdent" (change)="updateLayer(layeradmin)"></mat-form-field>
+            <mat-form-field id="exlayerservice"><input matInput required placeholder="Service" name="exlayerservice" title="{{layeradmin.layerService}}" [(ngModel)] = "layeradmin.layerService" (change)="updateLayer(layeradmin)"></mat-form-field>
+            <mat-form-field id="exlayerserver">
+            <mat-select placeholder="Server" name="exlayerserver" [(ngModel)] = "layeradmin.serverID" required type="number">
+                <mat-option [value]="server.ID" *ngFor="let server of servers">
                     {{server.serverName}}
-                </option>
-            </select>
+                </mat-option>
+            </mat-select>
+            </mat-form-field>
 
-            <input matInput id="exlayerdescription" ngModel name="exlayerdescription" title="{{layeradmin.layerDescription}}" class="form-control" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)">            
+            <mat-form-field id="exlayerdescription" ><input matInput ngModel placeholder="Description" name="exlayerdescription" title="{{layeradmin.layerDescription}}" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)"></mat-form-field>
             
-            <select id="exlayerformat" ngModel required name="exlayerformat" class="form-control" [(ngModel)] = "layeradmin.layerFormat" type="text" (blur)="updateLayer(layeradmin)">
-                <option>image/png</option>
-                <option>image/jpg</option>
-                <option>image/jpeg</option>
-                <option>None</option>
-            </select>
+            <mat-form-field id="exlayerformat">
+            <mat-select ngModel required placeholder="Format" name="exlayerformat" [(ngModel)] = "layeradmin.layerFormat" (blur)="updateLayer(layeradmin)">
+                <mat-option value="image/png">image/png</mat-option>
+                <mat-option value="image/jpg">image/jpg</mat-option>
+                <mat-option value="image/jpeg">image/jpeg</mat-option>
+                <mat-option value="None">None</mat-option>
+            </mat-select>
+            </mat-form-field>
 
-            <select id="exlayertype" ngModel required name="exlayertype" class="form-control" [(ngModel)] = "layeradmin.layerType" type="text" (blur)="updateLayer(layeradmin)">
-                <option>PostGIS</option>
-                <option>MapServer</option>
-                <option>Geoserver</option>
-                <option>WMS</option>
-                <option>KML-Link</option>
-                <option>KML-Drive</option>
-                <option>GeoJSON</option>
-                <option>MyCube</option>
-            </select>
+            <mat-form-field id="exlayertype">
+            <mat-select ngModel required placeholder="Type" name="exlayertype" [(ngModel)] = "layeradmin.layerType" (blur)="updateLayer(layeradmin)">
+                <mat-option value="PostGIS">PostGIS</mat-option>
+                <mat-option value="MapServer">MapServer</mat-option>
+                <mat-option value="Geoserver">Geoserver</mat-option>
+                <mat-option value="WMS">WMS</mat-option>
+                <mat-option value="KML-Link">KML-Link</mat-option>
+                <mat-option value="KML-Drive">KML-Drive</mat-option>
+                <mat-option value="GeoJSON">GeoJSON</mat-option>
+                <mat-option value="MyCube">MyCube</mat-option>
+            </mat-select>
+            </mat-form-field>
 
-            <select id="exlayergeom" ngModel required name="exlayergeom" class="form-control" [(ngModel)] = "layeradmin.layerGeom" type="text" (blur)="updateLayer(layeradmin)">
-                <option>Point</option>
-                <option>Polyline</option>
-                <option>Polygon</option>
-                <option>Coverage</option>
-                <option>None</option>
-            </select>
+            <mat-form-field id="exlayergeom">
+            <mat-select ngModel required placeholder="Geometry" name="exlayergeom" [(ngModel)] = "layeradmin.layerGeom" (blur)="updateLayer(layeradmin)">
+                <mat-option value="Point">Point</mat-option>
+                <mat-option value="Polyline">Polyline</mat-option>
+                <mat-option value="Polygon">Polygon</mat-option>
+                <mat-option value="Coverage">Coverage</mat-option>
+                <mat-option value="None">None</mat-option>
+            </mat-select>
+            </mat-form-field>
 
-            <button id="exlayerperm" class="btn btn-primary" title="Open layer permissions" (click)="openPermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>
+            <button mat-button id="exlayerperm" title="Open layer permissions" (click)="openPermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>
         </form>
     </div>
 </div>        

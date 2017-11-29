@@ -26,6 +26,9 @@ import { MatDialogModule } from '@angular/material';
 import { MatSelectModule } from '@angular/material';
 import { MatCheckboxModule } from '@angular/material';
 import { MatInputModule } from '@angular/material';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTableModule} from '@angular/material/table';
 
 //Components
 import { LoginComponent } from './user/login.component';
@@ -157,6 +160,9 @@ import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
         MatSelectModule,
         MatCheckboxModule,
         MatInputModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatTableModule,
         LeafletModule.forRoot(),
         LeafletDrawModule.forRoot()
     ],
