@@ -32,12 +32,15 @@ export class LayerPermissionComponent implements OnInit {
     }
 
     ngOnInit() {
+        //this.getUserItems();
         this.getPermissionItems();
+        //this.fillLists();
         console.log(this.permNames)
-        this.getUserItems();
+        
     }
 
     private getPermissionItems(): void {
+        this.permNames = [];
         this.layerPermissionService
             .GetSome(this.layerID)
             .subscribe((data:LayerPermission[]) => {
@@ -49,21 +52,24 @@ export class LayerPermissionComponent implements OnInit {
                             this.permNames.push(u.firstName + " " + u.lastName);
                             console.log(this.permNames[0])
                         });
+
+                    //if(!(p.userID == this.users. ))
                 }
-                //this.getUserItems()    
+                this.getUserItems()    
             });
     }
 
     private getUserItems(): void {
+        this.users = [];
         this.userService
             .GetAll()
-            .subscribe((data:User[]) => {
-                // for(let u of data) {
-                //     if(u.ID != this.layerPermissions[data.indexOf(u)].userID) {
-                //         this.users.push(u);
-                //     }
-                // }
-                this.users = data;
+            .subscribe((data:User[]) => {             
+                for(let u of data) {
+                    if(this.permNames.indexOf(u.firstName + " " + u.lastName) == -1) {
+                        this.users.push(u);
+                    }
+                }
+                console.log(this.users);
             });
     }
     
@@ -86,7 +92,15 @@ export class LayerPermissionComponent implements OnInit {
     private updateLayerPermission(permission: LayerPermission): void {
         this.layerPermissionService
             .Update(permission)
-            .subscribe(() => {});
+            .subscribe((res) => {
+                console.log(res)
+            });
+    }
+
+    private updateLayerPermissions(): void {
+        for(let p of this.layerPermissions) {
+            this.updateLayerPermission(p)
+        }
     }
 
     private deleteLayerPermission(permissionID: number): void {

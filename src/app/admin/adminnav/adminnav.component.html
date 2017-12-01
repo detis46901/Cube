@@ -1,12 +1,27 @@
-<table class="table">
+ <!-- <table class="table">
     <tr><th><a [routerLink]="['/admin', {outlets: {admin: ['server']}}]" routerLinkActive="active"><h4>Admin Home<br></h4></a></th></tr>
     <tr><td><a [routerLink]="['/admin', {outlets: {admin: ['server']}}]" routerLinkActive="active"><h5>Servers</h5></a></td></tr>
     <tr><td><a [routerLink]="['/admin', {outlets: {admin: ['user']}}]" routerLinkActive="active"><h5>Users</h5></a></td></tr>
     <tr><td><a [routerLink]="['/admin', {outlets: {admin: ['layer']}}]" routerLinkActive="active"><h5>Layers</h5></a></td></tr>
     <tr><td><a [routerLink]="['/admin', {outlets: {admin: ['organization']}}]" routerLinkActive="active"><h5>Organization</h5></a></td></tr>
-    <!--<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['page']}}]" routerLinkActive="active"><h5>Pages</h5></a></td></tr>
-    <tr><td><a [routerLink]="['/admin', {outlets: {admin: ['module']}}]" routerLinkActive="active"><h5>Modules</h5></a></td></tr>-->
     <tr><td><a [routerLink]="['/admin', {outlets: {admin: ['default']}}]" routerLinkActive="active"><h5>Defaults</h5></a></td></tr>
-    <!--<tr><td><a [routerLink]="['/admin', {outlets: {admin: ['boundary']}}]" routerLinkActive="active"><h5>Boundaries</h5></a></td></tr>
-    <tr><td><a [routerLink]="['/admin', {outlets: {admin: ['notification']}}]" routerLinkActive="active"><h5>Notifications</h5></a></td></tr>-->
-</table>
+ </table> -->
+
+<mat-sidenav-container>
+    <mat-sidenav #sidenav class="example-sidenav">
+        <mat-nav-list>
+            <a mat-list-item [routerLink]="['/admin', {outlets: {admin: ['server']}}]" routerLinkActive="active"><h4>Admin Home<br></h4></a>
+            <a mat-list-item [routerLink]="['/admin', {outlets: {admin: ['server']}}]" routerLinkActive="active"><h5>Servers</h5></a>
+            <a mat-list-item [routerLink]="['/admin', {outlets: {admin: ['user']}}]" routerLinkActive="active"><h5>Users</h5></a>
+            <a mat-list-item [routerLink]="['/admin', {outlets: {admin: ['layer']}}]" routerLinkActive="active"><h5>Layers</h5></a>
+            <a mat-list-item [routerLink]="['/admin', {outlets: {admin: ['organization']}}]" routerLinkActive="active"><h5>Organization</h5></a>
+            <a mat-list-item [routerLink]="['/admin', {outlets: {admin: ['default']}}]" routerLinkActive="active"><h5>Defaults</h5></a>
+        </mat-nav-list>
+    </mat-sidenav>
+</mat-sidenav-container>
+
+<!-- <div class="example-sidenav-content">
+    <button type="button" mat-button (click)="sidenav.open()">
+        Open sidenav
+    </button>
+</div> -->

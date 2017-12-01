@@ -1,6 +1,9 @@
-<table class="table">
-    <tr><th><a [routerLink]="['/settings']" routerLinkActive="active"><h4>User Settings</h4></a><br></th></tr>
-    <!--<tr><td><a [routerLink]="['/settings', {outlets: {settings: ['user']}}]" routerLinkActive="active">Users</a></td></tr>-->
-    <tr><td><a [routerLink]="['/settings', {outlets: {settings: ['userpages']}}]" routerLinkActive="active"><h5>Pages</h5></a></td></tr><!-- NOT SAFE needs to have its own page for this-->
-    <tr><td><a [routerLink]="['/settings', {outlets: {settings: ['password']}}]" routerLinkActive="active"><h5>Change Password</h5></a></td></tr>
-</table>
+<mat-sidenav-container>
+    <mat-sidenav #sidenav class="example-sidenav">
+        <mat-nav-list>
+            <a mat-list-item [routerLink]="['/settings', {outlets: {settings: ['userpages']}}]" routerLinkActive="active"><h4>User Settings</h4></a>
+            <a mat-list-item [routerLink]="['/settings', {outlets: {settings: ['userpages']}}]" routerLinkActive="active"><h5>Pages</h5></a>
+            <a mat-list-item [routerLink]="['/settings', {outlets: {settings: ['password']}}]" routerLinkActive="active"><h5>Change Password</h5></a>
+        </mat-nav-list>
+    </mat-sidenav>
+</mat-sidenav-container>

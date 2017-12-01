@@ -19,17 +19,8 @@ import { NumFilterPipe } from '../_pipes/numfilter.pipe';
 
 //Angular Material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatRadioModule } from '@angular/material';
-import { MatMenuModule } from '@angular/material';
-import { MatIconModule } from '@angular/material';
-import { MatDialogModule } from '@angular/material';
-import { MatSelectModule } from '@angular/material';
-import { MatCheckboxModule } from '@angular/material';
-import { MatInputModule } from '@angular/material';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTableModule } from '@angular/material/table';
-import { MatListModule } from '@angular/material'
+import { MatRadioModule, MatMenuModule, MatIconModule, MatDialogModule, MatSelectModule, MatListModule, 
+         MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, MatFormFieldModule } from '@angular/material';
 
 //Components
 import { LoginComponent } from './user/login.component';

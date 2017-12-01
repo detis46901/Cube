@@ -67,7 +67,7 @@ export class LayerAdminComponent implements OnInit {
     }
 
     private createMyCube(): void {
-        const dialogRef = this.dialog.open(newMyCubeComponent, {height:'360px', width:'500px'});
+        const dialogRef = this.dialog.open(newMyCubeComponent, {height:'350px', width:'500px'});
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });

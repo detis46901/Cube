@@ -3,7 +3,7 @@
         <h4 mat-dialog-title id="layerPermTitle">{{layerName}} Permissions</h4>
     </div>
     <div class="col-md-2">
-        <button mat-dialog-close id="layerPermX" class="close">&times;</button>
+        <button mat-dialog-close (click)="updateLayerPermissions()" id="layerPermX" class="close">&times;</button>
     </div>
 </div>
 <hr>
@@ -15,7 +15,7 @@
             <div class="row" style="margin-left:0px;">
                 <i id="delUserPerm" style="width:1px; position:relative; top:3px;" (click)="deleteLayerPermission(perm.ID)" class="fa fa-times" aria-hidden="true"></i>
                 <p style="width:210px">{{permNames[layerPermissions.indexOf(perm)]}}</p>
-                <mat-checkbox style="position:relative;" name="layerPermissionEdit" [(ngModel)]="perm.edit" (change)="updateLayerPermission(layerPermission)">Edit</mat-checkbox><br>
+                <mat-checkbox name="layerPermissionEdit" [(ngModel)]="perm.edit">Edit</mat-checkbox><br>
             </div>
         </mat-list-item>
     </mat-list>
@@ -24,7 +24,7 @@
     <h5><b>New Permission</b></h5>
     <form id="permForm" class="form-inline" #f="ngForm">
         <mat-form-field style="width:200px; margin-right:20px">
-            <mat-select id="user" name="user" [(ngModel)] = "newLayerPermission.userID" required placeholder="User">
+            <mat-select id="layerPermNewUser" name="user" [(ngModel)] = "newLayerPermission.userID" required placeholder="User">
                 <mat-option [value]="user.ID" *ngFor="let user of users">
                     {{user.firstName}} {{user.lastName}}
                 </mat-option>
@@ -33,9 +33,13 @@
 
         <mat-checkbox name="newLayerPermissionEdit"[(ngModel)]="newLayerPermission.edit">Edit</mat-checkbox>
     </form>
+
+    <div *ngIf="users.length == 0">
+        <p>All users have permission to edit this layer.</p>
+    </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <button mat-dialog-close id="layerPermClose">Close</button>
+    <button mat-button mat-dialog-close (click)="updateLayerPermissions()" id="layerPermClose">Close</button>
     <button mat-button [disabled]="!f.valid" (click)="addLayerPermission(newLayerPermission)">Add Permission</button>
 </mat-dialog-actions>    

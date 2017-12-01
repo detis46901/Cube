@@ -1,80 +1,63 @@
 <!-- This defines the modal that pops up after a "Create New Layer" click event from "Layers" control-->
-<div class="row">
+<div id="myCube_newLayerHeader" class="row">
     <div class="col-md-9">
         <h4 mat-dialog-title>Create New MyCube Layer</h4>
     </div>
     <div class="col-md-1 col-md-offset-2">
-        <button mat-dialog-close class="close">&times;</button>
+        <button mat-dialog-close id="myCube_newLayerX" class="close">&times;</button>
     </div>
 </div>
+<hr>
 
-    <form #f="ngForm" (ngSubmit)="addLayer(newLayerAdmin)">
+<mat-dialog-content>
+    <form #f="ngForm">
         <!--Row 1-->
-        <div class="column">
-            <div id="nameBlock" class="form-group">
-                <div class="col-md-1">
-                    <label id="nameLabel" for="newlayername">Name</label>
-                </div>
-                <div class="col-md-4">
-                    <input matInput id="newlayername" name="newlayername" class="form-control input-sm col-sm" value="{{layerName}}" required [(ngModel)]="newLayerAdmin.layerName" type="text">
-                </div>
+        <div class="row">
+            <mat-form-field id="myCube_nameBlock">
+                <input matInput id="myCube_newlayername" name="myCube_newlayername" value="{{layerName}}" required [(ngModel)]="newLayerAdmin.layerName" placeholder="Name">
+            </mat-form-field>
+            
+            <mat-form-field id="myCube_descBlock">
+                <input matInput id="myCube_newlayerdescription" name="myCube_newlayerdescription" [(ngModel)] = "newLayerAdmin.layerDescription" placeholder="Description">
+            </mat-form-field>
+        </div>
+            
+        <!--Row 2-->
+        <div class="row">
+            <div class="col-md-6">
+            <mat-form-field id="myCube_fieldBlock">
+                    <input matInput id="myCube_newlayerfield" name="myCube_newlayerfield" [(ngModel)] = "newLayerField1.field" required placeholder="Field {{newLayerFields.length+1}}">
+            </mat-form-field>
             </div>
 
-            <div id="descBlock" class="form-group">
-                <div class="col-md-1">
-                    <label id="descriptionLabel" for="newlayerdescription">Description</label>
-                </div>
-                <div class="col-md-4">
-                    <input matInput id="newlayerdescription" name="newlayerdescription" class="form-control input-sm col-sm"  [(ngModel)] = "newLayerAdmin.layerDescription" type="text">
-                </div>
-            </div>      
+            <div class="col-md-3">
+            <mat-form-field id="myCube_typeBlock">
+                <mat-select id="myCube_newlayertype" name="myCube_newlayertype" [(ngModel)]="newLayerField1.type" required placeholder="Data type">
+                    <mat-option value="boolean">Boolean</mat-option>
+                    <mat-option value="text">Text</mat-option>
+                    <mat-option value="integer">Integer</mat-option>
+                    <mat-option value="double">Double</mat-option>
+                </mat-select>
+            </mat-form-field>
+            </div>
+            <div class="col-md-2">
+                <button mat-button id="myCube_addField" (click)="addField()">Add Field</button>
+            </div>
         </div>
-        <br>
+        <hr>
 
         <!--Row 2-->
-        <div *ngFor="let newLayerField of newLayerFields">
-            <div class="column">
-                   {{newLayerField.field}}
-                   {{newLayerField.type}}
-                    <div class="col-md-1">
-                        <p (click)="deleteField(newLayerFields.indexOf(newLayerField))"><i class="fa fa-times" aria-hidden="true"></i></p> 
-                    </div>
-            </div>
-        </div>
+        <h5><b>Layer fields:</b></h5>
+        <mat-list *ngFor="let newLayerField of newLayerFields">
+            <mat-list-item>
+                <p (click)="deleteField(newLayerFields.indexOf(newLayerField))"><i class="fa fa-times" aria-hidden="true"></i> {{newLayerField.field}}: {{newLayerField.type}}</p> 
+            </mat-list-item>
+        </mat-list>
         <br>
-        <br>
-            <div class="column">
-                <div id="fieldBlock1" class="form-group">
-                    <div class="col-md-1">
-                        <label id="fieldLabel" for="newlayerfield1">Field</label>
-                    </div>
-                    <div class="col-md-4">  
-                        <input matInput id="newlayerfield1" name="newlayerfield1" class="form-control input-sm col-sm"  [(ngModel)] = "newLayerField1.field" type="text">
-                    </div>
-                </div>
-
-                <div id="typeBlock" class="form-group">
-                    <div class="col-md-1">
-                        <label id="typeLabel" for="newlayertype1">Type</label>
-                    </div>
-                    <div class="col-md-3">
-                        <select id="newlayertype1" name="newlayertype1" class="form-control input-sm col-sm" [(ngModel)]="newLayerField1.type" required type="text">
-                            <option>boolean</option>
-                            <option>text</option>
-                            <option>integer</option>
-                            <option>double precision</option>
-                        </select>
-                    </div>
-                    <div class="col-md-1">
-                        <p (click)="addField()"><i class="fa fa-arrow-down" aria-hidden="true"></i></p> 
-                    </div>
-                </div>
-            </div>
     </form>
+</mat-dialog-content>
 
-<div id="layerNewFooter">
-    <md-dialog-actions>
-        <button mat-dialog-close>Close</button>
-        <button mat-button [disabled]="!f.valid" (click)="addLayer(newLayerAdmin)">Add Layer</button>
-    </md-dialog-actions>
-</div>
+<mat-dialog-actions style="float:right" id="myCube_layerNewFooter">
+    <button mat-dialog-close>Close</button>
+    <button mat-button [disabled]="!f.valid" (click)="addLayer(newLayerAdmin)">Add Layer</button>
+</mat-dialog-actions>

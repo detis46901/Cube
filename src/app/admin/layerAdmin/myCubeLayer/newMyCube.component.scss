@@ -1,28 +1,46 @@
-input, select {
-    position:absolute;
-    left:30px;
-    width:134px;
-    height:24px;
-    margin-bottom:8px;
+#myCube_newLayerHeader {
+    width:100%;
+    height:0px;
+    position:relative;
+    bottom:20px;
 }
 
-label {
+#myCube_newLayerX {
     position:relative;
-    direction:rtl;
-    left:38px;
-    top:3px;
+    top:6px;
 }
 
 h4 {
     color:black;
 }
 
-#nameBlock, #idBlock, #servBlock, #serviceBlock {
-    position:relative; 
-    right:8%
+#myCube_nameBlock{
+    margin-bottom: 5px;
+    margin-top:0px;
+    position:relative;
+    left:2%;
 }
 
-#descBlock, #typeBlock, #geomBlock, #formBlock {
+#myCube_descBlock{
     position:relative; 
-    left:8%
+    left:8%;
+    margin-bottom: 5px;
+    margin-top:0px;
+}
+
+#myCube_fieldBlock {
+    position:relative;
+    right:2%;
+}
+
+#myCube_typeBlock {
+    position:relative;
+    right:18%;
+    width:120%;
+}
+
+#myCube_addField {
+    position:relative;
+    top:10px;
+    right:20%;
 }
