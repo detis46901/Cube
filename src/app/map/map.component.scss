@@ -54,3 +54,16 @@ p {
 .leaflet-container.grab-enabled {
     cursor:grab
 }
+.example-radio-group {
+    display: inline-flex;
+    flex-direction: column;
+    text-align: left
+  }
+  
+  .example-radio-button {
+    margin: 5px;
+  }
+  
+  .example-selected-value {
+    margin: 15px 0;
+  }

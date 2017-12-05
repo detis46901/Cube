@@ -34,6 +34,14 @@ import 'leaflet/dist/images/marker-icon.png';
 })
 
 export class MapComponent {
+    favoriteSeason: string;
+    
+      seasons = [
+        'Winter',
+        'Spring',
+        'Summer',
+        'Autumn',
+      ];
     private token: string;
     private userID: number;
     private headers: Headers;
@@ -51,8 +59,8 @@ export class MapComponent {
 
     private defaultPage: UserPage;
     private turnOnLayer: L.Layer;
-    private currPage: any = 'None';
-    private currLayerName: string = 'No Active Layer';
+    private currPage: any = ''; //Could be "none"
+    private currLayerName: string = ''; //Could say something besides nothing
     private noLayers: boolean;
     private shown: boolean = false
     private drawOptions = {
@@ -179,11 +187,15 @@ export class MapComponent {
 
       //Reads index of layer in dropdown, layerAdmin, and if it is shown or not. Needs to remove a layer if a new one is selected
     private toggleLayers(index: number, layer: UserPageLayer, checked: boolean): void {
+        console.log("toggleLayers")
         let zindex: number = 1000;
         let allLayersOff: boolean = true;
         let nextActive: UserPageLayer;
+        index = this.userPageLayers.findIndex(x => x==layer)
+        console.log(index)
         
         if (checked == false) {  //Where layers get turned on
+            console.log("turning on layer " + layer.layer_admin.layerName)
             if (layer.layer_admin.layerType == 'MyCube') {this.loadMyCube(index, layer, checked)} else{
                 if (layer.layer_admin.layerGeom == 'Coverage') {zindex = -50}; //This doesn't seem to work.
                 console.log (layer.layer_admin.layerType)
@@ -200,7 +212,8 @@ export class MapComponent {
                 this.userPageLayers[index].layerShown = true;
                 this.setCurrentLayer(index, this.currLayer, true);
             }
-        } else {
+        } else { //Where layers get turned OFF
+            console.log("turning off layer" + layer.layer_admin.layerName)
             if (layer.layer_admin.layerType == 'MyCube') {this.loadMyCube(index, layer, checked)} else{
                 this.layerList[index].removeFrom(this._map);
                 this.userPageLayers[index].layerShown = false;
@@ -222,7 +235,7 @@ export class MapComponent {
                     //9/25/17: Needs to make the next layer the current layer.  Right now it just goes to the first one.
                     this.currLayer = nextActive;
                     this.currLayerName = nextActive.layer_admin.layerName;
-                    this.setCurrentLayer(index, this.currLayer, true); //sets the current layer if the current layer is turned off.
+                    //this.setCurrentLayer(index, this.currLayer, true); //sets the current layer if the current layer is turned off.
                     this.noLayers = false;
                 }
             }
@@ -277,6 +290,7 @@ export class MapComponent {
     }
     private setCurrentLayer(index: number, layer: UserPageLayer, checked: boolean): void {
         console.log('Setting Current Layer')
+        index = this.userPageLayers.findIndex(x => x==layer)
         for (let x of this.userPageLayers) {
             if (x == layer) {
                 if (x.layerShown === true && x.layer_admin.layerType == "MyCube") {

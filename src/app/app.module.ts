@@ -19,8 +19,11 @@ import { NumFilterPipe } from '../_pipes/numfilter.pipe';
 
 //Angular Material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatRadioModule, MatMenuModule, MatIconModule, MatDialogModule, MatSelectModule, MatListModule, 
-         MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, MatFormFieldModule } from '@angular/material';
+         MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, MatFormFieldModule, } from '@angular/material';
 
 //Components
 import { LoginComponent } from './user/login.component';
@@ -145,6 +148,9 @@ import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
             }
         ]),
         BrowserAnimationsModule,
+        MatSlideToggleModule,
+        MatTabsModule,
+        MatExpansionModule,
         MatRadioModule,
         MatMenuModule,
         MatIconModule,
