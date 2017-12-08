@@ -83,6 +83,20 @@
     
     <p style="position:absolute; left:35px">Create New User</p><br>
     <form #f="ngForm" style="position:relative; left:20px" class="form-inline" (ngSubmit)="addUser(newUser)" autocomplete="off">
+        <!-- <i class="fa fa-arrow-right" style="margin-right:5px" aria-hidden="true"></i>
+        <input matInput id="newuserfirstname" onClick="this.select();" name="newuserfirstname" required #newuserfirstnameinput [(ngModel)] = "newUser.firstName" type="text" placeholder="First Name">
+        <input matInput id="newuserlastname" onClick="this.select();" name="newuserlastname" required #newuserlastnameinput [(ngModel)] = "newUser.lastName" type="text" placeholder="Last Name">
+        <select id="newuserrole" name="newuserrole" name="exuserrole" class="form-control" required #role="ngModel" [(ngModel)] = "newUser.roleID" type="text">
+            <option *ngFor="let role of roles" [value]="role.ID">
+                {{role.role}}
+            </option>
+        </select>
+
+        <input matInput id="newuseremail" onClick="this.select();" autocomplete="off" name="newuseremail" required #newuseremailinput [(ngModel)] = "newUser.email" type="text" placeholder="Email">
+        <input type="checkbox" id="newuseractive" name="newuseractive" #newuseractiveinput [(ngModel)] = "newUser.active" placeholder="Active" checked>
+        <input type="checkbox" id="newuseradministrator" name="newuseradministrator" #newuseradministratorinput [(ngModel)] = "newUser.administrator" placeholder="Administrator">
+        <input matInput id="newuserpassword" onClick="this.select();" autocomplete="off" name="newuserpassword" #newuserpasswordinput [(ngModel)] = "newUser.password" type="password" placeholder="Password">
+        <button id="btnSub" type="submit" [disabled]="!f.valid">Submit</button> -->
         <i class="fa fa-arrow-right" style="margin-right:5px" aria-hidden="true"></i>
         <input matInput id="newuserfirstname" onClick="this.select();" name="newuserfirstname" required #newuserfirstnameinput [(ngModel)] = "newUser.firstName" type="text" placeholder="First Name">
         <input matInput id="newuserlastname" onClick="this.select();" name="newuserlastname" required #newuserlastnameinput [(ngModel)] = "newUser.lastName" type="text" placeholder="Last Name">

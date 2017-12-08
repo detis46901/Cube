@@ -167,7 +167,7 @@ export class UserComponent implements OnInit {
     }
 
     private openPages(userID: number, firstName: string, lastName: string): void {
-        let dialogRef = this.dialog.open(PageComponent, {height: '400px', width: '450px'});
+        let dialogRef = this.dialog.open(PageComponent, {height: '400px', width: '470px'});
         dialogRef.componentInstance.userID = userID;
         dialogRef.componentInstance.firstName = firstName;
         dialogRef.componentInstance.lastName = lastName;
@@ -204,7 +204,7 @@ export class UserComponent implements OnInit {
     }
 
     private openPageConfig(pageID: number, userID: number, name: string): void {
-        let dialogRef = this.dialog.open(PageConfigComponent, {width: '300px'});
+        let dialogRef = this.dialog.open(PageConfigComponent, {height: '320px', width: '350px'});
         dialogRef.componentInstance.pageID = pageID;
         dialogRef.componentInstance.userID = userID;
         dialogRef.componentInstance.pageName = name;

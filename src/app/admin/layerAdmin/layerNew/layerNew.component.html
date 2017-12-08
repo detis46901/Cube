@@ -4,13 +4,13 @@
         <h4 mat-dialog-title>Create New Layer</h4>
     </div>
     <div class="col-md-1 col-md-offset-2">
-        <button mat-dialog-close id="newLayerX" class="close" >&times;</button>
+        <button mat-dialog-close id="newLayerX" class="close" aria-label="Close">&times;</button>
     </div>
 </div>
 <hr>
 
 <mat-dialog-content>
-    <form #f="ngForm" (ngSubmit)="addLayer(newLayerAdmin)">
+    <form #f="ngForm">
         <!--Row 1-->
         <div class="row" style="width:100%">
             <mat-form-field id="nameBlock">
@@ -86,7 +86,7 @@
     </form>
 </mat-dialog-content>
 
-<md-dialog-actions>
+<mat-dialog-actions>
     <button mat-dialog-close id="newLayerClose">Close</button>
     <button mat-button id="newLayerAdd" (click)="addLayer(newLayerAdmin)" [disabled]="!f.valid">Add Layer</button>
-</md-dialog-actions>
+</mat-dialog-actions>

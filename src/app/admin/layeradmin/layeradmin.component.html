@@ -65,8 +65,8 @@
 
         <div class="col-md-3 col-md-offset-1">
             <div class="row">
-                <button mat-button id="createLayerBtn" class="btn-primary" (click)="createLayer()">Create Layer</button>
-                <button mat-button id="createMyCubeBtn" class="btn-primary" (click)="createMyCube()">Create MyCube</button>
+                <button mat-button id="createLayerBtn" (click)="createLayer()">Create Layer</button>
+                <button mat-button id="createMyCubeBtn" (click)="createMyCube()">Create MyCube</button>
                 <!--<div ngbDropdown>   
                     <button id="sortBtn" type="button" class="btn-primary" ngbDropdownToggle>Sort Layers</button>
                     <div id="sortDrop" class="dropdown-menu dropdown-menu-right" aria-labelledby="options">
@@ -83,7 +83,7 @@
     </div>
 
     <div style="margin-top:12px;">
-       <!-- This should be a material datatable and not a form -->
+       <!-- This should be a material datatable and not a form-->
         <form class="form-inline" #e="ngForm" style="position:relative; left:20px;" *ngFor="let layeradmin of layerAdmins">
             <i id="btnOpenDelLayer" class="fa fa-times" style="position:relative; margin-right:5px" (click)="openConfDel(layeradmin)"></i>
             <mat-form-field id="exlayername"><input matInput ngModel required placeholder="Name" name="exlayername" title="{{layeradmin.layerName}}" [(ngModel)] = "layeradmin.layerName" (blur)="updateLayer(layeradmin)"></mat-form-field>

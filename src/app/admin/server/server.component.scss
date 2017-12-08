@@ -2,11 +2,37 @@ h3, h4 {
     color: black;
 }
 
-/*td, table, th {
-    border: 2px solid black;
-}*/
+hr {
+    width:100%; 
+    position:relative; 
+    top:25px; 
+    border-width:3px; 
+    border-color:black;
+}
 
 td {
     position: relative;
     margin-bottom: 5px;
+}
+
+#exserverurl {
+    width:75%;
+}
+
+#btnOpenDelLayerServer {
+    position:relative; 
+    margin-right:5px
+}
+
+#serverHeaderRow {
+    position:relative; 
+    top:10px; 
+    left:10px;
+}
+
+#serverServersRow {
+    position:relative; 
+    left:3%; 
+    width:100%; 
+    top:15px;
 }

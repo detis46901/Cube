@@ -1,69 +1,36 @@
 <!-- This defines the modal that pops up after a "Create New Server" click event from "Servers" control-->
-<div id="createNewServer">
-    <div class="modal-header">
-        <div id="newServTitle" class="row">
-            <div class="col-md-10">
-                <h4 class="modal-title">Create New Server</h4>
-            </div>
-
-            <div class="col-md-1 col-md-offset-0">
-                <button id="newServX" type="button" class="close" aria-label="Close" (click)="dialog.closeAll()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        </div>
+<div id="newServTitle" class="row">
+    <div class="col-md-9">
+        <h4 mat-dialog-title>Create New Server</h4>
     </div>
-
-    <div class="modal-body">
-        <form #f="ngForm" (ngSubmit)="addServer(newserver)" style="align-items:flex-end">
-
-            <!--Row 1-->
-            <div id="newServR1" class="row">
-                <div class="form-group">
-                    <div class="col-md-2 col-md-offset-1">
-                        <label id="nameLabel" for="newservername">Name</label>
-                    </div>
-                    <div class="col-md-4 col-md-offset-2">
-                        <input matInput id="newservername" name="newservername" required [(ngModel)]="newserver.serverName" type="text" placeholder="Server Name">
-                    </div>
-                </div>     
-            </div>
-            <br>
-
-            <!--Row 2-->
-            <div id="newServR2" class="row">
-                <div class="form-group">
-                    <div class="col-md-2 col-md-offset-1">
-                        <label id="typeLabel" for="newservertype">Type</label>
-                    </div>
-                    <div class="col-md-4 col-md-offset-2">
-                        <select id="newservertype" name="newservertype" [(ngModel)]="newserver.serverType" required type="text" placeholder="Server Type">
-                            <option>Geoserver</option>
-                            <option>PostGIS</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <br>
-
-            <!--Row 3-->
-            <div id="newServR3" class="row">
-                <div class="form-group">
-                    <div class="col-md-2 col-md-offset-1">
-                        <label id="urlLabel" for="newserverurl">URL</label>
-                    </div>
-                    <div class="col-md-4 col-md-offset-2">
-                        <input matInput id="newserverurl" name="newserverurl" [(ngModel)]="newserver.serverURL" type="text" placeholder="Server URL">
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <div class="modal-footer">
-        <div id="newServTitle" class="row">
-            <button id="newServClose" type="button" class="btn btn-secondary text-center" (click)="dialog.closeAll()">Close</button>
-            <button id="newServAdd" class="btn btn-outline-primary text-center" (click)="addServer()" [disabled]="!f.valid">Add Server</button>
-        </div>
+    <div class="col-md-1 col-md-offset-1">
+        <button mat-dialog-close id="newServX" class="close">&times;</button>
     </div>
 </div>
+<hr>
+
+<mat-dialog-content id="newServBody">
+    <form #f="ngForm">
+        <mat-form-field>
+            <input matInput id="newServName" name="newServName" [(ngModel)]="newserver.serverName" required type="text" placeholder="Server Name">
+        </mat-form-field>
+        <br>
+
+        <mat-form-field>
+            <mat-select id="newServType" name="newServType" [(ngModel)]="newserver.serverType" required type="text" placeholder="Server Type">
+                <mat-option value="Geoserver">Geoserver</mat-option>
+                <mat-option value="PostGIS">PostGIS</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+
+        <mat-form-field>
+            <input matInput id="newserverurl" name="newserverurl" [(ngModel)]="newserver.serverURL" required type="text" placeholder="Server URL">
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions id="newServFoot" class="row">
+    <button mat-dialog-close id="newServClose">Close</button>
+    <button mat-button id="newServAdd" (click)="addServer(newserver)" [disabled]="!f.valid">Add Server</button>
+</mat-dialog-actions>

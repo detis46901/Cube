@@ -1,48 +1,48 @@
-<div style="position:relative; top:10px; left:10px;"class="row">
+<div id="serverHeaderRow" class="row">
     <div class="col-md-3">
-        <div class="col-md-8 col-md-offset-1" style="position:relative; left:3%">
+        <div class="col-md-8 col-md-offset-1" style="position:relative; left:1%">
             <h4>Instance Name</h4>
         </div>
     </div>
 
-    <div class="col-md-2" style="position:relative; right:5%">
+    <div class="col-md-2" style="position:relative; right:5.5%">
         <h4>Server Type</h4>
     </div>
 
-    <div class="col-md-3" style="position:relative; right:5%">
+    <div class="col-md-3" style="position:relative; right:5.5%">
         <h4>URL</h4>
     </div>
 
     <div class="col-md-1 col-md-offset-1">
-        <button id="createServerBtn" (click)="openServerNew()" style="width:80px; height:45px;">Create Server</button>
+        <button mat-button id="createServerBtn" (click)="openServerNew()">Create Server</button>
     </div>
 </div>
 
-<div class="row" style="position:relative; left:3%; width:100%; top:15px;">
+<div id="serverServersRow" class="row">
     <form style="width:100%" class="form-inline" #e="ngForm" *ngFor="let server of servers">
-        <i id="btnOpenDelLayerServer" class="fa fa-times" style="position:relative; margin-right:5px" (click)="openConfDel(server)"></i>
-        <div class="col-md-2">
-            <input matInput id="exservername" style="width:100%" ngModel required name="exservername" title="{{server.serverName}}" class="form-control" [(ngModel)]="server.serverName" type="text" (blur)="updateServer(server)">
-        </div>
-        <div class="col-md-2">
-            <select id="exservertype" style="width:100%; height:34px;" ngModel required name="exservertype" class="form-control" [(ngModel)]="server.serverType" type="text" (blur)="updateServer(server)">
-                <option>Geoserver</option>
-                <option>PostGIS</option>
-                <option>ArcGIS</option>
-            </select>
-        </div>
-        <div class="col-md-5">
-            <input matInput id="exserverurl" style="width:100%" ngModel required name="exserverurl" title="{{server.serverURL}}" class="form-control" [(ngModel)]="server.serverURL" type="text" (blur)="updateServer(server)">
-        </div>
+        <i id="btnOpenDelLayerServer" class="fa fa-times" (click)="openConfDel(server)"></i>
+        <mat-form-field class="col-md-2">
+            <input matInput id="exservername" style="width:100%" ngModel required name="exservername" title="{{server.serverName}}" [(ngModel)]="server.serverName" (blur)="updateServer(server)">
+        </mat-form-field>
+        <mat-form-field class="col-md-2">
+            <mat-select id="exservertype"  ngModel required name="exservertype" [(ngModel)]="server.serverType" (blur)="updateServer(server)">
+                <mat-option value="Geoserver">Geoserver</mat-option>
+                <mat-option value="PostGIS">PostGIS</mat-option>
+                <mat-option value="ArcGIS">ArcGIS</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="col-md-5">
+            <input matInput id="exserverurl" ngModel required name="exserverurl" title="{{server.serverURL}}" [(ngModel)]="server.serverURL" (blur)="updateServer(server)">
+        </mat-form-field>
         <div class="col-md-1">
-            <button id="getRequestBtn" style="height:28px;" (click)="getRequest(server)">Layers</button>
+            <button mat-button id="getRequestBtn" (click)="getRequest(server)">Layers</button>
         </div>
     </form>
     <br>
 </div>
 <div style="position:absolute; height:25px;"></div>
 
-<hr style="width:100%; position:relative; top:25px; border-width:3px; border-color:black;">
+<hr>
 <!--<div *ngIf="displayLayers" class="row" style="position:relative; top:25px; margin-bottom:10px;">
     <div class="col-md-3 col-md-offset-2" style="position:relative; left:2%">
         <h3>Name</h3>
@@ -78,7 +78,7 @@
             <td><h4>{{layer}}</h4></td>
             <td><h4>{{formatArray[folderArray.indexOf(layer)]}}</h4></td>
             <!--<td><input type='radio' name="create" value="toCreate"></td>-->
-            <td><button (click)="createGeoserverLayer(layer)">Create Layer</button></td>
+            <td><button mat-button (click)="createGeoserverLayer(layer)">Create Layer</button></td>
         </tr>
     </table>
 </div>
@@ -91,7 +91,7 @@
             <!--<th><h3 style="position:relative; top:7.5px;">Create Layer</h3></th>-->
         </tr>
         <tr *ngFor="let layer of folderArray">
-            <td><h4><button (click)="WMSRequest(layer, 'service')">{{layer}}</button></h4></td>
+            <td><h4><button mat-button (click)="WMSRequest(layer, 'service')">{{layer}}</button></h4></td>
             <td><h4>Format</h4></td>
             <!--<td><input type='radio' name="create" value="toCreate"></td>-->
         </tr>
@@ -103,7 +103,7 @@
             <!--<th><h3 style="position:relative; top:7.5px;">Create Layer</h3></th>-->
         </tr>
         <tr *ngFor="let service of serviceArray">
-            <td><h4><button (click)="WMSRequest(service.name, 'layer')">{{service.name}}</button></h4></td>
+            <td><h4><button mat-button (click)="WMSRequest(service.name, 'layer')">{{service.name}}</button></h4></td>
             <td><h4>Format</h4></td>
             <!--<td><input type='radio' name="create" value="toCreate"></td>-->
         </tr>
@@ -113,7 +113,7 @@
                 <td><h4>{{layer.name}}</h4></td>
                 <td><h4>Format</h4></td>
                 <!--<td><input type='radio' name="create" value="toCreate"></td>-->
-                <td><button (click)="createLayer(layerArray.indexOf(layer), layer.name)">Create Layer</button></td>
+                <td><button mat-button (click)="createLayer(layerArray.indexOf(layer), layer.name)">Create Layer</button></td>
         </tr>
     </table>
 </div>

@@ -9,14 +9,19 @@
             <tr *ngFor="let department of departments">
                 <td><form class="form-inline">
                     <div class="form-group" style="width:100%">
-                        <!--<label for="exdepartment"><i (click)="deleteDepartment(department.ID)" class="fa fa-times" aria-hidden="true"></i></label>-->
-                        <label for="btnOpenDelDep"><i id="btnOpenDelDep" class="fa fa-times" (click)="openConfDel(department, 3)"></i></label><!-- This needs to delete its groups and roles-->
-                        <input matInput ng-focus="foo = foo + 1" (click)="departmentClick(department)"id="exdepartment" name="exdepartment" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; width:90%" #editdepartmentinput [(ngModel)] = "department.department" type="text" (blur)="updateDepartment(department)">
+                        <i id="btnOpenDelDep" class="fa fa-times" (click)="openConfDel(department, 3)"></i>
+                        <mat-form-field>
+                            <input matInput id="exDepartment" (click)="departmentClick(department)" name="exDepartment" #editdepartmentinput [(ngModel)]="department.department" type="text" (blur)="updateDepartment(department)">
+                        </mat-form-field>
                     </div>
                 </form></td>
             </tr>
-            <tr><td><input matInput id="newDepartment" style="position:relative; left:15px; height:34px; border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:90%" #newdepartmentinput [(ngModel)] = "newDepartment" type="text" placeholder="New Department" (keyup.enter)="addDepartment(newDepartment); newdepartmentinput.value=''" aria-describedby="departmentHelpBlock"><br>
-            <p id="departmentHelpBlock" style="position:relative; left:15px" class="form-text form-muted">Press enter to create a department.</p></td></tr>
+            <tr>
+                <td><mat-form-field>
+                    <input matInput id="newDepartment" #newdepartmentinput [(ngModel)] = "newDepartment" placeholder="New Department" type="text" (keyup.enter)="addDepartment(newDepartment); newdepartmentinput.value=''" aria-describedby="departmentHelpBlock"><br>
+                </mat-form-field>
+                <p id="departmentHelpBlock" class="form-text form-muted">Press enter to create a department.</p></td>
+            </tr>
         </table>
     </div>
     <div class="col-md-4">
@@ -29,14 +34,19 @@
             <tr *ngFor="let group of groups">
                 <td *ngIf="filterGroup(group.departmentID)"><form class="form-inline">
                     <div class="form-group" style="width:100%">
-                        <!--<label for="exgroup" *ngIf="filterGroup(group.departmentID)"><i (click)="deleteGroup(group.ID)" class="fa fa-times" aria-hidden="true"></i></label>-->
-                        <label for="btnOpenDelGroup" *ngIf="filterGroup(group.departmentID)"><i id="btnOpenDelGroup" class="fa fa-times" (click)="openConfDel(group, 4)"></i></label>
-                        <input matInput ng-focus="" (click)="groupClick(group)" id="exgroup" name="exgroup" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px;  width:90%" #editgroupinput [(ngModel)] = "group.group" type="text" (blur)="updateGroup(group)">
+                        <i *ngIf="filterGroup(group.departmentID)" id="btnOpenDelGroup" class="fa fa-times" (click)="openConfDel(group, 4)"></i>
+                        <mat-form-field>
+                            <input matInput (click)="groupClick(group)" id="exGroup" name="exGroup" #editgroupinput [(ngModel)] = "group.group" type="text" (blur)="updateGroup(group)">
+                        </mat-form-field>
                     </div>
                 </form></td>
             </tr>
-            <tr><td><input matInput class="form-control" style="position:relative; left:15px; height:34px; border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px; width:90%" #newgroupinput [(ngModel)] = "newgroup" type="text" placeholder="New Group" (keyup.enter)="addGroup(newgroup); newgroupinput.value=''" aria-describedby="groupHelpBlock"><br>
-            <p id="groupHelpBlock" style="position:relative; left:15px; bottom:18px" class="form-text form-muted">Press enter to create a group.</p></td></tr>
+            <tr>
+                <td><mat-form-field>
+                    <input matInput #newgroupinput [(ngModel)] = "newgroup" type="text" placeholder="New Group" (keyup.enter)="addGroup(newgroup); newgroupinput.value=''" aria-describedby="groupHelpBlock"><br>
+                </mat-form-field>
+                <p id="groupHelpBlock" class="form-text form-muted">Press enter to create a group.</p></td>
+            </tr>
         </table>
     </div>
     <div class="col-md-4">
@@ -49,14 +59,19 @@
             <tr *ngFor="let role of roles">
                 <td *ngIf="filterRole(role.groupID)"><form class="form-inline">
                     <div class="form-group" style="width:100%">
-                        <!--<label for="exrole" *ngIf="filterRole(role.groupID)"><i (click)="deleteRole(role.ID)" class="fa fa-times" aria-hidden="true"></i></label>-->
-                        <label for="btnOpenDelRole" *ngIf="filterRole(role.groupID)"><i id="btnOpenDelRole" class="fa fa-times" (click)="openConfDel(role, 5)"></i></label>
-                        <input matInput id="exrole" name="exrole" class="form-control" style="border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px;  width:90%" #editroleinput [(ngModel)] = "role.role" type="text" (blur)="updateRole(role)">
+                        <i *ngIf="filterRole(role.groupID)" id="btnOpenDelRole" class="fa fa-times" (click)="openConfDel(role, 5)"></i>
+                        <mat-form-field>
+                            <input matInput id="exRole" name="exRole" #editroleinput [(ngModel)] = "role.role" type="text" (blur)="updateRole(role)">
+                        </mat-form-field>
                     </div>
                 </form></td>
             </tr>
-            <tr><td><input matInput id="newRole" style="position:relative; left:15px; height:34px; border-color: rgba(255,255,255,0); border:ridge; border-width:2px; border-radius:4px;  width:90%" #newroleinput [(ngModel)] = "newRole.role" type="text" placeholder="New Role" name="newRole" (keyup.enter)="addRole(newRole); newroleinput.value=''" aria-describedby="roleHelpBlock"><br>
-            <p id="roleHelpBlock" style="position:relative; left:15px" class="form-text form-muted">Press enter to create a role.</p></td></tr>
+            <tr>
+                <td><mat-form-field>
+                    <input matInput id="newRole" #newroleinput [(ngModel)] = "newRole.role" type="text" placeholder="New Role" name="newRole" (keyup.enter)="addRole(newRole); newroleinput.value=''" aria-describedby="roleHelpBlock"><br>
+                </mat-form-field>
+                <p id="roleHelpBlock" class="form-text form-muted">Press enter to create a role.</p></td>
+            </tr>
         </table>
     </div>
 </div>

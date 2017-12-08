@@ -24,6 +24,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatRadioModule, MatMenuModule, MatIconModule, MatDialogModule, MatSelectModule, MatListModule, 
          MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, MatFormFieldModule, } from '@angular/material';
+import 'hammerjs';
 
 //Components
 import { LoginComponent } from './user/login.component';
