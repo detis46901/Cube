@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
-import { SQLService } from './sql.service'
-import { MyCubeField, MyCubeConfig } from '../_models/layer.model'
+import { SQLService } from '../../../_services/sql.service'
+import { MyCubeField, MyCubeConfig } from '../../../_models/layer.model'
 
 //Must be declared here in order to mitigate a bug where toggling sidenav via view dropdown doesn't work unless clicked twice.
 let isOpen: boolean = true;
@@ -12,7 +12,7 @@ let markerData: string;
 
 @Injectable()
 
-export class SideNavService extends SQLService{
+export class MyCubeService extends SQLService{
    private subject = new Subject<any>();
    private mycubesubject = new Subject<MyCubeField[]>();
    private mycubeconfig = new Subject<MyCubeConfig>();

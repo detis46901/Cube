@@ -49,7 +49,7 @@ export class FeatureDataComponent{
     }
 
     private clearMyCubeData(): void {
-        this.message= ""
+        this.myCubeData = null
     }
 
     private updateMyCube(mycube: MyCubeField): void {

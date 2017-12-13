@@ -10,6 +10,7 @@ import { LayerPermissionService } from '../../_services/_layerPermission.service
 import { LayerAdminService } from '../../_services/_layerAdmin.service';
 import { UserPageService } from '../../_services/_userPage.service';
 import { SideNavService } from '../../_services/sidenav.service';
+import { MyCubeService } from './services/mycube.service'
 import { ServerService } from '../../_services/_server.service';
 import { LayerPermission, LayerAdmin, UserPageLayer, MyCubeField, MyCubeConfig } from '../../_models/layer.model';
 import { Server } from '../../_models/server.model';
@@ -34,19 +35,9 @@ import 'leaflet/dist/images/marker-icon.png';
 })
 
 export class MapComponent {
-    favoriteSeason: string;
-    
-      seasons = [
-        'Winter',
-        'Spring',
-        'Summer',
-        'Autumn',
-      ];
     private token: string;
     private userID: number;
     private headers: Headers;
-    private popupText: string = '';
-
     private _map: L.Map;
     private userPageLayers: Array<UserPageLayer> = [];
     private currLayer: UserPageLayer;
@@ -91,16 +82,13 @@ export class MapComponent {
 
     private layers: L.Layer []
 
-    constructor(private _http: Http, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private geoCoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sideNavService: SideNavService, private serverService: ServerService) {
+    constructor(private _http: Http, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private geoCoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sideNavService: SideNavService, private myCubeService: MyCubeService, private serverService: ServerService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
         this.headers.append('Accept', 'application/json');
-        wfsService.popupText$.subscribe(text => {
-            this.popupText = text;
-        });
     }
 
     
@@ -185,7 +173,7 @@ export class MapComponent {
         }
     }
 
-      //Reads index of layer in dropdown, layerAdmin, and if it is shown or not. Needs to remove a layer if a new one is selected
+    //Reads index of layer in dropdown, layerAdmin, and if it is shown or not. Needs to remove a layer if a new one is selected
     private toggleLayers(index: number, layer: UserPageLayer, checked: boolean): void {
         console.log("toggleLayers")
         let zindex: number = 1000;
@@ -254,8 +242,8 @@ export class MapComponent {
                     .addTo(this._map)
                     .on('click', (event: any) => {
                     //this.sendMyCubeData(event.layer.feature.properties)
-                    this.sideNavService.setMyCubeConfig(layer.layer_admin.ID, this.perm.edit);
-                    this.sideNavService.sendMyCubeData(layer.layer_admin.ID, event.layer.feature.properties.ID, event.layer.feature.properties);
+                    this.myCubeService.setMyCubeConfig(layer.layer_admin.ID, this.perm.edit);
+                    this.myCubeService.sendMyCubeData(layer.layer_admin.ID, event.layer.feature.properties.ID, event.layer.feature.properties);
                 })
             })
             this.setCurrentMyCube(index, layer, checked)
@@ -272,7 +260,7 @@ export class MapComponent {
                 }
             }
             console.log(this.perm.edit)
-            //this.sideNavService.setMyCubeConfig(layer.layer_admin.ID, this.perm.edit);
+            //this.myCubeService.setMyCubeConfig(layer.layer_admin.ID, this.perm.edit);
         } else {
             console.log("Removing Mycube: " + this.layerList[index])
             this.layerList[index].removeFrom(this._map);
@@ -454,10 +442,10 @@ export class MapComponent {
     private sendMyCubeData(message: JSON): void {
         let data: MyCubeField[]
         console.log(message["id"])
-        //this.sideNavService.sendMyCubeData(message["id"]);
+        //this.myCubeService.sendMyCubeData(message["id"]);
     }
 
     private clearMyCubeData(): void {
-        this.sideNavService.clearMyCubeData();
+        this.myCubeService.clearMyCubeData();
     }
 }

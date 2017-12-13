@@ -1,7 +1,7 @@
 //Angular/Miscellaneous
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+//import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpModule, JsonpModule } from '@angular/http';
@@ -22,7 +22,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatRadioModule, MatMenuModule, MatIconModule, MatDialogModule, MatSelectModule, MatListModule, 
+import {MatMenuModule} from '@angular/material/menu'
+import { MatRadioModule, MatIconModule, MatDialogModule, MatSelectModule, MatListModule, 
          MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, MatFormFieldModule, } from '@angular/material';
 import 'hammerjs';
 
@@ -51,7 +52,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { UserPageComponent } from './settings/user-pages/user-pages.component';
 import { PasswordComponent } from './settings/password/password.component';
 import { MarkerDataComponent } from './marker_data/marker-data.component';
-import { LayerControlsComponent } from './map/layer-controls/layer-controls.component';
+//import { LayerControlsComponent } from './map/layer-controls/layer-controls.component';
 import { ServerNewComponent } from './admin/server/serverNew/serverNew.component';
 import { ChangePasswordComponent } from './admin/user/changePassword/changePassword.component';
 import { HeaderComponent } from './header/header.component';
@@ -118,7 +119,7 @@ import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
         NotificationComponent,
         ServerComponent,
         MarkerDataComponent,
-        LayerControlsComponent,
+        //LayerControlsComponent,
         ServerNewComponent,
         ChangePasswordComponent
     ],
@@ -140,7 +141,7 @@ import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
         CommonModule,
         HttpModule,
         JsonpModule,
-        NgbModule.forRoot(),
+        //MNgbodule.forRoot(),
         Routing,
         RouterModule.forRoot([
             {

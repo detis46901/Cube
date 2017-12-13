@@ -6,8 +6,8 @@
     </mat-card-header>
 
     <mat-card-content *ngIf="message">
-        <button (click)='clearMessage()'>
-            <i class="fa fa-times" aria-hidden="true">message icon</i>
+        <button mat-button (click)='clearMessage()'>
+            <mat-icon>close</mat-icon>
         </button>
         <div [innerHTML]='message.text'></div>
     </mat-card-content>
@@ -16,11 +16,11 @@
             <i class="fa fa-times" aria-hidden="true"></i>
         </button>
         <div *ngFor="let myCube of myCubeData">
-                <div *ngIf="myCubeData.type=='id'"></div>
+                <div *ngIf="myCube.type=='id'"></div>
                 <div *ngIf="myCube.type=='geom'"></div>
-                <div *ngIf="myCube.type=='integer'">{{myCube.field}}<input matInput id="textinput" ngModel required name="textinput" title="{{myCube.field}}" class="form-control" [(ngModel)] = "myCube.value" type="text" (blur)="updateMyCube(myCube)"></div>
-                <div *ngIf="myCube.type=='boolean'">{{myCube.field}}<input matInput id="textinput" ngModel required name="textinput" title="{{myCube.field}}" class="form-control" [(ngModel)] = "myCube.value" type="text" (blur)="updateMyCube(myCube)"></div>
-                <div *ngIf="myCube.type=='text'">{{myCube.field}}<input matInput id="textinput" ngModel required name="textinput" title="{{myCube.field}}" class="form-control" [(ngModel)] = "myCube.value" type="text" (blur)="updateMyCube(myCube)"></div>
+                <div *ngIf="myCube.type=='integer'"><mat-form-field><input matInput id="textinput" ngModel required placeholder="{{myCube.field}}" [(ngModel)] = "myCube.value" (blur)="updateMyCube(myCube)"></mat-form-field></div>
+                <div *ngIf="myCube.type=='boolean'"><mat-form-field><input matInput id="textinput" ngModle required placeholder="{{myCube.field}}" [(ngModel)] = "myCube.value" (blur)="updateMyCube(myCube)"></mat-form-field></div>
+                <div *ngIf="myCube.type=='text'"><mat-form-field><input matInput id="textinput" ngModle required placeholder="{{myCube.field}}" [(ngModel)] = "myCube.value" (blur)="updateMyCube(myCube)"></mat-form-field></div>
             </div>    
     </mat-card-content>
 

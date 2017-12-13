@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UserService } from '../../_services/_user.service';
 import { User } from '../../_models/user.model';
 import { SideNavService} from '../../_services/sidenav.service';
+import { MyCubeService } from '../map/services/mycube.service'
 import { WFSService } from '../map/services/wfs.service';
 import { Subscription } from 'rxjs/Subscription';
 import { MyCubeField, MyCubeConfig } from '../../_models/layer.model'
@@ -10,7 +11,7 @@ import { MyCubeField, MyCubeConfig } from '../../_models/layer.model'
     selector: 'home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    providers: [SideNavService, WFSService]
+    providers: [SideNavService, WFSService, MyCubeService]
 })
 
 export class HomeComponent {
@@ -28,13 +29,13 @@ export class HomeComponent {
     private editSubscription: Subscription;
     private myCubeConfig: MyCubeConfig;
 
-    constructor(private dataService: UserService, private sideNavService: SideNavService, private WFSservice: WFSService) {
+    constructor(private dataService: UserService, private sideNavService: SideNavService, private myCubeService: MyCubeService, private WFSservice: WFSService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
         this.subscription = this.sideNavService.getMessage().subscribe(message => { this.message = message; });
-        this.myCubeSubscription = this.sideNavService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; });
-        this.editSubscription = this.sideNavService.getMyCubeConfig().subscribe(data => {this.myCubeConfig = data});
+        this.myCubeSubscription = this.myCubeService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; });
+        this.editSubscription = this.myCubeService.getMyCubeConfig().subscribe(data => {this.myCubeConfig = data});
         console.log("this.message = " + this.message)
     }
 

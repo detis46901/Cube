@@ -22,10 +22,26 @@
                         {{currPage}}
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <table>
-                    <div *ngFor="let userpage of userPages" style="position:relative; left:4%" data-toggle="buttons">
-                        <tr><td><button mat-button color="primary" (click)="setUserPageLayers(userpage)" style="margin-right:3px; margin-bottom:3px;" class="btn btn-secondary pull-left">{{userpage.page}}</button></td></tr>
-                    </div>
+                <table *ngFor="let userpage of userPages" style="position:relative; width:100%; right:4px" data-toggle="buttons">
+                        <tr><td><button mat-button (click)="setUserPageLayers(userpage)" style="margin-right:3px; margin-bottom:3px;" class="btn btn-secondary pull-left">{{userpage.page}}</button>
+                            </td><td style="position:relative; left:4px"><button mat-icon-button [matMenuTriggerFor]="menu">
+                                <mat-icon>more_vert</mat-icon>
+                              </button>
+                              <mat-menu #menu="matMenu">
+                                <button mat-menu-item>
+                                  <mat-icon>done</mat-icon>
+                                  <span>Make Default</span>
+                                </button>
+                                <button mat-menu-item disabled>
+                                  <mat-icon>voicemail</mat-icon>
+                                  <span>Check voicemail</span>
+                                </button>
+                                <button mat-menu-item>
+                                  <mat-icon>notifications_off</mat-icon>
+                                  <span>Disable alerts</span>
+                                </button>
+                              </mat-menu>
+                            </td></tr>
                 </table>
             </mat-expansion-panel>
             <mat-expansion-panel>
@@ -38,25 +54,39 @@
                     </mat-panel-description>
                 </mat-expansion-panel-header>
                 <mat-radio-group class="example-radio-group" [(ngModel)]="currLayer">
-                        <mat-radio-button [disabled]="!userpagelayer.layerShown" class="example-radio-button" *ngFor="let userpagelayer of userPageLayers" [value]="userpagelayer" (change)="setCurrentLayer(0,userpagelayer,true)">
+                        <div *ngFor="let userpagelayer of userPageLayers">
+                                <button mat-icon-button [matMenuTriggerFor]="menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                      </button>
+                                      <mat-menu #menu="matMenu">
+                                        <button mat-menu-item>
+                                          <mat-icon>done</mat-icon>
+                                          <span>Default On</span>
+                                        </button>
+                                        <button mat-menu-item>
+                                          <mat-icon>opacity</mat-icon>
+                                          <span>Opacity</span>
+                                        </button>
+                                        <button mat-menu-item>
+                                            <mat-icon>share</mat-icon>
+                                            <span>Share</span>
+                                          </button>
+                                          <button mat-menu-item>
+                                            <mat-icon>web</mat-icon>
+                                            <span>Copy Google Sheet Link</span>
+                                          </button>
+                                          <button mat-menu-item>
+                                            <mat-icon>now_wallpaper</mat-icon>
+                                            <span>View in Google Earth</span>
+                                          </button>
+                                      </mat-menu>
+                        <mat-radio-button [disabled]="!userpagelayer.layerShown" class="example-radio-button" [value]="userpagelayer" (change)="setCurrentLayer(0,userpagelayer,true)">
                             <mat-slide-toggle class="example-margin" [checked]="userpagelayer.layerShown" (change)="toggleLayers(0,userpagelayer,userpagelayer.layerShown)">
                                 {{userpagelayer.layer_admin.layerName}}
                             </mat-slide-toggle>
                         </mat-radio-button>
+                        </div>
                     </mat-radio-group>
-            </mat-expansion-panel>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Settings
-                    </mat-panel-title>
-                    <mat-panel-description>
-
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
-                Layer Settings go here.  Including:<br>
-                Opacity<br>
-                Default On<br> 
             </mat-expansion-panel>
             <mat-expansion-panel [disabled]="true">
                 <mat-expansion-panel-header>
