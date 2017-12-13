@@ -387,7 +387,7 @@ export class MapComponent {
     }
         
     private cleanPage(): void {
-        console.log('Flags array: ' + this.userPageLayers[0].layerShown);
+        //console.log('Flags array: ' + this.userPageLayers[0].layerShown);
         this.clearMessage();
         this.setFlags();
         this.mapService.map.eachLayer(function (removelayer) {

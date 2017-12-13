@@ -36,6 +36,7 @@
     "@types/leaflet": "^1.0.61",
     "@types/leaflet-draw": "^0.4.10",
     "@types/password-hash-and-salt": "^0.1.0",
+    "angular4-material-table": "^0.1.8",
     "aws-sdk": "^2.59.0",
     "bcrypt": "1.0.2",
     "bootstrap": "^3.3.7",

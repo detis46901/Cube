@@ -11,8 +11,23 @@ import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component
 import { PageComponent } from './page/page.component';
 import { PageConfigComponent } from './pageConfig/pageConfig.component';
 import { ChangePasswordComponent } from './changePassword/changePassword.component';
+import { NewUserComponent } from './newUser/newUser.component';
 import { Md5 } from 'ts-md5/dist/md5';
 import { MatDialog } from '@angular/material';
+import { DataSource } from '@angular/cdk/collections';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/switchMap';
+
+//var userList: Array<User>;
+var userList: any[] = [
+    {ID: 1, firstName: 'Josh', lastName: 'Church', roleID: 1, email: 'gmail@gmail.com', active: 'true', administrator: 'false'}
+]
+var roleList: Array<Role>;
 
 @Component({
     selector: 'user',
@@ -33,6 +48,11 @@ export class UserComponent implements OnInit {
     private userPages: Array<UserPage>;
     private users: Array<User>;
     private roles: Array<Role>;
+
+    //For use with Material Data Table
+    userColumns = ['userID', 'firstName', 'lastName', 'role', 'email', 'active', 'administrator']
+    dataSource: UserDataSource | null;
+    //dataSource: TableDataSource<User>;
     
     constructor(private userService: UserService, private roleService: RoleService, private userPageService: UserPageService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -41,27 +61,19 @@ export class UserComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.initNewUser();
         this.getUserItems();
         this.getRoleItems();
         this.getUserPageItems();
+        //console.log(this.users)
+        this.dataSource = new UserDataSource(this.userService)
     }
 
-    private initNewUser(): void {
-        this.newUser.firstName = 'First name';
-        this.newUser.lastName = 'Last name';
-        this.newUser.roleID = null;
-        this.newUser.active = true;
-        this.newUser.email = 'Email';
-        this.newUser.administrator = false;
-        this.newUser.password = '';
-    }
-
-    private getUserItems(): void {
+    public getUserItems(): void {
         this.userService
             .GetAll()
             .subscribe((data:User[]) => {
                 this.users = data;
+                userList = data;
             });
     }
 
@@ -70,6 +82,7 @@ export class UserComponent implements OnInit {
             .GetAll()
             .subscribe((data:Role[]) => {
                 this.roles = data;
+                roleList = this.roles;
             });
     }
 
@@ -79,39 +92,6 @@ export class UserComponent implements OnInit {
             .subscribe((data:UserPage[]) => {
                 this.userPages = data;
             });
-    }
-
-    private clearInputs(): void {
-        this.newUser.email = '';
-        this.newUser.password = '';
-    }
-
-    private addUser(newUser: User): void {
-        this.newUser = newUser;
-        let errorFlag = false;
-
-        for (let x of this.users) {
-            if (this.newUser.email === x.email) {
-                errorFlag = true;
-                this.clearInputs();
-                alert(x.email + ' is already taken.');
-            }
-        }
-
-        if (errorFlag == false) {
-            if (this.newUser.password == '') {
-                this.newUser.password = Md5.hashStr('Monday01').toString();
-            } else {
-                this.newUser.password = Md5.hashStr(this.newUser.password).toString();
-            }
-
-            this.userService
-                .Add(this.newUser)
-                .subscribe(() => {
-                    this.getUserItems();
-                    this.initNewUser();
-                });
-        }
     }
 
     private updateUser(user: User): void {
@@ -214,4 +194,40 @@ export class UserComponent implements OnInit {
             this.getUserPageItems();
         });
     }
+
+    private openNewUser(): void {
+        const dialogRef = this.dialog.open(NewUserComponent, {height:'370px', width:'500px'});
+        dialogRef.afterClosed()
+        .subscribe(() => {
+            this.getUserItems();
+            this.getUserPageItems();
+        });
+    }
+}
+
+export class UserDataSource extends DataSource<User> {
+    private users: Array<User>;
+
+    constructor(private userService: UserService) {
+        super();
+    }
+
+    ngOnInit() {
+        this.userService.GetAll()
+        .subscribe((data) => this.users = data)
+    }
+
+    connect(): Observable<User[]> {
+        //return Observable.of(userList)
+        // this.userService.GetAll()
+        // .subscribe((response) => {
+        //     return Observable.of(response);
+        // })
+        return this.userService.GetAll()
+        .map(data => {
+            return data;
+        })
+    }
+
+    disconnect() {}
 }

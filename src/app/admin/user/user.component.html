@@ -1,5 +1,4 @@
-<div style="width:100%">
-    <br>
+<!-- <div style="width:100%">
     <div class="row" style="position:relative; left:20px">
         <div class="col-md-2">
             <div class="row">
@@ -42,6 +41,10 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-2">
+            <button mat-button id="userCreateNew" style="position:relative; top:5px;" (click)="openNewUser()">Create User</button>
+        </div>
     </div>
     
     <form style="position:relative; left:20px" class="form-inline" #e="ngForm" *ngFor="let user of users">
@@ -79,39 +82,48 @@
             </mat-menu>
         </div>
     </form>      
-    <br>
+</div> -->
+
+<!--Material Data Table-->
+
+<mat-table id="userDataTable" #table [dataSource]="dataSource">
+    <ng-container matColumnDef="userID">
+        <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+        <mat-cell *matCellDef="let user"> {{user.ID}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="firstName">
+        <mat-header-cell *matHeaderCellDef> First Name </mat-header-cell>
+        <mat-cell *matCellDef="let user"> {{user.firstName}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="lastName">
+        <mat-header-cell *matHeaderCellDef> Last Name </mat-header-cell>
+        <mat-cell *matCellDef="let user"> {{user.lastName}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="role">
+        <mat-header-cell *matHeaderCellDef> Role </mat-header-cell>
+        <mat-cell *matCellDef="let user"> {{user.roleID}} </mat-cell>
+    </ng-container>
     
-    <p style="position:absolute; left:35px">Create New User</p><br>
-    <form #f="ngForm" style="position:relative; left:20px" class="form-inline" (ngSubmit)="addUser(newUser)" autocomplete="off">
-        <!-- <i class="fa fa-arrow-right" style="margin-right:5px" aria-hidden="true"></i>
-        <input matInput id="newuserfirstname" onClick="this.select();" name="newuserfirstname" required #newuserfirstnameinput [(ngModel)] = "newUser.firstName" type="text" placeholder="First Name">
-        <input matInput id="newuserlastname" onClick="this.select();" name="newuserlastname" required #newuserlastnameinput [(ngModel)] = "newUser.lastName" type="text" placeholder="Last Name">
-        <select id="newuserrole" name="newuserrole" name="exuserrole" class="form-control" required #role="ngModel" [(ngModel)] = "newUser.roleID" type="text">
-            <option *ngFor="let role of roles" [value]="role.ID">
-                {{role.role}}
-            </option>
-        </select>
+    <ng-container matColumnDef="email">
+        <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+        <mat-cell *matCellDef="let user"> {{user.email}} </mat-cell>
+    </ng-container>
+    
+    <ng-container matColumnDef="active">
+        <mat-header-cell *matHeaderCellDef> Active </mat-header-cell>
+        <mat-cell *matCellDef="let user"> {{user.active}} </mat-cell>
+    </ng-container>
 
-        <input matInput id="newuseremail" onClick="this.select();" autocomplete="off" name="newuseremail" required #newuseremailinput [(ngModel)] = "newUser.email" type="text" placeholder="Email">
-        <input type="checkbox" id="newuseractive" name="newuseractive" #newuseractiveinput [(ngModel)] = "newUser.active" placeholder="Active" checked>
-        <input type="checkbox" id="newuseradministrator" name="newuseradministrator" #newuseradministratorinput [(ngModel)] = "newUser.administrator" placeholder="Administrator">
-        <input matInput id="newuserpassword" onClick="this.select();" autocomplete="off" name="newuserpassword" #newuserpasswordinput [(ngModel)] = "newUser.password" type="password" placeholder="Password">
-        <button id="btnSub" type="submit" [disabled]="!f.valid">Submit</button> -->
-        <i class="fa fa-arrow-right" style="margin-right:5px" aria-hidden="true"></i>
-        <input matInput id="newuserfirstname" onClick="this.select();" name="newuserfirstname" required #newuserfirstnameinput [(ngModel)] = "newUser.firstName" type="text" placeholder="First Name">
-        <input matInput id="newuserlastname" onClick="this.select();" name="newuserlastname" required #newuserlastnameinput [(ngModel)] = "newUser.lastName" type="text" placeholder="Last Name">
-        <select id="newuserrole" name="newuserrole" name="exuserrole" class="form-control" required #role="ngModel" [(ngModel)] = "newUser.roleID" type="text">
-            <option *ngFor="let role of roles" [value]="role.ID">
-                {{role.role}}
-            </option>
-        </select>
+    <ng-container matColumnDef="administrator">
+        <mat-header-cell *matHeaderCellDef> Administrator </mat-header-cell>
+        <mat-cell *matCellDef="let user"> {{user.administrator}} </mat-cell>
+    </ng-container>
 
-        <input matInput id="newuseremail" onClick="this.select();" autocomplete="off" name="newuseremail" required #newuseremailinput [(ngModel)] = "newUser.email" type="text" placeholder="Email">
-        <input type="checkbox" id="newuseractive" name="newuseractive" #newuseractiveinput [(ngModel)] = "newUser.active" placeholder="Active" checked>
-        <input type="checkbox" id="newuseradministrator" name="newuseradministrator" #newuseradministratorinput [(ngModel)] = "newUser.administrator" placeholder="Administrator">
-        <input matInput id="newuserpassword" onClick="this.select();" autocomplete="off" name="newuserpassword" #newuserpasswordinput [(ngModel)] = "newUser.password" type="password" placeholder="Password">
-        <button id="btnSub" type="submit" [disabled]="!f.valid">Submit</button>
-    </form> 
-</div>
+    <mat-header-row *matHeaderRowDef="userColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: userColumns"></mat-row>
+</mat-table>
 
-<ng-template ngbModalContainer></ng-template>
+<button mat-button id="userCreateNew" (click)="openNewUser()">Create User</button>

@@ -1,12 +1,14 @@
 <div id="headerBar" class="col-md-12 w3-black w3-large w3-padding" style="z-index:1">
     <div id="welcome">Welcome, <strong><a title="Return Home" class="w3-hover-text-blue" routerLink="home">{{user.firstName}} {{user.lastName}}</a></strong></div>
 
-    <div ngbDropdown class="d-inline-block" style="z-index:-1;position:relative;background-color:black">
+    <!--<div ngbDropdown class="d-inline-block" style="z-index:-1;position:relative;background-color:black">
         <button id="viewBtn" type="button" class="w3-btn w3-hover-text-blue" ngbDropdownToggle><i class="fa fa-bars"></i> View</button>
         <div id="viewMenu" class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenu1">
             <button id="vData" (click)="menuToggle(screenCode)" class="w3-btn w3-hover-text-blue">Toggle Menu</button>
         </div>
-    </div>
+    </div>-->
+    <button mat-button style="position:relative; left:250px;" id="vData" (click)="menuToggle(screenCode)">Toggle Menu</button>
+    <button mat-button id="headerCreateUser" (click)="openNewUser()">Create User</button>
 
     <span class="w3-right">
         <a id="helpBtn" title="Help" class="w3-hover-none w3-xlarge w3-hover-text-blue w3-show-inline-block"><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>

@@ -78,6 +78,7 @@ import { UserService } from '../_services/_user.service';
 import { SQLService } from '../_services/sql.service'
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
+import { NewUserComponent } from './admin/user/newUser/newUser.component';
 
 
 
@@ -121,7 +122,8 @@ import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
         MarkerDataComponent,
         //LayerControlsComponent,
         ServerNewComponent,
-        ChangePasswordComponent
+        ChangePasswordComponent,
+        NewUserComponent
     ],
 
     entryComponents: [
@@ -132,7 +134,8 @@ import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
         PageComponent, 
         PageConfigComponent, 
         ConfirmDeleteComponent,
-        ServerNewComponent
+        ServerNewComponent,
+        NewUserComponent
     ],
 
     imports: [

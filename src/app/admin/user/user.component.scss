@@ -1,56 +1,76 @@
-h4 {
-    color: black;
+// h4 {
+//     color: black;
+// }
+
+// #newuserfirstname, #exuserfirstname, #newuserlastname, #exuserlastname, #newuserrole, #exuserrole, #newuseremail, #exuseremail {
+//     border-color: rgba(255,255,255,0); 
+//     border:ridge; 
+//     border-width:2px; 
+//     width:15.5%; 
+//     height:33px; 
+//     border-radius:4px
+// }
+
+// #newuseremail, #exuseremail {
+//     width: 18%
+// }
+
+// #newuseractive, #exuseractive, #newuseradministrator, #exuseradministrator {
+//     border-color: rgba(255,255,255,0); 
+//     border:ridge; 
+//     border-width:2px; 
+//     width:5%
+// }
+
+// #AdminUserOptions, #AdminUserEdit, {
+//     position:relative;
+//     height:33px; 
+//     border-radius:3px;
+//     border-color:black;
+//     border-width:1px;
+// }
+
+// #AdminUserOptions {
+//     width:65px; 
+// }
+
+// #AdminUserEdit {
+//     width:80px;
+// }
+
+// #newuserpassword {
+//     position:relative; 
+//     border-color: rgba(255,255,255,0); 
+//     border:ridge; 
+//     border-width:2px; 
+//     width:13%; 
+//     height:34px; 
+//     border-radius:4px;
+//     right:10px
+// }
+
+// #btnSub {
+//     width:80px; 
+//     height:33px; 
+//     border-radius:3px;
+// }
+
+.mat-column-userID {
+    flex: 0 0 70px;
 }
 
-#newuserfirstname, #exuserfirstname, #newuserlastname, #exuserlastname, #newuserrole, #exuserrole, #newuseremail, #exuseremail {
-    border-color: rgba(255,255,255,0); 
-    border:ridge; 
-    border-width:2px; 
-    width:15.5%; 
-    height:33px; 
-    border-radius:4px
+.mat-column-firstName, .mat-column-lastName {
+    flex: 0 0 180px;
 }
 
-#newuseremail, #exuseremail {
-    width: 18%
+.mat-column-active, .mat-column-administrator {
+    flex: 0 0 100px;
 }
 
-#newuseractive, #exuseractive, #newuseradministrator, #exuseradministrator {
-    border-color: rgba(255,255,255,0); 
-    border:ridge; 
-    border-width:2px; 
-    width:5%
+.mat-column-role {
+    flex: 0 0 150px;
 }
 
-#AdminUserOptions, #AdminUserEdit, {
-    position:relative;
-    height:33px; 
-    border-radius:3px;
-    border-color:black;
-    border-width:1px;
-}
-
-#AdminUserOptions {
-    width:65px; 
-}
-
-#AdminUserEdit {
-    width:80px;
-}
-
-#newuserpassword {
-    position:relative; 
-    border-color: rgba(255,255,255,0); 
-    border:ridge; 
-    border-width:2px; 
-    width:13%; 
-    height:34px; 
-    border-radius:4px;
-    right:10px
-}
-
-#btnSub {
-    width:80px; 
-    height:33px; 
-    border-radius:3px;
-}
+// #userDataTable {
+//     width: 90%;
+// }
