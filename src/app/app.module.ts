@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 //import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule, JsonpModule } from '@angular/http';
 import { MapService } from './map/services/map.service';
 import { GeocodingService } from './map/services/geocoding.service';
@@ -79,6 +79,7 @@ import { SQLService } from '../_services/sql.service'
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
 import { NewUserComponent } from './admin/user/newUser/newUser.component';
+import { UserTableComponent } from './admin/user/userTable/userTable.component';
 
 
 
@@ -123,7 +124,8 @@ import { NewUserComponent } from './admin/user/newUser/newUser.component';
         //LayerControlsComponent,
         ServerNewComponent,
         ChangePasswordComponent,
-        NewUserComponent
+        NewUserComponent,
+        UserTableComponent
     ],
 
     entryComponents: [
@@ -152,6 +154,8 @@ import { NewUserComponent } from './admin/user/newUser/newUser.component';
                 component: HomeComponent
             }
         ]),
+        FormsModule,
+        ReactiveFormsModule,
         BrowserAnimationsModule,
         MatSlideToggleModule,
         MatTabsModule,

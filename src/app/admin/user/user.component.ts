@@ -16,12 +16,7 @@ import { Md5 } from 'ts-md5/dist/md5';
 import { MatDialog } from '@angular/material';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/switchMap';
+//import { UserDataSource } from './userTable/userData';
 
 //var userList: Array<User>;
 var userList: any[] = [
@@ -51,7 +46,7 @@ export class UserComponent implements OnInit {
 
     //For use with Material Data Table
     userColumns = ['userID', 'firstName', 'lastName', 'role', 'email', 'active', 'administrator']
-    dataSource: UserDataSource | null;
+    //dataSource: UserDataSource | null;
     //dataSource: TableDataSource<User>;
     
     constructor(private userService: UserService, private roleService: RoleService, private userPageService: UserPageService, private dialog: MatDialog) {
@@ -65,7 +60,7 @@ export class UserComponent implements OnInit {
         this.getRoleItems();
         this.getUserPageItems();
         //console.log(this.users)
-        this.dataSource = new UserDataSource(this.userService)
+        //this.dataSource = new UserDataSource(this.userService)
     }
 
     public getUserItems(): void {
@@ -201,33 +196,7 @@ export class UserComponent implements OnInit {
         .subscribe(() => {
             this.getUserItems();
             this.getUserPageItems();
+            //call userTableService method and subcribe to refresh list in userTable.
         });
     }
-}
-
-export class UserDataSource extends DataSource<User> {
-    private users: Array<User>;
-
-    constructor(private userService: UserService) {
-        super();
-    }
-
-    ngOnInit() {
-        this.userService.GetAll()
-        .subscribe((data) => this.users = data)
-    }
-
-    connect(): Observable<User[]> {
-        //return Observable.of(userList)
-        // this.userService.GetAll()
-        // .subscribe((response) => {
-        //     return Observable.of(response);
-        // })
-        return this.userService.GetAll()
-        .map(data => {
-            return data;
-        })
-    }
-
-    disconnect() {}
 }

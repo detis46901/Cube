@@ -1,52 +1,4 @@
-<!-- <div style="width:100%">
-    <div class="row" style="position:relative; left:20px">
-        <div class="col-md-2">
-            <div class="row">
-                <div class="col-md-10 col-md-offset-1">
-                    <h4>First Name</h4>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-2">
-            <h4>Last Name</h4>            
-        </div>
-
-        <div class="col-md-1">
-            <div style="position:relative; right:33%">
-                <h4>Role</h4>
-            </div>
-        </div>
-
-        <div class="col-md-1">
-            <div class="row">
-                <div class="col-md-5 col-md-offset-7">
-                    <h4>Email</h4>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-2">
-            <div class="row">
-                <div class="col-md-1 col-md-offset-11">
-                    <h4>Active</h4>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-1">
-            <div class="row">
-                <div class="col-md-2 col-md-offset-4">
-                    <h4>Admin</h4>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-2">
-            <button mat-button id="userCreateNew" style="position:relative; top:5px;" (click)="openNewUser()">Create User</button>
-        </div>
-    </div>
-    
+<!-- <div style="width:100%">  
     <form style="position:relative; left:20px" class="form-inline" #e="ngForm" *ngFor="let user of users">
         <i id="btnOpenDelUser" class="fa fa-times" style="margin-right:5px" (click)="openConfDel(user)"></i>
         <input matInput id="exuserfirstname" ngModel required name="exuserfirstname" class="form-control" [(ngModel)] = "user.firstName" (blur)="updateUser(user)">
@@ -83,50 +35,7 @@
         </div>
     </form>      
 </div> -->
+<!--<a href="https://github.com/angular/material2/issues/5982">Look at this website</a>-->
 
-<!--Material Data Table-->
-
-<mat-table id="userDataTable" #table [dataSource]="dataSource">
-    <ng-container matColumnDef="userID">
-        <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
-        <mat-cell *matCellDef="let user"> {{user.ID}} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="firstName">
-        <mat-header-cell *matHeaderCellDef> First Name </mat-header-cell>
-        <mat-cell *matCellDef="let user"><form><mat-form-field><input matInput [value]="user.firstName"></mat-form-field></form>    </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="lastName">
-        <mat-header-cell *matHeaderCellDef> Last Name </mat-header-cell>
-        <mat-cell *matCellDef="let user"> {{user.lastName}} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="role">
-        <mat-header-cell *matHeaderCellDef> Role </mat-header-cell>
-        <mat-cell *matCellDef="let user"> {{user.roleID}} </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef="email">
-        <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
-        <mat-cell *matCellDef="let user"> {{user.email}} </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef="active">
-        <mat-header-cell *matHeaderCellDef> Active </mat-header-cell>
-        <mat-cell *matCellDef="let user"> {{user.active}} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="administrator">
-        <mat-header-cell *matHeaderCellDef> Administrator </mat-header-cell>
-        <mat-cell *matCellDef="let user"> {{user.administrator}} </mat-cell>
-    </ng-container>
-
-    <mat-header-row *matHeaderRowDef="userColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: userColumns"></mat-row>
-</mat-table>
-
-
-<a href="https://github.com/angular/material2/issues/5982">Look at this website</a>
-
+<userTable></userTable>
 <button mat-button id="userCreateNew" (click)="openNewUser()">Create User</button>
