@@ -94,7 +94,7 @@
 
     <ng-container matColumnDef="firstName">
         <mat-header-cell *matHeaderCellDef> First Name </mat-header-cell>
-        <mat-cell *matCellDef="let user"> {{user.firstName}} </mat-cell>
+        <mat-cell *matCellDef="let user"><form><mat-form-field><input matInput [value]="user.firstName"></mat-form-field></form>    </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="lastName">
@@ -125,5 +125,8 @@
     <mat-header-row *matHeaderRowDef="userColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: userColumns"></mat-row>
 </mat-table>
+
+
+<a href="https://github.com/angular/material2/issues/5982">Look at this website</a>
 
 <button mat-button id="userCreateNew" (click)="openNewUser()">Create User</button>
