@@ -20,15 +20,15 @@
 
     <form style="position:relative; bottom:10px">
         <div class="row" *ngFor="let upl of userPageLayers; let i=index">
-        <div id="pageConfigLayersColumn" class="column">
-            <span>
-                <i (click)="deleteUserPageLayer(upl.ID)" class="fa fa-times" aria-hidden="true"></i>
-                &nbsp;{{upl.layer_admin.layerName}}
-            </span>
-        </div>
-        <div id="pageConfigDefaultColumn" class="column">
-            <mat-checkbox [name]="upl.ID" [(ngModel)]="upl.layerON"></mat-checkbox>
-        </div>
+            <div id="pageConfigLayersColumn" class="column">
+                <span>
+                    <i (click)="deleteUserPageLayer(upl.ID)" class="fa fa-times" aria-hidden="true"></i>
+                    &nbsp;{{upl.layer_admin.layerName}}
+                </span>
+            </div>
+            <div id="pageConfigDefaultColumn" class="column">
+                <mat-checkbox [name]="upl.ID" [(ngModel)]="upl.layerON"></mat-checkbox>
+            </div>
         </div>
     </form>
     <hr>

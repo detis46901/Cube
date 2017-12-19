@@ -11,22 +11,37 @@
     top:3px;
 }
 
-#pageDelPage {
+.column {
     position:relative;
-    right:4%;
+    bottom:7px;
 }
 
-#exPage {
-    width:45%;
-    padding-right:30px;
+#pageContentTitleBar {
+    border-bottom:solid black 1px;
+}
+
+#exPageNameCol {
     position:relative;
-    right:4%;
+    left:15px;
 }
 
-#exPageActive {
-    padding-right:50px;
+// #exPageActiveCol {
+//     margin-right:20%;
+// }
+
+// #exPageDefaultCol {
+//     margin-right:20%
+// }
+
+// #exPageOrderCol {
+//     
+// }
+
+#pageBodyRows {
+    height:30px;
+    border-bottom:solid black 1px;
 }
 
-#exPageDefault {
-    padding-right:45px;
+hr {
+    margin-bottom:5px;
 }

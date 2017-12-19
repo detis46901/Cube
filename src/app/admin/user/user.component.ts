@@ -68,7 +68,7 @@ export class UserComponent implements OnInit {
         this.getRoleItems();
         this.getUserPageItems();
         this.getUsers();
-        //this.openPages(2,"Josh","Church")
+        this.openPages(2,"Josh","Church")
     }
 
     private getUsers() {

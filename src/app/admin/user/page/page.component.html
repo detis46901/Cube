@@ -12,7 +12,7 @@
 <hr>
 
 <mat-dialog-content>
-    <div class="row">
+    <div id="pageContentTitleBar" class="row">
         <div class="col-md-2">
             <h4>Pages</h4>
         </div>
@@ -27,20 +27,33 @@
                 <h4>Order</h4>
             </div>
         </div>
-
-        <mat-radio-group class="pageGroup" [(ngModel)]="selectedPage">
-            <form *ngFor="let userPage of userPages" style="position:relative; left:15px">
-                <i id="pageDelPage" (click)="openConfDel(userPage)" class="fa fa-times" aria-hidden="true"></i>
-                <mat-form-field id="exPage">
-                    <input matInput name="exPage" #edituserpageinput [(ngModel)] = "userPage.page" type="text">
-                </mat-form-field>
-                <mat-checkbox id="exPageActive" name="exPageActive" [(ngModel)] = "userPage.active"></mat-checkbox>
-                <mat-radio-button id="exPageDefault" radioGroup="pageGroup" [name]="userPage.ID" (click)="updateDefaultPage(userPage)" [value]="userPage.ID"></mat-radio-button>
-                <i id="orderUp" class="fa fa-arrow-up" style="margin-right:5px;" aria-hidden="true" (click)="moveUp(userPage)"></i>
-                <i id="orderDown" class="fa fa-arrow-down" aria-hidden="true" (click)="moveDown(userPage)"></i>
-            </form> 
-        </mat-radio-group>
     </div>
+
+    <form>
+        <div id="pageBodyRows" class="row" *ngFor="let userPage of userPages; let i=index">
+            <mat-radio-group class="pageGroup" [name]="userPage.ID + userPage.ID + i" [(ngModel)]="selectedPage">
+                <span id="exPageNameCol" class="column">
+                    <i (click)="openConfDel(userPage)" class="fa fa-times" aria-hidden="true"></i>
+                    <mat-form-field id="exPage">
+                        <input matInput [name]="userPage.page + i" #edituserpageinput [(ngModel)] = "userPage.page" type="text">
+                    </mat-form-field>
+                </span>
+
+                <span id="exPageActiveCol" class="column">
+                    <mat-checkbox [name]="userPage.active + i" [(ngModel)] = "userPage.active"></mat-checkbox>
+                </span>
+
+                <span id="exPageDefaultCol" class="column">
+                    <mat-radio-button id="exPageDefault" radioGroup="pageGroup" [name]="userPage.ID + i" (click)="updateDefaultPage(userPage)" [value]="userPage.ID"></mat-radio-button>
+                </span>
+
+                <span id="exPageOrderCol" class="column">
+                    <i id="orderUp" class="fa fa-arrow-up" style="margin-right:5px;" aria-hidden="true" (click)="moveUp(userPage)"></i>
+                    <i id="orderDown" class="fa fa-arrow-down" aria-hidden="true" (click)="moveDown(userPage)"></i>
+                </span>
+            </mat-radio-group>
+        </div>
+    </form>
     <hr>
 
     <mat-form-field>
