@@ -15,8 +15,8 @@
 
 #pageConfigX {
     position:relative;
-    left:20px;
-    top:3px;
+    left:60px;
+    top:5px;
 }
 
 #pageConfigNewLayer {
@@ -24,7 +24,30 @@
     left:15px;
 }
 
-// #exPageLayerOn {
-//     padding-left:20px;
-// }
-//need to find a way to workaround the text length
+#pageConfigLayersColumn {
+    position:relative;
+    left:5%;
+    width:72%;
+}
+
+#pageConfigDefaultColumn {
+    width:20%;
+}
+
+.column {
+    border-top:solid black 1px;
+}
+
+mat-checkbox {
+    position:relative;
+    top:2px;
+}
+
+hr {
+    margin:10px 0px 10px 0px;
+
+}
+
+mat-dialog-actions {
+    margin-bottom:0px;
+}

@@ -8,22 +8,29 @@
 </div>
 <hr>
 
-<mat-dialog-content>
-    <div id="pageConfigBody" class="row" style="position:relative; bottom:10px">
+<mat-dialog-content id="pageConfigBody">
+    <div class="row">
         <div class="col-md-7">
             <h4>Current Layers</h4>
         </div>
         <div class="col-md-5">
             <h4>Default On</h4>
         </div>
-
-        <form *ngFor="let userPageLayer of userPageLayers" style="position:relative; left:15px;">
-            <span style="padding-right:100px;"><i (click)="deleteUserPageLayer(userPageLayer.ID)" class="fa fa-times" aria-hidden="true"></i>
-                &nbsp;{{userPageLayer.layer_admin.layerName}}</span>
-            <mat-checkbox id="exPageLayerOn" name="exPageLayerOn" [(ngModel)]="userPageLayer.layerON" (click)="updateUserPageLayer(userPageLayer)"></mat-checkbox>
-        </form>
-        <br>
     </div>
+
+    <form style="position:relative; bottom:10px">
+        <div class="row" *ngFor="let upl of userPageLayers; let i=index">
+        <div id="pageConfigLayersColumn" class="column">
+            <span>
+                <i (click)="deleteUserPageLayer(upl.ID)" class="fa fa-times" aria-hidden="true"></i>
+                &nbsp;{{upl.layer_admin.layerName}}
+            </span>
+        </div>
+        <div id="pageConfigDefaultColumn" class="column">
+            <mat-checkbox [name]="upl.ID" [(ngModel)]="upl.layerON"></mat-checkbox>
+        </div>
+        </div>
+    </form>
     <hr>
 
     <form #f="ngForm">
@@ -40,6 +47,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions id="pageConfigFooter">
-    <button mat-dialog-close id="matClose">Close</button>
+    <button [mat-dialog-close]="userPageLayers" id="matClose">Save &amp; Exit</button>
     <button mat-button id="pageConfigSubmit" (click)="addUserPageLayer(newUserPageLayer)" [disabled]="!f.valid">Add Layer</button>
 </mat-dialog-actions>

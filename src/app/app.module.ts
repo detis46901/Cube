@@ -79,7 +79,6 @@ import { SQLService } from '../_services/sql.service'
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
 import { NewUserComponent } from './admin/user/newUser/newUser.component';
-import { UserTableComponent } from './admin/user/userTable/userTable.component';
 
 
 
@@ -125,7 +124,6 @@ import { UserTableComponent } from './admin/user/userTable/userTable.component';
         ServerNewComponent,
         ChangePasswordComponent,
         NewUserComponent,
-        UserTableComponent
     ],
 
     entryComponents: [

@@ -1,41 +1,5 @@
-<!-- <div style="width:100%">  
-    <form style="position:relative; left:20px" class="form-inline" #e="ngForm" *ngFor="let user of users">
-        <i id="btnOpenDelUser" class="fa fa-times" style="margin-right:5px" (click)="openConfDel(user)"></i>
-        <input matInput id="exuserfirstname" ngModel required name="exuserfirstname" class="form-control" [(ngModel)] = "user.firstName" (blur)="updateUser(user)">
-        <input matInput id="exuserlastname" ngModel required name="exuserlastname" class="form-control" [(ngModel)] = "user.lastName" type="text" (blur)="updateUser(user)">
-        <select id="exuserrole" ngModel required name="exuserrole" class="form-control" [(ngModel)] = "user.roleID" #role="ngModel" type="text" (blur)="updateUser(user)">
-            <option *ngFor="let role of roles" [value]="role.ID">
-                {{role.role}}
-            </option>
-        </select>
-        <input matInput id="exuseremail" ngModel required name="exuseremail" title="{{user.email}}" class="form-control" [(ngModel)] = "user.email" type="text" (blur)="updateUser(user)">
-        <input type="checkbox" id="exuseractive" name="exuseractive" class="form-check-input" [(ngModel)] = "user.active" (blur)="updateUser(user)">
-        <input type="checkbox" id="exuseradministrator" name="exuseradministrator" class="form-check-input" [(ngModel)] = "user.administrator" (blur)="updateUser(user)">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <div class="row" style="position:relative;width:22%;left:2%">
-            <button mat-button [matMenuTriggerFor]="menu">
-                Options
-            </button>
-            <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="changePassword(user.ID)">
-                    <h5>Change Password</h5>
-                </button>
-                <button mat-menu-item (click)="openPages(user.ID, user.firstName, user.lastName)">
-                    <h5>Pages</h5>
-                </button>
-            </mat-menu>
-            <button mat-button [matMenuTriggerFor]="menu2">
-                Edit Layers
-            </button>
-            <mat-menu #menu2="matMenu">
-                <button mat-menu-item id="openConfig" *ngFor="let userpage of (userPages | pagefilter: (user.ID))" (click)="getUserPageItem(userpage.ID, user.ID)">
-                    <h5>{{userpage.page}}</h5>
-                </button>
-            </mat-menu>
-        </div>
-    </form>      
-</div> -->
-<!--<a href="https://github.com/angular/material2/issues/5982">Look at this website</a>-->
 <mat-table id="userDataTable" #table [dataSource]="dataSource">
         <ng-container matColumnDef="userID">
             <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
@@ -68,11 +32,15 @@
             <mat-header-cell *matHeaderCellDef> Role </mat-header-cell>
             <mat-cell *matCellDef="let row">
               <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                  <input matInput [formControl]="row.validator.controls['roleID']" [readonly]="!row.editing" [(ngModel)]="row.currentData.roleID">
+                  <mat-select [formControl]="row.validator.controls['roleID']" [(ngModel)]="row.currentData.roleID">
+                        <mat-option *ngFor="let role of roles" [value]="role.ID">
+                            {{role.role}}
+                        </mat-option>
+                    </mat-select>
               </mat-form-field>
             </mat-cell>
         </ng-container>
-        
+
         <ng-container matColumnDef="email">
             <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
             <mat-cell *matCellDef="let row">
@@ -100,6 +68,8 @@
               </mat-form-field>
             </mat-cell>
         </ng-container>
+
+        
       
         <ng-container matColumnDef="actionsColumn">
           <mat-header-cell *matHeaderCellDef> Options </mat-header-cell>

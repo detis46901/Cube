@@ -69,8 +69,11 @@ export class PageConfigComponent implements OnInit {
         this.userPageLayerService
             .Update(userPage)
             .subscribe(result => {
+                console.log(result)
                 this.getUserPageLayers();
             });
+        console.log(userPage.ID)
+        console.log(this.userPageLayers)
     }
 
     public deleteUserPageLayer(userPageID: number): void {
@@ -79,5 +82,9 @@ export class PageConfigComponent implements OnInit {
             .subscribe(result => {
                 this.getUserPageLayers();
             });
+    }
+
+    public debug(u) {
+        console.log(u)
     }
 }
