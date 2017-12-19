@@ -7,13 +7,14 @@ import { UserValidatorService } from './userValidator.service';
 import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { MatDialog, MatInputModule } from '@angular/material';
 import { ConfirmDeleteComponent } from '../../confirmDelete/confirmDelete.component';
+import { PagePipe } from '../../../../_pipes/rowfilter2.pipe';
 
 @Component({
     selector: 'userTable',
     templateUrl: './userTable.component.html',
     styleUrls: ['./userTable.component.scss'],
     providers: [
-        {provide: ValidatorService, useClass: UserValidatorService},
+        {provide: ValidatorService, useClass: UserValidatorService},PagePipe,
         UserService
     ]
 })
@@ -22,6 +23,8 @@ export class UserTableComponent implements OnInit {
     private objCode = 1
     private userList: User[];
 
+    @Input() userPages: UserPage[]
+    @Input() userID: number
     @Output() userListChange = new EventEmitter<User[]>();
 
     private userColumns = ['userID', 'firstName', 'lastName', 'role', 'email', 'active', 'administrator', 'actionsColumn']

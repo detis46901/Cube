@@ -16,6 +16,11 @@ import { Md5 } from 'ts-md5/dist/md5';
 import { MatDialog } from '@angular/material';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
+
+import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
+import { UserValidatorService } from './../../admin/user/usertable/userValidator.service';
+
+
 //import { UserDataSource } from './userTable/userData';
 
 //var userList: Array<User>;
@@ -27,9 +32,10 @@ var roleList: Array<Role>;
 @Component({
     selector: 'user',
     templateUrl: './user.component.html',
-    providers: [UserService, RoleService, UserPageService, Configuration, PagePipe, NumFilterPipe],
+    providers: [UserService, RoleService, UserPageService, Configuration, PagePipe, NumFilterPipe, {provide: ValidatorService, useClass: UserValidatorService}],
     styleUrls: ['./user.component.scss'],
 })
+
 
 export class UserComponent implements OnInit {
     private objCode = 1
@@ -43,13 +49,17 @@ export class UserComponent implements OnInit {
     private userPages: Array<UserPage>;
     private users: Array<User>;
     private roles: Array<Role>;
+    private userList: User[];
+
+    private userColumns = ['userID', 'firstName', 'lastName', 'role', 'email', 'active', 'administrator', 'actionsColumn']
+    private dataSource: TableDataSource<User>;
 
     //For use with Material Data Table
-    userColumns = ['userID', 'firstName', 'lastName', 'role', 'email', 'active', 'administrator']
+   // userColumns = ['userID', 'firstName', 'lastName', 'role', 'email', 'active', 'administrator']
     //dataSource: UserDataSource | null;
     //dataSource: TableDataSource<User>;
     
-    constructor(private userService: UserService, private roleService: RoleService, private userPageService: UserPageService, private dialog: MatDialog) {
+    constructor(private userValidator: ValidatorService, private userService: UserService, private roleService: RoleService, private userPageService: UserPageService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
@@ -59,10 +69,21 @@ export class UserComponent implements OnInit {
         this.getUserItems();
         this.getRoleItems();
         this.getUserPageItems();
+        this.getUsers();
         //console.log(this.users)
         //this.dataSource = new UserDataSource(this.userService)
     }
 
+    private getUsers() {
+        this.userService.GetAll()
+        .subscribe((users: User[]) => {
+            this.userList = users
+            console.log(users)
+            this.dataSource = new TableDataSource<User>(users, User, this.userValidator);
+            //this.dataSource.datasourceSubject.subscribe(users => this.userListChange.emit(users));
+            console.log(this.dataSource.getRow(0))
+        }); 
+    }
     public getUserItems(): void {
         this.userService
             .GetAll()

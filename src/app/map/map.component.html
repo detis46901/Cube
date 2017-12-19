@@ -60,7 +60,7 @@
                                       </button>
                                       <mat-menu #menu="matMenu">
                                         <button mat-menu-item>
-                                          <mat-icon>done</mat-icon>
+                                          <mat-icon>star</mat-icon>
                                           <span>Default On</span>
                                         </button>
                                         <button mat-menu-item>
@@ -72,13 +72,21 @@
                                             <span>Share</span>
                                           </button>
                                           <button mat-menu-item>
+                                                <mat-icon>remove</mat-icon>
+                                                <span>Remove From Page</span>
+                                              </button>
+                                          <button mat-menu-item>
                                             <mat-icon>web</mat-icon>
                                             <span>Copy Google Sheet Link</span>
                                           </button>
                                           <button mat-menu-item>
-                                            <mat-icon>now_wallpaper</mat-icon>
+                                            <mat-icon>place</mat-icon>
                                             <span>View in Google Earth</span>
                                           </button>
+                                          <button mat-menu-item>
+                                                <mat-icon>assignment</mat-icon>
+                                                <span>View Metadata</span>
+                                              </button>                                              
                                       </mat-menu>
                         <mat-radio-button [disabled]="!userpagelayer.layerShown" class="example-radio-button" [value]="userpagelayer" (change)="setCurrentLayer(0,userpagelayer,true)">
                             <mat-slide-toggle class="example-margin" [checked]="userpagelayer.layerShown" (change)="toggleLayers(0,userpagelayer,userpagelayer.layerShown)">

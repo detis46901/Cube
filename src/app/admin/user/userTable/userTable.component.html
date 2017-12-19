@@ -75,9 +75,19 @@
       <button mat-icon-button color="primary" focusable="false" (click)="confirmDelete(row.currentData)">
             <i class="fa fa-times mat-icon"></i>
           </button>
+          <button mat-button [matMenuTriggerFor]="menu2">
+                Edit Layers
+            </button>
+            <mat-menu #menu2="matMenu" [overlapTrigger]="false">
+                <button mat-menu-item id="openConfig" *ngFor="let userpage of (userPages | pagefilter: (userID))" (click)="getUserPageItem(userpage.ID, userID)">
+                    <h5>{{userpage.page}}</h5>
+                </button>
+            </mat-menu>
     </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="userColumns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: userColumns"></mat-row>
 </mat-table>
+
+

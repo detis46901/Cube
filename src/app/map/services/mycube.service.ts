@@ -80,13 +80,13 @@ export class MyCubeService extends SQLService{
                 this.cubeData[1].type = "geom"
                 this.getsingle(table, message["id"])
                 //the value of the geometry field will be undefined because it isn't sent in the geoJSON.
-                 for(let i=0; i<properties.length; i++) {
-                     propList.push(properties[i].substring(1, properties[i].indexOf(":")-1));
+                //  for(let i=0; i<this.cubeData.length; i++) {
+                //      propList.push(properties[i].substring(1, properties[i].indexOf(":")-1));
                    
-                     this.cubeData[i+1].value = message[propList[i]]
-                     console.log(message[propList[i]])
-                 }
-                console.log(this.cubeData)                
+                //      this.cubeData[i+1].value = message[propList[i]]
+                //      console.log(message[propList[i]])
+                //  }
+                // console.log(this.cubeData)                
                 
             })
             
@@ -97,7 +97,7 @@ export class MyCubeService extends SQLService{
     getsingle(table, id) {
         this.GetSingle(table, id)
         .subscribe((sdata: JSON) => {
-            console.log(sdata)
+            console.log(sdata[0][0])
             // for(let i=0; i<properties.length; i++) {
             //     console.log(JSON.stringify(sdata))
             //     propList.push(properties[i].substring(1, properties[i].indexOf(":")-1));
@@ -105,9 +105,21 @@ export class MyCubeService extends SQLService{
             //     this.cubeData[i+1].value = data[0][0][propList[i]]
             //     console.log(data[propList[i]])
             //}
-            for (let z = 2; z==sdata[0][0].length; z++) {
-                
-            }
+
+            let z=0
+            for (var key in sdata[0][0]) {
+                if (sdata[0][0].hasOwnProperty(key)) {
+                  console.log(key + ": " + sdata[0][0][key]);
+                  if (z!=0) {this.cubeData[z].value = sdata[0][0][key]}
+                  console.log(z, this.cubeData[z].value)
+                  z++
+                }
+              }
+
+            // for (let z = 2; z==sdata[0].length; z++) {
+            //     console.log(sdata[0][z])
+            //     this.cubeData[z].value = sdata[0][z]
+            // }
             this.mycubesubject.next(this.cubeData);
         })
 

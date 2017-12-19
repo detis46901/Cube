@@ -12,14 +12,14 @@
         <div [innerHTML]='message.text'></div>
     </mat-card-content>
     <mat-card-content *ngIf="myCubeData">
-        <button (click)='clearMyCubeData()'>
-            <i class="fa fa-times" aria-hidden="true"></i>
+        <button mat-button (click)='clearMyCubeData()'>
+            <mat-icon>close</mat-icon>
         </button>
         <div *ngFor="let myCube of myCubeData">
                 <div *ngIf="myCube.type=='id'"></div>
                 <div *ngIf="myCube.type=='geom'"></div>
                 <div *ngIf="myCube.type=='integer'"><mat-form-field><input matInput id="textinput" ngModel required placeholder="{{myCube.field}}" [(ngModel)] = "myCube.value" (blur)="updateMyCube(myCube)"></mat-form-field></div>
-                <div *ngIf="myCube.type=='boolean'"><mat-form-field><input matInput id="textinput" ngModle required placeholder="{{myCube.field}}" [(ngModel)] = "myCube.value" (blur)="updateMyCube(myCube)"></mat-form-field></div>
+                <div *ngIf="myCube.type=='boolean'"><mat-checkbox [(ngModel)] = "myCube.value" (change)="updateMyCube(myCube)">{{myCube.field}}</mat-checkbox></div>
                 <div *ngIf="myCube.type=='text'"><mat-form-field><input matInput id="textinput" ngModle required placeholder="{{myCube.field}}" [(ngModel)] = "myCube.value" (blur)="updateMyCube(myCube)"></mat-form-field></div>
             </div>    
     </mat-card-content>
