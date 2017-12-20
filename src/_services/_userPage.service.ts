@@ -21,9 +21,19 @@ export class UserPageService extends ParentService {
             .map((response: Response) => <UserPage[]>response.json())
             .catch(this.handleError);
     }
+
     public GetDefault = (userid): Observable<UserPage[]> => {
         return this._http.get(this.actionUrl + 'default?userID=' + userid)
             .map((response: Response) => <UserPage[]>response.json())
             .catch(this.handleError);
+    }
+
+    public UpdateMultiple = (items: UserPage[]): Observable<UserPage[]> => {
+        console.log(JSON.stringify(items))
+ 
+        return this._http.put(this.actionUrl + 'updatemulti', JSON.stringify(items), {headers: this.headers})
+            .map((response: Response) => <any>response.json())
+            .catch(this.handleError);
+            
     }
 }

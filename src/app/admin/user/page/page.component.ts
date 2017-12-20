@@ -23,11 +23,11 @@ export class PageComponent implements OnInit {
     private user = new User;
     private userPage = new UserPage;
 
-    private userPages: Array<UserPage>;
+    private userPages = new Array<UserPage>();
     private newUserPage: string;
     private selectedPage: number;
 
-    constructor(private userpageService: UserPageService, private dialog: MatDialog) {
+    constructor(private userPageService: UserPageService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
     }
@@ -37,33 +37,35 @@ export class PageComponent implements OnInit {
     }
 
     private getUserPageItems(): void {
-        this.userpageService
+        this.userPageService
             .GetSome(this.userID)
             .subscribe((data:UserPage[]) => {
-                this.setDefaultPage(data);
+                this.setupPages(data);
             });
     }
     
-    private setDefaultPage(userPages: Array<UserPage>): void {
-        this.userPages = userPages;
+    private setupPages(userPages: Array<UserPage>): void {  
+        console.log(this.userPages[0] == undefined)    
         for (let userPage of userPages) {
+            this.userPages[userPage.pageOrder] = userPage
+
             if (userPage.default == true) {
                 this.selectedPage = userPage.ID;
+            }
+        }
+        for(let userPage of this.userPages) {
+            if(userPage == undefined) {
+                alert("Page list is incomplete. Error unhandled.")
             }
         }
     }
 
     private updateDefaultPage(userPage: UserPage): void {
-        for (let tempage of this.userPages) {
-            if (tempage.default == true) {
-                tempage.default = false;
-                this.updateUserPage(tempage);
-            }
-        }
-        for (let tempage of this.userPages) {
-            if (tempage.ID == userPage.ID) {
-                tempage.default = true;
-                this.updateUserPage(tempage);
+        userPage.default = true
+        for (let temp of this.userPages) {
+            if (temp.default && temp.ID != userPage.ID) {
+                temp.default = false;
+                this.updateUserPage(temp);
             }
         }
     }
@@ -92,7 +94,7 @@ export class PageComponent implements OnInit {
         this.userPage.active = true;
         this.userPage.pageOrder = this.userPages.length;
         this.userPage.default = false;
-        this.userpageService
+        this.userPageService
             .Add(this.userPage)
             .subscribe(() => {
                 this.getUserPageItems();
@@ -100,11 +102,20 @@ export class PageComponent implements OnInit {
     }
 
     private updateUserPage(userPage: UserPage): void {
-        this.userpageService
+        this.userPageService
             .Update(userPage)
             .subscribe(() => {
                 this.getUserPageItems();
             });
+    }
+
+    private updateMultiple(userPages: UserPage[]): void {
+        this.userPageService
+            .UpdateMultiple(userPages)
+            // .subscribe((res) => {
+            //     console.log(res)
+            //     this.getUserPageItems();
+            // });
     }
 
     private openConfDel(userPage: UserPage): void {
@@ -123,7 +134,7 @@ export class PageComponent implements OnInit {
     }
 
     private deleteUserPage(userpageID: number): void {
-        this.userpageService
+        this.userPageService
             .Delete(userpageID)
             .subscribe(() => {
                 this.getUserPageItems();
@@ -150,17 +161,22 @@ export class PageComponent implements OnInit {
     }
 
     private moveUp(userPage: UserPage): void {
-        let temp = userPage.pageOrder;
-        for (let x of this.userPages) {
-            if (x.pageOrder == temp-1) {
-                x.pageOrder = temp;
-                userPage.pageOrder = temp-1;
-            }
+        if(userPage.pageOrder != 0) {
+            let swap = this.userPages[userPage.pageOrder-1]
+            swap.pageOrder +=1
+            userPage.pageOrder -= 1;
+            this.updateUserPage(userPage);
+            this.updateUserPage(swap);
         }
-        this.getUserPageItems();
     }
 
-    //For use in ordering page items.
     private moveDown(userPage: UserPage): void {
+        if(userPage.pageOrder != this.userPages.length-1) {
+            let swap = this.userPages[userPage.pageOrder+1]
+            swap.pageOrder -=1
+            userPage.pageOrder += 1;
+            this.updateUserPage(userPage);
+            this.updateUserPage(swap);
+        }
     }
 }

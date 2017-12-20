@@ -2,68 +2,68 @@
 <!--This should be updated to Material Data Table-->
 <div style="width:100%">
     <div class="row" style="position:relative; top:10px; left:40px">
-        <div class="col-md-1">
+        <div class="col-sm-1">
             <h4>Name</h4>
         </div>
 
-        <div class="col-md-1">
+        <div class="col-sm-1">
             <div class="row">
-                <div class="col-md-1 col-md-offset-2">
+                <div class="col-sm-1 col-sm-offset-2">
                     <h4>Identity</h4>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-1">
+        <div class="col-sm-1">
             <div class="row">
-                <div class="col-md-2 col-md-offset-4">
+                <div class="col-sm-2 col-sm-offset-4">
                     <h4>Service</h4>
                 </div>
             </div>
         </div> 
 
-        <div class="col-md-1">
+        <div class="col-sm-1">
             <div class="row">
-                <div class="col-md-2 col-md-offset-4">
+                <div class="col-sm-2 col-sm-offset-4">
                     <h4>Server</h4>
                 </div>
             </div>
         </div> 
 
-        <div class="col-md-1">
+        <div class="col-sm-1">
             <div class="row">
-                <div class="col-md-1 col-md-offset-6">
+                <div class="col-sm-1 col-sm-offset-6">
                     <h4>Description</h4>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-1">
+        <div class="col-sm-1">
             <div class="row">
-                <div class="col-md-1 col-md-offset-8">
+                <div class="col-sm-1 col-sm-offset-8">
                     <h4>Format</h4>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-1">
+        <div class="col-sm-1">
             <div class="row">
-                <div class="col-md-1 col-md-offset-5">
+                <div class="col-sm-1 col-sm-offset-5">
                     <h4>Type</h4>
                 </div>
             </div>
         </div>       
 
-        <div class="col-md-1">
+        <div class="col-sm-1">
             <div class="row">
-                <div class="col-md-1 col-md-offset-1">
+                <div class="col-sm-1 col-sm-offset-1">
                     <h4>Geometry</h4>
                 </div>
             </div>
         </div>
         
 
-        <div class="col-md-3 col-md-offset-1">
+        <div class="col-sm-3 col-sm-offset-1">
             <div class="row">
                 <button mat-button id="createLayerBtn" (click)="createLayer()">Create Layer</button>
                 <button mat-button id="createMyCubeBtn" (click)="createMyCube()">Create MyCube</button>
@@ -86,21 +86,21 @@
        <!-- This should be a material datatable and not a form-->
         <form class="form-inline" #e="ngForm" style="position:relative; left:20px;" *ngFor="let layeradmin of layerAdmins">
             <i id="btnOpenDelLayer" class="fa fa-times" style="position:relative; margin-right:5px" (click)="openConfDel(layeradmin)"></i>
-            <mat-form-field id="exlayername"><input matInput ngModel required placeholder="Name" name="exlayername" title="{{layeradmin.layerName}}" [(ngModel)] = "layeradmin.layerName" (blur)="updateLayer(layeradmin)"></mat-form-field>
-            <mat-form-field id="exlayerident"><input matInput  required placeholder="Identity" name="exlayerident" title="{{layeradmin.layerIdent}}" [(ngModel)] = "layeradmin.layerIdent" (change)="updateLayer(layeradmin)"></mat-form-field>
-            <mat-form-field id="exlayerservice"><input matInput required placeholder="Service" name="exlayerservice" title="{{layeradmin.layerService}}" [(ngModel)] = "layeradmin.layerService" (change)="updateLayer(layeradmin)"></mat-form-field>
+            <mat-form-field id="exlayername"><input matInput ngModel required placeholder="Name" name="exlayername" title="{{layeradmin.layerName}}" [(ngModel)]="layeradmin.layerName" (blur)="updateLayer(layeradmin)"></mat-form-field>
+            <mat-form-field id="exlayerident"><input matInput  required placeholder="Identity" name="exlayerident" title="{{layeradmin.layerIdent}}" [(ngModel)]="layeradmin.layerIdent" (change)="updateLayer(layeradmin)"></mat-form-field>
+            <mat-form-field id="exlayerservice"><input matInput required placeholder="Service" name="exlayerservice" title="{{layeradmin.layerService}}" [(ngModel)]="layeradmin.layerService" (change)="updateLayer(layeradmin)"></mat-form-field>
             <mat-form-field id="exlayerserver">
-            <mat-select placeholder="Server" name="exlayerserver" [(ngModel)] = "layeradmin.serverID" required type="number">
+            <mat-select placeholder="Server" name="exlayerserver" [(ngModel)]="layeradmin.serverID" required type="number">
                 <mat-option [value]="server.ID" *ngFor="let server of servers">
                     {{server.serverName}}
                 </mat-option>
             </mat-select>
             </mat-form-field>
 
-            <mat-form-field id="exlayerdescription" ><input matInput ngModel placeholder="Description" name="exlayerdescription" title="{{layeradmin.layerDescription}}" [(ngModel)] = "layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)"></mat-form-field>
+            <mat-form-field id="exlayerdescription" ><input matInput ngModel placeholder="Description" name="exlayerdescription" title="{{layeradmin.layerDescription}}" [(ngModel)]="layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)"></mat-form-field>
             
             <mat-form-field id="exlayerformat">
-            <mat-select ngModel required placeholder="Format" name="exlayerformat" [(ngModel)] = "layeradmin.layerFormat" (blur)="updateLayer(layeradmin)">
+            <mat-select ngModel required placeholder="Format" name="exlayerformat" [(ngModel)]="layeradmin.layerFormat" (blur)="updateLayer(layeradmin)">
                 <mat-option value="image/png">image/png</mat-option>
                 <mat-option value="image/jpg">image/jpg</mat-option>
                 <mat-option value="image/jpeg">image/jpeg</mat-option>
@@ -109,7 +109,7 @@
             </mat-form-field>
 
             <mat-form-field id="exlayertype">
-            <mat-select ngModel required placeholder="Type" name="exlayertype" [(ngModel)] = "layeradmin.layerType" (blur)="updateLayer(layeradmin)">
+            <mat-select ngModel required placeholder="Type" name="exlayertype" [(ngModel)]="layeradmin.layerType" (blur)="updateLayer(layeradmin)">
                 <mat-option value="PostGIS">PostGIS</mat-option>
                 <mat-option value="MapServer">MapServer</mat-option>
                 <mat-option value="Geoserver">Geoserver</mat-option>
@@ -122,7 +122,7 @@
             </mat-form-field>
 
             <mat-form-field id="exlayergeom">
-            <mat-select ngModel required placeholder="Geometry" name="exlayergeom" [(ngModel)] = "layeradmin.layerGeom" (blur)="updateLayer(layeradmin)">
+            <mat-select ngModel required placeholder="Geometry" name="exlayergeom" [(ngModel)]="layeradmin.layerGeom" (blur)="updateLayer(layeradmin)">
                 <mat-option value="Point">Point</mat-option>
                 <mat-option value="Polyline">Polyline</mat-option>
                 <mat-option value="Polygon">Polygon</mat-option>

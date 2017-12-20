@@ -1,9 +1,9 @@
 <!-- This defines the modal that pops up after a "Create New Layer" click event from "Layers" control-->
 <div id="newLayerHeader" class="row">
-    <div class="col-md-9">
+    <div class="col-sm-9">
         <h4 mat-dialog-title>Create New Layer</h4>
     </div>
-    <div class="col-md-1 col-md-offset-2">
+    <div class="col-sm-1 col-sm-offset-2">
         <button mat-dialog-close id="newLayerX" class="close" aria-label="Close">&times;</button>
     </div>
 </div>
@@ -18,7 +18,7 @@
             </mat-form-field>
             
             <mat-form-field id="descBlock">
-                <input matInput id="newlayerdescription" name="newlayerdescription" [(ngModel)] = "newLayerAdmin.layerDescription" placeholder="Description">
+                <input matInput id="newlayerdescription" name="newlayerdescription" [(ngModel)]="newLayerAdmin.layerDescription" placeholder="Description">
             </mat-form-field>      
         </div>
         <br>
@@ -26,7 +26,7 @@
         <!--Row 2-->
         <div class="row" style="width:100%">
             <mat-form-field id="idBlock">  
-                <input matInput *ngIf="layerServer == null" id="newlayerident" name="newlayerident" [(ngModel)] = "newLayerAdmin.layerIdent" placeholder="Identity">
+                <input matInput *ngIf="layerServer == null" id="newlayerident" name="newlayerident" [(ngModel)]="newLayerAdmin.layerIdent" placeholder="Identity">
                 <input matInput *ngIf="layerServer != null" id="newlayerident2" value="{{layerIdent}}" readonly placeholder="Identity">
             </mat-form-field>
 
@@ -48,7 +48,7 @@
         <!--Row 3-->
         <div class="row" style="width:100%">
             <mat-form-field id="serviceBlock"> 
-                <input matInput *ngIf="layerServer == null" id="newlayerservice" name="newlayerservice" [(ngModel)] = "newLayerAdmin.layerService" placeholder="Service">
+                <input matInput *ngIf="layerServer == null" id="newlayerservice" name="newlayerservice" [(ngModel)]="newLayerAdmin.layerService" placeholder="Service">
                 <input matInput *ngIf="layerServer != null" id="newlayerident2" value="{{layerService}}" readonly placeholder="Service">
             </mat-form-field>
 
@@ -66,7 +66,7 @@
         <!--Row 4-->
         <div class="row" style="width:100%">
             <mat-form-field id="servBlock">
-                <mat-select *ngIf="layerServer == null" id="newLayerServer" name="newLayerServer" [(ngModel)] = "newLayerAdmin.serverID" required placeholder="Server">
+                <mat-select *ngIf="layerServer == null" id="newLayerServer" name="newLayerServer" [(ngModel)]="newLayerAdmin.serverID" required placeholder="Server">
                     <mat-option [value]="server.ID" *ngFor="let server of servers">
                         {{server.serverName}}
                     </mat-option>
@@ -75,7 +75,7 @@
             </mat-form-field>
 
             <mat-form-field id="formBlock">
-                <mat-select *ngIf="layerFormat == null" id="newLayerFormat" name="newLayerFormat" [(ngModel)] = "newLayerAdmin.layerFormat" required placeholder="Format">
+                <mat-select *ngIf="layerFormat == null" id="newLayerFormat" name="newLayerFormat" [(ngModel)]="newLayerAdmin.layerFormat" required placeholder="Format">
                     <mat-option value="image/png">image/png</mat-option>
                     <mat-option value="image/jpg">image/jpg</mat-option>
                     <mat-option value="image/jpeg">image/jpeg</mat-option>

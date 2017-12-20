@@ -97,7 +97,7 @@
     width:100%
 }
 
-::ng-deep .mat-input-underline {
+:host ::ng-deep .mat-input-underline {
     background-position: 0;
     background-color: transparent;
     display: none;

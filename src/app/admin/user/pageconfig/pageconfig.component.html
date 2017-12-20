@@ -1,8 +1,8 @@
 <div id="pageConfigHeader" class="row">
-    <div class="col-md-9">
+    <div class="col-sm-9">
         <h4 mat-dialog-title>Page: {{pageName}}</h4>
     </div>
-    <div class="col-md-1 col-md-offset-1">
+    <div class="col-sm-1 col-sm-offset-1">
         <button mat-dialog-close id="pageConfigX" class="close" aria-label="Close">&times;</button>
     </div>
 </div>
@@ -10,10 +10,10 @@
 
 <mat-dialog-content id="pageConfigBody">
     <div class="row">
-        <div class="col-md-7">
+        <div class="col-sm-7">
             <h4>Current Layers</h4>
         </div>
-        <div class="col-md-5">
+        <div class="col-sm-5">
             <h4>Default On</h4>
         </div>
     </div>
@@ -36,7 +36,7 @@
     <form #f="ngForm">
         <div class="row">
             <mat-form-field id="pageConfigNewLayer">
-                <mat-select [(ngModel)] = "newUserPageLayer.layerAdminID" required name="layer" placeholder="Add Layer">
+                <mat-select [(ngModel)]="newUserPageLayer.layerAdminID" required name="layer" placeholder="Add Layer">
                     <mat-option [value]="layerPermission.layerAdminID" *ngFor="let layerPermission of layerPermissions">
                         {{layerPermission.layer_admin.layerName}}
                     </mat-option>

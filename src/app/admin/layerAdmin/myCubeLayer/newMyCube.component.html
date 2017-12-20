@@ -1,9 +1,9 @@
 <!-- This defines the modal that pops up after a "Create New Layer" click event from "Layers" control-->
 <div id="myCube_newLayerHeader" class="row">
-    <div class="col-md-9">
+    <div class="col-sm-9">
         <h4 mat-dialog-title>Create New MyCube Layer</h4>
     </div>
-    <div class="col-md-1 col-md-offset-2">
+    <div class="col-sm-1 col-sm-offset-2">
         <button mat-dialog-close id="myCube_newLayerX" class="close">&times;</button>
     </div>
 </div>
@@ -18,19 +18,19 @@
             </mat-form-field>
             
             <mat-form-field id="myCube_descBlock">
-                <input matInput id="myCube_newlayerdescription" name="myCube_newlayerdescription" [(ngModel)] = "newLayerAdmin.layerDescription" placeholder="Description">
+                <input matInput id="myCube_newlayerdescription" name="myCube_newlayerdescription" [(ngModel)]="newLayerAdmin.layerDescription" placeholder="Description">
             </mat-form-field>
         </div>
             
         <!--Row 2-->
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-sm-6">
             <mat-form-field id="myCube_fieldBlock">
-                    <input matInput id="myCube_newlayerfield" name="myCube_newlayerfield" [(ngModel)] = "newLayerField1.field" required placeholder="Field {{newLayerFields.length+1}}">
+                    <input matInput id="myCube_newlayerfield" name="myCube_newlayerfield" [(ngModel)]="newLayerField1.field" required placeholder="Field {{newLayerFields.length+1}}">
             </mat-form-field>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-sm-3">
             <mat-form-field id="myCube_typeBlock">
                 <mat-select id="myCube_newlayertype" name="myCube_newlayertype" [(ngModel)]="newLayerField1.type" required placeholder="Data type">
                     <mat-option value="boolean">Boolean</mat-option>
@@ -40,7 +40,7 @@
                 </mat-select>
             </mat-form-field>
             </div>
-            <div class="col-md-2">
+            <div class="col-sm-2">
                 <button mat-button id="myCube_addField" (click)="addField()">Add Field</button>
             </div>
         </div>

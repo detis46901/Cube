@@ -1,19 +1,19 @@
 <div id="serverHeaderRow" class="row">
-    <div class="col-md-3">
-        <div class="col-md-8 col-md-offset-1" style="position:relative; left:1%">
+    <div class="col-sm-3">
+        <div class="col-sm-8 col-sm-offset-1" style="position:relative; left:1%">
             <h4>Instance Name</h4>
         </div>
     </div>
 
-    <div class="col-md-2" style="position:relative; right:5.5%">
+    <div class="col-sm-2" style="position:relative; right:5.5%">
         <h4>Server Type</h4>
     </div>
 
-    <div class="col-md-3" style="position:relative; right:5.5%">
+    <div class="col-sm-3" style="position:relative; right:5.5%">
         <h4>URL</h4>
     </div>
 
-    <div class="col-md-1 col-md-offset-1">
+    <div class="col-sm-1 col-sm-offset-1">
         <button mat-button id="createServerBtn" (click)="openServerNew()">Create Server</button>
     </div>
 </div>
@@ -21,20 +21,20 @@
 <div id="serverServersRow" class="row">
     <form style="width:100%" class="form-inline" #e="ngForm" *ngFor="let server of servers">
         <i id="btnOpenDelLayerServer" class="fa fa-times" (click)="openConfDel(server)"></i>
-        <mat-form-field class="col-md-2">
+        <mat-form-field class="col-sm-2">
             <input matInput id="exservername" style="width:100%" ngModel required name="exservername" title="{{server.serverName}}" [(ngModel)]="server.serverName" (blur)="updateServer(server)">
         </mat-form-field>
-        <mat-form-field class="col-md-2">
+        <mat-form-field class="col-sm-2">
             <mat-select id="exservertype"  ngModel required name="exservertype" [(ngModel)]="server.serverType" (blur)="updateServer(server)">
                 <mat-option value="Geoserver">Geoserver</mat-option>
                 <mat-option value="PostGIS">PostGIS</mat-option>
                 <mat-option value="ArcGIS">ArcGIS</mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-form-field class="col-md-5">
+        <mat-form-field class="col-sm-5">
             <input matInput id="exserverurl" ngModel required name="exserverurl" title="{{server.serverURL}}" [(ngModel)]="server.serverURL" (blur)="updateServer(server)">
         </mat-form-field>
-        <div class="col-md-1">
+        <div class="col-sm-1">
             <button mat-button id="getRequestBtn" (click)="getRequest(server)">Layers</button>
         </div>
     </form>
@@ -44,10 +44,10 @@
 
 <hr>
 <!--<div *ngIf="displayLayers" class="row" style="position:relative; top:25px; margin-bottom:10px;">
-    <div class="col-md-3 col-md-offset-2" style="position:relative; left:2%">
+    <div class="col-sm-3 col-sm-offset-2" style="position:relative; left:2%">
         <h3>Name</h3>
     </div>
-    <div class="col-md-3" style="position:relative; left:1%"> 
+    <div class="col-sm-3" style="position:relative; left:1%"> 
         <h3>Format</h3>
     </div>
     <div>
@@ -58,10 +58,10 @@
 <div *ngFor="let layer of nameArray" style="position:relative; top:20px; left:10px;">
     <div *ngIf="displayLayers">
         <div class="row" style="margin-bottom:5px">
-            <div class="col-md-3 col-md-offset-2">
+            <div class="col-sm-3 col-sm-offset-2">
                 <h5>{{layer}}</h5>
             </div>
-            <div class="col-md-1"> 
+            <div class="col-sm-1"> 
                 <h5>{{formatArray[nameArray.indexOf(layer)]}}</h5>
             </div>
         </div>

@@ -2,10 +2,10 @@
     pageconfig adds things in a very similar way, why does it work but this doesn't? There is probably one small change.-->
 
 <div id="pageHeader" class="row">
-    <div class="col-md-9">
+    <div class="col-sm-9">
         <h4 mat-dialog-title>{{firstName}} {{lastName}}'s Pages</h4>
     </div>
-    <div class="col-md-1 col-md-offset-2">
+    <div class="col-sm-1 col-sm-offset-2">
         <button id="pageX" mat-dialog-close class="close" aria-label="Close">&times;</button>
     </div>
 </div>
@@ -13,53 +13,49 @@
 
 <mat-dialog-content>
     <div id="pageContentTitleBar" class="row">
-        <div class="col-md-2">
+        <div class="col-sm-3">
             <h4>Pages</h4>
         </div>
-        <div class="col-md-1 col-md-offset-3">
+        <div class="col-sm-3">
             <h4>Active</h4>
         </div>
-        <div class="col-md-2 col-md-offset-1">
+        <div class="col-sm-3">
             <h4>Default</h4>
         </div>
-        <div class="col-md-2">
-            <div class="col-md-1 col-md-offset-2">
-                <h4>Order</h4>
-            </div>
+        <div class="col-sm-3">
+            <h4>Order</h4>
         </div>
     </div>
 
     <form>
-        <div id="pageBodyRows" class="row" *ngFor="let userPage of userPages; let i=index">
-            <mat-radio-group class="pageGroup" [name]="userPage.ID + userPage.ID + i" [(ngModel)]="selectedPage">
-                <span id="exPageNameCol" class="column">
-                    <i (click)="openConfDel(userPage)" class="fa fa-times" aria-hidden="true"></i>
-                    <mat-form-field id="exPage">
-                        <input matInput [name]="userPage.page + i" #edituserpageinput [(ngModel)] = "userPage.page" type="text">
-                    </mat-form-field>
-                </span>
+        <mat-radio-group id="pageBodyRows" class="row" *ngFor="let userPage of userPages; let i=index" value="userPage.default" name="pageGroup" [(ngModel)]="selectedPage">
+            <span id="exPageNameCol" class="col-sm-3">
+                <i (click)="openConfDel(userPage)" class="fa fa-times" aria-hidden="true"></i>
+                {{userPage.page}}
+            </span>
 
-                <span id="exPageActiveCol" class="column">
-                    <mat-checkbox [name]="userPage.active + i" [(ngModel)] = "userPage.active"></mat-checkbox>
-                </span>
+            <span id="exPageActiveCol" class="col-sm-3">
+                <mat-slide-toggle *ngIf="userPage.active" name="userPage.active + A + i" [(ngModel)]="userPage.active" checked></mat-slide-toggle>
+                <mat-slide-toggle *ngIf="!userPage.active" name="userPage.active + B + i" [(ngModel)]="userPage.active"></mat-slide-toggle>
+            </span>
 
-                <span id="exPageDefaultCol" class="column">
-                    <mat-radio-button id="exPageDefault" radioGroup="pageGroup" [name]="userPage.ID + i" (click)="updateDefaultPage(userPage)" [value]="userPage.ID"></mat-radio-button>
-                </span>
+            <span id="exPageDefaultCol" class="col-sm-3">
+                <mat-radio-button id="exPageDefault" radioGroup="pageGroup" name="userPage.ID + i" (click)="updateDefaultPage(userPage)" [value]="userPage.ID"></mat-radio-button>
+            </span>
 
-                <span id="exPageOrderCol" class="column">
-                    <i id="orderUp" class="fa fa-arrow-up" style="margin-right:5px;" aria-hidden="true" (click)="moveUp(userPage)"></i>
-                    <i id="orderDown" class="fa fa-arrow-down" aria-hidden="true" (click)="moveDown(userPage)"></i>
-                </span>
-            </mat-radio-group>
-        </div>
+            <span id="exPageOrderCol" class="col-sm-3">
+                <i id="orderUp" class="fa fa-arrow-up" style="margin-right:5px;" aria-hidden="true" (click)="moveUp(userPage)"></i>
+                <i id="orderDown" class="fa fa-arrow-down" aria-hidden="true" (click)="moveDown(userPage)"></i>
+            </span>
+        </mat-radio-group>
     </form>
-    <hr>
 
-    <mat-form-field>
-        <input matInput id="newUserPage" #newuserpageinput [(ngModel)]="newUserPage" type="text" placeholder="New Page" (keyup.enter)="addUserPage(newUserPage); newuserpageinput.value=''" aria-describedby="userpageHelpBlock">
-    </mat-form-field>
-    &nbsp;&nbsp;&nbsp;Press Enter to create page.
+    <div class="newPageInputArea">
+        <mat-form-field>
+            <input matInput id="newUserPage" #newuserpageinput [(ngModel)]="newUserPage" type="text" placeholder="New Page" (keyup.enter)="addUserPage(newUserPage); newuserpageinput.value=''" aria-describedby="userpageHelpBlock">
+        </mat-form-field>
+        &nbsp;&nbsp;&nbsp;Press Enter to create page.
+    </div>
 </mat-dialog-content>
 
 <mat-dialog-actions id="pageFooter" class="row">

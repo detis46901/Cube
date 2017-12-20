@@ -68,8 +68,11 @@ export class UserComponent implements OnInit {
         this.getRoleItems();
         this.getUserPageItems();
         this.getUsers();
-        this.openPages(2,"Josh","Church")
     }
+
+    // ngAfterViewInit() {
+    //     this.openPages(2,"Josh","Church")
+    // }
 
     private getUsers() {
         this.userService.GetAll()
@@ -159,7 +162,7 @@ export class UserComponent implements OnInit {
     }
 
     private openPages(userID: number, firstName: string, lastName: string): void {
-        let dialogRef = this.dialog.open(PageComponent, {height: '400px', width: '470px'});
+        let dialogRef = this.dialog.open(PageComponent);
         dialogRef.componentInstance.userID = userID;
         dialogRef.componentInstance.firstName = firstName;
         dialogRef.componentInstance.lastName = lastName;

@@ -12,12 +12,12 @@
 <div class="container-fluid pull-right">
     <div class="row"></div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-sm-12">
             <ngb-tabset type="pills" activeId="closeTab" class="btn btn-secondary" style="background: rgba(255, 255, 255, 0.5)">
                 <ngb-tab title="{{currPage}}">
                     <ng-template ngbTabContent>
                         <br>
-                        <div class="col-md-6" style="position:relative; right:14%">
+                        <div class="col-sm-6" style="position:relative; right:14%">
                             <h5>Pages</h5>
                         </div>
                         <br><hr>
@@ -33,10 +33,10 @@
                     <ng-template ngbTabContent>
                         <form #f="ngForm">
                             <br>
-                            <div class="col-md-6" style="position:relative; right:8%">
+                            <div class="col-sm-6" style="position:relative; right:8%">
                                 <h5>Active Layer</h5>
                             </div>
-                            <div class="col-md-6" style="position:relative; right:8%">
+                            <div class="col-sm-6" style="position:relative; right:8%">
                                 <h5>{{currPage}} Layers</h5>
                             </div>
                             <br><hr>
@@ -57,16 +57,16 @@
                     <ng-template ngbTabContent>
                         <div>
                             <br>
-                            <div class="col-md-4">
+                            <div class="col-sm-4">
                                 <h5>Layer Settings</h5>
                             </div>
                             <br><hr>
 
-                            <div class="col-md-1">
+                            <div class="col-sm-1">
                                 <b>Default On: </b>
                             </div>
 
-                            <div class="col-md-1 col-md-offset-9">
+                            <div class="col-sm-1 col-sm-offset-9">
                                 <input matInput id="currLayerON" class="form-check-input" style="position:relative; bottom:3px;" [(ngModel)]="currLayer.layerON" type="checkbox" (change)="updateUserPageLayer(currLayer)">
                             </div>
                         </div>
