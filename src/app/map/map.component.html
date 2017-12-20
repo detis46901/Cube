@@ -22,8 +22,8 @@
                         {{currPage}}
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <table *ngFor="let userpage of userPages" style="position:relative; width:100%; right:4px" data-toggle="buttons">
-                        <tr><td><button mat-button (click)="setUserPageLayers(userpage)" style="margin-right:3px; margin-bottom:3px;" class="btn btn-secondary pull-left">{{userpage.page}}</button>
+                <table *ngFor="let userPage of userPages" style="position:relative; width:100%; right:4px" data-toggle="buttons"> <!--*ngFor="let activePage of activePages"-->
+                        <tr><td><button mat-button (click)="setUserPageLayers(userPage)" style="margin-right:3px; margin-bottom:3px;" class="btn btn-secondary pull-left">{{userPage.page}}</button> <!--(click)="setUserPageLayers(activePage)", {{activePage.page}}-->
                             </td><td style="position:relative; left:4px"><button mat-icon-button [matMenuTriggerFor]="menu">
                                 <mat-icon>more_vert</mat-icon>
                               </button>
@@ -54,7 +54,7 @@
                     </mat-panel-description>
                 </mat-expansion-panel-header>
                 <mat-radio-group class="example-radio-group" [(ngModel)]="currLayer">
-                        <div *ngFor="let userpagelayer of userPageLayers">
+                        <div *ngFor="let userpagelayer of userPageLayers"> <!--let activeUPL of UPLs?-->
                                 <button mat-icon-button [matMenuTriggerFor]="menu">
                                         <mat-icon>more_vert</mat-icon>
                                       </button>

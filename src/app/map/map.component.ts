@@ -40,8 +40,10 @@ export class MapComponent {
     private headers: Headers;
     private _map: L.Map;
     private userPageLayers: Array<UserPageLayer> = [];
+    private activePageLayers = new Array<UserPageLayer>();
     private currLayer: UserPageLayer;
     private userPages: UserPage[];
+    private activePages = new Array<UserPage>();
     private layerList: Array<L.Layer> = [];
     private server: Server;
     private servers: Array<Server>;
@@ -112,6 +114,11 @@ export class MapComponent {
             .subscribe((data: UserPage[]) => {
                 console.log(data);
                 this.userPages = data;
+                for(let active of data) {
+                    if(active.active) {
+                        this.activePages.push()
+                    }
+                }
                 this.getDefaultPage();
             });
     }
@@ -134,6 +141,10 @@ export class MapComponent {
             .GetPageLayers(page.ID)
             .subscribe((data: UserPageLayer[]) => {
                 this.userPageLayers = data;
+                // for(let active of this.activePages) {
+                //     if(active.ID == a layer pageID )
+                //         activeUPL.push(valid_upl)
+                // }
                 this.getServers();
             });
     }

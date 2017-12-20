@@ -8,14 +8,17 @@
 
 #pageConfigHeader {
     width:100%;
-    height:0px;
     position:relative;
     bottom:20px;
 }
 
+h4[mat-dialog-title] {
+    margin-bottom:0px;
+}
+
 #pageConfigX {
     position:relative;
-    left:60px;
+    left:55px;
     top:5px;
 }
 
@@ -38,13 +41,13 @@
     border-top:solid black 1px;
 }
 
-mat-checkbox {
+mat-slide-toggle {
     position:relative;
-    top:2px;
+    top:4px;
 }
 
 hr {
-    margin:10px 0px 10px 0px;
+    margin:0px 0px 0px 0px;
 
 }
 

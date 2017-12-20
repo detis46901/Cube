@@ -3,7 +3,7 @@
         <h4 mat-dialog-title>Page: {{pageName}}</h4>
     </div>
     <div class="col-sm-1 col-sm-offset-1">
-        <button mat-dialog-close id="pageConfigX" class="close" aria-label="Close">&times;</button>
+        <button [mat-dialog-close]="userPageLayers" id="pageConfigX" class="close" aria-label="Close">&times;</button>
     </div>
 </div>
 <hr>
@@ -27,11 +27,10 @@
                 </span>
             </div>
             <div id="pageConfigDefaultColumn" class="column">
-                <mat-checkbox [name]="upl.ID" [(ngModel)]="upl.layerON"></mat-checkbox>
+                <mat-slide-toggle [name]="upl.ID" [(ngModel)]="upl.layerON"></mat-slide-toggle>
             </div>
         </div>
     </form>
-    <hr>
 
     <form #f="ngForm">
         <div class="row">
@@ -47,6 +46,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions id="pageConfigFooter">
-    <button [mat-dialog-close]="userPageLayers" id="matClose">Save &amp; Exit</button>
+    <button [mat-dialog-close]="userPageLayers" id="matClose">Close</button>
     <button mat-button id="pageConfigSubmit" (click)="addUserPageLayer(newUserPageLayer)" [disabled]="!f.valid">Add Layer</button>
 </mat-dialog-actions>

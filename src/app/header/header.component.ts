@@ -29,7 +29,7 @@ export class HeaderComponent {
         switch(sCode) {
             case 0:
                 //throw exception here for a call without a screen code (will default to 0 as assigned above)
-                console.log("break")
+                console.log("Exception")
                 break;
             case 1:
                 console.log("home")
@@ -41,12 +41,14 @@ export class HeaderComponent {
             case 3:
                 this.userToggle();
                 break;
+            default:
+                console.log("Exception")
         }
     }
 
     //Code 1
     private homeToggle(): void {
-        document.getElementById("headerCreateUserBtn").style.visibility = "hidden";
+        //document.getElementById("headerCreateUserBtn").style.visibility = "hidden"; //Figure this out to appear only on admin/user. create buttons could go in header.
         if(!this.isOpen) {
             document.getElementById("mySidenav").style.display = "block";
             document.getElementById("mySidenav").style.width = "250px";

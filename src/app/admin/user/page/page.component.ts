@@ -44,8 +44,7 @@ export class PageComponent implements OnInit {
             });
     }
     
-    private setupPages(userPages: Array<UserPage>): void {  
-        console.log(this.userPages[0] == undefined)    
+    private setupPages(userPages: Array<UserPage>): void {    
         for (let userPage of userPages) {
             this.userPages[userPage.pageOrder] = userPage
 
@@ -61,31 +60,27 @@ export class PageComponent implements OnInit {
     }
 
     private updateDefaultPage(userPage: UserPage): void {
-        userPage.default = true
-        for (let temp of this.userPages) {
-            if (temp.default && temp.ID != userPage.ID) {
-                temp.default = false;
-                this.updateUserPage(temp);
+        // userPage.default = true
+        // for (let temp of this.userPages) {
+        //     if (temp.default && temp.ID != userPage.ID) {
+        //         temp.default = false;
+        //         this.updateUserPage(temp);
+        //     }
+        // }
+
+        for (let tempage of this.userPages) {
+            if (tempage.default == true) {
+                tempage.default = false;
+                this.updateUserPage(tempage);
             }
         }
-    }
-
-    //this should order the pages
-    private orderUserPages(userPages: Array<UserPage>): void {
-        this.userPages = userPages;
-
-        /*console.log(up)
-        let temp: number[] = []
-        for (let x of up) {
-            temp.push(x.pageOrder)
-        }
-        for (let i=0; i<up.length; i++) {
-            console.log(temp[i])
-            console.log(up[temp[i]])
-            this.userPages[i] = up[temp[i]];
-        }
-        console.log(up[2])
-        console.log(this.userPages)*/
+        for (let tempage of this.userPages) {
+            if (tempage.ID == userPage.ID) {
+                tempage.default = true;
+                tempage.active = true;
+                this.updateUserPage(tempage);
+            }
+        } 
     }
 
     private addUserPage(newUserPage: string): void {
@@ -107,15 +102,6 @@ export class PageComponent implements OnInit {
             .subscribe(() => {
                 this.getUserPageItems();
             });
-    }
-
-    private updateMultiple(userPages: UserPage[]): void {
-        this.userPageService
-            .UpdateMultiple(userPages)
-            // .subscribe((res) => {
-            //     console.log(res)
-            //     this.getUserPageItems();
-            // });
     }
 
     private openConfDel(userPage: UserPage): void {

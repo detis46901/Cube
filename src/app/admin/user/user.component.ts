@@ -147,7 +147,7 @@ export class UserComponent implements OnInit {
     }
 
     private changePassword(userID: number): void {
-        let dialogRef = this.dialog.open(ChangePasswordComponent, {height: '300px', width: '340px',
+        let dialogRef = this.dialog.open(ChangePasswordComponent, {
             data: { userID: userID }
         });
     }
@@ -199,7 +199,7 @@ export class UserComponent implements OnInit {
     }
 
     private openPageConfig(pageID: number, userID: number, name: string): void {
-        let dialogRef = this.dialog.open(PageConfigComponent, {height: '340px', width: '350px'});
+        let dialogRef = this.dialog.open(PageConfigComponent);
         dialogRef.componentInstance.pageID = pageID;
         dialogRef.componentInstance.userID = userID;
         dialogRef.componentInstance.pageName = name;
@@ -216,7 +216,7 @@ export class UserComponent implements OnInit {
     }
 
     private openNewUser(): void {
-        const dialogRef = this.dialog.open(NewUserComponent, {height:'370px', width:'500px'});
+        const dialogRef = this.dialog.open(NewUserComponent, {height:'370px', width:'500px'});//need to make this responsive
         dialogRef.afterClosed()
         .subscribe(() => {
             this.getUserItems();

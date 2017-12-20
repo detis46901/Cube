@@ -1,113 +1,113 @@
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <mat-table id="userDataTable" #table [dataSource]="dataSource">
-        <ng-container matColumnDef="userID">
-            <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-              <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                  <input matInput [formControl]="row.validator.controls['ID']" [readonly]="!row.editing" [(ngModel)]="row.currentData.ID">
-              </mat-form-field>
-            </mat-cell>
-        </ng-container>
-      
-        <ng-container matColumnDef="firstName">
-            <mat-header-cell *matHeaderCellDef> First Name </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-                <mat-form-field #input floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                    <input matInput [formControl]="row.validator.controls['firstName']" [readonly]="!row.editing" [(ngModel)]="row.currentData.firstName">
-                </mat-form-field>
-            </mat-cell>
-        </ng-container>
-      
-        <ng-container matColumnDef="lastName">
-            <mat-header-cell *matHeaderCellDef> Last Name </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-              <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                  <input matInput [formControl]="row.validator.controls['lastName']" [readonly]="!row.editing" [(ngModel)]="row.currentData.lastName">
-              </mat-form-field>
-            </mat-cell>
-        </ng-container>
-      
-        <ng-container matColumnDef="role">
-            <mat-header-cell *matHeaderCellDef> Role </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-              <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                  <mat-select [formControl]="row.validator.controls['roleID']" [(ngModel)]="row.currentData.roleID">
-                        <mat-option *ngFor="let role of roles" [value]="role.ID">
-                            {{role.role}}
-                        </mat-option>
-                    </mat-select>
-              </mat-form-field>
-            </mat-cell>
-        </ng-container>
+    <ng-container class="col-sm-1" matColumnDef="userID">
+        <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                <input matInput [formControl]="row.validator.controls['ID']" [readonly]="!row.editing" [(ngModel)]="row.currentData.ID">
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
+    
+    <ng-container class="col-sm-1" matColumnDef="firstName">
+        <mat-header-cell *matHeaderCellDef> First Name </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field #input floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                <input matInput [formControl]="row.validator.controls['firstName']" [readonly]="!row.editing" [(ngModel)]="row.currentData.firstName">
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
+    
+    <ng-container class="col-sm-1" matColumnDef="lastName">
+        <mat-header-cell *matHeaderCellDef> Last Name </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                <input matInput [formControl]="row.validator.controls['lastName']" [readonly]="!row.editing" [(ngModel)]="row.currentData.lastName">
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
+    
+    <ng-container class="col-sm-1" matColumnDef="role">
+        <mat-header-cell *matHeaderCellDef> Role </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                <mat-select [formControl]="row.validator.controls['roleID']" [(ngModel)]="row.currentData.roleID">
+                    <mat-option *ngFor="let role of roles" [value]="role.ID">
+                        {{role.role}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
 
-        <ng-container matColumnDef="email">
-            <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-              <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                  <input matInput [formControl]="row.validator.controls['email']" [readonly]="!row.editing" [(ngModel)]="row.currentData.email">
-              </mat-form-field>
-            </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="active">
-            <mat-header-cell *matHeaderCellDef> Active </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-              <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                   <input matInput [formControl]="row.validator.controls['active']" [readonly]="!row.editing" [(ngModel)]="row.currentData.active">
-                  <!-- <mat-checkbox formControlName="userTableActive" [formControl]="row.validator.controls[active]" [(ngModel)]="row.currentData.active"></mat-checkbox> -->
-              </mat-form-field>
-            </mat-cell>
-        </ng-container>
-      
-        <ng-container matColumnDef="administrator">
-            <mat-header-cell *matHeaderCellDef> Administrator </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-              <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                  <input matInput [formControl]="row.validator.controls['administrator']" [readonly]="!row.editing" [(ngModel)]="row.currentData.administrator">
-              </mat-form-field>
-            </mat-cell>
-        </ng-container>
+    <ng-container class="col-sm-2" matColumnDef="email">
+        <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                <input matInput [formControl]="row.validator.controls['email']" [readonly]="!row.editing" [(ngModel)]="row.currentData.email">
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
+    
+    <ng-container class="col-sm-1" matColumnDef="active">
+        <mat-header-cell *matHeaderCellDef> Active </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                <input matInput [formControl]="row.validator.controls['active']" [readonly]="!row.editing" [(ngModel)]="row.currentData.active">
+                <!-- <mat-checkbox formControlName="userTableActive" [formControl]="row.validator.controls[active]" [(ngModel)]="row.currentData.active"></mat-checkbox> -->
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
+    
+    <ng-container class="col-sm-1" matColumnDef="administrator">
+        <mat-header-cell *matHeaderCellDef> Administrator </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                <input matInput [formControl]="row.validator.controls['administrator']" [readonly]="!row.editing" [(ngModel)]="row.currentData.administrator">
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
 
-        
-      
-        <ng-container matColumnDef="actionsColumn">
-          <mat-header-cell *matHeaderCellDef> Options </mat-header-cell>
-          <mat-cell *matCellDef="let row">
-            <button *ngIf="!row.editing" mat-icon-button color="primary" focusable="false" (click)="row.startEdit()">
-                  <i class="fa fa-pencil mat-icon"></i>
+    
+    
+    <ng-container class="col-sm-4" matColumnDef="actionsColumn">
+        <mat-header-cell *matHeaderCellDef> Options </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+        <button *ngIf="!row.editing" mat-icon-button color="primary" focusable="false" (click)="row.startEdit()">
+                <i class="fa fa-pencil mat-icon"></i>
+            </button>
+        <button *ngIf="row.editing" mat-icon-button color="primary" focusable="false" (click)="row.confirmEditCreate()">
+                <i class="fa fa-check mat-icon"></i>
+            </button>
+        <button mat-icon-button color="primary" focusable="false" (click)="confirmDelete(row.currentData)">
+                <i class="fa fa-times mat-icon"></i>
+            </button>
+            <button mat-button [matMenuTriggerFor]="menu">
+                    Options
                 </button>
-            <button *ngIf="row.editing" mat-icon-button color="primary" focusable="false" (click)="row.confirmEditCreate()">
-                  <i class="fa fa-check mat-icon"></i>
-                </button>
-            <button mat-icon-button color="primary" focusable="false" (click)="confirmDelete(row.currentData)">
-                  <i class="fa fa-times mat-icon"></i>
-                </button>
-                <button mat-button [matMenuTriggerFor]="menu">
-                        Options
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="changePassword(row.currentData.ID)">
+                        <h5>Change Password</h5>
                     </button>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="changePassword(row.currentData.ID)">
-                            <h5>Change Password</h5>
-                        </button>
-                        <button mat-menu-item (click)="openPages(row.currentData.ID, row.currentData.firstName, row.currentData.lastName)">
-                            <h5>Pages</h5>
-                        </button>
-                    </mat-menu>
-                <button mat-button [matMenuTriggerFor]="menu2">
-                      Edit Layers
-                  </button>
-                  <mat-menu #menu2="matMenu" [overlapTrigger]="false">
-                        <button mat-menu-item id="openConfig" *ngFor="let userpage of (userPages | pagefilter: (row.currentData.ID))" (click)="getUserPageItem(userpage.ID, row.currentData.ID)">                          
-                            <h5>{{userpage.page}}</h5>
-                      </button>
-                  </mat-menu>
-          </mat-cell>
-        </ng-container>
+                    <button mat-menu-item (click)="openPages(row.currentData.ID, row.currentData.firstName, row.currentData.lastName)">
+                        <h5>Pages</h5>
+                    </button>
+                </mat-menu>
+            <button mat-button [matMenuTriggerFor]="menu2">
+                    Edit Layers
+                </button>
+                <mat-menu #menu2="matMenu" [overlapTrigger]="false">
+                    <button mat-menu-item id="openConfig" *ngFor="let userpage of (userPages | pagefilter: (row.currentData.ID))" (click)="getUserPageItem(userpage.ID, row.currentData.ID)">                          
+                        <h5>{{userpage.page}}</h5>
+                    </button>
+                </mat-menu>
+        </mat-cell>
+    </ng-container>
       
-        <mat-header-row *matHeaderRowDef="userColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: userColumns"></mat-row>
-      </mat-table>
+    <mat-header-row *matHeaderRowDef="userColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: userColumns"></mat-row>
+</mat-table>
       
 
 <!-- <userTable [userPages]="userPages" [userID]="userID"></userTable> -->

@@ -35,8 +35,8 @@
             </span>
 
             <span id="exPageActiveCol" class="col-sm-3">
-                <mat-slide-toggle *ngIf="userPage.active" name="userPage.active + A + i" [(ngModel)]="userPage.active" checked></mat-slide-toggle>
-                <mat-slide-toggle *ngIf="!userPage.active" name="userPage.active + B + i" [(ngModel)]="userPage.active"></mat-slide-toggle>
+                <mat-slide-toggle *ngIf="userPage.active" name="userPage.active + A + i" (change)="updateUserPage(userPage)" [(ngModel)]="userPage.active" checked></mat-slide-toggle>
+                <mat-slide-toggle *ngIf="!userPage.active" name="userPage.active + B + i" (change)="updateUserPage(userPage)" [(ngModel)]="userPage.active"></mat-slide-toggle>
             </span>
 
             <span id="exPageDefaultCol" class="col-sm-3">
