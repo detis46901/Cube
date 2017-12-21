@@ -4,6 +4,16 @@ import { SideNavService } from "../../_services/sidenav.service";
 import { MatDialog } from '@angular/material';
 import { NewUserComponent } from '../admin/user/newUser/newUser.component';
 import { UserComponent } from '../admin/user/user.component';
+import { MatToolbar } from '@angular/material';
+
+// declare var Vue: any;
+
+// var vue = new Vue({
+//     el: '#imgur',
+//     data: {
+//         image: '/avatar2.png'
+//     }
+// })
 
 @Component({
     selector: 'header',
@@ -16,6 +26,8 @@ export class HeaderComponent {
     @Input() user: User;
     @Input() screenCode: number = 0; 
     private isOpen: boolean;
+
+    private imgURL = "avatar2.png"
 
     constructor(private sideNavService: SideNavService) {}
 
@@ -109,4 +121,5 @@ export class HeaderComponent {
         //     this.getUserPageItems();
         // });
     }
+
 }

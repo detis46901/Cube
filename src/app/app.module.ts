@@ -24,7 +24,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatMenuModule} from '@angular/material/menu'
 import { MatRadioModule, MatIconModule, MatDialogModule, MatSelectModule, MatListModule, 
-         MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, MatFormFieldModule, } from '@angular/material';
+         MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, 
+         MatFormFieldModule, MatProgressSpinnerModule, MatToolbarModule } from '@angular/material';
 import 'hammerjs';
 
 //Components
@@ -79,7 +80,6 @@ import { SQLService } from '../_services/sql.service'
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
 import { NewUserComponent } from './admin/user/newUser/newUser.component';
-
 
 
 @NgModule ({
@@ -168,6 +168,8 @@ import { NewUserComponent } from './admin/user/newUser/newUser.component';
         MatFormFieldModule,
         MatButtonModule,
         MatTableModule,
+        MatProgressSpinnerModule,
+        MatToolbarModule,
         LeafletModule.forRoot(),
         LeafletDrawModule.forRoot()
     ],

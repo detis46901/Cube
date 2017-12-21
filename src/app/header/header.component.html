@@ -1,20 +1,17 @@
-<div id="headerBar" class="col-sm-12 w3-black w3-large w3-padding" style="z-index:1">
-    <div id="welcome">Welcome, <strong><a title="Return Home" class="w3-hover-text-blue" routerLink="home">{{user.firstName}} {{user.lastName}}</a></strong></div>
+<div id="headerBar" class="row">
+    <span id="headerLeft" class="col-sm-4">
+        <h4 style="margin-left:10px;">
+            Welcome, <a title="Return Home" routerLink="home">{{user.firstName}} {{user.lastName}}</a>
+            <button mat-button id="headerSidenavToggle" (click)="menuToggle(screenCode)">Toggle Menu</button>
+            <!-- <button mat-button id="headerCreateUser" (click)="openNewUser()">Create User</button> use *ngIf and new screen codes for each admin routed page--> 
+        </h4>       
+    </span>
 
-    <!--<div ngbDropdown class="d-inline-block" style="z-index:-1;position:relative;background-color:black">
-        <button id="viewBtn" type="button" class="w3-btn w3-hover-text-blue" ngbDropdownToggle><i class="fa fa-bars"></i> View</button>
-        <div id="viewMenu" class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenu1">
-            <button id="vData" (click)="menuToggle(screenCode)" class="w3-btn w3-hover-text-blue">Toggle Menu</button>
-        </div>
-    </div>-->
-    <button mat-button style="position:relative; left:250px;" id="vData" (click)="menuToggle(screenCode)">Toggle Menu</button>
-    <button mat-button id="headerCreateUser" (click)="openNewUser()">Create User</button>
-
-    <span class="w3-right">
-        <a id="helpBtn" title="Help" class="w3-hover-none w3-xlarge w3-hover-text-blue w3-show-inline-block"><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>
-        <a id="inboxBtn" title="Inbox" class="w3-hover-none w3-xlarge w3-hover-text-blue w3-show-inline-block"><i class="fa fa-envelope" aria-hidden="true"></i></a>
-        <a id="logoffBtn" href="/logout" id="logoutBtn" title="Logout" class="w3-hover-none w3-xlarge w3-hover-text-blue w3-show-inline-block"><i class="fa fa-power-off" aria-hidden="true"></i></a>
-        <a id="settingsBtn" href="/settings" id="settings" title="Settings" class="w3-xlarge w3-hover-text-blue w3-show-inline-block"><i class="fa fa-cog"></i></a>
-        <a *ngIf="user.administrator" id="admin" style="position:relative;bottom:3px" title="Admin Menu" class="w3-btn w3-orange w3-tiny w3-border w3-border-orange w3-round-large w3-text-white" href="/admin">Admin</a>
+    <span id="headerRight" class="col-sm-3 col-sm-offset-5">
+        <a id="headerHelp" title="Help"><i class="fa fa-question-circle-o fa-2x" aria-hidden="true"></i></a>
+        <a id="headerInbox" title="Inbox"><i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
+        <a id="headerLogoff" title="Logout" href="/logout"><i class="fa fa-power-off fa-2x" aria-hidden="true"></i></a>       
+        <a id="headerSettings" title="Settings" href="/settings"><i class="fa fa-cog fa-2x"></i></a> 
+        <a id="headerAdmin" *ngIf="user.administrator" title="Admin Menu" href="/admin"><i class="fa fa-folder-open fa-2x"></i></a>   
     </span>
 </div>

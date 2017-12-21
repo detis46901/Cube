@@ -1,35 +1,24 @@
-#createLayerBtn {
-     position:relative; 
-     right:5%;
-     margin-right: 5px;
-     width: 30%;
-}
+// #createLayerBtn {
+//      position:relative; 
+//      right:5%;
+//      margin-right: 5px;
+//      width: 30%;
+// }
 
-#sortBtn {
-    position:relative;
-    height:100%;
-    width:100%;
-    right:17%;
-}
+// #sortAZ, #sortOldNew, #sortNewOld, #sortZA, #sortType {
+//     position:relative; 
+//     left:5px; 
+//     margin-bottom:5px
+// }
 
-#sortDrop {
-    width:170px;
-}
-
-#sortAZ, #sortOldNew, #sortNewOld, #sortZA, #sortType {
-    position:relative; 
-    left:5px; 
-    margin-bottom:5px
-}
-
- #exlayername, #exlayerident, #exlayerurl, #exlayerdescription, #exlayerformat, #exlayertype, #exlayergeom, #exlayerserver {
-//     border-color: rgba(255,255,255,0); 
-//     border:ridge; 
-//     border-width:2px; 
-//     border-radius:4px; 
-     width:10%;
-//     height:34px;
- }
+//  #exlayername, #exlayerident, #exlayerurl, #exlayerdescription, #exlayerformat, #exlayertype, #exlayergeom, #exlayerserver {
+//      border-color: rgba(255,255,255,0); 
+//      border:ridge; 
+//      border-width:2px; 
+//      border-radius:4px; 
+//      width:10%;
+//      height:34px;
+//  }
 
 // #exlayerperm {
 //     position:relative;
@@ -44,7 +33,25 @@ h4 {
     color:black;
 }
 
-// #createLayerBtn, #createMyCubeBtn {
-//     border:black;
-//     border-width: 3px;
-// }
+.row {
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    left:15px;
+}
+
+.mat-form-field {
+    width:80%
+}
+
+.mat-table {
+    width:98%;
+    overflow:auto;
+    max-height:80vh;
+}
+
+:host ::ng-deep .mat-input-underline {
+    background-position: 0;
+    background-color: transparent;
+    display: none;
+}

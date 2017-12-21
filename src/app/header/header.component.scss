@@ -1,34 +1,26 @@
-#welcome {
-    position: absolute;
-    margin-top: 5px;
+#headerSidenavToggle {
+    position:relative;
+    bottom:2px;
 }
 
-#viewBtn {
-    position:absolute;
-    width:100px;
-    height:40px;
-    left:230px;
-    bottom:-20px;
+.row {
+    height:53px;
+    position:relative;
+    z-index:1;
     background-color:black;
 }
 
-#inboxBtn, #logoffBtn, #settingsBtn {
-    right: 0px;
+h4 {
+    color:white;
 }
 
-#viewMenu {
-    z-index:1;
-    position:absolute;
-    width:80px;
-    left:210px;
-    top:15px;
+a {
+    margin-right:10px;
 }
 
-#headerCreateUser {
-    position:relative;
-    left:240px;
+#headerRight {
+    display:flex;
+    margin-top:10px;
+    justify-content:flex-end;
+    padding-right:2%;
 }
-
-/*a {
-    -webkit-text-fill-color: rgb(66, 147, 255); Something to think about
-}*/

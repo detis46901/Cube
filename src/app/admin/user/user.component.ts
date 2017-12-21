@@ -18,19 +18,14 @@ import { Md5 } from 'ts-md5/dist/md5';
 import { MatDialog } from '@angular/material';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
-
-
 import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { UserValidatorService } from './userValidator.service';
 
 
 //import { UserDataSource } from './userTable/userData';
 
+//Material Table list
 //var userList: Array<User>;
-var userList: any[] = [
-    {ID: 1, firstName: 'Josh', lastName: 'Church', roleID: 1, email: 'gmail@gmail.com', active: 'true', administrator: 'false'}
-]
-var roleList: Array<Role>;
 
 @Component({
     selector: 'user',
@@ -52,7 +47,7 @@ export class UserComponent implements OnInit {
     private userPages: Array<UserPage>;
     private users: Array<User>;
     private roles: Array<Role>;
-    private userList: User[];
+    //private userList: User[];
 
     private userColumns = ['userID', 'firstName', 'lastName', 'role', 'email', 'active', 'administrator', 'actionsColumn']
     private dataSource: TableDataSource<User>;
@@ -77,7 +72,7 @@ export class UserComponent implements OnInit {
     private getUsers() {
         this.userService.GetAll()
         .subscribe((users: User[]) => {
-            this.userList = users
+            //this.userList = users
             console.log(users)
             this.dataSource = new TableDataSource<User>(users, User, this.userValidator);
             console.log(this.dataSource.getRow(0))
@@ -88,7 +83,7 @@ export class UserComponent implements OnInit {
             .GetAll()
             .subscribe((data:User[]) => {
                 this.users = data;
-                userList = data;
+                //userList = data;
             });
     }
 
@@ -97,7 +92,6 @@ export class UserComponent implements OnInit {
             .GetAll()
             .subscribe((data:Role[]) => {
                 this.roles = data;
-                roleList = this.roles;
             });
     }
 

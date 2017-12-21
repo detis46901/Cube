@@ -15,32 +15,39 @@
 // .col-11 {width: 91.66%;}
 // .col-12 {width: 100%;}
 
-.mat-column-userID {
-    flex: 0 0 100px;
-}
+// .mat-column-userID {
+//     flex: 0 0 100px;
+// }
 
-.mat-column-firstName, .mat-column-lastName {
-    flex: 0 0 150px;
-}
+// .mat-column-firstName, .mat-column-lastName {
+//     flex: 0 0 150px;
+// }
 
-.mat-column-role {
-    flex: 0 0 150px;
-}
+// .mat-column-role {
+//     flex: 0 0 150px;
+// }
 
-.mat-column-email {
-    flex: 0 0 250px;
-}
+// .mat-column-email {
+//     flex: 0 0 250px;
+// }
 
-.mat-column-active {
-    flex: 0 0 100px;
-}
+// .mat-column-active {
+//     flex: 0 0 100px;
+// }
 
-.mat-column-administrator {
-    flex: 0 0 100px;
-}
+// .mat-column-administrator {
+//     flex: 0 0 100px;
+// }
 
-.mat-column-actionsColumn {
-    flex: 0 0 320px;
+// .mat-column-actionsColumn {
+//     flex: 0 0 320px;
+// }
+
+.row {
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    left:15px;
 }
 
 .mat-form-field {
@@ -48,8 +55,9 @@
 }
 
 .mat-table {
-    width:100%
-    
+    width:98%;
+    overflow:auto;
+    max-height:80vh;
 }
 
 :host ::ng-deep .mat-input-underline {

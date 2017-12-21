@@ -65,6 +65,7 @@
     "typeorm": "0.1.0-alpha.31",
     "typescript": "^2.6.1",
     "uglifyjs-webpack-plugin": "^1.0.1",
+    "vue-cli": "^2.9.2",
     "webpack": "^3.1.0",
     "webpack-dev-server": "^2.9.4",
     "zone.js": "^0.6.26"

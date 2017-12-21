@@ -14,11 +14,13 @@ import { newMyCubeComponent } from './myCubeLayer/newMyCube.component'
 import { ServerService } from '../../../_services/_server.service';
 import { Server } from '../../../_models/server.model';
 import { MatDialog } from '@angular/material';
+import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
+import { LayerValidatorService } from './layerValidator.service';
 
 @Component({
     selector: 'layer-admin',
     templateUrl: './layerAdmin.component.html',
-    providers: [UserService, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, ServerService, SQLService],
+    providers: [UserService, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, ServerService, SQLService, {provide: ValidatorService, useClass: LayerValidatorService}],
     styleUrls: ['./layerAdmin.component.scss']
 })
 
@@ -32,7 +34,10 @@ export class LayerAdminComponent implements OnInit {
     private layerAdmins: LayerAdmin[];
     private servers: Server[];
 
-    constructor(private layerAdminService: LayerAdminService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {
+    private layerColumns = ['layerID', 'name', 'identity', 'service', 'server', 'description', 'format', 'type', 'geometry', 'actionsColumn'];
+    private dataSource: TableDataSource<LayerAdmin>;
+
+    constructor(private layerValidator: ValidatorService, private layerAdminService: LayerAdminService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
@@ -46,8 +51,9 @@ export class LayerAdminComponent implements OnInit {
     private getLayerItems(): void {
         this.layerAdminService
             .GetAll()
-            .subscribe((data: LayerAdmin[]) => {
-                this.layerAdmins = data;
+            .subscribe((layers: LayerAdmin[]) => {
+                this.layerAdmins = layers;
+                this.dataSource = new TableDataSource<LayerAdmin>(layers, LayerAdmin, this.layerValidator);
             });
     }
 
@@ -79,7 +85,7 @@ export class LayerAdminComponent implements OnInit {
         dialogRef.componentInstance.layerName = layername;
     }
 
-    private openConfDel(layer: LayerAdmin): void {
+    private confirmDelete(layer: LayerAdmin): void {
         const dialogRef = this.dialog.open(ConfirmDeleteComponent);
         dialogRef.componentInstance.objCode = this.objCode;
         dialogRef.componentInstance.objID = layer.ID;
