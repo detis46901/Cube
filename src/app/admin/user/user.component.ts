@@ -218,4 +218,10 @@ export class UserComponent implements OnInit {
             //call userTableService method and subcribe to refresh list in userTable.
         });
     }
+
+    private boo(row) {
+        row.confirmEditCreate()
+        row.editing = !row.editing;
+        console.log(row.editing)
+    }
 }

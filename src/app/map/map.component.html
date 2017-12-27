@@ -32,9 +32,9 @@
                                   <mat-icon>done</mat-icon>
                                   <span>Make Default</span>
                                 </button>
-                                <button mat-menu-item disabled>
+                                <button mat-menu-item (click)="openPageConfig(userPage.ID, userPage.userID, userPage.page)">
                                   <mat-icon>voicemail</mat-icon>
-                                  <span>Check voicemail</span>
+                                  <span>Edit Layers</span>
                                 </button>
                                 <button mat-menu-item>
                                   <mat-icon>notifications_off</mat-icon>

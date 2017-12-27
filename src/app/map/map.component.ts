@@ -25,6 +25,10 @@ import * as L from 'leaflet';
 import 'leaflet-draw';
 import 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/images/marker-icon.png';
+
+import { PageConfigComponent } from '../admin/user/pageconfig/pageconfig.component';
+import { MatDialog } from '@angular/material';
+
 declare var ol: any;
 
 @Component({
@@ -58,7 +62,7 @@ export class MapComponent {
     private noLayers: boolean;
     private shown: boolean = false
     
-    constructor(private _http: Http, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private geoCoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sideNavService: SideNavService, private myCubeService: MyCubeService, private serverService: ServerService) {
+    constructor(private _http: Http, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private geoCoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sideNavService: SideNavService, private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
@@ -133,6 +137,23 @@ export class MapComponent {
         this.mapService.getUserPageLayers(page);
         this.currLayerName = 'No Active Layer';
         this.noLayers = true;
+    }
+
+    private openPageConfig(pageID: number, userID: number, name: string): void {
+        let dialogRef = this.dialog.open(PageConfigComponent);
+        dialogRef.componentInstance.pageID = pageID;
+        dialogRef.componentInstance.userID = userID;
+        dialogRef.componentInstance.pageName = name;
+
+        dialogRef.afterClosed()
+        .subscribe((response: UserPageLayer[]) => {
+            if(response != null) {
+                for(let i of response) {
+                    this.userPageLayerService.Update(i).subscribe();
+                }
+                this.getUserPageItems();
+            }
+        });
     }
         
     private cleanPage(): void {
