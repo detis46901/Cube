@@ -80,6 +80,14 @@ import { SQLService } from '../_services/sql.service'
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
 import { NewUserComponent } from './admin/user/newUser/newUser.component';
+import { ServerService } from '../_services/_server.service';
+import { geoJSONService } from './map/services/geoJSON.service';
+import { MyCubeService } from './/map/services/mycube.service';
+import { WFSService } from './map/services/wfs.service';
+import { SideNavService } from '../_services/sidenav.service';
+
+
+
 
 
 @NgModule ({
@@ -191,7 +199,12 @@ import { NewUserComponent } from './admin/user/newUser/newUser.component';
         UserPageLayerService,
         UserPageService,
         Configuration,
-        BaseRequestOptions
+        BaseRequestOptions,
+        ServerService,
+        geoJSONService,
+        MyCubeService,
+        WFSService,
+        SideNavService
     ], 
 
     bootstrap: [AppComponent]
