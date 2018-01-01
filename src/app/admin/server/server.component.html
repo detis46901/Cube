@@ -1,4 +1,69 @@
-<div id="serverHeaderRow" class="row">
+
+    
+<mat-table id="serverDataTable" #table [dataSource]="dataSource">
+    <div class="row">
+        <ng-container class="col-sm-1" matColumnDef="serverID">
+            <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+                <b>{{row.currentData.ID}}</b>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container class="col-sm-2" matColumnDef="serverName">
+            <mat-header-cell *matHeaderCellDef> Instance Name </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+                <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                    <input matInput [formControl]="row.validator.controls['serverName']" [readonly]="!row.editing" [(ngModel)]="row.currentData.serverName">
+                </mat-form-field>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container class="col-sm-2" matColumnDef="serverType">
+            <mat-header-cell *matHeaderCellDef> Server Type </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+                <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                    <input matInput [formControl]="row.validator.controls['serverType']" [readonly]="!row.editing" [(ngModel)]="row.currentData.serverType">
+                </mat-form-field>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container class="col-sm-4" matColumnDef="serverURL">
+            <mat-header-cell *matHeaderCellDef> URL </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+                <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                    <input matInput [formControl]="row.validator.controls['serverURL']" [readonly]="!row.editing" [(ngModel)]="row.currentData.serverURL">
+                </mat-form-field>
+            </mat-cell>
+        </ng-container>
+    
+        <ng-container class="col-sm-3" matColumnDef="actionsColumn">
+            <mat-header-cell *matHeaderCellDef> Options </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+                <button *ngIf="!row.editing" mat-icon-button color="primary" focusable="false" (click)="row.startEdit()">
+                    <i class="fa fa-pencil mat-icon"></i>
+                </button>
+                
+                <button *ngIf="row.editing" mat-icon-button color="primary" focusable="false" (click)="row.confirmEditCreate()">
+                    <i class="fa fa-check mat-icon"></i>
+                </button>
+
+                <button mat-icon-button color="primary" focusable="false" (click)="confirmDelete(row.currentData)">
+                    <i class="fa fa-times mat-icon"></i>
+                </button>
+
+                <button mat-button (click)="getRequest(row.currentData)">
+                    Layers
+                </button>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="serverColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: serverColumns"></mat-row>
+    </div>
+</mat-table>
+
+
+<!-- 12/27/17 <div id="serverHeaderRow" class="row">
     <div class="col-sm-3">
         <div class="col-sm-8 col-sm-offset-1" style="position:relative; left:1%">
             <h4>Instance Name</h4>
@@ -42,7 +107,7 @@
 </div>
 <div style="position:absolute; height:25px;"></div>
 
-<hr>
+<hr> -->
 <!--<div *ngIf="displayLayers" class="row" style="position:relative; top:25px; margin-bottom:10px;">
     <div class="col-sm-3 col-sm-offset-2" style="position:relative; left:2%">
         <h3>Name</h3>

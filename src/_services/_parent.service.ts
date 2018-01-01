@@ -30,7 +30,7 @@ export class ParentService {
     }
     
     public GetSingleFromEmail = (email: string): Observable<any> => {
-        return this._http.get(this.actionUrl + 'one?email=' + email)
+        return this._http.get(this.actionUrl + 'one?email=' + email /*+API key 12/27/17*/)
             .map((response: Response) => <any>response.json())
             .catch(this.handleError);
     }

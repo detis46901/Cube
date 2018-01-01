@@ -36,3 +36,28 @@ td {
     width:100%; 
     top:15px;
 }
+
+/////////////////////////
+
+.row {
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    left:15px;
+}
+
+.mat-form-field {
+    width:80%
+}
+
+.mat-table {
+    width:100%;
+    overflow:auto;
+    max-height:80vh;
+}
+
+:host ::ng-deep .mat-input-underline {
+    background-position: 0;
+    background-color: transparent;
+    display: none;
+}

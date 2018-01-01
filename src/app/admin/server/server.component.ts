@@ -6,12 +6,14 @@ import { Http, RequestOptions, Headers } from '@angular/http';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
 import { LayerNewComponent } from '../layerAdmin/layerNew/layerNew.component';
 import { MatDialog } from '@angular/material';
+import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
+import { ServerValidatorService } from './serverValidator.service';
 
 @Component({
     selector: 'server',
     templateUrl: './server.component.html',
     styleUrls: ['./server.component.scss'],
-    providers: [ServerService]
+    providers: [ServerService, {provide: ValidatorService, useClass: ServerValidatorService}]
 })
 
 export class ServerComponent implements OnInit {
@@ -33,7 +35,10 @@ export class ServerComponent implements OnInit {
     private displayFolders: boolean;
     private path: string = '';
 
-    constructor(private serverService: ServerService, private dialog: MatDialog) {
+    private serverColumns = ['serverID', 'serverName', 'serverType', 'serverURL', 'actionsColumn']
+    private dataSource: TableDataSource<Server>;
+
+    constructor(private serverService: ServerService, private dialog: MatDialog, private serverValidator: ValidatorService) {
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         this.headers.append('Accept', 'text/plain');
@@ -48,8 +53,9 @@ export class ServerComponent implements OnInit {
     private getServers(): void {
         this.serverService
             .GetAll()
-            .subscribe((data) => {
-                this.servers = data;
+            .subscribe((servers) => {
+                this.servers = servers;
+                this.dataSource = new TableDataSource<Server>(servers, Server, this.serverValidator);
             });
     }
 
