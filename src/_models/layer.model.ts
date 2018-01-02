@@ -34,6 +34,7 @@ export class UserPageLayer {
     layer_admin: LayerAdmin;
     serverID: number;
     layerShown: boolean;
+    loadOrder: number;
 }
 
 export class MyCubeField {

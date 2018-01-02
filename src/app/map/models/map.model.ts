@@ -21,16 +21,6 @@ export class MapConfig {
     layerpermission?: LayerPermission[];
 }
 
-// export interface MapConfig {
-//     target: string,
-//     view: MapConfigView,
-//     layers?: LayerClass[],
-//     layerpermissions?: LayerPermission,
-//     userpagelayer?: UserPageLayer,
-//     renderer?: string,
-//     controllers?: string
-// }
-
 export class styles {
     public image = new ol.style.Circle({
         radius: 5,

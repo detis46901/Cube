@@ -87,6 +87,8 @@ export class MapService {
                     this.mapConfig.map = new ol.Map({
                         layers: this.mapConfig.layers,
                         view: new ol.View({
+                            projection: 'EPSG:3857',
+                            
                             center: ol.proj.transform([-86.1336, 40.4864], 'EPSG:4326', 'EPSG:3857'),
                             zoom: 13
                         })
@@ -127,15 +129,13 @@ export class MapService {
     //loadLayers will load during map init and load the layers that should come on by themselves with the "layerON" property set (in userPageLayers)
     public loadLayers(mapConfig: MapConfig, init: boolean): Promise<any> {
         let promise = new Promise((resolve, reject) => {
-            console.log("Existing # of layers=" + this.mapConfig.layers.length)
+            console.log("Existing # of layers in array=" + this.mapConfig.layers.length)
             console.log('LoadLayers Started.  # of layers= '  + this.mapConfig.userpagelayers.length)
             for (let i = 0; i < this.mapConfig.userpagelayers.length; i++) {
                 console.log("loading " + this.mapConfig.userpagelayers[i].layer_admin.layerName)
                 if (this.mapConfig.userpagelayers[i].layer_admin.layerType == "MyCube") {
-                    console.log("This is a MyCube Layer, index before push = " + this.mapConfig.layers.length)
-                    this.loadMyCube(init,this.mapConfig.userpagelayers[i],i+1)
-                    console.log("These should match..." + this.mapConfig.layers.length + " and " + i)
-                      
+                    this.mapConfig.userpagelayers[i].layerShown = this.mapConfig.userpagelayers[i].layerON
+                    this.loadMyCube(init,this.mapConfig.userpagelayers[i],i)  
                 }
                     else {
                     console.log(this.mapConfig.userpagelayers[i].layer_admin.layerType)
@@ -155,9 +155,11 @@ export class MapService {
                     this.mapConfig.userpagelayers[i].layerShown = this.mapConfig.userpagelayers[i].layerON
                     wmsLayer.setVisible(this.mapConfig.userpagelayers[i].layerON)
                     this.mapConfig.layers.push(wmsLayer)
+                    this.mapConfig.userpagelayers[i].loadOrder = this.mapConfig.layers.length
+                    //this.mapConfig.map.addLayer(wmsLayer)
                     console.log("Layer " + this.mapConfig.layers.length + " pushed")
                     if (init == false) {
-                        mapConfig.map.addLayer(wmsLayer)
+                       mapConfig.map.addLayer(wmsLayer)
                     }
                 
                 }
@@ -168,15 +170,15 @@ export class MapService {
     }
 
     //Reads index of layer in dropdown, layerAdmin, and if it is shown or not. Needs to remove a layer if a new one is selected
-    private toggleLayers(index: number, mapConfig: MapConfig, checked: boolean): void {
-        console.log("toggling Layer " + (index + 1) + "(aka " + mapConfig.userpagelayers[index].layer_admin.layerName + ")")
+    private toggleLayers(loadOrder: number, mapConfig: MapConfig, index): void {
+        console.log("toggling Layer loadOrder=" + (loadOrder) + "index=" + index)
         //console.log(index)
         if (mapConfig.userpagelayers[index].layerShown === true) {
-            mapConfig.layers[index + 1].setVisible(false)
+            mapConfig.layers[loadOrder - 1].setVisible(false)
             mapConfig.userpagelayers[index].layerShown = false
         }
         else {
-            mapConfig.layers[index + 1].setVisible(true)
+            mapConfig.layers[loadOrder - 1].setVisible(true)
             mapConfig.userpagelayers[index].layerShown = true
         }
         // let zindex: number = 1000;
@@ -236,21 +238,58 @@ export class MapService {
     private loadMyCube(init: boolean, layer: UserPageLayer, index) {
         let allLayersOff: boolean = true;
         let nextActive: UserPageLayer;
-        let source = new ol.source.Vector()
-        let vectorlayer = new ol.layer.Vector()
-        this.mapConfig.layers.push(vectorlayer)
+        
+        //let vectorLayer = new ol.layer.Vector()
+        //let geojsonObject = {"type":"FeatureCollection","features":[{"id":"2018-01-01T15:26:57.01581","type":"Feature","geometry":{"type":"LineString","coordinates":[[-86.1217502016954,40.5042953152252],[-86.1557655020145,40.4238597233524]]},"properties":{"1":true,"id":"2018-01-01T15:26:57.01581"}},{"id":"2018-01-01T17:08:58.357797","type":"Feature","geometry":{"type":"LineString","coordinates":[[-86.1523180053605,40.4938091790315],[-86.1192220374824,40.4247345410204]]},"properties":{"1":false,"id":"2018-01-01T17:08:58.357797"}}]};
+    
+        //   let geoJSONObject2 = {
+        //       "type":"FeatureCollection",
+        //   'crs': {
+        //     'type': 'name',
+        //     'properties': {
+        //       'name': 'EPSG:4326'
+        //     }
+        // },
+        // "features":[{
+        //     "type":"Feature",
+        //     "geometry":{
+        //         "type":"LineString",
+        //         "coordinates":[[4e6, -2e6], [8e6, -2e6]]
+        //     }
+        // },{
+        //     "type":"Feature",
+        //     "geometry":{
+        //         "type":"LineString",
+        //         "coordinates":[[-86.15,40.49], [-86.11,40.42]]
+        //     }}
+        // ]}
+        // console.log(geojsonObject)
+        // let source = new ol.source.Vector({features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)})
+        // var vectorLayer = new ol.layer.Vector({
+        //     source: source
+        // });
+        
+        // this.mapConfig.layers.push(vectorLayer)
+        
+        // let source2 = new ol.source.Vector({features: (new ol.format.GeoJSON()).readFeatures(geoJSONObject2)})
+        // var vectorLayer2 = new ol.layer.Vector({
+        //     source: source2
+        // });
+        // this.mapConfig.layers.push(vectorLayer2)
+        // console.log(geoJSONObject2)
+        
         console.log("loadMyCube: init=" + init + ",index=" + index)
             this.geojsonservice.GetAll(layer.layer_admin.ID)
                 .subscribe((data: GeoJSON.Feature<any>) => {
                     console.log(data[0][0]['jsonb_build_object'])
-                    let source = new ol.source.Vector({features: (new ol.format.GeoJSON()).readFeatures(data[0][0]['jsonb_build_object'])})
-                    let highlightStyle = new ol.style.Style({
-                        stroke: new ol.style.Stroke({
-                          color: '#f00',
-                          width: 1
-                        }),
+                    let source = new ol.source.Vector({features: (new ol.format.GeoJSON({defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'})).readFeatures(data[0][0]['jsonb_build_object'])})
+                    let style = new ol.style.Style({
                         fill: new ol.style.Fill({
-                          color: 'rgba(255,0,0,0.1)'
+                          color: 'rgba(255, 255, 255, 0.6)'
+                        }),
+                        stroke: new ol.style.Stroke({
+                          color: '#319FD3',
+                          width: 1
                         }),
                         text: new ol.style.Text({
                           font: '12px Calibri,sans-serif',
@@ -258,19 +297,22 @@ export class MapService {
                             color: '#000'
                           }),
                           stroke: new ol.style.Stroke({
-                            color: '#f00',
+                            color: '#fff',
                             width: 3
                           })
                         })
                       });
-                    //console.log(highlightStyle)
-                    this.vectorlayer = new ol.layer.Vector({source: source, style: highlightStyle})
+        
+                    this.vectorlayer = new ol.layer.Vector({source: source})
 
-                   //console.log (vectorlayer.getStyle())
-                    this.mapConfig.layers[index] = (this.vectorlayer)
+                   //this.mapConfig.layers[index] = (this.vectorlayer)
+                   this.vectorlayer.setVisible(layer.layerON)
+                   this.mapConfig.map.addLayer(this.vectorlayer)
+                   this.mapConfig.layers.push(this.vectorlayer)
+                   this.mapConfig.userpagelayers[index].loadOrder = this.mapConfig.layers.length
                     console.log("Layer " + index + " pushed")
                     if (init == false) {
-                        this.mapConfig.map.addLayer(this.vectorlayer)
+                        //this.mapConfig.map.addLayer(this.vectorlayer)
                     }
                     // this.layerList[index] = L.geoJSON(data[0][0]['jsonb_build_object'])
                     //     .addTo(this.map)

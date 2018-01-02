@@ -1,14 +1,5 @@
 <div #mapElement id="mapid"></div>
 
-<!-- <div leaflet style="position: fixed; bottom: 0; right: 0; top: 0; left:0"
-     [leafletOptions]="options"
-     [leafletLayers]="layers"
-     (leafletMapReady)="onMapReady($event)">
-	<div *ngIf="shown" 
-	     leafletDraw
-	     [leafletDrawOptions]="drawOptions"></div>
-</div> -->
-
 <div class="container-fluid pull-right" style="background: rgba(255,255,255,.7)">
    
     <div class="row">
@@ -22,7 +13,7 @@
                         {{currPage}}
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <table *ngFor="let userPage of mapConfig.userpages" style="position:relative; width:100%; right:4px" data-toggle="buttons"> <!--*ngFor="let activePage of activePages"-->
+                <table *ngFor="let userPage of mapConfig.userpages" style="position:relative; width:100%; right:4px" data-toggle="buttons">
                         <tr><td><button mat-button (click)="setPage(userPage)" style="margin-right:3px; margin-bottom:3px;" class="btn btn-secondary pull-left">{{userPage.page}}</button> <!--(click)="setUserPageLayers(activePage)", {{activePage.page}}-->
                             </td><td style="position:relative; left:4px"><button mat-icon-button [matMenuTriggerFor]="menu">
                                 <mat-icon>more_vert</mat-icon>
@@ -89,12 +80,12 @@
                                               </button>                                              
                                       </mat-menu>
                         <mat-radio-button [disabled]="!userpagelayer.layerShown" class="example-radio-button" [value]="userpagelayer" (change)="setCurrentLayer(0,userpagelayer,true)">
-                            <mat-slide-toggle class="example-margin" [checked]="userpagelayer.layerShown" (change)="mapService.toggleLayers(i,mapConfig,userpagelayer.layerShown)">
+                            <mat-slide-toggle class="example-margin" [checked]="userpagelayer.layerShown" (change)="mapService.toggleLayers(userpagelayer.loadOrder,mapConfig,i)">
                                 {{userpagelayer.layer_admin.layerName}}
                             </mat-slide-toggle>
                         </mat-radio-button>
                         </div>
-                    </mat-radio-group>
+                    </mat-radio-group><hr><p>Spacer Text</p>
             </mat-expansion-panel>
             <mat-expansion-panel [disabled]="true">
                 <mat-expansion-panel-header>

@@ -27,7 +27,7 @@ import 'leaflet-draw';
 import 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/images/marker-icon.png';
 
-import { PageConfigComponent } from '../admin/user/pageconfig/pageconfig.component';
+import { PageConfigComponent } from '../admin/user/pageConfig/pageConfig.component';
 import { MatDialog } from '@angular/material';
 
 declare var ol: any;
@@ -92,6 +92,7 @@ export class MapComponent {
          .then (() => this.mapService.initMap(this.mapConfig)
             .then ((mapConfig) => {
                 this.mapConfig = mapConfig  //Not sure if this is necessary.  Just in case.
+                console.log("setting Target")
                 mapConfig.map.setTarget(this.mapElement.nativeElement.id)
             })    
          )}
@@ -137,15 +138,10 @@ export class MapComponent {
     private setPage(page: UserPage): void {
         this.mapConfig.currentpage = page
         this.currPage = page.page;
-<<<<<<< HEAD
         this.mapService.getUserPageLayers(this.mapConfig)
         .then(() => this.mapService.getLayerPerms())
         .then(() => {this.cleanPage();})
-}
-
-=======
-        this.cleanPage();
-        this.mapService.getUserPageLayers(page);
+        //this.mapService.getUserPageLayers(page);
         this.currLayerName = 'No Active Layer';
         this.noLayers = true;
     }
@@ -167,7 +163,7 @@ export class MapComponent {
         });
     }
         
->>>>>>> origin/master
+
     private cleanPage(): void {
         //console.log('Flags array: ' + this.userPageLayers[0].layerShown);
         this.clearMessage();
