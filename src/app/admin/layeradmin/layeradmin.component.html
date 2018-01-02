@@ -1,3 +1,21 @@
+<div class="col-sm-3 col-sm-offset-1">
+    <div class="row">
+        <button mat-button id="createLayerBtn" (click)="createLayer()">Create Layer</button>
+        <button mat-button id="createMyCubeBtn" (click)="createMyCube()">Create MyCube</button>
+        <div ngbDropdown>   
+            <button id="sortBtn" type="button" class="btn-primary" ngbDropdownToggle>Sort Layers</button>
+            <div id="sortDrop" class="dropdown-menu dropdown-menu-right" aria-labelledby="options">
+                <button id="sortAZ" type="button" class="btn btn-secondary" (click)="sortLayers('AZ')">Name (Ascending)</button>
+                <button id="sortZA" type="button" class="btn btn-secondary" (click)="sortLayers('ZA')">Name (Descending)</button>
+                <button id="sortType" type="button" class="btn btn-secondary" (click)="sortLayers('TYPE')">Type</button>
+                <button id="sortOldNew" type="button" class="btn btn-secondary" (click)="sortLayers('OLD_NEW')">Old to New</button><br>
+                <button id="sortNewOld" type="button" class="btn btn-secondary" (click)="sortLayers('NEW_OLD')">New to Old</button><br>
+                <button id="sortGeom" type="button" class="btn btn-secondary" (click)="sortLayers('GEOM')">Geometry</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- This defines the component redirected to by the "Layers" option in the navigation sidepane.-->
 <!--This should be updated to Material Data Table-->
 <!-- <div style="width:100%">
@@ -235,7 +253,7 @@
                 <button mat-icon-button color="primary" focusable="false" (click)="confirmDelete(row.currentData)">
                     <i class="fa fa-times mat-icon"></i>
                 </button>
-                <button mat-button id="exlayerperm" title="Open layer permissions" (click)="openPermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>
+                <button mat-button id="exlayerperm" title="Open layer permissions" (click)="openPermission(row.currentData.ID,row.currentData.layerName)">Permissions</button>
             </mat-cell>
         </ng-container>
         

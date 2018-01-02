@@ -22,6 +22,12 @@ export class UserPageService extends ParentService {
             .catch(this.handleError);
     }
 
+    public GetActiveByUserID = (userid): Observable<UserPage[]> => {
+        return this._http.get(this.actionUrl + 'getactivebyuserid?userID=' + userid)
+            .map((response: Response) => <UserPage[]>response.json())
+            .catch(this.handleError);
+    }
+
     public GetDefault = (userid): Observable<UserPage[]> => {
         return this._http.get(this.actionUrl + 'default?userID=' + userid)
             .map((response: Response) => <UserPage[]>response.json())

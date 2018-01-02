@@ -1,3 +1,4 @@
+import { Server } from './server.model'
 export class LayerAdmin {
     ID: number;
     layerName: string;
@@ -8,6 +9,7 @@ export class LayerAdmin {
     layerDescription: string;
     layerGeom: string;
     serverID: number;
+    server: Server;
 }
 
 export class LayerPermission {
@@ -23,13 +25,16 @@ export class LayerClass extends LayerAdmin {
 
 export class UserPageLayer {
     ID: number;
-    userID: number;
     layerON: boolean;
+    createdAt: string;
+    updatedAt: string;
+    userID: number;    
     userPageID: number;
     layerAdminID: number;
     layer_admin: LayerAdmin;
+    serverID: number;
     layerShown: boolean;
-    featureGroupObject?: L.FeatureGroup;
+    loadOrder: number;
 }
 
 export class MyCubeField {

@@ -82,6 +82,7 @@ export class newMyCubeComponent implements OnInit {
     private addLayer(newlayer: LayerAdmin): void {
         this.layerAdmin.layerName = newlayer.layerName
         this.layerAdmin.layerDescription = newlayer.layerDescription
+        console.log("Creating MyCube")
         this.layerAdminService
             .Add(this.layerAdmin)
             .subscribe((result: LayerAdmin) => {
