@@ -17,8 +17,9 @@ export class LoginComponent implements OnInit {
     public user = new User;
     loading = false;
     error = '';
+    token;
  
-    constructor(private router: Router, private authenticationService: AuthenticationService, private dataService: UserService) {
+    constructor(private router: Router, private authenticationService: AuthenticationService, private userService: UserService) {
     }
  
     ngOnInit() {
@@ -28,10 +29,16 @@ export class LoginComponent implements OnInit {
  
     login() {
         this.loading = true;
-        console.log(this.model.username)
-        //console.log(Md5.hashStr(this.model.password).toString())
         this.model.password = Md5.hashStr(this.model.password).toString()
-        console.log(this.model.password)
+        this.userService.login(this.model.username, this.model.password).subscribe(res => { 
+            if (res) {
+                this.token = res
+                //this.router.navigate(['/']);
+            } else {
+                this.model.password="";
+                this.loading=false;
+            }
+        })
         this.authenticationService.login(this.model.username, this.model.password)
             .subscribe(result => {
                 if (result > 0 ) {
@@ -49,7 +56,7 @@ export class LoginComponent implements OnInit {
     }
 
     getAllItems(userID): void {
-         this.dataService
+         this.userService
             .GetSingle(userID)
             .subscribe((data:User) => this.user = data,
                 error => console.log(error),
