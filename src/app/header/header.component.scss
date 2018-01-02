@@ -10,12 +10,20 @@
     background-color:black;
 }
 
-h4 {
+h4, h3 {
     color:white;
+    margin:0px 30px 0px 10px;
+    top:25%;
+    position:relative;
+    font-family:georgia;
 }
 
 a {
     margin-right:10px;
+}
+
+#headerSidenavToggle {
+    margin-left:40px;
 }
 
 #headerRight {

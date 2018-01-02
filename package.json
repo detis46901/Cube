@@ -54,6 +54,7 @@
     "leaflet-omnivore": "^0.3.4",
     "leaflet-plugins": "^3.0.0",
     "live-server": "^1.2.0",
+    "mdi": "^2.1.19",
     "next": "^2.4.3",
     "node-pre-gyp": "0.6.34",
     "node-sass": "^4.6.1",

@@ -26,7 +26,7 @@ import 'leaflet-draw';
 import 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/images/marker-icon.png';
 
-import { PageConfigComponent } from '../admin/user/pageconfig/pageconfig.component';
+import { PageConfigComponent } from '../admin/user/pageConfig/pageConfig.component';
 import { MatDialog } from '@angular/material';
 
 declare var ol: any;
