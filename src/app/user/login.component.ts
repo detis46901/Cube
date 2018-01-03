@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
     public user = new User;
     loading = false;
     error = '';
-    token;
+    public token;
  
     constructor(private router: Router, private authenticationService: AuthenticationService, private userService: UserService) {
     }
@@ -26,33 +26,45 @@ export class LoginComponent implements OnInit {
         //reset login status
         this.authenticationService.logout();
     }
+
+    ngOnDestroy() {
+        //emit this.token to application for use with API calls
+    }
  
     login() {
         this.loading = true;
-        this.model.password = Md5.hashStr(this.model.password).toString()
-        this.userService.login(this.model.username, this.model.password).subscribe(res => { 
+        //this.model.password = Md5.hashStr(this.model.password).toString()
+        console.log(this.model)
+        this.userService
+        .login(this.model.username, this.model.password)
+        .subscribe(res => {
+            console.log(res)
             if (res) {
                 this.token = res
-                //this.router.navigate(['/']);
+                console.log(res)
+                this.loading=false;
+                this.router.navigate(['/']);
             } else {
                 this.model.password="";
                 this.loading=false;
+                console.log(res)
             }
         })
-        this.authenticationService.login(this.model.username, this.model.password)
-            .subscribe(result => {
-                if (result > 0 ) {
-                    // login successful
-                    console.log(result)
-                    this.router.navigate(['/']); //may want to change this so it redirects to a url with the user's ID in it
-                } else {
-                    // login failed
-                    console.log(result)
-                    this.model.password="";
-                    this.error = 'Username or password is incorrect.';
-                    this.loading = false;
-                }
-            });
+        // this.authenticationService.login(this.model.username, this.model.password)
+        //     .subscribe(result => {
+        //         if (result > 0 ) {
+        //             // login successful
+        //             console.log(result)
+        //             this.router.navigate(['/']); //may want to change this so it redirects to a url with the user's ID in it
+        //             this.loading=false;
+        //         } else {
+        //             // login failed
+        //             console.log(result)
+        //             this.model.password="";
+        //             this.error = 'Username or password is incorrect.';
+        //             this.loading = false;
+        //         }
+        //     });
     }
 
     getAllItems(userID): void {
