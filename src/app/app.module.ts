@@ -85,6 +85,7 @@ import { geoJSONService } from './map/services/geoJSON.service';
 import { MyCubeService } from './/map/services/mycube.service';
 import { WFSService } from './map/services/wfs.service';
 import { SideNavService } from '../_services/sidenav.service';
+import { MessageService } from '../_services/message.service'
 
 
 
@@ -204,7 +205,8 @@ import { SideNavService } from '../_services/sidenav.service';
         geoJSONService,
         MyCubeService,
         WFSService,
-        SideNavService
+        SideNavService,
+        MessageService,
     ], 
 
     bootstrap: [AppComponent]

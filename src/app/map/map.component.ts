@@ -22,6 +22,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { LeafletDirective, LeafletDirectiveWrapper } from '@asymmetrik/ngx-leaflet';
 import { LeafletDrawDirective, LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
+import { MessageService } from '../../_services/message.service'
 import * as L from 'leaflet';
 import 'leaflet-draw';
 import 'leaflet/dist/images/marker-shadow.png';
@@ -64,7 +65,7 @@ export class MapComponent {
     private noLayers: boolean;
     private shown: boolean = false
     
-    constructor(private _http: Http, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private geoCoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sideNavService: SideNavService, private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog) {
+    constructor(private _http: Http, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private geoCoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sideNavService: SideNavService, private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog, private messageService:MessageService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userid;
@@ -166,7 +167,7 @@ export class MapComponent {
 
     private cleanPage(): void {
         //console.log('Flags array: ' + this.userPageLayers[0].layerShown);
-        this.clearMessage();
+        //this.clearMessage();
         this.setFlags();
         console.log("layer=" + this.mapConfig.layers)
         
@@ -183,15 +184,6 @@ export class MapComponent {
             this.currLayerName = 'No Active Layer';
             this.noLayers = true;
         })
-    }
-
-    private sendMessage(message: string): void {
-        message = message.split("<body>")[1]
-        this.sideNavService.sendMessage(message);
-    }
-
-    private clearMessage(): void {
-        this.sideNavService.clearMessage();
     }
 
     private clearMyCubeData(): void {

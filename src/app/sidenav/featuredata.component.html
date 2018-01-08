@@ -9,9 +9,11 @@
         <button mat-button (click)='clearMessage()'>
             <mat-icon>close</mat-icon>
         </button>
-        <div [innerHTML]='message.text'></div>
+        <!-- <div><iframe [src]="message"></iframe></div> -->
+        <div [innerHTML]="message"></div>
     </mat-card-content>
     <mat-card-content *ngIf="myCubeData">
+        {{myCubeData.field}}
         <button mat-button (click)='clearMyCubeData()'>
             <mat-icon>close</mat-icon>
         </button>
