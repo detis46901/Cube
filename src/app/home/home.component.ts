@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output } from '@angular/core';
 import { UserService } from '../../_services/_user.service';
 import { User } from '../../_models/user.model';
 import { SideNavService} from '../../_services/sidenav.service';
@@ -15,6 +15,8 @@ import { MyCubeField, MyCubeConfig } from '../../_models/layer.model'
 })
 
 export class HomeComponent {
+    //@Output() user;
+
     //This is the variable that tells the header's toggle menu button which screen the user is on
     private screen = 1;
 
@@ -31,8 +33,10 @@ export class HomeComponent {
 
     constructor(private dataService: UserService, private sideNavService: SideNavService, private myCubeService: MyCubeService, private WFSservice: WFSService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        console.log(localStorage.getItem('currentUser'))
+        console.log(currentUser.userID)
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userid;
+        this.userID = currentUser && currentUser.userID;
         this.subscription = this.sideNavService.getMessage().subscribe(message => { this.message = message; });
         this.myCubeSubscription = this.myCubeService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; });
         this.editSubscription = this.myCubeService.getMyCubeConfig().subscribe(data => {this.myCubeConfig = data});
@@ -40,14 +44,17 @@ export class HomeComponent {
     }
 
     ngOnInit() {
-       this.getAllItems(this.userID);
-       this.message = "Click a layer for details.";
+        console.log(this.userID)
+        this.getAllItems(this.userID);
+        //this.getAllItems(102); //toby mcguire
+        this.message = "Click a layer for details.";
     }
 
     private getAllItems(userID: number): void {
         this.dataService
             .GetSingle(userID)
             .subscribe((data: User) => {
+                console.log(data)
                 this.user = data;
             });
     }

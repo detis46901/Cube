@@ -36,7 +36,7 @@ export class OrganizationComponent implements OnInit {
     constructor(private departmentService: DepartmentService, private userService: UserService, private groupService: GroupService, private roleService: RoleService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userid;
+        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {

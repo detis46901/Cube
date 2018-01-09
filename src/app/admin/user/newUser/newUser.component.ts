@@ -26,7 +26,7 @@ export class NewUserComponent implements OnInit {
     constructor(private dialog: MatDialog, private userService: UserService, private roleService: RoleService) { 
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userid;
+        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {

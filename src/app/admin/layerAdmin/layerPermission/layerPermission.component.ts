@@ -28,7 +28,7 @@ export class LayerPermissionComponent implements OnInit {
     constructor(private layerPermissionService: LayerPermissionService, private userService: UserService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userid;
+        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {

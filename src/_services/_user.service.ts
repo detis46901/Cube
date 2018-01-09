@@ -31,12 +31,14 @@ export class UserService extends ParentService {
                 //console.log(token) correct
                 if (token) {//if(token.isValid())
                     this.token = token;
-                    let userID = response.json() && response.json().userid;
-                    let admin = response.json() && response.json().admin;
+                    var userID = response.json() && response.json().userID;
+                    var admin = response.json() && response.json().admin;
+                    console.log(response.json())
+                    console.log(userID)
 
                     // store username and jwt token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('currentUser', JSON.stringify({
-                        userid: userID, 
+                        userID: userID, 
                         admin: admin, 
                         token: token
                     }));

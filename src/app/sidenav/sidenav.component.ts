@@ -20,7 +20,7 @@ export class SideNavComponent implements OnInit {
          // subscribe to map component messages
          let currentUser = JSON.parse(localStorage.getItem('currentUser'));
          this.token = currentUser && currentUser.token;
-         this.userID = currentUser && currentUser.userid;
+         this.userID = currentUser && currentUser.userID;
          console.log(currentUser)
     } 
 

@@ -40,7 +40,7 @@ export class LayerAdminComponent implements OnInit {
     constructor(private layerValidator: ValidatorService, private layerAdminService: LayerAdminService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userid;
+        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {

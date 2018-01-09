@@ -29,7 +29,9 @@ export class HeaderComponent {
 
     private imgURL = "avatar2.png"
 
-    constructor(private sideNavService: SideNavService) {}
+    constructor(private sideNavService: SideNavService) {
+        console.log(this.user)
+    }
 
     private menuToggle(sCode: number): void {
         if (this.sideNavService.getHidden() == null) {
@@ -48,9 +50,11 @@ export class HeaderComponent {
                 this.homeToggle();
                 break;
             case 2:
+                console.log("admin")
                 this.adminToggle();
                 break;
             case 3:
+                console.log("user")
                 this.userToggle();
                 break;
             default:

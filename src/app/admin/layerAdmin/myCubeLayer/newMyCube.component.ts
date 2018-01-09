@@ -41,7 +41,7 @@ export class newMyCubeComponent implements OnInit {
     constructor(private layerAdminService: LayerAdminService, private dialog: MatDialog, private serverService: ServerService, private sqlservice: SQLService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userid;
+        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {

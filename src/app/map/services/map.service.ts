@@ -104,11 +104,11 @@ export class MapService {
         let promise = new Promise((resolve, reject) => {
             console.log("mapService getUserPageLayers")
             this.userPageLayerService
-                .GetPageLayers(this.mapConfig.currentpage.ID)
-                .subscribe((data: UserPageLayer[]) => {
-                    this.mapConfig.userpagelayers = data
-                    resolve()
-                });
+            .GetPageLayers(this.mapConfig.currentpage.ID)
+            .subscribe((data: UserPageLayer[]) => {
+                this.mapConfig.userpagelayers = data
+                resolve()
+            });
         })
         return promise
     }

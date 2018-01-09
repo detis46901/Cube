@@ -38,7 +38,7 @@ export class LayerNewComponent implements OnInit {
     constructor(private layerAdminService: LayerAdminService, private dialog: MatDialog, private serverService: ServerService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userid;
+        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {

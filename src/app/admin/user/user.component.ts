@@ -55,7 +55,7 @@ export class UserComponent implements OnInit {
     constructor(private userValidator: ValidatorService, private userService: UserService, private userPageLayerService: UserPageLayerService, private roleService: RoleService, private userPageService: UserPageService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userid;
+        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {

@@ -67,7 +67,7 @@ export class MapComponent {
     constructor(private _http: Http, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private geoCoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sideNavService: SideNavService, private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userid;
+        this.userID = currentUser && currentUser.userID;
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
         this.headers.append('Accept', 'application/json');
@@ -89,8 +89,8 @@ export class MapComponent {
     //Angular component initialization
     ngOnInit() {
          this.getDefaultPage()
-         .then (() => this.mapService.initMap(this.mapConfig)
-            .then ((mapConfig) => {
+         .then(() => this.mapService.initMap(this.mapConfig)
+            .then((mapConfig) => {
                 this.mapConfig = mapConfig  //Not sure if this is necessary.  Just in case.
                 console.log("setting Target")
                 mapConfig.map.setTarget(this.mapElement.nativeElement.id)

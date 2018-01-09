@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
         this.userService
         .login(this.model.username, this.model.password)
         .subscribe(res => {
-            console.log(res)
+            //console.log(res.loginToken)
             if (res) {
                 this.token = res
                 console.log(res)
