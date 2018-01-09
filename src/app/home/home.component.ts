@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { Component, Output } from '@angular/core';
-=======
-import { Component, OnDestroy } from '@angular/core';
->>>>>>> c4be1e12c58e75cb2cd08fba48bb5ab7c04b3973
+import { Component, Output, OnDestroy } from '@angular/core';
 import { UserService } from '../../_services/_user.service';
 import { User } from '../../_models/user.model';
 import { SideNavService} from '../../_services/sidenav.service';
