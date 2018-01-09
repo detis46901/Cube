@@ -207,10 +207,10 @@ export class WFSService {
                     console.log (temp3)
                 }
 
-                this.popupText.next(temp)
+                // this.popupText.next(temp)
                 //7/13/17 This allows click events to create sidenav popup information, while allowing mousemove events to change the cursor icon to a pointing hand without updating popup.
-                if (!mouseDown)
-                    {this.popupText.next(temp)}
+                // if (!mouseDown)
+                //     {this.popupText.next(temp)}
                 return temp;
             })
     }

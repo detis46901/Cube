@@ -13,11 +13,13 @@ export interface MapConfigView {
 export class MapConfig {
     name?: string;
     map?: ol.Map;
-    layers?= new Array;
+    sources?= new Array;
+    layers? = new Array;
     userpages?: UserPage[];
     defaultpage?: UserPage;
     currentpage?: UserPage;
     userpagelayers?: UserPageLayer[];
+    currLayerName?: string;
     layerpermission?: LayerPermission[];
 }
 

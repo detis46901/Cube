@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 import { Component, Output } from '@angular/core';
+=======
+import { Component, OnDestroy } from '@angular/core';
+>>>>>>> c4be1e12c58e75cb2cd08fba48bb5ab7c04b3973
 import { UserService } from '../../_services/_user.service';
 import { User } from '../../_models/user.model';
 import { SideNavService} from '../../_services/sidenav.service';
+import { MessageService } from '../../_services/message.service'
 import { MyCubeService } from '../map/services/mycube.service'
 import { WFSService } from '../map/services/wfs.service';
 import { Subscription } from 'rxjs/Subscription';
@@ -11,7 +16,7 @@ import { MyCubeField, MyCubeConfig } from '../../_models/layer.model'
     selector: 'home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    providers: [SideNavService, WFSService, MyCubeService]
+    providers: [SideNavService, WFSService]
 })
 
 export class HomeComponent {
@@ -24,14 +29,14 @@ export class HomeComponent {
     private token: string;
     private userID: number;
     private popupText: string;
-    private message: string;
+    private message: any;
     private myCubeData: MyCubeField;
     private subscription: Subscription;
     private myCubeSubscription: Subscription;
     private editSubscription: Subscription;
     private myCubeConfig: MyCubeConfig;
 
-    constructor(private dataService: UserService, private sideNavService: SideNavService, private myCubeService: MyCubeService, private WFSservice: WFSService) {
+    constructor(private dataService: UserService, private sideNavService: SideNavService, private myCubeService: MyCubeService, private WFSservice: WFSService, private messageService: MessageService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         console.log(localStorage.getItem('currentUser'))
         console.log(currentUser.userID)
@@ -57,5 +62,11 @@ export class HomeComponent {
                 console.log(data)
                 this.user = data;
             });
+    }
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe()
+        this.myCubeSubscription.unsubscribe()
+        this.editSubscription.unsubscribe()
     }
 }

@@ -35,6 +35,7 @@ export class UserPageLayer {
     serverID: number;
     layerShown: boolean;
     loadOrder: number;
+    clickEventKey: any;
 }
 
 export class MyCubeField {

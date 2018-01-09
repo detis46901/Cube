@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { SideNavService } from "../../_services/sidenav.service"
 import { MyCubeField, MyCubeConfig }from "../../_models/layer.model"
 import { SQLService } from "../../_services/sql.service"
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 
 @Component({
     moduleId: module.id,
@@ -13,15 +14,23 @@ import { SQLService } from "../../_services/sql.service"
     providers: [SideNavService]
 })
 export class FeatureDataComponent{ 
+    public trustedUrl: SafeUrl
+    public videoUrl: SafeResourceUrl;
+
     constructor(private sideNavService: SideNavService, private sqlservice: SQLService){
          // subscribe to map component messages
     }
-    @Input() message: any;
+
+    
+
+    @Input() message: any
     @Input() myCubeData: MyCubeField[];
     @Input() myCubeConfig: MyCubeConfig;
     @Input() canEdit: boolean;
-
-    ngOnInit() {}
+    
+   
+    ngOnInit() {
+    }
 
     public hideMenu() {
         this.sideNavService.toggleHidden();
@@ -45,7 +54,7 @@ export class FeatureDataComponent{
     }
 
     private clearMessage(): void {
-        this.message = ""
+        this.message = null
     }
 
     private clearMyCubeData(): void {
