@@ -343,8 +343,7 @@ export class MapService {
         this.mapConfig = mapconfig
         this.mapConfig.userpagelayers.forEach(element => {
             if (element.layer_admin.layerType == "MyCube") {
-                console.log("Seeting layer to .5 opacity")
-                // this.mapConfig.layers[element.loadOrder-1].setOpacity(1)
+                console.log("Setting layer to .5 opacity")
                 this.mapConfig.layers[element.loadOrder-1].setOpacity(.5)
             }
         });
@@ -479,6 +478,7 @@ export class MapService {
             }
         })
         this.mapConfig.map.addInteraction(selectClick)
+        this.mapConfig.clickInteraction = selectClick
 
         // this.evkey = this.mapConfig.map.on('click', (evt:ol.MapEvent) => {
         //     console.log('clicked on the screen')

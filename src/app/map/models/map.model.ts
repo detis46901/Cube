@@ -15,6 +15,7 @@ export class MapConfig {
     map?: ol.Map;
     sources?= new Array;
     layers? = new Array;
+    clickInteraction?: ol.interaction.Interaction
     userpages?: UserPage[];
     defaultpage?: UserPage;
     currentpage?: UserPage;
