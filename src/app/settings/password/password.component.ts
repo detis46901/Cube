@@ -34,23 +34,16 @@ export class PasswordComponent implements OnInit{
     }
 
     changePW() {
-        //console.log(this.oldPw);
-        //console.log(this.newPw);
-
-        this.oldPw = Md5.hashStr(this.oldPw).toString();
-        this.newPw = Md5.hashStr(this.newPw).toString();
-        this.confPw = Md5.hashStr(this.confPw).toString();
-
-        if (this.oldPw == this.user.password && this.newPw == this.confPw) {
-            this.user.password = this.newPw
-            this.userService
-                .Update(this.user) //this method doesn't work the way it's intended to
-                .subscribe()
-            alert("Password successfully changed.")
-        } else if (this.oldPw == this.user.password && this.newPw != this.confPw) {
-            alert("New password does not match confirmation input.")
+        if(this.newPw == this.oldPw) {
+            console.log("New password matches old password.")
+            alert("New password matches old password.")
+        } else if(this.newPw != this.confPw) {
+            console.log("Confirm password entry did not match new password entry.")
+            alert("Confirm password entry did not match new password entry.")
         } else {
-            alert("Old password does not match database records.")
+            console.log("userService.updatePassword initiated")
+            this.userService.updatePassword(this.user, this.oldPw, this.newPw)
+            .subscribe()
         }
 
         this.oldPw = "";

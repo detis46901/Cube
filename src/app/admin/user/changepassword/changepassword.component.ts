@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef, MatInputModule, MAT_DIALOG_DATA} from '@angula
 import { UserService } from '../../../../_services/_user.service';
 import { User } from '../../../../_models/user.model';
 import { Md5 } from 'ts-md5/dist/md5';
+import bcrypt = require('bcrypt');
 
 @Component({
     selector: 'change-password',
@@ -39,21 +40,45 @@ export class ChangePasswordComponent implements OnInit {
         //console.log(this.newPw);
         //console.log(this.confPw);
 
-        this.oldPw = Md5.hashStr(this.oldPw).toString();
-        this.newPw = Md5.hashStr(this.newPw).toString();
-        this.confPw = Md5.hashStr(this.confPw).toString();
+        //last working code
+        // this.oldPw = Md5.hashStr(this.oldPw).toString();
+        // this.newPw = Md5.hashStr(this.newPw).toString();
+        // this.confPw = Md5.hashStr(this.confPw).toString();
+        // if (this.oldPw == this.user.password && this.newPw == this.confPw) {
+        //     this.user.password = this.newPw
+        //     this.userService
+        //         .Update(this.user)
+        //         .subscribe()
+        //     alert("Password successfully changed.")
+        //     this.dialog.closeAll();
+        // } else if (this.oldPw == this.user.password && this.newPw != this.confPw) {
+        //     alert("New password does not match confirmation input.")
+        // } else {
+        //     alert("Old password does not match database records.")
+        // }
 
-        if (this.oldPw == this.user.password && this.newPw == this.confPw) {
-            this.user.password = this.newPw
-            this.userService
-                .Update(this.user)
-                .subscribe()
-            alert("Password successfully changed.")
-            this.dialog.closeAll();
-        } else if (this.oldPw == this.user.password && this.newPw != this.confPw) {
-            alert("New password does not match confirmation input.")
+        //1/11/18
+        // bcrypt.compare(this.oldPw, this.user.password, (err, result) => {
+        //     if(err) { //bcrypt hashing error
+        //         console.error(err);
+        //     } else if(result) {
+        //         alert("Curent password is correct.")
+        //     } else {
+        //         alert("Current password is incorrect.")
+        //     }
+        // })
+        if(this.newPw == this.oldPw) {
+            console.log("New password matches old password.")
+            alert("New password matches old password.")
+        } else if(this.newPw != this.confPw) {
+            console.log("Confirm password entry did not match new password entry.")
+            alert("Confirm password entry did not match new password entry.")
         } else {
-            alert("Old password does not match database records.")
+            console.log("userService.updatePassword initiated")
+            this.userService.updatePassword(this.user, this.oldPw, this.newPw)
+            .subscribe(() => {
+               this.dialog.closeAll()
+            })
         }
 
         this.oldPw = "";

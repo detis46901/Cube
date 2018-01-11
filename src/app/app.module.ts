@@ -85,7 +85,8 @@ import { geoJSONService } from './map/services/geoJSON.service';
 import { MyCubeService } from './/map/services/mycube.service';
 import { WFSService } from './map/services/wfs.service';
 import { SideNavService } from '../_services/sidenav.service';
-import { MessageService } from '../_services/message.service'
+import { MessageService } from '../_services/message.service';
+import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
 
 
 
@@ -133,6 +134,7 @@ import { MessageService } from '../_services/message.service'
         ServerNewComponent,
         ChangePasswordComponent,
         NewUserComponent,
+        ApiKeyComponent,
     ],
 
     entryComponents: [

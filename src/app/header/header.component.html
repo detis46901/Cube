@@ -3,7 +3,7 @@
         <h3>
             {{user.firstName}} {{user.lastName}}
             <a title="Return Home" routerLink="home"><i class="fa fa-cube"></i></a>
-            <button mat-button id="headerSidenavToggle" (click)="menuToggle(screenCode)">Toggle Menu</button>
+            <button mat-button *ngIf="screenCode == 1" id="headerSidenavToggle" (click)="menuToggle(screenCode)">Toggle Menu</button>
             <!-- <button mat-button id="headerCreateUser" (click)="openNewUser()">Create User</button> use *ngIf and new screen codes for each admin routed page--> 
         </h3>       
     </span>
@@ -13,7 +13,7 @@
         <a id="headerInbox" title="Inbox"><i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
         <!-- <a id="headerLogoff" title="Logout" href="/logout"><i class="fa fa-power-off fa-2x" aria-hidden="true"></i></a>        -->
         <a id="headerLogout" title="Logout" href="/logout"><i class="material-icons">exit_to_app</i></a>
-        <a id="headerSettings" title="Settings" href="/settings"><i class="fa fa-cog fa-2x"></i></a> 
+        <a id="headerSettings" title="Settings" href="/settings"><i class="fa fa-cog fa-2x"></i></a>
         <a id="headerAdmin" *ngIf="user.administrator" title="Admin Menu" href="/admin"><i class="fa fa-folder-open fa-2x"></i></a>   
     </span>
 </div>

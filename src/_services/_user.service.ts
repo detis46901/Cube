@@ -23,6 +23,31 @@ export class UserService extends ParentService {
             .catch(this.handleError);
     }
 
+    public generateKey(email: string, firstName: string, lastName: string) {
+        return this._http.post(this.actionUrl + "generateKey", {email: email, firstName: firstName, lastName: lastName})
+        .map((response) => {
+            if(response.ok) {
+                return response.json()
+            } else {
+                return false
+            }
+        })
+    }
+
+    public updatePassword(user: User, oldPw: string, newPw: string) {
+        return this._http.put(this.actionUrl + "updatePassword", {currUser: user, password: user.password, oldPassword: oldPw, newPassword: newPw})
+        .map((response) => {
+            console.log(response.json())
+            if(response.ok) {
+                console.log("ok")
+                return response.json()
+            } else {
+                console.log("not")
+                return false
+            }
+        })
+    }
+
     public login(username: string, password: string) {
         return this._http.post(this.actionUrl + "login", {email: username, password: password})
         .map((response) => {

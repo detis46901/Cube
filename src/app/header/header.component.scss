@@ -36,3 +36,12 @@ a {
     justify-content:flex-end;
     padding-right:2%;
 }
+
+#headerSettings, #headerAdmin {
+    position:relative;
+    top:1px;
+}
+
+#headerBar {
+    display: flex;
+}
