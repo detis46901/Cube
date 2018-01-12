@@ -16,6 +16,7 @@ export class AuthenticationService {
         this.actionUrl = configuration.serverWithApiUrl + 'authenticate';
     }
  
+    //NOT USED - 'user.service.ts/login' INSTEAD
     login(username: string, password: string): Observable<number> {        
         return this.http.post(this.actionUrl, {email: username, password: password})
             .map((response: Response) => {

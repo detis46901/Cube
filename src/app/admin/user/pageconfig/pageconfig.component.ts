@@ -59,7 +59,8 @@ export class PageConfigComponent implements OnInit {
         this.newUserPageLayer.layerAdminID = newUserPageLayer.layerAdminID;
 
         this.userPageLayerService
-            .Add(this.newUserPageLayer, this.token)
+            //.Add(this.newUserPageLayer, this.token)
+            .Add(this.newUserPageLayer)
             .subscribe(result => {
                 this.getUserPageLayers();
             });

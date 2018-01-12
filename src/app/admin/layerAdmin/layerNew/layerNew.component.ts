@@ -68,7 +68,8 @@ export class LayerNewComponent implements OnInit {
         }
         //console.log(this.token)
         this.layerAdminService
-            .Add(this.layerAdmin, this.token)
+            //.Add(this.layerAdmin, this.token)
+            .Add(this.layerAdmin)
             .subscribe(result => {
                 console.log('result=' + JSON.stringify(result))
                 this.dialog.closeAll();

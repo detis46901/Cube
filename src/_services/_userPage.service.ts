@@ -17,20 +17,20 @@ export class UserPageService extends ParentService {
     }
  
     public GetSome = (userid): Observable<UserPage[]> => {
-        return this._http.get(this.actionUrl + 'list?userID=' + userid)
+        return this._http.get(this.actionUrl + 'list?userID=' + userid, this.options)
             .map((response: Response) => <UserPage[]>response.json())
             .catch(this.handleError);
     }
 
     public GetActiveByUserID = (userid): Observable<UserPage[]> => {
         console.log((this.actionUrl + 'getactivebyuserid?userID=' + userid))
-        return this._http.get(this.actionUrl + 'getactivebyuserid?userID=' + userid)
+        return this._http.get(this.actionUrl + 'getactivebyuserid?userID=' + userid, this.options)
             .map((response: Response) => <UserPage[]>response.json())
             .catch(this.handleError);
     }
 
     public GetDefault = (userid): Observable<UserPage[]> => {
-        return this._http.get(this.actionUrl + 'default?userID=' + userid)
+        return this._http.get(this.actionUrl + 'default?userID=' + userid, this.options)
             .map((response: Response) => <UserPage[]>response.json())
             .catch(this.handleError);
     }
@@ -38,7 +38,7 @@ export class UserPageService extends ParentService {
     public UpdateMultiple = (items: UserPage[]): Observable<UserPage[]> => {
         console.log(JSON.stringify(items))
  
-        return this._http.put(this.actionUrl + 'updatemulti', JSON.stringify(items), {headers: this.headers})
+        return this._http.put(this.actionUrl + 'updatemulti', JSON.stringify(items), this.options)
             .map((response: Response) => <any>response.json())
             .catch(this.handleError);
             

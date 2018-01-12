@@ -17,13 +17,13 @@ export class LayerPermissionService extends ParentService {
     }
 
     public GetUserLayer = (userid): Observable<LayerPermission[]> => {
-        return this._http.get(this.actionUrl + 'userlist?userid=' + userid)
+        return this._http.get(this.actionUrl + 'userlist?userid=' + userid, this.options)
             .map((response: Response) => <LayerPermission[]>response.json())
             .catch(this.handleError);
     }
     
     public GetSome = (layerid): Observable<LayerPermission[]> => {
-        return this._http.get(this.actionUrl + 'list?layerID=' + layerid)
+        return this._http.get(this.actionUrl + 'list?layerID=' + layerid, this.options)
             .map((response: Response) => <LayerPermission[]>response.json())
             .catch(this.handleError);
     }

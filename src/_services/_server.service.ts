@@ -26,7 +26,7 @@ export class ServerService extends ParentService {
                 actionUrl = serv.serverURL + 'f=pjson'; 
                 break;
         }
-        return this._http.get(actionUrl, options)
+        return this._http.get(actionUrl, options/*, this.options*/)
             .map((response: Response) => response.text());
     }
 
@@ -41,7 +41,7 @@ export class ServerService extends ParentService {
                 actionUrl = serv.serverURL + path + '?f=pjson'; 
                 break;
         }     
-        return this._http.get(actionUrl, options)
+        return this._http.get(actionUrl, options/*, this.options*/)
             .map((response: Response) => response.text());
     }
 }

@@ -17,25 +17,25 @@ export class UserPageLayerService extends ParentService {
     }
 
     public GetSome = (pageid): Observable<UserPageLayer[]> => {
-        return this._http.get(this.actionUrl + 'list?ID=' + pageid)
+        return this._http.get(this.actionUrl + 'list?ID=' + pageid, this.options)
             .map((response: Response) => <UserPageLayer[]>response.json())
             .catch(this.handleError);
     }
 
     public GetPageLayers = (pageid): Observable<UserPageLayer[]> => {
-        return this._http.get(this.actionUrl + 'getpagelayers?pageID=' + pageid)
+        return this._http.get(this.actionUrl + 'getpagelayers?pageID=' + pageid, this.options)
             .map((response: Response) => <UserPageLayer[]>response.json())
             .catch(this.handleError);
     }
 
     public GetUserLayers = (userid): Observable<UserPageLayer[]> => {
-        return this._http.get(this.actionUrl + 'userlist?userid=' + userid)
+        return this._http.get(this.actionUrl + 'userlist?userid=' + userid, this.options)
             .map((response: Response) => <UserPageLayer[]>response.json())
             .catch(this.handleError);
     }
 
     public GetByLayer = (layerid): Observable<UserPageLayer[]> => {
-        return this._http.get(this.actionUrl + 'getbylayer?layerAdminID=' + layerid)
+        return this._http.get(this.actionUrl + 'getbylayer?layerAdminID=' + layerid, this.options)
             .map((response: Response) => <UserPageLayer[]>response.json())
             .catch(this.handleError);
     }

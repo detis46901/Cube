@@ -1,4 +1,4 @@
-import {Http, Headers, Response} from "@angular/http";
+import {Http, Headers, Response, RequestOptions} from "@angular/http";
 import {Location} from "../core/location.class";
 import {Injectable} from "@angular/core";
 import {Observable} from 'rxjs'
@@ -14,6 +14,8 @@ import "rxjs/add/operator/mergeMap";
 export class WFSService {
     http: Http;
     public headers: Headers;
+    public options: RequestOptions;
+    private token: string;
     public styleHead: Headers;
     public popupText = new Subject<string>();
     popupText$ = this.popupText.asObservable();
@@ -24,6 +26,9 @@ export class WFSService {
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json'); //maybe it should be text/plain.  Most servers don't allow the application/json.  But text/plain fails on Geoserver
         this.headers.append('Accept', 'application/json');  //same as above
+        this.headers.append('Authorization', 'Bearer ' + this.token);
+        this.headers.append('Access-Control-Allow-Origin', '*');
+        this.options = new RequestOptions({headers: this.headers})
 
         this.styleHead = new Headers();
         this.styleHead.append('Content-Type', 'application/vnd.ogc.sld+xml')
@@ -41,7 +46,7 @@ export class WFSService {
         let len: number = 1;
         let data: Array<any> = [];
 
-        return this.http.get(path, {headers: this.headers})
+        return this.http.get(path, this.options)
             .map( (responseData) => {
                 //console.log(responseData)
                 return responseData.json();
@@ -99,7 +104,7 @@ export class WFSService {
         let polylist: Array<L.Layer> = [];
         let count:number = 0;
 
-        return this.http.get(path, {headers: this.headers})
+        return this.http.get(path, this.options)
             .map( (responseData) => {
                 console.log(responseData)
                 return responseData.json();
@@ -161,7 +166,7 @@ export class WFSService {
     }
 
     getfeatureinfo(URL, mouseDown: boolean) {
-        return this.http.get(URL)
+        return this.http.get(URL, this.options)
             .map((responseData) => {
                 let temp: string = responseData['_body']
                 //console.log("temp=" + temp)

@@ -18,13 +18,13 @@ export class UserService extends ParentService {
     }
 
     public GetByRole = (roleID): Observable<User[]> => {
-        return this._http.get(this.actionUrl + 'getbyrole?roleID=' + roleID)
+        return this._http.get(this.actionUrl + 'getbyrole?roleID=' + roleID, this.options)
             .map((response: Response) => <User[]>response.json())
             .catch(this.handleError);
     }
 
     public generateKey(email: string, firstName: string, lastName: string) {
-        return this._http.post(this.actionUrl + "generateKey", {email: email, firstName: firstName, lastName: lastName})
+        return this._http.post(this.actionUrl + "generateKey", {email: email, firstName: firstName, lastName: lastName}, this.options)
         .map((response) => {
             if(response.ok) {
                 return response.json()
@@ -35,7 +35,7 @@ export class UserService extends ParentService {
     }
 
     public updatePassword(user: User, oldPw: string, newPw: string) {
-        return this._http.put(this.actionUrl + "updatePassword", {currUser: user, password: user.password, oldPassword: oldPw, newPassword: newPw})
+        return this._http.put(this.actionUrl + "updatePassword", {currUser: user, password: user.password, oldPassword: oldPw, newPassword: newPw}, this.options)
         .map((response) => {
             console.log(response.json())
             if(response.ok) {
