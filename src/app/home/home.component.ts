@@ -38,8 +38,8 @@ export class HomeComponent {
         console.log(currentUser.userID)
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
-        this.subscription = this.sideNavService.getMessage().subscribe(message => { this.message = message; });
-        this.myCubeSubscription = this.myCubeService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; });
+        this.subscription = this.messageService.getMessage().subscribe(message => { this.message = message; this.myCubeData = null });
+        this.myCubeSubscription = this.myCubeService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; this.message = null});
         this.editSubscription = this.myCubeService.getMyCubeConfig().subscribe(data => {this.myCubeConfig = data});
         console.log("this.message = " + this.message)
     }
@@ -48,7 +48,7 @@ export class HomeComponent {
         console.log(this.userID)
         this.getAllItems(this.userID);
         //this.getAllItems(102); //toby mcguire
-        this.message = "Click a layer for details.";
+        this.message = null
     }
 
     private getAllItems(userID: number): void {

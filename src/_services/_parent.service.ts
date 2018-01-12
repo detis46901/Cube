@@ -35,9 +35,9 @@ export class ParentService {
             .catch(this.handleError);
     }
  
-    public Add = (toAdd: any): Observable<any> => {
+    public Add = (toAdd: any, token: any): Observable<any> => {
         console.log('adding a record.  Add to=' + JSON.stringify(toAdd))
-        console.log(this.actionUrl + 'create', JSON.stringify(toAdd), {headers: this.headers})
+        console.log(this.actionUrl + 'create', token, JSON.stringify(toAdd), {headers: this.headers})
         return this._http.post(this.actionUrl + 'create', JSON.stringify(toAdd), {headers: this.headers})
             .map((response: Response) => <any>response.json())
             .catch(this.handleError);

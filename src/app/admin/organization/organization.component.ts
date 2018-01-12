@@ -93,7 +93,7 @@ export class OrganizationComponent implements OnInit {
         this.department.department = newDepartment;
         this.department.active = true;
         this.departmentService
-            .Add(this.department)
+            .Add(this.department, this.token)
             .subscribe(() => {
                 this.getDepartmentItems();
             });
@@ -104,7 +104,7 @@ export class OrganizationComponent implements OnInit {
         this.group.group = newGroup;
         this.group.active = true;
         this.groupService
-            .Add(this.group)
+            .Add(this.group, this.token)
             .subscribe(() => {
                 this.getGroupItems();
             });
@@ -116,7 +116,7 @@ export class OrganizationComponent implements OnInit {
         this.role.role = newRole.role;
         this.role.active = true;
         this.roleService
-            .Add(this.role)
+            .Add(this.role, this.token)
             .subscribe(() => {
                 this.getRoleItems();
             });

@@ -66,9 +66,9 @@ export class LayerNewComponent implements OnInit {
             this.layerAdmin.layerType = this.layerType;
             //this.layerAdmin.layerFormat = this.layerFormat;
         }
-        console.log(this.layerFormat)
+        //console.log(this.token)
         this.layerAdminService
-            .Add(this.layerAdmin)
+            .Add(this.layerAdmin, this.token)
             .subscribe(result => {
                 console.log('result=' + JSON.stringify(result))
                 this.dialog.closeAll();

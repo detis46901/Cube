@@ -51,7 +51,6 @@ export class MapComponent {
     private headers: Headers;
     private userPageLayers: Array<UserPageLayer> = [];
     private activePageLayers = new Array<UserPageLayer>();
-    private currLayer: UserPageLayer;
     private userPages: UserPage[];
     private activePages = new Array<UserPage>();
     private server: Server;
@@ -61,9 +60,7 @@ export class MapComponent {
 
     private defaultPage: UserPage;
     private currPage: any = ''; //Could be "none"
-    private currLayerName: string = ''; //Could say something besides nothing
     private noLayers: boolean;
-    private shown: boolean = false
     
     constructor(private _http: Http, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private geoCoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sideNavService: SideNavService, private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog, private messageService:MessageService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -77,14 +74,7 @@ export class MapComponent {
 
     // After view init the map target can be set!
     ngAfterViewInit() {
-        //this.map.setTarget(this.mapElement.nativeElement.id)
-        // const promise = new Promise((resolve, reject) => {this.getPage(); this.map = this.mapService.initMap()})
-        // .then(data=> console.log("data= " + data))
-
-        // console.log("Initialize Start")
-        // this.Initialize()
-        //     .then(data=>console.log("Is initialization over?"))
-        //     .then (data => this.map.setTarget(this.mapElement.nativeElement.id));        
+        //mapConfig.map.setTarget(this.mapElement.nativeElement.id)
     }
     
     //Angular component initialization
@@ -94,7 +84,7 @@ export class MapComponent {
             .then((mapConfig) => {
                 this.mapConfig = mapConfig  //Not sure if this is necessary.  Just in case.
                 console.log("setting Target")
-                mapConfig.map.setTarget(this.mapElement.nativeElement.id)
+                mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
             })    
          )}
 
@@ -104,6 +94,7 @@ export class MapComponent {
             .GetActiveByUserID(this.userID)
             .subscribe((data: UserPage[]) => {
                 this.mapConfig.name = "Current"
+                console.log(data)
                 this.mapConfig.userpages = data
                 for (let userpage of this.mapConfig.userpages) {
                     if (userpage.default === true) {
@@ -119,22 +110,6 @@ export class MapComponent {
         return promise
     }
 
-    //This method sets flags for use with the "Layers in Map Component" map.component.html control in order to determine
-    //Which layers are currently active, so they can be turned on or off at will with the corresponding dropdown selection.
-    private setFlags(): void {
-        for (let x of this.userPageLayers) {
-            x.layerShown = x.layerON;
-        }
-    }
-
-    private getUserPageItems(): void {
-        this.userPageService
-            .GetSome(this.userID)
-            .subscribe((data: UserPage[]) => {
-                this.userPages = data;
-            });
-    }
-        
     //Gets userPageLayers by page.ID, changes pages
     private setPage(page: UserPage): void {
         this.mapConfig.currentpage = page
@@ -143,7 +118,6 @@ export class MapComponent {
         .then(() => this.mapService.getLayerPerms())
         .then(() => {this.cleanPage();})
         //this.mapService.getUserPageLayers(page);
-        this.currLayerName = 'No Active Layer';
         this.noLayers = true;
     }
 
@@ -159,18 +133,13 @@ export class MapComponent {
                 for(let i of response) {
                     this.userPageLayerService.Update(i).subscribe();
                 }
-                this.getUserPageItems();
             }
         });
     }
         
 
     private cleanPage(): void {
-        //console.log('Flags array: ' + this.userPageLayers[0].layerShown);
-        //this.clearMessage();
-        this.setFlags();
         console.log("layer=" + this.mapConfig.layers)
-        
         for (let k=1; k< this.mapConfig.layers.length; k) {
             console.log(k + " of " + this.mapConfig.layers.length)
             this.mapConfig.map.removeLayer(this.mapConfig.layers[k])
@@ -178,10 +147,7 @@ export class MapComponent {
             console.log(this.mapConfig.layers)
         }
         this.mapService.loadLayers(this.mapConfig, false).then(() => {  
-        
-            //this.mapService.loadLayers(this.mapConfig)
-            //this.mapService.getUserPageLayers(this.mapConfig);
-            this.currLayerName = 'No Active Layer';
+            this.mapConfig.currLayerName = ""
             this.noLayers = true;
         })
     }

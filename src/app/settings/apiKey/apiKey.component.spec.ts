@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ApiKeyComponent } from './api-key.component';
+import { ApiKeyComponent } from './apiKey.component';
 
 describe('ApiKeyComponent', () => {
   let component: ApiKeyComponent;

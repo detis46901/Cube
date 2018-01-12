@@ -109,6 +109,7 @@ export class MapService {
         this.mapConfig = mapConfig //only necessary on changed page
         let promise = new Promise((resolve, reject) => {
             console.log("mapService getUserPageLayers")
+            console.log(this.mapConfig)
             this.userPageLayerService
             .GetPageLayers(this.mapConfig.currentpage.ID)
             .subscribe((data: UserPageLayer[]) => {
@@ -134,6 +135,9 @@ export class MapService {
 
     //loadLayers will load during map init and load the layers that should come on by themselves with the "layerON" property set (in userPageLayers)
     public loadLayers(mapConfig: MapConfig, init: boolean): Promise<any> {
+        if (this.evkey) { ol.Observable.unByKey(this.evkey); console.log(this.evkey + " is unned in setCurrentLayer")}
+        this.myCubeService.clearMyCubeData()
+        this.messageService.clearMessage()
         let promise = new Promise((resolve, reject) => {
             for (let i = 0; i < this.mapConfig.userpagelayers.length; i++) {
                 if (this.mapConfig.userpagelayers[i].layer_admin.layerType == "MyCube") {
@@ -341,6 +345,7 @@ export class MapService {
     private setCurrentLayer(index: number, layer: UserPageLayer, checked: boolean, mapconfig: MapConfig): void {
         console.log("setCurrentLayer()")
         this.mapConfig = mapconfig
+        this.mapConfig.currLayerName = layer.layer_admin.layerName
         this.mapConfig.userpagelayers.forEach(element => {
             if (element.layer_admin.layerType == "MyCube") {
                 console.log("Setting layer to .5 opacity")
@@ -465,9 +470,9 @@ export class MapService {
         filterlayer.push(this.mapConfig.layers[layer.loadOrder])
         let selectClick = new ol.interaction.Select({
             condition: ol.events.condition.click,
-            layers:  [this.mapConfig.layers[layer.loadOrder-1]],
+            layers:  [this.mapConfig.layers[layer.loadOrder-1]]
           });
-        
+          
         selectClick.on('select', (evt:ol.interaction.Select.Event) => {
             console.log("inside the selectClick interaction")
             if (evt.selected[0]) {

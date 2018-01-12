@@ -32,6 +32,7 @@ export class SideNavComponent implements OnInit {
         //console.log("SideName" + json.parse[0])
         console.log(this.myCubeData)
         console.log(this.userID)
+        this.hideMenu()
     }
 
     public hideMenu() {

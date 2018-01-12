@@ -90,7 +90,7 @@ export class PageComponent implements OnInit {
         this.userPage.pageOrder = this.userPages.length;
         this.userPage.default = false;
         this.userPageService
-            .Add(this.userPage)
+            .Add(this.userPage, this.token)
             .subscribe(() => {
                 this.getUserPageItems();
             });

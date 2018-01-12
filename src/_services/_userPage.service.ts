@@ -23,6 +23,7 @@ export class UserPageService extends ParentService {
     }
 
     public GetActiveByUserID = (userid): Observable<UserPage[]> => {
+        console.log((this.actionUrl + 'getactivebyuserid?userID=' + userid))
         return this._http.get(this.actionUrl + 'getactivebyuserid?userID=' + userid)
             .map((response: Response) => <UserPage[]>response.json())
             .catch(this.handleError);
