@@ -30,32 +30,6 @@ export class MarkerComponent {
     }
 
     Initialize() {
-        this.mapService.map.on("click", (e: L.LeafletMouseEvent) => {
-            if (this.editing) {
-                let marker = L.marker(e.latlng, {
-                   /* icon: L.icon({
-                        //className: 'fa fa-map-marker fa'
-                        iconUrl: "../images/marker-icon.png",
-                        shadowUrl: "../../images/marker-shadow.png"
-                    }),*/
-                    draggable: true
-                })
-                .bindPopup("Marker #" + (this.markerCount + 1).toString(), {
-                    offset: L.point(12, 6)
-                })
-                .addTo(this.mapService.map)
-                .openPopup();
-
-                this.markerCount += 1;
-
-                marker.on("click", (event: L.LeafletMouseEvent) => {
-                    if (this.removing) {
-                        this.mapService.map.removeLayer(marker);
-                        this.markerCount -= 1;
-                    }
-                });
-            }
-        });
     }
 
     toggleEditing() {
@@ -77,63 +51,63 @@ export class MarkerComponent {
     //6/23/17 parse this out and take what can be taken out of this from the map component
     renderGeoJSON (flag, URL) {
 
-        let props = Array();
-        let len: number;
-        let array = Array();
-        let j: JSON;
+        // let props = Array();
+        // let len: number;
+        // let array = Array();
+        // let j: JSON;
 
-        //Function that maps GeoJSON data to corresponding marker click events, and extrapolates feature's property names from JSON
-        function onEach (feature, layer) {
-            let exec: any;
-            let data = '<p>';
+        // //Function that maps GeoJSON data to corresponding marker click events, and extrapolates feature's property names from JSON
+        // function onEach (feature, layer) {
+        //     let exec: any;
+        //     let data = '<p>';
             
-            //First iteration exclusive
-            if(props[0] == null) {
-                props = JSON.stringify(feature.properties).split(',')
-                len = props.length
-                props[0] = props[0].substr(1)
-                props[len-1] = props[len-1].substring(0,props[len-1].indexOf('}'))
+        //     //First iteration exclusive
+        //     if(props[0] == null) {
+        //         props = JSON.stringify(feature.properties).split(',')
+        //         len = props.length
+        //         props[0] = props[0].substr(1)
+        //         props[len-1] = props[len-1].substring(0,props[len-1].indexOf('}'))
 
-                //Cleanup property names array values to simple plain-text string values
-                for(var i=0; i<len; i++) {
-                    props[i]=props[i].substring(1,props[i].indexOf('"', 1))
-                }
-            }
+        //         //Cleanup property names array values to simple plain-text string values
+        //         for(var i=0; i<len; i++) {
+        //             props[i]=props[i].substring(1,props[i].indexOf('"', 1))
+        //         }
+        //     }
 
-            for(var i=0; i<len; i++) {
-                exec = eval("feature.properties." + props[i])
-                data = data + props[i] + ": " + exec + "<br>"
-            }
-            data = data + "</p>"
+        //     for(var i=0; i<len; i++) {
+        //         exec = eval("feature.properties." + props[i])
+        //         data = data + props[i] + ": " + exec + "<br>"
+        //     }
+        //     data = data + "</p>"
 
-            array.push(feature['properties'])
-            layer.bindPopup(data)
-            this.geoProp = props;            
-        }
+        //     array.push(feature['properties'])
+        //     layer.bindPopup(data)
+        //     this.geoProp = props;            
+        // }
 
-        for (let i=0; i<this.geoArray.length; i++) {
-            let curMark = L.marker(this.geoArray[i]._latlng)
-            this.markerList.push(curMark)
-        }
+        // for (let i=0; i<this.geoArray.length; i++) {
+        //     let curMark = L.marker(this.geoArray[i]._latlng)
+        //     this.markerList.push(curMark)
+        // }
 
-        var geoMap = this.mapService.map;
-        var foo = Array();
+        // //var geoMap = this.mapService.map;
+        // var foo = Array();
         
-        //observer variable used in GeoJSON subscription, function parameter after value in L.geoJSON uses onEachFeature to allow clicking of features
-        var observer = {
-            next: function(value) {
-                this.geoLayerGroup = L.geoJSON(value, {
-                    onEachFeature: onEach
-                })
-                .addTo(geoMap)
-                this.geoArray = this.geoLayerGroup.getLayers()
-                let len = this.geoArray.length
+        // //observer variable used in GeoJSON subscription, function parameter after value in L.geoJSON uses onEachFeature to allow clicking of features
+        // var observer = {
+        //     next: function(value) {
+        //         this.geoLayerGroup = L.geoJSON(value, {
+        //             onEachFeature: onEach
+        //         })
+        //         .addTo(geoMap)
+        //         this.geoArray = this.geoLayerGroup.getLayers()
+        //         let len = this.geoArray.length
 
-                this.geoLayerGroup.on('click', this.onGeoMarkerClick(this.geoArray))                
-            }
+        //         this.geoLayerGroup.on('click', this.onGeoMarkerClick(this.geoArray))                
+        //     }
         
-        }
-        console.log(observer)
+        // }
+        // console.log(observer)
 
         //6/23/17 this probably belongs in the map component
         //Add geoJSON if none exists yet
@@ -153,7 +127,7 @@ export class MarkerComponent {
             this.geoFlag = false
         }*/
 
-        this.geoArray = array
+        // this.geoArray = array
     }
 
     public onGeoMarkerClick(arr) {

@@ -13,12 +13,11 @@ export class MessageService {
     constructor(public sanitizer: DomSanitizer) {}
 
     sendMessage(message: any) {
-        console.log("in message.service sendMessage")
         this.subject.next(message);
     }
  
     clearMessage() {
-        this.subject.next();
+        this.subject.next(null);
     }
  
     getMessage(): Observable<any> {

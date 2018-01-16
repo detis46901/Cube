@@ -35,8 +35,62 @@ export class WFSService {
         this.styleHead.append('Accept', 'application/json');
 
     }
-
     
+    getfeatureinfo(URL, mouseDown: boolean) {
+        return this.http.get(URL)
+            .map((responseData) => {
+                let temp: string = responseData['_body']
+                //console.log("temp=" + temp)
+
+                //This "if" block captures layer features with no pre-formatted "content.ftl" file
+                if (temp.startsWith("<table")) {
+                    console.log("Preformatted Geoserver")
+                    let formattedHead: Array<string> = [];
+                    let formattedData: Array<string> = [];
+                    let headArray = temp.split("<th")
+                    let dataArray = temp.split("<td")
+
+                    //Fill arrays with table heading values and data values of each, respectively
+                    for (let i=1; i<headArray.length; i++) {
+                        let temp = headArray[i].substring(headArray[i].indexOf(">")+1,headArray[i].indexOf("<"))
+                        formattedHead[i-1] = temp
+                    }
+                    for (let i=1; i<dataArray.length; i++) {
+                        let temp = dataArray[i].substring(dataArray[i].indexOf(">")+1,dataArray[i].indexOf("<"))
+                        formattedData[i-1] = temp
+                    }
+
+                    //Create final string product to be displayed in HTML on sidenav
+                    temp = "<h3>" + formattedData[0] + "</h3><br>"
+                    for (let i=1; i<formattedData.length; i++) {
+                        temp = temp + "<b>" + formattedHead[i] + ":</b> " + formattedData[i] + "<br>"
+                    }
+                }
+
+                //This "if" block captures layer features from ArcGIS Servers
+                
+                if (temp.includes("<FIELDS")) {
+                    console.log('ArcGIS Data')
+                    let formattedHead: Array<string> = [];
+                    let formattedData: Array<string> = [];
+                    let temp1 = temp.split("<FIELDS ")
+                    let temp2 = temp1[1].split("></FIELDS>")
+                    let temp3 = temp2[0].replace(" ","<BR>")
+                    let re = /'"'/gi
+                    temp3 = temp3.replace('\"'," ")
+                    //temp3 = temp3.replace('"'," ")
+                    temp = temp3
+                    console.log (temp3)
+                }
+
+                // this.popupText.next(temp)
+                //7/13/17 This allows click events to create sidenav popup information, while allowing mousemove events to change the cursor icon to a pointing hand without updating popup.
+                // if (!mouseDown)
+                //     {this.popupText.next(temp)}
+                return temp;
+            })
+    }
+
     //Not used
     getPointLayers(path: string) {
         let features: Array<L.Layer> = [];
@@ -165,58 +219,4 @@ export class WFSService {
             });
     }
 
-    getfeatureinfo(URL, mouseDown: boolean) {
-        return this.http.get(URL, this.options)
-            .map((responseData) => {
-                let temp: string = responseData['_body']
-                //console.log("temp=" + temp)
-
-                //This "if" block captures layer features with no pre-formatted "content.ftl" file
-                if (temp.startsWith("<table")) {
-                    console.log("Preformatted Geoserver")
-                    let formattedHead: Array<string> = [];
-                    let formattedData: Array<string> = [];
-                    let headArray = temp.split("<th")
-                    let dataArray = temp.split("<td")
-
-                    //Fill arrays with table heading values and data values of each, respectively
-                    for (let i=1; i<headArray.length; i++) {
-                        let temp = headArray[i].substring(headArray[i].indexOf(">")+1,headArray[i].indexOf("<"))
-                        formattedHead[i-1] = temp
-                    }
-                    for (let i=1; i<dataArray.length; i++) {
-                        let temp = dataArray[i].substring(dataArray[i].indexOf(">")+1,dataArray[i].indexOf("<"))
-                        formattedData[i-1] = temp
-                    }
-
-                    //Create final string product to be displayed in HTML on sidenav
-                    temp = "<h3>" + formattedData[0] + "</h3><br>"
-                    for (let i=1; i<formattedData.length; i++) {
-                        temp = temp + "<b>" + formattedHead[i] + ":</b> " + formattedData[i] + "<br>"
-                    }
-                }
-
-                //This "if" block captures layer features from ArcGIS Servers
-                
-                if (temp.includes("<FIELDS")) {
-                    console.log('ArcGIS Data')
-                    let formattedHead: Array<string> = [];
-                    let formattedData: Array<string> = [];
-                    let temp1 = temp.split("<FIELDS ")
-                    let temp2 = temp1[1].split("></FIELDS>")
-                    let temp3 = temp2[0].replace(" ","<BR>")
-                    let re = /'"'/gi
-                    temp3 = temp3.replace('\"'," ")
-                    //temp3 = temp3.replace('"'," ")
-                    temp = temp3
-                    console.log (temp3)
-                }
-
-                // this.popupText.next(temp)
-                //7/13/17 This allows click events to create sidenav popup information, while allowing mousemove events to change the cursor icon to a pointing hand without updating popup.
-                // if (!mouseDown)
-                //     {this.popupText.next(temp)}
-                return temp;
-            })
-    }
 }

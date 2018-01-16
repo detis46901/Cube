@@ -60,6 +60,12 @@ export class SQLService {
             .catch(this.handleError);
     }
  
+    public addRecord = (table: number, geometry: JSON): Observable<any> => {
+        console.log(this.actionUrl + 'addRecord?table=' + table + '&geometry="' + JSON.stringify(geometry['geometry']))
+        return this._http.get(this.actionUrl + 'addRecord?table=' + table + '&geometry=' + JSON.stringify(geometry['geometry']))
+            .map((response: Response) => <any>response.json())
+            .catch(this.handleError)
+    }
     public Update = (table: number, id: string, field: string, type: string, value: any): Observable<any> => {
         console.log(this.actionUrl + 'update?table=' + table + "&id=" + id + "&field=" + field + "&type=" + type + "&value=" + value)
         return this._http.get(this.actionUrl + 'update?table=' + table + "&id=" + id + "&field=" + field + "&type=" + type + "&value=" + value, this.options)
@@ -67,9 +73,9 @@ export class SQLService {
             .catch(this.handleError);
     }
  
-    public Delete = (id: number): Observable<Response> => {
-        console.log(this.actionUrl + 'delete?ID=' + id)
-        return this._http.delete(this.actionUrl + 'delete?ID=' + id, this.options)
+    public Delete = (table: number, id: string): Observable<Response> => {
+        console.log(this.actionUrl + 'delete?table=' + table + '&id=' + id)
+        return this._http.delete(this.actionUrl + 'delete?table=' + table + '&id=' + id, this.options)
             .catch(this.handleError);
     }
 

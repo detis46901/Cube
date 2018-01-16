@@ -70,6 +70,14 @@ export class geoJSONService {
         return this._http.get(this.actionUrl + 'deleteTable?table=' + table, this.options)
     }
  
+    public updateGeometry(table: number, json2: JSON): Observable<any> {
+        let id = JSON.stringify(json2['id']).slice(1,JSON.stringify(json2['id']).length-1)
+        console.log(this.actionUrl + 'updateGeometry?table=' + table + '&geometry="' + JSON.stringify(json2['geometry']) + '"&id=' + id, this.options)
+        return this._http.get(this.actionUrl + 'updateGeometry?table=' + table + '&geometry=' + JSON.stringify(json2['geometry']) + '&id=' + id, this.options)
+        .map((response: Response) => <any>response.json())
+        //console.log(json2['geometry'])
+    }
+
     protected handleError(error: Response) {
         console.error(error);
         return Observable.throw(error.json().error || 'any error');

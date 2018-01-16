@@ -1,6 +1,7 @@
 import { LayerClass, LayerPermission, UserPageLayer } from '../../../_models/layer.model';
 import { Server } from '../../../_models/server.model';
 import { User, UserPage } from '../../../_models/user.model';
+import { Feature } from 'openlayers';
 
 export interface MapConfigView {
     projection: string;
@@ -15,23 +16,85 @@ export class MapConfig {
     map?: ol.Map;
     sources?= new Array;
     layers? = new Array;
-    clickInteraction?: ol.interaction.Interaction
+    selectedFeature?: ol.Feature;
+    selectedFeatures?: ol.Collection<ol.Feature> = new ol.Collection<ol.Feature>()
     userpages?: UserPage[];
     defaultpage?: UserPage;
     currentpage?: UserPage;
     userpagelayers?: UserPageLayer[];
-    currLayerName?: string;
+    currentLayer?: UserPageLayer;
+    currentLayerName?: string;
     layerpermission?: LayerPermission[];
 }
 
-export class styles {
+export class mapStyles {
     public image = new ol.style.Circle({
         radius: 5,
         fill: null,
         stroke: new ol.style.Stroke({ color: 'red', width: 1 })
     });
 
-    public styles = {
+    public load = new ol.style.Style({
+        fill: new ol.style.Fill({
+            color: 'rgba(255, 255, 255, 0.6)'
+        }),
+        stroke: new ol.style.Stroke({
+            color: '#319FD3',
+            width: 2
+        }),
+        text: new ol.style.Text({
+            font: '12px Calibri,sans-serif',
+            fill: new ol.style.Fill({
+                color: '#000'
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#fff',
+                width: 1
+            })
+        })
+    });
+
+    public current = new ol.style.Style({
+        fill: new ol.style.Fill({
+            color: 'rgba(255, 255, 255, 1)'
+        }),
+        stroke: new ol.style.Stroke({
+            color: '#319FD3',
+            width: 4
+        }),
+        text: new ol.style.Text({
+            font: '12px Calibri,sans-serif',
+            fill: new ol.style.Fill({
+                color: '#000'
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#fff',
+                width: 5
+            })
+        })
+    })
+
+    public selected = new ol.style.Style({
+        fill: new ol.style.Fill({
+            color: 'rgba(255, 255, 255, 1)'
+        }),
+        stroke: new ol.style.Stroke({
+            color: '#ff0000',
+            width: 4
+        }),
+        text: new ol.style.Text({
+            font: '12px Calibri,sans-serif',
+            fill: new ol.style.Fill({
+                color: '#000'
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#fff',
+                width: 10
+            })
+        })
+    })
+
+    public loadmulti = {
         'Point': new ol.style.Style({
             image: this.image
         }),

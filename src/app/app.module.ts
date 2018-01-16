@@ -26,6 +26,7 @@ import {MatMenuModule} from '@angular/material/menu'
 import { MatRadioModule, MatIconModule, MatDialogModule, MatSelectModule, MatListModule, 
          MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, 
          MatFormFieldModule, MatProgressSpinnerModule, MatToolbarModule } from '@angular/material';
+import {MatChipsModule} from '@angular/material/chips'
 import 'hammerjs';
 
 //Components
@@ -86,6 +87,7 @@ import { MyCubeService } from './/map/services/mycube.service';
 import { WFSService } from './map/services/wfs.service';
 import { SideNavService } from '../_services/sidenav.service';
 import { MessageService } from '../_services/message.service';
+import { mapStyles } from '../app/map/models/map.model'
 import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
 
 
@@ -181,6 +183,7 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
         MatTableModule,
         MatProgressSpinnerModule,
         MatToolbarModule,
+        MatChipsModule,
         LeafletModule.forRoot(),
         LeafletDrawModule.forRoot()
     ],
@@ -209,6 +212,7 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
         WFSService,
         SideNavService,
         MessageService,
+        mapStyles
     ], 
 
     bootstrap: [AppComponent]
