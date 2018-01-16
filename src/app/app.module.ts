@@ -26,6 +26,7 @@ import {MatMenuModule} from '@angular/material/menu'
 import { MatRadioModule, MatIconModule, MatDialogModule, MatSelectModule, MatListModule, 
          MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, 
          MatFormFieldModule, MatProgressSpinnerModule, MatToolbarModule } from '@angular/material';
+import {MatChipsModule} from '@angular/material/chips'
 import 'hammerjs';
 
 //Components
@@ -34,7 +35,6 @@ import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminNavComponent } from './admin/adminNav/adminNav.component';
 import { SettingsNavComponent } from './settings/settingsnav/settingsnav.component';
-import { OrganizationComponent } from './admin/organization/organization.component';
 import { LayerAdminComponent} from './admin/layerAdmin/layerAdmin.component';
 import { LayerPermissionComponent} from './admin/layerAdmin/layerPermission/layerPermission.component';
 import { PageComponent} from './admin/user/page/page.component';
@@ -65,11 +65,10 @@ import { MarkerComponent } from '../app/map/marker/marker.component';
 import { PMMarkerComponent } from '../app/map/marker/PMmarker.component'
 import { NavigatorComponent } from '../app/map/navigator/navigator.component';
 import { PagesComponent } from './pages/pages.component';
+import { GroupComponent } from './admin/group/group.component';
 
 //Services
-import { DepartmentService } from '../_services/_department.service';
 import { GroupService } from '../_services/_group.service';
-import { RoleService } from '../_services/_role.service';
 import { LayerAdminService } from '../_services/_layerAdmin.service';
 import { LayerPermissionService } from '../_services/_layerPermission.service';
 import { UserPageLayerService } from '../_services/_userPageLayer.service';
@@ -85,6 +84,9 @@ import { geoJSONService } from './map/services/geoJSON.service';
 import { MyCubeService } from './/map/services/mycube.service';
 import { WFSService } from './map/services/wfs.service';
 import { SideNavService } from '../_services/sidenav.service';
+import { MessageService } from '../_services/message.service';
+import { mapStyles } from '../app/map/models/map.model'
+import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
 
 
 
@@ -106,7 +108,7 @@ import { SideNavService } from '../_services/sidenav.service';
         AdminComponent,
         AdminNavComponent,
         SettingsNavComponent,
-        OrganizationComponent,
+        GroupComponent,
         LayerAdminComponent,
         UserComponent,
         AdminPageComponent,
@@ -132,6 +134,7 @@ import { SideNavService } from '../_services/sidenav.service';
         ServerNewComponent,
         ChangePasswordComponent,
         NewUserComponent,
+        ApiKeyComponent,
     ],
 
     entryComponents: [
@@ -178,6 +181,7 @@ import { SideNavService } from '../_services/sidenav.service';
         MatTableModule,
         MatProgressSpinnerModule,
         MatToolbarModule,
+        MatChipsModule,
         LeafletModule.forRoot(),
         LeafletDrawModule.forRoot()
     ],
@@ -190,9 +194,7 @@ import { SideNavService } from '../_services/sidenav.service';
         AdminGuard, 
         AuthenticationService, 
         UserService, 
-        DepartmentService, 
-        GroupService, 
-        RoleService, 
+        GroupService,
         LayerAdminService, 
         LayerPermissionService,
         SQLService,
@@ -204,7 +206,9 @@ import { SideNavService } from '../_services/sidenav.service';
         geoJSONService,
         MyCubeService,
         WFSService,
-        SideNavService
+        SideNavService,
+        MessageService,
+        mapStyles
     ], 
 
     bootstrap: [AppComponent]

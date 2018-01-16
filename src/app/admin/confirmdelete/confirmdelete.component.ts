@@ -22,7 +22,7 @@ export class ConfirmDeleteComponent implements OnInit {
 	constructor() {
 		let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.token = currentUser && currentUser.token;
-		this.userID = currentUser && currentUser.userid;
+		this.userID = currentUser && currentUser.userID;
 	}
 
 	ngOnInit() {
@@ -38,15 +38,8 @@ export class ConfirmDeleteComponent implements OnInit {
                 this.objectType = "Layer";
                 break;
             case 3:
-                this.objectType = "Department";
-                this.dependentWarning = true;
-                break;
-            case 4:
                 this.objectType = "Group";
                 this.dependentWarning = true;
-                break;
-            case 5:
-                this.objectType = "Role";
                 break;
             case 6:
                 this.objectType = "Server";
