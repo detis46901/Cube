@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User, UserPage } from '../../../../_models/user.model';
-import { Role } from '../../../../_models/organization.model';
 import { UserService } from '../../../../_services/_user.service';
-import { RoleService } from '../../../../_services/_role.service';
 import { Md5 } from 'ts-md5/dist/md5';
 import { MatDialog } from '@angular/material';
 
@@ -21,9 +19,7 @@ export class NewUserComponent implements OnInit {
     private newUser = new User;
     private users: Array<User>;
 
-    private roles: Array<Role>;
-
-    constructor(private dialog: MatDialog, private userService: UserService, private roleService: RoleService) { 
+    constructor(private dialog: MatDialog, private userService: UserService) { 
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -31,7 +27,6 @@ export class NewUserComponent implements OnInit {
 
     ngOnInit() {
         this.getUserItems();
-        this.getRoleItems();
     }
 
     private getUserItems(): void {
@@ -39,14 +34,6 @@ export class NewUserComponent implements OnInit {
             .GetAll()
             .subscribe((data:User[]) => {
                 this.users = data;
-            });
-    }
-
-    private getRoleItems(): void {
-        this.roleService
-            .GetAll()
-            .subscribe((data:Role[]) => {
-                this.roles = data;
             });
     }
 

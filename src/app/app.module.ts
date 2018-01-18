@@ -35,7 +35,6 @@ import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminNavComponent } from './admin/adminNav/adminNav.component';
 import { SettingsNavComponent } from './settings/settingsnav/settingsnav.component';
-import { OrganizationComponent } from './admin/organization/organization.component';
 import { LayerAdminComponent} from './admin/layerAdmin/layerAdmin.component';
 import { LayerPermissionComponent} from './admin/layerAdmin/layerPermission/layerPermission.component';
 import { PageComponent} from './admin/user/page/page.component';
@@ -66,11 +65,10 @@ import { MarkerComponent } from '../app/map/marker/marker.component';
 import { PMMarkerComponent } from '../app/map/marker/PMmarker.component'
 import { NavigatorComponent } from '../app/map/navigator/navigator.component';
 import { PagesComponent } from './pages/pages.component';
+import { GroupComponent } from './admin/group/group.component';
 
 //Services
-import { DepartmentService } from '../_services/_department.service';
 import { GroupService } from '../_services/_group.service';
-import { RoleService } from '../_services/_role.service';
 import { LayerAdminService } from '../_services/_layerAdmin.service';
 import { LayerPermissionService } from '../_services/_layerPermission.service';
 import { UserPageLayerService } from '../_services/_userPageLayer.service';
@@ -110,7 +108,7 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
         AdminComponent,
         AdminNavComponent,
         SettingsNavComponent,
-        OrganizationComponent,
+        GroupComponent,
         LayerAdminComponent,
         UserComponent,
         AdminPageComponent,
@@ -136,7 +134,7 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
         ServerNewComponent,
         ChangePasswordComponent,
         NewUserComponent,
-        ApiKeyComponent,
+        ApiKeyComponent
     ],
 
     entryComponents: [
@@ -196,9 +194,7 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
         AdminGuard, 
         AuthenticationService, 
         UserService, 
-        DepartmentService, 
-        GroupService, 
-        RoleService, 
+        GroupService,
         LayerAdminService, 
         LayerPermissionService,
         SQLService,

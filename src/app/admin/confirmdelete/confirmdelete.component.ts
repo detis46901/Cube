@@ -38,15 +38,8 @@ export class ConfirmDeleteComponent implements OnInit {
                 this.objectType = "Layer";
                 break;
             case 3:
-                this.objectType = "Department";
-                this.dependentWarning = true;
-                break;
-            case 4:
                 this.objectType = "Group";
                 this.dependentWarning = true;
-                break;
-            case 5:
-                this.objectType = "Role";
                 break;
             case 6:
                 this.objectType = "Server";

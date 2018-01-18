@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../_services/_user.service';
 import { Configuration } from '../../../_api/api.constants';
-import { RoleService } from '../../../_services/_role.service';
 import { UserPageService } from '../../../_services/_userPage.service';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { User, UserPage } from '../../../_models/user.model';
-import { Role } from '../../../_models/organization.model';
 import { UserPageLayer } from '../../../_models/layer.model'
 import { PagePipe } from '../../../_pipes/rowfilter2.pipe';
 import { NumFilterPipe } from '../../../_pipes/numfilter.pipe';
@@ -30,7 +28,7 @@ import { UserValidatorService } from './userValidator.service';
 @Component({
     selector: 'user',
     templateUrl: './user.component.html',
-    providers: [UserService, UserPageLayerService, RoleService, UserPageService, Configuration, PagePipe, NumFilterPipe, {provide: ValidatorService, useClass: UserValidatorService}],
+    providers: [UserService, UserPageLayerService, UserPageService, Configuration, PagePipe, NumFilterPipe, {provide: ValidatorService, useClass: UserValidatorService}],
     styleUrls: ['./user.component.scss'],
 })
 
@@ -46,13 +44,12 @@ export class UserComponent implements OnInit {
     private userPage: UserPage;
     private userPages: Array<UserPage>;
     private users: Array<User>;
-    private roles: Array<Role>;
     //private userList: User[];
 
-    private userColumns = ['userID', 'firstName', 'lastName', 'role', 'email', 'active', 'administrator', 'actionsColumn']
+    private userColumns = ['userID', 'firstName', 'lastName', 'email', 'active', 'administrator', 'actionsColumn']
     private dataSource: TableDataSource<User>;
     
-    constructor(private userValidator: ValidatorService, private userService: UserService, private userPageLayerService: UserPageLayerService, private roleService: RoleService, private userPageService: UserPageService, private dialog: MatDialog) {
+    constructor(private userValidator: ValidatorService, private userService: UserService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -60,7 +57,6 @@ export class UserComponent implements OnInit {
 
     ngOnInit() {
         this.getUserItems();
-        this.getRoleItems();
         this.getUserPageItems();
         this.getUsers();
     }
@@ -84,14 +80,6 @@ export class UserComponent implements OnInit {
             .subscribe((data:User[]) => {
                 this.users = data;
                 //userList = data;
-            });
-    }
-
-    private getRoleItems(): void {
-        this.roleService
-            .GetAll()
-            .subscribe((data:Role[]) => {
-                this.roles = data;
             });
     }
 
