@@ -134,7 +134,7 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
         ServerNewComponent,
         ChangePasswordComponent,
         NewUserComponent,
-        ApiKeyComponent,
+        ApiKeyComponent
     ],
 
     entryComponents: [
@@ -206,7 +206,7 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
         geoJSONService,
         MyCubeService,
         WFSService,
-        SideNavService,
+        SideNavService
         MessageService,
         mapStyles
     ], 

@@ -46,7 +46,7 @@ export class UserComponent implements OnInit {
     private users: Array<User>;
     //private userList: User[];
 
-    private userColumns = ['userID', 'firstName', 'lastName', 'role', 'email', 'active', 'administrator', 'actionsColumn']
+    private userColumns = ['userID', 'firstName', 'lastName', 'email', 'active', 'administrator', 'actionsColumn']
     private dataSource: TableDataSource<User>;
     
     constructor(private userValidator: ValidatorService, private userService: UserService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private dialog: MatDialog) {

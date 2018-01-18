@@ -39,6 +39,7 @@ export class GroupComponent implements OnInit {
             .GetAll()
             .subscribe((data:Group[]) => {
                 this.groups = data;
+                console.log(data)
             },
             error => {
                 console.error(error);
