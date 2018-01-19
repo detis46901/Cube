@@ -1,7 +1,22 @@
-// #newDepartment {
-//     width:90%;
-// }
+.group-parent-container {
+    //background-color:yellow;
+    position:relative;
+    padding:20px;
+    display:flex;
+}
 
-// #exDepartment {
-//     width:90%;
-// }
+.group-user-list {
+    background-color:white;
+    border:solid black 2px;
+    position:relative;
+    width:30%;
+    margin:10px;
+}
+
+.group-group-list {
+    background-color:white;
+    border:solid black 2px;
+    position:relative;
+    width:70%;
+    margin:10px;
+}

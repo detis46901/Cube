@@ -81,7 +81,7 @@ export class LayerAdminComponent implements OnInit {
     }
 
     private openPermission(layerid: number, layername: string): void {
-        const dialogRef = this.dialog.open(LayerPermissionComponent, {height:'460px', width:'350px'});
+        const dialogRef = this.dialog.open(LayerPermissionComponent);
         dialogRef.componentInstance.layerID = layerid;
         dialogRef.componentInstance.layerName = layername;
     }
@@ -110,7 +110,7 @@ export class LayerAdminComponent implements OnInit {
 
     private deletePermission(layerID: number) {
         this.layerPermissionService
-        .GetSome(layerID)
+        .GetByLayer(layerID)
         .subscribe(result => {
             console.log(result)
             for (let i of result) {

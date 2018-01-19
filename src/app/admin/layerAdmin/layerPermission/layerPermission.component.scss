@@ -16,6 +16,7 @@ h4 {
 #permHeader {
     position:relative;
     height:0px;
+    margin-bottom:20px;
 }
 
 #exitMod {
@@ -31,4 +32,14 @@ h4 {
 #layerPermTitle {
     position:relative;
     bottom:15px;
+}
+
+mat-checkbox {
+    margin-right:10px;
+}
+
+hr {
+    margin:0;
+    padding:0;
+    border-color: #8d8d8d;
 }

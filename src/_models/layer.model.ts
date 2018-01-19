@@ -14,9 +14,15 @@ export class LayerAdmin {
 
 export class LayerPermission {
     ID: number;
-    userID: number;
     edit: boolean;
+    delete: boolean;
+    owner: boolean;
+    canGrant: boolean;
+    grantedBy?: number;
+    comments?: string;
+    userID: number;
     layerAdminID: number;
+    groupID: number;
 }
 
 export class LayerClass extends LayerAdmin {

@@ -87,7 +87,7 @@ export class MapService {
     public getLayerPerms(): Promise<any> {
         let promise = new Promise((resolve, reject) => {
             this.layerPermissionService
-                .GetUserLayer(this.userID)
+                .GetByUser(this.userID)
                 .subscribe((data: LayerPermission[]) => {
                     this.mapConfig.layerpermission = data
                     resolve()

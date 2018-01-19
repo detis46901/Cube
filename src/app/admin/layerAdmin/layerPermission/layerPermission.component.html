@@ -15,23 +15,38 @@
             <div class="row" style="margin-left:0px;">
                 <i id="delUserPerm" style="width:1px; position:relative; top:3px;" (click)="deleteLayerPermission(perm.ID)" class="fa fa-times" aria-hidden="true"></i>
                 <p style="width:210px">{{permNames[layerPermissions.indexOf(perm)]}}</p>
-                <mat-checkbox name="layerPermissionEdit" [(ngModel)]="perm.edit">Edit</mat-checkbox><br>
+                <mat-checkbox name="layerPermissionEdit" [(ngModel)]="perm.edit">Edit</mat-checkbox>
+                <mat-checkbox name="layerPermissionDelete" [(ngModel)]="perm.delete">Delete</mat-checkbox>
+                <mat-checkbox name="layerPermissionGrant" [(ngModel)]="perm.canGrant">Grant</mat-checkbox>
+            </div>
+            <div *ngIf="perm.comments">
+                <strong>Comments:</strong> {{perm.comments}}
             </div>
         </mat-list-item>
     </mat-list>
     <hr>
 
     <h5><b>New Permission</b></h5>
-    <form id="permForm" class="form-inline" #f="ngForm">
-        <mat-form-field style="width:200px; margin-right:20px">
-            <mat-select id="layerPermNewUser" name="user" [(ngModel)]="newLayerPermission.userID" required placeholder="User">
-                <mat-option [value]="user.ID" *ngFor="let user of users">
-                    {{user.firstName}} {{user.lastName}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+    <form id="permForm" class="form" #f="ngForm">
+        <div>
+            <mat-form-field style="width:200px; margin-right:20px">
+                <mat-select id="layerPermNewUser" name="user" [(ngModel)]="newLayerPermission.userID" required placeholder="User">
+                    <mat-option [value]="user.ID" *ngFor="let user of users">
+                        {{user.firstName}} {{user.lastName}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
-        <mat-checkbox name="newLayerPermissionEdit"[(ngModel)]="newLayerPermission.edit">Edit</mat-checkbox>
+            <mat-checkbox name="newLayerPermissionEdit" [(ngModel)]="newLayerPermission.edit">Edit</mat-checkbox>
+            <mat-checkbox name="newLayerPermissionDelete" [(ngModel)]="newLayerPermission.delete">Delete</mat-checkbox>
+            <mat-checkbox name="newLayerPermissionGrant" [(ngModel)]="newLayerPermission.canGrant">Grant</mat-checkbox>
+        </div>
+
+        <div>
+            <mat-form-field style="width:100%">
+                <textarea name="newLayerPermissionComments" [(ngModel)]="newLayerPermission.comments" matInput placeholder="Comments:"></textarea>
+            </mat-form-field>
+        </div>
     </form>
 
     <div *ngIf="users.length == 0">

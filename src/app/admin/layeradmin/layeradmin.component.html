@@ -1,158 +1,3 @@
-<div class="col-sm-3 col-sm-offset-1">
-    <div class="row">
-        <button mat-button id="createLayerBtn" (click)="createLayer()">Create Layer</button>
-        <button mat-button id="createMyCubeBtn" (click)="createMyCube()">Create MyCube</button>
-        <div ngbDropdown>   
-            <button id="sortBtn" type="button" class="btn-primary" ngbDropdownToggle>Sort Layers</button>
-            <div id="sortDrop" class="dropdown-menu dropdown-menu-right" aria-labelledby="options">
-                <button id="sortAZ" type="button" class="btn btn-secondary" (click)="sortLayers('AZ')">Name (Ascending)</button>
-                <button id="sortZA" type="button" class="btn btn-secondary" (click)="sortLayers('ZA')">Name (Descending)</button>
-                <button id="sortType" type="button" class="btn btn-secondary" (click)="sortLayers('TYPE')">Type</button>
-                <button id="sortOldNew" type="button" class="btn btn-secondary" (click)="sortLayers('OLD_NEW')">Old to New</button><br>
-                <button id="sortNewOld" type="button" class="btn btn-secondary" (click)="sortLayers('NEW_OLD')">New to Old</button><br>
-                <button id="sortGeom" type="button" class="btn btn-secondary" (click)="sortLayers('GEOM')">Geometry</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- This defines the component redirected to by the "Layers" option in the navigation sidepane.-->
-<!--This should be updated to Material Data Table-->
-<!-- <div style="width:100%">
-    <div class="row" style="position:relative; top:10px; left:40px">
-        <div class="col-sm-1">
-            <h4>Name</h4>
-        </div>
-
-        <div class="col-sm-1">
-            <div class="row">
-                <div class="col-sm-1 col-sm-offset-2">
-                    <h4>Identity</h4>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-1">
-            <div class="row">
-                <div class="col-sm-2 col-sm-offset-4">
-                    <h4>Service</h4>
-                </div>
-            </div>
-        </div> 
-
-        <div class="col-sm-1">
-            <div class="row">
-                <div class="col-sm-2 col-sm-offset-4">
-                    <h4>Server</h4>
-                </div>
-            </div>
-        </div> 
-
-        <div class="col-sm-1">
-            <div class="row">
-                <div class="col-sm-1 col-sm-offset-6">
-                    <h4>Description</h4>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-1">
-            <div class="row">
-                <div class="col-sm-1 col-sm-offset-8">
-                    <h4>Format</h4>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-1">
-            <div class="row">
-                <div class="col-sm-1 col-sm-offset-5">
-                    <h4>Type</h4>
-                </div>
-            </div>
-        </div>       
-
-        <div class="col-sm-1">
-            <div class="row">
-                <div class="col-sm-1 col-sm-offset-1">
-                    <h4>Geometry</h4>
-                </div>
-            </div>
-        </div>
-        
-
-        <div class="col-sm-3 col-sm-offset-1">
-            <div class="row">
-                <button mat-button id="createLayerBtn" (click)="createLayer()">Create Layer</button>
-                <button mat-button id="createMyCubeBtn" (click)="createMyCube()">Create MyCube</button>
-                <!-<div ngbDropdown>   
-                    <button id="sortBtn" type="button" class="btn-primary" ngbDropdownToggle>Sort Layers</button>
-                    <div id="sortDrop" class="dropdown-menu dropdown-menu-right" aria-labelledby="options">
-                        <button id="sortAZ" type="button" class="btn btn-secondary" (click)="sortLayers('AZ')">Name (Ascending)</button>
-                        <button id="sortZA" type="button" class="btn btn-secondary" (click)="sortLayers('ZA')">Name (Descending)</button>
-                        <button id="sortType" type="button" class="btn btn-secondary" (click)="sortLayers('TYPE')">Type</button>
-                        <button id="sortOldNew" type="button" class="btn btn-secondary" (click)="sortLayers('OLD_NEW')">Old to New</button><br>
-                        <button id="sortNewOld" type="button" class="btn btn-secondary" (click)="sortLayers('NEW_OLD')">New to Old</button><br>
-                        <button id="sortGeom" type="button" class="btn btn-secondary" (click)="sortLayers('GEOM')">Geometry</button>
-                    </div>
-                </div>->     
-            </div>
-        </div>
-    </div>
-
-    <div style="margin-top:12px;">
-
-        <form class="form-inline" #e="ngForm" style="position:relative; left:20px;" *ngFor="let layeradmin of layerAdmins">
-            <i id="btnOpenDelLayer" class="fa fa-times" style="position:relative; margin-right:5px" (click)="openConfDel(layeradmin)"></i>
-            <mat-form-field id="exlayername"><input matInput ngModel required placeholder="Name" name="exlayername" title="{{layeradmin.layerName}}" [(ngModel)]="layeradmin.layerName" (blur)="updateLayer(layeradmin)"></mat-form-field>
-            <mat-form-field id="exlayerident"><input matInput  required placeholder="Identity" name="exlayerident" title="{{layeradmin.layerIdent}}" [(ngModel)]="layeradmin.layerIdent" (change)="updateLayer(layeradmin)"></mat-form-field>
-            <mat-form-field id="exlayerservice"><input matInput required placeholder="Service" name="exlayerservice" title="{{layeradmin.layerService}}" [(ngModel)]="layeradmin.layerService" (change)="updateLayer(layeradmin)"></mat-form-field>
-            <mat-form-field id="exlayerserver">
-            <mat-select placeholder="Server" name="exlayerserver" [(ngModel)]="layeradmin.serverID" required type="number">
-                <mat-option [value]="server.ID" *ngFor="let server of servers">
-                    {{server.serverName}}
-                </mat-option>
-            </mat-select>
-            </mat-form-field>
-
-            <mat-form-field id="exlayerdescription" ><input matInput ngModel placeholder="Description" name="exlayerdescription" title="{{layeradmin.layerDescription}}" [(ngModel)]="layeradmin.layerDescription" type="text" (blur)="updateLayer(layeradmin)"></mat-form-field>
-            
-            <mat-form-field id="exlayerformat">
-            <mat-select ngModel required placeholder="Format" name="exlayerformat" [(ngModel)]="layeradmin.layerFormat" (blur)="updateLayer(layeradmin)">
-                <mat-option value="image/png">image/png</mat-option>
-                <mat-option value="image/jpg">image/jpg</mat-option>
-                <mat-option value="image/jpeg">image/jpeg</mat-option>
-                <mat-option value="None">None</mat-option>
-            </mat-select>
-            </mat-form-field>
-
-            <mat-form-field id="exlayertype">
-            <mat-select ngModel required placeholder="Type" name="exlayertype" [(ngModel)]="layeradmin.layerType" (blur)="updateLayer(layeradmin)">
-                <mat-option value="PostGIS">PostGIS</mat-option>
-                <mat-option value="MapServer">MapServer</mat-option>
-                <mat-option value="Geoserver">Geoserver</mat-option>
-                <mat-option value="WMS">WMS</mat-option>
-                <mat-option value="KML-Link">KML-Link</mat-option>
-                <mat-option value="KML-Drive">KML-Drive</mat-option>
-                <mat-option value="GeoJSON">GeoJSON</mat-option>
-                <mat-option value="MyCube">MyCube</mat-option>
-            </mat-select>
-            </mat-form-field>
-
-            <mat-form-field id="exlayergeom">
-            <mat-select ngModel required placeholder="Geometry" name="exlayergeom" [(ngModel)]="layeradmin.layerGeom" (blur)="updateLayer(layeradmin)">
-                <mat-option value="Point">Point</mat-option>
-                <mat-option value="Polyline">Polyline</mat-option>
-                <mat-option value="Polygon">Polygon</mat-option>
-                <mat-option value="Coverage">Coverage</mat-option>
-                <mat-option value="None">None</mat-option>
-            </mat-select>
-            </mat-form-field>
-
-            <button mat-button id="exlayerperm" title="Open layer permissions" (click)="openPermission(layeradmin.ID,layeradmin.layerName)">Permissions</button>
-        </form>
-    </div>
-</div>         -->
 <div class="row">
     <mat-table id="layerDataTable" #table [dataSource]="dataSource">
         <ng-container class="col-sm-1" matColumnDef="layerID">
@@ -261,3 +106,18 @@
         <mat-row *matRowDef="let row; columns: layerColumns"></mat-row>
     </mat-table>
 </div>
+
+
+<button mat-button id="createLayerBtn" (click)="createLayer()">Create Layer</button>
+<button mat-button id="createMyCubeBtn" (click)="createMyCube()">Create MyCube</button>
+<span ngbDropdown>   
+    <button id="sortBtn" type="button" class="btn-primary" ngbDropdownToggle>Sort Layers</button>
+    <div id="sortDrop" class="dropdown-menu dropdown-menu-right" aria-labelledby="options">
+        <button id="sortAZ" type="button" class="btn btn-secondary" (click)="sortLayers('AZ')">Name (Ascending)</button>
+        <button id="sortZA" type="button" class="btn btn-secondary" (click)="sortLayers('ZA')">Name (Descending)</button>
+        <button id="sortType" type="button" class="btn btn-secondary" (click)="sortLayers('TYPE')">Type</button>
+        <button id="sortOldNew" type="button" class="btn btn-secondary" (click)="sortLayers('OLD_NEW')">Old to New</button><br>
+        <button id="sortNewOld" type="button" class="btn btn-secondary" (click)="sortLayers('NEW_OLD')">New to Old</button><br>
+        <button id="sortGeom" type="button" class="btn btn-secondary" (click)="sortLayers('GEOM')">Geometry</button>
+    </div>
+</span>

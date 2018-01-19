@@ -6,7 +6,7 @@ import { LayerPermissionService } from '../../../../_services/_layerPermission.s
 import { ServerService } from '../../../../_services/_server.service';
 import { LayerAdmin } from '../../../../_models/layer.model';
 import { Server } from '../../../../_models/server.model';
-import { LayerPermissionComponent } from '../layerPermission/layerPermission.component';
+import { LayerPermission } from '../../../../_models/layer.model';
 import { MatDialog } from '@angular/material';
 
 @Component({
@@ -35,7 +35,7 @@ export class LayerNewComponent implements OnInit {
     private servers: Array<Server>;
     private layerAdmin = new LayerAdmin;
 
-    constructor(private layerAdminService: LayerAdminService, private dialog: MatDialog, private serverService: ServerService) {
+    constructor(private layerAdminService: LayerAdminService, private layerPermissionService: LayerPermissionService, private dialog: MatDialog, private serverService: ServerService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -58,6 +58,16 @@ export class LayerNewComponent implements OnInit {
 
     private addLayer(newlayer: LayerAdmin): void {
         this.layerAdmin = newlayer;
+        let layerPerm: LayerPermission;
+        layerPerm.userID = this.userID;
+        layerPerm.layerAdminID = newlayer.ID;
+        layerPerm.groupID = null;
+        layerPerm.edit = true;
+        layerPerm.delete = true;
+        layerPerm.owner = true;
+        layerPerm.canGrant = true;
+        layerPerm.grantedBy = null;
+        layerPerm.comments = null;
 
         if (this.serverCalled) {
             this.layerAdmin.serverID = this.layerServer.ID;
@@ -72,7 +82,11 @@ export class LayerNewComponent implements OnInit {
             .Add(this.layerAdmin)
             .subscribe(result => {
                 console.log('result=' + JSON.stringify(result))
-                this.dialog.closeAll();
             });
+        
+        this.layerPermissionService
+            .Add(layerPerm)
+            .subscribe(() => this.dialog.closeAll())
+            
     }
 }

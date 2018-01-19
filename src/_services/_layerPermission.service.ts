@@ -16,16 +16,21 @@ export class LayerPermissionService extends ParentService {
         this.actionUrl = this.configuration.serverWithApiUrl + 'layerpermission/';
     }
 
-    public GetUserLayer = (userid): Observable<LayerPermission[]> => {
-        return this._http.get(this.actionUrl + 'userlist?userid=' + userid, this.options)
+    public GetByUser = (userid): Observable<LayerPermission[]> => {
+        return this._http.get(this.actionUrl + 'getbyuser?userid=' + userid, this.options)
             .map((response: Response) => <LayerPermission[]>response.json())
             .catch(this.handleError);
     }
     
-    public GetSome = (layerid): Observable<LayerPermission[]> => {
-        return this._http.get(this.actionUrl + 'list?layerID=' + layerid, this.options)
+    public GetByLayer = (layerid): Observable<LayerPermission[]> => {
+        return this._http.get(this.actionUrl + 'getbylayer?layerID=' + layerid, this.options)
             .map((response: Response) => <LayerPermission[]>response.json())
             .catch(this.handleError);
     }
 
+    public GetByGroup = (groupid): Observable<LayerPermission[]> => {
+        return this._http.get(this.actionUrl + 'getbygroup?groupID=' + groupid, this.options)
+            .map((response: Response) => <LayerPermission[]>response.json())
+            .catch(this.handleError);
+    }
 }

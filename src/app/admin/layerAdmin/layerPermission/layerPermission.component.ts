@@ -24,6 +24,7 @@ export class LayerPermissionComponent implements OnInit {
     private token: string;
     private userID: number;
     private permNames = new Array<string>();
+    private layerOwner: number;
 
     constructor(private layerPermissionService: LayerPermissionService, private userService: UserService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -32,20 +33,23 @@ export class LayerPermissionComponent implements OnInit {
     }
 
     ngOnInit() {
-        //this.getUserItems();
         this.getPermissionItems();
-        //this.fillLists();
-        console.log(this.permNames)
-        
+        this.newLayerPermission.edit = false;
+        this.newLayerPermission.delete = false;
+        this.newLayerPermission.owner = false;
+        this.newLayerPermission.canGrant = false;
     }
 
     private getPermissionItems(): void {
         this.permNames = [];
         this.layerPermissionService
-            .GetSome(this.layerID)
+            .GetByLayer(this.layerID)
             .subscribe((data:LayerPermission[]) => {
                 this.layerPermissions = data;
                 for(let p of data) {
+                    if(p.owner) {
+                        this.layerOwner = p.userID
+                    }
                     this.userService
                         .GetSingle(p.userID)
                         .subscribe((u: User) => {
@@ -74,13 +78,22 @@ export class LayerPermissionComponent implements OnInit {
     }
     
     private initNewPermission(): void {
-        this.newLayerPermission.edit = null;
-        this.newLayerPermission.userID = 0;
+        this.newLayerPermission.edit = false;
+        this.newLayerPermission.delete = false;
+        this.newLayerPermission.owner = false;
+        this.newLayerPermission.canGrant = false;
+        this.newLayerPermission.grantedBy = null;
+        this.newLayerPermission.comments = null;
+        this.newLayerPermission.userID = null;
+        this.newLayerPermission.layerAdminID = null;
+        this.newLayerPermission.groupID = null;
     }
 
     private addLayerPermission(newLayerPermission: LayerPermission): void {
         this.newLayerPermission = newLayerPermission;
         this.newLayerPermission.layerAdminID = this.layerID;
+        this.newLayerPermission.grantedBy = this.userID;
+        
         this.layerPermissionService
             .Add(this.newLayerPermission)
             .subscribe(() => {

@@ -46,7 +46,7 @@ export class PageConfigComponent implements OnInit {
 
     private getLayers(): void {
         this.layerPermissionService
-            .GetUserLayer(this.userID)
+            .GetByUser(this.userID)
             .subscribe((data: LayerPermission[]) => {
                 this.layerPermissions = data; 
             });
