@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../../_services/_user.service';
 import { User } from '../../../_models/user.model';
+import { Group } from '../../../_models/group.model';
+import { GroupMember } from '../../../_models/groupMember.model';
 import { GroupService } from '../../../_services/_group.service';
-import { Group} from '../../../_models/group.model';
+import { GroupMemberService } from '../../../_services/_groupMember.service'
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MatSelectionList } from '@angular/material';
 
 @Component({
     selector: 'group',
@@ -14,17 +16,24 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 })
 
 export class GroupComponent implements OnInit {
+
+    @ViewChild('groupUsers') groupSelectionList:any;
+
     private token: string;
     private userID: number;
     private objCode = 3;
 
     private group = new Group;
-    private groups: Array<any>;
+    private groups: Array<Group>;
+    private users: Array<User>;
 
+    private selectedUser: User;
     private selectedGroup: Group;
+
+    private selectedUserGroups: GroupMember[];
     private showGroup: boolean;
 
-    constructor(private userService: UserService, private groupService: GroupService, private dialog: MatDialog) {
+    constructor(private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -32,6 +41,7 @@ export class GroupComponent implements OnInit {
 
     ngOnInit() {
         this.getGroupItems();
+        this.getUserItems();
     }
 
     private getGroupItems(): void {
@@ -39,11 +49,21 @@ export class GroupComponent implements OnInit {
             .GetAll()
             .subscribe((data:Group[]) => {
                 this.groups = data;
-                console.log(data)
             },
             error => {
                 console.error(error);
             });
+    }
+
+    private getUserItems(): void {
+        this.userService
+            .GetAll()
+            .subscribe((data:User[]) => {
+                this.users = data;
+            },
+            error => {
+                console.error(error);
+            })
     }
 
     private addGroup(newGroup: string): void {
@@ -78,12 +98,74 @@ export class GroupComponent implements OnInit {
         });
     }
 
-
     private deleteGroup(groupID: number): void {
         this.groupService
             .Delete(groupID)
             .subscribe((data:Group[]) => {
                 this.getGroupItems()
             })
+    }
+
+    private selectUser(user: User): void {
+        console.log("selectUser called")
+        this.groupSelectionList.deselectAll();
+        this.selectedUser = user;
+
+        this.groupMemberService
+            .GetByUser(user.ID)
+            .subscribe((data: GroupMember[]) => {
+                this.selectedUserGroups = data;
+            })
+        console.log("selectUser finished")
+    }
+
+    //this is running too much. *ngFor in matList is culprit
+    private checkGroup(group: Group): boolean {
+        let member = false;
+        //console.log("checkGroup before for")
+        if(this.selectedUserGroups) {
+            for(let assoc of this.selectedUserGroups) {
+                //console.log("loop cycle")
+                if(assoc.groupID == group.ID) {
+                    member = true;
+                    break;
+                }
+            }
+        }
+        //console.log("checkGroup after for")
+        return member;
+    }
+
+    private removeUserGrp(group: Group) {
+        if(this.selectedUserGroups) {
+            for(let assoc of this.selectedUserGroups) {
+                if(assoc.groupID == group.ID) {
+                    console.log("\n\n\n\n\n\n\n\n\nclick minus\n\n\n\n\n\n\n\n\n")
+                    this.groupMemberService
+                        .Delete(assoc.ID)
+                        .subscribe(() => this.getGroupItems());
+                }
+            }
+        }
+    }
+
+    private addUserGrp(group: Group) {
+        let groupMember: GroupMember;
+        console.log(group)
+
+        groupMember.groupID = group.ID
+        groupMember.userID = this.selectedUser.ID
+        this.groupMemberService
+            .Add(groupMember)
+            .subscribe(() => this.getGroupItems());
+        
+    }
+
+    private confDelGroup(group: Group) {
+        console.log("open confirm delete dialog here")
+    }
+
+    private createGroup() {
+        console.log("open create group dialog here")
     }
 }
