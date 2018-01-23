@@ -106,7 +106,7 @@ export class MapService {
             for (let i = 0; i < this.mapConfig.userpagelayers.length; i++) {
                 if (this.mapConfig.userpagelayers[i].layer_admin.layerType == "MyCube") {
                     this.mapConfig.userpagelayers[i].layerShown = this.mapConfig.userpagelayers[i].layerON
-                    this.loadMyCube(init,this.mapConfig.userpagelayers[i],i)  
+                    this.loadMyCube(init,this.mapConfig.userpagelayers[i])  
                 }
                     else {
                     let url = this.formLayerRequest(this.mapConfig.userpagelayers[i])
@@ -148,7 +148,8 @@ export class MapService {
         }
     }
 
-    private loadMyCube(init: boolean, layer: UserPageLayer, index) {
+    private loadMyCube(init: boolean, layer: UserPageLayer) {
+        let index = this.mapConfig.userpagelayers.findIndex(x => x == layer)
         let allLayersOff: boolean = true;
         let nextActive: UserPageLayer;
         this.geojsonservice.GetAll(layer.layer_admin.ID)
@@ -269,7 +270,8 @@ export class MapService {
             });
             if (hit) {
               this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected)
-              this.editmode = true    
+              this.editmode = true
+              console.log(this.mapConfig.selectedFeature.getProperties())
               this.myCubeService.setMyCubeConfig(layer.layer_admin.ID, true); //need to fix the edit property
                 this.myCubeService.sendMyCubeData(layer.layer_admin.ID, this.mapConfig.selectedFeature.getProperties().id);
                 this.mapConfig.selectedFeatures.clear()
@@ -282,7 +284,6 @@ export class MapService {
                                 let featurejson = new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(this.mapConfig.selectedFeature)
                                   this.geojsonservice.updateGeometry(layer.layer_admin.ID, JSON.parse(featurejson))
                                     .subscribe((data) => {console.log(data)})
-                                 
                             });
                 })
             } else {
@@ -295,7 +296,6 @@ export class MapService {
     }
     private draw(mapconfig: MapConfig, featurety: any) {
         this.mapConfig = mapconfig
-        if (this.evkey) { ol.Observable.unByKey(this.evkey), console.log(this.evkey + " is unned in setCurrentMyCube.")}
         if (this.modkey) { ol.Observable.unByKey(this.modkey)} //removes the previous modify even if there was one.
         this.mapConfig.map.removeInteraction(this.modify)
         let src = new ol.source.Vector()
@@ -310,13 +310,23 @@ export class MapService {
             }
         )
         this.mapConfig.map.addLayer(vector)
-        this.mapConfig.map.addInteraction(draw)
-        draw.on('drawend', (e) => {
-            console.log(this.mapConfig.currentLayer.layer_admin.ID)       
+        this.modkey = this.mapConfig.map.addInteraction(draw)
+        draw.once('drawend', (e) => {
+            console.log(this.mapConfig.currentLayer.layer_admin.ID)   
             let featurejson = new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(e.feature)
+            
             this.sqlService.addRecord(this.mapConfig.currentLayer.layer_admin.ID, JSON.parse(featurejson))
-                .subscribe((data) => {console.log(data)})
+                .subscribe((data) => {
+                    console.log(data[0])
+                    e.feature.setProperties(data[0])
+                    console.log(e.feature.getProperties())
+                    this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder-1].addFeature(e.feature)})
+                
             this.mapConfig.map.removeLayer(vector)
+            this.mapConfig.map.changed()
+            ol.Observable.unByKey(this.modkey)
+            this.mapConfig.map.removeInteraction(draw)
+            
         })
     }
     private delete(mapconfig: MapConfig, featurety: any) {
@@ -325,6 +335,16 @@ export class MapService {
             //console.log(feat.getId().toString)
             mapconfig.sources[mapconfig.currentLayer.loadOrder-1].removeFeature(feat)
             this.sqlService.Delete(mapconfig.currentLayer.layer_admin.ID, feat.getId().toString())
+                .subscribe((data) => {
+                    console.log(data)
+                })
+            this.myCubeService.clearMyCubeData()
+        })
+    }
+    private cleanInteractions() {
+        this.mapConfig.map.getInteractions().forEach((int) => {
+            console.log(int.getKeys())
+            this.mapConfig.map.removeInteraction(int)
         })
     }
 }

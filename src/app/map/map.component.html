@@ -91,6 +91,7 @@
                         <mat-chip (click)="mapService.draw(mapConfig,'LineString')"><mat-icon>timeline</mat-icon></mat-chip>
                         <mat-chip (click)="mapService.draw(mapConfig,'Polygon')"><mat-icon>change_history</mat-icon></mat-chip>
                         <mat-chip (click)="mapService.delete(mapConfig)"><mat-icon>delete</mat-icon></mat-chip>
+                        <mat-chip (click)="mapService.cleanInteractions()">Clean</mat-chip>
                     </mat-chip-list>
             </mat-expansion-panel>
             <mat-expansion-panel [disabled]="true">

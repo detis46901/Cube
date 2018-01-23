@@ -61,7 +61,7 @@ export class SQLService {
     }
  
     public addRecord = (table: number, geometry: JSON): Observable<any> => {
-        console.log(this.actionUrl + 'addRecord?table=' + table + '&geometry="' + JSON.stringify(geometry['geometry']))
+        console.log(this.actionUrl + 'addRecord?table=' + table + '&geometry=' + JSON.stringify(geometry['geometry']))
         return this._http.get(this.actionUrl + 'addRecord?table=' + table + '&geometry=' + JSON.stringify(geometry['geometry']))
             .map((response: Response) => <any>response.json())
             .catch(this.handleError)
@@ -74,8 +74,9 @@ export class SQLService {
     }
  
     public Delete = (table: number, id: string): Observable<Response> => {
-        console.log(this.actionUrl + 'delete?table=' + table + '&id=' + id)
-        return this._http.delete(this.actionUrl + 'delete?table=' + table + '&id=' + id, this.options)
+        console.log(this.actionUrl + 'deleteRecord?table=' + table + '&id=' + id)
+        return this._http.get(this.actionUrl + 'deleteRecord?table=' + table + '&id=' + id, this.options)
+            .map((response: Response) => <any>response.json())
             .catch(this.handleError);
     }
 

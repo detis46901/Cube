@@ -109,9 +109,9 @@ export class MyCubeService extends SQLService{
             let z=0
             for (var key in sdata[0][0]) {
                 if (sdata[0][0].hasOwnProperty(key)) {
-                  console.log(key + ": " + sdata[0][0][key]);
+                  //console.log(key + ": " + sdata[0][0][key]);
                   if (z!=0) {this.cubeData[z].value = sdata[0][0][key]}
-                  console.log(z, this.cubeData[z].value)
+                  //console.log(z, this.cubeData[z].value)
                   z++
                 }
               }
