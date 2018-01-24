@@ -288,6 +288,7 @@ export class MapService {
                 })
             } else {
                 this.mapConfig.map.removeInteraction(this.modify)
+                if (this.modkey) { ol.Observable.unByKey(this.modkey)} //removes the previous modify even if there was one.
                 this.myCubeService.clearMyCubeData()
                 this.mapConfig.layers[layer.loadOrder-1].setStyle(this.mapstyles.current)
             }
@@ -317,7 +318,8 @@ export class MapService {
             
             this.sqlService.addRecord(this.mapConfig.currentLayer.layer_admin.ID, JSON.parse(featurejson))
                 .subscribe((data) => {
-                    console.log(data[0])
+                    console.log(data[0].id)
+                    e.feature.setId(data[0].id)
                     e.feature.setProperties(data[0])
                     console.log(e.feature.getProperties())
                     this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder-1].addFeature(e.feature)})
@@ -334,9 +336,11 @@ export class MapService {
         this.mapConfig.selectedFeatures.forEach((feat) => {
             //console.log(feat.getId().toString)
             mapconfig.sources[mapconfig.currentLayer.loadOrder-1].removeFeature(feat)
-            this.sqlService.Delete(mapconfig.currentLayer.layer_admin.ID, feat.getId().toString())
+            console.log(feat.getId())
+            this.sqlService.Delete(mapconfig.currentLayer.layer_admin.ID, feat.getId())
                 .subscribe((data) => {
                     console.log(data)
+                    if (this.modkey) { ol.Observable.unByKey(this.modkey)} //removes the previous modify even if there was one.
                 })
             this.myCubeService.clearMyCubeData()
         })

@@ -25,8 +25,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatMenuModule} from '@angular/material/menu'
 import { MatRadioModule, MatIconModule, MatDialogModule, MatSelectModule, MatListModule, 
          MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, 
-         MatFormFieldModule, MatProgressSpinnerModule, MatToolbarModule } from '@angular/material';
-import {MatChipsModule} from '@angular/material/chips'
+         MatFormFieldModule, MatProgressSpinnerModule, MatToolbarModule, MatNativeDateModule } from '@angular/material';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+
 import 'hammerjs';
 
 //Components
@@ -182,8 +184,8 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
         MatProgressSpinnerModule,
         MatToolbarModule,
         MatChipsModule,
-        LeafletModule.forRoot(),
-        LeafletDrawModule.forRoot()
+        MatDatepickerModule,
+        MatNativeDateModule
     ],
 
     providers: [

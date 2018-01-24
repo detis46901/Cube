@@ -73,7 +73,7 @@ export class SQLService {
             .catch(this.handleError);
     }
  
-    public Delete = (table: number, id: string): Observable<Response> => {
+    public Delete = (table: number, id: any): Observable<Response> => {
         console.log(this.actionUrl + 'deleteRecord?table=' + table + '&id=' + id)
         return this._http.get(this.actionUrl + 'deleteRecord?table=' + table + '&id=' + id, this.options)
             .map((response: Response) => <any>response.json())

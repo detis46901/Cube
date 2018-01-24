@@ -35,6 +35,11 @@ export class mapStyles {
     });
 
     public load = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 5,
+            fill: null,
+            stroke: new ol.style.Stroke({color: '#319FD3', width: 2})
+        }),
         fill: new ol.style.Fill({
             color: 'rgba(255, 255, 255, 0.6)'
         }),
@@ -50,11 +55,16 @@ export class mapStyles {
             stroke: new ol.style.Stroke({
                 color: '#fff',
                 width: 1
-            })
+            }),
         })
     });
 
     public current = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 5,
+            fill: null,
+            stroke: new ol.style.Stroke({color: '#319FD3', width: 4})
+        }),
         fill: new ol.style.Fill({
             color: 'rgba(255, 255, 255, 1)'
         }),
@@ -75,6 +85,11 @@ export class mapStyles {
     })
 
     public selected = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 5,
+            fill: null,
+            stroke: new ol.style.Stroke({color: '#ff0000', width: 4})
+        }),
         fill: new ol.style.Fill({
             color: 'rgba(255, 255, 255, 1)'
         }),
