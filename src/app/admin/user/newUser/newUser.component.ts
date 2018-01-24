@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { User, UserPage } from '../../../../_models/user.model';
 import { UserService } from '../../../../_services/_user.service';
+import { GroupMember } from '../../../../_models/groupMember.model';
+import { GroupMemberService } from '../../../../_services/_groupMember.service';
 import { Md5 } from 'ts-md5/dist/md5';
 import { MatDialog } from '@angular/material';
 
@@ -19,7 +21,7 @@ export class NewUserComponent implements OnInit {
     private newUser = new User;
     private users: Array<User>;
 
-    constructor(private dialog: MatDialog, private userService: UserService) { 
+    constructor(private dialog: MatDialog, private userService: UserService, private groupMemberService: GroupMemberService) { 
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -67,6 +69,15 @@ export class NewUserComponent implements OnInit {
                 .subscribe(() => {
                     this.dialog.closeAll();
                 });
+        }
+
+        if (this.newUser.administrator) {
+            let newAdminEntry: GroupMember
+            newAdminEntry.groupID = 2;
+            newAdminEntry.userID = this.newUser.ID
+            this.groupMemberService
+                .Add(newAdminEntry)
+                .subscribe()
         }
     }
 

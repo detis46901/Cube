@@ -70,13 +70,14 @@ import { PagesComponent } from './pages/pages.component';
 import { GroupComponent } from './admin/group/group.component';
 
 //Services
+import { UserService } from '../_services/_user.service';
 import { GroupService } from '../_services/_group.service';
+import { GroupMemberService } from '../_services/_groupMember.service';
 import { LayerAdminService } from '../_services/_layerAdmin.service';
 import { LayerPermissionService } from '../_services/_layerPermission.service';
 import { UserPageLayerService } from '../_services/_userPageLayer.service';
 import { UserPageService } from '../_services/_userPage.service';
 import { AuthenticationService} from '../_services/authentication.service';
-import { UserService } from '../_services/_user.service';
 import { SQLService } from '../_services/sql.service'
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
@@ -185,7 +186,10 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
         MatToolbarModule,
         MatChipsModule,
         MatDatepickerModule,
-        MatNativeDateModule
+        MatNativeDateModule,
+        MatListModule,
+        LeafletModule.forRoot(),
+        LeafletDrawModule.forRoot()
     ],
 
     providers: [
@@ -197,6 +201,7 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
         AuthenticationService, 
         UserService, 
         GroupService,
+        GroupMemberService,
         LayerAdminService, 
         LayerPermissionService,
         SQLService,

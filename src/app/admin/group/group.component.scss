@@ -9,7 +9,7 @@
     background-color:white;
     border:solid black 2px;
     position:relative;
-    width:30%;
+    width:40%;
     margin:10px;
 }
 
@@ -17,6 +17,25 @@
     background-color:white;
     border:solid black 2px;
     position:relative;
-    width:70%;
+    width:60%;
     margin:10px;
+}
+
+.fa-check, .fa-plus {
+    color:green;
+}
+
+:host ::ng-deep .mat-pseudo-checkbox {
+    background-position: 0;
+    background-color: transparent;
+    display: none;
+}
+
+button {
+    background-color:white;
+    border:none;
+}
+
+.fa-minus {
+    color:red;
 }
