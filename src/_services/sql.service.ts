@@ -60,9 +60,13 @@ export class SQLService {
             .catch(this.handleError);
     }
  
+    public setSRID = (table: number): Observable<any> => {
+        return this._http.get(this.actionUrl + 'setSRID?table=' + table, this.options)
+    }
+    
     public addRecord = (table: number, geometry: JSON): Observable<any> => {
         console.log(this.actionUrl + 'addRecord?table=' + table + '&geometry=' + JSON.stringify(geometry['geometry']))
-        return this._http.get(this.actionUrl + 'addRecord?table=' + table + '&geometry=' + JSON.stringify(geometry['geometry']))
+        return this._http.get(this.actionUrl + 'addRecord?table=' + table + '&geometry=' + JSON.stringify(geometry['geometry']), this.options)
             .map((response: Response) => <any>response.json())
             .catch(this.handleError)
     }

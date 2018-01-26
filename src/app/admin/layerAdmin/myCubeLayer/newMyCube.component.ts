@@ -100,6 +100,11 @@ export class newMyCubeComponent implements OnInit {
                 this.newLayerFields.forEach(element => {
                     this.addColumn(id, element)
                 });
+                this.sqlservice
+                    .setSRID(id)
+                    .subscribe(result => {
+                        console.log('SRID set')
+                    })
                 this.dialog.closeAll();
             })
     }

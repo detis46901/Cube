@@ -5,6 +5,7 @@ import { SideNavService } from "../../_services/sidenav.service"
 import { MyCubeField, MyCubeConfig }from "../../_models/layer.model"
 import { SQLService } from "../../_services/sql.service"
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
+import {FormControl} from '@angular/forms';
 
 @Component({
     moduleId: module.id,
@@ -16,6 +17,7 @@ import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browse
 export class FeatureDataComponent{ 
     public trustedUrl: SafeUrl
     public videoUrl: SafeResourceUrl;
+    public serializedDate = new FormControl((new Date()).toISOString());
 
     constructor(private sideNavService: SideNavService, private sqlservice: SQLService){
          // subscribe to map component messages
@@ -62,7 +64,12 @@ export class FeatureDataComponent{
     }
 
     private updateMyCube(mycube: MyCubeField): void {
+        
+        if (mycube.type == "date") {
+            mycube.value = mycube.value.toJSON()
+        }
         console.log(this.myCubeData[0].value)
+        console.log(mycube.type)
         console.log(mycube.value)
         this.sqlservice
             .Update(this.myCubeConfig.table, this.myCubeData[0].value, mycube.field, mycube.type, mycube.value)

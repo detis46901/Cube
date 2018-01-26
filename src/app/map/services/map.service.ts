@@ -253,7 +253,7 @@ export class MapService {
     private setCurrentMyCube(layer: UserPageLayer) {
         this.shown = true
         this.mapConfig.map.removeInteraction(this.modify)
-        this.mapConfig.map.getInteractions().forEach((e) => {console.log(e.getProperties())})
+        //this.mapConfig.map.getInteractions().forEach((e) => {console.log(e.getProperties())})
         if (this.evkey) { ol.Observable.unByKey(this.evkey), console.log(this.evkey + " is unned in setCurrentMyCube.")}
         if (this.modkey) { ol.Observable.unByKey(this.modkey)} //removes the previous modify even if there was one.
         this.mapConfig.layers[layer.loadOrder-1].setStyle(this.mapstyles.current)

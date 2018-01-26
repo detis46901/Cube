@@ -14,6 +14,11 @@ export class geoJSONService {
  
     constructor(protected _http: Http, protected configuration: Configuration) {
         this.headers = new Headers();
+        try {
+            this.token = JSON.parse(localStorage.getItem('currentUser')).token
+        } catch(err) {
+            console.log("Could not authenticate user.\n"+err)
+        }
         this.headers.append('Content-Type', 'application/json');
         this.headers.append('Accept', 'application/json');
         this.headers.append('Authorization', 'Bearer ' + this.token);
@@ -21,7 +26,8 @@ export class geoJSONService {
         this.options = new RequestOptions({headers: this.headers})
     }
  
-    public GetAll = (layerID: number): Observable<GeoJSON.GeoJsonObject> => {           
+    public GetAll = (layerID: number): Observable<GeoJSON.GeoJsonObject> => {
+        console.log(this.token)        
         let ob = this._http.get(this.actionUrl + 'all?table=' + layerID, this.options)
             .map((response: Response) => <GeoJSON.GeoJsonObject[]>response.json())
             .catch(this.handleError);
