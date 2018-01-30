@@ -150,9 +150,9 @@ export class GroupComponent implements OnInit {
     }
 
     private addUserGrp(group: Group) {
-        let groupMember: GroupMember;
-        console.log(group)
-
+        let groupMember = new GroupMember;
+        console.log(group.ID)
+        
         groupMember.groupID = group.ID
         groupMember.userID = this.selectedUser.ID
         this.groupMemberService

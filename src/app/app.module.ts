@@ -79,8 +79,8 @@ import { UserPageLayerService } from '../_services/_userPageLayer.service';
 import { UserPageService } from '../_services/_userPage.service';
 import { AuthenticationService} from '../_services/authentication.service';
 import { SQLService } from '../_services/sql.service'
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
-import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
+//import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+//import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
 import { NewUserComponent } from './admin/user/newUser/newUser.component';
 import { ServerService } from '../_services/_server.service';
 import { geoJSONService } from './map/services/geoJSON.service';
@@ -188,8 +188,8 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
         MatDatepickerModule,
         MatNativeDateModule,
         MatListModule,
-        LeafletModule.forRoot(),
-        LeafletDrawModule.forRoot()
+        //LeafletModule.forRoot(),
+        //LeafletDrawModule.forRoot()
     ],
 
     providers: [
