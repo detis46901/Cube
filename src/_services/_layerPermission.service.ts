@@ -17,12 +17,14 @@ export class LayerPermissionService extends ParentService {
     }
 
     public GetByUser = (userid): Observable<LayerPermission[]> => {
+        console.log(this.actionUrl + 'getbyuser?userid=' + userid)
         return this._http.get(this.actionUrl + 'getbyuser?userid=' + userid, this.options)
             .map((response: Response) => <LayerPermission[]>response.json())
             .catch(this.handleError);
     }
     
     public GetByLayer = (layerid): Observable<LayerPermission[]> => {
+        console.log(this.actionUrl + 'getbylayer?layerID=' + layerid, this.options)
         return this._http.get(this.actionUrl + 'getbylayer?layerID=' + layerid, this.options)
             .map((response: Response) => <LayerPermission[]>response.json())
             .catch(this.handleError);

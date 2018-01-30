@@ -94,7 +94,7 @@ export class newMyCubeComponent implements OnInit {
     private createTable(id): void {
         console.log("Creating Table")
         this.sqlservice
-            .Create(id, this.newLayerFields)
+            .Create(id)
             .subscribe(result => {
                 console.log('Number of Columns to Add:' + this.newLayerFields.length)
                 this.newLayerFields.forEach(element => {
@@ -107,6 +107,13 @@ export class newMyCubeComponent implements OnInit {
                     })
                 this.dialog.closeAll();
             })
+            console.log("Creating Comment Table")
+            this.sqlservice
+            .CreateCommentTable(id)
+            .subscribe(result => {
+                console.log(result)
+            })
+            console.log("Comment Table Created")
     }
 
     private addColumn(id, element): void {

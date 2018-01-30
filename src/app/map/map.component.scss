@@ -6,6 +6,11 @@
     z-index:-1;
   }
 
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
 #dropdownMenu1, #dropdownMenu2 {
     border: 2px solid rgb(26, 117, 255);
     margin: 25px 15px 0 0;

@@ -142,6 +142,8 @@ export class LayerAdminComponent implements OnInit {
                     console.log('removing MyCube')
                     this.sqlservice.deleteTable(result.ID)
                     .subscribe((result)=> console.log(result))
+                    this.sqlservice.deleteCommentTable(result.ID)
+                    .subscribe((result)=> console.log(result))
                 }
             });
 

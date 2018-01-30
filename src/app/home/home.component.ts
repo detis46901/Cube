@@ -6,7 +6,7 @@ import { MessageService } from '../../_services/message.service'
 import { MyCubeService } from '../map/services/mycube.service'
 import { WFSService } from '../map/services/wfs.service';
 import { Subscription } from 'rxjs/Subscription';
-import { MyCubeField, MyCubeConfig } from '../../_models/layer.model'
+import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../_models/layer.model'
 
 @Component({
     selector: 'home',
@@ -27,8 +27,10 @@ export class HomeComponent {
     private popupText: string;
     private message: any;
     private myCubeData: MyCubeField;
+    private myCubeComments: MyCubeComment[]
     private subscription: Subscription;
     private myCubeSubscription: Subscription;
+    private myCubeCommentSubscription: Subscription;
     private editSubscription: Subscription;
     private myCubeConfig: MyCubeConfig;
 
@@ -40,6 +42,7 @@ export class HomeComponent {
         this.userID = currentUser && currentUser.userID;
         this.subscription = this.messageService.getMessage().subscribe(message => { this.message = message; this.myCubeData = null });
         this.myCubeSubscription = this.myCubeService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; this.message = null});
+        this.myCubeCommentSubscription = this.myCubeService.getMyCubeComments().subscribe(myCubeComments => {this.myCubeComments = myCubeComments})
         this.editSubscription = this.myCubeService.getMyCubeConfig().subscribe(data => {this.myCubeConfig = data});
         console.log("this.message = " + this.message)
     }

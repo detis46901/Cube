@@ -38,6 +38,7 @@ export class UserPageLayer {
     userPageID: number;
     layerAdminID: number;
     layer_admin: LayerAdmin;
+    layerPermissions = new LayerPermission;
     serverID: number;
     layerShown: boolean;
     loadOrder: number;
@@ -53,4 +54,12 @@ export class MyCubeField {
 export class MyCubeConfig {
     table: number;
     edit: boolean;
+}
+
+export class MyCubeComment {
+    id: number;
+    userID: number;
+    comment: string;
+    geom: string;
+    featureID: number;
 }

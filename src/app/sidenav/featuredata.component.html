@@ -1,4 +1,4 @@
-<mat-card class="example-card" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 50px; padding:5px 5px 5px 5px;">
+<mat-card class="example-card" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 0px; padding:5px 5px 5px 5px;">
     <mat-card-header>
         <div mat-card-avatar class="example-header-image"></div>
         <mat-card-title></mat-card-title>
@@ -12,23 +12,43 @@
         <!-- <div><iframe [src]="message"></iframe></div> -->
         <div [innerHTML]="message"></div>
     </mat-card-content>
-    <mat-card-content *ngIf="myCubeData">
-        {{myCubeData.field}}
-        <button mat-button (click)='clearMyCubeData()'>
-            <mat-icon>close</mat-icon>
-        </button>
-        <div *ngFor="let myCube of myCubeData">
-                <div *ngIf="myCube.type=='id'"></div>
-                <div *ngIf="myCube.type=='geom'"></div>
-                <div *ngIf="myCube.type=='integer'"><mat-form-field><input matInput id="textinput" ngModel required placeholder="{{myCube.field}}" [(ngModel)]="myCube.value" (blur)="updateMyCube(myCube)"></mat-form-field></div>
-                <div *ngIf="myCube.type=='boolean'"><mat-checkbox [(ngModel)]="myCube.value" (change)="updateMyCube(myCube)">{{myCube.field}}</mat-checkbox></div>
-                <div *ngIf="myCube.type=='text'"><mat-form-field><input matInput id="textinput" ngModel required placeholder="{{myCube.field}}" [(ngModel)]="myCube.value" (blur)="updateMyCube(myCube)"></mat-form-field></div>
-                <div *ngIf="myCube.type=='date'"><mat-form-field>
-                    <input matInput [matDatepicker]="picker" [formControl]="serializedDate" placeholder="{{myCube.field}}" [(ngModel)]="myCube.value" (dateChange)="updateMyCube(myCube)">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field></div>
-            </div>    
-    </mat-card-content>
-    <br>
 </mat-card>
+            <div *ngIf="myCubeData">
+                    <mat-accordion  [multi] = true style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 5px; right: 5px; padding:0px 0px 0px 0px;">
+                            <mat-expansion-panel [expanded] = true>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Feature Data
+                                    </mat-panel-title>
+                                    <mat-panel-description>
+                                            {{myCubeData.field}}
+                                    </mat-panel-description>
+                                </mat-expansion-panel-header>
+                                    <div *ngFor="let myCube of myCubeData">
+                                            <div *ngIf="myCube.type=='id'"></div>
+                                            <div *ngIf="myCube.type=='geom'"></div>
+                                            <div *ngIf="myCube.type=='integer'"><mat-form-field><input matInput id="textinput" ngModel required placeholder="{{myCube.field}}" [(ngModel)]="myCube.value" (blur)="updateMyCube(myCube)"></mat-form-field></div>
+                                            <div *ngIf="myCube.type=='boolean'"><mat-checkbox [(ngModel)]="myCube.value" (change)="updateMyCube(myCube)">{{myCube.field}}</mat-checkbox></div>
+                                            <div *ngIf="myCube.type=='text'"><mat-form-field><input matInput id="textinput" ngModel required placeholder="{{myCube.field}}" [(ngModel)]="myCube.value" (blur)="updateMyCube(myCube)"></mat-form-field></div>
+                                            <div *ngIf="myCube.type=='date'"><mat-form-field>
+                                                <input matInput [matDatepicker]="picker" [formControl]="serializedDate" placeholder="{{myCube.field}}" [(ngModel)]="myCube.value" (dateChange)="updateMyCube(myCube)">
+                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker></mat-datepicker>
+                                              </mat-form-field></div>
+                                        </div>    
+                            </mat-expansion-panel>
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Comments
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div *ngFor="let myCubeComment of myCubeComments">
+                                    {{myCubeComment.comment}}
+                                </div>
+                                <mat-form-field><input matInput id="comment" [(ngModel)]="newComment" placeholder="comment" (blur)="addMyCubeComment()"></mat-form-field>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+        
+    <br>

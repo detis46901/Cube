@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 import { SQLService } from '../../../_services/sql.service'
-import { MyCubeField, MyCubeConfig } from '../../../_models/layer.model'
+import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../../_models/layer.model'
 
 //Must be declared here in order to mitigate a bug where toggling sidenav via view dropdown doesn't work unless clicked twice.
 let isOpen: boolean = true;
@@ -16,6 +16,7 @@ export class MyCubeService extends SQLService{
    private subject = new Subject<any>();
    private mycubesubject = new Subject<MyCubeField[]>();
    private mycubeconfig = new Subject<MyCubeConfig>();
+   private mycubecomment = new Subject<MyCubeComment[]>();
    private cubeData: MyCubeField[]
    
 
@@ -121,7 +122,10 @@ export class MyCubeService extends SQLService{
             //     this.cubeData[z].value = sdata[0][z]
             // }
             console.log(this.cubeData)
-            this.mycubesubject.next(this.cubeData);
+        this.getComments(table, id)
+        .subscribe((cdata: any) =>
+         {console.log(cdata[0]);this.mycubesubject.next(this.cubeData);
+        this.mycubecomment.next(cdata[0])})
         })
 
     }
@@ -132,6 +136,14 @@ export class MyCubeService extends SQLService{
 
     getMyCubeData(): Observable<any> {
         return this.mycubesubject.asObservable();
+    }
+
+    clearMyCubeComments() {
+        this.mycubecomment.next();
+    }
+
+    getMyCubeComments() {
+        return this.mycubecomment.asObservable();
     }
 
     // public setEdit(edit: boolean): void {

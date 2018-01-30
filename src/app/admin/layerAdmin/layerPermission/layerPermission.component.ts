@@ -45,6 +45,7 @@ export class LayerPermissionComponent implements OnInit {
         this.layerPermissionService
             .GetByLayer(this.layerID)
             .subscribe((data:LayerPermission[]) => {
+                console.log(data)
                 this.layerPermissions = data;
                 for(let p of data) {
                     if(p.owner) {
@@ -54,7 +55,7 @@ export class LayerPermissionComponent implements OnInit {
                         .GetSingle(p.userID)
                         .subscribe((u: User) => {
                             this.permNames.push(u.firstName + " " + u.lastName);
-                            console.log(this.permNames[0])
+                            //console.log(this.permNames[0])
                         });
 
                     //if(!(p.userID == this.users. ))

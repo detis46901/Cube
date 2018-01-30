@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { SideNavService } from "../../_services/sidenav.service"
-import { MyCubeField, MyCubeConfig }from "../../_models/layer.model"
+import { MyCubeField, MyCubeConfig, MyCubeComment }from "../../_models/layer.model"
 import { SQLService } from "../../_services/sql.service"
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import {FormControl} from '@angular/forms';
@@ -18,14 +18,14 @@ export class FeatureDataComponent{
     public trustedUrl: SafeUrl
     public videoUrl: SafeResourceUrl;
     public serializedDate = new FormControl((new Date()).toISOString());
+    public newComment: string;
 
     constructor(private sideNavService: SideNavService, private sqlservice: SQLService){
          // subscribe to map component messages
     }
 
     
-
-    @Input() message: any
+    @Input() myCubeComments: MyCubeComment[]
     @Input() myCubeData: MyCubeField[];
     @Input() myCubeConfig: MyCubeConfig;
     @Input() canEdit: boolean;
@@ -55,16 +55,12 @@ export class FeatureDataComponent{
         
     }
 
-    private clearMessage(): void {
-        this.message = null
-    }
 
     private clearMyCubeData(): void {
         this.myCubeData = null
     }
 
     private updateMyCube(mycube: MyCubeField): void {
-        
         if (mycube.type == "date") {
             mycube.value = mycube.value.toJSON()
         }
@@ -73,6 +69,13 @@ export class FeatureDataComponent{
         console.log(mycube.value)
         this.sqlservice
             .Update(this.myCubeConfig.table, this.myCubeData[0].value, mycube.field, mycube.type, mycube.value)
+            .subscribe()
+    }
+
+    private addMyCubeComment() {
+        console.log("Adding MyCube Comment " + this.newComment)
+        this.sqlservice
+            .addComment(this.myCubeConfig.table, this.myCubeData[0].value, this.newComment, 1)
             .subscribe()
     }
 }

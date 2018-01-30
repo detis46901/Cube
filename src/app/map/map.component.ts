@@ -57,6 +57,7 @@ export class MapComponent {
     
     //Angular component initialization
     ngOnInit() {
+        this.mapConfig.userID = this.userID
          this.getDefaultPage()
          .then(() => this.mapService.initMap(this.mapConfig)
             .then((mapConfig) => {
@@ -72,15 +73,11 @@ export class MapComponent {
             .GetActiveByUserID(this.userID)
             .subscribe((data: UserPage[]) => {
                 this.mapConfig.name = "Current"
-                console.log(data)
                 this.mapConfig.userpages = data
-                for (let userpage of this.mapConfig.userpages) {
-                    if (userpage.default === true) {
-                        this.mapConfig.defaultpage = userpage;
-                        this.mapConfig.currentpage = userpage;
-                        this.currPage = userpage.page;
-                    }
-                }
+                let index = this.mapConfig.userpages.findIndex(x => x.default == true)
+                this.mapConfig.defaultpage = this.mapConfig.userpages[index]
+                this.mapConfig.currentpage = this.mapConfig.userpages[index]
+                this.currPage = this.mapConfig.userpages[index].page
                 resolve()
             });
         })
@@ -125,6 +122,7 @@ export class MapComponent {
         }
         this.mapService.loadLayers(this.mapConfig, false).then(() => {  
             this.mapConfig.currentLayerName = null
+            this.mapConfig.editmode = false
             this.noLayers = true;
         })
     }

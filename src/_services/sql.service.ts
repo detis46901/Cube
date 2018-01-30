@@ -52,14 +52,36 @@ export class SQLService {
             .catch(this.handleError);
     }
  
-    public Create = (layerName: string, fields: any): Observable<any> => {
+    public Create = (layerName: string): Observable<any> => {
         console.log('Creating a table.' + layerName)
         console.log(this.actionUrl + 'create', layerName, {headers: this.headers})
         return this._http.get(this.actionUrl + 'create?table=' + layerName, this.options)
             .map((response: Response) => <any>response.json())
             .catch(this.handleError);
     }
+
+    public CreateCommentTable = (layerName: string): Observable<any> => {
+        console.log('Creating a table.' + layerName)
+        console.log(this.actionUrl + 'createcommenttable', layerName, {headers: this.headers})
+        return this._http.get(this.actionUrl + 'createcommenttable?table=' + layerName, this.options)
+            .map((response: Response) => <any>response.json())
+            .catch(this.handleError);
+    }
  
+    public getComments = (table: number, id: string): Observable<any> => {
+        console.log(this.actionUrl + 'getcomments?table=' + table + '&id=' + id)
+        return this._http.get(this.actionUrl + 'getcomments?table=' + table + '&id=' + id, this.options)
+        .map((response: Response) => <any>response.json())
+        .catch(this.handleError);
+    }
+
+    public addComment = (table: number, id: string, comment: string, userid: number): Observable<any> => {
+        console.log(this.actionUrl + 'addcomment?table=' + table + '&id=' + id + '&comment=' + comment)
+        return this._http.get(this.actionUrl + 'addcomment?table=' + table + '&id=' + id + '&comment=' + comment)
+        .map((response: Response) => <any>response.json())
+        .catch(this.handleError);
+    }
+
     public setSRID = (table: number): Observable<any> => {
         return this._http.get(this.actionUrl + 'setSRID?table=' + table, this.options)
     }
@@ -92,6 +114,10 @@ export class SQLService {
 
     public deleteTable = (table: number): Observable<any> => {
         return this._http.get(this.actionUrl + 'deleteTable?table=' + table, this.options)
+    }
+
+    public deleteCommentTable = (table: number): Observable<any> => {
+        return this._http.get(this.actionUrl + 'deletecommenttable?table=' + table, this.options)
     }
  
     protected handleError(error: Response) {

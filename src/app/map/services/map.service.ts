@@ -15,7 +15,6 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class MapService {
     public map: L.Map; //needs to be removed once marker and pmmarker are removed.
-    private userID: number;
     public noLayers: boolean;
     private shown: boolean = false
     public mapConfig: MapConfig;
@@ -78,6 +77,7 @@ export class MapService {
             .GetPageLayers(this.mapConfig.currentpage.ID)
             .subscribe((data: UserPageLayer[]) => {
                 this.mapConfig.userpagelayers = data
+                console.log(this.mapConfig.userpagelayers)
                 resolve()
             });
         })
@@ -87,9 +87,17 @@ export class MapService {
     public getLayerPerms(): Promise<any> {
         let promise = new Promise((resolve, reject) => {
             this.layerPermissionService
-                .GetByUser(this.userID)
+                .GetByUser(this.mapConfig.userID)
                 .subscribe((data: LayerPermission[]) => {
                     this.mapConfig.layerpermission = data
+                    console.log(data)
+                    this.mapConfig.userpagelayers.forEach((userpagelayer) => {
+                        let j = this.mapConfig.layerpermission.findIndex((x) => x.layerAdminID == userpagelayer.layerAdminID)
+                        if (j >= 0) {
+                            userpagelayer.layerPermissions = this.mapConfig.layerpermission[j]
+                            console.log(this.mapConfig.userpagelayers[0].layerPermissions)
+                        }
+                    })
                     resolve()
                 })
         })
@@ -154,7 +162,10 @@ export class MapService {
         let nextActive: UserPageLayer;
         this.geojsonservice.GetAll(layer.layer_admin.ID)
             .subscribe((data: GeoJSON.Feature<any>) => {
-                let source = new ol.source.Vector({ features: (new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' })).readFeatures(data[0][0]['jsonb_build_object']) })
+                let source = new ol.source.Vector()
+                if (data[0][0]['jsonb_build_object']['features']) {
+                    console.log('filling source')
+                    source = new ol.source.Vector({ features: (new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' })).readFeatures(data[0][0]['jsonb_build_object']) })}
                 this.vectorlayer = new ol.layer.Vector({ source: source, style: this.mapstyles.load})
                 this.vectorlayer.setVisible(layer.layerON)
                 this.mapConfig.map.addLayer(this.vectorlayer)
@@ -184,6 +195,7 @@ export class MapService {
 
     private setCurrentLayer(layer: UserPageLayer, mapconfig: MapConfig): void {
         this.mapConfig = mapconfig
+        this.mapConfig.editmode = false
         this.mapConfig.currentLayer = layer
         this.myCubeService.clearMyCubeData() //cleans the selected myCube data off the screen
         if (this.mapConfig.selectedFeature) {this.mapConfig.selectedFeature.setStyle(null)}  //fixes a selected feature's style
@@ -252,6 +264,7 @@ export class MapService {
 
     private setCurrentMyCube(layer: UserPageLayer) {
         this.shown = true
+        this.mapConfig.editmode = layer.layerPermissions.edit
         this.mapConfig.map.removeInteraction(this.modify)
         //this.mapConfig.map.getInteractions().forEach((e) => {console.log(e.getProperties())})
         if (this.evkey) { ol.Observable.unByKey(this.evkey), console.log(this.evkey + " is unned in setCurrentMyCube.")}
@@ -270,9 +283,9 @@ export class MapService {
             });
             if (hit) {
               this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected)
-              this.editmode = true
+              console.log(this.editmode)
               console.log(this.mapConfig.selectedFeature.getProperties())
-              this.myCubeService.setMyCubeConfig(layer.layer_admin.ID, true); //need to fix the edit property
+              this.myCubeService.setMyCubeConfig(layer.layer_admin.ID, layer.layerPermissions.edit); //need to fix the edit property
                 this.myCubeService.sendMyCubeData(layer.layer_admin.ID, this.mapConfig.selectedFeature.getProperties().id);
                 this.mapConfig.selectedFeatures.clear()
                 this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature)
@@ -318,12 +331,12 @@ export class MapService {
             
             this.sqlService.addRecord(this.mapConfig.currentLayer.layer_admin.ID, JSON.parse(featurejson))
                 .subscribe((data) => {
+                    console.log(data)
                     console.log(data[0].id)
                     e.feature.setId(data[0].id)
                     e.feature.setProperties(data[0])
                     console.log(e.feature.getProperties())
                     this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder-1].addFeature(e.feature)})
-                
             this.mapConfig.map.removeLayer(vector)
             this.mapConfig.map.changed()
             ol.Observable.unByKey(this.modkey)
@@ -341,14 +354,9 @@ export class MapService {
                 .subscribe((data) => {
                     console.log(data)
                     if (this.modkey) { ol.Observable.unByKey(this.modkey)} //removes the previous modify even if there was one.
+                    this.mapConfig.map.removeInteraction(this.modify)
                 })
             this.myCubeService.clearMyCubeData()
-        })
-    }
-    private cleanInteractions() {
-        this.mapConfig.map.getInteractions().forEach((int) => {
-            console.log(int.getKeys())
-            this.mapConfig.map.removeInteraction(int)
         })
     }
 }

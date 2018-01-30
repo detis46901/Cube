@@ -2,9 +2,9 @@
 
 <div class="container-fluid pull-right" style="background: rgba(255,255,255,.7)">
    
-    <div class="row">
-       <mat-accordion >
-            <mat-expansion-panel>
+    <div>
+       <mat-accordion class="example-headers-align">
+            <mat-expansion-panel >
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         Pages
@@ -81,17 +81,17 @@
                                       </mat-menu>
                         <mat-radio-button [disabled]="!userpagelayer.layerShown" class="example-radio-button" [value]="userpagelayer" (change)="mapService.setCurrentLayer(userpagelayer, mapConfig)">
                             <mat-slide-toggle class="example-margin" [checked]="userpagelayer.layerShown" (change)="mapService.toggleLayers(userpagelayer.loadOrder,mapConfig,i)">
-                                {{userpagelayer.layer_admin.layerName}}
+                                {{userpagelayer.layer_admin.layerName}}<br>
                             </mat-slide-toggle>
                         </mat-radio-button>
                         </div>
                     </mat-radio-group><hr>
-                    <mat-chip-list>
+                   
+                    <mat-chip-list *ngIf="mapConfig.editmode">
                         <mat-chip (click)="mapService.draw(mapConfig,'Point')"><mat-icon>control_point</mat-icon></mat-chip>
                         <mat-chip (click)="mapService.draw(mapConfig,'LineString')"><mat-icon>timeline</mat-icon></mat-chip>
                         <mat-chip (click)="mapService.draw(mapConfig,'Polygon')"><mat-icon>change_history</mat-icon></mat-chip>
                         <mat-chip (click)="mapService.delete(mapConfig)"><mat-icon>delete</mat-icon></mat-chip>
-                        <mat-chip (click)="mapService.cleanInteractions()">Clean</mat-chip>
                     </mat-chip-list>
             </mat-expansion-panel>
             <mat-expansion-panel [disabled]="true">
