@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UserService } from '../../../../_services/_user.service';
 import { User } from '../../../../_models/user.model';
+import { GroupService } from '../../../../_services/_group.service';
+import { Group } from '../../../../_models/group.model';
 import { Configuration } from '../../../../_api/api.constants';
 import { LayerService } from '../../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
@@ -11,22 +13,24 @@ import { MatDialog, MatDialogRef } from '@angular/material';
     selector: 'layer-permission',
     templateUrl: './layerPermission.component.html',
     styleUrls: ['./layerPermission.component.scss'],
-    providers: [UserService, Configuration, LayerService, LayerPermissionService]
+    providers: [UserService, GroupService, Configuration, LayerService, LayerPermissionService]
 })
 
 export class LayerPermissionComponent implements OnInit {
     @Input() layerID: number;
     @Input() layerName: string;
     private closeResult: string;
-    private users = new Array<User>();
+    private permlessUsers = new Array<User>();
+    private permlessGroups = new Array<Group>();
     private newLayerPermission = new LayerPermission;
     private layerPermissions = new Array<LayerPermission>();
     private token: string;
     private userID: number;
     private permNames = new Array<string>();
     private layerOwner: number;
+    private isGroup: boolean = false;
 
-    constructor(private layerPermissionService: LayerPermissionService, private userService: UserService, private dialog: MatDialog) {
+    constructor(private layerPermissionService: LayerPermissionService, private userService: UserService, private groupService: GroupService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -38,6 +42,9 @@ export class LayerPermissionComponent implements OnInit {
         this.newLayerPermission.delete = false;
         this.newLayerPermission.owner = false;
         this.newLayerPermission.canGrant = false;
+
+        //Initialize mat-slide-toggle state to user
+        //this.isUser = true;
     }
 
     private getPermissionItems(): void {
@@ -48,33 +55,58 @@ export class LayerPermissionComponent implements OnInit {
                 console.log(data)
                 this.layerPermissions = data;
                 for(let p of data) {
-                    if(p.owner) {
-                        this.layerOwner = p.userID
+                    //If permission applies to a user
+                    if(p.userID && !p.groupID) {
+                        if(p.owner) {
+                            this.layerOwner = p.userID
+                        }
+                        this.userService
+                            .GetSingle(p.userID)
+                            .subscribe((u: User) => {
+                                //Add name to an array for interpolation under "Current Permissions"
+                                this.permNames.push(u.firstName + " " + u.lastName);
+                            });
+                    //If permission applies to a group
+                    } else if(p.groupID && !p.userID) {
+                        this.groupService
+                            .GetSingle(p.groupID)
+                            .subscribe((g: Group) => {
+                                //Add name to an array for interpolation under "Current Permissions"
+                                this.permNames.push(g.name);
+                            });
                     }
-                    this.userService
-                        .GetSingle(p.userID)
-                        .subscribe((u: User) => {
-                            this.permNames.push(u.firstName + " " + u.lastName);
-                            //console.log(this.permNames[0])
-                        });
-
-                    //if(!(p.userID == this.users. ))
                 }
-                this.getUserItems()    
+                this.getUserItems();
+                this.getGroupItems();
+                console.log(this.permNames) 
             });
     }
 
     private getUserItems(): void {
-        this.users = [];
+        this.permlessUsers = [];
         this.userService
             .GetAll()
             .subscribe((data:User[]) => {             
                 for(let u of data) {
+                    //If no existing permission exists for the user
                     if(this.permNames.indexOf(u.firstName + " " + u.lastName) == -1) {
-                        this.users.push(u);
+                        this.permlessUsers.push(u);
                     }
                 }
-                console.log(this.users);
+            });
+    }
+
+    private getGroupItems(): void {
+        this.permlessGroups = [];
+        this.groupService
+            .GetAll()
+            .subscribe((data:Group[]) => {             
+                for(let g of data) {
+                    //If no existing permission exists for the group
+                    if(this.permNames.indexOf(g.name) == -1) {
+                        this.permlessGroups.push(g);
+                    }
+                }
             });
     }
     
@@ -123,5 +155,16 @@ export class LayerPermissionComponent implements OnInit {
             .subscribe(() => {
                 this.getPermissionItems();
             });
+    }
+
+    private switchPermType() {
+        this.isGroup = !this.isGroup;
+        // if(this.isGroup) {
+        //     document.getElementById('layerPermNewUser').style.display = "inline";
+        //     document.getElementById('layerPermNewGroup').style.display = "none";
+        // } else {
+        //     document.getElementById('layerPermNewUser').style.display = "none";
+        //     document.getElementById('layerPermNewGroup').style.display = "inline";
+        // }
     }
 }

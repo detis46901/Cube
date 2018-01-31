@@ -1,7 +1,3 @@
-#layerPermNewUser {
-    height: 30px;
-}
-
 #delUserPerm {
     margin-right:10px;
     position: relative;
@@ -34,12 +30,21 @@ h4 {
     bottom:15px;
 }
 
-mat-checkbox {
-    margin-right:10px;
-}
-
 hr {
     margin:0;
     padding:0;
     border-color: #8d8d8d;
+}
+
+b {
+    margin-right:20px;
+}
+
+mat-checkbox {
+    margin-right:10px;
+}
+
+mat-slide-toggle {
+    position:relative;
+    top:3px;
 }
