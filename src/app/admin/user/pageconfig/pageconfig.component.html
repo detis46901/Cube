@@ -23,7 +23,7 @@
             <div id="pageConfigLayersColumn" class="column">
                 <span>
                     <i (click)="deleteUserPageLayer(upl.ID)" class="fa fa-times" aria-hidden="true"></i>
-                    &nbsp;{{upl.layer_admin.layerName}}
+                    &nbsp;{{upl.layer.layerName}}
                 </span>
             </div>
             <div id="pageConfigDefaultColumn" class="column">
@@ -35,9 +35,9 @@
     <form #f="ngForm">
         <div class="row">
             <mat-form-field id="pageConfigNewLayer">
-                <mat-select [(ngModel)]="newUserPageLayer.layerAdminID" required name="layer" placeholder="Add Layer">
-                    <mat-option [value]="layerPermission.layerAdminID" *ngFor="let layerPermission of layerPermissions">
-                        {{layerPermission.layer_admin.layerName}}
+                <mat-select [(ngModel)]="newUserPageLayer.layerID" required name="layer" placeholder="Add Layer">
+                    <mat-option [value]="layerPermission.layerID" *ngFor="let layerPermission of layerPermissions">
+                        {{layerPermission.layer.layerName}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

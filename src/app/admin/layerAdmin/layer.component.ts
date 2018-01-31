@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../_services/_user.service';
 import { User } from '../../../_models/user.model';
 import { Configuration } from '../../../_api/api.constants';
-import { LayerAdminService } from '../../../_services/_layerAdmin.service';
+import { LayerService } from '../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../_services/_layerPermission.service';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { SQLService } from '../../../_services/sql.service'
-import { LayerAdmin, LayerPermission, UserPageLayer } from '../../../_models/layer.model';
+import { Layer, LayerPermission, UserPageLayer } from '../../../_models/layer.model';
 import { LayerPermissionComponent } from './layerPermission/layerPermission.component';
 import { LayerNewComponent } from './layerNew/layerNew.component';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
@@ -18,26 +18,26 @@ import { TableDataSource, DefaultValidatorService, ValidatorService, TableElemen
 import { LayerValidatorService } from './layerValidator.service';
 
 @Component({
-    selector: 'layer-admin',
-    templateUrl: './layerAdmin.component.html',
-    providers: [UserService, Configuration, LayerAdminService, LayerPermissionService, UserPageLayerService, ServerService, SQLService, {provide: ValidatorService, useClass: LayerValidatorService}],
-    styleUrls: ['./layerAdmin.component.scss']
+    selector: 'layer',
+    templateUrl: './layer.component.html',
+    providers: [UserService, Configuration, LayerService, LayerPermissionService, UserPageLayerService, ServerService, SQLService, {provide: ValidatorService, useClass: LayerValidatorService}],
+    styleUrls: ['./layer.component.scss']
 })
 
-export class LayerAdminComponent implements OnInit {
+export class LayerComponent implements OnInit {
 
-    //objCode refers to the admin menu tab the user is on, so the openConfDel method knows what to interpolate based on what it's deleting
+    //objCode refers to the  menu tab the user is on, so the openConfDel method knows what to interpolate based on what it's deleting
     private objCode: number = 2;
     private token: string;
     private userID: number;
 
-    private layerAdmins: LayerAdmin[];
+    private layers: Layer[];
     private servers: Server[];
 
     private layerColumns = ['layerID', 'name', 'identity', 'service', 'server', 'description', 'format', 'type', 'geometry', 'actionsColumn'];
-    private dataSource: TableDataSource<LayerAdmin>;
+    private dataSource: TableDataSource<Layer>;
 
-    constructor(private layerValidator: ValidatorService, private layerAdminService: LayerAdminService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {
+    constructor(private layerValidator: ValidatorService, private layerService: LayerService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser.token;
         this.userID = currentUser.userID;
@@ -50,11 +50,11 @@ export class LayerAdminComponent implements OnInit {
     }
 
     private getLayerItems(): void {
-        this.layerAdminService
+        this.layerService
             .GetAll()
-            .subscribe((layers: LayerAdmin[]) => {
-                this.layerAdmins = layers;
-                this.dataSource = new TableDataSource<LayerAdmin>(layers, LayerAdmin, this.layerValidator);
+            .subscribe((layers: Layer[]) => {
+                this.layers = layers;
+                this.dataSource = new TableDataSource<Layer>(layers, Layer, this.layerValidator);
             });
     }
 
@@ -86,7 +86,7 @@ export class LayerAdminComponent implements OnInit {
         dialogRef.componentInstance.layerName = layername;
     }
 
-    private confirmDelete(layer: LayerAdmin): void {
+    private confirmDelete(layer: Layer): void {
         const dialogRef = this.dialog.open(ConfirmDeleteComponent);
         dialogRef.componentInstance.objCode = this.objCode;
         dialogRef.componentInstance.objID = layer.ID;
@@ -100,8 +100,8 @@ export class LayerAdminComponent implements OnInit {
         });
     }
 
-    private updateLayer(layer: LayerAdmin): void {
-        this.layerAdminService
+    private updateLayer(layer: Layer): void {
+        this.layerService
             .Update(layer)
             .subscribe(() => {
                 this.getLayerItems();
@@ -135,9 +135,9 @@ export class LayerAdminComponent implements OnInit {
     }
 
     private deleteLayer(layerID: number): void {
-        this.layerAdminService
+        this.layerService
             .GetSingle(layerID)
-            .subscribe((result: LayerAdmin) => {
+            .subscribe((result: Layer) => {
                 if (result.layerType=='MyCube') {
                     console.log('removing MyCube')
                     this.sqlservice.deleteTable(result.ID)
@@ -147,7 +147,7 @@ export class LayerAdminComponent implements OnInit {
                 }
             });
 
-        this.layerAdminService
+        this.layerService
             .Delete(layerID)
                 .subscribe((res) => {
                     console.log(res)
@@ -160,7 +160,7 @@ export class LayerAdminComponent implements OnInit {
     //To be expanded to sort layers on display via html button press.
     private sortLayers(code: string): void {
         let indexList: Array<number> = [];
-        let list = this.layerAdmins;
+        let list = this.layers;
         let temp: Array<any> = [];
 
         switch (code) {
@@ -187,7 +187,7 @@ export class LayerAdminComponent implements OnInit {
 
     private orderAZ(): void {
         let indexList: Array<number> = [];
-        let list, temp = this.layerAdmins;
+        let list, temp = this.layers;
         for (let i=0; i<list.length; i++) {
             temp[i] = list[i].layerName;
         }

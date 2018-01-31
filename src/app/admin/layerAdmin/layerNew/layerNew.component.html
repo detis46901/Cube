@@ -14,11 +14,11 @@
         <!--Row 1-->
         <div class="row" style="width:100%">
             <mat-form-field id="nameBlock">
-                <input matInput id="newlayername" name="newlayername" value="{{layerName}}" required [(ngModel)]="newLayerAdmin.layerName" placeholder="Name">
+                <input matInput id="newlayername" name="newlayername" value="{{layerName}}" required [(ngModel)]="newLayer.layerName" placeholder="Name">
             </mat-form-field>
             
             <mat-form-field id="descBlock">
-                <input matInput id="newlayerdescription" name="newlayerdescription" [(ngModel)]="newLayerAdmin.layerDescription" placeholder="Description">
+                <input matInput id="newlayerdescription" name="newlayerdescription" [(ngModel)]="newLayer.layerDescription" placeholder="Description">
             </mat-form-field>      
         </div>
         <br>
@@ -26,13 +26,13 @@
         <!--Row 2-->
         <div class="row" style="width:100%">
             <mat-form-field id="idBlock">  
-                <input matInput *ngIf="layerServer == null" id="newlayerident" name="newlayerident" [(ngModel)]="newLayerAdmin.layerIdent" placeholder="Identity">
+                <input matInput *ngIf="layerServer == null" id="newlayerident" name="newlayerident" [(ngModel)]="newLayer.layerIdent" placeholder="Identity">
                 <input matInput *ngIf="layerServer != null" id="newlayerident2" value="{{layerIdent}}" readonly placeholder="Identity">
             </mat-form-field>
 
             <!--Bug: choices are not working. mat-form-field is probably going to need to be split. -11/24/17-->
             <mat-form-field id="typeBlock">
-                <mat-select *ngIf="layerType == null" id="newlayertype" value="{{layerType}}" name="newlayertype" [(ngModel)]="newLayerAdmin.layerType" required placeholder="Layer Source Type">
+                <mat-select *ngIf="layerType == null" id="newlayertype" value="{{layerType}}" name="newlayertype" [(ngModel)]="newLayer.layerType" required placeholder="Layer Source Type">
                     <mat-option value="PostGIS">PostGIS</mat-option>
                     <mat-option value="MapServer">MapServer</mat-option>
                     <mat-option value="WMS">WMS</mat-option>
@@ -48,12 +48,12 @@
         <!--Row 3-->
         <div class="row" style="width:100%">
             <mat-form-field id="serviceBlock"> 
-                <input matInput *ngIf="layerServer == null" id="newlayerservice" name="newlayerservice" [(ngModel)]="newLayerAdmin.layerService" placeholder="Service">
+                <input matInput *ngIf="layerServer == null" id="newlayerservice" name="newlayerservice" [(ngModel)]="newLayer.layerService" placeholder="Service">
                 <input matInput *ngIf="layerServer != null" id="newlayerident2" value="{{layerService}}" readonly placeholder="Service">
             </mat-form-field>
 
             <mat-form-field id="geomBlock">
-                <mat-select id="newlayergeom" name="newlayergeom" [(ngModel)]="newLayerAdmin.layerGeom" required placeholder="Geometry">
+                <mat-select id="newlayergeom" name="newlayergeom" [(ngModel)]="newLayer.layerGeom" required placeholder="Geometry">
                     <mat-option value="Point">Point</mat-option>
                     <mat-option value="Polyline">Polyline</mat-option>
                     <mat-option value="Polygon">Polygon</mat-option>
@@ -66,7 +66,7 @@
         <!--Row 4-->
         <div class="row" style="width:100%">
             <mat-form-field id="servBlock">
-                <mat-select *ngIf="layerServer == null" id="newLayerServer" name="newLayerServer" [(ngModel)]="newLayerAdmin.serverID" required placeholder="Server">
+                <mat-select *ngIf="layerServer == null" id="newLayerServer" name="newLayerServer" [(ngModel)]="newLayer.serverID" required placeholder="Server">
                     <mat-option [value]="server.ID" *ngFor="let server of servers">
                         {{server.serverName}}
                     </mat-option>
@@ -75,7 +75,7 @@
             </mat-form-field>
 
             <mat-form-field id="formBlock">
-                <mat-select *ngIf="layerFormat == null" id="newLayerFormat" name="newLayerFormat" [(ngModel)]="newLayerAdmin.layerFormat" required placeholder="Format">
+                <mat-select *ngIf="layerFormat == null" id="newLayerFormat" name="newLayerFormat" [(ngModel)]="newLayer.layerFormat" required placeholder="Format">
                     <mat-option value="image/png">image/png</mat-option>
                     <mat-option value="image/jpg">image/jpg</mat-option>
                     <mat-option value="image/jpeg">image/jpeg</mat-option>
@@ -88,5 +88,5 @@
 
 <mat-dialog-actions>
     <button mat-dialog-close id="newLayerClose">Close</button>
-    <button mat-button id="newLayerAdd" (click)="addLayer(newLayerAdmin)" [disabled]="!f.valid">Add Layer</button>
+    <button mat-button id="newLayerAdd" (click)="addLayer(newLayer)" [disabled]="!f.valid">Add Layer</button>
 </mat-dialog-actions>

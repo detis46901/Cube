@@ -41,6 +41,7 @@ export class PageConfigComponent implements OnInit {
             .GetPageLayers(this.pageID)
             .subscribe((data: UserPageLayer[]) => {
                 this.userPageLayers = data;
+                console.log(data)
             });
     }
 
@@ -56,7 +57,7 @@ export class PageConfigComponent implements OnInit {
         this.newUserPageLayer.userPageID = this.pageID ;
         this.newUserPageLayer.userID = this.userID ;
         this.newUserPageLayer.layerON = true;
-        this.newUserPageLayer.layerAdminID = newUserPageLayer.layerAdminID;
+        this.newUserPageLayer.layerID = newUserPageLayer.layerID;
 
         this.userPageLayerService
             //.Add(this.newUserPageLayer, this.token)

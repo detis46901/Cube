@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { UserService } from '../../../../_services/_user.service';
 import { User } from '../../../../_models/user.model';
 import { Configuration } from '../../../../_api/api.constants';
-import { LayerAdminService } from '../../../../_services/_layerAdmin.service';
+import { LayerService } from '../../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { LayerPermission } from '../../../../_models/layer.model';
 import { MatDialog, MatDialogRef } from '@angular/material';
@@ -11,7 +11,7 @@ import { MatDialog, MatDialogRef } from '@angular/material';
     selector: 'layer-permission',
     templateUrl: './layerPermission.component.html',
     styleUrls: ['./layerPermission.component.scss'],
-    providers: [UserService, Configuration, LayerAdminService, LayerPermissionService]
+    providers: [UserService, Configuration, LayerService, LayerPermissionService]
 })
 
 export class LayerPermissionComponent implements OnInit {
@@ -86,13 +86,13 @@ export class LayerPermissionComponent implements OnInit {
         this.newLayerPermission.grantedBy = null;
         this.newLayerPermission.comments = null;
         this.newLayerPermission.userID = null;
-        this.newLayerPermission.layerAdminID = null;
+        this.newLayerPermission.layerID = null;
         this.newLayerPermission.groupID = null;
     }
 
     private addLayerPermission(newLayerPermission: LayerPermission): void {
         this.newLayerPermission = newLayerPermission;
-        this.newLayerPermission.layerAdminID = this.layerID;
+        this.newLayerPermission.layerID = this.layerID;
         this.newLayerPermission.grantedBy = this.userID;
         
         this.layerPermissionService

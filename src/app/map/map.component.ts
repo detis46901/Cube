@@ -7,11 +7,11 @@ import { geoJSONService } from './services/geoJSON.service'
 import { NavigatorComponent } from './navigator/navigator.component';
 import { PMMarkerComponent } from './marker/PMmarker.component';
 import { LayerPermissionService } from '../../_services/_layerPermission.service';
-import { LayerAdminService } from '../../_services/_layerAdmin.service';
+import { LayerService } from '../../_services/_layer.service';
 import { UserPageService } from '../../_services/_userPage.service';
 import { MyCubeService } from './services/mycube.service'
 import { ServerService } from '../../_services/_server.service';
-import { LayerPermission, LayerAdmin, UserPageLayer, MyCubeField, MyCubeConfig } from '../../_models/layer.model';
+import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig } from '../../_models/layer.model';
 import { UserPage } from '../../_models/user.model';
 import { UserPageLayerService } from '../../_services/_userPageLayer.service';
 import { Observable } from 'rxjs/Observable';
@@ -44,7 +44,7 @@ export class MapComponent {
     private currPage: any = ''; //Could be "none"
     private noLayers: boolean;
     
-    constructor(private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private layerPermissionService: LayerPermissionService, private layerAdminService: LayerAdminService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog, private messageService:MessageService) {
+    constructor(private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private layerPermissionService: LayerPermissionService, private layerService: LayerService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog, private messageService:MessageService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -67,8 +67,9 @@ export class MapComponent {
             })    
          )}
 
-    getDefaultPage(): Promise<any> {   
-        let promise = new Promise ((resolve, reject) => {
+    getDefaultPage(): Promise<any> {
+        console.log("Getting default Page")   
+        let promise = new Promise ((resolve, reject) => { 
         this.userPageService
             .GetActiveByUserID(this.userID)
             .subscribe((data: UserPage[]) => {

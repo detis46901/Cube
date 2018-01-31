@@ -14,11 +14,11 @@
         <!--Row 1-->
         <div class="row">
             <mat-form-field id="myCube_nameBlock">
-                <input matInput id="myCube_newlayername" name="myCube_newlayername" value="{{layerName}}" required [(ngModel)]="newLayerAdmin.layerName" placeholder="Name">
+                <input matInput id="myCube_newlayername" name="myCube_newlayername" value="{{layerName}}" required [(ngModel)]="newLayer.layerName" placeholder="Name">
             </mat-form-field>
             
             <mat-form-field id="myCube_descBlock">
-                <input matInput id="myCube_newlayerdescription" name="myCube_newlayerdescription" [(ngModel)]="newLayerAdmin.layerDescription" placeholder="Description">
+                <input matInput id="myCube_newlayerdescription" name="myCube_newlayerdescription" [(ngModel)]="newLayer.layerDescription" placeholder="Description">
             </mat-form-field>
         </div>
             
@@ -60,5 +60,5 @@
 
 <mat-dialog-actions style="float:right" id="myCube_layerNewFooter">
     <button mat-dialog-close>Close</button>
-    <button mat-button [disabled]="!f.valid" (click)="addLayer(newLayerAdmin)">Add Layer</button>
+    <button mat-button [disabled]="!f.valid" (click)="addLayer(newLayer)">Add Layer</button>
 </mat-dialog-actions>

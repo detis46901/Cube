@@ -179,7 +179,7 @@ export class ServerComponent implements OnInit {
         const dialogRef = this.dialog.open(LayerNewComponent, {height:'450px', width:'500px'});
         dialogRef.componentInstance.layerName = name;
         dialogRef.componentInstance.layerIdent = (String)(index);
-        dialogRef.componentInstance.layerService = this.path;
+        dialogRef.componentInstance.layerServiceField = this.path;
         dialogRef.componentInstance.layerType = this.serviceArray[index]['type'];
         dialogRef.componentInstance.layerServer = this.currServer;
     }
@@ -188,7 +188,7 @@ export class ServerComponent implements OnInit {
         const dialogRef = this.dialog.open(LayerNewComponent, {height:'360px', width:'500px'});
         dialogRef.componentInstance.layerName = name;
         dialogRef.componentInstance.layerIdent = name;
-        dialogRef.componentInstance.layerService = "None";
+        dialogRef.componentInstance.layerServiceField = "None";
         dialogRef.componentInstance.layerType = "Geoserver";
         dialogRef.componentInstance.layerServer = this.currServer;
     }

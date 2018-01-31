@@ -1,5 +1,5 @@
 import { Server } from './server.model'
-export class LayerAdmin {
+export class Layer {
     ID: number;
     layerName: string;
     layerType: string;
@@ -21,11 +21,11 @@ export class LayerPermission {
     grantedBy?: number;
     comments?: string;
     userID: number;
-    layerAdminID: number;
+    layerID: number;
     groupID: number;
 }
 
-export class LayerClass extends LayerAdmin {
+export class LayerClass extends Layer {
     on: boolean;
 }
 
@@ -36,8 +36,8 @@ export class UserPageLayer {
     updatedAt: string;
     userID: number;    
     userPageID: number;
-    layerAdminID: number;
-    layer_admin: LayerAdmin;
+    layerID: number;
+    layer: Layer;
     layerPermissions = new LayerPermission;
     serverID: number;
     layerShown: boolean;

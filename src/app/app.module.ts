@@ -37,7 +37,7 @@ import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminNavComponent } from './admin/adminNav/adminNav.component';
 import { SettingsNavComponent } from './settings/settingsnav/settingsnav.component';
-import { LayerAdminComponent} from './admin/layerAdmin/layerAdmin.component';
+import { LayerComponent} from './admin/layerAdmin/layer.component';
 import { LayerPermissionComponent} from './admin/layerAdmin/layerPermission/layerPermission.component';
 import { PageComponent} from './admin/user/page/page.component';
 import { PageConfigComponent} from './admin/user/pageConfig/pageConfig.component';
@@ -73,7 +73,7 @@ import { GroupComponent } from './admin/group/group.component';
 import { UserService } from '../_services/_user.service';
 import { GroupService } from '../_services/_group.service';
 import { GroupMemberService } from '../_services/_groupMember.service';
-import { LayerAdminService } from '../_services/_layerAdmin.service';
+import { LayerService } from '../_services/_layer.service';
 import { LayerPermissionService } from '../_services/_layerPermission.service';
 import { UserPageLayerService } from '../_services/_userPageLayer.service';
 import { UserPageService } from '../_services/_userPage.service';
@@ -112,7 +112,7 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
         AdminNavComponent,
         SettingsNavComponent,
         GroupComponent,
-        LayerAdminComponent,
+        LayerComponent,
         UserComponent,
         AdminPageComponent,
         SettingsComponent,
@@ -202,7 +202,7 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
         UserService, 
         GroupService,
         GroupMemberService,
-        LayerAdminService, 
+        LayerService, 
         LayerPermissionService,
         SQLService,
         UserPageLayerService,

@@ -1,11 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { UserService } from '../../../../_services/_user.service';
 import { Configuration } from '../../../../_api/api.constants';
-import { LayerAdminService } from '../../../../_services/_layerAdmin.service';
+import { LayerService } from '../../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { ServerService } from '../../../../_services/_server.service';
 import { SQLService } from '../../../../_services/sql.service';
-import { LayerAdmin, MyCubeField } from '../../../../_models/layer.model';
+import { Layer, MyCubeField } from '../../../../_models/layer.model';
 import { Server } from '../../../../_models/server.model';
 import { LayerPermissionComponent } from '../layerPermission/layerPermission.component';
 import { MatDialog } from '@angular/material';
@@ -14,11 +14,11 @@ import { MatDialog } from '@angular/material';
     selector: 'layer-new',
     templateUrl: './newMyCube.component.html',
     styleUrls: ['./newMyCube.component.scss'],
-    providers: [UserService, Configuration, LayerAdminService, LayerPermissionService, ServerService],
+    providers: [UserService, Configuration, LayerService, LayerPermissionService, ServerService],
 })
 
 export class newMyCubeComponent implements OnInit {
-    @Input() layerService: string;
+    @Input() layerServiceField: string;
     @Input() layerIdent: string;
     @Input() layerServer: Server;
     @Input() layerFormat: string;
@@ -30,27 +30,27 @@ export class newMyCubeComponent implements OnInit {
     //Set to true in ngOnInit() if inputs are read from the server screen, thus determines if the server screen is calling this dialog
     
 
-    //if error in submission, set this to a new object (= new LayerAdmin)
-    private newLayerAdmin = new LayerAdmin;
+    //if error in submission, set this to a new object (= new Layer)
+    private newLayer = new Layer;
     private newLayerServer = new Server;
     private servers: Array<Server>;
-    private layerAdmin = new LayerAdmin;
+    private layer = new Layer;
     public newLayerField1 = new MyCubeField
     public newLayerFields: Array<MyCubeField> = [];
     
-    constructor(private layerAdminService: LayerAdminService, private dialog: MatDialog, private serverService: ServerService, private sqlservice: SQLService) {
+    constructor(private layerservice: LayerService, private dialog: MatDialog, private serverService: ServerService, private sqlservice: SQLService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {
-        this.layerAdmin.layerFormat = "None"
-        this.layerAdmin.layerIdent = "None"
-        this.layerAdmin.layerGeom = "None"
-        this.layerAdmin.layerService = "None"
-        this.layerAdmin.layerType = "MyCube"
-        this.layerAdmin.serverID = 0
+        this.layer.layerFormat = "None"
+        this.layer.layerIdent = "None"
+        this.layer.layerGeom = "None"
+        this.layer.layerService = "None"
+        this.layer.layerType = "MyCube"
+        this.layer.serverID = 0
         // this.newLayerField1.field = "Field 1"
         // this.newLayerField1.type = "type 1"
        
@@ -79,13 +79,13 @@ export class newMyCubeComponent implements OnInit {
             console.log(this.newLayerFields)
     }
 
-    private addLayer(newlayer: LayerAdmin): void {
-        this.layerAdmin.layerName = newlayer.layerName
-        this.layerAdmin.layerDescription = newlayer.layerDescription
+    private addLayer(newlayer: Layer): void {
+        this.layer.layerName = newlayer.layerName
+        this.layer.layerDescription = newlayer.layerDescription
         console.log("Creating MyCube")
-        this.layerAdminService
-            .Add(this.layerAdmin)
-            .subscribe((result: LayerAdmin) => {
+        this.layerservice
+            .Add(this.layer)
+            .subscribe((result: Layer) => {
                 console.log('result=' + JSON.stringify(result))
                 this.createTable(result.ID);
             });

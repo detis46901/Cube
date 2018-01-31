@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { UserService } from '../../../../_services/_user.service';
 import { Configuration } from '../../../../_api/api.constants';
-import { LayerAdminService } from '../../../../_services/_layerAdmin.service';
+import { LayerService } from '../../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { ServerService } from '../../../../_services/_server.service';
-import { LayerAdmin } from '../../../../_models/layer.model';
+import { Layer } from '../../../../_models/layer.model';
 import { Server } from '../../../../_models/server.model';
 import { LayerPermission } from '../../../../_models/layer.model';
 import { MatDialog } from '@angular/material';
@@ -13,11 +13,11 @@ import { MatDialog } from '@angular/material';
     selector: 'layer-new',
     templateUrl: './layerNew.component.html',
     styleUrls: ['./layerNew.component.scss'],
-    providers: [UserService, Configuration, LayerAdminService, LayerPermissionService, ServerService],
+    providers: [UserService, Configuration, LayerService, LayerPermissionService, ServerService],
 })
 
 export class LayerNewComponent implements OnInit {
-    @Input() layerService: string;
+    @Input() layerServiceField: string;
     @Input() layerIdent: string;
     @Input() layerServer: Server;
     @Input() layerFormat: string;
@@ -29,13 +29,13 @@ export class LayerNewComponent implements OnInit {
     //Set to true in ngOnInit() if inputs are read from the server screen, thus determines if the server screen is calling this dialog
     private serverCalled: boolean = false;
 
-    //if error in submission, set this to a new object (= new LayerAdmin)
-    private newLayerAdmin = new LayerAdmin;
+    //if error in submission, set this to a new object (= new Layer)
+    private newLayer = new Layer;
     private newLayerServer = new Server;
     private servers: Array<Server>;
-    private layerAdmin = new LayerAdmin;
+    private layer = new Layer;
 
-    constructor(private layerAdminService: LayerAdminService, private layerPermissionService: LayerPermissionService, private dialog: MatDialog, private serverService: ServerService) {
+    constructor(private layerservice: LayerService, private layerPermissionService: LayerPermissionService, private dialog: MatDialog, private serverService: ServerService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -46,6 +46,7 @@ export class LayerNewComponent implements OnInit {
         if (this.layerIdent!=null && this.layerType!=null && this.layerServer!=null) {
             this.serverCalled = true;
         }
+        console.log (this.userID)
     }
 
     private getServers(): void {
@@ -56,11 +57,11 @@ export class LayerNewComponent implements OnInit {
             });
     }
 
-    private addLayer(newlayer: LayerAdmin): void {
-        this.layerAdmin = newlayer;
-        let layerPerm: LayerPermission;
+    private addLayer(newlayer: Layer): void {
+        this.layer = newlayer;
+        let layerPerm = new LayerPermission;
         layerPerm.userID = this.userID;
-        layerPerm.layerAdminID = newlayer.ID;
+        layerPerm.layerID = newlayer.ID;
         layerPerm.groupID = null;
         layerPerm.edit = true;
         layerPerm.delete = true;
@@ -70,16 +71,16 @@ export class LayerNewComponent implements OnInit {
         layerPerm.comments = null;
 
         if (this.serverCalled) {
-            this.layerAdmin.serverID = this.layerServer.ID;
-            this.layerAdmin.layerService = this.layerService;
-            this.layerAdmin.layerIdent = this.layerIdent;
-            this.layerAdmin.layerType = this.layerType;
-            //this.layerAdmin.layerFormat = this.layerFormat;
+            this.layer.serverID = this.layerServer.ID;
+            this.layer.layerService = this.layerServiceField;
+            this.layer.layerIdent = this.layerIdent;
+            this.layer.layerType = this.layerType;
+            //this.layer.layerFormat = this.layerFormat;
         }
         //console.log(this.token)
-        this.layerAdminService
-            //.Add(this.layerAdmin, this.token)
-            .Add(this.layerAdmin)
+        this.layerservice
+            //.Add(this.layer, this.token)
+            .Add(this.layer)
             .subscribe(result => {
                 console.log('result=' + JSON.stringify(result))
             });
