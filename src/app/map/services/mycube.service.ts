@@ -13,7 +13,7 @@ let markerData: string;
 @Injectable()
 
 export class MyCubeService extends SQLService{
-   private subject = new Subject<any>();
+   private messageSubject = new Subject<any>();
    private mycubesubject = new Subject<MyCubeField[]>();
    private mycubeconfig = new Subject<MyCubeConfig>();
    private mycubecomment = new Subject<MyCubeComment[]>();
@@ -47,15 +47,15 @@ export class MyCubeService extends SQLService{
     sendMessage(message: string) {
         console.log("Arrived at sendMessage")
         console.log(message)
-        this.subject.next({text:message});
+        this.messageSubject.next({text:message});
     }
 
     clearMessage() {
-        this.subject.next();
+        this.messageSubject.next();
     }
 
     getMessage(): Observable<any> {
-        return this.subject.asObservable();
+        return this.messageSubject.asObservable();
     }
 
     sendMyCubeData(table: number, id: string) {

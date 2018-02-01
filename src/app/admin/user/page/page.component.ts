@@ -40,11 +40,13 @@ export class PageComponent implements OnInit {
         this.userPageService
             .GetSome(this.userID)
             .subscribe((data:UserPage[]) => {
+                console.log(data)
                 this.setupPages(data);
             });
     }
     
-    private setupPages(userPages: Array<UserPage>): void {    
+    private setupPages(userPages: Array<UserPage>): void {
+        console.log(userPages)  
         for (let userPage of userPages) {
             this.userPages[userPage.pageOrder] = userPage
 
@@ -53,6 +55,7 @@ export class PageComponent implements OnInit {
             }
         }
         for(let userPage of this.userPages) {
+            console.log(this.userPages)
             if(userPage == undefined) {
                 alert("Page list is incomplete. Error unhandled.")
             }

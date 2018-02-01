@@ -78,7 +78,6 @@ export class geoJSONService {
  
     public updateGeometry(table: number, json2: JSON): Observable<any> {
         let id = JSON.stringify(json2['id'])
-        console.log (id)
         console.log(this.actionUrl + 'updateGeometry?table=' + table + '&geometry="' + JSON.stringify(json2['geometry']) + '"&id=' + id, this.options)
         return this._http.get(this.actionUrl + 'updateGeometry?table=' + table + '&geometry=' + JSON.stringify(json2['geometry']) + '&id=' + id, this.options)
         .map((response: Response) => <any>response.json())

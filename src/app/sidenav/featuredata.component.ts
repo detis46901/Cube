@@ -4,8 +4,10 @@ import { Subscription } from 'rxjs/Subscription';
 import { SideNavService } from "../../_services/sidenav.service"
 import { MyCubeField, MyCubeConfig, MyCubeComment }from "../../_models/layer.model"
 import { SQLService } from "../../_services/sql.service"
+import { MyCubeService } from "../map/services/mycube.service"
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import {FormControl} from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @Component({
     moduleId: module.id,
@@ -19,12 +21,15 @@ export class FeatureDataComponent{
     public videoUrl: SafeResourceUrl;
     public serializedDate = new FormControl((new Date()).toISOString());
     public newComment: string;
+    public userID: number;
 
-    constructor(private sideNavService: SideNavService, private sqlservice: SQLService){
+    constructor(private sideNavService: SideNavService, private sqlservice: SQLService, private mycubeservice: MyCubeService){
          // subscribe to map component messages
+         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+         this.userID = currentUser && currentUser.userID;
     }
 
-    
+    @Input() message: any
     @Input() myCubeComments: MyCubeComment[]
     @Input() myCubeData: MyCubeField[];
     @Input() myCubeConfig: MyCubeConfig;
@@ -32,6 +37,7 @@ export class FeatureDataComponent{
     
    
     ngOnInit() {
+        console.log(this.myCubeComments)
     }
 
     public hideMenu() {
@@ -60,6 +66,9 @@ export class FeatureDataComponent{
         this.myCubeData = null
     }
 
+    private clearMessage(): void {
+        this.message = null
+    }
     private updateMyCube(mycube: MyCubeField): void {
         if (mycube.type == "date") {
             mycube.value = mycube.value.toJSON()
@@ -74,8 +83,13 @@ export class FeatureDataComponent{
 
     private addMyCubeComment() {
         console.log("Adding MyCube Comment " + this.newComment)
+        console.log("feature id is= " + this.myCubeData[0].value)
         this.sqlservice
-            .addComment(this.myCubeConfig.table, this.myCubeData[0].value, this.newComment, 1)
-            .subscribe()
+            .addComment(this.myCubeConfig.table, this.myCubeData[0].value, this.newComment, this.userID)
+            .subscribe((result) => {
+                console.log(result)
+            })
+        this.mycubeservice.sendMyCubeData(this.myCubeConfig.table, this.myCubeData[0].value)
+        this.newComment = ""
     }
 }

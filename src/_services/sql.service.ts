@@ -75,9 +75,9 @@ export class SQLService {
         .catch(this.handleError);
     }
 
-    public addComment = (table: number, id: string, comment: string, userid: number): Observable<any> => {
-        console.log(this.actionUrl + 'addcomment?table=' + table + '&id=' + id + '&comment=' + comment)
-        return this._http.get(this.actionUrl + 'addcomment?table=' + table + '&id=' + id + '&comment=' + comment)
+    public addComment = (table: number, featureID: number, comment: string, userID: number): Observable<any> => {
+        console.log(this.actionUrl + 'addcomment?table=' + table + '&featureID=' + featureID + '&comment=' + comment + '&userID=' + userID)
+        return this._http.get(this.actionUrl + 'addcomment?table=' + table + '&featureID=' + featureID + '&comment=' + comment + '&userID=' + userID)
         .map((response: Response) => <any>response.json())
         .catch(this.handleError);
     }

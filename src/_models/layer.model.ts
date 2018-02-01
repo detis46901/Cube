@@ -62,4 +62,7 @@ export class MyCubeComment {
     comment: string;
     geom: string;
     featureID: number;
+    createdat: Date;
+    firstName: string;
+    lastName: string;
 }

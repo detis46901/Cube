@@ -196,6 +196,7 @@ export class MapService {
     private setCurrentLayer(layer: UserPageLayer, mapconfig: MapConfig): void {
         this.mapConfig = mapconfig
         this.mapConfig.editmode = false
+        this.mapConfig.map.removeInteraction(this.modify)
         this.mapConfig.currentLayer = layer
         this.myCubeService.clearMyCubeData() //cleans the selected myCube data off the screen
         if (this.mapConfig.selectedFeature) {this.mapConfig.selectedFeature.setStyle(null)}  //fixes a selected feature's style
@@ -216,7 +217,7 @@ export class MapService {
                         case ("MyCube"): { this.shown = true; break }
                         default: { this.shown = false }
                     }
-                    if (this.evkey) { ol.Observable.unByKey(this.evkey); console.log(this.evkey + " is unned in setCurrentLayer")}
+                    if (this.evkey) { ol.Observable.unByKey(this.evkey)}
                     if (this.modkey) { ol.Observable.unByKey(this.modkey)} //removes the previous modify even if there was one.
                     this.evkey = this.createClick(layer, index)
                     this.mapConfig.currentLayerName = x.layer.layerName;
@@ -296,7 +297,7 @@ export class MapService {
                                 this.mapConfig.selectedFeature = element
                                 let featurejson = new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(this.mapConfig.selectedFeature)
                                   this.geojsonservice.updateGeometry(layer.layer.ID, JSON.parse(featurejson))
-                                    .subscribe((data) => {console.log(data)})
+                                    .subscribe()
                             });
                 })
             } else {
@@ -305,7 +306,7 @@ export class MapService {
                 this.myCubeService.clearMyCubeData()
                 this.mapConfig.layers[layer.loadOrder-1].setStyle(this.mapstyles.current)
             }
-            this.mapConfig.selectedFeature.changed();
+            //this.mapConfig.selectedFeature.changed();
           });
     }
     private draw(mapconfig: MapConfig, featurety: any) {
@@ -331,11 +332,8 @@ export class MapService {
             
             this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
                 .subscribe((data) => {
-                    console.log(data)
-                    console.log(data[0].id)
                     e.feature.setId(data[0].id)
                     e.feature.setProperties(data[0])
-                    console.log(e.feature.getProperties())
                     this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder-1].addFeature(e.feature)})
             this.mapConfig.map.removeLayer(vector)
             this.mapConfig.map.changed()

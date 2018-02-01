@@ -28,6 +28,7 @@ import { MatRadioModule, MatIconModule, MatDialogModule, MatSelectModule, MatLis
          MatFormFieldModule, MatProgressSpinnerModule, MatToolbarModule, MatNativeDateModule } from '@angular/material';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatTooltipModule} from '@angular/material/tooltip'
 
 import 'hammerjs';
 
@@ -188,6 +189,7 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
         MatDatepickerModule,
         MatNativeDateModule,
         MatListModule,
+        MatTooltipModule
         //LeafletModule.forRoot(),
         //LeafletDrawModule.forRoot()
     ],

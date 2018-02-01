@@ -9,3 +9,25 @@ hr {
 #layerMarkup {
     font: 16px black;
 }
+
+.feature-data .mat-expansion-panel-header-title, 
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+  width: 254px;
+}
+
+.feature-data .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment-data .mat-expansion-panel-header-title, 
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+  width: 354px;
+}
+
+.comment-data .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}

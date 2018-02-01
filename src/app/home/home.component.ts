@@ -33,6 +33,7 @@ export class HomeComponent {
     private myCubeCommentSubscription: Subscription;
     private editSubscription: Subscription;
     private myCubeConfig: MyCubeConfig;
+    private messageSubscription: Subscription;
 
     constructor(private dataService: UserService, private sideNavService: SideNavService, private myCubeService: MyCubeService, private WFSservice: WFSService, private messageService: MessageService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -44,6 +45,7 @@ export class HomeComponent {
         this.myCubeSubscription = this.myCubeService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; this.message = null});
         this.myCubeCommentSubscription = this.myCubeService.getMyCubeComments().subscribe(myCubeComments => {this.myCubeComments = myCubeComments})
         this.editSubscription = this.myCubeService.getMyCubeConfig().subscribe(data => {this.myCubeConfig = data});
+        this.messageSubscription = this.myCubeService.getMessage().subscribe(data => this.message = data)
         console.log("this.message = " + this.message)
     }
 
