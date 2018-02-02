@@ -5,6 +5,7 @@ import { Group } from '../../../_models/group.model';
 import { GroupMember } from '../../../_models/groupMember.model';
 import { GroupService } from '../../../_services/_group.service';
 import { GroupMemberService } from '../../../_services/_groupMember.service'
+import { NewGroupComponent } from './newGroup/newGroup.component';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
 import { MatDialog, MatDialogRef, MatSelectionList } from '@angular/material';
 
@@ -73,6 +74,7 @@ export class GroupComponent implements OnInit {
             .Add(this.group)            
             .subscribe(() => {
                 this.getGroupItems();
+                this.getUserItems();
             });
     }
 
@@ -81,6 +83,7 @@ export class GroupComponent implements OnInit {
             .Update(group)
             .subscribe(() => {
                 this.getGroupItems();
+                this.getUserItems();
             });
     }
 
@@ -96,14 +99,6 @@ export class GroupComponent implements OnInit {
             }
             this.getGroupItems();
         });
-    }
-
-    private deleteGroup(groupID: number): void {
-        this.groupService
-            .Delete(groupID)
-            .subscribe((data:Group[]) => {
-                this.getGroupItems()
-            })
     }
 
     private selectUser(user: User): void {
@@ -138,7 +133,10 @@ export class GroupComponent implements OnInit {
                 if(assoc.groupID == group.ID) {
                     this.groupMemberService
                         .Delete(assoc.ID)
-                        .subscribe(() => this.getGroupItems());
+                        .subscribe(() => {
+                            this.getGroupItems();
+                            this.getUserItems();
+                        });
                 }
             }
         }
@@ -151,15 +149,43 @@ export class GroupComponent implements OnInit {
         
         this.groupMemberService
             .Add(groupMember)
-            .subscribe(() => this.getGroupItems());
+            .subscribe(() => {
+                this.getGroupItems();
+                this.getUserItems();
+            });
         
     }
 
     private confDelGroup(group: Group) {
-        console.log("open confirm delete dialog here")
+        const dialogRef = this.dialog.open(ConfirmDeleteComponent);
+        dialogRef.componentInstance.objCode = this.objCode;
+        dialogRef.componentInstance.objID = group.ID;
+        dialogRef.componentInstance.objName = group.name;
+
+        dialogRef
+            .afterClosed()
+            .subscribe(result => {
+                if (result == this.objCode) {
+                    this.deleteGroup(group.ID);
+                }
+            });
     }
 
-    private createGroup() {
-        console.log("open create group dialog here")
+    private deleteGroup(groupID): void {
+        this.groupService
+            .Delete(groupID)
+            .subscribe(() => {
+                this.getGroupItems();
+                this.getUserItems();
+            });
+    }
+
+    private openNewGroup() {
+        const dialogRef = this.dialog.open(NewGroupComponent, {height:'500px',width:'500px'});
+        dialogRef.afterClosed()
+            .subscribe(() => {
+                this.getGroupItems();
+                this.getUserItems();
+            });
     }
 }

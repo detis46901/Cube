@@ -1,0 +1,29 @@
+<div id="newGroupHeader" class="row">
+    <div class="col-sm-9">
+        <h4 mat-dialog-title>Create New Group</h4>
+    </div>
+    <div class="col-sm-1 col-sm-offset-2">
+        <button mat-dialog-close id="newGroupX" class="close" aria-label="Close">&times;</button>
+    </div>
+</div>
+
+<mat-dialog-content>
+    <form #f="ngForm">
+        <div class="row" style="width:100%">
+            <mat-form-field id="nameBlock">
+                <input matInput id="newGroupName" name="newGroupName" [(ngModel)]="newGroup.name" type="text" placeholder="Group Name" required>
+            </mat-form-field>
+        </div>
+        <br>
+        <div class="row" style="width:100%">
+            <mat-form-field id="descBlock">
+                <input matInput id="newGroupDesc" name="newGroupDesc" [(ngModel)]="newGroup.desc" type="text" placeholder="Description">
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-dialog-close id="newGroupClose">Close</button>
+    <button mat-button id="newGroupSub" (click)="addGroup(newGroup)" [disabled]="!f.valid">Submit</button>
+</mat-dialog-actions>

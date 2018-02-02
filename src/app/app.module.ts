@@ -90,7 +90,8 @@ import { WFSService } from './map/services/wfs.service';
 import { SideNavService } from '../_services/sidenav.service';
 import { MessageService } from '../_services/message.service';
 import { mapStyles } from '../app/map/models/map.model'
-import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
+import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
+import { NewGroupComponent } from './admin/group/newGroup/newGroup.component'
 
 
 
@@ -138,7 +139,8 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component'
         ServerNewComponent,
         ChangePasswordComponent,
         NewUserComponent,
-        ApiKeyComponent
+        ApiKeyComponent,
+        NewGroupComponent
     ],
 
     entryComponents: [

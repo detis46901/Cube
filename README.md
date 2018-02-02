@@ -11,7 +11,7 @@ The system is designed to use feature modules that will provide custom functions
 
 Notifications have system-wide availability. All modules have access to initiate a notification, which are consolidated, prioritized, and sorted in users’ inboxes.
 
-An important strength of this system is its ability to share almost anything seemlessly. Modules, layers, images, etc. can be shared from one user to another user or group depending on authorization, which will create a collaborative ecosystem for users to work with.
+An important strength of this system is its ability to share almost anything seamlessly. Modules, layers, images, etc. can be shared from one user to another user or group depending on authorization, which will create a collaborative ecosystem for users to work with.
 
 ### Technologies
 The front-end client application is built with Angular 5, and thus written in Typescript. The back-end API is written in Node server-side javascript, transpiled from Typescript using Gulp. PostgreSQL with the PostGIS add-on is used for data storage and some geographical functions. The client connects to the API via client HTTP requests that hit API endpoints. The API connects to PostgreSQL via the Sequelize library. Openlayers is the mapping library.
