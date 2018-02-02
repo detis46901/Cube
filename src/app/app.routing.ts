@@ -21,20 +21,20 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
 
 
 const appRoutes: Routes = [
-    //Login/Map
+    // Login/Map
     {path: 'login', component: LoginComponent},
     {path: 'logout', redirectTo: 'login'},
     {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
     {path: '', component: HomeComponent, canActivate: [AuthGuard]},
 
-    //Non-admin Settings
+    // Non-admin Settings
     {path: 'settings', component: SettingsComponent, children: [
         {path: 'userpages', component: UserPageComponent, outlet: 'settings'},
         {path: 'password', component: PasswordComponent, outlet: 'settings'},
         {path: 'apikey', component: ApiKeyComponent, outlet: 'settings'}
     ]},
 
-    //Admin Settings
+    // Admin Settings
     {path: 'admin', component: AdminComponent, canActivate: [AdminGuard], children: [
         {path: 'user', component: UserComponent, outlet: 'admin'},
         {path: 'group', component: GroupComponent, outlet: 'admin'},
@@ -46,9 +46,7 @@ const appRoutes: Routes = [
         {path: 'notification', component: NotificationComponent, outlet: 'admin'},
         {path: 'server', component: ServerComponent, outlet: 'admin'}
     ]},
-    
     // otherwise redirect to home
     {path: '**', redirectTo: ''}
 ];
- 
 export const Routing = RouterModule.forRoot(appRoutes);

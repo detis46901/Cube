@@ -77,7 +77,7 @@ export class SQLService {
 
     public addComment = (table: number, featureID: number, comment: string, userID: number): Observable<any> => {
         console.log(this.actionUrl + 'addcomment?table=' + table + '&featureID=' + featureID + '&comment=' + comment + '&userID=' + userID)
-        return this._http.get(this.actionUrl + 'addcomment?table=' + table + '&featureID=' + featureID + '&comment=' + comment + '&userID=' + userID)
+        return this._http.get(this.actionUrl + 'addcomment?table=' + table + '&featureID=' + featureID + '&comment=' + comment + '&userID=' + userID, this.options)
         .map((response: Response) => <any>response.json())
         .catch(this.handleError);
     }
