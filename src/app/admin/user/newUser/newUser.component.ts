@@ -58,10 +58,9 @@ export class NewUserComponent implements OnInit {
 
         if (errorFlag == false) {
             if (this.newUser.password == '' || this.newUser.password == null) {
-                this.newUser.password = Md5.hashStr('Monday01').toString();
+                this.newUser.password = 'Monday01';
             } else {
-                console.log(this.newUser.password)
-                this.newUser.password = Md5.hashStr(this.newUser.password).toString();
+                this.newUser.password = this.newUser.password;
             }
 
             this.userService

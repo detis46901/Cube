@@ -140,7 +140,6 @@ export class ServerComponent implements OnInit {
         this.displayFolders = true;
         this.serverService.getFolders(this.currServer, this.path, type, this.options)
             .subscribe((response: string) => {
-                console.log(response)
                 this.parseLayers(response);
             });
     }

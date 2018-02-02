@@ -27,10 +27,8 @@ export class NavigatorComponent {
 
     goto() {
         if (!this.address) { return; }
-        console.log(this.geocoder.geocode(this.address))
         this.geocoder.geocode(this.address)
         .subscribe(location => {
-            console.log(location.viewBounds)
             this.mapService.map.fitBounds(location.viewBounds);
             this.address = location.address;
         }, error => console.error(error));

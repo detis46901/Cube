@@ -45,8 +45,6 @@ export class MyCubeService extends SQLService{
     }
 
     sendMessage(message: string) {
-        console.log("Arrived at sendMessage")
-        console.log(message)
         this.messageSubject.next({text:message});
     }
 
@@ -59,27 +57,14 @@ export class MyCubeService extends SQLService{
     }
 
     sendMyCubeData(table: number, id: string) {
-        //console.log("Arrived at sendMyCubeData")
-        console.log(id)
-        let h: JSON[] = new Array();
-        let p: string;
-        let y = {};
-        let e: any[];
-        let q: MyCubeField[]
-        let t = "<h4>Feature Data</h4>";
-        let propList = new Array<string>()
-        //let properties = JSON.stringify(message).split(",");
-        //console.log(properties)
-        //properties.shift();
-        //console.log(properties[0].substring(1, properties[0].indexOf(":")-1))
         this.GetSchema(table)
             .subscribe((data: MyCubeField[]) => {
                 this.cubeData = data
-                console.log(data)
                 this.cubeData[0].value = id
                 this.cubeData[0].type = "id"
                 this.cubeData[1].type = "geom"
                 this.getsingle(table, id)
+
                 //the value of the geometry field will be undefined because it isn't sent in the geoJSON.
                 //  for(let i=0; i<this.cubeData.length; i++) {
                 //      propList.push(properties[i].substring(1, properties[i].indexOf(":")-1));
@@ -87,18 +72,14 @@ export class MyCubeService extends SQLService{
                 //      this.cubeData[i+1].value = message[propList[i]]
                 //      console.log(message[propList[i]])
                 //  }
-                // console.log(this.cubeData)                
-                
+                // console.log(this.cubeData)                  
             })
-            
-        //this.subject.next({text:this.cubeData[0].field})
-        
+        //this.subject.next({text:this.cubeData[0].field})    
     }
 
     getsingle(table, id) {
         this.GetSingle(table, id)
         .subscribe((sdata: JSON) => {
-            console.log(sdata[0][0])
             // for(let i=0; i<properties.length; i++) {
             //     console.log(JSON.stringify(sdata))
             //     propList.push(properties[i].substring(1, properties[i].indexOf(":")-1));
@@ -121,13 +102,12 @@ export class MyCubeService extends SQLService{
             //     console.log(sdata[0][z])
             //     this.cubeData[z].value = sdata[0][z]
             // }
-            console.log(this.cubeData)
         this.getComments(table, id)
-        .subscribe((cdata: any) =>
-         {console.log(cdata[0]);this.mycubesubject.next(this.cubeData);
-        this.mycubecomment.next(cdata[0])})
+            .subscribe((cdata: any) => {
+                console.log(cdata[0]);this.mycubesubject.next(this.cubeData);
+                this.mycubecomment.next(cdata[0])
+            })
         })
-
     }
 
     clearMyCubeData() {
@@ -145,10 +125,6 @@ export class MyCubeService extends SQLService{
     getMyCubeComments() {
         return this.mycubecomment.asObservable();
     }
-
-    // public setEdit(edit: boolean): void {
-    //     this.edit.next(edit);
-    // }
 
     public setMyCubeConfig(table: number, edit: boolean) {
         let mycubeconfig= new MyCubeConfig

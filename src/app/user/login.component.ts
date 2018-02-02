@@ -33,46 +33,27 @@ export class LoginComponent implements OnInit {
  
     login() {
         this.loading = true;
-        //this.model.password = Md5.hashStr(this.model.password).toString()
-        console.log(this.model)
         this.userService
         .login(this.model.username, this.model.password)
         .subscribe(res => {
-            //console.log(res.loginToken)
             if (res) {
                 this.token = res
-                console.log(res)
                 this.loading=false;
                 this.router.navigate(['/']);
             } else {
                 this.model.password="";
                 this.loading=false;
-                console.log(res)
             }
         })
-        // this.authenticationService.login(this.model.username, this.model.password)
-        //     .subscribe(result => {
-        //         if (result > 0 ) {
-        //             // login successful
-        //             console.log(result)
-        //             this.router.navigate(['/']); //may want to change this so it redirects to a url with the user's ID in it
-        //             this.loading=false;
-        //         } else {
-        //             // login failed
-        //             console.log(result)
-        //             this.model.password="";
-        //             this.error = 'Username or password is incorrect.';
-        //             this.loading = false;
-        //         }
-        //     });
     }
 
     getAllItems(userID): void {
          this.userService
             .GetSingle(userID)
-            .subscribe((data:User) => this.user = data,
-                error => console.log(error),
-                () => console.log(this.user.email));
+            .subscribe((data:User) => 
+                this.user = data,
+                error => console.error(error)
+            );
             
     }
 }

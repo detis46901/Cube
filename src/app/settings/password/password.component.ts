@@ -3,17 +3,15 @@ import { UserService } from '../../../_services/_user.service';
 import { Configuration } from '../../../_api/api.constants';
 import { Http, Headers, Response } from '@angular/http';
 import { User } from '../../../_models/user.model';
-import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
-  selector: 'password',
-  templateUrl: './password.component.html',
-  providers: [UserService, Configuration],
-  styleUrls: ['./password.component.scss'],
+    selector: 'password',
+    templateUrl: './password.component.html',
+    providers: [UserService, Configuration],
+    styleUrls: ['./password.component.scss'],
 })
 
 export class PasswordComponent implements OnInit{
-
     private oldPw: string = "";
     private newPw: string = "";
     private confPw: string = "";
@@ -33,31 +31,70 @@ export class PasswordComponent implements OnInit{
        this.getUserItems(this.userID);
     }
 
-    changePW() {
+    private changePW(): void {
+        if(!this.oldPw) {
+            if(!this.newPw) {
+                alert("Please enter a value for old password and new password.");
+                this.clearInputs();
+                return;
+            } else {
+                alert("Please enter a value for old password.");
+                this.clearInputs();
+                return;
+            }
+        } 
+        if(this.oldPw && !this.newPw) {
+            alert("Please enter a value for new password.");
+            this.clearInputs();
+            return;
+        }
+        if(this.oldPw && this.newPw && !this.confPw) {
+            alert("Please enter a value for confirm password.");
+            this.clearInputs();
+            return;
+        }
+        if(this.newPw.length < 8) {
+            alert("Please enter a password that is at least 8 characters long.")
+            this.clearInputs();
+            return;
+        }
         if(this.newPw == this.oldPw) {
-            console.log("New password matches old password.")
             alert("New password matches old password.")
-        } else if(this.newPw != this.confPw) {
-            console.log("Confirm password entry did not match new password entry.")
+            this.clearInputs();
+            return;
+        } 
+        if(this.newPw != this.confPw) {
             alert("Confirm password entry did not match new password entry.")
+            this.clearInputs();
+            return;
         } else {
-            console.log("userService.updatePassword initiated")
             this.userService.updatePassword(this.user, this.oldPw, this.newPw)
-            .subscribe()
+                .subscribe(() => {
+                    this.getUserItems(this.userID);
+                    alert("Password successfully changed.");
+                }, error => {
+                    alert("Incorrect password.")
+                })
         }
 
+        this.clearInputs();
+    }
+
+    private clearInputs(): void {
         this.oldPw = "";
         this.newPw = "";
         this.confPw = "";
+        this.getUserItems(this.userID);
     }
 
     //It would be wise to implement sending an email for password reset, or allowing a user to choose security questions
     getUserItems(userID): void {
         this.userService
         .GetSingle(userID)
-        .subscribe((data:User) => this.user = data,
-            error => console.log(error),
-            () => console.log(this.user.email));
+        .subscribe((data:User) => 
+            this.user = data,
+            error => console.error(error)
+        );
             
     }
 }

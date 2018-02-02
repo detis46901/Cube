@@ -34,12 +34,8 @@ export class SettingsComponent{
             .GetSingle(userid)
             .subscribe((data:User) => {
                 return this.user = data;
-            },
-            error => {
-                return console.log(error);
-            },
-            () => {
-                return console.log(this.user.email);
+            }, error => {
+                return console.error(error);
             });
             
     }

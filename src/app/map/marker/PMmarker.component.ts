@@ -123,7 +123,6 @@ var options = {
             }
         
         }
-        console.log(observer)
 
         //6/23/17 this probably belongs in the map component
         //Add geoJSON if none exists yet

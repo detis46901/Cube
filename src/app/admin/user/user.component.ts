@@ -68,25 +68,21 @@ export class UserComponent implements OnInit {
     private getUsers() {
         this.userService.GetAll()
         .subscribe((users: User[]) => {
-            //this.userList = users
-            console.log(users)
             this.dataSource = new TableDataSource<User>(users, User, this.userValidator);
-            console.log(this.dataSource.getRow(0))
         }); 
     }
     public getUserItems(): void {
         this.userService
             .GetAll()
-            .subscribe((data:User[]) => {
+            .subscribe((data: User[]) => {
                 this.users = data;
-                //userList = data;
             });
     }
 
     private getUserPageItems(): void {
         this.userPageService
             .GetAll()
-            .subscribe((data:UserPage[]) => {
+            .subscribe((data: UserPage[]) => {
                 this.userPages = data;
             });
     }
@@ -116,7 +112,6 @@ export class UserComponent implements OnInit {
         this.userService
             .GetSingle(userID)
             .subscribe(result => {
-                console.log(result);
                 this.user = result;
                 this.user.password = 'Monday01';
                 this.userService
@@ -144,7 +139,7 @@ export class UserComponent implements OnInit {
     }
 
     private openPages(userID: number, firstName: string, lastName: string): void {
-        let dialogRef = this.dialog.open(PageComponent);
+        const dialogRef = this.dialog.open(PageComponent);
         dialogRef.componentInstance.userID = userID;
         dialogRef.componentInstance.firstName = firstName;
         dialogRef.componentInstance.lastName = lastName;
@@ -210,6 +205,5 @@ export class UserComponent implements OnInit {
     private boo(row) {
         row.confirmEditCreate()
         row.editing = !row.editing;
-        console.log(row.editing)
     }
 }

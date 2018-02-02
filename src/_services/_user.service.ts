@@ -37,12 +37,11 @@ export class UserService extends ParentService {
     public updatePassword(user: User, oldPw: string, newPw: string) {
         return this._http.put(this.actionUrl + "updatePassword", {currUser: user, password: user.password, oldPassword: oldPw, newPassword: newPw}, this.options)
         .map((response) => {
-            console.log(response.json())
             if(response.ok) {
-                console.log("ok")
+                console.log("HTTP Response OK")
                 return response.json()
             } else {
-                console.log("not")
+                console.log("HTTP Response failed")
                 return false
             }
         })
@@ -53,13 +52,10 @@ export class UserService extends ParentService {
         .map((response) => {
             if(response.ok) {
                 var token = response.json().token
-                //console.log(token) correct
                 if (token) {//if(token.isValid())
                     this.token = token;
                     var userID = response.json() && response.json().userID;
                     var admin = response.json() && response.json().admin;
-                    console.log(response.json())
-                    console.log(userID)
 
                     // store username and jwt token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('currentUser', JSON.stringify({
@@ -67,35 +63,15 @@ export class UserService extends ParentService {
                         admin: admin, 
                         token: token
                     }));
-                    //return userID;
-                    console.log("here")
                     return token
                 } else {
                     // return false to indicate failed login
-                    console.log("failed")
+                    console.log("Failed login")
                     return 0;
                 }
             } else {
                 alert("Authentication error.")
             }
-                // login is successful if there's a jwt token in the response
-                // let token = response.json() && response.json().token;
-                // if (token) {
-                //     this.token = token;
-                //     let userID = response.json() && response.json().userid;
-                //     let admin = response.json() && response.json().admin;
-
-                //     // store username and jwt token in local storage to keep user logged in between page refreshes
-                //     localStorage.setItem('currentUser', JSON.stringify({
-                //         userid: userID, 
-                //         admin: admin, 
-                //         token: token
-                //     }));
-                //     return userID;
-                // } else {
-                //     // return false to indicate failed login
-                //     return 0;
-                // }
-            });
+        });
     }
 }

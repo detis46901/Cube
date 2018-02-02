@@ -62,13 +62,11 @@ export class MapComponent {
          .then(() => this.mapService.initMap(this.mapConfig)
             .then((mapConfig) => {
                 this.mapConfig = mapConfig  //Not sure if this is necessary.  Just in case.
-                console.log("setting Target")
                 mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
             })    
          )}
 
-    getDefaultPage(): Promise<any> {
-        console.log("Getting default Page")   
+    getDefaultPage(): Promise<any> {  
         let promise = new Promise ((resolve, reject) => { 
         this.userPageService
             .GetActiveByUserID(this.userID)
@@ -113,7 +111,6 @@ export class MapComponent {
     }
         
     private cleanPage(): void {
-        console.log("layer=" + this.mapConfig.layers)
         for (let k=1; k< this.mapConfig.layers.length; k) {
             console.log(k + " of " + this.mapConfig.layers.length)
             this.mapConfig.map.removeLayer(this.mapConfig.layers[k])

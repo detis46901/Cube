@@ -36,9 +36,7 @@ export class FeatureDataComponent{
     @Input() canEdit: boolean;
     
    
-    ngOnInit() {
-        console.log(this.myCubeComments)
-    }
+    ngOnInit() {}
 
     public hideMenu() {
         this.sideNavService.toggleHidden();
@@ -86,9 +84,7 @@ export class FeatureDataComponent{
         console.log("feature id is= " + this.myCubeData[0].value)
         this.sqlservice
             .addComment(this.myCubeConfig.table, this.myCubeData[0].value, this.newComment, this.userID)
-            .subscribe((result) => {
-                console.log(result)
-            })
+            .subscribe()
         this.mycubeservice.sendMyCubeData(this.myCubeConfig.table, this.myCubeData[0].value)
         this.newComment = ""
     }

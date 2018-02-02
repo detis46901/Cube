@@ -51,12 +51,6 @@ export class newMyCubeComponent implements OnInit {
         this.layer.layerService = "None"
         this.layer.layerType = "MyCube"
         this.layer.serverID = 0
-        // this.newLayerField1.field = "Field 1"
-        // this.newLayerField1.type = "type 1"
-       
-        // console.log(this.newLayerFields.push())
-        // this.newLayerFields[0].field = "Field1"
-        // this.newLayerFields[0].type = "type1"
     }
 
     private getServers(): void {
@@ -68,31 +62,24 @@ export class newMyCubeComponent implements OnInit {
     }
 
     private addField() {
-        console.log("Add Field")
         this.newLayerFields.push({field: this.newLayerField1.field, type: this.newLayerField1.type})
-            console.log(this.newLayerFields)
     }
 
     private deleteField(index) {
-        console.log("Deleting Field")
         this.newLayerFields.splice(index,1)
-            console.log(this.newLayerFields)
     }
 
     private addLayer(newlayer: Layer): void {
         this.layer.layerName = newlayer.layerName
         this.layer.layerDescription = newlayer.layerDescription
-        console.log("Creating MyCube")
         this.layerservice
             .Add(this.layer)
             .subscribe((result: Layer) => {
-                console.log('result=' + JSON.stringify(result))
                 this.createTable(result.ID);
             });
     }
 
     private createTable(id): void {
-        console.log("Creating Table")
         this.sqlservice
             .Create(id)
             .subscribe(result => {
@@ -102,26 +89,17 @@ export class newMyCubeComponent implements OnInit {
                 });
                 this.sqlservice
                     .setSRID(id)
-                    .subscribe(result => {
-                        console.log('SRID set')
-                    })
-                this.dialog.closeAll();
+                    .subscribe(() => this.dialog.closeAll()); 
             })
-            console.log("Creating Comment Table")
-            this.sqlservice
+        this.sqlservice
             .CreateCommentTable(id)
-            .subscribe(result => {
-                console.log(result)
-            })
-            console.log("Comment Table Created")
+            .subscribe();
+        console.log("Comment Table Created")
     }
 
     private addColumn(id, element): void {
-        console.log("Adding Columns")
         this.sqlservice
             .addColumn(id, element)
-            .subscribe(result=> {
-                console.log(result)
-            })
+            .subscribe();
     }
 }

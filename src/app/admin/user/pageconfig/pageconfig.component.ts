@@ -28,7 +28,7 @@ export class PageConfigComponent implements OnInit {
     
     constructor(private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private layerPermissionService: LayerPermissionService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token; 
+        this.token = currentUser && currentUser.token;
     }
 
     ngOnInit() {
@@ -41,7 +41,6 @@ export class PageConfigComponent implements OnInit {
             .GetPageLayers(this.pageID)
             .subscribe((data: UserPageLayer[]) => {
                 this.userPageLayers = data;
-                console.log(data)
             });
     }
 
@@ -62,7 +61,7 @@ export class PageConfigComponent implements OnInit {
         this.userPageLayerService
             //.Add(this.newUserPageLayer, this.token)
             .Add(this.newUserPageLayer)
-            .subscribe(result => {
+            .subscribe(() => {
                 this.getUserPageLayers();
             });
     }
@@ -70,23 +69,16 @@ export class PageConfigComponent implements OnInit {
     private updateUserPageLayer(userPage: UserPage): void {
         this.userPageLayerService
             .Update(userPage)
-            .subscribe(result => {
-                console.log(result)
+            .subscribe(() => {
                 this.getUserPageLayers();
             });
-        console.log(userPage.ID)
-        console.log(this.userPageLayers)
     }
 
     public deleteUserPageLayer(userPageID: number): void {
         this.userPageLayerService
             .Delete(userPageID)
-            .subscribe(result => {
+            .subscribe(() => {
                 this.getUserPageLayers();
             });
-    }
-
-    public debug(u) {
-        console.log(u)
     }
 }

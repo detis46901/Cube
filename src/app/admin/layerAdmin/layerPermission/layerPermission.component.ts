@@ -52,7 +52,6 @@ export class LayerPermissionComponent implements OnInit {
         this.layerPermissionService
             .GetByLayer(this.layerID)
             .subscribe((data:LayerPermission[]) => {
-                console.log(data)
                 this.layerPermissions = data;
                 for(let p of data) {
                     //If permission applies to a user
@@ -78,7 +77,6 @@ export class LayerPermissionComponent implements OnInit {
                 }
                 this.getUserItems();
                 this.getGroupItems();
-                console.log(this.permNames) 
             });
     }
 
@@ -138,9 +136,7 @@ export class LayerPermissionComponent implements OnInit {
     private updateLayerPermission(permission: LayerPermission): void {
         this.layerPermissionService
             .Update(permission)
-            .subscribe((res) => {
-                console.log(res)
-            });
+            .subscribe();
     }
 
     private updateLayerPermissions(): void {
@@ -159,12 +155,14 @@ export class LayerPermissionComponent implements OnInit {
 
     private switchPermType() {
         this.isGroup = !this.isGroup;
-        // if(this.isGroup) {
-        //     document.getElementById('layerPermNewUser').style.display = "inline";
-        //     document.getElementById('layerPermNewGroup').style.display = "none";
-        // } else {
-        //     document.getElementById('layerPermNewUser').style.display = "none";
-        //     document.getElementById('layerPermNewGroup').style.display = "inline";
-        // }
+
+        // 2/2/18: Find a way to accomplish this without having to click control twice as-is currently
+        /* if(this.isGroup) {
+            document.getElementById('layerPermNewUser').style.display = "inline";
+            document.getElementById('layerPermNewGroup').style.display = "none";
+        } else {
+            document.getElementById('layerPermNewUser').style.display = "none";
+            document.getElementById('layerPermNewGroup').style.display = "inline";
+        } */
     }
 }

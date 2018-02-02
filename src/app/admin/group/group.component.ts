@@ -116,23 +116,19 @@ export class GroupComponent implements OnInit {
             .subscribe((data: GroupMember[]) => {
                 this.selectedUserGroups = data;
             })
-        console.log("selectUser finished")
     }
 
     //this is running too much. *ngFor in matList is culprit
     private checkGroup(group: Group): boolean {
         let member = false;
-        //console.log("checkGroup before for")
         if(this.selectedUserGroups) {
             for(let assoc of this.selectedUserGroups) {
-                //console.log("loop cycle")
                 if(assoc.groupID == group.ID) {
                     member = true;
                     break;
                 }
             }
         }
-        //console.log("checkGroup after for")
         return member;
     }
 
@@ -140,7 +136,6 @@ export class GroupComponent implements OnInit {
         if(this.selectedUserGroups) {
             for(let assoc of this.selectedUserGroups) {
                 if(assoc.groupID == group.ID) {
-                    console.log("\n\n\n\n\n\n\n\n\nclick minus\n\n\n\n\n\n\n\n\n")
                     this.groupMemberService
                         .Delete(assoc.ID)
                         .subscribe(() => this.getGroupItems());
@@ -150,11 +145,10 @@ export class GroupComponent implements OnInit {
     }
 
     private addUserGrp(group: Group) {
-        let groupMember = new GroupMember;
-        console.log(group.ID)
-        
+        let groupMember = new GroupMember;        
         groupMember.groupID = group.ID
         groupMember.userID = this.selectedUser.ID
+        
         this.groupMemberService
             .Add(groupMember)
             .subscribe(() => this.getGroupItems());

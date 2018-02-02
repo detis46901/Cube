@@ -21,7 +21,6 @@ export class SideNavComponent implements OnInit {
          let currentUser = JSON.parse(localStorage.getItem('currentUser'));
          this.token = currentUser && currentUser.token;
          this.userID = currentUser && currentUser.userID;
-         console.log(currentUser)
     } 
 
     @Input() canEdit: boolean;
@@ -29,9 +28,6 @@ export class SideNavComponent implements OnInit {
     
     ngOnInit() {
         let json = <JSON>this.myCubeData
-        //console.log("SideName" + json.parse[0])
-        console.log(this.myCubeData)
-        console.log(this.userID)
         this.hideMenu()
     }
 

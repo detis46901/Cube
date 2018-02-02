@@ -37,8 +37,6 @@ export class HomeComponent {
 
     constructor(private dataService: UserService, private sideNavService: SideNavService, private myCubeService: MyCubeService, private WFSservice: WFSService, private messageService: MessageService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        console.log(localStorage.getItem('currentUser'))
-        console.log(currentUser.userID)
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
         this.subscription = this.messageService.getMessage().subscribe(message => { this.message = message; this.myCubeData = null });
@@ -46,13 +44,10 @@ export class HomeComponent {
         this.myCubeCommentSubscription = this.myCubeService.getMyCubeComments().subscribe(myCubeComments => {this.myCubeComments = myCubeComments})
         this.editSubscription = this.myCubeService.getMyCubeConfig().subscribe(data => {this.myCubeConfig = data});
         this.messageSubscription = this.myCubeService.getMessage().subscribe(data => this.message = data)
-        console.log("this.message = " + this.message)
     }
 
     ngOnInit() {
-        console.log(this.userID)
         this.getAllItems(this.userID);
-        //this.getAllItems(102); //toby mcguire
         this.message = null
     }
 
@@ -60,7 +55,6 @@ export class HomeComponent {
         this.dataService
             .GetSingle(userID)
             .subscribe((data: User) => {
-                console.log(data)
                 this.user = data;
             });
     }

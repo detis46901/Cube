@@ -31,7 +31,7 @@ export class AppComponent {
             .GetAll()
             .subscribe((data: User[]) => {
                 this.myItems = data,
-                error => console.log(error)
+                error => console.error(error)
             });            
     }
 }

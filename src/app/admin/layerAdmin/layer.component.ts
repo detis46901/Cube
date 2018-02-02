@@ -41,7 +41,6 @@ export class LayerComponent implements OnInit {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser.token;
         this.userID = currentUser.userID;
-        console.log(this.token)
     }
 
     ngOnInit() {
@@ -112,7 +111,6 @@ export class LayerComponent implements OnInit {
         this.layerPermissionService
         .GetByLayer(layerID)
         .subscribe(result => {
-            console.log(result)
             for (let i of result) {
                 this.layerPermissionService
                     .Delete(i.ID)
@@ -139,25 +137,23 @@ export class LayerComponent implements OnInit {
             .GetSingle(layerID)
             .subscribe((result: Layer) => {
                 if (result.layerType=='MyCube') {
-                    console.log('removing MyCube')
                     this.sqlservice.deleteTable(result.ID)
-                    .subscribe((result)=> console.log(result))
+                        .subscribe()
                     this.sqlservice.deleteCommentTable(result.ID)
-                    .subscribe((result)=> console.log(result))
+                        .subscribe()
                 }
             });
 
         this.layerService
             .Delete(layerID)
-                .subscribe((res) => {
-                    console.log(res)
+                .subscribe(() => {
                     this.getLayerItems();
                 });
     }
 
      
 
-    //To be expanded to sort layers on display via html button press.
+    // 2/2/18: Keep this here to remind you: DON'T do it this way, when you get to it, implement using the pagination/sorting features of mat-table
     private sortLayers(code: string): void {
         let indexList: Array<number> = [];
         let list = this.layers;

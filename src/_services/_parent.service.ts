@@ -18,7 +18,7 @@ export class ParentService {
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
         } catch(err) {
-            console.log("Could not authenticate user.\n"+err)
+            console.log("Could not find user in local storage. Did you reinstall your browser or delete cookies?\n"+err)
         }
         this.headers.append('Content-Type', 'application/json');
         this.headers.append('Accept', 'application/json');
@@ -46,8 +46,6 @@ export class ParentService {
     }
 
     public Add = (toAdd: any): Observable<any> => {
-        console.log('adding a record.  Add to=' + JSON.stringify(toAdd))
-        console.log(this.actionUrl + 'create', JSON.stringify(toAdd), {headers: this.headers})
         return this._http.post(this.actionUrl + 'create', JSON.stringify(toAdd), this.options)
             .map((response: Response) => <any>response.json())
             .catch(this.handleError);
@@ -60,7 +58,6 @@ export class ParentService {
     }
  
     public Delete = (id: number): Observable<any> => {
-        console.log(this.actionUrl + 'delete?ID=' + id)
         return this._http.delete(this.actionUrl + 'delete?ID=' + id, this.options)
             .catch(this.handleError);
     }

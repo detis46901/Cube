@@ -23,7 +23,6 @@ export class UserPageService extends ParentService {
     }
 
     public GetActiveByUserID = (userid): Observable<UserPage[]> => {
-        console.log((this.actionUrl + 'getactivebyuserid?userID=' + userid))
         return this._http.get(this.actionUrl + 'getactivebyuserid?userID=' + userid, this.options)
             .map((response: Response) => <UserPage[]>response.json())
             .catch(this.handleError);
@@ -36,8 +35,6 @@ export class UserPageService extends ParentService {
     }
 
     public UpdateMultiple = (items: UserPage[]): Observable<UserPage[]> => {
-        console.log(JSON.stringify(items))
- 
         return this._http.put(this.actionUrl + 'updatemulti', JSON.stringify(items), this.options)
             .map((response: Response) => <any>response.json())
             .catch(this.handleError);

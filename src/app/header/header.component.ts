@@ -29,9 +29,7 @@ export class HeaderComponent {
 
     private imgURL = "avatar2.png"
 
-    constructor(private sideNavService: SideNavService) {
-        console.log(this.user)
-    }
+    constructor(private sideNavService: SideNavService) {}
 
     private menuToggle(sCode: number): void {
         if (this.sideNavService.getHidden() == null) {
@@ -46,15 +44,15 @@ export class HeaderComponent {
                 console.log("Exception")
                 break;
             case 1:
-                console.log("home")
+                console.log("homeToggle()")
                 this.homeToggle();
                 break;
             case 2:
-                console.log("admin")
+                console.log("adminToggle()")
                 this.adminToggle();
                 break;
             case 3:
-                console.log("user")
+                console.log("userToggle()")
                 this.userToggle();
                 break;
             default:
@@ -64,7 +62,10 @@ export class HeaderComponent {
 
     //Code 1
     private homeToggle(): void {
+
+        // 2/2/18 What I was trying to do below is to get some typical menu functions (file, edit, view, etc.) available on the header navigation bar.
         //document.getElementById("headerCreateUserBtn").style.visibility = "hidden"; //Figure this out to appear only on admin/user. create buttons could go in header.
+
         if(!this.isOpen) {
             document.getElementById("mySidenav").style.display = "block";
             document.getElementById("mySidenav").style.width = "250px";

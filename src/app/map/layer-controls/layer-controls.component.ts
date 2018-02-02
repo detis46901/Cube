@@ -68,8 +68,9 @@ export class LayerControlsComponent {
     getPage(): void {
         this.userPageService
             .GetSome(this.userID)
-            .subscribe((data:UserPage[]) => this.userpages = data,
-                error => console.log(error),
+            .subscribe((data:UserPage[]) => 
+                this.userpages = data,
+                error => console.error(error),
                 () => this.getDefaultPage()
             );
     }
@@ -88,8 +89,9 @@ export class LayerControlsComponent {
     getUserPageLayers(page): void {
         this.userPageLayerService
             .GetPageLayers(page.ID)
-            .subscribe((data:UserPageLayer[]) => this.userpagelayers = data,
-                error => console.log(error),
+            .subscribe((data:UserPageLayer[]) => 
+                this.userpagelayers = data,
+                error => console.error(error),
                 () =>  this.getServers()
             );
     }
@@ -103,8 +105,10 @@ export class LayerControlsComponent {
     getServers() {
         this.serverService
             .GetAll()
-            .subscribe((data) => this.servers = data,
-                () => this.init());
+            .subscribe((data) => 
+                this.servers = data,
+                () => this.init()
+            );
     }
 
     init() {
@@ -119,8 +123,7 @@ export class LayerControlsComponent {
     updateUserPageLayer(userpage) {
         this.userPageLayerService
             .Update(userpage)
-            .subscribe(result => {
-                console.log(result);
+            .subscribe(() => {
                 this.getUserPageLayers(userpage);
             })
     }
@@ -128,9 +131,10 @@ export class LayerControlsComponent {
     getUserPageItems(): void {
         this.userPageService
         .GetSome(this.userID)
-        .subscribe((data:UserPage[]) => this.userpages = data,
-            error => console.log(error)
-            );
+        .subscribe((data:UserPage[]) => 
+            this.userpages = data,
+            error => console.error(error)
+        );
     }
 
     setFlags() {
@@ -152,7 +156,6 @@ export class LayerControlsComponent {
     loadLayers() {
         let temp = this.userpagelayers
         for (let i=0; i<temp.length; i++) {
-            console.log(temp[i])
             if (temp[i].layerON) {
                 this.toggleLayers(i,temp[i], false)
             }
@@ -169,9 +172,7 @@ export class LayerControlsComponent {
     setCurrentLayer(index, layer: UserPageLayer, checked) {
         for (let x of this.userpagelayers) {
             if (x == layer) {
-                console.log("Found Layer!")
                 if (x.layerShown === true) {
-                    console.log("Layer is shown")
                     this.currLayerName = x.layer.layerName
                     this._map.off('click')
                     this._map.on('click', (event: L.LeafletMouseEvent) => { 
@@ -182,9 +183,8 @@ export class LayerControlsComponent {
                         let X = this._map.layerPointToContainerPoint(event.layerPoint).x;
                         let Y = Math.trunc(this._map.layerPointToContainerPoint(event.layerPoint).y);
                         let URL = this.server.serverURL + '?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&LAYERS='+IDENT+'&QUERY_LAYERS='+IDENT+'&BBOX='+BBOX+'&FEATURE_COUNT=1&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&INFO_FORMAT=text%2Fhtml&SRS=EPSG%3A4326&X='+X+'&Y='+Y;
-                        console.log(URL)
                         this.wfsservice.getfeatureinfo(URL, false)
-                        .subscribe((data: any) => this.getFeatureData = data)
+                            .subscribe((data: any) => this.getFeatureData = data)
                     })
                 }
             }
@@ -193,7 +193,6 @@ export class LayerControlsComponent {
         if(!checked) {
             this.toggleLayers(index, layer, checked)
         }
-        console.log(this.server)
     }
 
     toggleLayers(index, layer: UserPageLayer, checked) {
@@ -212,11 +211,6 @@ export class LayerControlsComponent {
         for (let i of this.servers) {
             if (i.ID == layer.layer.serverID) {server = i}
         }
-        console.log(server.serverURL)
-        console.log(checked)
-        console.log(layer.layer.layerIdent)
-        console.log(layer.layer.layerFormat)
-
 
         if (checked == false) {
             if (layer.layer.layerGeom == "Coverage") {zindex = -50}
@@ -226,7 +220,6 @@ export class LayerControlsComponent {
                 format: layer.layer.layerFormat,
                 transparent: true,
             }).addTo(this._map))
-            console.log(this.turnonlayer)
             this.layerList[index] = this.turnonlayer
             this.currLayer = layer
             this.currLayerName = layer.layer.layerName

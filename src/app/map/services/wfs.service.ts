@@ -40,11 +40,9 @@ export class WFSService {
         return this.http.get(URL)
             .map((responseData) => {
                 let temp: string = responseData['_body']
-                //console.log("temp=" + temp)
 
                 //This "if" block captures layer features with no pre-formatted "content.ftl" file
                 if (temp.startsWith("<table")) {
-                    console.log("Preformatted Geoserver")
                     let formattedHead: Array<string> = [];
                     let formattedData: Array<string> = [];
                     let headArray = temp.split("<th")
@@ -80,7 +78,6 @@ export class WFSService {
                     temp3 = temp3.replace('\"'," ")
                     //temp3 = temp3.replace('"'," ")
                     temp = temp3
-                    console.log (temp3)
                 }
 
                 // this.popupText.next(temp)
@@ -102,7 +99,6 @@ export class WFSService {
 
         return this.http.get(path, this.options)
             .map( (responseData) => {
-                //console.log(responseData)
                 return responseData.json();
             })
             .map((markers: Array<JSON>) => {
@@ -132,7 +128,6 @@ export class WFSService {
                     }
 
                     data[i] = data[i] + "</p>"
-                    //console.log(markers["features"][i].geometry.coordinates[1], markers["features"][i].geometry.coordinates[0])
                     let tempLatLng = L.latLng(markers["features"][i].geometry.coordinates[1], markers["features"][i].geometry.coordinates[0])
                     let tempMarker = L.circleMarker(tempLatLng, {opacity: 0, fillOpacity: 0})
                     tempMarker.bindPopup(JSON.stringify(markers["features"][i]["properties"]))
@@ -140,7 +135,6 @@ export class WFSService {
                     //7/05/17 - on click function block for displaying marker information in sidenav
                     tempMarker.on('click', (event: L.LeafletMouseEvent) => {
                         this.popupText.next(data[i]);
-                        console.log(this.popupText)
                         tempMarker.closePopup()
                     })
                     features.push(tempMarker)
@@ -160,11 +154,9 @@ export class WFSService {
 
         return this.http.get(path, this.options)
             .map( (responseData) => {
-                console.log(responseData)
                 return responseData.json();
             })
             .map((markers: Array<JSON>) => {
-                console.log(markers)
                 props = JSON.stringify(markers["features"][0]["properties"]).split(',')
                 len = props.length
                 props[0] = props[0].substr(1)
@@ -213,7 +205,6 @@ export class WFSService {
                     }
                     
                 };
-                console.log(count)//Max number of coord pairs for Kokomo:Pipes is 180
                 polylineGroup = L.featureGroup(polylist)
                 return polylineGroup;
             });

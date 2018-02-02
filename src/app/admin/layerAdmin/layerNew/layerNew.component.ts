@@ -46,7 +46,6 @@ export class LayerNewComponent implements OnInit {
         if (this.layerIdent!=null && this.layerType!=null && this.layerServer!=null) {
             this.serverCalled = true;
         }
-        console.log (this.userID)
     }
 
     private getServers(): void {
@@ -77,13 +76,9 @@ export class LayerNewComponent implements OnInit {
             this.layer.layerType = this.layerType;
             //this.layer.layerFormat = this.layerFormat;
         }
-        //console.log(this.token)
         this.layerservice
-            //.Add(this.layer, this.token)
             .Add(this.layer)
-            .subscribe(result => {
-                console.log('result=' + JSON.stringify(result))
-            });
+            .subscribe();
         
         this.layerPermissionService
             .Add(layerPerm)
