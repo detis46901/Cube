@@ -15,6 +15,7 @@ export class MapConfig {
     name?: string;
     userID?: number;
     map?: ol.Map;
+    view?: ol.View;
     sources?= new Array;
     layers? = new Array;
     selectedFeature?: ol.Feature;
@@ -23,10 +24,15 @@ export class MapConfig {
     defaultpage?: UserPage;
     currentpage?: UserPage;
     userpagelayers?: UserPageLayer[];
-    currentLayer?: UserPageLayer;
+    currentLayer? = new UserPageLayer;
     currentLayerName?: string;
     editmode?: boolean;
     layerpermission?: LayerPermission[];
+}
+
+export class featureList {
+    label: string
+    feature: ol.Feature
 }
 
 export class mapStyles {
@@ -43,7 +49,7 @@ export class mapStyles {
             stroke: new ol.style.Stroke({color: '#319FD3', width: 2})
         }),
         fill: new ol.style.Fill({
-            color: 'rgba(255, 255, 255, 0.6)'
+            color: 'rgba(255, 255, 255, 0.2)'
         }),
         stroke: new ol.style.Stroke({
             color: '#319FD3',
@@ -68,7 +74,7 @@ export class mapStyles {
             stroke: new ol.style.Stroke({color: '#319FD3', width: 4})
         }),
         fill: new ol.style.Fill({
-            color: 'rgba(255, 255, 255, 1)'
+            color: 'rgba(255, 255, 255, 0.6)'
         }),
         stroke: new ol.style.Stroke({
             color: '#319FD3',
@@ -93,7 +99,7 @@ export class mapStyles {
             stroke: new ol.style.Stroke({color: '#ff0000', width: 4})
         }),
         fill: new ol.style.Fill({
-            color: 'rgba(255, 255, 255, 1)'
+            color: 'rgba(255, 255, 255, 0.6)'
         }),
         stroke: new ol.style.Stroke({
             color: '#ff0000',

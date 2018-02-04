@@ -2,25 +2,5 @@
 <i class="fa fa-close" style="float:right; position:relative; right:5px;" (click)="hideMenu()"></i>
 
 <div class="col-sm-12" style="position:absolute; bottom:50px">
-    <h4></h4>
-    <hr>
-    <mat-card id="featureCard" class="example-card">
-        <mat-card-header>
-            <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title></mat-card-title>
-            <mat-card-subtitle></mat-card-subtitle>
-        </mat-card-header>
-
-        <mat-card-content>
-            <div *ngIf="myCubeData && !canEdit">
-                <i id="cardClose" class="fa fa-times" aria-hidden="true" (click)="clearMessage()"></i>
-                <div [innerHTML]='myCubeData.text'></div>
-            </div>
-
-            <div *ngIf="myCubeData && canEdit">
-                <!--Display data as input fields that can be modified by user-->
-            </div>
-        </mat-card-content>
-    </mat-card>
 </div>
 

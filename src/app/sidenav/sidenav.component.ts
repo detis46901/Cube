@@ -23,35 +23,13 @@ export class SideNavComponent implements OnInit {
          this.userID = currentUser && currentUser.userID;
     } 
 
-    @Input() canEdit: boolean;
-    @Input() myCubeData: any;
     
     ngOnInit() {
-        let json = <JSON>this.myCubeData
         this.hideMenu()
     }
 
     public hideMenu() {
         this.sideNavService.toggleHidden();
         document.getElementById("mySidenav").style.width = "0";
-        document.getElementById("place-input").style.left = "15px";
-        document.getElementById("goto").style.left = "15px";
-        document.getElementById("add-marker").style.left = "30px";
-        document.getElementById("remove-marker").style.left = "70px";
-    }
-
-    drawLineClick() {
-
-    }
-
-    drawPointClick() {
-
-    }
-
-    drawPolygonClick() {
-        
-    }
-    private clearMessage(): void {
-        this.myCubeData = ""
     }
 }

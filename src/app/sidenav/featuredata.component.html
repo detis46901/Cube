@@ -22,8 +22,8 @@
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
                                     <div *ngFor="let myCubeComment of myCubeComments">
-                                        <b>{{myCubeComment.firstName}} {{myCubeComment.lastName}}</b>  <i>{{myCubeComment.createdat | date:'MMM dd':'-0500'}} at {{myCubeComment.createdat | date:'h:ma':'-0500'}}</i><br>
-                                        {{myCubeComment.comment}}<br> 
+                                        <button *ngIf="userID == myCubeComment.userid" mat-button (click)='deleteMyCubeComment(myCubeConfig.table, myCubeComment.id)'><mat-icon>delete</mat-icon></button><b>{{myCubeComment.firstName}} {{myCubeComment.lastName}}</b>  <i>{{myCubeComment.createdat | date:'MMM dd':'-0500'}} at {{myCubeComment.createdat | date:'h:ma':'-0500'}}</i><br>
+                                        {{myCubeComment.comment}}<br>
                                     </div>
                                     <mat-form-field style="width:100%" ><input matInput id="comment" [(ngModel)]="newComment" placeholder="New Comment" (blur)="addMyCubeComment()"></mat-form-field>
                                     <mat-hint align="start"><strong>Don't use single quotes right now.</strong> </mat-hint>
@@ -35,9 +35,6 @@
                                     <mat-panel-title>
                                         Feature Data
                                     </mat-panel-title>
-                                    <mat-panel-description>
-                                            {{myCubeData.field}}
-                                    </mat-panel-description>
                                 </mat-expansion-panel-header>
                                     <div *ngFor="let myCube of myCubeData">
                                             <div *ngIf="myCube.type=='id'"></div>

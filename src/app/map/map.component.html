@@ -35,7 +35,7 @@
                             </td></tr>
                 </table>
             </mat-expansion-panel>
-            <mat-expansion-panel>
+            <mat-expansion-panel [expanded] = true>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         Layers
@@ -86,7 +86,6 @@
                         </mat-radio-button>
                         </div>
                     </mat-radio-group><hr>
-                   
                     <mat-chip-list *ngIf="mapConfig.editmode">
                         <mat-chip (click)="mapService.draw(mapConfig,'Point')"><mat-icon>control_point</mat-icon></mat-chip>
                         <mat-chip (click)="mapService.draw(mapConfig,'LineString')"><mat-icon>timeline</mat-icon></mat-chip>
@@ -94,6 +93,17 @@
                         <mat-chip (click)="mapService.delete(mapConfig)"><mat-icon>delete</mat-icon></mat-chip>
                     </mat-chip-list>
             </mat-expansion-panel>
+            <mat-expansion-panel *ngIf="mapConfig.currentLayer.layer.layerType == 'MyCube'">
+                
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Feature List
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                    <div *ngFor="let fl of mapService.featurelist">
+                        <a style="cursor: pointer;" (click)="mapService.zoomToFeature(fl)">{{fl.label}}</a>
+                    </div>
+            </mat-expansion-panel>  
             <mat-expansion-panel [disabled]="true">
                 <mat-expansion-panel-header>
                     <mat-panel-title>

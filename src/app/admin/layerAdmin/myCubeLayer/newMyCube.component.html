@@ -41,6 +41,9 @@
                 </mat-select>
             </mat-form-field>
             </div>
+            <div>
+                <mat-checkbox name="mycube_newlayerlabel" [(ngModel)]="newLayerField1.label">Use as Label</mat-checkbox>
+            </div>
             <div class="col-sm-2">
                 <button mat-button id="myCube_addField" (click)="addField()">Add Field</button>
             </div>

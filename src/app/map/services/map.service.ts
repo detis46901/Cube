@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { MapConfig, mapStyles } from '../models/map.model'
+import { MapConfig, mapStyles, featureList } from '../models/map.model'
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig } from '../../../_models/layer.model';
 import { LayerPermissionService } from '../../../_services/_layerPermission.service';
@@ -24,6 +24,8 @@ export class MapService {
     public modify: ol.interaction.Modify;
     public selectedLayer: any
     public editmode: boolean = false
+    public oid: number
+    public featurelist = new Array<featureList>()
 
     constructor(
         private userPageLayerService: UserPageLayerService,
@@ -55,13 +57,14 @@ export class MapService {
             this.getUserPageLayers(this.mapConfig)  //only sending an argument because I have to.
                 .then(() => this.getLayerPerms())
                 .then(() => this.loadLayers(this.mapConfig, true).then(() => {
+                    this.mapConfig.view = new ol.View({
+                        projection: 'EPSG:3857',                       
+                        center: ol.proj.transform([-86.1336, 40.4864], 'EPSG:4326', 'EPSG:3857'),
+                        zoom: 13
+                    })
                     this.mapConfig.map = new ol.Map({
                         layers: this.mapConfig.layers,
-                        view: new ol.View({
-                            projection: 'EPSG:3857',                       
-                            center: ol.proj.transform([-86.1336, 40.4864], 'EPSG:4326', 'EPSG:3857'),
-                            zoom: 13
-                        })
+                        view: this.mapConfig.view
                     }); resolve(this.mapConfig)
                 })
                 )
@@ -76,6 +79,13 @@ export class MapService {
             .GetPageLayers(this.mapConfig.currentpage.ID)
             .subscribe((data: UserPageLayer[]) => {
                 this.mapConfig.userpagelayers = data
+                console.log(data)
+                if (data.length != 0){
+                this.mapConfig.currentLayer = this.mapConfig.userpagelayers[0]}
+                else {
+                    console.log("No Data")
+                    this.mapConfig.currentLayer = new UserPageLayer
+                }
                 resolve()
             });
         })
@@ -144,6 +154,7 @@ export class MapService {
         if (mapConfig.userpagelayers[index].layerShown === true) {
             mapConfig.layers[loadOrder - 1].setVisible(false)
             mapConfig.userpagelayers[index].layerShown = false
+            //Need to add something to reset the current layer
         }
         else {
             mapConfig.layers[loadOrder - 1].setVisible(true)
@@ -269,8 +280,8 @@ export class MapService {
         if (this.modkey) { 
             ol.Observable.unByKey(this.modkey) //removes the previous modify even if there was one.
         }
-
         this.mapConfig.layers[layer.loadOrder-1].setStyle(this.mapstyles.current)
+        this.getOID()
         this.evkey = this.mapConfig.map.on('singleclick', (e) => {
             if (this.mapConfig.selectedFeature) {
                 this.mapConfig.selectedFeature.setStyle(null)
@@ -285,7 +296,15 @@ export class MapService {
                     hitTolerance: 5
                 });
                 if (hit) {
-                    this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected)
+                    this.selectFeature(layer)
+                } else {
+                   this.clearFeature(layer)
+                }
+          });
+    }
+
+    private selectFeature(layer: UserPageLayer) {
+        this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected)
                     this.myCubeService.setMyCubeConfig(layer.layer.ID, layer.layerPermissions.edit); //need to fix the edit property
                     this.myCubeService.sendMyCubeData(layer.layer.ID, this.mapConfig.selectedFeature.getProperties().id);
                     this.mapConfig.selectedFeatures.clear()
@@ -300,15 +319,19 @@ export class MapService {
                                 .subscribe()
                         });
                     })
-                } else {
-                    this.mapConfig.map.removeInteraction(this.modify)
-                    if (this.modkey) {
-                        ol.Observable.unByKey(this.modkey) //removes the previous modify even if there was one.
-                    }
-                    this.myCubeService.clearMyCubeData()
-                    this.mapConfig.layers[layer.loadOrder-1].setStyle(this.mapstyles.current)
-                }
-          });
+    }
+
+    private clearFeature(layer: UserPageLayer) {
+        console.log("Clearing Features")
+        if (this.mapConfig.selectedFeature) {
+            this.mapConfig.selectedFeature.setStyle(null)
+        }
+        this.mapConfig.map.removeInteraction(this.modify)
+        if (this.modkey) {
+            ol.Observable.unByKey(this.modkey) //removes the previous modify even if there was one.
+        }
+        this.myCubeService.clearMyCubeData()
+        this.mapConfig.layers[layer.loadOrder-1].setStyle(this.mapstyles.current)
     }
 
     private draw(mapconfig: MapConfig, featurety: any) {
@@ -354,6 +377,65 @@ export class MapService {
                 })
             this.myCubeService.clearMyCubeData()
         })
+    }
+
+    private getOID(): void {
+        this.featurelist = new Array<featureList>()
+        this.sqlService
+            .getOID(this.mapConfig.currentLayer.layerID)
+            .subscribe((result) => {
+                let body:string = result._body
+                //body.split('"attrelid":')[1]
+                let bodyjson:JSON = JSON.parse(result._body)
+                console.log(bodyjson[0][0].attrelid)
+                this.oid = bodyjson[0][0].attrelid
+            })
+            
+        this.sqlService
+            .getColumnCount(this.mapConfig.currentLayer.layerID)
+            .subscribe((result) => {
+                let bodyjson : JSON = JSON.parse(result._body)
+                let count: number = bodyjson[0][0].count
+                console.log(count)
+                for (let i = 2; i <= count; i++) {
+                    console.log(i)
+                    this.sqlService
+                    .getIsLabel(this.oid, i)
+                    .subscribe((result) => {
+                        //console.log(result)
+                        let labeljson: JSON = JSON.parse(result._body)
+                        let labelName:string = labeljson[0][0].col_description
+                        if (labelName != null) {
+                        if (labelName.length > 0)
+                            {console.log(labeljson[0][0].col_description)}
+                            console.log(this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder-1].forEachFeature((x:ol.Feature) => {
+                                console.log(x.get(labelName))
+                                let fl= new featureList
+                                fl.label = x.get(labelName)
+                                fl.feature = x
+                                this.featurelist.push(fl)
+                            }))
+                    }})
+                }
+            })
+    }
+
+    private zoomToFeature(featurelist: featureList): void {
+        this.clearFeature(this.mapConfig.currentLayer)
+        let ext = featurelist.feature.getGeometry().getExtent();
+        console.log(ext)
+        let center = ol.extent.getCenter(ext);
+        console.log(center)
+        // this.mapConfig.view.animate({
+        //     center: [center[0], center[1]],
+        // zoom: 18
+        // })
+        this.mapConfig.view.fit(featurelist.feature.getGeometry().getExtent(), {
+            duration: 1000,
+            maxZoom: 17
+        })
+        this.mapConfig.selectedFeature = featurelist.feature
+        this.selectFeature(this.mapConfig.currentLayer)
     }
 }
 

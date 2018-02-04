@@ -96,8 +96,8 @@ export class SQLService {
             .catch(this.handleError);
     }
 
-    public addColumn = (table: string, field: MyCubeField): Observable<any> => {
-        return this._http.get(this.actionUrl + 'addColumn?table=' + table + '&field=' + field.field + '&type=' + field.type, this.options)
+    public addColumn = (table: number, field: MyCubeField): Observable<any> => {
+        return this._http.get(this.actionUrl + 'addColumn?table=' + table + '&field=' + field.field + '&type=' + field.type + '&label=' + field.label, this.options)
             .catch(this.handleError)
     }
 
@@ -107,6 +107,23 @@ export class SQLService {
 
     public deleteCommentTable = (table: number): Observable<any> => {
         return this._http.get(this.actionUrl + 'deletecommenttable?table=' + table, this.options)
+    }
+
+    public deleteComment = (table: number, id: number): Observable<Response> => {
+        return this._http.get(this.actionUrl + 'deletecomment?table=' + table + "&id=" + id, this.options)
+    }
+
+    public getOID = (table: number): Observable<any> => {
+        return this._http.get(this.actionUrl + 'getOID?table=' + table, this.options)
+    }
+
+    public getColumnCount = (table: number): Observable<any> => {
+        console.log(this.actionUrl + 'getColumnCount?table=' + table)
+        return this._http.get(this.actionUrl + 'getColumnCount?table=' + table, this.options)
+    }
+
+    public getIsLabel = (oid: number, field: number): Observable<any> => {
+        return this._http.get(this.actionUrl + 'getIsLabel?oid=' + oid + "&field=" + field, this.options)
     }
  
     protected handleError(error: Response) {

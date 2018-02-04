@@ -5,7 +5,7 @@ export class Layer {
     layerType: string;
     layerService: string;
     layerIdent: string;
-    layerFormat: string;
+    layerFormat: string = "";
     layerDescription: string;
     layerGeom: string;
     serverID: number;
@@ -37,7 +37,7 @@ export class UserPageLayer {
     userID: number;    
     userPageID: number;
     layerID: number;
-    layer: Layer;
+    layer = new Layer;
     layerPermissions = new LayerPermission;
     serverID: number;
     layerShown: boolean;
@@ -49,6 +49,7 @@ export class MyCubeField {
     field: string;
     type: string;
     value?: any;
+    label?: boolean
 }
 
 export class MyCubeConfig {

@@ -62,7 +62,7 @@ export class newMyCubeComponent implements OnInit {
     }
 
     private addField() {
-        this.newLayerFields.push({field: this.newLayerField1.field, type: this.newLayerField1.type})
+        this.newLayerFields.push({field: this.newLayerField1.field, type: this.newLayerField1.type, label: this.newLayerField1.label})
     }
 
     private deleteField(index) {
@@ -82,7 +82,7 @@ export class newMyCubeComponent implements OnInit {
     private createTable(id): void {
         this.sqlservice
             .Create(id)
-            .subscribe(result => {
+            .subscribe((result:JSON) => {
                 console.log('Number of Columns to Add:' + this.newLayerFields.length)
                 this.newLayerFields.forEach(element => {
                     this.addColumn(id, element)
@@ -100,6 +100,10 @@ export class newMyCubeComponent implements OnInit {
     private addColumn(id, element): void {
         this.sqlservice
             .addColumn(id, element)
-            .subscribe();
+            .subscribe((result:string) => {
+                console.log(result)
+            });
     }
+
+    
 }

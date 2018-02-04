@@ -114,7 +114,6 @@ export class MapComponent {
         for (let k=1; k< this.mapConfig.layers.length; k) {
             console.log(k + " of " + this.mapConfig.layers.length)
             this.mapConfig.map.removeLayer(this.mapConfig.layers[k])
-            
             this.mapConfig.layers.splice(k,1)
             console.log(this.mapConfig.layers)
             this.mapConfig.currentLayerName = null

@@ -17,8 +17,6 @@ import { DatePipe } from '@angular/common';
     providers: [SideNavService]
 })
 export class FeatureDataComponent{ 
-    public trustedUrl: SafeUrl
-    public videoUrl: SafeResourceUrl;
     public serializedDate = new FormControl((new Date()).toISOString());
     public newComment: string;
     public userID: number;
@@ -71,6 +69,7 @@ export class FeatureDataComponent{
         if (mycube.type == "date") {
             mycube.value = mycube.value.toJSON()
         }
+        
         console.log(this.myCubeData[0].value)
         console.log(mycube.type)
         console.log(mycube.value)
@@ -87,5 +86,15 @@ export class FeatureDataComponent{
             .subscribe()
         this.mycubeservice.sendMyCubeData(this.myCubeConfig.table, this.myCubeData[0].value)
         this.newComment = ""
+    }
+
+    private deleteMyCubeComment(table, id) {
+        console.log("Deleting comment " + table, id)
+        this.sqlservice
+            .deleteComment(table, id)
+            .subscribe((result) => {
+                console.log(result)
+            })
+        this.mycubeservice.sendMyCubeData(this.myCubeConfig.table, this.myCubeData[0].value)
     }
 }
