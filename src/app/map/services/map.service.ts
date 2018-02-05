@@ -81,10 +81,13 @@ export class MapService {
                 this.mapConfig.userpagelayers = data
                 console.log(data)
                 if (data.length != 0){
-                this.mapConfig.currentLayer = this.mapConfig.userpagelayers[0]}
+                this.mapConfig.currentLayer = this.mapConfig.userpagelayers[0]
+                //this.mapConfig.currentLayerName = this.mapConfig.userpagelayers[0].layer.layerName
+                }
                 else {
                     console.log("No Data")
                     this.mapConfig.currentLayer = new UserPageLayer
+                    this.mapConfig.currentLayerName = ""
                 }
                 resolve()
             });
@@ -205,6 +208,7 @@ export class MapService {
         this.mapConfig.currentLayer = layer
         this.myCubeService.clearMyCubeData() //cleans the selected myCube data off the screen
         if (this.mapConfig.selectedFeature) {this.mapConfig.selectedFeature.setStyle(null)}  //fixes a selected feature's style
+        console.log ("Current Layer name is " + layer.layer.layerName)
         this.mapConfig.currentLayerName = layer.layer.layerName  //Puts the current name in the component
         this.mapConfig.userpagelayers.forEach(element => {
             if (element.layer.layerType == "MyCube") {
@@ -281,7 +285,7 @@ export class MapService {
             ol.Observable.unByKey(this.modkey) //removes the previous modify even if there was one.
         }
         this.mapConfig.layers[layer.loadOrder-1].setStyle(this.mapstyles.current)
-        this.getOID()
+        this.getFeatureList()
         this.evkey = this.mapConfig.map.on('singleclick', (e) => {
             if (this.mapConfig.selectedFeature) {
                 this.mapConfig.selectedFeature.setStyle(null)
@@ -305,20 +309,22 @@ export class MapService {
 
     private selectFeature(layer: UserPageLayer) {
         this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected)
-                    this.myCubeService.setMyCubeConfig(layer.layer.ID, layer.layerPermissions.edit); //need to fix the edit property
-                    this.myCubeService.sendMyCubeData(layer.layer.ID, this.mapConfig.selectedFeature.getProperties().id);
-                    this.mapConfig.selectedFeatures.clear()
-                    this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature)
-                    this.modify = new ol.interaction.Modify({features: this.mapConfig.selectedFeatures})
-                    this.mapConfig.map.addInteraction(this.modify)
-                    this.modkey = this.modify.on('modifyend', (e) => {
-                        e.features.forEach(element => {
-                            this.mapConfig.selectedFeature = element
-                            let featurejson = new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(this.mapConfig.selectedFeature)
-                                this.geojsonservice.updateGeometry(layer.layer.ID, JSON.parse(featurejson))
-                                .subscribe()
-                        });
-                    })
+        this.myCubeService.setMyCubeConfig(layer.layer.ID, layer.layerPermissions.edit); //need to fix the edit property
+        this.myCubeService.sendMyCubeData(layer.layer.ID, this.mapConfig.selectedFeature.getProperties().id);
+        this.mapConfig.selectedFeatures.clear()
+        this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature)
+        if (layer.layerPermissions.edit == true) {
+        this.modify = new ol.interaction.Modify({features: this.mapConfig.selectedFeatures})
+        this.mapConfig.map.addInteraction(this.modify)
+        this.modkey = this.modify.on('modifyend', (e) => {
+            e.features.forEach(element => {
+                this.mapConfig.selectedFeature = element
+                let featurejson = new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(this.mapConfig.selectedFeature)
+                    this.geojsonservice.updateGeometry(layer.layer.ID, JSON.parse(featurejson))
+                    .subscribe()
+            });
+        })
+    }
     }
 
     private clearFeature(layer: UserPageLayer) {
@@ -357,6 +363,7 @@ export class MapService {
                     e.feature.setId(data[0].id)
                     e.feature.setProperties(data[0])
                     this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder-1].addFeature(e.feature)
+                    this.getFeatureList()
                 })
             this.mapConfig.map.removeLayer(vector)
             this.mapConfig.map.changed()
@@ -377,9 +384,11 @@ export class MapService {
                 })
             this.myCubeService.clearMyCubeData()
         })
+        this.getFeatureList()
     }
 
-    private getOID(): void {
+    private getFeatureList(): void {
+        console.log("getting features")
         this.featurelist = new Array<featureList>()
         this.sqlService
             .getOID(this.mapConfig.currentLayer.layerID)
@@ -404,6 +413,7 @@ export class MapService {
                     .subscribe((result) => {
                         //console.log(result)
                         let labeljson: JSON = JSON.parse(result._body)
+                        console.log(labeljson)
                         let labelName:string = labeljson[0][0].col_description
                         if (labelName != null) {
                         if (labelName.length > 0)

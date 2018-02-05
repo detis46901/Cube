@@ -37,12 +37,6 @@ export class FeatureDataComponent{
     ngOnInit() {}
 
     public hideMenu() {
-        this.sideNavService.toggleHidden();
-        document.getElementById("mySidenav").style.width = "0";
-        document.getElementById("place-input").style.left = "15px";
-        document.getElementById("goto").style.left = "15px";
-        document.getElementById("add-marker").style.left = "30px";
-        document.getElementById("remove-marker").style.left = "70px";
     }
 
     drawLineClick() {

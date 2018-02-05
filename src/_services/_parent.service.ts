@@ -58,6 +58,7 @@ export class ParentService {
     }
  
     public Delete = (id: number): Observable<any> => {
+        console.log(this.actionUrl + 'delete?ID=' + id)
         return this._http.delete(this.actionUrl + 'delete?ID=' + id, this.options)
             .catch(this.handleError);
     }

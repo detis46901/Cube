@@ -33,8 +33,9 @@ export class LoginComponent implements OnInit {
  
     login() {
         this.loading = true;
+        let username:string = this.model.username
         this.userService
-        .login(this.model.username, this.model.password)
+        .login(username.toLowerCase(), this.model.password)
         .subscribe(res => {
             if (res) {
                 this.token = res
