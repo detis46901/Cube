@@ -11,14 +11,15 @@
     <h5><b>Current Permissions</b></h5>
     <mat-list id="layerPerm_exUserList" *ngFor="let perm of layerPermissions">
         <mat-list-item>
-            <div class="row" style="margin-left:0px;">
+            <div class="row" id="user-group-entry" style="margin-left:0px;">
                 <i id="delUserPerm" style="width:1px; position:relative; top:3px;" (click)="deleteLayerPermission(perm.ID)" class="fa fa-times" aria-hidden="true"></i>
-                <p style="width:210px">{{permNames[layerPermissions.indexOf(perm)]}}</p>
+                <p *ngIf="!perm.groupID" style="width:210px">{{perm.user.firstName}}&nbsp;{{perm.user.lastName}}</p>
+                <p *ngIf="!perm.userID" style="width:210px">{{perm.group.name}}</p>
                 <mat-checkbox name="layerPermissionEdit" [(ngModel)]="perm.edit">Edit</mat-checkbox>
                 <mat-checkbox name="layerPermissionDelete" [(ngModel)]="perm.delete">Delete</mat-checkbox>
                 <mat-checkbox name="layerPermissionGrant" [(ngModel)]="perm.canGrant">Grant</mat-checkbox>
             </div>
-            <div *ngIf="perm.comments">
+            <div class="row" *ngIf="perm.comments">
                 <strong>Comments:</strong> {{perm.comments}}
             </div>
         </mat-list-item>
@@ -40,8 +41,11 @@
     <span>
         <b>New Permission</b>
         User
-        <mat-slide-toggle name="permission-user-group-toggle" (change)="switchPermType()" [(ngModel)]="isGroup"></mat-slide-toggle>
+        <mat-slide-toggle class="user-group-toggle" name="permission-user-group-toggle" [checked]="isGroup" (change)="switchPermType()"></mat-slide-toggle>
         Group
+        <!-- <mat-slide-toggle class="example-margin" (change)="mapService.toggleLayers(userpagelayer.loadOrder,mapConfig,i)">
+                {{userpagelayer.layer.layerName}}<br>
+            </mat-slide-toggle> JUST TO LOOK AT FOR FIXING TOGGLE ABOVE -->
     </span>
     <form id="permForm" class="form" #f="ngForm">
         <div>
@@ -73,9 +77,9 @@
         </div>
     </form>
 
-    <div *ngIf="permlessUsers.length == 0">
+    <!-- <div *ngIf="permlessUsers.length == 0">
         <p>All users have permission to edit this layer.</p>
-    </div>
+    </div> -->
 </mat-dialog-content>
 
 <mat-dialog-actions>

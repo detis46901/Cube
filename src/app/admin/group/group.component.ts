@@ -181,7 +181,7 @@ export class GroupComponent implements OnInit {
     }
 
     private openNewGroup() {
-        const dialogRef = this.dialog.open(NewGroupComponent, {height:'500px',width:'500px'});
+        const dialogRef = this.dialog.open(NewGroupComponent, {width:'325px'});
         dialogRef.afterClosed()
             .subscribe(() => {
                 this.getGroupItems();

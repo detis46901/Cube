@@ -14,6 +14,8 @@ export class NewGroupComponent implements OnInit {
     private token: string;
     private userID: number;
 
+    private newGroup = new Group;
+
     constructor(private dialog: MatDialog, private groupService: GroupService) { 
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
@@ -26,7 +28,7 @@ export class NewGroupComponent implements OnInit {
     private addGroup(newGrp): void {
         this.groupService
             .Add(newGrp)
-            .subscribe()
+            .subscribe(()=>this.dialog.closeAll())
     }
 
 }

@@ -58,24 +58,17 @@ export class UserComponent implements OnInit {
     ngOnInit() {
         this.getUserItems();
         this.getUserPageItems();
-        this.getUsers();
     }
 
     // ngAfterViewInit() {
-    //     this.openPages(2,"Josh","Church")
-    // }
+    // this.openPages(2,"Josh","Church")
 
-    private getUsers() {
-        this.userService.GetAll()
-        .subscribe((users: User[]) => {
-            this.dataSource = new TableDataSource<User>(users, User, this.userValidator);
-        }); 
-    }
     public getUserItems(): void {
         this.userService
             .GetAll()
-            .subscribe((data: User[]) => {
-                this.users = data;
+            .subscribe((users: User[]) => {
+                this.users = users;
+                this.dataSource = new TableDataSource<User>(users, User, this.userValidator);
             });
     }
 

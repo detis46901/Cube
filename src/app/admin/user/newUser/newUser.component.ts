@@ -63,20 +63,20 @@ export class NewUserComponent implements OnInit {
                 this.newUser.password = this.newUser.password;
             }
 
+            if (this.newUser.administrator) {
+                let newAdminEntry: GroupMember
+                newAdminEntry.groupID = 2;
+                newAdminEntry.userID = this.newUser.ID
+                this.groupMemberService
+                    .Add(newAdminEntry)
+                    .subscribe()
+            }
+
             this.userService
                 .Add(this.newUser)
                 .subscribe(() => {
                     this.dialog.closeAll();
                 });
-        }
-
-        if (this.newUser.administrator) {
-            let newAdminEntry: GroupMember
-            newAdminEntry.groupID = 2;
-            newAdminEntry.userID = this.newUser.ID
-            this.groupMemberService
-                .Add(newAdminEntry)
-                .subscribe()
         }
     }
 

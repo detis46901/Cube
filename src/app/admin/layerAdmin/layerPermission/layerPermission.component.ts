@@ -48,7 +48,6 @@ export class LayerPermissionComponent implements OnInit {
     }
 
     private getPermissionItems(): void {
-        this.permNames = [];
         this.layerPermissionService
             .GetByLayer(this.layerID)
             .subscribe((data:LayerPermission[]) => {
@@ -56,13 +55,14 @@ export class LayerPermissionComponent implements OnInit {
                 for(let p of data) {
                     //If permission applies to a user
                     if(p.userID && !p.groupID) {
+                        //If user is the owner of the layer
                         if(p.owner) {
                             this.layerOwner = p.userID
                         }
                         this.userService
                             .GetSingle(p.userID)
                             .subscribe((u: User) => {
-                                //Add name to an array for interpolation under "Current Permissions"
+                                //Add name to an array for checking for "Permissionless" users
                                 this.permNames.push(u.firstName + " " + u.lastName);
                             });
                     //If permission applies to a group
@@ -70,7 +70,7 @@ export class LayerPermissionComponent implements OnInit {
                         this.groupService
                             .GetSingle(p.groupID)
                             .subscribe((g: Group) => {
-                                //Add name to an array for interpolation under "Current Permissions"
+                                //Add name to an array for checking for "Permissionless" groups
                                 this.permNames.push(g.name);
                             });
                     }

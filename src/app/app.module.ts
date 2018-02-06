@@ -69,6 +69,7 @@ import { PMMarkerComponent } from '../app/map/marker/PMmarker.component'
 import { NavigatorComponent } from '../app/map/navigator/navigator.component';
 import { PagesComponent } from './pages/pages.component';
 import { GroupComponent } from './admin/group/group.component';
+import { NewGroupComponent } from './admin/group/newGroup/newGroup.component'
 
 //Services
 import { UserService } from '../_services/_user.service';
@@ -91,7 +92,7 @@ import { SideNavService } from '../_services/sidenav.service';
 import { MessageService } from '../_services/message.service';
 import { mapStyles } from '../app/map/models/map.model'
 import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
-import { NewGroupComponent } from './admin/group/newGroup/newGroup.component'
+
 
 
 
@@ -152,7 +153,8 @@ import { NewGroupComponent } from './admin/group/newGroup/newGroup.component'
         PageConfigComponent, 
         ConfirmDeleteComponent,
         ServerNewComponent,
-        NewUserComponent
+        NewUserComponent,
+        NewGroupComponent
     ],
 
     imports: [
