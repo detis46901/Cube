@@ -81,7 +81,7 @@ export class MapService {
                 this.mapConfig.userpagelayers = data
                 console.log(data)
                 if (data.length != 0){
-                this.mapConfig.currentLayer = this.mapConfig.userpagelayers[0]
+                //if (this.mapConfig.userpagelayers[0].layerON == true) {this.mapConfig.currentLayer = this.mapConfig.userpagelayers[0]}
                 //this.mapConfig.currentLayerName = this.mapConfig.userpagelayers[0].layer.layerName
                 }
                 else {
@@ -157,7 +157,12 @@ export class MapService {
         if (mapConfig.userpagelayers[index].layerShown === true) {
             mapConfig.layers[loadOrder - 1].setVisible(false)
             mapConfig.userpagelayers[index].layerShown = false
-            //Need to add something to reset the current layer
+            
+            if (this.mapConfig.currentLayer == this.mapConfig.userpagelayers[index]) {
+                console.log("Turning off the current layer if it's the layer that's on")
+                this.mapConfig.currentLayer = new UserPageLayer
+                this.mapConfig.currentLayerName = ""}
+                //could add something here that would move to the next layerShown=true.  Not sure.
         }
         else {
             mapConfig.layers[loadOrder - 1].setVisible(true)
@@ -210,6 +215,7 @@ export class MapService {
         if (this.mapConfig.selectedFeature) {this.mapConfig.selectedFeature.setStyle(null)}  //fixes a selected feature's style
         console.log ("Current Layer name is " + layer.layer.layerName)
         this.mapConfig.currentLayerName = layer.layer.layerName  //Puts the current name in the component
+        if (layer.layerON) {this.mapConfig.currentLayer = layer}
         this.mapConfig.userpagelayers.forEach(element => {
             if (element.layer.layerType == "MyCube") {
                 this.mapConfig.layers[element.loadOrder-1].setStyle(this.mapstyles.load) //resets all the feature styles to "load"
@@ -387,20 +393,12 @@ export class MapService {
         this.getFeatureList()
     }
 
-    private getFeatureList(): void {
+    private getFeatureList(): Promise<any> {
         console.log("getting features")
         this.featurelist = new Array<featureList>()
-        this.sqlService
-            .getOID(this.mapConfig.currentLayer.layerID)
-            .subscribe((result) => {
-                let body:string = result._body
-                //body.split('"attrelid":')[1]
-                let bodyjson:JSON = JSON.parse(result._body)
-                console.log(bodyjson[0][0].attrelid)
-                this.oid = bodyjson[0][0].attrelid
-            })
-            
-        this.sqlService
+        let promise = new Promise((resolve, reject) => {this.getOID()
+            .then(() => {
+                this.sqlService
             .getColumnCount(this.mapConfig.currentLayer.layerID)
             .subscribe((result) => {
                 let bodyjson : JSON = JSON.parse(result._body)
@@ -418,18 +416,35 @@ export class MapService {
                         if (labelName != null) {
                         if (labelName.length > 0)
                             {console.log(labeljson[0][0].col_description)}
-                            console.log(this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder-1].forEachFeature((x:ol.Feature) => {
+                            this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder-1].forEachFeature((x:ol.Feature) => {
                                 console.log(x.get(labelName))
                                 let fl= new featureList
                                 fl.label = x.get(labelName)
                                 fl.feature = x
                                 this.featurelist.push(fl)
-                            }))
+                            })
                     }})
                 }
             })
+            })})     
+            return promise
     }
 
+    private getOID(): Promise<any> {
+        let promise = new Promise((resolve, reject) => {
+        this.sqlService
+        .getOID(this.mapConfig.currentLayer.layerID)
+        .subscribe((result) => {
+            let body:string = result._body
+            //body.split('"attrelid":')[1]
+            let bodyjson:JSON = JSON.parse(result._body)
+            console.log(bodyjson[0][0].attrelid)
+            this.oid = bodyjson[0][0].attrelid
+            resolve()
+        })
+    })
+    return promise
+}
     private zoomToFeature(featurelist: featureList): void {
         this.clearFeature(this.mapConfig.currentLayer)
         let ext = featurelist.feature.getGeometry().getExtent();

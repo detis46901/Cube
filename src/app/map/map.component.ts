@@ -33,6 +33,7 @@ declare var ol: any;
 export class MapComponent {
     // This is necessary to access the html element to set the map target (after view init)!
     @ViewChild("mapElement") mapElement: ElementRef;
+    @ViewChild("layers") layers: ElementRef;
     private mapConfig = new MapConfig;
     private token: string;
     private userID: number;
@@ -117,6 +118,8 @@ export class MapComponent {
             this.mapConfig.layers.splice(k,1)
             console.log(this.mapConfig.layers)
             this.mapConfig.currentLayerName = null
+            
+
         }
         this.mapConfig.sources = []
         this.mapConfig.sources.push(new ol.source.OSM())
