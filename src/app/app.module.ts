@@ -92,6 +92,8 @@ import { SideNavService } from '../_services/sidenav.service';
 import { MessageService } from '../_services/message.service';
 import { mapStyles } from '../app/map/models/map.model'
 import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
+import { ProfileComponent } from './settings/profile/profile.component';
+import { ChangePictureComponent } from './settings/profile/change-picture/change-picture.component';
 
 
 
@@ -141,7 +143,9 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
         ChangePasswordComponent,
         NewUserComponent,
         ApiKeyComponent,
-        NewGroupComponent
+        NewGroupComponent,
+        ProfileComponent,
+        ChangePictureComponent
     ],
 
     entryComponents: [
@@ -154,7 +158,8 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
         ConfirmDeleteComponent,
         ServerNewComponent,
         NewUserComponent,
-        NewGroupComponent
+        NewGroupComponent,
+        ChangePictureComponent
     ],
 
     imports: [

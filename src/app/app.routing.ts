@@ -18,6 +18,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { UserPageComponent } from './settings/user-pages/user-pages.component';
 import { PasswordComponent } from './settings/password/password.component';
 import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
+import { ProfileComponent } from './settings/profile/profile.component';
 
 
 const appRoutes: Routes = [
@@ -29,6 +30,7 @@ const appRoutes: Routes = [
 
     // Non-admin Settings
     {path: 'settings', component: SettingsComponent, children: [
+        {path: 'profile', component: ProfileComponent, outlet: 'settings'},
         {path: 'userpages', component: UserPageComponent, outlet: 'settings'},
         {path: 'password', component: PasswordComponent, outlet: 'settings'},
         {path: 'apikey', component: ApiKeyComponent, outlet: 'settings'}

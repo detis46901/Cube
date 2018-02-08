@@ -2,6 +2,7 @@
     <mat-sidenav #sidenav class="example-sidenav">
         <mat-nav-list>
             <a mat-list-item [routerLink]="['/settings', {outlets: {settings: ['userpages']}}]" routerLinkActive="active"><h4>User Settings</h4></a>
+            <a mat-list-item [routerLink]="['/settings', {outlets: {settings: ['profile']}}]" routerLinkActive="active"><h5>Profile</h5></a>
             <a mat-list-item [routerLink]="['/settings', {outlets: {settings: ['userpages']}}]" routerLinkActive="active"><h5>Pages</h5></a>
             <a mat-list-item [routerLink]="['/settings', {outlets: {settings: ['password']}}]" routerLinkActive="active"><h5>Change Password</h5></a>
             <a mat-list-item [routerLink]="['/settings', {outlets: {settings: ['apikey']}}]" routerLinkActive="active"><h5>API Key</h5></a>

@@ -76,13 +76,9 @@ export class LayerNewComponent implements OnInit {
             this.layer.layerType = this.layerType;
             //this.layer.layerFormat = this.layerFormat;
         }
+        
         this.layerservice
             .Add(this.layer)
-            .subscribe();
-        
-        this.layerPermissionService
-            .Add(layerPerm)
-            .subscribe(() => this.dialog.closeAll())
-            
+            .subscribe(() => this.dialog.closeAll());            
     }
 }

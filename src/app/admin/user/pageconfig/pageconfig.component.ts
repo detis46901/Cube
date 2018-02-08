@@ -22,7 +22,7 @@ export class PageConfigComponent implements OnInit {
     private newUserPage: string;
     private newUserPageLayer = new UserPageLayer;
     private layerPermissions: LayerPermission[];
-    private userPageLayers: UserPageLayer[]; //insert instantiation if error **REMOVE**
+    private userPageLayers = new Array<UserPageLayer>(); //insert instantiation if error **REMOVE**
     private token: string;
     private selectedUserPage: UserPage;
     
@@ -54,6 +54,8 @@ export class PageConfigComponent implements OnInit {
     }
 
     private addUserPageLayer(newUserPageLayer: UserPageLayer): void {
+        console.log(newUserPageLayer)
+        
         this.newUserPageLayer.userPageID = this.pageID ;
         this.newUserPageLayer.userID = this.userID ;
         this.newUserPageLayer.layerON = true;

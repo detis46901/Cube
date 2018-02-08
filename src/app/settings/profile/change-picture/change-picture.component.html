@@ -1,0 +1,14 @@
+<div class="change-picture-parent-container">
+    <div class="change-picture-header">
+        <h4>
+            <strong>Change Profile Picture</strong>
+            <button [mat-dialog-close] class="close" aria-label="Close">&times;</button>
+        </h4>
+    </div>
+    <mat-dialog-content>
+        <div class="change-picture-content">
+            <button mat-button (click)="importImage()">Import</button>
+            <!-- <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".png, .jpeg, .jpg"> -->
+        </div>
+    </mat-dialog-content>
+</div>

@@ -22,12 +22,10 @@ import { MatToolbar } from '@angular/material';
     providers: [SideNavService]
 })
 
-export class HeaderComponent { 
+export class HeaderComponent {
     @Input() user: User;
     @Input() screenCode: number = 0; 
     private isOpen: boolean;
-
-    private imgURL = "avatar2.png"
 
     constructor(private sideNavService: SideNavService) {}
 

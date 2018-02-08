@@ -120,6 +120,7 @@ export class LayerPermissionComponent implements OnInit {
         this.newLayerPermission.groupID = null;
     }
 
+    //2/8/18 Can a perm be added without a layerID? Or does deleting a layer not delete permissions?
     private addLayerPermission(newLayerPermission: LayerPermission): void {
         this.newLayerPermission = newLayerPermission;
         this.newLayerPermission.layerID = this.layerID;
@@ -150,6 +151,8 @@ export class LayerPermissionComponent implements OnInit {
             .Delete(permissionID)
             .subscribe(() => {
                 this.getPermissionItems();
+                this.getGroupItems();
+                this.getUserItems();
             });
     }
 
