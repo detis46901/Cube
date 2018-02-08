@@ -5,13 +5,20 @@
         <mat-card-subtitle></mat-card-subtitle>
     </mat-card-header>
 
-    <mat-card-content *ngIf="message">
-        <button mat-button (click)='clearMessage()'>
-            <mat-icon>close</mat-icon>
-        </button>
+    <div *ngIf="message">
+        <mat-accordion class="message-data" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 0px; padding:0px 0px 0px 0px; max-height: 35 0px;">
+            <mat-expansion-panel [expanded] = true>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Feature Data
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div [innerHTML]="message"></div>
+            </mat-expansion-panel>
+        </mat-accordion>
         <!-- <div><iframe [src]="message"></iframe></div> -->
-        <div [innerHTML]="message"></div>
-    </mat-card-content>
+       
+    </div>
 </mat-card>
             <div *ngIf="myCubeData" style="position: absolute; bottom: 5px; right: 5px; padding:0px 0px 0px 0px">
                     <mat-accordion class="comment-data" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 384px; padding:0px 0px 0px 0px;">

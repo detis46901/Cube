@@ -48,6 +48,7 @@ export class PageConfigComponent implements OnInit {
         this.layerPermissionService
             .GetByUser(this.userID)
             .subscribe((data: LayerPermission[]) => {
+                console.log(data)
                 this.layerPermissions = data; 
             });
     }

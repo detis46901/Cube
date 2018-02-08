@@ -137,6 +137,7 @@ export class MapService {
                     let wmsLayer = new ol.layer.Image({
                         source: wmsSource
                     });
+                    console.log(wmsSource)
                     this.mapConfig.userpagelayers[i].layerShown = this.mapConfig.userpagelayers[i].layerON
                     wmsLayer.setVisible(this.mapConfig.userpagelayers[i].layerON)
                     this.mapConfig.layers.push(wmsLayer)

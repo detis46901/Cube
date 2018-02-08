@@ -22,6 +22,7 @@ export class LayerPermission {
     comments?: string;
     userID: number;
     layerID: number;
+    layer: Layer;
     groupID: number;
 }
 
