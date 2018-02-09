@@ -10,34 +10,26 @@
 <mat-dialog-content>
     <h5><b>Current Permissions</b></h5>
     <mat-list id="layerPerm_exUserList" *ngFor="let perm of layerPermissions">
-        <mat-list-item>
-            <div class="row" id="user-group-entry" style="margin-left:0px;">
-                <i id="delUserPerm" style="width:1px; position:relative; top:3px;" (click)="deleteLayerPermission(perm.ID)" class="fa fa-times" aria-hidden="true"></i>
+        <mat-list-item id="exLayerPerm">
+            <div class="row" id="user-group-entry">
+                <i id="delUserPerm" style="width:1px; position:relative; top:3px;" (click)="deleteLayerPermission(perm)" class="fa fa-times" aria-hidden="true"></i>
                 <p *ngIf="!perm.groupID" style="width:210px">{{perm.user.firstName}}&nbsp;{{perm.user.lastName}}</p>
                 <p *ngIf="!perm.userID" style="width:210px">{{perm.group.name}}</p>
                 <mat-checkbox name="layerPermissionEdit" [(ngModel)]="perm.edit">Edit</mat-checkbox>
                 <mat-checkbox name="layerPermissionDelete" [(ngModel)]="perm.delete">Delete</mat-checkbox>
                 <mat-checkbox name="layerPermissionGrant" [(ngModel)]="perm.canGrant">Grant</mat-checkbox>
             </div>
-            <div class="row" *ngIf="perm.comments">
-                <strong>Comments:</strong> {{perm.comments}}
-            </div>
         </mat-list-item>
-        <!-- <mat-list-item *ngIf="!perm.userID">
-            <div class="row" style="margin-left:0px;">
-                <i id="delGroupPerm" style="width:1px; position:relative; top:3px;" (click)="deleteLayerPermission(perm.ID)" class="fa fa-times" aria-hidden="true"></i>
-                <p style="width:210px">{{permNames[layerPermissions.indexOf(perm)]}}</p>
-                <mat-checkbox name="layerPermissionEdit" [(ngModel)]="perm.edit">Edit</mat-checkbox>
-                <mat-checkbox name="layerPermissionDelete" [(ngModel)]="perm.delete">Delete</mat-checkbox>
-                <mat-checkbox name="layerPermissionGrant" [(ngModel)]="perm.canGrant">Grant</mat-checkbox>
-            </div>
-            <div *ngIf="perm.comments">
-                <strong>Comments:</strong> {{perm.comments}}
-            </div>
-        </mat-list-item> -->
-    </mat-list>
-    <hr>
 
+        <mat-list-item id="layerPermExComment" *ngIf="perm.comments">
+            <strong>Comments:&nbsp;</strong> {{perm.comments}}
+        </mat-list-item>
+    </mat-list>
+</mat-dialog-content>
+
+<hr>
+
+<div>
     <span>
         <b>New Permission</b>
         User
@@ -76,11 +68,11 @@
             </mat-form-field>
         </div>
     </form>
-
+</div>
     <!-- <div *ngIf="permlessUsers.length == 0">
         <p>All users have permission to edit this layer.</p>
     </div> -->
-</mat-dialog-content>
+
 
 <mat-dialog-actions>
     <button mat-button mat-dialog-close (click)="updateLayerPermissions()" id="layerPermClose">Close</button>

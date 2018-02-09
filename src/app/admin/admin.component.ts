@@ -25,7 +25,12 @@ export class AdminComponent {
     }
 
     ngOnInit() {
-        this.getAllItems(this.userID);        
+        this.getAllItems(this.userID);
+        // let foo = new Array<number>();      
+        // let bar = [4, 5, 6]
+        // foo.push.apply(foo,bar)
+        // console.log(foo)
+        // console.log(bar)
     }
 
     private getAllItems(userid: number): void {

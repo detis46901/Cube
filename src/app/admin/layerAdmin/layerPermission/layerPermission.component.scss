@@ -48,3 +48,18 @@ mat-slide-toggle {
     position:relative;
     top:3px;
 }
+
+mat-dialog-content {
+    max-height:300px;
+}
+
+#exLayerPerm {
+    padding-top:0;
+}
+
+#layerPermExComment {
+    position:relative;
+    bottom:20px;
+    right:5px;
+    height:20px;
+}

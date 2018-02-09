@@ -7,7 +7,6 @@ import { Configuration } from '../../../../_api/api.constants';
 import { LayerService } from '../../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { LayerPermission } from '../../../../_models/layer.model';
-import { MatDialog, MatDialogRef } from '@angular/material';
 
 @Component({
     selector: 'layer-permission',
@@ -30,14 +29,17 @@ export class LayerPermissionComponent implements OnInit {
     private layerOwner: number;
     private isGroup: boolean = false;
 
-    constructor(private layerPermissionService: LayerPermissionService, private userService: UserService, private groupService: GroupService, private dialog: MatDialog) {
+    private currDeletedPermObj: any; //Group or User Object
+    private currDeletedPermIsUser: boolean; //True if it is a User object from the permission.
+
+    constructor(private layerPermissionService: LayerPermissionService, private userService: UserService, private groupService: GroupService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {
-        this.getPermissionItems();
+        this.getPermissionItems(false);
         this.newLayerPermission.edit = false;
         this.newLayerPermission.delete = false;
         this.newLayerPermission.owner = false;
@@ -47,7 +49,7 @@ export class LayerPermissionComponent implements OnInit {
         //this.isUser = true;
     }
 
-    private getPermissionItems(): void {
+    private getPermissionItems(calledByDelete: boolean): void {
         this.layerPermissionService
             .GetByLayer(this.layerID)
             .subscribe((data:LayerPermission[]) => {
@@ -75,13 +77,22 @@ export class LayerPermissionComponent implements OnInit {
                             });
                     }
                 }
-                this.getUserItems();
-                this.getGroupItems();
+                this.getUserItems(calledByDelete);
+                this.getGroupItems(calledByDelete);
             });
     }
 
-    private getUserItems(): void {
+    //2/9/18 this is the last part that needs fixed to get the list to return correctly
+    private getUserItems(calledByDelete: boolean): void {
         this.permlessUsers = [];
+
+        if(this.currDeletedPermIsUser==true && calledByDelete) {
+            //this.permlessUsers.push(this.currDeletedPermObj)
+            console.log(this.currDeletedPermObj)
+            this.currDeletedPermIsUser = null;
+            this.currDeletedPermObj = null;
+        }
+
         this.userService
             .GetAll()
             .subscribe((data:User[]) => {             
@@ -94,8 +105,17 @@ export class LayerPermissionComponent implements OnInit {
             });
     }
 
-    private getGroupItems(): void {
+    //2/9/18 this is the last part that needs fixed to get the list to return correctly
+    private getGroupItems(calledByDelete: boolean): void {
         this.permlessGroups = [];
+        
+        if(this.currDeletedPermIsUser==false && calledByDelete) {
+            //this.permlessGroups.push(this.currDeletedPermObj)
+            console.log(this.currDeletedPermObj)
+            this.currDeletedPermIsUser = null;
+            this.currDeletedPermObj = null;
+        }
+
         this.groupService
             .GetAll()
             .subscribe((data:Group[]) => {             
@@ -119,8 +139,7 @@ export class LayerPermissionComponent implements OnInit {
         this.newLayerPermission.layerID = null;
         this.newLayerPermission.groupID = null;
     }
-
-    //2/8/18 Can a perm be added without a layerID? Or does deleting a layer not delete permissions?
+    
     private addLayerPermission(newLayerPermission: LayerPermission): void {
         this.newLayerPermission = newLayerPermission;
         this.newLayerPermission.layerID = this.layerID;
@@ -130,14 +149,17 @@ export class LayerPermissionComponent implements OnInit {
             .Add(this.newLayerPermission)
             .subscribe(() => {
                 this.initNewPermission();
-                this.getPermissionItems();
+                this.getPermissionItems(false);
             });
     }
 
     private updateLayerPermission(permission: LayerPermission): void {
         this.layerPermissionService
             .Update(permission)
-            .subscribe();
+            .subscribe(() => {
+                this.initNewPermission();
+                this.getPermissionItems(false);
+            });
     }
 
     private updateLayerPermissions(): void {
@@ -146,26 +168,27 @@ export class LayerPermissionComponent implements OnInit {
         }
     }
 
-    private deleteLayerPermission(permissionID: number): void {
+    // 2/8/18: permless users/groups are not being updated correctly once an object is deleted. Object deletion should add the object that was 
+    // deleted to the correct permless list
+    private deleteLayerPermission(perm: LayerPermission): void {
+        this.currDeletedPermObj = perm
+        //perm.groupID ? this.currDeletedPermIsUser=false : this.currDeletedPermIsUser=true;
+
+        if(!perm.groupID) {
+            this.currDeletedPermIsUser = true;
+        } else {
+            this.currDeletedPermIsUser = false;
+        }
+
         this.layerPermissionService
-            .Delete(permissionID)
+            .Delete(perm.ID)
             .subscribe(() => {
-                this.getPermissionItems();
-                this.getGroupItems();
-                this.getUserItems();
+                this.initNewPermission();
+                this.getPermissionItems(true);
             });
     }
 
     private switchPermType() {
         this.isGroup = !this.isGroup;
-
-        // 2/2/18: Find a way to accomplish this without having to click control twice as-is currently
-        /* if(this.isGroup) {
-            document.getElementById('layerPermNewUser').style.display = "inline";
-            document.getElementById('layerPermNewGroup').style.display = "none";
-        } else {
-            document.getElementById('layerPermNewUser').style.display = "none";
-            document.getElementById('layerPermNewGroup').style.display = "inline";
-        } */
     }
 }

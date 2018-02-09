@@ -13,7 +13,7 @@ import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component
 import { newMyCubeComponent } from './myCubeLayer/newMyCube.component'
 import { ServerService } from '../../../_services/_server.service';
 import { Server } from '../../../_models/server.model';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogConfig  } from '@angular/material';
 import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { LayerValidatorService } from './layerValidator.service';
 
