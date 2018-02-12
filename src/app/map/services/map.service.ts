@@ -79,13 +79,11 @@ export class MapService {
             .GetPageLayers(this.mapConfig.currentpage.ID)
             .subscribe((data: UserPageLayer[]) => {
                 this.mapConfig.userpagelayers = data
-                console.log(data)
                 if (data.length != 0){
                 //if (this.mapConfig.userpagelayers[0].layerON == true) {this.mapConfig.currentLayer = this.mapConfig.userpagelayers[0]}
                 //this.mapConfig.currentLayerName = this.mapConfig.userpagelayers[0].layer.layerName
                 }
                 else {
-                    console.log("No Data")
                     this.mapConfig.currentLayer = new UserPageLayer
                     this.mapConfig.currentLayerName = ""
                 }
@@ -97,14 +95,18 @@ export class MapService {
 
     public getLayerPerms(): Promise<any> {
         let promise = new Promise((resolve, reject) => {
+            console.log("UserID = " + this.mapConfig.userID)
             this.layerPermissionService
-                .GetByUser(this.mapConfig.userID)
+                .GetByUserGroups(this.mapConfig.userID)
                 .subscribe((data: LayerPermission[]) => {
                     this.mapConfig.layerpermission = data
                     this.mapConfig.userpagelayers.forEach((userpagelayer) => {
                         let j = this.mapConfig.layerpermission.findIndex((x) => x.layerID == userpagelayer.layerID)
                         if (j >= 0) {
+                            //console.log('j' + j)
+                            console.log(this.mapConfig.layerpermission[j])
                             userpagelayer.layerPermissions = this.mapConfig.layerpermission[j]
+                            //need to make sure the maximum permissions get provided.  probably need to use foreach instead of findIndex  It uses the first one instead of the most liberal.
                         }
                     })
                     resolve()
@@ -137,7 +139,6 @@ export class MapService {
                     let wmsLayer = new ol.layer.Image({
                         source: wmsSource
                     });
-                    console.log(wmsSource)
                     this.mapConfig.userpagelayers[i].layerShown = this.mapConfig.userpagelayers[i].layerON
                     wmsLayer.setVisible(this.mapConfig.userpagelayers[i].layerON)
                     this.mapConfig.layers.push(wmsLayer)
@@ -160,7 +161,6 @@ export class MapService {
             mapConfig.userpagelayers[index].layerShown = false
             
             if (this.mapConfig.currentLayer == this.mapConfig.userpagelayers[index]) {
-                console.log("Turning off the current layer if it's the layer that's on")
                 this.mapConfig.currentLayer = new UserPageLayer
                 this.mapConfig.currentLayerName = ""}
                 //could add something here that would move to the next layerShown=true.  Not sure.
@@ -181,7 +181,7 @@ export class MapService {
                 let source = new ol.source.Vector()
                 if (data[0][0]['jsonb_build_object']['features']) {
                     source = new ol.source.Vector({ features: (new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' })).readFeatures(data[0][0]['jsonb_build_object']) })}
-                    this.vectorlayer = new ol.layer.Vector({ source: source, style: this.mapstyles.load})
+                    this.vectorlayer = new ol.layer.Vector({ source: source, style: this.styleFunction(layer, 'load')})
                     this.vectorlayer.setVisible(layer.layerON)
                     this.mapConfig.map.addLayer(this.vectorlayer)
                     this.mapConfig.layers.push(this.vectorlayer)
@@ -193,6 +193,37 @@ export class MapService {
             })
     }
 
+    private styleFunction(layer: UserPageLayer, mode:string):ol.style.Style {
+        let color: string
+        let width: number
+        if (layer.style) {color = layer.style[mode]['color'];width = layer.style[mode]['width']}
+        else {color = layer.layer.defaultStyle[mode]['color']; width = layer.layer.defaultStyle[mode]['width']}
+        let load = new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 5,
+                fill: null,
+                stroke: new ol.style.Stroke({color: color, width: width})
+            }),
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.2)'
+            }),
+            stroke: new ol.style.Stroke({
+                color: color,
+                width: width
+            }),
+            text: new ol.style.Text({
+                font: '12px Calibri,sans-serif',
+                fill: new ol.style.Fill({
+                    color: '#000'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#fff',
+                    width: 1
+                }),
+            })
+        });
+        return load
+    }
     private formLayerRequest(layer: UserPageLayer): string {
       switch (layer.layer.layerType) {
             case ('MapServer'): {
@@ -214,12 +245,11 @@ export class MapService {
         this.mapConfig.currentLayer = layer
         this.myCubeService.clearMyCubeData() //cleans the selected myCube data off the screen
         if (this.mapConfig.selectedFeature) {this.mapConfig.selectedFeature.setStyle(null)}  //fixes a selected feature's style
-        console.log ("Current Layer name is " + layer.layer.layerName)
         this.mapConfig.currentLayerName = layer.layer.layerName  //Puts the current name in the component
         if (layer.layerON) {this.mapConfig.currentLayer = layer}
         this.mapConfig.userpagelayers.forEach(element => {
             if (element.layer.layerType == "MyCube") {
-                this.mapConfig.layers[element.loadOrder-1].setStyle(this.mapstyles.load) //resets all the feature styles to "load"
+                this.mapConfig.layers[element.loadOrder-1].setStyle(this.styleFunction(element, 'load')) //resets all the feature styles to "load"
             }
         });
         let index = this.mapConfig.userpagelayers.findIndex(x => x == layer)
@@ -291,7 +321,7 @@ export class MapService {
         if (this.modkey) { 
             ol.Observable.unByKey(this.modkey) //removes the previous modify even if there was one.
         }
-        this.mapConfig.layers[layer.loadOrder-1].setStyle(this.mapstyles.current)
+        this.mapConfig.layers[layer.loadOrder-1].setStyle(this.styleFunction(layer,'current'))
         this.getFeatureList()
         this.evkey = this.mapConfig.map.on('singleclick', (e) => {
             if (this.mapConfig.selectedFeature) {
@@ -344,7 +374,7 @@ export class MapService {
             ol.Observable.unByKey(this.modkey) //removes the previous modify even if there was one.
         }
         this.myCubeService.clearMyCubeData()
-        this.mapConfig.layers[layer.loadOrder-1].setStyle(this.mapstyles.current)
+        this.mapConfig.layers[layer.loadOrder-1].setStyle(this.styleFunction(layer, 'current'))
     }
 
     private draw(mapconfig: MapConfig, featurety: any) {
@@ -404,30 +434,29 @@ export class MapService {
             .subscribe((result) => {
                 let bodyjson : JSON = JSON.parse(result._body)
                 let count: number = bodyjson[0][0].count
-                console.log(count)
                 for (let i = 2; i <= count; i++) {
-                    console.log(i)
                     this.sqlService
                     .getIsLabel(this.oid, i)
                     .subscribe((result) => {
-                        //console.log(result)
                         let labeljson: JSON = JSON.parse(result._body)
-                        console.log(labeljson)
                         let labelName:string = labeljson[0][0].col_description
                         if (labelName != null) {
                         if (labelName.length > 0)
-                            {console.log(labeljson[0][0].col_description)}
                             this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder-1].forEachFeature((x:ol.Feature) => {
-                                console.log(x.get(labelName))
                                 let fl= new featureList
                                 fl.label = x.get(labelName)
                                 fl.feature = x
                                 this.featurelist.push(fl)
                             })
+                            this.featurelist.sort((a, b):number => {
+                                if (a.label > b.label) {return 1}
+                                if (a.label < b.label) {return -1} 
+                                return 0
+                            })
                     }})
                 }
             })
-            })})     
+            })})
             return promise
     }
 
@@ -439,7 +468,6 @@ export class MapService {
             let body:string = result._body
             //body.split('"attrelid":')[1]
             let bodyjson:JSON = JSON.parse(result._body)
-            console.log(bodyjson[0][0].attrelid)
             this.oid = bodyjson[0][0].attrelid
             resolve()
         })
@@ -449,19 +477,20 @@ export class MapService {
     private zoomToFeature(featurelist: featureList): void {
         this.clearFeature(this.mapConfig.currentLayer)
         let ext = featurelist.feature.getGeometry().getExtent();
-        console.log(ext)
         let center = ol.extent.getCenter(ext);
-        console.log(center)
-        // this.mapConfig.view.animate({
-        //     center: [center[0], center[1]],
-        // zoom: 18
-        // })
         this.mapConfig.view.fit(featurelist.feature.getGeometry().getExtent(), {
             duration: 1000,
-            maxZoom: 17
+            maxZoom: 18
         })
         this.mapConfig.selectedFeature = featurelist.feature
         this.selectFeature(this.mapConfig.currentLayer)
     }
+
+    private zoomExtents(): void {
+        console.log("zoomExtents")
+
+        this.mapConfig.view.animate({zoom:13, center:ol.proj.transform([-86.1336, 40.4864], 'EPSG:4326', 'EPSG:3857')})
+    }
 }
 
+ 

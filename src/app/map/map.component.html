@@ -23,7 +23,7 @@
                                 <mat-icon>more_vert</mat-icon>
                             </button>
                             <mat-menu #menu="matMenu">
-                                <button mat-menu-item>
+                                <button disabled="true" mat-menu-item>
                                     <mat-icon>done</mat-icon>
                                     <span>Make Default</span>
                                 </button>
@@ -31,7 +31,7 @@
                                     <mat-icon>settings</mat-icon>
                                     <span>Edit Layers</span>
                                 </button>
-                                <button mat-menu-item>
+                                <button disabled="true" mat-menu-item>
                                     <mat-icon>notifications_off</mat-icon>
                                     <span>Disable alerts</span>
                                 </button>
@@ -58,31 +58,31 @@
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
-                            <button mat-menu-item>
+                            <button mat-menu-item disabled="true">
                                 <mat-icon>star</mat-icon>
                                 <span>Default On</span>
                             </button>
-                            <button mat-menu-item>
+                            <button mat-menu-item disabled="true">
                                 <mat-icon>opacity</mat-icon>
                                 <span>Opacity</span>
                             </button>
-                            <button mat-menu-item>
+                            <button mat-menu-item disabled="true">
                                 <mat-icon>share</mat-icon>
                                 <span>Share</span>
                             </button>
-                            <button mat-menu-item>
+                            <button mat-menu-item disabled="true">
                                 <mat-icon>remove</mat-icon>
                                 <span>Remove From Page</span>
                             </button>
-                            <button mat-menu-item>
+                            <button mat-menu-item disabled="true">
                                 <mat-icon>web</mat-icon>
                                 <span>Copy Google Sheet Link</span>
                             </button>
-                            <button mat-menu-item>
+                            <button mat-menu-item disabled="true">
                                 <mat-icon>place</mat-icon>
                                 <span>View in Google Earth</span>
                             </button>
-                            <button mat-menu-item>
+                            <button mat-menu-item disabled="true">
                                 <mat-icon>assignment</mat-icon>
                                 <span>View Metadata</span>
                             </button>                                              
@@ -96,12 +96,13 @@
                     <br>
                 </mat-radio-group>
 
-                <mat-action-row *ngIf="mapConfig.editmode">
+                <mat-action-row>
                     <mat-chip-list>
-                        <mat-chip (click)="mapService.draw(mapConfig,'Point')"><mat-icon>control_point</mat-icon></mat-chip>
-                        <mat-chip (click)="mapService.draw(mapConfig,'LineString')"><mat-icon>timeline</mat-icon></mat-chip>
-                        <mat-chip (click)="mapService.draw(mapConfig,'Polygon')"><mat-icon>change_history</mat-icon></mat-chip>
-                        <mat-chip (click)="mapService.delete(mapConfig)"><mat-icon>delete</mat-icon></mat-chip>
+                        <mat-chip (click)="mapService.zoomExtents()"><mat-icon>zoom_out_map</mat-icon></mat-chip>
+                        <mat-chip *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'Point')"><mat-icon>control_point</mat-icon></mat-chip>
+                        <mat-chip *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'LineString')"><mat-icon>timeline</mat-icon></mat-chip>
+                        <mat-chip *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'Polygon')"><mat-icon>change_history</mat-icon></mat-chip>
+                        <mat-chip *ngIf="mapConfig.editmode" (click)="mapService.delete(mapConfig)"><mat-icon>delete</mat-icon></mat-chip>
                     </mat-chip-list>
                 </mat-action-row>
             </mat-expansion-panel>
@@ -109,7 +110,7 @@
             <mat-expansion-panel *ngIf="mapConfig.currentLayer.layer.layerType == 'MyCube'">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        Feature List
+                        Feature List ({{mapService.featurelist.length}})
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
@@ -120,13 +121,14 @@
                     </div>
                 </div>
 
-                <mat-action-row *ngIf="mapConfig.editmode">
+                <mat-action-row>
                     <mat-chip-list>
-                        <mat-chip (click)="mapService.draw(mapConfig,'Point')"><mat-icon>control_point</mat-icon></mat-chip>
-                        <mat-chip (click)="mapService.draw(mapConfig,'LineString')"><mat-icon>timeline</mat-icon></mat-chip>
-                        <mat-chip (click)="mapService.draw(mapConfig,'Polygon')"><mat-icon>change_history</mat-icon></mat-chip>
-                        <mat-chip (click)="mapService.delete(mapConfig)"><mat-icon>delete</mat-icon></mat-chip>
-                    </mat-chip-list>
+                            <mat-chip (click)="mapService.zoomExtents()"><mat-icon>zoom_out_map</mat-icon></mat-chip>
+                            <mat-chip *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'Point')"><mat-icon>control_point</mat-icon></mat-chip>
+                            <mat-chip *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'LineString')"><mat-icon>timeline</mat-icon></mat-chip>
+                            <mat-chip *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'Polygon')"><mat-icon>change_history</mat-icon></mat-chip>
+                            <mat-chip *ngIf="mapConfig.editmode" (click)="mapService.delete(mapConfig)"><mat-icon>delete</mat-icon></mat-chip>
+                        </mat-chip-list>
                 </mat-action-row>
             </mat-expansion-panel>
 

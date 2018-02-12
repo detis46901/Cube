@@ -22,6 +22,13 @@ export class LayerPermissionService extends ParentService {
             .map((response: Response) => <LayerPermission[]>response.json())
             .catch(this.handleError);
     }
+
+    public GetByUserGroups = (userid): Observable<LayerPermission[]> => {
+        console.log(this.actionUrl + 'getbyusergroups?userID=' + userid)
+        return this._http.get(this.actionUrl + 'getbyusergroups?userID=' + userid, this.options)
+            .map((response: Response) => <LayerPermission[]>response.json())
+            .catch(this.handleError);
+    }
     
     public GetByLayer = (layerid): Observable<LayerPermission[]> => {
         return this._http.get(this.actionUrl + 'getbylayer?layerID=' + layerid, this.options)

@@ -10,6 +10,7 @@ export class Layer {
     layerGeom: string;
     serverID: number;
     server: Server;
+    defaultStyle: JSON;
 }
 
 export class LayerPermission {
@@ -38,6 +39,7 @@ export class UserPageLayer {
     userID: number;    
     userPageID: number;
     layerID: number;
+    style: JSON;
     layer = new Layer;
     layerPermissions = new LayerPermission;
     serverID: number;

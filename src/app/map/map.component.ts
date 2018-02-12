@@ -118,6 +118,7 @@ export class MapComponent {
             this.mapConfig.layers.splice(k,1)
             console.log(this.mapConfig.layers)
             this.mapConfig.currentLayerName = null
+            this.mapService.featurelist = []
             
 
         }
