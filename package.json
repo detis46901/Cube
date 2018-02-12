@@ -51,7 +51,7 @@
     "leaflet-plugins": "^3.0.1",
     "live-server": "^1.2.0",
     "mdi": "^2.1.19",
-    "next": "^2.4.9",
+    "next": "^4.2.3",
     "node-pre-gyp": "^0.6.34",
     "node-sass": "^4.7.2",
     "openlayers": "^4.6.4",
