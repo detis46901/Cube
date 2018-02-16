@@ -1,14 +1,31 @@
 <div class="change-picture-parent-container">
     <div class="change-picture-header">
         <h4>
-            <strong>Change Profile Picture</strong>
+            <strong>Change Avatar</strong>
             <button [mat-dialog-close] class="close" aria-label="Close">&times;</button>
         </h4>
     </div>
+
     <mat-dialog-content>
         <div class="change-picture-content">
-            <button mat-button (click)="importImage()">Import</button>
-            <!-- <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".png, .jpeg, .jpg"> -->
+            <!-- default options?
+            <div class="sample-grid">
+                <img src="">
+                <img src="">
+                <img src="">
+                <img src="">
+                <img src="">
+                <img src="">
+                <img src="">
+                <img src="">
+            </div>
+            <hr> -->
+            <input type="file" (change)="onFileSelected($event)">
         </div>
     </mat-dialog-content>
+
+    <mat-dialog-actions>
+        <button mat-dialog-close id="newGroupClose">Cancel</button>
+        <button mat-button (click)="onUpload()">Ok</button>
+    </mat-dialog-actions>
 </div>

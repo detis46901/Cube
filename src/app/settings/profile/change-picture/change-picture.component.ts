@@ -1,42 +1,39 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { RequestOptions, Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { HttpClient } from '@angular/common/http';
+import { ImageService } from '../../../../_services/image.service';
 
 @Component({
     selector: 'change-picture',
     templateUrl: './change-picture.component.html',
-    styleUrls: ['./change-picture.component.scss']
+    styleUrls: ['./change-picture.component.scss'],
+    providers: [ImageService]
 })
 
 export class ChangePictureComponent implements OnInit {
     @Input() userID;
+    private selectedFile: File = null;
 
-    constructor(private http: Http) {     
+    constructor(private http: HttpClient, private imageService: ImageService) {     
     }
 
     ngOnInit() {
     }
 
-    private importImage() {
-        console.log("import image")
+    private onFileSelected(event) {
+        console.log(event.target.files[0])
+        this.selectedFile = <File>event.target.files[0]
     }
 
-    // private fileChange(event) {
-    //     let fileList: FileList = event.target.files;
-    //     if(fileList.length > 0) {
-    //         let file: File = fileList[0];
-    //         let formData:FormData = new FormData();
-    //         formData.append('uploadFile', file, file.name);
-    //         let headers = new Headers();
-    //         headers.append('Accept', 'application/json');
-    //         let options = new RequestOptions({ headers: headers });
-    //         this.http.post(`${this.apiEndPoint}`, formData, options)
-    //             .map(res => res.json())
-    //             .catch(error => Observable.throw(error))
-    //             .subscribe(
-    //                 data => console.log('success'),
-    //                 error => console.log(error)
-    //             )
-    //     }
-    // }
+    private onUpload() {
+        //use service to interface with backend to post file upload
+        const fd = new FormData();
+        fd.append('upload', this.selectedFile, this.selectedFile.name);//for FormData, use fd. for binary, use selectedFile
+        this.imageService
+            .Upload(/*fd*/this.selectedFile)
+            .subscribe(res => {
+                console.log(res)
+            });
+    }
 }

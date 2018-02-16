@@ -69,7 +69,7 @@
             </mat-cell>
         </ng-container>
 
-        <ng-container class="col-sm-5" matColumnDef="actionsColumn">
+        <ng-container matColumnDef="actionsColumn">
             <mat-header-cell *matHeaderCellDef> Options </mat-header-cell>
             <mat-cell *matCellDef="let row">
                 <button *ngIf="!row.editing" mat-icon-button color="primary" focusable="false" (click)="row.startEdit()">

@@ -6,13 +6,7 @@ import { Configuration } from '../_api/api.constants';
 @Component({
     selector: 'app',
     providers: [UserService, Configuration],
-    template: `
-    <div>     
-        <router-outlet></router-outlet>
-        <br />  
-    <br />   
-    </div>
-    `,
+    templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']  
 })
 

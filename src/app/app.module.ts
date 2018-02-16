@@ -69,7 +69,13 @@ import { PMMarkerComponent } from '../app/map/marker/PMmarker.component'
 import { NavigatorComponent } from '../app/map/navigator/navigator.component';
 import { PagesComponent } from './pages/pages.component';
 import { GroupComponent } from './admin/group/group.component';
-import { NewGroupComponent } from './admin/group/newGroup/newGroup.component'
+import { NewGroupComponent } from './admin/group/newGroup/newGroup.component';
+import { NewUserComponent } from './admin/user/newUser/newUser.component';
+import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
+import { ProfileComponent } from './settings/profile/profile.component';
+import { ChangePictureComponent } from './settings/profile/change-picture/change-picture.component';
+
+import { mapStyles } from '../app/map/models/map.model';
 
 //Services
 import { UserService } from '../_services/_user.service';
@@ -81,24 +87,13 @@ import { UserPageLayerService } from '../_services/_userPageLayer.service';
 import { UserPageService } from '../_services/_userPage.service';
 import { AuthenticationService} from '../_services/authentication.service';
 import { SQLService } from '../_services/sql.service'
-//import { LeafletModule } from '@asymmetrik/ngx-leaflet';
-//import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
-import { NewUserComponent } from './admin/user/newUser/newUser.component';
 import { ServerService } from '../_services/_server.service';
 import { geoJSONService } from './map/services/geoJSON.service';
 import { MyCubeService } from './/map/services/mycube.service';
 import { WFSService } from './map/services/wfs.service';
 import { SideNavService } from '../_services/sidenav.service';
 import { MessageService } from '../_services/message.service';
-import { mapStyles } from '../app/map/models/map.model'
-import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
-import { ProfileComponent } from './settings/profile/profile.component';
-import { ChangePictureComponent } from './settings/profile/change-picture/change-picture.component';
-
-
-
-
-
+import { ImageService } from '../_services/image.service';
 
 @NgModule ({
     declarations: [
@@ -228,7 +223,8 @@ import { ChangePictureComponent } from './settings/profile/change-picture/change
         WFSService,
         SideNavService,
         MessageService,
-        mapStyles
+        mapStyles,
+        ImageService
     ], 
 
     bootstrap: [AppComponent]
