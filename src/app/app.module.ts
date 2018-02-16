@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 //import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule, JsonpModule } from '@angular/http';
+import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { MapService } from './map/services/map.service';
 import { GeocodingService } from './map/services/geocoding.service';
 import { Routes, RouterModule } from '@angular/router';
@@ -22,8 +22,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import {MatMenuModule} from '@angular/material/menu'
-import { MatRadioModule, MatIconModule, MatDialogModule, MatSelectModule, MatListModule, 
+import { MatMenuModule } from '@angular/material/menu'
+import { MatRadioModule, MatIconModule, MatCardModule, MatDialogModule, MatSelectModule, MatListModule, 
          MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, 
          MatFormFieldModule, MatProgressSpinnerModule, MatToolbarModule, MatNativeDateModule } from '@angular/material';
 import {MatChipsModule} from '@angular/material/chips';
@@ -166,8 +166,8 @@ import { ChangePictureComponent } from './settings/profile/change-picture/change
         BrowserModule,
         FormsModule,
         CommonModule,
-        HttpModule,
-        JsonpModule,
+        HttpClientModule,
+        HttpClientJsonpModule,
         //MNgbodule.forRoot(),
         Routing,
         RouterModule.forRoot([
@@ -179,6 +179,8 @@ import { ChangePictureComponent } from './settings/profile/change-picture/change
         FormsModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
+        MatCardModule,
+        MatSidenavModule,
         MatSlideToggleModule,
         MatTabsModule,
         MatExpansionModule,

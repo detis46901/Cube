@@ -23,19 +23,19 @@ export class ApiKeyComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.getUserItems(this.userID)
+        //this.getUserItems(this.userID)
     }
 
-    getUserItems(userID): void {
-        this.userService
-        .GetSingle(userID)
-        .subscribe((data:User) => {
-            this.user = data
-            this.userService
-            .generateKey(data.email, data.firstName, data.lastName) //error: 500 hash comparison failed on API
-            .subscribe((key:string) => {
-                this.apiKeyToken = key;
-            })
-        })
-    }
+    // getUserItems(userID): void {
+    //     this.userService
+    //     .GetSingle(userID)
+    //     .subscribe((data:User) => {
+    //         this.user = data
+    //         this.userService
+    //         .generateKey(data.email, data.firstName, data.lastName) //error: 500 hash comparison failed on API
+    //         .subscribe((key) => {
+    //             this.apiKeyToken = key;
+    //         })
+    //     })
+    // }
 }

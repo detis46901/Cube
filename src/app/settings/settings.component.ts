@@ -7,7 +7,7 @@ import { User } from '../../_models/user.model';
     selector: 'settings',
     templateUrl: './settings.component.html',
     providers: [UserService, Configuration],
-    styleUrls: ['./settings.component.css'],
+    styleUrls: ['./settings.component.scss'],
     })
 
 export class SettingsComponent{

@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ServerService } from '../../../_services/_server.service';
 import { Server } from '../../../_models/server.model';
 import { ServerNewComponent } from './serverNew/serverNew.component';
-import { Http, RequestOptions, Headers } from '@angular/http';
+import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { RequestOptions } from '@angular/http';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
 import { LayerNewComponent } from '../layerAdmin/layerNew/layerNew.component';
 import { MatDialog } from '@angular/material';
@@ -18,8 +19,8 @@ import { ServerValidatorService } from './serverValidator.service';
 
 export class ServerComponent implements OnInit {
     private objCode = 6;
-    private headers: Headers;
-    private options: RequestOptions;
+    private token: string;
+    private options: any;
     
     private toCreate: boolean = false;
 
@@ -39,10 +40,12 @@ export class ServerComponent implements OnInit {
     private dataSource: TableDataSource<Server>;
 
     constructor(private serverService: ServerService, private dialog: MatDialog, private serverValidator: ValidatorService) {
-        this.headers = new Headers();
-        this.headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        this.headers.append('Accept', 'text/plain');
-        this.options = new RequestOptions({headers: this.headers});
+        this.options = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'Accept': 'text/plain' //use token auth
+            })
+        }
     }
 
     ngOnInit() {

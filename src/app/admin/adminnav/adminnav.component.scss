@@ -1,13 +1,37 @@
-h4 {
-    color: black;
-}
-
 a {
-    position: relative;
-    left: 15px;
+    color: black;
+    margin-left:10px;
+    font-family: 'Nunito', sans-serif;
 }
 
-mat-nav-list {
-    position:relative;
-    right:20px;
+h4 {
+    font-family: 'Nunito', sans-serif;
 }
+
+
+// a {
+//     position: relative;
+//     left: 15px;
+//     height:40px;
+//     //z-index:10003;
+// }
+
+// mat-sidenav-container {
+//     height:60%;
+//     width:100%;
+//     position:absolute;
+//     top:50px;
+//     //z-index:10001;
+// }
+
+// mat-nav-list {
+//     position:relative;
+//     right:20px;
+//     height:60%;
+//     z-index:10002;
+// }
+
+// .test {
+//     height:60%;
+//     z-index:100;
+// }

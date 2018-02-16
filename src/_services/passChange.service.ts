@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers } from '@angular/http';
+import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class PasswordChangeService {
-    constructor(private http: Http) {}
+    constructor(private http: HttpClient) {}
 }

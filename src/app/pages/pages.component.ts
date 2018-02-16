@@ -4,7 +4,8 @@ import { UserPage } from '../../_models/user.model';
 
 @Component({
   selector: 'pages',
-  templateUrl: './pages.component.html'
+  templateUrl: './pages.component.html',
+  styleUrls: ['./pages.component.scss'],
 })
 
 export class PagesComponent implements OnInit{
@@ -19,7 +20,7 @@ export class PagesComponent implements OnInit{
     }
 
     ngOnInit() {
-    this.getUserPageItems()
+        this.getUserPageItems()
     }
 
     public getUserPageItems(): void {

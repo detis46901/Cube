@@ -1,11 +1,12 @@
 <mat-sidenav-container>
-    <mat-sidenav #sidenav class="example-sidenav">
-        <mat-nav-list>
-            <a mat-list-item [routerLink]="['/settings', {outlets: {settings: ['userpages']}}]" routerLinkActive="active"><h4>User Settings</h4></a>
-            <a mat-list-item [routerLink]="['/settings', {outlets: {settings: ['profile']}}]" routerLinkActive="active"><h5>Profile</h5></a>
-            <a mat-list-item [routerLink]="['/settings', {outlets: {settings: ['userpages']}}]" routerLinkActive="active"><h5>Pages</h5></a>
-            <a mat-list-item [routerLink]="['/settings', {outlets: {settings: ['password']}}]" routerLinkActive="active"><h5>Change Password</h5></a>
-            <a mat-list-item [routerLink]="['/settings', {outlets: {settings: ['apikey']}}]" routerLinkActive="active"><h5>API Key</h5></a>
-        </mat-nav-list>
-    </mat-sidenav>
+    <mat-sidenav #sidenav class="settings-sidenav">User Settings</mat-sidenav>
+    <mat-sidenav-content>
+        <mat-list>
+            <mat-list-item role="settings-menu-item"><h4>User Settings</h4></mat-list-item>
+            <mat-list-item role="settings-menu-item"><a [routerLink]="['/settings', {outlets: {settings: ['profile']}}]" routerLinkActive="active">Profile</a></mat-list-item>
+            <!-- <mat-list-item role="settings-menu-item"><a [routerLink]="['/settings', {outlets: {settings: ['userpages']}}]" routerLinkActive="active">Pages</a></mat-list-item> -->
+            <mat-list-item role="settings-menu-item"><a [routerLink]="['/settings', {outlets: {settings: ['password']}}]" routerLinkActive="active">Change Password</a></mat-list-item>
+            <mat-list-item role="settings-menu-item"><a [routerLink]="['/settings', {outlets: {settings: ['apikey']}}]" routerLinkActive="active">API Key</a></mat-list-item>
+        </mat-list>
+    </mat-sidenav-content>
 </mat-sidenav-container>

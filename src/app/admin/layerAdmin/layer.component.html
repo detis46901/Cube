@@ -1,123 +1,125 @@
-<div class="row">
-    <mat-table id="layerDataTable" #table [dataSource]="dataSource">
-        <ng-container class="col-sm-1" matColumnDef="layerID">
-            <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-                <b>{{row.currentData.ID}}</b>
-                <!-- <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                    <input matInput [formControl]="row.validator.controls['ID']" [readonly]="!row.editing" [(ngModel)]="row.currentData.ID">
-                </mat-form-field> -->
-            </mat-cell>
-        </ng-container>
-        
-        <ng-container class="col-sm-1" matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-                <mat-form-field #input floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                    <input matInput [formControl]="row.validator.controls['layerName']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerName">
-                </mat-form-field>
-            </mat-cell>
-        </ng-container>
+<div class="layer-parent-container">
+    <div class="row">
+        <mat-table id="layerDataTable" #table [dataSource]="dataSource">
+            <ng-container class="col-sm-1" matColumnDef="layerID">
+                <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <b>{{row.currentData.ID}}</b>
+                    <!-- <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                        <input matInput [formControl]="row.validator.controls['ID']" [readonly]="!row.editing" [(ngModel)]="row.currentData.ID">
+                    </mat-form-field> -->
+                </mat-cell>
+            </ng-container>
+            
+            <ng-container class="col-sm-1" matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <mat-form-field #input floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                        <input matInput [formControl]="row.validator.controls['layerName']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerName">
+                    </mat-form-field>
+                </mat-cell>
+            </ng-container>
 
-        <ng-container class="col-sm-1" matColumnDef="identity">
-            <mat-header-cell *matHeaderCellDef> Identity </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-                <mat-form-field #input floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                    <input matInput [formControl]="row.validator.controls['layerIdent']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerIdent">
-                </mat-form-field>
-            </mat-cell>
-        </ng-container>
-        
-        <ng-container class="col-sm-2" matColumnDef="service">
-            <mat-header-cell *matHeaderCellDef> Service </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-                <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                    <input matInput [formControl]="row.validator.controls['layerService']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerService">
-                </mat-form-field>
-            </mat-cell>
-        </ng-container>
-        
-        <ng-container class="col-sm-1" matColumnDef="server">
-            <mat-header-cell *matHeaderCellDef> Server </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-                <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                    <mat-select [formControl]="row.validator.controls['serverID']" [(ngModel)]="row.currentData.serverID">
-                        <mat-option *ngFor="let server of servers" [value]="server.ID">
-                            {{server.serverName}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-cell>
-        </ng-container>
+            <ng-container class="col-sm-1" matColumnDef="identity">
+                <mat-header-cell *matHeaderCellDef> Identity </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <mat-form-field #input floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                        <input matInput [formControl]="row.validator.controls['layerIdent']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerIdent">
+                    </mat-form-field>
+                </mat-cell>
+            </ng-container>
+            
+            <ng-container class="col-sm-2" matColumnDef="service">
+                <mat-header-cell *matHeaderCellDef> Service </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                        <input matInput [formControl]="row.validator.controls['layerService']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerService">
+                    </mat-form-field>
+                </mat-cell>
+            </ng-container>
+            
+            <ng-container class="col-sm-1" matColumnDef="server">
+                <mat-header-cell *matHeaderCellDef> Server </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                        <mat-select [formControl]="row.validator.controls['serverID']" [(ngModel)]="row.currentData.serverID">
+                            <mat-option *ngFor="let server of servers" [value]="server.ID">
+                                {{server.serverName}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </mat-cell>
+            </ng-container>
 
-        <ng-container class="col-sm-1" matColumnDef="description">
-            <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-                <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                    <input matInput [formControl]="row.validator.controls['layerDescription']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerDescription">
-                </mat-form-field>
-            </mat-cell>
-        </ng-container>
-        
-        <ng-container class="col-sm-1" matColumnDef="format">
-            <mat-header-cell *matHeaderCellDef> Format </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-                <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                    <input matInput [formControl]="row.validator.controls['layerFormat']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerFormat">
-                </mat-form-field>
-            </mat-cell>
-        </ng-container>
-        
-        <ng-container class="col-sm-1" matColumnDef="type">
-            <mat-header-cell *matHeaderCellDef> Type </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-                <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                    <input matInput [formControl]="row.validator.controls['layerType']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerType">
-                </mat-form-field>
-            </mat-cell>
-        </ng-container>
+            <ng-container class="col-sm-1" matColumnDef="description">
+                <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                        <input matInput [formControl]="row.validator.controls['layerDescription']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerDescription">
+                    </mat-form-field>
+                </mat-cell>
+            </ng-container>
+            
+            <ng-container class="col-sm-1" matColumnDef="format">
+                <mat-header-cell *matHeaderCellDef> Format </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                        <input matInput [formControl]="row.validator.controls['layerFormat']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerFormat">
+                    </mat-form-field>
+                </mat-cell>
+            </ng-container>
+            
+            <ng-container class="col-sm-1" matColumnDef="type">
+                <mat-header-cell *matHeaderCellDef> Type </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                        <input matInput [formControl]="row.validator.controls['layerType']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerType">
+                    </mat-form-field>
+                </mat-cell>
+            </ng-container>
 
-        <ng-container class="col-sm-1" matColumnDef="geometry">
-            <mat-header-cell *matHeaderCellDef> Geometry </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-                <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                    <input matInput [formControl]="row.validator.controls['layerGeom']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerGeom">
-                </mat-form-field>
-            </mat-cell>
-        </ng-container>
+            <ng-container class="col-sm-1" matColumnDef="geometry">
+                <mat-header-cell *matHeaderCellDef> Geometry </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                        <input matInput [formControl]="row.validator.controls['layerGeom']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerGeom">
+                    </mat-form-field>
+                </mat-cell>
+            </ng-container>
 
-        <ng-container class="col-sm-2" matColumnDef="actionsColumn">
-            <mat-header-cell *matHeaderCellDef> Options </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-                <button *ngIf="!row.editing" mat-icon-button color="primary" focusable="false" (click)="row.startEdit()">
-                    <i class="fa fa-pencil mat-icon"></i>
-                </button>
-                <button *ngIf="row.editing" mat-icon-button color="primary" focusable="false" (click)="row.confirmEditCreate()">
-                    <i class="fa fa-check mat-icon"></i>
-                </button>
-                <button mat-icon-button color="primary" focusable="false" (click)="confirmDelete(row.currentData)">
-                    <i class="fa fa-times mat-icon"></i>
-                </button>
-                <button mat-button id="exlayerperm" title="Open layer permissions" (click)="openPermission(row.currentData.ID,row.currentData.layerName)">Permissions</button>
-            </mat-cell>
-        </ng-container>
-        
-        <mat-header-row *matHeaderRowDef="layerColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: layerColumns"></mat-row>
-    </mat-table>
-</div>
-
-
-<button mat-button id="createLayerBtn" (click)="createLayer()">Create Layer</button>
-<button mat-button id="createMyCubeBtn" (click)="createMyCube()">Create MyCube</button>
-<span ngbDropdown>   
-    <button id="sortBtn" type="button" class="btn-primary" ngbDropdownToggle>Sort Layers</button>
-    <div id="sortDrop" class="dropdown-menu dropdown-menu-right" aria-labelledby="options">
-        <button id="sortAZ" type="button" class="btn btn-secondary" (click)="sortLayers('AZ')">Name (Ascending)</button>
-        <button id="sortZA" type="button" class="btn btn-secondary" (click)="sortLayers('ZA')">Name (Descending)</button>
-        <button id="sortType" type="button" class="btn btn-secondary" (click)="sortLayers('TYPE')">Type</button>
-        <button id="sortOldNew" type="button" class="btn btn-secondary" (click)="sortLayers('OLD_NEW')">Old to New</button><br>
-        <button id="sortNewOld" type="button" class="btn btn-secondary" (click)="sortLayers('NEW_OLD')">New to Old</button><br>
-        <button id="sortGeom" type="button" class="btn btn-secondary" (click)="sortLayers('GEOM')">Geometry</button>
+            <ng-container class="col-sm-2" matColumnDef="actionsColumn">
+                <mat-header-cell *matHeaderCellDef> Options </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <button *ngIf="!row.editing" mat-icon-button color="primary" focusable="false" (click)="row.startEdit()">
+                        <i class="fa fa-pencil mat-icon"></i>
+                    </button>
+                    <button *ngIf="row.editing" mat-icon-button color="primary" focusable="false" (click)="row.confirmEditCreate()">
+                        <i class="fa fa-check mat-icon"></i>
+                    </button>
+                    <button mat-icon-button color="primary" focusable="false" (click)="confirmDelete(row.currentData)">
+                        <i class="fa fa-times mat-icon"></i>
+                    </button>
+                    <button mat-button id="exlayerperm" title="Open layer permissions" (click)="openPermission(row.currentData.ID,row.currentData.layerName)">Permissions</button>
+                </mat-cell>
+            </ng-container>
+            
+            <mat-header-row *matHeaderRowDef="layerColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: layerColumns"></mat-row>
+        </mat-table>
     </div>
-</span>
+
+
+    <button mat-button id="createLayerBtn" (click)="createLayer()">Create Layer</button>
+    <button mat-button id="createMyCubeBtn" (click)="createMyCube()">Create MyCube</button>
+    <span ngbDropdown>   
+        <button id="sortBtn" type="button" class="btn-primary" ngbDropdownToggle>Sort Layers</button>
+        <div id="sortDrop" class="dropdown-menu dropdown-menu-right" aria-labelledby="options">
+            <button id="sortAZ" type="button" class="btn btn-secondary" (click)="sortLayers('AZ')">Name (Ascending)</button>
+            <button id="sortZA" type="button" class="btn btn-secondary" (click)="sortLayers('ZA')">Name (Descending)</button>
+            <button id="sortType" type="button" class="btn btn-secondary" (click)="sortLayers('TYPE')">Type</button>
+            <button id="sortOldNew" type="button" class="btn btn-secondary" (click)="sortLayers('OLD_NEW')">Old to New</button><br>
+            <button id="sortNewOld" type="button" class="btn btn-secondary" (click)="sortLayers('NEW_OLD')">New to Old</button><br>
+            <button id="sortGeom" type="button" class="btn btn-secondary" (click)="sortLayers('GEOM')">Geometry</button>
+        </div>
+    </span>
+</div>

@@ -1,54 +1,66 @@
 import 'rxjs/add/operator/map';
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers } from '@angular/http';
+import { HttpClient, HttpResponse, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http'
 import { Observable } from 'rxjs/Observable';
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+import { catchError } from 'rxjs/operators';
 import { User } from '../_models/user.model';
 import { Configuration } from './api.constants';
  
 @Injectable()
 export class DataService {
     private actionUrl: string;
-    private headers: Headers;
+    private options: any;
+    private token: string;
  
-    constructor(private _http: Http, private configuration: Configuration) {
+    constructor(private _http: HttpClient, private configuration: Configuration) {
         this.actionUrl = configuration.serverWithApiUrl + 'users/one?rowid=';
-        this.headers = new Headers();
-        this.headers.append('Content-Type', 'application/json');
-        this.headers.append('Accept', 'application/json');
+        this.options = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'// need to add token authorization, left out to prevent breaking functionality
+            })
+        }
     }
  
     public getAll = (): Observable<User[]> => {
-        return this._http.get(this.actionUrl)
-            .map((response: Response) => <User[]>response.json())
-            .catch(this.handleError);
+        return this._http.get(this.actionUrl, this.options)
+            .pipe(catchError(this.handleError));
     }
  
     public getSingle = (id: number): Observable<User> => {
         return this._http.get(this.actionUrl + id)
-            .map((response: Response) => <User>response.json())
-            .catch(this.handleError);
+            .pipe(catchError(this.handleError));
     }
  
     public add = (itemName: string): Observable<User> => {
-        let toAdd = JSON.stringify({ ItemName: itemName });
-        return this._http.post(this.actionUrl, toAdd, { headers: this.headers })
-            .map((response: Response) => <User>response.json())
-            .catch(this.handleError);
+        const toAdd = JSON.stringify({ ItemName: itemName });
+        return this._http.post(this.actionUrl, toAdd, this.options)
+            .pipe(catchError(this.handleError));
     }
  
     public update = (id: number, itemToUpdate: User): Observable<User> => {
-        return this._http.put(this.actionUrl + id, JSON.stringify(itemToUpdate), { headers: this.headers })
-            .map((response: Response) => <User>response.json())
-            .catch(this.handleError);
+        return this._http.put(this.actionUrl + id, JSON.stringify(itemToUpdate), this.options)
+            .pipe(catchError(this.handleError));
     }
  
     public delete = (id: number): Observable<Response> => {
-        return this._http.delete(this.actionUrl + id)
-            .catch(this.handleError);
+        return this._http.delete(this.actionUrl + id, this.options)
+            .pipe(catchError(this.handleError));
     }
  
-    private handleError(error: Response) {
-        console.error(error);
-        return Observable.throw(error.json().error || 'Server error');
+    protected handleError(error: HttpErrorResponse) {
+        if (error.error instanceof ErrorEvent) {
+            // A client-side or network error occurred. Handle it accordingly.
+            console.error('An error occurred:', error.error.message);
+        } else {
+            // The backend returned an unsuccessful response code.
+            // The response body may contain clues as to what went wrong,
+            console.error(
+              `Backend returned code ${error.status}, ` +
+              `body was: ${error.error}`);
+        }
+        // return an ErrorObservable with a user-facing error message
+        return new ErrorObservable('Something bad happened; please try again later.');
     }
 }

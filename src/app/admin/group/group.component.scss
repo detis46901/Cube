@@ -1,7 +1,7 @@
 .group-parent-container {
     //background-color:yellow;
     position:relative;
-    padding:20px;
+    padding:20px 20px 20px 13%;
     display:flex;
 }
 
@@ -41,6 +41,6 @@ button {
 }
 
 .createGroup {
-    position:relative;
-    left:30px;
+    margin-left:14%;
+    //width:40px;
 }

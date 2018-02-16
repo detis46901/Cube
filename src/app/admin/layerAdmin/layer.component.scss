@@ -48,10 +48,15 @@ h4 {
     width:98%;
     overflow:auto;
     max-height:80vh;
+    outline:solid 2px black;
 }
 
 :host ::ng-deep .mat-input-underline {
     background-position: 0;
     background-color: transparent;
     display: none;
+}
+
+.layer-parent-container {
+    padding-left:12.1%;
 }

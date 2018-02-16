@@ -48,6 +48,7 @@
     flex-direction:column;
     position:relative;
     left:15px;
+    padding-left:12.1%;
 }
 
 .mat-form-field {
@@ -58,10 +59,16 @@
     width:98%;
     overflow:auto;
     max-height:80vh;
+    outline:solid 2px black;
+    //border-top:
 }
 
 :host ::ng-deep .mat-input-underline {
     background-position: 0;
     background-color: transparent;
     display: none;
+}
+
+#userCreateNew {
+    margin-left:13%;
 }

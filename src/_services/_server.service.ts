@@ -1,7 +1,8 @@
 import 'rxjs/add/operator/map';
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers } from '@angular/http';
+import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { catchError } from 'rxjs/operators';
 import { Configuration } from '../_api/api.constants';
 import { ParentService } from './_parent.service';
 import { Server } from '../_models/server.model';
@@ -11,7 +12,7 @@ export class ServerService extends ParentService {
     protected actionUrl: string;
     protected headers: Headers;
  
-    constructor(protected _http: Http, protected configuration: Configuration) {
+    constructor(protected _http: HttpClient, protected configuration: Configuration) {
         super(_http, configuration);
         this.actionUrl = this.configuration.serverWithApiUrl + 'server/';
     }
@@ -26,8 +27,8 @@ export class ServerService extends ParentService {
                 actionUrl = serv.serverURL + 'f=pjson'; 
                 break;
         }
-        return this._http.get(actionUrl, options/*, this.options*/)
-            .map((response: Response) => response.text());
+        return this._http.get(actionUrl, options)
+            .pipe(catchError(this.handleError));
     }
 
     public getFolders(serv: Server, path: string, type: string, options: any): Observable<string> {
@@ -42,6 +43,6 @@ export class ServerService extends ParentService {
                 break;
         }     
         return this._http.get(actionUrl, options/*, this.options*/)
-            .map((response: Response) => response.text());
+            .pipe(catchError(this.handleError));
     }
 }

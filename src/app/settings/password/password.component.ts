@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UserService } from '../../../_services/_user.service';
 import { Configuration } from '../../../_api/api.constants';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http'
 import { User } from '../../../_models/user.model';
 
 @Component({

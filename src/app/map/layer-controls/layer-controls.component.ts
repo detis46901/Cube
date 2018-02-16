@@ -14,7 +14,7 @@ import { LayerPermission, Layer, UserPageLayer } from "../../../_models/layer.mo
 import { Server } from "../../../_models/server.model";
 import { UserPage } from '../../../_models/user.model';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service'
-import { Http, Response, Headers } from '@angular/http'
+import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http'
 import { Observable } from 'rxjs/Observable';
 import { Subscription }   from 'rxjs/Subscription';
 import * as L from "leaflet";
@@ -29,7 +29,7 @@ import * as L from "leaflet";
 export class LayerControlsComponent {
     public token: string;
     public userID: number;
-    public headers: Headers;
+    public options: any
     public popuptx: string = ""
 
     public _map: L.Map;
@@ -49,14 +49,19 @@ export class LayerControlsComponent {
     public currPage: any = "None"
     public currLayerName: string = "No Active Layer"
 
-    constructor(private _http: Http, private elementRef: ElementRef, private mapService: MapService, private wfsservice: WFSService, private geocoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerService: LayerService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private http: Http, private sideNavService: SideNavService, private serverService: ServerService) { 
+    constructor(private _http: HttpClient, private elementRef: ElementRef, private mapService: MapService, private wfsservice: WFSService, private geocoder: GeocodingService, private layerPermissionService: LayerPermissionService, private layerService: LayerService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private sideNavService: SideNavService, private serverService: ServerService) { 
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID; 
-        this.headers = new Headers();
-        this.headers.append('Content-Type', 'application/json');
-        this.headers.append('Accept', 'application/json');
+
         wfsservice.popupText$.subscribe(tx => this.popuptx = tx)
+
+        this.options = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                'Accept': 'application/json' //add token auth once back-end supports it
+            })
+        }
     }
 
     //Angular component initialization

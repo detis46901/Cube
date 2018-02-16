@@ -1,33 +1,72 @@
-import { Component, Input } from '@angular/core';
-import { User } from '../../_models/user.model';
+import { Component, Input, OnInit } from '@angular/core';
 import { SideNavService } from "../../_services/sidenav.service";
 import { MatDialog } from '@angular/material';
 import { NewUserComponent } from '../admin/user/newUser/newUser.component';
 import { UserComponent } from '../admin/user/user.component';
 import { MatToolbar } from '@angular/material';
-
-// declare var Vue: any;
-
-// var vue = new Vue({
-//     el: '#imgur',
-//     data: {
-//         image: '/avatar2.png'
-//     }
-// })
+import { PageComponent } from '../admin/user/page/page.component'
+import { User } from '../../_models/user.model';
+import { UserPage } from '../../_models/user.model';
+import { UserService } from '../../_services/_user.service';
+import { UserPageService } from '../../_services/_userPage.service';
 
 @Component({
     selector: 'header',
     templateUrl: './header.component.html',
     styleUrls: ['header.component.scss'],
-    providers: [SideNavService]
+    providers: [SideNavService, UserService, UserPageService]
 })
 
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
     @Input() user: User;
     @Input() screenCode: number = 0; 
     private isOpen: boolean;
 
-    constructor(private sideNavService: SideNavService) {}
+    private token: string;
+    private userID: number;
+
+    private currUser: User;
+    private userPages: UserPage[];
+
+    constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService ) {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.token = currentUser && currentUser.token;
+        this.userID = currentUser && currentUser.userID;
+        console.log(this.user)
+    }
+
+    ngOnInit() {
+        this.getUserItems()
+        this.getUserPageItems()
+    }
+
+    private getUserItems(): void {
+        this.userService
+            .GetSingle(this.userID)
+            .subscribe((user: User) => {
+                this.currUser = user
+            })
+    }
+
+    private getUserPageItems(): void {
+        this.userPageService
+            .GetAll()
+            .subscribe((data: UserPage[]) => {
+                this.userPages = data;
+            });
+    }
+
+    private openPages(userID: number, firstName: string, lastName: string): void {
+        const dialogRef = this.dialog.open(PageComponent);
+        dialogRef.componentInstance.userID = this.userID;
+        dialogRef.componentInstance.firstName = this.currUser.firstName;
+        dialogRef.componentInstance.lastName = this.currUser.lastName;
+
+        dialogRef.afterClosed()
+        .subscribe(() => {
+            this.getUserPageItems();
+        });
+    }
 
     private menuToggle(sCode: number): void {
         if (this.sideNavService.getHidden() == null) {
@@ -124,5 +163,4 @@ export class HeaderComponent {
         //     this.getUserPageItems();
         // });
     }
-
 }

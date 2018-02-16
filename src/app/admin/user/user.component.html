@@ -107,12 +107,12 @@
                 </mat-menu>
             </mat-cell>
         </ng-container>
-      
+    
         <mat-header-row *matHeaderRowDef="userColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: userColumns"></mat-row>
     </mat-table>
 </div>
-      
+    
 
 <!-- <userTable [userPages]="userPages" [userID]="userID"></userTable> -->
 <button mat-button id="userCreateNew" (click)="openNewUser()">Create User</button>
