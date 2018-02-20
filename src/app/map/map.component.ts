@@ -19,6 +19,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { MessageService } from '../../_services/message.service'
 import { PageConfigComponent } from '../admin/user/pageConfig/pageConfig.component';
 import { MatDialog } from '@angular/material';
+import { Clipboard } from 'ts-clipboard';
+import { Configuration } from '../../_api/api.constants'
+import {MatSnackBar} from '@angular/material';
 
 declare var ol: any;
 
@@ -44,8 +47,9 @@ export class MapComponent {
     private defaultPage: UserPage;
     private currPage: any = ''; //Could be "none"
     private noLayers: boolean;
+    private interval: any;
     
-    constructor(private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private layerPermissionService: LayerPermissionService, private layerService: LayerService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog, private messageService:MessageService) {
+    constructor(public snackBar: MatSnackBar, private configuration: Configuration, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private layerPermissionService: LayerPermissionService, private layerService: LayerService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog, private messageService:MessageService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -54,6 +58,7 @@ export class MapComponent {
     // After view init the map target can be set!
     ngAfterViewInit() {
         //mapConfig.map.setTarget(this.mapElement.nativeElement.id)
+        //this.refreshLayers()
     }
     
     //Angular component initialization
@@ -78,6 +83,7 @@ export class MapComponent {
                 this.mapConfig.defaultpage = this.mapConfig.userpages[index]
                 this.mapConfig.currentpage = this.mapConfig.userpages[index]
                 this.currPage = this.mapConfig.userpages[index].page
+                this.mapConfig.selectedFeature = null
                 resolve()
             });
         })
@@ -87,6 +93,7 @@ export class MapComponent {
     //Gets userPageLayers by page.ID, changes pages
     private setPage(page: UserPage): void {
         this.mapConfig.currentpage = page
+        this.mapConfig.currentLayer = new UserPageLayer
         this.currPage = page.page;
         this.mapService.getUserPageLayers(this.mapConfig)
         .then(() => this.mapService.getLayerPerms())
@@ -130,4 +137,26 @@ export class MapComponent {
             this.noLayers = true;
         })
     }
+
+    private copyToClipboard(url:string) {
+        Clipboard.copy(this.configuration.outsideServerWithApiUrl + url + '&apikey=' + this.token);
+        this.snackBar.open("Copied to the clipboard", "", {
+            duration: 2000,
+          });
+        console.log(this.configuration.outsideServerWithApiUrl + url + '&apikey=' + this.token)
+    }
+
+    private copyGSToClipboard(url:string) {
+        Clipboard.copy('=IMPORTHTML("' + this.configuration.outsideServerWithApiUrl + url + '&apikey=' + this.token + '", "table", 1)')
+        this.snackBar.open("Copied to the clipboard", "", {
+            duration: 2000,
+          });
+    }
+
+    // private refreshLayers() {
+    //     this.interval = setInterval(() => {
+    //         console.log("Refreshing Layers")
+    //         //this.mapService.refreshLayers()
+    //       }, 20000);
+    // }
 }

@@ -47,6 +47,7 @@
                                             <div *ngIf="myCube.type=='id'"></div>
                                             <div *ngIf="myCube.type=='geom'"></div>
                                             <div *ngIf="myCube.type=='integer'"><mat-form-field style="width:100%"><input matInput [disabled] = "!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}" [(ngModel)]="myCube.value" (blur)="updateMyCube(myCube)"></mat-form-field></div>
+                                            <div *ngIf="myCube.type=='double precision'"><mat-form-field style="width:100%"><input matInput [disabled] = "!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}" [(ngModel)]="myCube.value" (blur)="updateMyCube(myCube)"></mat-form-field></div>
                                             <div *ngIf="myCube.type=='boolean'"><mat-checkbox  [disabled] = "!myCubeConfig.edit" [(ngModel)]="myCube.value" (change)="updateMyCube(myCube)">{{myCube.field}}</mat-checkbox></div>
                                             <div *ngIf="myCube.type=='text'" matTooltip="No crazy symbols yet" matTooltipPosition="above" matTooltipShowDelay="1000"><mat-form-field style="width:100%"><input matInput  [disabled] = "!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}" [(ngModel)]="myCube.value" (blur)="updateMyCube(myCube)"></mat-form-field></div>
                                             <div *ngIf="myCube.type=='date'"><mat-form-field style="width:100%">
