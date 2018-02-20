@@ -118,7 +118,7 @@ export class SQLService {
     }
 
     public getColumnCount = (table: number): Observable<any> => {
-        console.log(this.actionUrl + 'getColumnCount?table=' + table)
+        //console.log(this.actionUrl + 'getColumnCount?table=' + table)
         return this._http.get(this.actionUrl + 'getColumnCount?table=' + table, this.options)
     }
 

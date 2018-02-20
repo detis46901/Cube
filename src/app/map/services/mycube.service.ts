@@ -18,6 +18,7 @@ export class MyCubeService extends SQLService{
    private mycubeconfig = new Subject<MyCubeConfig>();
    private mycubecomment = new Subject<MyCubeComment[]>();
    private cubeData: MyCubeField[]
+   private tempCubeData: MyCubeField[]
    
 
     public toggleHidden(): void {
@@ -56,7 +57,19 @@ export class MyCubeService extends SQLService{
         return this.messageSubject.asObservable();
     }
 
-    sendMyCubeData(table: number, id: string) {
+    //This needs a lot of work.  This should create an array of arrays for all of the features in the layer.
+    prebuildMyCube(layer) {
+        this.GetSchema(layer.layer.ID)
+        .subscribe((data) => {
+          this.cubeData = data
+          this.cubeData[0].type = "id"
+          this.cubeData[1].type = "geom"
+        })
+    }
+    
+    sendMyCubeData(table: number, feature: ol.Feature) {
+        let id = feature.getProperties().id
+        
         this.GetSchema(table)
             .subscribe((data: MyCubeField[]) => {
                 this.cubeData = data

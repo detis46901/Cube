@@ -29,6 +29,7 @@ import { MatRadioModule, MatIconModule, MatDialogModule, MatSelectModule, MatLis
 import {MatChipsModule} from '@angular/material/chips';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatTooltipModule} from '@angular/material/tooltip'
+import {MatSnackBarModule} from '@angular/material/snack-bar'
 
 import 'hammerjs';
 
@@ -198,9 +199,8 @@ import { ChangePictureComponent } from './settings/profile/change-picture/change
         MatDatepickerModule,
         MatNativeDateModule,
         MatListModule,
-        MatTooltipModule
-        //LeafletModule.forRoot(),
-        //LeafletDrawModule.forRoot()
+        MatTooltipModule,
+        MatSnackBarModule
     ],
 
     providers: [
