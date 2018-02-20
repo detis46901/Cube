@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
+import { HttpModule, ConnectionBackend, Http } from '@angular/http';
 import { MapService } from './map/services/map.service';
 import { GeocodingService } from './map/services/geocoding.service';
 import { Routes, RouterModule } from '@angular/router';
@@ -164,6 +165,7 @@ import { ImageService } from '../_services/image.service';
         CommonModule,
         HttpClientModule,
         HttpClientJsonpModule,
+        HttpModule,
         //MNgbodule.forRoot(),
         Routing,
         RouterModule.forRoot([

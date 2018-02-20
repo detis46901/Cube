@@ -1,7 +1,4 @@
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { RequestOptions } from "@angular/http";
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
-import { catchError } from 'rxjs/operators';
+import {Http, Headers, Response, RequestOptions} from "@angular/http";
 import {Location} from "../core/location.class";
 import {Injectable} from "@angular/core";
 import {Observable} from 'rxjs'
@@ -15,32 +12,28 @@ import "rxjs/add/operator/mergeMap";
 
 
 export class WFSService {
-    http: HttpClient;
-    public mainOptions: any;
-    public styleOptions: any;
+    http: Http;
+    public headers: Headers;
+    public options: RequestOptions;
     private token: string;
     public styleHead: Headers;
     public popupText = new Subject<string>();
     popupText$ = this.popupText.asObservable();
     
-    constructor(http: HttpClient) {
+    constructor(http: Http) {
         this.http = http;
 
-        this.mainOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': 'Bearer ' + this.token,
-                'Access-Control-Allow-Origin': '*'
-            })
-        }
+        this.headers = new Headers();
+        this.headers.append('Content-Type', 'application/json'); //maybe it should be text/plain.  Most servers don't allow the application/json.  But text/plain fails on Geoserver
+        this.headers.append('Accept', 'application/json');  //same as above
+        this.headers.append('Authorization', 'Bearer ' + this.token);
+        this.headers.append('Access-Control-Allow-Origin', '*');
+        this.options = new RequestOptions({headers: this.headers})
 
-        this.styleOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/vnd.ogc.sld+xml',
-                'Accept': 'application/json'
-            })
-        }
+        this.styleHead = new Headers();
+        this.styleHead.append('Content-Type', 'application/vnd.ogc.sld+xml')
+        this.styleHead.append('Accept', 'application/json');
+
     }
     
     getfeatureinfo(URL, mouseDown: boolean) {
@@ -93,7 +86,6 @@ export class WFSService {
                 //     {this.popupText.next(temp)}
                 return temp;
             })
-            .pipe(catchError(this.handleError));
     }
 
     //Not used
@@ -105,12 +97,11 @@ export class WFSService {
         let len: number = 1;
         let data: Array<any> = [];
 
-        return this.http.get(path, this.mainOptions)
-            // .map((responseData) => {
-            //     return responseData;
-            // })
-            // .map((markers: Array<JSON>) => {
-            .map((markers) => {
+        return this.http.get(path, this.options)
+            .map( (responseData) => {
+                return responseData.json();
+            })
+            .map((markers: Array<JSON>) => {
                 props = JSON.stringify(markers["features"][0]["properties"]).split(',')
                 len = props.length
                 props[0] = props[0].substr(1)
@@ -150,9 +141,7 @@ export class WFSService {
                 };
                 featureGroup = L.featureGroup(features)
                 return featureGroup;
-            })
-            .pipe(catchError(this.handleError));
-            // 2/13/18 FIND A WAY TO MAP USING ANGULAR 5
+            });
     }
 
     //Not used
@@ -163,12 +152,11 @@ export class WFSService {
         let polylist: Array<L.Layer> = [];
         let count:number = 0;
 
-        return this.http.get(path, this.mainOptions)
-            // .map( (responseData) => {
-            //     return responseData.json();
-            // })
-            // .map((markers: Array<JSON>) => {
-            .map((markers) => {
+        return this.http.get(path, this.options)
+            .map( (responseData) => {
+                return responseData.json();
+            })
+            .map((markers: Array<JSON>) => {
                 props = JSON.stringify(markers["features"][0]["properties"]).split(',')
                 len = props.length
                 props[0] = props[0].substr(1)
@@ -199,7 +187,6 @@ export class WFSService {
                     let coordList = markers["features"][i].geometry.coordinates;
 
                     if(coordList.length != 0) { //Object number 36338 of Kokomo:Pipes has an empty coordinates array
-
                         //7/7/17 Cycles through the list of coordinate pairs from each indiviual polyline, then adds the coordinate pair to the line
                         for(let j=0; j<coordList[0].length; j++) {
                             if(j>count){count=j}//7/7/17 Finding largest coord pair
@@ -219,23 +206,7 @@ export class WFSService {
                 };
                 polylineGroup = L.featureGroup(polylist)
                 return polylineGroup;
-            })
-            .pipe(catchError(this.handleError));
-            // 2/13/18 FIND A WAY TO MAP USING ANGULAR 5
+            });
     }
 
-    protected handleError(error: HttpErrorResponse) {
-        if (error.error instanceof ErrorEvent) {
-            // A client-side or network error occurred. Handle it accordingly.
-            console.error('An error occurred:', error.error.message);
-        } else {
-            // The backend returned an unsuccessful response code.
-            // The response body may contain clues as to what went wrong,
-            console.error(
-              `Backend returned code ${error.status}, ` +
-              `body was: ${error.error}`);
-        }
-        // return an ErrorObservable with a user-facing error message
-        return new ErrorObservable('Something bad happened; please try again later.');
-    }
 }
