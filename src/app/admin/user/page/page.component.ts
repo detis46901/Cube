@@ -106,12 +106,12 @@ export class PageComponent implements OnInit {
         .subscribe(result => {
             if (result == this.objCode) {
                 this.deleteUserPage(userPage.ID);
+                this.decrementPageOrders(userPage.pageOrder);
                 //START 2/22/18
-                //delete all UPLs associated with userPage.ID
                 //decrement all pageOrder values that are greater than the value of pageOrder on deleted page by 1.
                 //(i.e. pageOrders of 0,1,2,3,4 on pages a,b,c,d,e. Delete page b => decrement c,d,e pageOrders by 1)
             }
-            this.getUserPageItems();
+            //this.getUserPageItems();
         });
     }
 
@@ -122,6 +122,14 @@ export class PageComponent implements OnInit {
             .subscribe(() => {
                 this.getUserPageItems();
             });
+    }
+
+    private decrementPageOrders(order: number) {
+        for(let page of this.userPages) {
+            if(page.pageOrder > order) {
+                page.pageOrder = page.pageOrder - 1;
+            }
+        }
     }
 
     private onClose(): void {

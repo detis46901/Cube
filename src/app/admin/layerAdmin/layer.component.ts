@@ -92,8 +92,8 @@ export class LayerComponent implements OnInit {
         dialogRef.componentInstance.objName = layer.layerName;
         dialogRef.afterClosed().subscribe(result => {
             if (result == this.objCode) {
-                this.deletePermission(layer.ID);
-                this.deleteUPL(layer.ID);
+                //this.deletePermission(layer.ID);
+                //this.deleteUPL(layer.ID);
                 this.deleteLayer(layer.ID);
             }
         });

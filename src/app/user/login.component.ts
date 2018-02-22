@@ -4,12 +4,11 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from '../../_services/authentication.service';
 import { UserService } from '../../_services/_user.service';
 import { User } from '../../_models/user.model'
-import { Md5 } from 'ts-md5/dist/md5'
 
 @Component({
     //moduleId: module.id, (why does this not need to be there???)
     templateUrl: 'login.component.html',
-    styleUrls: ['login.component.css']
+    styleUrls: ['login.component.scss']
 })
  
 export class LoginComponent implements OnInit {
@@ -25,6 +24,8 @@ export class LoginComponent implements OnInit {
     ngOnInit() {
         //reset login status
         this.authenticationService.logout();
+        this.token = null;
+        localStorage.clear();
     }
 
     ngOnDestroy() {
@@ -32,23 +33,26 @@ export class LoginComponent implements OnInit {
     }
  
     login() {
+        let that = this;
+        console.log(this.model)
         this.loading = true;
         let username:string = this.model.username
         this.userService
-        .login(username.toLowerCase(), this.model.password)
-        .subscribe(res => {
-            if (res) {
-                this.token = res
-                this.loading=false;
-                this.router.navigate(['/']);
-            } else {
-                this.model.password="";
-                this.loading=false;
-            }
-        })
+            .login(username.toLowerCase(), this.model.password)
+            .subscribe(res => {
+                if (res) {
+                    console.log(localStorage.getItem('currentUser'))
+                    this.token = res
+                    this.loading=false;
+                    this.router.navigate(['/']);
+                } else {
+                    this.loading=false;
+                    this.model.password="";
+                }
+            })
     }
 
-    getAllItems(userID): void {
+    getUser(userID): void {
          this.userService
             .GetSingle(userID)
             .subscribe((data:User) => 
