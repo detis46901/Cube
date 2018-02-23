@@ -18,8 +18,6 @@ import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { UserValidatorService } from './userValidator.service';
-
-
 //import { UserDataSource } from './userTable/userData';
 
 //Material Table list
@@ -49,7 +47,7 @@ export class UserComponent implements OnInit {
     private userColumns = ['userID', 'firstName', 'lastName', 'email', 'active', 'administrator', 'actionsColumn']
     private dataSource: TableDataSource<User>;
     
-    constructor(private userValidator: ValidatorService, private userService: UserService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private dialog: MatDialog) {
+    constructor(private userValidator: UserValidatorService, private userService: UserService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private dialog: MatDialog) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;

@@ -5,7 +5,7 @@ import { ServerNewComponent } from './serverNew/serverNew.component';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { RequestOptions } from '@angular/http';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
-import { LayerNewComponent } from '../layerAdmin/layerNew/layerNew.component';
+import { LayerNewComponent } from '../layer/layerNew/layerNew.component';
 import { MatDialog } from '@angular/material';
 import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { ServerValidatorService } from './serverValidator.service';

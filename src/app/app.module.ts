@@ -40,12 +40,12 @@ import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminNavComponent } from './admin/adminNav/adminNav.component';
 import { SettingsNavComponent } from './settings/settingsnav/settingsnav.component';
-import { LayerComponent} from './admin/layerAdmin/layer.component';
-import { LayerPermissionComponent} from './admin/layerAdmin/layerPermission/layerPermission.component';
+import { LayerComponent} from './admin/layer/layer.component';
+import { LayerPermissionComponent} from './admin/layer/layerPermission/layerPermission.component';
 import { PageComponent} from './admin/user/page/page.component';
 import { PageConfigComponent} from './admin/user/pageConfig/pageConfig.component';
-import { LayerNewComponent } from './admin/layerAdmin/layerNew/layerNew.component';
-import { newMyCubeComponent } from './admin/layerAdmin/myCubeLayer/newMyCube.component';
+import { LayerNewComponent } from './admin/layer/layerNew/layerNew.component';
+import { newMyCubeComponent } from './admin/layer/myCubeLayer/newMyCube.component';
 import { UserComponent } from './admin/user/user.component';
 import { AdminPageComponent } from './admin/adminPage/adminPage.component';
 import { ModuleComponent } from './admin/module/module.component';
@@ -96,6 +96,7 @@ import { WFSService } from './map/services/wfs.service';
 import { SideNavService } from '../_services/sidenav.service';
 import { MessageService } from '../_services/message.service';
 import { ImageService } from '../_services/image.service';
+import { UserValidatorService } from './admin/user/userValidator.service';
 
 @NgModule ({
     declarations: [
@@ -226,7 +227,8 @@ import { ImageService } from '../_services/image.service';
         SideNavService,
         MessageService,
         mapStyles,
-        ImageService
+        ImageService,
+        UserValidatorService
     ], 
 
     bootstrap: [AppComponent]

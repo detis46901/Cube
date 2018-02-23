@@ -1,48 +1,3 @@
-// * {
-//     box-sizing: border-box;
-// }
-
-// .col-sm-1 {width: 8.33%;}
-// .col-sm-2 {width: 16.66%;}
-// .col-3 {width: 25%;}
-// .col-sm-4 {width: 33.33%;}
-// .col-5 {width: 41.66%;}
-// .col-6 {width: 50%;}
-// .col-7 {width: 58.33%;}
-// .col-8 {width: 66.66%;}
-// .col-9 {width: 75%;}
-// .col-10 {width: 83.33%;}
-// .col-11 {width: 91.66%;}
-// .col-12 {width: 100%;}
-
-// .mat-column-userID {
-//     flex: 0 0 100px;
-// }
-
-// .mat-column-firstName, .mat-column-lastName {
-//     flex: 0 0 150px;
-// }
-
-// .mat-column-role {
-//     flex: 0 0 150px;
-// }
-
-// .mat-column-email {
-//     flex: 0 0 250px;
-// }
-
-// .mat-column-active {
-//     flex: 0 0 100px;
-// }
-
-// .mat-column-administrator {
-//     flex: 0 0 100px;
-// }
-
-// .mat-column-actionsColumn {
-//     flex: 0 0 320px;
-// }
-
 .row {
     display:flex;
     flex-direction:column;
@@ -70,5 +25,22 @@
 }
 
 #userCreateNew {
-    margin-left:13%;
+    margin-left:20%;
+}
+
+mat-table mat-row mat-cell.user-lg-cell, mat-table mat-header-row mat-header-cell.user-lg-head {
+    max-width: 28%;
+    margin-left: 6%
+}
+
+mat-table mat-row mat-cell.user-md-cell, mat-table mat-header-row mat-header-cell.user-md-head {
+    max-width: 14%;
+}
+
+mat-table mat-row mat-cell.user-sm-cell, mat-table mat-header-row mat-header-cell.user-sm-head {
+    max-width: 8%;
+}
+
+mat-table mat-header-row mat-header-cell {
+    color: blue;
 }

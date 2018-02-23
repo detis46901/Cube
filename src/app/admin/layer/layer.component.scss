@@ -1,0 +1,57 @@
+h4 {
+    color:black;
+}
+
+.row {
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    left:15px;
+}
+
+.mat-form-field {
+    width:80%
+}
+
+.mat-table {
+    width:98%;
+    overflow:auto;
+    max-height:80vh;
+    outline:solid 2px black;
+}
+
+:host ::ng-deep .mat-input-underline {
+    background-position: 0;
+    background-color: transparent;
+    display: none;
+}
+
+.layer-parent-container {
+    padding-left:12.1%;
+}
+
+// #createLayerBtn, #createMyCubeBtn {
+//     margin-left:10%;
+// }
+
+mat-table mat-header-row mat-header-cell.layer-lg-head {
+    max-width: 20%;
+    margin-left: 5%;
+}
+
+mat-table mat-row mat-cell.layer-lg-cell {
+    max-width: 18%;
+    margin-left: 7%;
+}
+
+mat-table mat-row mat-cell.layer-md-cell, mat-table mat-header-row mat-header-cell.layer-md-head {
+    max-width: 9%;
+}
+
+mat-table mat-row mat-cell.layer-sm-cell, mat-table mat-header-row mat-header-cell.layer-sm-head {
+    max-width: 6%;
+}
+
+mat-table mat-header-row mat-header-cell {
+    color: blue;
+}
