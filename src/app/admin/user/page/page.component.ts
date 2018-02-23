@@ -44,7 +44,8 @@ export class PageComponent implements OnInit {
             });
     }
     
-    private setupPages(userPages: Array<UserPage>): void { 
+    private setupPages(userPages: Array<UserPage>): void {
+        this.userPages = []
         for (let userPage of userPages) {
             this.userPages[userPage.pageOrder] = userPage
 
@@ -111,7 +112,7 @@ export class PageComponent implements OnInit {
                 //decrement all pageOrder values that are greater than the value of pageOrder on deleted page by 1.
                 //(i.e. pageOrders of 0,1,2,3,4 on pages a,b,c,d,e. Delete page b => decrement c,d,e pageOrders by 1)
             }
-            //this.getUserPageItems();
+            this.getUserPageItems();
         });
     }
 
@@ -120,7 +121,7 @@ export class PageComponent implements OnInit {
         this.userPageService
             .Delete(userpageID)
             .subscribe(() => {
-                this.getUserPageItems();
+                //this.getUserPageItems();
             });
     }
 
@@ -128,6 +129,7 @@ export class PageComponent implements OnInit {
         for(let page of this.userPages) {
             if(page.pageOrder > order) {
                 page.pageOrder = page.pageOrder - 1;
+                this.updateUserPage(page);
             }
         }
     }
