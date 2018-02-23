@@ -18,6 +18,7 @@ import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { UserValidatorService } from './userValidator.service';
+import { DetailsComponent} from '../details/details.component';
 //import { UserDataSource } from './userTable/userData';
 
 //Material Table list
@@ -191,6 +192,13 @@ export class UserComponent implements OnInit {
             this.getUserPageItems();
             //call userTableService method and subcribe to refresh list in userTable.
         });
+    }
+
+    private openDetails(id: number, name: string) {
+        //open a dialog to edit the layer data
+        const dialogRef = this.dialog.open(DetailsComponent);
+        dialogRef.componentInstance.ID = id;
+        dialogRef.componentInstance.name = name;
     }
 
     private boo(row) {

@@ -5,17 +5,18 @@ import { Configuration } from '../../../_api/api.constants';
 import { LayerService } from '../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../_services/_layerPermission.service';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
-import { SQLService } from '../../../_services/sql.service'
+import { SQLService } from '../../../_services/sql.service';
 import { Layer, LayerPermission, UserPageLayer } from '../../../_models/layer.model';
 import { LayerPermissionComponent } from './layerPermission/layerPermission.component';
 import { LayerNewComponent } from './layerNew/layerNew.component';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
-import { newMyCubeComponent } from './myCubeLayer/newMyCube.component'
+import { newMyCubeComponent } from './myCubeLayer/newMyCube.component';
 import { ServerService } from '../../../_services/_server.service';
 import { Server } from '../../../_models/server.model';
 import { MatDialog, MatDialogConfig  } from '@angular/material';
 import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { LayerValidatorService } from './layerValidator.service';
+import { DetailsComponent} from '../details/details.component';
 
 @Component({
     selector: 'layer',
@@ -34,7 +35,7 @@ export class LayerComponent implements OnInit {
     private layers: Layer[];
     private servers: Server[];
 
-    private layerColumns = ['layerID', 'name', 'identity', 'service', 'server', 'description', 'format', 'type', 'geometry', 'actionsColumn'];
+    private layerColumns = ['layerID', 'name', /*'identity', 'service', 'server', */'description', /*'format', */'type', /*'geometry', */'actionsColumn'];
     private dataSource: TableDataSource<Layer>;
 
     constructor(private layerValidator: ValidatorService, private layerService: LayerService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {
@@ -151,8 +152,13 @@ export class LayerComponent implements OnInit {
                 });
     }
 
+    private openDetails(id: number, name: string) {
+        //open a dialog to edit the layer data
+        const dialogRef = this.dialog.open(DetailsComponent);
+        dialogRef.componentInstance.ID = id;
+        dialogRef.componentInstance.name = name;
+    }
      
-
     // 2/2/18: Keep this here to remind you: DON'T do it this way, when you get to it, implement using the pagination/sorting features of mat-table
     private sortLayers(code: string): void {
         let indexList: Array<number> = [];

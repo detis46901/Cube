@@ -97,6 +97,7 @@ import { SideNavService } from '../_services/sidenav.service';
 import { MessageService } from '../_services/message.service';
 import { ImageService } from '../_services/image.service';
 import { UserValidatorService } from './admin/user/userValidator.service';
+import { DetailsComponent } from './admin/details/details.component';
 
 @NgModule ({
     declarations: [
@@ -143,7 +144,8 @@ import { UserValidatorService } from './admin/user/userValidator.service';
         ApiKeyComponent,
         NewGroupComponent,
         ProfileComponent,
-        ChangePictureComponent
+        ChangePictureComponent,
+        DetailsComponent
     ],
 
     entryComponents: [

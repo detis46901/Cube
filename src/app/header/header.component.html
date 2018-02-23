@@ -18,3 +18,21 @@
         <a id="headerAdmin" *ngIf="user.administrator" title="Admin Menu" href="/admin"><i class="fa fa-folder-open fa-2x"></i></a>   
     </span>
 </div>
+
+<!--New header format-->
+<!-- <div id="headerBar" class="row">
+    <span id="headerLeft" class="col-sm-6">
+        <h3>
+            <span><a id="headerSettings" title="Settings" href="./settings"><img src="../../assets/images/default-profile-icon.png">{{user.firstName}} {{user.lastName}}</span>
+            <a id="headerInbox" title="Inbox"><i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a>
+            <a title="Return Home" routerLink="home"><i class="fa fa-cube"></i></a>
+            <a id="headerAdmin" *ngIf="user.administrator" title="Admin Menu" href="/admin"><i class="fa fa-folder-open fa-2x"></i></a>
+            <button mat-button *ngIf="screenCode == 1" id="headerSidenavToggle" (click)="menuToggle(screenCode)">Toggle Menu</button>
+        </h3>       
+    </span>
+
+    <span id="headerRight" class="col-sm-3 col-sm-offset-3">
+        <a id="headerHelp" title="Help"><i class="fa fa-question-circle-o fa-2x" aria-hidden="true"></i></a>
+        <a id="headerLogout" title="Logout" href="./logout"><i class="material-icons">exit_to_app</i></a>          
+    </span>
+</div> -->

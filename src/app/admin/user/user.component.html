@@ -61,7 +61,7 @@
         </ng-container>
         
         <ng-container matColumnDef="administrator">
-            <mat-header-cell class="user-sm-head" *matHeaderCellDef> Administrator </mat-header-cell>
+            <mat-header-cell class="user-sm-head" *matHeaderCellDef> Admin </mat-header-cell>
             <mat-cell class="user-sm-cell" *matCellDef="let row">
                 <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
                     <input matInput [formControl]="row.validator.controls['administrator']" [readonly]="!row.editing" [(ngModel)]="row.currentData.administrator">
@@ -72,15 +72,9 @@
         <ng-container matColumnDef="actionsColumn">
             <mat-header-cell class="user-lg-head" *matHeaderCellDef><button mat-button id="userCreateNew" (click)="openNewUser()"><strong>Create New User</strong></button></mat-header-cell>
             <mat-cell class="user-lg-cell" *matCellDef="let row">
-                <button *ngIf="!row.editing; else checkMark" mat-icon-button color="primary" focusable="false" (click)="row.startEdit()">
+                <button mat-icon-button color="primary" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.layerName)">
                     <i class="fa fa-pencil mat-icon"></i>
                 </button>
-                
-                <ng-template #checkMark>
-                    <button mat-icon-button color="primary" focusable="false" (click)="row.confirmEditCreate()"><!--boo(row)-->
-                        <i class="fa fa-check mat-icon"></i>
-                    </button>
-                </ng-template>
 
                 <button mat-icon-button color="primary" focusable="false" (click)="openConfDel(row.currentData)">
                     <i class="fa fa-times mat-icon"></i>

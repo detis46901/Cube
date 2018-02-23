@@ -11,7 +11,7 @@
 }
 
 .mat-table {
-    width:98%;
+    width:80%;
     overflow:auto;
     max-height:80vh;
     outline:solid 2px black;
@@ -22,6 +22,10 @@
     background-position: 0;
     background-color: transparent;
     display: none;
+}
+
+.mat-input-element:disabled {
+    color:black;
 }
 
 #userCreateNew {

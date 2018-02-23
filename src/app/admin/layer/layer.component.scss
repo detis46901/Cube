@@ -14,7 +14,7 @@ h4 {
 }
 
 .mat-table {
-    width:98%;
+    width:67%;
     overflow:auto;
     max-height:80vh;
     outline:solid 2px black;
@@ -30,26 +30,26 @@ h4 {
     padding-left:12.1%;
 }
 
-// #createLayerBtn, #createMyCubeBtn {
-//     margin-left:10%;
-// }
+.mat-input-element:disabled {
+    color:black;
+}
 
 mat-table mat-header-row mat-header-cell.layer-lg-head {
-    max-width: 20%;
-    margin-left: 5%;
+    max-width: 32%;
+    margin-left: 4%;
 }
 
 mat-table mat-row mat-cell.layer-lg-cell {
-    max-width: 18%;
+    max-width: 29%;
     margin-left: 7%;
 }
 
 mat-table mat-row mat-cell.layer-md-cell, mat-table mat-header-row mat-header-cell.layer-md-head {
-    max-width: 9%;
+    max-width: 18%;
 }
 
 mat-table mat-row mat-cell.layer-sm-cell, mat-table mat-header-row mat-header-cell.layer-sm-head {
-    max-width: 6%;
+    max-width: 10%;
 }
 
 mat-table mat-header-row mat-header-cell {
