@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+
 import { MapConfig, mapStyles, featureList } from '../models/map.model'
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig } from '../../../_models/layer.model';
@@ -11,6 +12,8 @@ import { MessageService } from '../../../_services/message.service'
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { when } from "q";
 
 @Injectable()
 export class MapService {
@@ -28,6 +31,8 @@ export class MapService {
     public featurelist = new Array<featureList>()
     public base: string = 'base'
     private cubeData: MyCubeField[]
+    public http: Http
+    public options: any
 
     constructor(
         private userPageLayerService: UserPageLayerService,
@@ -37,8 +42,9 @@ export class MapService {
         private wfsService: WFSService,
         private messageService: MessageService,
         private sqlService: SQLService,
-        private mapstyles: mapStyles
-         ) { }
+        private mapstyles: mapStyles,
+        http: Http
+         ) {this.http = http }
 
     //Will be deleted once the navigator component is changed out.
     disableLeafletMouseEvent(elementId: string) {
@@ -49,7 +55,7 @@ export class MapService {
         //sets the base layer
         this.mapConfig.layers = []
         let osm_layer: any = new ol.layer.Tile({
-            source: new ol.source.OSM()
+           source: new ol.source.OSM()
         });
         osm_layer.setVisible(true)
         this.mapConfig.sources.push(new ol.source.OSM())
@@ -115,42 +121,96 @@ export class MapService {
         return promise
     }
 
+    public getCapabilities = (url): Observable<any> => {
+        return this.http.get(url)
+        //return this.http.get("https://openlayers.org/en/v4.6.4/examples/data/WMTSCapabilities.xml")
+            .map((response: Response) => <any>response.text())
+    }
+
     //loadLayers will load during map init and load the layers that should come on by themselves with the "layerON" property set (in userPageLayers)
     public loadLayers(mapConfig: MapConfig, init: boolean): Promise<any> {
+        let j=0
         if (this.evkey) { ol.Observable.unByKey(this.evkey)}  //removes the previous click event if there was one.
         if (this.modkey) { ol.Observable.unByKey(this.modkey)} //removes the previous modify even if there was one.
         this.myCubeService.clearMyCubeData()
         this.messageService.clearMessage()
         let promise = new Promise((resolve, reject) => {
             for (let i = 0; i < this.mapConfig.userpagelayers.length; i++) {
-                if (this.mapConfig.userpagelayers[i].layer.layerType == "MyCube") {
-                    this.mapConfig.userpagelayers[i].layerShown = this.mapConfig.userpagelayers[i].layerON
-                    this.loadMyCube(init,this.mapConfig.userpagelayers[i])  
-                }
-                    else {
-                    let url = this.formLayerRequest(this.mapConfig.userpagelayers[i])
-                    let wmsSource = new ol.source.ImageWMS({
-                        url: url,
-                        params: { 'LAYERS': this.mapConfig.userpagelayers[i].layer.layerIdent },
-                        projection: 'EPSG:4326',
-                        serverType: 'geoserver',
-                        crossOrigin: 'anonymous'
-                    });
-                    this.setLoadEvent(this.mapConfig.userpagelayers[i], wmsSource)
-                    let wmsLayer = new ol.layer.Image({
-                        source: wmsSource
-                    });
-                    this.mapConfig.userpagelayers[i].layerShown = this.mapConfig.userpagelayers[i].layerON
-                    wmsLayer.setVisible(this.mapConfig.userpagelayers[i].layerON)
-                    this.mapConfig.layers.push(wmsLayer)
-                    this.mapConfig.sources.push(wmsSource)
-                    this.mapConfig.userpagelayers[i].loadOrder = this.mapConfig.layers.length
-                    if (init == false) {
-                       mapConfig.map.addLayer(wmsLayer)
+
+                switch (this.mapConfig.userpagelayers[i].layer.layerType) {
+                    case "MyCube": {
+                        this.mapConfig.userpagelayers[i].layerShown = this.mapConfig.userpagelayers[i].layerON
+                        this.loadMyCube(init, this.mapConfig.userpagelayers[i])
+                        j++
+                        console.log("j=" + j)
+                        if (j == this.mapConfig.userpagelayers.length) {resolve()}
+                        break
+                    }
+                    case "WMTS": {
+                        this.getCapabilities(this.mapConfig.userpagelayers[i].layer.server.serverURL)
+                            .subscribe((data) => {
+                                console.log(data)
+                                let parser = new ol.format.WMTSCapabilities();
+                                let result = parser.read(data)
+                                //console.log(result)
+                                let options = ol.source.WMTS.optionsFromCapabilities(result, {
+                                    layer: this.mapConfig.userpagelayers[i].layer.layerIdent,
+                                    matrixSet: 'EPSG:3857'
+                                });
+                                console.log(mapConfig.userpagelayers[i].layer.layerIdent)
+                                console.log(options)
+                                let wmsSource = new ol.source.WMTS(options)
+                                this.setLoadEvent(this.mapConfig.userpagelayers[i], wmsSource)
+                                let wmsLayer = new ol.layer.Tile({
+                                    opacity: 1,
+                                    source: new ol.source.WMTS(options)
+                                });
+                                this.mapConfig.userpagelayers[i].layerShown = this.mapConfig.userpagelayers[i].layerON
+                                wmsLayer.setVisible(this.mapConfig.userpagelayers[i].layerON)
+                                this.mapConfig.layers.push(wmsLayer)
+                                this.mapConfig.sources.push(wmsSource)
+                                this.mapConfig.userpagelayers[i].loadOrder = this.mapConfig.layers.length
+                                if (init == false) {
+                                    mapConfig.map.addLayer(wmsLayer)
+                                }
+                                console.log("Done")
+                                j++
+                                console.log("j=" + j)
+                                if (j == this.mapConfig.userpagelayers.length) {resolve()}
+                            })
+                        break
+
+                    }
+                    default: {
+                        let url = this.formLayerRequest(this.mapConfig.userpagelayers[i])
+                        let wmsSource = new ol.source.ImageWMS({
+                            url: url,
+                            params: { 'LAYERS': this.mapConfig.userpagelayers[i].layer.layerIdent },
+                            projection: 'EPSG:4326',
+                            serverType: 'geoserver',
+                            crossOrigin: 'anonymous'
+                        });
+                        this.setLoadEvent(this.mapConfig.userpagelayers[i], wmsSource)
+                        let wmsLayer = new ol.layer.Image({
+                            source: wmsSource
+                        });
+
+                        this.mapConfig.userpagelayers[i].layerShown = this.mapConfig.userpagelayers[i].layerON
+                        wmsLayer.setVisible(this.mapConfig.userpagelayers[i].layerON)
+                        this.mapConfig.layers.push(wmsLayer)
+                        this.mapConfig.sources.push(wmsSource)
+                        this.mapConfig.userpagelayers[i].loadOrder = this.mapConfig.layers.length
+                        if (init == false) {
+                            mapConfig.map.addLayer(wmsLayer)
+                        }
+                        j++
+                        console.log("j=" + j)
+                        if (j == this.mapConfig.userpagelayers.length) {resolve()}
                     }
                 }
-                resolve()
             }
+            
+            console.log(this.mapConfig.userpagelayers.length)
         })
         return promise
     }
@@ -341,7 +401,18 @@ export class MapService {
           return evkey
     }
 
-    private setLoadEvent(layer: UserPageLayer, source: ol.source.ImageWMS) {
+    private setLoadEvent(layer: UserPageLayer, source: ol.source.Source) {
+        source.on('tileloadstart', () => {
+            layer.loadStatus = "Loading"
+            console.log(layer.layer.layerName + " loading")
+        })
+        source.on('tileloadend', () => {
+            layer.loadStatus = "Loaded"
+            console.log(layer.layer.layerName + " loaded")
+        })
+        source.on('tileloaderror', () => {
+            console.log("error")
+        })
         source.on('imageloadstart', () => {
             layer.loadStatus = "Loading"
             console.log(layer.layer.layerName + " loading")
@@ -349,6 +420,9 @@ export class MapService {
         source.on('imageloadend', () => {
             layer.loadStatus = "Loaded"
             console.log(layer.layer.layerName + " loaded")
+        })
+        source.on('imageloaderror', () => {
+            console.log("error")
         })
     }
     private sendMessage(message: string): void {

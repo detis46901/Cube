@@ -69,6 +69,7 @@ export class MapComponent {
             .then((mapConfig) => {
                 this.mapConfig = mapConfig  //Not sure if this is necessary.  Just in case.
                 mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
+                console.log("Map Initialized")
             })    
          )}
 
