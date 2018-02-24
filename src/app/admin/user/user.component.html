@@ -1,27 +1,27 @@
 <div class="row">    
     <mat-table id="userDataTable" #table [dataSource]="dataSource">
-        <ng-container class="col-sm-1" matColumnDef="userID">
-            <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
-            <mat-cell *matCellDef="let row">
+        <ng-container matColumnDef="userID">
+            <mat-header-cell class="user-sm-head" *matHeaderCellDef> ID </mat-header-cell>
+            <mat-cell class="user-sm-cell" *matCellDef="let row">
                 <!-- <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}"> -->
                     <!-- <input matInput [formControl]="row.validator.controls['ID']" [readonly] [(ngModel)]="row.currentData.ID"> -->
-                    <b>{{row.currentData.ID}}</b>
+                    {{row.currentData.ID}}
                 <!-- </mat-form-field> -->
             </mat-cell>
         </ng-container>
         
-        <ng-container class="col-sm-1" matColumnDef="firstName">
-            <mat-header-cell *matHeaderCellDef> First Name </mat-header-cell>
-            <mat-cell *matCellDef="let row">
+        <ng-container matColumnDef="firstName">
+            <mat-header-cell class="user-md-head" *matHeaderCellDef> First Name </mat-header-cell>
+            <mat-cell class="user-md-cell" *matCellDef="let row">
                 <mat-form-field #input floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
                     <input matInput [formControl]="row.validator.controls['firstName']" [readonly]="!row.editing" [(ngModel)]="row.currentData.firstName">
                 </mat-form-field>
             </mat-cell>
         </ng-container>
         
-        <ng-container class="col-sm-1" matColumnDef="lastName">
-            <mat-header-cell *matHeaderCellDef> Last Name </mat-header-cell>
-            <mat-cell *matCellDef="let row">
+        <ng-container matColumnDef="lastName">
+            <mat-header-cell class="user-md-head" *matHeaderCellDef> Last Name </mat-header-cell>
+            <mat-cell class="user-md-cell" *matCellDef="let row">
                 <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
                     <input matInput [formControl]="row.validator.controls['lastName']" [readonly]="!row.editing" [(ngModel)]="row.currentData.lastName">
                 </mat-form-field>
@@ -41,18 +41,18 @@
             </mat-cell>
         </ng-container> -->
 
-        <ng-container class="col-sm-1" matColumnDef="email">
-            <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
-            <mat-cell *matCellDef="let row">
+        <ng-container matColumnDef="email">
+            <mat-header-cell class="user-md-head" *matHeaderCellDef> Email </mat-header-cell>
+            <mat-cell class="user-md-cell" *matCellDef="let row">
                 <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
                     <input matInput [formControl]="row.validator.controls['email']" [readonly]="!row.editing" [(ngModel)]="row.currentData.email">
                 </mat-form-field>
             </mat-cell>
         </ng-container>
         
-        <ng-container class="col-sm-1" matColumnDef="active">
-            <mat-header-cell *matHeaderCellDef> Active </mat-header-cell>
-            <mat-cell *matCellDef="let row">
+        <ng-container matColumnDef="active">
+            <mat-header-cell class="user-sm-head" *matHeaderCellDef> Active </mat-header-cell>
+            <mat-cell class="user-sm-cell" *matCellDef="let row">
                 <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
                     <input matInput [formControl]="row.validator.controls['active']" [readonly]="!row.editing" [(ngModel)]="row.currentData.active">
                     <!-- <mat-checkbox formControlName="userTableActive" [formControl]="row.validator.controls[active]" [(ngModel)]="row.currentData.active"></mat-checkbox> -->
@@ -60,9 +60,9 @@
             </mat-cell>
         </ng-container>
         
-        <ng-container class="col-sm-1" matColumnDef="administrator">
-            <mat-header-cell *matHeaderCellDef> Administrator </mat-header-cell>
-            <mat-cell *matCellDef="let row">
+        <ng-container matColumnDef="administrator">
+            <mat-header-cell class="user-sm-head" *matHeaderCellDef> Admin </mat-header-cell>
+            <mat-cell class="user-sm-cell" *matCellDef="let row">
                 <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
                     <input matInput [formControl]="row.validator.controls['administrator']" [readonly]="!row.editing" [(ngModel)]="row.currentData.administrator">
                 </mat-form-field>
@@ -70,14 +70,10 @@
         </ng-container>
 
         <ng-container matColumnDef="actionsColumn">
-            <mat-header-cell *matHeaderCellDef> Options </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-                <button *ngIf="!row.editing" mat-icon-button color="primary" focusable="false" (click)="row.startEdit()">
+            <mat-header-cell class="user-lg-head" *matHeaderCellDef><button mat-button id="userCreateNew" (click)="openNewUser()"><strong>Create New User</strong></button></mat-header-cell>
+            <mat-cell class="user-lg-cell" *matCellDef="let row">
+                <button mat-icon-button color="primary" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.layerName)">
                     <i class="fa fa-pencil mat-icon"></i>
-                </button>
-                
-                <button *ngIf="row.editing" mat-icon-button color="primary" focusable="false" (click)="row.confirmEditCreate()"><!--boo(row)-->
-                    <i class="fa fa-check mat-icon"></i>
                 </button>
 
                 <button mat-icon-button color="primary" focusable="false" (click)="openConfDel(row.currentData)">
@@ -115,4 +111,3 @@
     
 
 <!-- <userTable [userPages]="userPages" [userID]="userID"></userTable> -->
-<button mat-button id="userCreateNew" (click)="openNewUser()">Create User</button>

@@ -6,7 +6,7 @@ import { LoginComponent } from './user/login.component';
 import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { GroupComponent } from './admin/group/group.component';
-import { LayerComponent } from './admin/layerAdmin/layer.component';
+import { LayerComponent } from './admin/layer/layer.component';
 import { UserComponent } from './admin/user/user.component';
 import { ModuleComponent } from './admin/module/module.component';
 import { DefaultsComponent } from './admin/default/default.component';

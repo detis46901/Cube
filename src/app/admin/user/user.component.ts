@@ -18,8 +18,7 @@ import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { UserValidatorService } from './userValidator.service';
-
-
+import { DetailsComponent} from '../details/details.component';
 //import { UserDataSource } from './userTable/userData';
 
 //Material Table list
@@ -49,7 +48,7 @@ export class UserComponent implements OnInit {
     private userColumns = ['userID', 'firstName', 'lastName', 'email', 'active', 'administrator', 'actionsColumn']
     private dataSource: TableDataSource<User>;
     
-    constructor(private userValidator: ValidatorService, private userService: UserService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private dialog: MatDialog) {
+    constructor(private userValidator: UserValidatorService, private userService: UserService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private dialog: MatDialog) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -193,6 +192,13 @@ export class UserComponent implements OnInit {
             this.getUserPageItems();
             //call userTableService method and subcribe to refresh list in userTable.
         });
+    }
+
+    private openDetails(id: number, name: string) {
+        //open a dialog to edit the layer data
+        const dialogRef = this.dialog.open(DetailsComponent);
+        dialogRef.componentInstance.ID = id;
+        dialogRef.componentInstance.name = name;
     }
 
     private boo(row) {
