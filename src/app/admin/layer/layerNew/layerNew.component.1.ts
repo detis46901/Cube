@@ -4,7 +4,7 @@ import { Configuration } from '../../../../_api/api.constants';
 import { LayerService } from '../../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { ServerService } from '../../../../_services/_server.service';
-import { Layer, WMSLayer } from '../../../../_models/layer.model';
+import { Layer } from '../../../../_models/layer.model';
 import { Server } from '../../../../_models/server.model';
 import { LayerPermission } from '../../../../_models/layer.model';
 import { MatDialog } from '@angular/material';
@@ -18,39 +18,22 @@ import { MatDialog } from '@angular/material';
 
 export class LayerNewComponent implements OnInit {
     @Input() layerServiceField: string;
-    @Input() serverLayer: Layer;
     @Input() layerIdent: string;
-    @Input() serverCalled: boolean = false;
-    //@Input() layerServer: Server;
+    @Input() layerServer: Server;
+    @Input() layerFormat: string;
+    @Input() layerType: string;
     @Input() layerName: string;
     private token: string;
     private userID: number;
-    private step = 0;
-    setStep(index: number) {
-        this.step = index;
-    }
-
-    nextStep() {
-        this.step++;
-    }
-
-    prevStep() {
-        this.step--;
-    }
 
     //Set to true in ngOnInit() if inputs are read from the server screen, thus determines if the server screen is calling this dialog
+    private serverCalled: boolean = false;
 
     //if error in submission, set this to a new object (= new Layer)
     private newLayer = new Layer;
     private newLayerServer = new Server;
     private servers: Array<Server>;
     private layer = new Layer;
-
-
-    //steps that should occur in this component
-    //identify the layer
-    //provide permissions
-    //place on userpages?
 
     constructor(private layerservice: LayerService, private layerPermissionService: LayerPermissionService, private dialog: MatDialog, private serverService: ServerService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -59,9 +42,10 @@ export class LayerNewComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (this.serverLayer) { this.newLayer = this.serverLayer }
-        console.log(this.newLayer)
         this.getServers();
+        if (this.layerIdent!=null && this.layerType!=null && this.layerServer!=null) {
+            this.serverCalled = true;
+        }
     }
 
     private getServers(): void {
@@ -85,8 +69,16 @@ export class LayerNewComponent implements OnInit {
         layerPerm.grantedBy = null;
         layerPerm.comments = null;
 
+        if (this.serverCalled) {
+            this.layer.serverID = this.layerServer.ID;
+            this.layer.layerService = this.layerServiceField;
+            this.layer.layerIdent = this.layerIdent;
+            this.layer.layerType = this.layerType;
+            //this.layer.layerFormat = this.layerFormat;
+        }
+        
         this.layerservice
             .Add(this.layer)
-            .subscribe(() => this.dialog.closeAll());
+            .subscribe(() => this.dialog.closeAll());            
     }
 }

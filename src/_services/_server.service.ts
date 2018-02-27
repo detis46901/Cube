@@ -17,17 +17,22 @@ export class ServerService extends ParentService {
         this.actionUrl = this.configuration.serverWithApiUrl + 'server/';
     }
 
-    public getCapabilities(serv: Server, options: any): Observable<string> {
+    public getCapabilities(serv: Server): Observable<string> {
         let actionUrl: string
         switch(serv.serverType) {
-            case "Geoserver": 
+            case "GeoserverWMS": 
                 actionUrl = serv.serverURL + '/wms?request=getCapabilities&service=WMS'; 
+                console.log(actionUrl)
                 break;
+            case "GeoserverWMTS":
+                actionUrl = serv.serverURL + '/gwc/service/wmts?request=getcapabilities';
+                break
             case "ArcGIS": 
                 actionUrl = serv.serverURL + 'f=pjson'; 
                 break;
         }
-        return this._http.get(actionUrl, options)
+        
+        return this._http.get(actionUrl)
             .pipe(catchError(this.handleError));
     }
 

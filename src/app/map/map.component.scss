@@ -6,6 +6,11 @@
     z-index:-1;
   }
 
+  .featurelist {
+      height:260px;
+      width: 800px;
+      overflow: auto;
+  }
 .example-headers-align .mat-expansion-panel-header-description {
   justify-content: space-between;
   align-items: center;

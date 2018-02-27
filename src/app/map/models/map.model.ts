@@ -28,6 +28,7 @@ export class MapConfig {
     currentLayerName?: string;
     editmode?: boolean;
     layerpermission?: LayerPermission[];
+    mouseoverLayer?: UserPageLayer;
 }
 
 export class featureList {

@@ -102,7 +102,13 @@
                     <button mat-icon-button color="primary" focusable="false" (click)="confirmDelete(row.currentData)">
                         <i class="fa fa-times mat-icon"></i>
                     </button>
-                    <button mat-button id="exlayerperm" (click)="openPermission(row.currentData.ID, row.currentData.layerName)">Permissions</button>
+                    <button mat-button [matMenuTriggerFor]="menu2">
+                        Options
+                    </button>
+                    <mat-menu #menu2="matMenu" [overlapTrigger]="false">
+                        <button mat-menu-item id="exlayerperm" (click)="openPermission(row.currentData.ID, row.currentData.layerName)">Permissions</button>
+                        <button mat-menu-item id="openstyle" (click)="openStyle(row.currentData.ID, row.currentData.layerName)">Style</button>
+                    </mat-menu>
                     <!-- <button mat-button id="exlayerdetails" (click)="openDetails(row.currentData.ID, row.currentData.layerName)">Details</button> -->
                 </mat-cell>
             </ng-container>

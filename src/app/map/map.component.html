@@ -1,6 +1,6 @@
 <div #mapElement id="mapid"></div>
 
-<div class="container-fluid pull-right" style="background: rgba(255,255,255,.7)">
+<div class="container-fluid pull-right" style="background: rgba(255,255,255,0)">
    
     <div>
        <mat-accordion class="example-headers-align">
@@ -23,10 +23,16 @@
                                 <mat-icon>more_vert</mat-icon>
                             </button>
                             <mat-menu #menu="matMenu">
-                                <button disabled="true" mat-menu-item>
+                                <button *ngIf="userPage == mapConfig.defaultpage; else makedefault" disabled="true" mat-menu-item>
                                     <mat-icon>done</mat-icon>
-                                    <span>Make Default</span>
+                                    <span>This is the default page</span>
                                 </button>
+                                <ng-template #makedefault>
+                                        <button mat-menu-item (click)="setDefaultPage(userPage)">
+                                                <mat-icon>done</mat-icon>
+                                                <span>Make Default</span>
+                                            </button>
+                                </ng-template>
                                 <button mat-menu-item (click)="openPageConfig(userPage.ID, userPage.userID, userPage.page)">
                                     <mat-icon>settings</mat-icon>
                                     <span>Edit Layers</span>
@@ -98,7 +104,7 @@
                         </mat-menu>
                         <mat-radio-button [disabled]="!userpagelayer.layerShown" class="example-radio-button" [value]="userpagelayer" (change)="mapService.setCurrentLayer(userpagelayer, mapConfig)">
                             <mat-slide-toggle class="example-margin" [checked]="userpagelayer.layerShown" (change)="mapService.toggleLayers(userpagelayer.loadOrder,mapConfig,i)">
-                                <i *ngIf="userpagelayer.loadStatus=='Loading'">{{userpagelayer.layer.layerName}}</i><span *ngIf="userpagelayer.loadStatus!='Loading'">{{userpagelayer.layer.layerName}}</span> </mat-slide-toggle><br>
+                                <b *ngIf="userpagelayer == mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</b><i *ngIf="userpagelayer.loadStatus=='Loading'">{{userpagelayer.layer.layerName}}</i><span *ngIf="userpagelayer.loadStatus!='Loading' &&  userpagelayer != mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</span> </mat-slide-toggle><br>
                         </mat-radio-button> <mat-icon *ngIf="userpagelayer.loadStatus=='Error'">error</mat-icon>
                     </div>
                     <br>
@@ -121,11 +127,11 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <div style="height:240px">
-                    <div *ngFor="let fl of mapService.featurelist">
-                        <a style="cursor: pointer;" (click)="mapService.zoomToFeature(fl)">{{fl.label}}</a>
+                <div class="featurelist">
+                        <div *ngFor="let fl of mapService.featurelist">
+                            <a style="cursor: pointer;" (click)="mapService.zoomToFeature(fl)">{{fl.label}}</a>
+                        </div>
                     </div>
-                </div>
 
                 <mat-action-row>
                     <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'Point')"><mat-icon matTooltip="Create Point">control_point</mat-icon></button>

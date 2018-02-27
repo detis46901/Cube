@@ -13,7 +13,7 @@ import { Configuration } from '../_api/api.constants';
 @Injectable()
 export class ParentService {
     protected actionUrl: string;
-    protected options: any;
+    public options: any;
     protected token: string;
  
     constructor(protected _http: HttpClient, protected configuration: Configuration) {

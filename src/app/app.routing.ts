@@ -20,6 +20,8 @@ import { PasswordComponent } from './settings/password/password.component';
 import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
 import { ProfileComponent } from './settings/profile/profile.component';
 
+import { LayerPermissionComponent } from './admin/layer/layerPermission/layerPermission.component'
+
 
 const appRoutes: Routes = [
     // Login/Map
@@ -48,6 +50,9 @@ const appRoutes: Routes = [
         {path: 'notification', component: NotificationComponent, outlet: 'admin'},
         {path: 'server', component: ServerComponent, outlet: 'admin'}
     ]},
+
+    // new Layer Modal Settings
+    {path: 'layerNew', component: LayerPermissionComponent},
     // otherwise redirect to home
     {path: '**', redirectTo: ''}
 ];

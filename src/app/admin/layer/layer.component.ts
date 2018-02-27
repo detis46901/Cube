@@ -8,6 +8,7 @@ import { UserPageLayerService } from '../../../_services/_userPageLayer.service'
 import { SQLService } from '../../../_services/sql.service';
 import { Layer, LayerPermission, UserPageLayer } from '../../../_models/layer.model';
 import { LayerPermissionComponent } from './layerPermission/layerPermission.component';
+import { LayerStyleComponent } from './layerStyle/layerStyle.component'
 import { LayerNewComponent } from './layerNew/layerNew.component';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
 import { newMyCubeComponent } from './myCubeLayer/newMyCube.component';
@@ -67,7 +68,7 @@ export class LayerComponent implements OnInit {
     }
 
     private createLayer(): void {
-        const dialogRef = this.dialog.open(LayerNewComponent, {height:'450px', width:'500px'});
+        const dialogRef = this.dialog.open(LayerNewComponent, {height:'700px', width:'700px'});
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });
@@ -82,6 +83,12 @@ export class LayerComponent implements OnInit {
 
     private openPermission(layerid: number, layername: string): void {
         const dialogRef = this.dialog.open(LayerPermissionComponent);
+        dialogRef.componentInstance.layerID = layerid;
+        dialogRef.componentInstance.layerName = layername;
+    }
+
+    private openStyle(layerid: number, layername: string): void {
+        const dialogRef = this.dialog.open(LayerStyleComponent);
         dialogRef.componentInstance.layerID = layerid;
         dialogRef.componentInstance.layerName = layername;
     }

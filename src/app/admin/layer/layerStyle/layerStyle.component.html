@@ -1,0 +1,21 @@
+<div id="styleHeader" class="row">
+    <div class="col-sm-10">
+    </div>
+    <div class="col-sm-2">
+        <button mat-dialog-close (click)="updateLayerStyle()" id="layerStyleX" class="close">&times;</button>
+    </div>
+</div>
+
+<mat-dialog-content>
+    <h5><b>Current Styles</b></h5>
+    <form class="example-form">      
+        <mat-form-field style="width:250px">
+          <textarea style="width:100%;height:200px" matInput id="layerStyle" name="layerStyle" [(ngModel)]="defaultStyle" placeholder="JSON Style"></textarea>
+        </mat-form-field>
+      </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close (click)="updateLayerStyle(layer)" id="layerStyleClose">Close</button>
+    <!-- <button mat-button [disabled]="!f.valid" (click)="addLayerPermission(newLayerPermission)">Add Permission</button> -->
+</mat-dialog-actions>    

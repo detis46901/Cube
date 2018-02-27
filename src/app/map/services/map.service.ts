@@ -72,7 +72,11 @@ export class MapService {
                     })
                     this.mapConfig.map = new ol.Map({
                         layers: this.mapConfig.layers,
-                        view: this.mapConfig.view
+                        view: this.mapConfig.view,
+                        controls: ol.control.defaults({
+                            attribution: false,
+                            zoom: null
+                        })
                     }); resolve(this.mapConfig)
                 })
                 )
@@ -479,7 +483,7 @@ export class MapService {
         this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected)
         if (refresh == false) {
         this.myCubeService.setMyCubeConfig(layer.layer.ID, layer.layerPermissions.edit);
-        this.myCubeService.sendMyCubeData(layer.layer.ID, this.mapConfig.selectedFeature);
+        this.myCubeService.sendMyCubeData(layer.layer.ID, this.mapConfig.selectedFeature.getId());
         }
         this.mapConfig.selectedFeatures.clear()
         this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature)

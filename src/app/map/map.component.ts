@@ -68,6 +68,29 @@ export class MapComponent {
          .then(() => this.mapService.initMap(this.mapConfig)
             .then((mapConfig) => {
                 this.mapConfig = mapConfig  //Not sure if this is necessary.  Just in case.
+                let ptkey = this.mapConfig.map.on('pointermove', (evt) => {
+                    mapConfig.map.getTargetElement().style.cursor =
+                    mapConfig.map.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
+                    if (mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
+                        this.mapConfig.map.forEachLayerAtPixel((evt.pixel), layers => {
+                            //console.log(layers)
+                            let index = this.mapConfig.layers.findIndex(x => x == layers)
+                            if (index > 0 ) {
+                                let index2 = this.mapConfig.userpagelayers.findIndex (z => z.loadOrder-1 == index)
+                                // let features = this.mapConfig.map.getFeaturesAtPixel(evt.pixel)
+                                // let popup = new ol.Overlay({
+                                //     element: document.getElementById('popup'),
+                                //     position: evt.coordinate,
+                                //   });
+                                //   //popup.setPosition(evt.coordinate);
+                                //   this.mapConfig.map.addOverlay(popup);
+                                // console.log(this.mapConfig.userpagelayers[index2].layer.layerName)
+                                this.mapConfig.mouseoverLayer = this.mapConfig.userpagelayers[index2]
+                            }
+                        })
+                    }
+                    else { this.mapConfig.mouseoverLayer = null}
+                }, {hitTolerance: 5})
                 mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
                 console.log("Map Initialized")
             })    
@@ -154,6 +177,19 @@ export class MapComponent {
           });
     }
 
+    private setDefaultPage(userpage: UserPage) {
+        this.mapConfig.defaultpage.default = false
+        this.userPageService
+        .Update(this.mapConfig.defaultpage)
+        .subscribe()
+
+        userpage.default = true
+        this.userPageService
+        .Update(userpage)
+        .subscribe((data) => {
+            this.mapConfig.defaultpage = userpage
+        })
+    }
     // private refreshLayers() {
     //     this.interval = setInterval(() => {
     //         console.log("Refreshing Layers")

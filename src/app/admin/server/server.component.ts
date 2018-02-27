@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ServerService } from '../../../_services/_server.service';
 import { Server } from '../../../_models/server.model';
+import { Layer, WMSLayer } from '../../../_models/layer.model'
 import { ServerNewComponent } from './serverNew/serverNew.component';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { RequestOptions } from '@angular/http';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
 import { LayerNewComponent } from '../layer/layerNew/layerNew.component';
 import { MatDialog } from '@angular/material';
 import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { ServerValidatorService } from './serverValidator.service';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
 @Component({
     selector: 'server',
@@ -31,6 +35,8 @@ export class ServerComponent implements OnInit {
     private folderArray: Array<string> = [];
     private serviceArray: Array<string> = [];
     private formatArray: Array<string> = [];
+    private WMSLayers: Array<WMSLayer> = [];
+    private newLayer = new Layer
 
     private displayGeoserverLayers: boolean;
     private displayFolders: boolean;
@@ -38,8 +44,10 @@ export class ServerComponent implements OnInit {
 
     private serverColumns = ['serverID', 'serverName', 'serverType', 'serverURL', 'actionsColumn']
     private dataSource: TableDataSource<Server>;
+    private http:Http
 
-    constructor(private serverService: ServerService, private dialog: MatDialog, private serverValidator: ValidatorService) {
+    constructor(private serverService: ServerService, private dialog: MatDialog, private serverValidator: ValidatorService, http: Http
+         ) {this.http = http 
         this.options = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -62,6 +70,11 @@ export class ServerComponent implements OnInit {
             });
     }
 
+    public getCapabilities = (url): Observable<any> => {        
+        return this.http.get(url)
+            .map((response: Response) => <any>response.text())
+    }
+
     private clearArrays(): void {
         this.layerArray = [];
         this.folderArray = [];
@@ -70,26 +83,41 @@ export class ServerComponent implements OnInit {
     }
 
     private getRequest(serv: Server): void {
-        switch(serv.serverType) {
-            case "Geoserver": {
+        let url: string
+        switch (serv.serverType) {
+            case "GeoserverWMS": {
                 this.getGeoserver(serv)
                 break
             }
-            case "ArcGIS": {
-                this.getLayers(serv)
+            case "GeoserverWMTS":
+                url = serv.serverURL + '/gwc/service/wmts?request=getcapabilities';
                 break
-            }
+            case "ArcGIS":
+                url = serv.serverURL + 'f=pjson';
+                break;
         }
+  
     }
+        
     private getGeoserver(serv: Server): void {
-        this.currServer = serv;
-        this.clearArrays();
-        this.displayGeoserverLayers = true;
+        let url = serv.serverURL + '/wms?request=getCapabilities&service=WMS';
+        this.getCapabilities(url)
+        .subscribe((data) => {
+            let parser = new ol.format.WMSCapabilities();
+            let result = parser.read(data)
+            console.log(result)
+            console.log(result['Capability']['Layer']['Layer'])
+            this.WMSLayers = result['Capability']['Layer']['Layer']
+            this.currServer = serv
+        })
+        // this.currServer = serv;
+        // this.clearArrays();
+        // this.displayGeoserverLayers = true;
 
-        this.serverService.getCapabilities(serv, this.options)
-            .subscribe((response: string) => {
-                this.parseGeoserver(response);
-            });
+        // this.serverService.getCapabilities(serv)
+        //     .subscribe((response: string) => {
+        //         this.parseGeoserver(response);
+        //     });
     }
 
     private parseGeoserver(response: string): void {
@@ -178,21 +206,23 @@ export class ServerComponent implements OnInit {
     }
 
     private createLayer(index: number, name: string): void {
-        const dialogRef = this.dialog.open(LayerNewComponent, {height:'450px', width:'500px'});
+        const dialogRef = this.dialog.open(LayerNewComponent, {height:'700px', width:'700px'});
         dialogRef.componentInstance.layerName = name;
         dialogRef.componentInstance.layerIdent = (String)(index);
         dialogRef.componentInstance.layerServiceField = this.path;
-        dialogRef.componentInstance.layerType = this.serviceArray[index]['type'];
-        dialogRef.componentInstance.layerServer = this.currServer;
+        //dialogRef.componentInstance.layerType = this.serviceArray[index]['type'];
+        //dialogRef.componentInstance.layerServer = this.currServer;
     }
 
-    private createGeoserverLayer(name: string): void {
-        const dialogRef = this.dialog.open(LayerNewComponent, {height:'360px', width:'500px'});
-        dialogRef.componentInstance.layerName = name;
-        dialogRef.componentInstance.layerIdent = name;
-        dialogRef.componentInstance.layerServiceField = "None";
-        dialogRef.componentInstance.layerType = "Geoserver";
-        dialogRef.componentInstance.layerServer = this.currServer;
+    private createGeoserverLayer(WMSLayer: WMSLayer): void {
+        const dialogRef = this.dialog.open(LayerNewComponent, {height:'700px', width:'700px'});
+        this.newLayer.layerName = WMSLayer.Title
+        this.newLayer.layerIdent = WMSLayer.Name
+        this.newLayer.layerService = "None"
+        this.newLayer.server = this.currServer
+        this.newLayer.layerType = "Geoserver WMS"
+        //dialogRef.componentInstance.layerServer = this.currServer;
+        dialogRef.componentInstance.serverLayer = this.newLayer
     }
     
 

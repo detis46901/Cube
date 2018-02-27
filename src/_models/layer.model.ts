@@ -70,3 +70,8 @@ export class MyCubeComment {
     firstName: string;
     lastName: string;
 }
+
+export class WMSLayer {
+    Title: string;
+    Name: string;
+}

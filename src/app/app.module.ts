@@ -42,6 +42,7 @@ import { AdminNavComponent } from './admin/adminNav/adminNav.component';
 import { SettingsNavComponent } from './settings/settingsnav/settingsnav.component';
 import { LayerComponent} from './admin/layer/layer.component';
 import { LayerPermissionComponent} from './admin/layer/layerPermission/layerPermission.component';
+import { LayerStyleComponent } from './admin/layer/layerStyle/layerStyle.component'
 import { PageComponent} from './admin/user/page/page.component';
 import { PageConfigComponent} from './admin/user/pageConfig/pageConfig.component';
 import { LayerNewComponent } from './admin/layer/layerNew/layerNew.component';
@@ -126,6 +127,7 @@ import { DetailsComponent } from './admin/details/details.component';
         NumFilterPipe,
         PagePipe,
         LayerPermissionComponent,
+        LayerStyleComponent,
         PageComponent,
         PageConfigComponent,
         LayerNewComponent,
@@ -152,7 +154,8 @@ import { DetailsComponent } from './admin/details/details.component';
         LayerNewComponent,
         newMyCubeComponent,
         ChangePasswordComponent, 
-        LayerPermissionComponent, 
+        LayerPermissionComponent,
+        LayerStyleComponent,
         PageComponent, 
         PageConfigComponent, 
         ConfirmDeleteComponent,

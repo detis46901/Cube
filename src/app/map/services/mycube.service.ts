@@ -67,8 +67,8 @@ export class MyCubeService extends SQLService{
         })
     }
     
-    sendMyCubeData(table: number, feature: ol.Feature) {
-        let id = feature.getProperties().id
+    sendMyCubeData(table: number, featureid: string | number) {
+        let id = featureid
         
         this.GetSchema(table)
             .subscribe((data: MyCubeField[]) => {

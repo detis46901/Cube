@@ -63,6 +63,15 @@
 </mat-table>
 
 <button mat-button id="createServerBtn" (click)="openServerNew()">Create Server</button>
+
+
+<div *ngIf="WMSLayers.length > 0" class="row">
+        WMS Layers
+    <div *ngFor="let WMSLayer of WMSLayers">
+        <button mat-button (click)="createGeoserverLayer(WMSLayer)">{{WMSLayer.Title}}</button>
+    </div>
+</div>
+
 <!-- 12/27/17 <div id="serverHeaderRow" class="row">
     <div class="col-sm-3">
         <div class="col-sm-8 col-sm-offset-1" style="position:relative; left:1%">
@@ -182,5 +191,3 @@
         </tr>
     </table>
 </div>
-
-    
