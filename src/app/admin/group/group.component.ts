@@ -136,6 +136,7 @@ export class GroupComponent implements OnInit {
                         .subscribe(() => {
                             this.getGroupItems();
                             this.getUserItems();
+                            this.selectUser(this.selectedUser)
                         });
                 }
             }
@@ -152,6 +153,7 @@ export class GroupComponent implements OnInit {
             .subscribe(() => {
                 this.getGroupItems();
                 this.getUserItems();
+                this.selectUser(this.selectedUser)
             });
         
     }
