@@ -35,7 +35,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar'
 import 'hammerjs';
 
 //Components
-import { LoginComponent } from './user/login.component';
+import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminNavComponent } from './admin/adminNav/adminNav.component';
