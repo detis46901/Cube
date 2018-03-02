@@ -52,7 +52,6 @@ import { AdminPageComponent } from './admin/adminPage/adminPage.component';
 import { ModuleComponent } from './admin/module/module.component';
 import { DefaultsComponent } from './admin/default/default.component';
 import { BoundaryComponent } from './admin/boundary/boundary.component';
-import { NotificationComponent } from './admin/notification/notification.component';
 import { ServerComponent } from './admin/server/server.component';
 import { ConfirmDeleteComponent } from './admin/confirmDelete/confirmDelete.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -77,6 +76,7 @@ import { NewUserComponent } from './admin/user/newUser/newUser.component';
 import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
 import { ProfileComponent } from './settings/profile/profile.component';
 import { ChangePictureComponent } from './settings/profile/change-picture/change-picture.component';
+import { NotificationComponent } from '../app/notification/notification.component';
 
 import { mapStyles } from '../app/map/models/map.model';
 
@@ -99,6 +99,7 @@ import { MessageService } from '../_services/message.service';
 import { ImageService } from '../_services/image.service';
 import { UserValidatorService } from './admin/user/userValidator.service';
 import { DetailsComponent } from './admin/details/details.component';
+import { NotificationService } from '../_services/notification.service';
 
 @NgModule ({
     declarations: [
@@ -147,7 +148,8 @@ import { DetailsComponent } from './admin/details/details.component';
         NewGroupComponent,
         ProfileComponent,
         ChangePictureComponent,
-        DetailsComponent
+        DetailsComponent,
+        NotificationComponent
     ],
 
     entryComponents: [
@@ -162,7 +164,8 @@ import { DetailsComponent } from './admin/details/details.component';
         ServerNewComponent,
         NewUserComponent,
         NewGroupComponent,
-        ChangePictureComponent
+        ChangePictureComponent,
+        DetailsComponent
     ],
 
     imports: [
@@ -233,7 +236,8 @@ import { DetailsComponent } from './admin/details/details.component';
         MessageService,
         mapStyles,
         ImageService,
-        UserValidatorService
+        UserValidatorService,
+        NotificationService
     ], 
 
     bootstrap: [AppComponent]

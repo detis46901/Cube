@@ -1,0 +1,10 @@
+<mat-card id="notificationMenu" class="notification-card">
+    <mat-list>
+        <mat-list-item *ngFor="let notif of notifications">
+            <!-- <span *ngFor="let priority"><i class="fas fa-exclamation"></i></span> -->
+            <h4>{{notif.name}}</h4>
+            <h5>{{notif.description}}</h5>
+            <mat-divider></mat-divider>
+        </mat-list-item>
+    </mat-list>
+</mat-card>

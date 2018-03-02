@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
- 
 import { AuthenticationService } from '../../_services/authentication.service';
 import { UserService } from '../../_services/_user.service';
-import { User } from '../../_models/user.model'
+import { User } from '../../_models/user.model';
 
 @Component({
-    //moduleId: module.id, (why does this not need to be there???)
     templateUrl: 'login.component.html',
     styleUrls: ['login.component.scss']
 })
@@ -26,6 +24,14 @@ export class LoginComponent implements OnInit {
         this.authenticationService.logout();
         this.token = null;
         localStorage.clear();
+
+        document.getElementById("loginPassword")
+            .addEventListener("keyup", function(event) {
+                event.preventDefault();
+                if(event.keyCode === 13) {
+                    document.getElementById("loginSubmit").click();
+                }
+            })
     }
 
     ngOnDestroy() {

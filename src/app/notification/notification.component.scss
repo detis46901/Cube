@@ -1,0 +1,16 @@
+:host #notificationMenu {
+    padding:0;
+    width:400px;
+    max-height:600px;
+    min-height:300px;
+    overflow:auto;
+    display:none;
+}
+
+mat-list-item {
+    font-family:'Roboto', sans-serif;
+}
+
+h4 {
+    display:inline;
+}

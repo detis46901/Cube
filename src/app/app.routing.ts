@@ -11,7 +11,6 @@ import { UserComponent } from './admin/user/user.component';
 import { ModuleComponent } from './admin/module/module.component';
 import { DefaultsComponent } from './admin/default/default.component';
 import { BoundaryComponent } from './admin/boundary/boundary.component';
-import { NotificationComponent } from './admin/notification/notification.component';
 import { ServerComponent } from './admin/server/server.component';
 import { AdminPageComponent } from './admin/adminPage/adminPage.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -47,7 +46,6 @@ const appRoutes: Routes = [
         {path: 'page', component: AdminPageComponent, outlet: 'admin'},
         {path: 'default', component: DefaultsComponent, outlet: 'admin'},
         {path: 'boundary', component: BoundaryComponent, outlet: 'admin'},
-        {path: 'notification', component: NotificationComponent, outlet: 'admin'},
         {path: 'server', component: ServerComponent, outlet: 'admin'}
     ]},
 

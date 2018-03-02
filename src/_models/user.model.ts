@@ -16,3 +16,13 @@ export class UserPage {
     default: boolean;
     active?: boolean;
 }
+
+export class Notification {
+    ID: number;
+    userID: number;
+    name: string;
+    description: string;
+    link: string;
+    priority: number;
+    read: boolean;
+}

@@ -18,10 +18,6 @@ h4, h3 {
     font-family: 'Raleway', sans-serif;
 }
 
-a {
-    margin-left:10px;
-}
-
 img {
     width:25px;
     height:25px;
@@ -49,4 +45,31 @@ img {
 
 #headerBar {
     display: flex;
+}
+
+#headerNotifications {
+    color:#337ab7;
+    position:relative;
+    bottom:5px;
+    margin-left:5px;
+    padding:0;
+    z-index:1;
+}
+
+.mat-button {
+    min-width:25px;
+}
+
+button:focus {
+    outline:none;
+    width:25px;
+}
+
+a {
+    margin-left:10px;
+}
+
+h3 a {
+    margin-left:5px;
+    z-index:5;
 }

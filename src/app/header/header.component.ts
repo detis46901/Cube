@@ -9,6 +9,7 @@ import { User } from '../../_models/user.model';
 import { UserPage } from '../../_models/user.model';
 import { UserService } from '../../_services/_user.service';
 import { UserPageService } from '../../_services/_userPage.service';
+import { NotificationService } from '../../_services/notification.service';
 
 @Component({
     selector: 'header',
@@ -21,6 +22,7 @@ export class HeaderComponent implements OnInit {
     @Input() user: User;
     @Input() screenCode: number = 0; 
     private isOpen: boolean;
+    private isNotifOpen: boolean = false;
 
     private token: string;
     private userID: number;
@@ -28,7 +30,7 @@ export class HeaderComponent implements OnInit {
     private currUser: User;
     private userPages: UserPage[];
 
-    constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService ) {
+    constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService, private notificationService: NotificationService ) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -162,5 +164,15 @@ export class HeaderComponent implements OnInit {
         //     this.getUserItems();
         //     this.getUserPageItems();
         // });
+    }
+
+    private openNotifications(id): void {
+        console.log("notif opened")
+        if(this.isNotifOpen) {
+            document.getElementById("notificationMenu").style.display = "none";
+        } else {
+            document.getElementById("notificationMenu").style.display = "block";
+        }
+        this.isNotifOpen = !this.isNotifOpen
     }
 }
