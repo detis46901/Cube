@@ -656,17 +656,8 @@ export class MapService {
             this.base = 'base'
             this.mapConfig.layers[0].setSource(base)
         }
-        //this.mapConfig.sources.push(new ol.source.BingMaps())
-        //this.mapConfig.layers.push(osm_layer)
-        //this.mapConfig.map.addLayer(osm_layer)
         
         }
     
-    // public refreshLayers() {
-    //      this.mapConfig.sources.forEach((x: ol.source.Vector) => {
-    //          x.refresh()
-    //      })
-    // }
 }
-
  

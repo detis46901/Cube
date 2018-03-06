@@ -31,6 +31,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatTooltipModule} from '@angular/material/tooltip'
 import {MatSnackBarModule} from '@angular/material/snack-bar'
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 import 'hammerjs';
 
@@ -78,6 +79,7 @@ import { ProfileComponent } from './settings/profile/profile.component';
 import { ChangePictureComponent } from './settings/profile/change-picture/change-picture.component';
 import { NotificationComponent } from '../app/notification/notification.component';
 
+import { MeasureComponent } from './map/measure/measure.component'
 import { mapStyles } from '../app/map/models/map.model';
 
 //Services
@@ -149,7 +151,8 @@ import { NotificationService } from '../_services/notification.service';
         ProfileComponent,
         ChangePictureComponent,
         DetailsComponent,
-        NotificationComponent
+        NotificationComponent,
+        MeasureComponent
     ],
 
     entryComponents: [
@@ -189,6 +192,7 @@ import { NotificationService } from '../_services/notification.service';
         MatCardModule,
         MatSidenavModule,
         MatSlideToggleModule,
+        MatButtonToggleModule,
         MatTabsModule,
         MatExpansionModule,
         MatRadioModule,

@@ -22,6 +22,7 @@ import { MatDialog } from '@angular/material';
 import { Clipboard } from 'ts-clipboard';
 import { Configuration } from '../../_api/api.constants'
 import {MatSnackBar} from '@angular/material';
+import { Feature } from 'geojson';
 
 declare var ol: any;
 
@@ -94,7 +95,8 @@ export class MapComponent {
                 mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
                 console.log("Map Initialized")
             })    
-         )}
+         )
+        }
 
     getDefaultPage(): Promise<any> {  
         let promise = new Promise ((resolve, reject) => { 
@@ -190,10 +192,5 @@ export class MapComponent {
             this.mapConfig.defaultpage = userpage
         })
     }
-    // private refreshLayers() {
-    //     this.interval = setInterval(() => {
-    //         console.log("Refreshing Layers")
-    //         //this.mapService.refreshLayers()
-    //       }, 20000);
-    // }
+
 }

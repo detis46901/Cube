@@ -1,0 +1,27 @@
+<div class="measure-container">
+    <mat-accordion class="example-headers-align">
+        <mat-expansion-panel [expanded]=true>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Measure
+                </mat-panel-title>
+                <mat-panel-description>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <span *ngIf="measureType == 'LineString'">Length: {{value}} {{unit}}</span>
+            <span *ngIf="measureType == 'Polygon'">Area: {{value}} {{unit}}</span>
+            <mat-action-row>
+                <button *ngIf="measureType == 'LineString'" (click)="changeUnit('feet',1)">Feet</button>
+                <button *ngIf="measureType == 'LineString'" (click)="changeUnit('miles',1/5280)">Miles</button>
+                    <button mat-icon-button (click)="measure('LineString')">
+                            <mat-icon matTooltip="Measure Length">trending_flat</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="measure('Polygon')">
+                                <mat-icon matTooltip="Measure Area">crop_din</mat-icon>
+                            </button>       
+
+            </mat-action-row>
+
+        </mat-expansion-panel>
+        </mat-accordion>
+</div>
