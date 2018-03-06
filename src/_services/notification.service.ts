@@ -17,23 +17,28 @@ export class NotificationService {
     private headers;
 
     constructor(protected _http: HttpClient, protected configuration: Configuration) {
-        this.headers = new Headers();
+        this.headers = new HttpHeaders();
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
         } catch(err) {
             console.log("Could not find user in local storage. Did you reinstall your browser or delete cookies?\n"+err)
         }
 
-        this.headers.append('Content-Type', 'application/json');
-        this.headers.append('Accept', 'application/json');
-        //this.headers.append('Authorization', 'Bearer ' + this.token);
-        this.headers.append('Access-Control-Allow-Origin', '*');
-        this.options = new RequestOptions({headers: this.headers})
+        // this.headers.append('Authorization', 'Bearer ' + this.token);
+        // this.options = new RequestOptions({headers: this.headers})
         this.actionUrl = this.configuration.serverWithApiUrl + 'notification/';
+
+        this.options = {
+            headers: new HttpHeaders({
+                'Authorization': 'Bearer ' + this.token
+            })
+        }
     }
 
     public GetByUser = (userID): Observable<Notification[]> => {
-        return this._http.get<Notification[]>(this.actionUrl + 'getbyuser?userID=' + userID, this.options)
+        console.log(this.options)
+        console.log(this.actionUrl + 'getbyuser?userID=' + userID)
+        return this._http.get(this.actionUrl + 'getbyuser?userID=' + userID, this.options)
             .pipe(catchError(this.handleError));
     }
 

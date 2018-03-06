@@ -5,21 +5,26 @@ import { NotificationService } from '../../_services/notification.service';
 @Component({
     selector: 'notification',
     templateUrl: './notification.component.html',
-    styleUrls: ['./notification.component.scss']
+    styleUrls: ['./notification.component.scss'],
+    providers: [NotificationService]
 })
+
 export class NotificationComponent implements OnInit {
     public token: string;
     public userID: number;
-    public userpages: any;
     private notifications: any;
     
     constructor(private notificationService: NotificationService) { 
-        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID; 
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.token = currentUser.token;
+        this.userID = currentUser.userID; 
     }
 
     ngOnInit() {
+        this.getNotifications();
+    }
+
+    private getNotifications(): void {
         this.notificationService.GetByUser(this.userID)
             .subscribe((res) => {
                 this.notifications = res
