@@ -1,10 +1,10 @@
 <div #mapElement id="mapid"></div>
 
 <div class="container-fluid pull-right" style="background: rgba(255,255,255,0)">
-   
+    <measure *ngIf="measureOn" [mapConfig]="mapConfig"></measure>
     <div>
-       <mat-accordion class="example-headers-align">
-            <mat-expansion-panel >
+        <mat-accordion class="example-headers-align">
+            <mat-expansion-panel>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         Pages
@@ -16,7 +16,8 @@
                 <table *ngFor="let userPage of mapConfig.userpages" style="position:relative; width:100%; right:4px" data-toggle="buttons">
                     <tr>
                         <td>
-                            <button mat-button (click)="setPage(userPage)" style="text-align: left">{{userPage.page}}</button> <!--(click)="setUserPageLayers(activePage)", {{activePage.page}}-->
+                            <button mat-button (click)="setPage(userPage)" style="text-align: left">{{userPage.page}}</button>
+                            <!--(click)="setUserPageLayers(activePage)", {{activePage.page}}-->
                         </td>
                         <td style="position:absolute; right:4px">
                             <button button mat-icon-button [matMenuTriggerFor]="menu">
@@ -28,10 +29,10 @@
                                     <span>This is the default page</span>
                                 </button>
                                 <ng-template #makedefault>
-                                        <button mat-menu-item (click)="setDefaultPage(userPage)">
-                                                <mat-icon>done</mat-icon>
-                                                <span>Make Default</span>
-                                            </button>
+                                    <button mat-menu-item (click)="setDefaultPage(userPage)">
+                                        <mat-icon>done</mat-icon>
+                                        <span>Make Default</span>
+                                    </button>
                                 </ng-template>
                                 <button mat-menu-item (click)="openPageConfig(userPage.ID, userPage.userID, userPage.page)">
                                     <mat-icon>settings</mat-icon>
@@ -47,13 +48,20 @@
                 </table>
                 <br>
                 <mat-action-row>
-                        <button mat-icon-button (click)="mapService.zoomExtents()"><mat-icon matTooltip="Zoom Extents">zoom_out_map</mat-icon></button>
-                            <button mat-icon-button (click)="mapService.toggleBasemap()"><mat-icon matTooltip="Toggle Aerial Photos">map</mat-icon></button>
+                    <button mat-icon-button (click)="measureOn = !measureOn">
+                        <mat-icon matTooltip="Measure Toolbar">trending_flat</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="mapService.zoomExtents()">
+                        <mat-icon matTooltip="Zoom Extents">zoom_out_map</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="mapService.toggleBasemap()">
+                        <mat-icon matTooltip="Toggle Aerial Photos">map</mat-icon>
+                    </button>
                 </mat-action-row>
 
             </mat-expansion-panel>
 
-            <mat-expansion-panel [expanded] = true>
+            <mat-expansion-panel [expanded]=true>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         Layers
@@ -64,11 +72,20 @@
                 </mat-expansion-panel-header>
 
                 <mat-radio-group class="example-radio-group" [(ngModel)]="mapConfig.currentLayer">
-                    <div *ngFor="let userpagelayer of mapConfig.userpagelayers; let i = index" [attr.data-index]="i"> <!--let activeUPL of UPLs?-->
+                    <div *ngFor="let userpagelayer of mapConfig.userpagelayers; let i = index" [attr.data-index]="i">
+                        <!--let activeUPL of UPLs?-->
                         <button button mat-icon-button [matMenuTriggerFor]="menu">
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
+                            <button mat-menu-item disabled="true">
+                                <mat-icon>zoom_in</mat-icon>
+                                <span>Zoom To Layer</span>
+                            </button>
+                            <button mat-menu-item disabled="true">
+                                <mat-icon>filter_list</mat-icon>
+                                <span>Filter</span>
+                            </button>
                             <button mat-menu-item disabled="true">
                                 <mat-icon>star</mat-icon>
                                 <span>Default On</span>
@@ -85,11 +102,13 @@
                                 <mat-icon>remove</mat-icon>
                                 <span>Remove From Page</span>
                             </button>
-                            <button mat-menu-item matTooltip="Use this in an Excel Data Connection" *ngIf="userpagelayer.layer.layerType == 'MyCube'" (click)="copyToClipboard('sql/getsheets?table=' + userpagelayer.layer.ID)">
+                            <button mat-menu-item matTooltip="Use this in an Excel Data Connection" *ngIf="userpagelayer.layer.layerType == 'MyCube'"
+                                (click)="copyToClipboard('sql/getsheets?table=' + userpagelayer.layer.ID)">
                                 <mat-icon>web</mat-icon>
                                 <span>Copy Excel URL</span>
                             </button>
-                            <button mat-menu-item matTooltip="Paste this into a Google Sheets Cell" *ngIf="userpagelayer.layer.layerType == 'MyCube'" (click)="copyGSToClipboard('sql/getsheets?table=' + userpagelayer.layer.ID)">
+                            <button mat-menu-item matTooltip="Paste this into a Google Sheets Cell" *ngIf="userpagelayer.layer.layerType == 'MyCube'"
+                                (click)="copyGSToClipboard('sql/getsheets?table=' + userpagelayer.layer.ID)">
                                 <mat-icon>web</mat-icon>
                                 <span>Copy Google Sheets URL</span>
                             </button>
@@ -100,26 +119,46 @@
                             <button mat-menu-item disabled="true">
                                 <mat-icon>assignment</mat-icon>
                                 <span>View Metadata</span>
-                            </button>                                              
+                            </button>
                         </mat-menu>
                         <mat-radio-button [disabled]="!userpagelayer.layerShown" class="example-radio-button" [value]="userpagelayer" (change)="mapService.setCurrentLayer(userpagelayer, mapConfig)">
                             <mat-slide-toggle class="example-margin" [checked]="userpagelayer.layerShown" (change)="mapService.toggleLayers(userpagelayer.loadOrder,mapConfig,i)">
-                                <b *ngIf="userpagelayer == mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</b><i *ngIf="userpagelayer.loadStatus=='Loading'">{{userpagelayer.layer.layerName}}</i><span *ngIf="userpagelayer.loadStatus!='Loading' &&  userpagelayer != mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</span> </mat-slide-toggle><br>
-                        </mat-radio-button> <mat-icon *ngIf="userpagelayer.loadStatus=='Error'">error</mat-icon>
+                                <b *ngIf="userpagelayer == mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</b>
+                                <i *ngIf="userpagelayer.loadStatus=='Loading'">{{userpagelayer.layer.layerName}}</i>
+                                <span *ngIf="userpagelayer.loadStatus!='Loading' &&  userpagelayer != mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</span>
+                            </mat-slide-toggle>
+                            <br>
+                        </mat-radio-button>
+                        <mat-icon *ngIf="userpagelayer.loadStatus=='Error'">error</mat-icon>
                     </div>
                     <br>
                 </mat-radio-group>
 
                 <mat-action-row>
-                        <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'Point')"><mat-icon matTooltip="Create Point">control_point</mat-icon></button>
-                        <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'LineString')"><mat-icon matTooltip="Create Line">timeline</mat-icon></button>
-                        <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'Polygon')"><mat-icon matTooltip="Create Polygon">change_history</mat-icon></button>
-                        <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.delete(mapConfig)"><mat-icon matTooltip="Delete Feature">delete</mat-icon></button>
-                        <button mat-icon-button (click)="mapService.zoomExtents()"><mat-icon matTooltip="Zoom Extents">zoom_out_map</mat-icon></button>
-                        <button mat-icon-button (click)="mapService.toggleBasemap()"><mat-icon matTooltip="Toggle Aerial Photos">map</mat-icon></button>
+                    <button mat-icon-button (click)="measureOn = !measureOn">
+                        <mat-icon matTooltip="Measure Toolbar">trending_flat</mat-icon>
+                    </button>
+                    <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'Point')">
+                        <mat-icon matTooltip="Create Point">control_point</mat-icon>
+                    </button>
+                    <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'LineString')">
+                        <mat-icon matTooltip="Create Line">timeline</mat-icon>
+                    </button>
+                    <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'Polygon')">
+                        <mat-icon matTooltip="Create Polygon">change_history</mat-icon>
+                    </button>
+                    <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.delete(mapConfig)">
+                        <mat-icon matTooltip="Delete Feature">delete</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="mapService.zoomExtents()">
+                        <mat-icon matTooltip="Zoom Extents">zoom_out_map</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="mapService.toggleBasemap()">
+                        <mat-icon matTooltip="Toggle Aerial Photos">map</mat-icon>
+                    </button>
                 </mat-action-row>
             </mat-expansion-panel>
-            
+
             <mat-expansion-panel *ngIf="mapConfig.currentLayer.layer.layerType == 'MyCube'">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
@@ -128,22 +167,34 @@
                 </mat-expansion-panel-header>
 
                 <div class="featurelist">
-                        <div *ngFor="let fl of mapService.featurelist">
-                            <a style="cursor: pointer;" (click)="mapService.zoomToFeature(fl)">{{fl.label}}</a>
-                        </div>
+                    <div *ngFor="let fl of mapService.featurelist">
+                        <a style="cursor: pointer;" (click)="mapService.zoomToFeature(fl)">{{fl.label}}</a>
                     </div>
+                </div>
 
                 <mat-action-row>
-                    <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'Point')"><mat-icon matTooltip="Create Point">control_point</mat-icon></button>
-                    <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'LineString')"><mat-icon matTooltip="Create Line">timeline</mat-icon></button>
-                    <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'Polygon')"><mat-icon matTooltip="Create Polygon">change_history</mat-icon></button>
-                    <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.delete(mapConfig)"><mat-icon matTooltip="Delete Feature">delete</mat-icon></button>
-                        <button mat-icon-button (click)="mapService.zoomExtents()"><mat-icon matTooltip="Zoom Extents">zoom_out_map</mat-icon></button>
-                            <button mat-icon-button (click)="mapService.toggleBasemap()"><mat-icon matTooltip="Toggle Aerial Photos">map</mat-icon></button>
+                    <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'Point')">
+                        <mat-icon matTooltip="Create Point">control_point</mat-icon>
+                    </button>
+                    <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'LineString')">
+                        <mat-icon matTooltip="Create Line">timeline</mat-icon>
+                    </button>
+                    <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'Polygon')">
+                        <mat-icon matTooltip="Create Polygon">change_history</mat-icon>
+                    </button>
+                    <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.delete(mapConfig)">
+                        <mat-icon matTooltip="Delete Feature">delete</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="mapService.zoomExtents()">
+                        <mat-icon matTooltip="Zoom Extents">zoom_out_map</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="mapService.toggleBasemap()">
+                        <mat-icon matTooltip="Toggle Aerial Photos">map</mat-icon>
+                    </button>
                 </mat-action-row>
             </mat-expansion-panel>
 
-            <mat-expansion-panel  *ngIf="mapConfig.currentLayer.layer.layerType == 'Nevergoingtoshow'" [disabled]="true">
+            <mat-expansion-panel *ngIf="mapConfig.currentLayer.layer.layerType == 'Nevergoingtoshow'" [disabled]="true">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         Modules
