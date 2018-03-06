@@ -12,7 +12,7 @@ import { NotificationService } from '../../_services/notification.service';
 export class NotificationComponent implements OnInit {
     public token: string;
     public userID: number;
-    private notifications: any;
+    private notifications;
     
     constructor(private notificationService: NotificationService) { 
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -27,7 +27,11 @@ export class NotificationComponent implements OnInit {
     private getNotifications(): void {
         this.notificationService.GetByUser(this.userID)
             .subscribe((res) => {
-                this.notifications = res
+                if(res.length > 0) {
+                    this.notifications = res
+                } else {
+                    console.log("sonny");
+                }
             })
     }
 

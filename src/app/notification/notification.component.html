@@ -6,5 +6,8 @@
             <h5>{{notif.description}}</h5>
             <mat-divider></mat-divider>
         </mat-list-item>
+        <mat-list-item *ngIf="!notifications">
+            <h4>Nothing to see here.</h4>
+        </mat-list-item>
     </mat-list>
 </mat-card>

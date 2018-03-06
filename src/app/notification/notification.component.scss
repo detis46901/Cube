@@ -1,10 +1,11 @@
 :host #notificationMenu {
     padding:0;
     width:400px;
-    max-height:600px;
-    min-height:300px;
+    max-height:400px;
+    //min-height:300px;
     overflow:auto;
     display:none;
+    margin-right:0 auto;
 }
 
 mat-list-item {
@@ -13,4 +14,5 @@ mat-list-item {
 
 h4 {
     display:inline;
+    margin-right:1em;
 }

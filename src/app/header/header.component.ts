@@ -171,7 +171,7 @@ export class HeaderComponent implements OnInit {
         if(this.isNotifOpen) {
             document.getElementById("notificationMenu").style.display = "none";
         } else {
-            document.getElementById("notificationMenu").style.display = "block";
+            document.getElementById("notificationMenu").style.display = "inline-block";
         }
         this.isNotifOpen = !this.isNotifOpen
     }
