@@ -36,9 +36,17 @@ export class NotificationService {
     }
 
     public GetByUser = (userID): Observable<Notification[]> => {
-        console.log(this.options)
-        console.log(this.actionUrl + 'getbyuser?userID=' + userID)
         return this._http.get(this.actionUrl + 'getbyuser?userID=' + userID, this.options)
+            .pipe(catchError(this.handleError));
+    }
+
+    public GetByType = (type): Observable<Notification[]> => {
+        return this._http.get(this.actionUrl + 'getbytype?objectType=' + type, this.options)
+            .pipe(catchError(this.handleError));
+    }
+
+    public GetBySource = (sourceID): Observable<Notification[]> => {
+        return this._http.get(this.actionUrl + 'getbysource?sourceID=' + sourceID, this.options)
             .pipe(catchError(this.handleError));
     }
 

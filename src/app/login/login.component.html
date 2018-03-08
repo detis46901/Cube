@@ -10,7 +10,6 @@
             <mat-form-field>
                 <input matInput id="loginPassword" type="password" name="password" [(ngModel)]="model.password" #password="ngModel" required placeholder="Password" />
             </mat-form-field>
-            <br>
             <button mat-button id="loginSubmit" (click)="login()" [disabled]="loading" class="btn btn-primary">Login</button>
         </div>
     </mat-card>

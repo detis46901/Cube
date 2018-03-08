@@ -107,7 +107,7 @@ export class MapService {
 
     public getLayerPerms(): Promise<any> {
         let promise = new Promise((resolve, reject) => {
-            console.log("UserID = " + this.mapConfig.userID)
+            //console.log("UserID = " + this.mapConfig.userID)
             this.layerPermissionService
                 .GetByUserGroups(this.mapConfig.userID)
                 .subscribe((data: LayerPermission[]) => {
@@ -208,13 +208,13 @@ export class MapService {
                             mapConfig.map.addLayer(wmsLayer)
                         }
                         j++
-                        console.log("j=" + j)
+                        //console.log("j=" + j)
                         if (j == this.mapConfig.userpagelayers.length) {resolve()}
                     }
                 }
             }
             
-            console.log(this.mapConfig.userpagelayers.length)
+            //console.log(this.mapConfig.userpagelayers.length)
         })
         return promise
     }

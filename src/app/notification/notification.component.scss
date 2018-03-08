@@ -1,7 +1,7 @@
-:host #notificationMenu {
+.notification-card {
     padding:0;
     width:400px;
-    max-height:400px;
+    max-height:800px;
     //min-height:300px;
     overflow:auto;
     display:none;
@@ -12,7 +12,6 @@ mat-list-item {
     font-family:'Roboto', sans-serif;
 }
 
-h4 {
-    display:inline;
-    margin-right:1em;
+h3, h5 {
+    font-family: 'Roboto', sans-serif;
 }

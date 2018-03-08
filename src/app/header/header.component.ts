@@ -34,7 +34,6 @@ export class HeaderComponent implements OnInit {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
-        console.log(this.user)
     }
 
     ngOnInit() {

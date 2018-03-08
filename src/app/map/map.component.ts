@@ -93,7 +93,7 @@ export class MapComponent {
                     else { this.mapConfig.mouseoverLayer = null}
                 }, {hitTolerance: 5})
                 mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
-                console.log("Map Initialized")
+                //console.log("Map Initialized")
             })    
          )
         }
