@@ -29,6 +29,8 @@ export class MapConfig {
     editmode?: boolean;
     layerpermission?: LayerPermission[];
     mouseoverLayer?: UserPageLayer;
+    filterOn?: boolean;
+    filterShow?: boolean;
 }
 
 export class featureList {

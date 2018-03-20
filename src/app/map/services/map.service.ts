@@ -14,6 +14,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { when } from "q";
+import { FilterService } from '../services/filter.service'
 
 @Injectable()
 export class MapService {
@@ -43,6 +44,7 @@ export class MapService {
         private messageService: MessageService,
         private sqlService: SQLService,
         private mapstyles: mapStyles,
+        private filterService: FilterService,
         http: Http
          ) {this.http = http }
 
@@ -68,7 +70,8 @@ export class MapService {
                     this.mapConfig.view = new ol.View({
                         projection: 'EPSG:3857',                       
                         center: ol.proj.transform([-86.1336, 40.4864], 'EPSG:4326', 'EPSG:3857'),
-                        zoom: 13
+                        zoom: 13,
+                        enableRotation: false
                     })
                     this.mapConfig.map = new ol.Map({
                         layers: this.mapConfig.layers,
@@ -237,46 +240,31 @@ export class MapService {
         }
     }
 
-    private loadMyCube(init: boolean, layer: UserPageLayer) {
+    public loadMyCube(init: boolean, layer: UserPageLayer) {
         let index = this.mapConfig.userpagelayers.findIndex(x => x == layer)
         let allLayersOff: boolean = true;
         let nextActive: UserPageLayer;
-        //let source = new ol.source.Vector(
         let source = new ol.source.Vector({
             format: new ol.format.GeoJSON()
         })
 
         let interval = setInterval(() => {
-            this.getMyCubeData(layer).then((data) => {
-                if (data[0][0]['jsonb_build_object']['features']) {
-                    //need to put something in here so that when an object is being edited, it doesn't update...
-                    //might just be that the layer doesn't update unless something has changed.
-                    source.clear()
-                    source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']))
-                    if (this.mapConfig.currentLayer == layer) {
-                        this.getFeatureList()
-                        if (this.mapConfig.selectedFeature) {
-                            this.mapConfig.selectedFeature = source.getFeatureById(this.mapConfig.selectedFeature.getId())
-                            if (this.mapConfig.selectedFeature) {this.selectFeature(layer, true)} //need to make sure the feature still exists
-                            
-                            //source.getFeatureById(this.mapConfig.selectedFeature.getId()).setStyle(this.mapstyles.selected)
-                            //this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected)
-                        }
-                    }
-                    //may need to add something in here that compares new data to old data and makes sure the selected feature remains selected.
-                }
-            })    
+           this.runInterval(layer, source)   
         }, 20000);
 
         this.getMyCubeData(layer).then((data) => {
+            let source2: ol.source.Vector = source
             if (data[0][0]['jsonb_build_object']['features']) {
                 source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']))
+                //this.filterFunction(layer, source)
+                source2 = this.filterFunction(layer, source)
             }
-            this.vectorlayer = new ol.layer.Vector({ source: source, style: this.styleFunction(layer, 'load') })
+            //this.filterfunction(source,layer)
+            this.vectorlayer = new ol.layer.Vector({ source: source2, style: this.styleFunction(layer, 'load') })
             this.vectorlayer.setVisible(layer.layerON)
             this.mapConfig.map.addLayer(this.vectorlayer)
             this.mapConfig.layers.push(this.vectorlayer)
-            this.mapConfig.sources.push(source)
+            this.mapConfig.sources.push(source2)
             this.mapConfig.userpagelayers[index].loadOrder = this.mapConfig.layers.length
             if (init == false) {
                 this.mapConfig.map.addLayer(this.vectorlayer)
@@ -285,6 +273,32 @@ export class MapService {
         //source = new ol.source.Vector({ features: (new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' })).readFeatures(data[0][0]['jsonb_build_object']) })}
     }
     
+    public runInterval(layer: UserPageLayer, source: ol.source.Vector) {
+        let source2: ol.source.Vector = source
+        this.getMyCubeData(layer).then((data) => {
+            if (data[0]) {
+                if (data[0][0]['jsonb_build_object']['features']) {
+                    //need to put something in here so that when an object is being edited, it doesn't update...
+                    //might just be that the layer doesn't update unless something has changed.
+                    source.clear()
+                    source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']))
+                   //this.filterFunction(layer, source)
+                   source2 = this.filterFunction(layer, source)
+                    if (this.mapConfig.currentLayer == layer) {
+                        this.getFeatureList()
+                        if (this.mapConfig.selectedFeature) {
+                            this.mapConfig.selectedFeature = source.getFeatureById(this.mapConfig.selectedFeature.getId())
+                            if (this.mapConfig.selectedFeature) { this.selectFeature(layer, true) } //need to make sure the feature still exists
+                            //source.getFeatureById(this.mapConfig.selectedFeature.getId()).setStyle(this.mapstyles.selected)
+                            //this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected)
+                        }
+                    }
+                    //may need to add something in here that compares new data to old data and makes sure the selected feature remains selected.
+                }
+            }
+        })
+    }
+
     private getMyCubeData(layer): Promise<any> {
         let source = new ol.source.Vector()
         let promise = new Promise ((resolve, reject) => {
@@ -296,6 +310,97 @@ export class MapService {
            
         })
         return promise
+    }
+
+    public filterFunction(layer: UserPageLayer, mapSource: ol.source.Vector):ol.source.Vector {
+        //this needs to be placed in filterService.  For some reason, that's harder than it seems.
+        let filterType: string
+        let filterLabel: string
+        let filterColumn: string
+        let filterOperator: string
+        let filterValue: any
+        let filteredSource: ol.source.Vector = mapSource
+
+        if (layer.style) {
+            console.log(layer.style)
+            filterColumn = layer.style['filter']['column']
+            filterOperator = layer.style['filter']['operator']
+            filterValue = layer.style['filter']['value']
+            // console.log(filterColumn)
+            // console.log(filterOperator)
+            // console.log(filterValue)
+        }
+        else {
+            if (layer.layer.defaultStyle['filter']) {
+            filterColumn = layer.layer.defaultStyle['filter']['column']
+            filterOperator = layer.layer.defaultStyle['filter']['operator']
+            filterValue = layer.layer.defaultStyle['filter']['value']
+            // console.log(filterColumn)
+            // console.log(filterOperator)
+            // console.log(filterValue)
+            }
+        }
+        if (filterColumn) {
+            mapSource.forEachFeature((feat) => {
+                if (feat) {
+                    if (filterColumn && filterOperator) {
+                        switch (filterOperator) {
+                            case ("isEqual"): {
+                                if (feat.get(filterColumn) == filterValue) {
+                                    filteredSource.addFeature(feat)
+                                }
+                                else {
+                                    if (filterValue == false) {
+                                        if (feat.get(filterColumn) == null) { }
+                                        else { mapSource.removeFeature(feat) }
+                                    }
+                                    else { mapSource.removeFeature(feat) }
+                                }
+                                break
+                            }
+                            case ("isNotEqual"): {
+                                if (feat.get(filterColumn) != filterValue) {
+                                    filteredSource.addFeature(feat)
+                                }
+                                else {
+                                    if (filterValue == false) {
+                                        if (feat.get(filterColumn) == null) {filteredSource.addFeature(feat) }
+                                        else { mapSource.removeFeature(feat) }
+                                    }
+                                    else { mapSource.removeFeature(feat) }
+                                }
+                                break
+                            }
+                            case ("isGreaterThan"): {
+                                console.log("isGreaterThan")
+                                if (parseInt(feat.get(filterColumn)) > parseInt(filterValue)) {
+                                    console.log(parseInt(feat.get(filterColumn)))
+                                    console.log(parseInt(filterValue))
+                                    filteredSource.addFeature(feat)
+                                }
+                                else {
+                                    mapSource.removeFeature(feat)
+                                }
+                                break
+                            }
+                            case ("isLessThan"): {
+                                console.log("isLessThan")
+                                if (parseInt(feat.get(filterColumn)) < parseInt(filterValue)) {
+                                    filteredSource.addFeature(feat)
+                                }
+                                else {
+                                    mapSource.removeFeature(feat)
+                                }
+                                break
+                            }
+                        }
+                        this.mapConfig.filterOn = true
+                    }
+                }
+            })
+        }
+        mapSource = filteredSource
+        return (filteredSource)
     }
 
     private styleFunction(layer: UserPageLayer, mode:string):ol.style.Style {
@@ -344,6 +449,7 @@ export class MapService {
     }
 
     private setCurrentLayer(layer: UserPageLayer, mapconfig: MapConfig): void {
+        this.mapConfig.filterOn = false
         this.mapConfig = mapconfig
         this.mapConfig.editmode = false
         this.mapConfig.map.removeInteraction(this.modify)
@@ -354,8 +460,13 @@ export class MapService {
         this.mapConfig.currentLayerName = layer.layer.layerName  //Puts the current name in the component
         if (layer.layerON) {this.mapConfig.currentLayer = layer}
         this.mapConfig.userpagelayers.forEach(element => {
-            if (element.layer.layerType == "MyCube") {
-                this.mapConfig.layers[element.loadOrder-1].setStyle(this.styleFunction(element, 'load')) //resets all the feature styles to "load"
+             if (element.layer.layerType == "MyCube") {
+                 this.mapConfig.sources[element.loadOrder-1].forEachFeature ((feat) => {
+                    //this.filterFunction(layer, this.mapConfig.sources[element.loadOrder-1])
+                    //feat.setStyle(this.styleFunction(element, 'load'))
+                     //console.log('set feature style back to load')
+                 })
+            this.mapConfig.layers[element.loadOrder-1].setStyle(this.styleFunction(element, 'load')) //resets all the feature styles to "load"
             }
         });
         let index = this.mapConfig.userpagelayers.findIndex(x => x == layer)
@@ -566,64 +677,34 @@ export class MapService {
         this.getFeatureList()
     }
 
-    private getFeatureList(): Promise<any> {
-        let promise = new Promise((resolve, reject) => {
-            this.getOID()
-            .then(() => {
-                this.sqlService
-                    .getColumnCount(this.mapConfig.currentLayer.layerID)
-                    .subscribe((result) => {
-                        let bodyjson: JSON = JSON.parse(result._body)
-                        let count: number = bodyjson[0][0].count
-                        for (let i = 2; i <= count; i++) {
-                            this.sqlService
-                                .getIsLabel(this.oid, i)
-                                .subscribe((result) => {
-                                    let labeljson: JSON = JSON.parse(result._body)
-                                    let labelName: string = labeljson[0][0].col_description
-                                    if (labelName != null) {
-                                        if (labelName.length > 0)
-                                            //console.log("existing list length " + this.featurelist.length)
-                                            //console.log("new list length " + this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder-1].getFeatures().length)                        
-                                            //this.featurelist = this.featurelist.slice(0,this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder-1].length-1)
-                                            this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].forEachFeature((x: ol.Feature) => {
-                                                let i = this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].getFeatures().findIndex((j) => j == x)
-                                                let fl = new featureList
-                                                fl.label = x.get(labelName)
-                                                fl.feature = x
-                                                if (i > -1) {
-                                                    this.featurelist[i] = fl
-                                                }
-                                                else { this.featurelist.push(fl) }
-                                            }) 
-                                    }
-                                    this.featurelist.sort((a, b): number => {
-                                        if (a.label > b.label) { return 1 }
-                                        if (a.label < b.label) { return -1 }
-                                        return 0
-                                    })
-                                })
-                        }
-                    })
-            })
+    private getFeatureList() {
+        console.log('getting featurelist')
+        let k:number = 0
+        let labelName: string = this.mapConfig.currentLayer.layer.defaultStyle['listLabel']
+        if (!labelName) { labelName = this.mapConfig.currentLayer.style['listLabel'] }
+        if (labelName != null) {
+            if (labelName.length > 0)
+                this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].forEachFeature((x: ol.Feature) => {
+                    k += 1
+                    let i = this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].getFeatures().findIndex((j) => j == x)
+                    let fl = new featureList
+                    fl.label = x.get(labelName)
+                    fl.feature = x
+                    if (i > -1) {
+                        
+                        this.featurelist[i] = fl
+                    }
+                    else { this.featurelist.push(fl) }
+                })
+                this.featurelist = this.featurelist.slice(0,k)
+        }
+        this.featurelist.sort((a, b): number => {
+            if (a.label > b.label) { return 1 }
+            if (a.label < b.label) { return -1 }
+            return 0
         })
-        return promise
     }
 
-    private getOID(): Promise<any> {
-        let promise = new Promise((resolve, reject) => {
-        this.sqlService
-        .getOID(this.mapConfig.currentLayer.layerID)
-        .subscribe((result) => {
-            let body:string = result._body
-            //body.split('"attrelid":')[1]
-            let bodyjson:JSON = JSON.parse(result._body)
-            this.oid = bodyjson[0][0].attrelid
-            resolve()
-        })
-    })
-    return promise
-}
     private zoomToFeature(featurelist: featureList): void {
         this.clearFeature(this.mapConfig.currentLayer)
         let ext = featurelist.feature.getGeometry().getExtent();
@@ -656,8 +737,6 @@ export class MapService {
             this.base = 'base'
             this.mapConfig.layers[0].setSource(base)
         }
-        
         }
-    
 }
  

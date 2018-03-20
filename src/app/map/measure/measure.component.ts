@@ -24,6 +24,7 @@ export class MeasureComponent implements OnInit, OnDestroy {
   public draw: ol.interaction.Draw
   public value: number
   public measureType: string
+  public measureLabel: string
   public font = 'normal 14px Arial';
   public unit: string
   public convert: number
@@ -42,6 +43,7 @@ export class MeasureComponent implements OnInit, OnDestroy {
     });
     //this.deactivateDraw();
     this.mapConfig.map.addLayer(this.layer);
+    this.measureLabel = "Length"
     this.measure('LineString')
 
   }
@@ -53,6 +55,8 @@ export class MeasureComponent implements OnInit, OnDestroy {
 
   private measure(mtype: string) {
     //this.measureOn = true
+    if (mtype == "Polygon") {this.unit = "acres"; this.convert = 1/43560; this.measureLabel = "Area"}
+    if (mtype == "LineString") {this.unit = "feet"; this.convert = 1; this.measureLabel = "Length"}
     this.measureType = mtype
     this.deactivateDraw();
     this.draw = new ol.interaction.Draw({
@@ -106,7 +110,7 @@ export class MeasureComponent implements OnInit, OnDestroy {
         break;
       case 'Polygon':
         try {
-          value = parseFloat((ol.Sphere.getArea(geom)*10.76391/43560).toString()).toFixed(2).toString();
+          value = parseFloat((ol.Sphere.getArea(geom)*10.76391*this.convert).toString()).toFixed(2).toString();
           if (value == '0.00') {value = ''}
         } catch (error) { }
         break;
@@ -124,6 +128,7 @@ export class MeasureComponent implements OnInit, OnDestroy {
     this.unit = unit
     this.convert = convert
     this._getLengthOrArea(this.layer.getSource().getFeatures()[0])
+    this.layer.getSource().getFeatures()[0].changed()
 
   }
   private _getStyle(feature: ol.Feature): ol.style.Style[] {

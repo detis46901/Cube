@@ -6,8 +6,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { HttpModule, ConnectionBackend, Http } from '@angular/http';
-import { MapService } from './map/services/map.service';
-import { GeocodingService } from './map/services/geocoding.service';
 import { Routes, RouterModule } from '@angular/router';
 import { Routing } from './app.routing';
 import { BaseRequestOptions } from '@angular/http';
@@ -58,7 +56,6 @@ import { ConfirmDeleteComponent } from './admin/confirmDelete/confirmDelete.comp
 import { SettingsComponent } from './settings/settings.component';
 import { UserPageComponent } from './settings/user-pages/user-pages.component';
 import { PasswordComponent } from './settings/password/password.component';
-import { MarkerDataComponent } from './marker_data/marker-data.component';
 //import { LayerControlsComponent } from './map/layer-controls/layer-controls.component';
 import { ServerNewComponent } from './admin/server/serverNew/serverNew.component';
 import { ChangePasswordComponent } from './admin/user/changePassword/changePassword.component';
@@ -80,6 +77,7 @@ import { ChangePictureComponent } from './settings/profile/change-picture/change
 import { NotificationComponent } from '../app/notification/notification.component';
 
 import { MeasureComponent } from './map/measure/measure.component'
+import { FilterComponent } from './map/filter/filter.component'
 import { mapStyles } from '../app/map/models/map.model';
 
 //Services
@@ -102,6 +100,9 @@ import { ImageService } from '../_services/image.service';
 import { UserValidatorService } from './admin/user/userValidator.service';
 import { DetailsComponent } from './admin/details/details.component';
 import { NotificationService } from '../_services/notification.service';
+import { MapService } from './map/services/map.service';
+import { FilterService } from './map/services/filter.service';
+import { GeocodingService } from './map/services/geocoding.service';
 
 @NgModule ({
     declarations: [
@@ -141,7 +142,6 @@ import { NotificationService } from '../_services/notification.service';
         BoundaryComponent,
         NotificationComponent,
         ServerComponent,
-        MarkerDataComponent,
         //LayerControlsComponent,
         ServerNewComponent,
         ChangePasswordComponent,
@@ -152,7 +152,8 @@ import { NotificationService } from '../_services/notification.service';
         ChangePictureComponent,
         DetailsComponent,
         NotificationComponent,
-        MeasureComponent
+        MeasureComponent,
+        FilterComponent
     ],
 
     entryComponents: [
@@ -217,7 +218,8 @@ import { NotificationService } from '../_services/notification.service';
 
     providers: [
         UserService, 
-        MapService, 
+        MapService,
+        FilterService,
         GeocodingService, 
         AuthGuard, 
         AdminGuard, 

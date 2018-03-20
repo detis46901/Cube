@@ -49,6 +49,7 @@ export class MapComponent {
     private currPage: any = ''; //Could be "none"
     private noLayers: boolean;
     private interval: any;
+
     
     constructor(public snackBar: MatSnackBar, private configuration: Configuration, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private layerPermissionService: LayerPermissionService, private layerService: LayerService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog, private messageService:MessageService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -156,6 +157,7 @@ export class MapComponent {
 
         }
         this.mapConfig.sources = []
+        this.mapConfig.filterOn = false
         this.mapConfig.sources.push(new ol.source.OSM())
         this.mapService.loadLayers(this.mapConfig, false).then(() => {  
             this.mapConfig.currentLayerName = null

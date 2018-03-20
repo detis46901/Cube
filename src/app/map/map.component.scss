@@ -6,6 +6,12 @@
     z-index:-1;
   }
 
+  .tool-container {
+    position: absolute;
+    top:0px;
+    right: 400px;
+  }
+
   .featurelist {
       height:260px;
       max-width: 300px;

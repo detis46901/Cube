@@ -1,7 +1,10 @@
 <div #mapElement id="mapid"></div>
 
 <div class="container-fluid pull-right" style="background: rgba(255,255,255,0)">
+    <mat-accordion class="tool-container">
     <measure *ngIf="measureOn" [mapConfig]="mapConfig"></measure>
+    <filter *ngIf="mapConfig.filterShow" [mapConfig]="mapConfig"></filter>
+    </mat-accordion>
     <div>
         <mat-accordion class="example-headers-align">
             <mat-expansion-panel>
@@ -82,7 +85,7 @@
                                 <mat-icon>zoom_in</mat-icon>
                                 <span>Zoom To Layer</span>
                             </button>
-                            <button mat-menu-item disabled="true">
+                            <button *ngIf="mapConfig.currentLayer == userpagelayer" mat-menu-item (click)="mapConfig.filterShow = !mapConfig.filterShow">
                                 <mat-icon>filter_list</mat-icon>
                                 <span>Filter</span>
                             </button>
@@ -162,7 +165,7 @@
             <mat-expansion-panel *ngIf="mapConfig.currentLayer.layer.layerType == 'MyCube'">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        Feature List ({{mapService.featurelist.length}})
+                        Feature List ({{mapService.featurelist.length}}) <span *ngIf="mapConfig.filterOn"> - Filtered</span>
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
