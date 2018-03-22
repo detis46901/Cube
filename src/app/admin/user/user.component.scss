@@ -8,17 +8,15 @@
 
 @media (min-width:1200px) {
     .mat-form-field {
-        width:1200px;
+        width:1400px;
     }
 }
 
 @media (min-width:1200px) {
     .mat-table {
-        width:1200px;
+        width:1400px;
         overflow:auto;
         max-height:80vh;
-        outline:solid 2px black;
-        margin-left:182px;
         //border-top:
     }
 }
@@ -32,7 +30,6 @@
 @media (max-width:1200px) {
     .mat-table {
         width:800px;
-        margin-left:182px;
     }
 }
 

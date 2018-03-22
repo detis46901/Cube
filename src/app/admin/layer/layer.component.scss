@@ -9,15 +9,9 @@ h4 {
     left:15px;
 }
 
-.mat-form-field {
-    width:80%
-}
-
 .mat-table {
-    width:80%;
     overflow:auto;
     max-height:80vh;
-    outline:solid 2px black;
 }
 
 :host ::ng-deep .mat-input-underline {
@@ -27,11 +21,38 @@ h4 {
 }
 
 .layer-parent-container {
-    padding-left:12.1%;
+    padding-left:2px;
 }
 
 .mat-input-element:disabled {
     color:black;
+}
+
+@media (min-width:1200px) {
+    .mat-form-field {
+        width:1400px;
+    }
+}
+
+@media (min-width:1200px) {
+    .mat-table {
+        width:1400px;
+        overflow:auto;
+        max-height:80vh;
+        //border-top:
+    }
+}
+
+@media (max-width:1200px) {
+    .mat-form-field {
+        width:800px;
+    }
+}
+
+@media (max-width:1200px) {
+    .mat-table {
+        width:800px;
+    }
 }
 
 mat-table mat-header-row mat-header-cell.layer-lg-head {

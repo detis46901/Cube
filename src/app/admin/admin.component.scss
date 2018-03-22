@@ -6,11 +6,12 @@
 }
 
 admin-nav {
-    position:absolute;
+    //position:absolute;
     width:180px;
     height:32%;
     top:53px;
     color:#b3daff;
+    float:right;
 }
 
 router-outlet {
