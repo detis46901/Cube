@@ -4,22 +4,23 @@
     bottom:0;
     width:100%;
     z-index:-1;
-  }
+}
 
-  .tool-container {
+.tool-container {
     position: absolute;
     top:0px;
     right: 400px;
-  }
+}
 
-  .featurelist {
-      height:260px;
-      max-width: 300px;
-      overflow: auto;
-  }
+.featurelist {
+    height:260px;
+    max-width: 300px;
+    overflow: auto;
+}
+
 .example-headers-align .mat-expansion-panel-header-description {
-  justify-content: space-between;
-  align-items: center;
+    justify-content: space-between;
+    align-items: center;
 }
 
 #dropdownMenu1, #dropdownMenu2 {
@@ -81,18 +82,18 @@ p {
 .example-radio-group {
     display: inline-flex;
     flex-direction: column;
-    text-align: left
-  }
+    text-align: left;
+}
   
-  .example-radio-button {
+.example-radio-button {
     margin: 5px;
-  }
-  
-  .example-selected-value {
-    margin: 15px 0;
-  }
+}
 
-  .tooltip {
+.example-selected-value {
+    margin: 15px 0;
+}
+
+.tooltip {
     position: relative;
     background: rgba(0, 0, 0, 0.5);
     border-radius: 4px;
@@ -100,18 +101,20 @@ p {
     padding: 4px 8px;
     opacity: 0.7;
     white-space: nowrap;
-  }
-  .tooltip-measure {
+}
+
+.tooltip-measure {
     opacity: 1;
     font-weight: bold;
-  }
-  .tooltip-static {
+}
+
+.tooltip-static {
     background-color: #ffcc33;
     color: black;
     border: 1px solid white;
-  }
-  .tooltip-measure:before,
-  .tooltip-static:before {
+}
+
+.tooltip-measure:before, .tooltip-static:before {
     border-top: 6px solid rgba(0, 0, 0, 0.5);
     border-right: 6px solid transparent;
     border-left: 6px solid transparent;
@@ -120,7 +123,12 @@ p {
     bottom: -6px;
     margin-left: -7px;
     left: 50%;
-  }
-  .tooltip-static:before {
+}
+
+.tooltip-static:before {
     border-top-color: #ffcc33;
-  }  
+}
+
+.mat-expansion-panel {
+    margin-bottom:0;
+}

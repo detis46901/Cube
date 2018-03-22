@@ -3,19 +3,37 @@
     flex-direction:column;
     position:relative;
     left:15px;
-    padding-left:12.1%;
+    //padding-left:12.1%;
 }
 
-.mat-form-field {
-    width:80%
+@media (min-width:1200px) {
+    .mat-form-field {
+        width:1200px;
+    }
 }
 
-.mat-table {
-    width:80%;
-    overflow:auto;
-    max-height:80vh;
-    outline:solid 2px black;
-    //border-top:
+@media (min-width:1200px) {
+    .mat-table {
+        width:1200px;
+        overflow:auto;
+        max-height:80vh;
+        outline:solid 2px black;
+        margin-left:182px;
+        //border-top:
+    }
+}
+
+@media (max-width:1200px) {
+    .mat-form-field {
+        width:800px;
+    }
+}
+
+@media (max-width:1200px) {
+    .mat-table {
+        width:800px;
+        margin-left:182px;
+    }
 }
 
 :host ::ng-deep .mat-input-underline {
