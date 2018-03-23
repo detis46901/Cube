@@ -1,27 +1,26 @@
-        <mat-expansion-panel [expanded]=true>
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    <span class="measure-help" matTooltip="Click once to start measurement. Click again to create an angle. Double-click to end measurement."><i class="fas fa-question"></i></span> Measure
-                </mat-panel-title>
-                <mat-panel-description>
-                    {{measureLabel}}
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <span *ngIf="measureType == 'LineString'">Length: {{value}} {{unit}}</span>
-            <span *ngIf="measureType == 'Polygon'">Area: {{value}} {{unit}}</span>
-            <mat-action-row>
-                <button mat-button *ngIf="measureType == 'LineString'" (click)="changeUnit('feet',1)">Feet</button>
-                <button mat-button *ngIf="measureType == 'LineString'" (click)="changeUnit('miles',1/5280)">Miles</button>
-                <button mat-button *ngIf="measureType == 'Polygon'" (click)="changeUnit('square feet',1)">Square Feet</button>
-                <button mat-button *ngIf="measureType == 'Polygon'" (click)="changeUnit('acres',1/43560)">Acres</button>
-                <button mat-button *ngIf="measureType == 'Polygon'" (click)="changeUnit('square miles',1/(43560*640))">Square Miles</button>
-                    <button mat-icon-button (click)="measure('LineString')">
-                            <mat-icon matTooltip="Measure Length">trending_flat</mat-icon>
-                        </button>
-                        <button mat-icon-button (click)="measure('Polygon')">
-                                <mat-icon matTooltip="Measure Area">crop_din</mat-icon>
-                            </button>       
-
-            </mat-action-row>
-
-        </mat-expansion-panel>
+<mat-expansion-panel [expanded]=true>
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            <span class="measure-help" id="measure-help" matTooltip="Click once to start measurement. Click again to create an angle. Double-click to end measurement. Click the arrow to measure length, click the box to measure area."><i class="fas fa-question"></i></span>
+        </mat-panel-title>
+        <mat-panel-description>
+            <span *ngIf="!value"><strong>Awaiting measurement</strong></span>
+            <span *ngIf="measureType == 'LineString' && value"><strong>Length: {{value}} {{unit}}</strong></span>
+            <span *ngIf="measureType == 'Polygon' && value"><strong>Area: {{value}} {{unit}}</strong></span>
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+    
+    <mat-action-row style="display:flex; padding-left:10px">
+        <button mat-button *ngIf="measureType == 'LineString'" (click)="changeUnit('feet',1)">Feet</button>
+        <button mat-button *ngIf="measureType == 'LineString'" (click)="changeUnit('miles',1/5280)">Miles</button>
+        <button mat-button *ngIf="measureType == 'Polygon'" (click)="changeUnit('square feet',1)">Square Feet</button>
+        <button mat-button *ngIf="measureType == 'Polygon'" (click)="changeUnit('acres',1/43560)">Acres</button>
+        <button mat-button *ngIf="measureType == 'Polygon'" (click)="changeUnit('square miles',1/(43560*640))">Square Miles</button>
+        <button mat-icon-button (click)="measure('LineString')">
+            <mat-icon matTooltip="Measure Length">trending_flat</mat-icon>
+        </button>
+        <button mat-icon-button (click)="measure('Polygon')">
+            <mat-icon matTooltip="Measure Area">crop_din</mat-icon>
+        </button>       
+    </mat-action-row>
+</mat-expansion-panel>
