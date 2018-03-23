@@ -8,7 +8,7 @@ import { UserPageLayerService } from '../../../_services/_userPageLayer.service'
 import { SQLService } from '../../../_services/sql.service';
 import { Layer, LayerPermission, UserPageLayer } from '../../../_models/layer.model';
 import { LayerPermissionComponent } from './layerPermission/layerPermission.component';
-import { LayerStyleComponent } from './layerStyle/layerStyle.component'
+import { LayerStyleComponent } from './layerStyle/layerStyle.component';
 import { LayerNewComponent } from './layerNew/layerNew.component';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
 import { newMyCubeComponent } from './myCubeLayer/newMyCube.component';
@@ -17,7 +17,7 @@ import { Server } from '../../../_models/server.model';
 import { MatDialog, MatDialogConfig  } from '@angular/material';
 import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { LayerValidatorService } from './layerValidator.service';
-import { DetailsComponent} from '../details/details.component';
+import { LayerDetailsComponent } from '../details/layerDetails/layerDetails.component';
 
 @Component({
     selector: 'layer',
@@ -27,7 +27,6 @@ import { DetailsComponent} from '../details/details.component';
 })
 
 export class LayerComponent implements OnInit {
-
     //objCode refers to the  menu tab the user is on, so the openConfDel method knows what to interpolate based on what it's deleting
     private objCode: number = 2;
     private token: string;
@@ -91,6 +90,12 @@ export class LayerComponent implements OnInit {
         const dialogRef = this.dialog.open(LayerStyleComponent);
         dialogRef.componentInstance.layerID = layerid;
         dialogRef.componentInstance.layerName = layername;
+    }
+
+    private openDetails(id: number, name: string): void {
+        const dialogRef = this.dialog.open(LayerDetailsComponent);
+        dialogRef.componentInstance.ID = id;
+        dialogRef.componentInstance.name = name;
     }
 
     private confirmDelete(layer: Layer): void {
@@ -157,13 +162,6 @@ export class LayerComponent implements OnInit {
                 .subscribe(() => {
                     this.getLayerItems();
                 });
-    }
-
-    private openDetails(id: number, name: string) {
-        //open a dialog to edit the layer data
-        const dialogRef = this.dialog.open(DetailsComponent);
-        dialogRef.componentInstance.ID = id;
-        dialogRef.componentInstance.name = name;
     }
      
     // 2/2/18: Keep this here to remind you: DON'T do it this way, when you get to it, implement using the pagination/sorting features of mat-table

@@ -76,8 +76,8 @@ import { ProfileComponent } from './settings/profile/profile.component';
 import { ChangePictureComponent } from './settings/profile/change-picture/change-picture.component';
 import { NotificationComponent } from '../app/notification/notification.component';
 
-import { MeasureComponent } from './map/measure/measure.component'
-import { FilterComponent } from './map/filter/filter.component'
+import { MeasureComponent } from './map/measure/measure.component';
+import { FilterComponent } from './map/filter/filter.component';
 import { mapStyles } from '../app/map/models/map.model';
 
 //Services
@@ -98,7 +98,7 @@ import { SideNavService } from '../_services/sidenav.service';
 import { MessageService } from '../_services/message.service';
 import { ImageService } from '../_services/image.service';
 import { UserValidatorService } from './admin/user/userValidator.service';
-import { DetailsComponent } from './admin/details/details.component';
+import { LayerDetailsComponent } from './admin/details/layerDetails/layerDetails.component';
 import { NotificationService } from '../_services/notification.service';
 import { MapService } from './map/services/map.service';
 import { FilterService } from './map/services/filter.service';
@@ -150,7 +150,7 @@ import { GeocodingService } from './map/services/geocoding.service';
         NewGroupComponent,
         ProfileComponent,
         ChangePictureComponent,
-        DetailsComponent,
+        LayerDetailsComponent,
         NotificationComponent,
         MeasureComponent,
         FilterComponent
@@ -169,7 +169,7 @@ import { GeocodingService } from './map/services/geocoding.service';
         NewUserComponent,
         NewGroupComponent,
         ChangePictureComponent,
-        DetailsComponent
+        LayerDetailsComponent
     ],
 
     imports: [
