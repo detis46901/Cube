@@ -10,17 +10,33 @@
     background-color:black;
 }
 
-h4, h3 {
+h5, h4, h3 {
     color:white;
-    margin:0px 30px 0px 10px;
-    top:25%;
+    margin:0px 0px 0px 10px;
+    top:15%;
     position:relative;
-    font-family: 'Raleway', sans-serif;
+    font-family: 'Roboto', sans-serif;
+}
+
+h5 {
+    top:20%;
+}
+
+h3 {
+    top:20%;
 }
 
 img {
     width:25px;
     height:25px;
+}
+
+a i {
+    top:5%;
+}
+
+#headerSettings {
+    color:white;
 }
 
 .material-icons {
@@ -36,11 +52,6 @@ img {
     margin-top:10px;
     justify-content:flex-end;
     padding-right:2%;
-}
-
-#headerSettings, #headerAdmin {
-    position:relative;
-    top:1px;
 }
 
 #headerBar {

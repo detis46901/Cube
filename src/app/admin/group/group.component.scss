@@ -1,16 +1,15 @@
 .group-parent-container {
     //background-color:yellow;
     position:relative;
-    padding:20px 20px 20px 13%;
+    padding:10px 10px 20px 10px;
     display:flex;
-    width:80%;
 }
 
 .group-user-list {
     background-color:white;
     border:solid black 2px;
     position:relative;
-    width:40%;
+    width:33%;
     margin:10px;
     max-height:60vh;
     overflow:auto;
@@ -20,10 +19,24 @@
     background-color:white;
     border:solid black 2px;
     position:relative;
-    width:60%;
+    width:33%;
     margin:10px;
     max-height:60vh;
     overflow:auto;
+}
+
+@media (min-width:1200px) {
+    .group-parent-container {
+        width:1400px;
+        overflow:auto;
+        max-height:80vh;
+    }
+}
+
+@media (max-width:1200px) {
+    .group-parent-container {
+        width:800px;
+    }
 }
 
 .fa-check, .fa-plus {
@@ -46,6 +59,6 @@ button {
 }
 
 .createGroup {
-    margin-left:14%;
+    margin-left:20px;
     //width:40px;
 }

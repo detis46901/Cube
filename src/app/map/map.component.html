@@ -2,15 +2,15 @@
 
 <div class="container-fluid pull-right" style="background: rgba(255,255,255,0)">
     <mat-accordion class="tool-container">
-    <measure *ngIf="measureOn" [mapConfig]="mapConfig"></measure>
-    <filter *ngIf="mapConfig.filterShow" [mapConfig]="mapConfig"></filter>
+        <measure *ngIf="measureOn" [mapConfig]="mapConfig"></measure>
+        <filter *ngIf="mapConfig.filterShow" [mapConfig]="mapConfig"></filter>
     </mat-accordion>
     <div>
         <mat-accordion class="example-headers-align">
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        Pages
+                        <strong>Pages</strong>
                     </mat-panel-title>
                     <mat-panel-description>
                         {{currPage}}
@@ -67,7 +67,7 @@
             <mat-expansion-panel id="layerExpansion" [expanded] = true>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        Layers
+                        <strong>Layers</strong>
                     </mat-panel-title>
                     <mat-panel-description>
                         {{mapConfig.currentLayerName}}

@@ -16,6 +16,7 @@ declare var ol: any;
   templateUrl: './measure.component.html',
   styleUrls: ['./measure.component.scss']
 })
+
 export class MeasureComponent implements OnInit, OnDestroy {
   @Input() mapConfig: MapConfig;
   //measure stuff
