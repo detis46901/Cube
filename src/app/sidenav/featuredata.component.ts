@@ -63,7 +63,7 @@ export class FeatureDataComponent{
         if (mycube.type == "date") {
             mycube.value = mycube.value.toJSON()
         }
-        
+        //document.getElementById("featureData").style.display = "block";
         console.log(this.myCubeData[0].value)
         console.log(mycube.type)
         console.log(mycube.value)

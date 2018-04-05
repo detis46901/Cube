@@ -50,6 +50,11 @@ export class NotificationService {
             .pipe(catchError(this.handleError));
     }
 
+    public Add = (toAdd: Notification): Observable<any> => {
+        return this._http.post(this.actionUrl + 'create', JSON.stringify(toAdd), this.options)
+            .pipe(catchError(this.handleError));
+    }
+
     public openNotifications(id) {
         this.userID = id;
         console.log("notif-service")
