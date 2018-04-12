@@ -104,6 +104,9 @@ import { MapService } from './map/services/map.service';
 import { FilterService } from './map/services/filter.service';
 import { GeocodingService } from './map/services/geocoding.service';
 
+//Pipes
+import { AvailableGroupsPipe } from './admin/group/availableGroups.pipe';
+
 @NgModule ({
     declarations: [
         AppComponent,
@@ -153,7 +156,8 @@ import { GeocodingService } from './map/services/geocoding.service';
         LayerDetailsComponent,
         NotificationComponent,
         MeasureComponent,
-        FilterComponent
+        FilterComponent,
+        AvailableGroupsPipe
     ],
 
     entryComponents: [

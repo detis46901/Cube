@@ -11,3 +11,7 @@
 .mat-tooltip {
     font-size: 1em !important;
 }
+
+h3, h4 {
+    font-family:"Roboto", sans-serif;
+}

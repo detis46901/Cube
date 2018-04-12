@@ -1,29 +1,84 @@
 <div class="group-parent-container">
-    <div class="group-user-list">
-        <mat-selection-list #groupUsers>
-            <mat-list-option *ngFor="let user of users" (click)="selectUser(user)">
-                {{user.firstName}}&nbsp;{{user.lastName}}
-            </mat-list-option>
-        </mat-selection-list>
+    <div class="col-md">
+        <span><h4>User view</h4><mat-slide-toggle></mat-slide-toggle><h4>Group view</h4></span>
+        <div class="group-list-container">
+            <mat-selection-list #groupUsers>
+                <mat-list-option *ngFor="let user of users" (click)="selectUser(user)">
+                    {{user.firstName}}&nbsp;{{user.lastName}}
+                </mat-list-option>
+            </mat-selection-list>
+        </div>
     </div>
 
-    <div class="group-group-list">
-        <mat-list>
-            <mat-list-item *ngFor="let group of groups">
-                <span>
-                    <i *ngIf="selectedUser && checkGroup(group)" class="fa fa-check"></i>
+    <div class="col-md">
+        <h4>{{type}}s Available</h4>
+        <div class="group-list-container">
+            <mat-selection-list>
+                <!-- <mat-list-item *ngFor="let group of groups">
+                    <span>
+                        <i *ngIf="selectedUser && checkGroup(group)" class="fa fa-check"></i>
+                        {{group.name}}
+                        <button *ngIf="selectedUser && checkGroup(group)" name="group_removeUserGrp" id="group_removeUserGrp" (click)="removeUserGrp(group)"><i class="fa fa-minus"></i></button>
+                        <button *ngIf="selectedUser && !checkGroup(group)" name="group_addUserGrp" id="group_addUserGrp" (click)="addUserGrp(group)"><i class="fa fa-plus"></i></button>
+                        
+                    </span>
+                </mat-list-item>
+                 -->
+                 <mat-list-option>
+                    <button class="createGroup" mat-button (click)="openNewGroup()">Create New...</button>
+                </mat-list-option>
+                <mat-list-option *ngFor="let group of availableGroups">
+                    <span>
+                        {{group.name}}
+                        <button name="group_deleteGroup" id="group_deleteGroup" (click)="confDelGroup(group)"><i class="fa fa-times"></i></button>
+                    </span>
+                </mat-list-option>
+            </mat-selection-list>
+        </div>
+    </div>
+
+    <div class="transfer-controls">
+        <button mat-button style="margin-bottom:10px;"><i style="font-size:30px;" class="fas fa-arrow-right"></i></button>
+        <br>
+        <button mat-button><i style="font-size:30px;" class="fas fa-arrow-left"></i></button>
+    </div>
+
+    <div class="col-md">
+        <h4>{{type}} Memberships</h4>
+        <div class="group-list-container">
+            <mat-list>
+                <mat-list-item *ngFor="let group of memberGroups">
                     {{group.name}}
-                    <button *ngIf="selectedUser && checkGroup(group)" name="group_removeUserGrp" id="group_removeUserGrp" (click)="removeUserGrp(group)"><i class="fa fa-minus"></i></button>
-                    <button *ngIf="selectedUser && !checkGroup(group)" name="group_addUserGrp" id="group_addUserGrp" (click)="addUserGrp(group)"><i class="fa fa-plus"></i></button>
-                    <button name="group_deleteGroup" id="group_deleteGroup" (click)="confDelGroup(group)"><i class="fa fa-times"></i></button>
-                </span>
-            </mat-list-item>
-        </mat-list>
-    </div>
-
-    <div class="group-group-list">
-        create a third column here and structure such that middle col is groups users belong to, third col is groups they don't. Have (an) arrow(s) between them to show how it should work to move them back and forth
+                </mat-list-item>
+            </mat-list>
+        </div>
     </div>
 </div>
 
-<button class="createGroup" mat-button (click)="openNewGroup()">Create Group</button>
+<!--CHECK THIS OUT FOR SOLUTION TO ASYNC-->
+<!-- <h2>{{title}}</h2>
+<p>
+New hero:
+  <input type="text" #box
+          (keyup.enter)="addHero(box.value); box.value=''"
+          placeholder="hero name">
+  <input id="can-fly" type="checkbox" [(ngModel)]="canFly"> can fly
+</p>
+<p>
+  <input id="mutate" type="checkbox" [(ngModel)]="mutate">Mutate array
+  <button (click)="reset()">Reset</button>
+</p>
+
+<h4>Heroes who fly (piped)</h4>
+<div id="flyers">
+  <div *ngFor="let hero of (heroes | flyingHeroes)">
+    {{hero.name}}
+  </div>
+</div>
+
+<h4>All Heroes (no pipe)</h4>
+<div id="all">
+  <div *ngFor="let hero of heroes">
+    {{hero.name}}
+  </div>
+</div> -->
