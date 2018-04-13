@@ -61,3 +61,13 @@ mat-slide-toggle {
     top:28vh;
     height:10vh;
 }
+
+.mat-list-item-focus, .group_arrow {
+    background-color: #FFCD7E;
+    //background: #FFCA65;
+    //background: #FFBB39;
+}
+
+.mat-selection-list {
+    padding-top:0;
+}

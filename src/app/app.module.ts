@@ -106,6 +106,7 @@ import { GeocodingService } from './map/services/geocoding.service';
 
 //Pipes
 import { AvailableGroupsPipe } from './admin/group/availableGroups.pipe';
+import { EditGroupComponent } from './admin/group/editGroup/editGroup.component';
 
 @NgModule ({
     declarations: [
@@ -157,7 +158,8 @@ import { AvailableGroupsPipe } from './admin/group/availableGroups.pipe';
         NotificationComponent,
         MeasureComponent,
         FilterComponent,
-        AvailableGroupsPipe
+        AvailableGroupsPipe,
+        EditGroupComponent
     ],
 
     entryComponents: [
@@ -172,6 +174,7 @@ import { AvailableGroupsPipe } from './admin/group/availableGroups.pipe';
         ServerNewComponent,
         NewUserComponent,
         NewGroupComponent,
+        EditGroupComponent,
         ChangePictureComponent,
         LayerDetailsComponent
     ],
