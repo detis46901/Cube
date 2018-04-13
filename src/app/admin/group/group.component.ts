@@ -179,9 +179,9 @@ export class GroupComponent implements OnInit {
             })  
     }
 
-    private selectGroup(group: Group): void {
+    private selectGroup(group: Group, color): void {
         //this.userSelectionList.deselectAll();
-        this.colorIcons(group)
+        if(color)this.colorIcons(group)
         this.selectedGroup = group;
         this.groupMemberService
             .GetByGroup(group.ID)
@@ -199,7 +199,7 @@ export class GroupComponent implements OnInit {
                 }             
 
                 this.memberUsers = tempA
-            })  
+            })
     }
 
     private selectUserAdd(user: User) {
@@ -244,7 +244,7 @@ export class GroupComponent implements OnInit {
                     .subscribe(() => {
                         this.getGroupItems();
                         this.getUserItems();
-                        this.selectUser(this.selectedUser)
+                        this.selectGroup(this.selectedGroup, false)
                     });
             }
         }
@@ -286,7 +286,7 @@ export class GroupComponent implements OnInit {
             .subscribe(() => {
                 this.getGroupItems();
                 this.getUserItems();
-                this.selectUser(this.selectedUser)
+                this.selectGroup(this.selectedGroup, false)
             });        
     }
 
