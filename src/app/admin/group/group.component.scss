@@ -56,6 +56,14 @@ mat-slide-toggle {
     margin: 0 10px;
 }
 
+:host ::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+    background-color: #FFBB39;
+}
+
+:host ::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+    background-color: #FFCD7E
+}
+
 .transfer-controls {
     position:relative;
     top:28vh;
