@@ -33,6 +33,29 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 import 'hammerjs';
 
+//Services
+import { UserService } from '../_services/_user.service';
+import { GroupService } from '../_services/_group.service';
+import { GroupMemberService } from '../_services/_groupMember.service';
+import { LayerService } from '../_services/_layer.service';
+import { LayerPermissionService } from '../_services/_layerPermission.service';
+import { UserPageLayerService } from '../_services/_userPageLayer.service';
+import { UserPageService } from '../_services/_userPage.service';
+import { AuthenticationService} from '../_services/authentication.service';
+import { SQLService } from '../_services/sql.service'
+import { ServerService } from '../_services/_server.service';
+import { geoJSONService } from './map/services/geoJSON.service';
+import { MyCubeService } from './/map/services/mycube.service';
+import { WFSService } from './map/services/wfs.service';
+import { SideNavService } from '../_services/sidenav.service';
+import { MessageService } from '../_services/message.service';
+import { ImageService } from '../_services/image.service';
+import { UserValidatorService } from './admin/user/userValidator.service';
+import { NotificationService } from '../_services/notification.service';
+import { MapService } from './map/services/map.service';
+import { FilterService } from './map/services/filter.service';
+import { GeocodingService } from './map/services/geocoding.service';
+
 //Components
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
@@ -75,37 +98,12 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
 import { ProfileComponent } from './settings/profile/profile.component';
 import { ChangePictureComponent } from './settings/profile/change-picture/change-picture.component';
 import { NotificationComponent } from '../app/notification/notification.component';
-
 import { MeasureComponent } from './map/measure/measure.component';
 import { FilterComponent } from './map/filter/filter.component';
 import { mapStyles } from '../app/map/models/map.model';
-
-//Services
-import { UserService } from '../_services/_user.service';
-import { GroupService } from '../_services/_group.service';
-import { GroupMemberService } from '../_services/_groupMember.service';
-import { LayerService } from '../_services/_layer.service';
-import { LayerPermissionService } from '../_services/_layerPermission.service';
-import { UserPageLayerService } from '../_services/_userPageLayer.service';
-import { UserPageService } from '../_services/_userPage.service';
-import { AuthenticationService} from '../_services/authentication.service';
-import { SQLService } from '../_services/sql.service'
-import { ServerService } from '../_services/_server.service';
-import { geoJSONService } from './map/services/geoJSON.service';
-import { MyCubeService } from './/map/services/mycube.service';
-import { WFSService } from './map/services/wfs.service';
-import { SideNavService } from '../_services/sidenav.service';
-import { MessageService } from '../_services/message.service';
-import { ImageService } from '../_services/image.service';
-import { UserValidatorService } from './admin/user/userValidator.service';
+import { ParentDetailsComponent } from './admin/details/parentDetails/parentDetails.component';
 import { LayerDetailsComponent } from './admin/details/layerDetails/layerDetails.component';
-import { NotificationService } from '../_services/notification.service';
-import { MapService } from './map/services/map.service';
-import { FilterService } from './map/services/filter.service';
-import { GeocodingService } from './map/services/geocoding.service';
-
-//Pipes
-import { AvailableGroupsPipe } from './admin/group/availableGroups.pipe';
+import { UserDetailsComponent } from './admin/details/userDetails/userDetails.component';
 import { EditGroupComponent } from './admin/group/editGroup/editGroup.component';
 
 @NgModule ({
@@ -158,8 +156,9 @@ import { EditGroupComponent } from './admin/group/editGroup/editGroup.component'
         NotificationComponent,
         MeasureComponent,
         FilterComponent,
-        AvailableGroupsPipe,
-        EditGroupComponent
+        EditGroupComponent,
+        ParentDetailsComponent,
+        UserDetailsComponent
     ],
 
     entryComponents: [
@@ -176,7 +175,8 @@ import { EditGroupComponent } from './admin/group/editGroup/editGroup.component'
         NewGroupComponent,
         EditGroupComponent,
         ChangePictureComponent,
-        LayerDetailsComponent
+        LayerDetailsComponent,
+        UserDetailsComponent
     ],
 
     imports: [

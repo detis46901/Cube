@@ -96,6 +96,9 @@ export class LayerComponent implements OnInit {
         const dialogRef = this.dialog.open(LayerDetailsComponent);
         dialogRef.componentInstance.ID = id;
         dialogRef.componentInstance.name = name;
+        dialogRef.afterClosed().subscribe(() => {
+            this.getLayerItems();
+        })
     }
 
     private confirmDelete(layer: Layer): void {

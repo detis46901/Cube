@@ -3,7 +3,7 @@
         <h4 mat-dialog-title style="position:relative; right:5px;">{{name}}</h4>
     </div>
     <div class="col-sm-1 col-sm-offset-2">
-        <button mat-dialog-close class="close" aria-label="Close">&times;</button>
+        <button id="LDX" mat-dialog-close class="close">&times;</button>
     </div>
 </div>
 
@@ -12,56 +12,56 @@
         <div class="col-sm-6">
             <div class="row" style="position:relative; right:1em;">
                 <mat-form-field>
-                    <input matInput name="layerDetailID" [(ngModel)]="layer.ID" placeholder="ID" value="{{layer.ID}}">
+                    <input matInput name="layerDetailID" [(ngModel)]="layer.ID" placeholder="ID" value="{{layer.ID}}" [disabled]="true">
                 </mat-form-field>
             </div>
 
             <div class="row">
                 <mat-form-field class="row">
-                    <input matInput name="layerDetailName" [ngModel]="layer.layerName" placeholder="Name" value="{{layer.layerName}}">
+                    <input matInput name="layerDetailName" [(ngModel)]="layer.layerName" placeholder="Name" value="{{layer.layerName}}">
                 </mat-form-field>
             </div>
                 
             <div class="row">
                 <mat-form-field class="row">
-                    <input matInput name="layerDetailDesc" [ngModel]="layer.layerDescription" placeholder="Description" value="{{layer.layerDescription}}">
+                    <input matInput name="layerDetailDesc" [(ngModel)]="layer.layerDescription" placeholder="Description" value="{{layer.layerDescription}}">
                 </mat-form-field>
             </div>
 
             <div class="row">    
                 <mat-form-field class="row">
-                    <input matInput name="layerDetailType" [ngModel]="layer.layerType" placeholder="Type" value="{{layer.layerType}}">
+                    <input matInput name="layerDetailType" [(ngModel)]="layer.layerType" placeholder="Type" value="{{layer.layerType}}">
                 </mat-form-field> 
             </div>
 
             <div class="row">
                 <mat-form-field class="row">
-                    <input matInput name="layerDetailService" [ngModel]="layer.layerService" placeholder="Service" value="{{layer.layerService}}">
+                    <input matInput name="layerDetailService" [(ngModel)]="layer.layerService" placeholder="Service" value="{{layer.layerService}}">
                 </mat-form-field> 
             </div>
         </div>
         <div class="col-sm-6">
             <div class="row">
                 <mat-form-field>
-                    <input matInput name="layerDetailIdent" [ngModel]="layer.Ident" placeholder="Identity" value="{{layer.layerIdent}}">
+                    <input matInput name="layerDetailIdent" [(ngModel)]="layer.Ident" placeholder="Identity" value="{{layer.layerIdent}}">
                 </mat-form-field>
             </div>
 
             <div class="row">
                 <mat-form-field>
-                    <input matInput name="layerDetailFormat" [ngModel]="layer.layerFormat" placeholder="Format" value="{{layer.layerFormat}}">
+                    <input matInput name="layerDetailFormat" [(ngModel)]="layer.layerFormat" placeholder="Format" value="{{layer.layerFormat}}">
                 </mat-form-field>
             </div>
 
             <div class="row">
                 <mat-form-field>
-                    <input matInput name="layerDetailGeom" [ngModel]="layer.layerGeom" placeholder="Geometry" value="{{layer.layerGeom}}">
+                    <input matInput name="layerDetailGeom" [(ngModel)]="layer.layerGeom" placeholder="Geometry" value="{{layer.layerGeom}}">
                 </mat-form-field>
             </div>
 
             <div class="row">
                 <mat-form-field>
-                    <input matInput name="layerDetailServer" [ngModel]="layer.server" placeholder="Server" value="{{layer.server}}">
+                    <input matInput name="layerDetailServer" [(ngModel)]="layer.server" placeholder="Server" value="{{layer.server}}">
                 </mat-form-field>
             </div>
 

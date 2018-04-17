@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgModel } from '@angular/forms';
+import { MatDialog } from '@angular/material';
 
 import { Layer } from '../../../../_models/layer.model';
 import { User, Notification } from '../../../../_models/user.model'; 
@@ -22,10 +23,15 @@ export class LayerDetailsComponent implements OnInit {
     @Input() ID;
     @Input() name;
 
-    private layer: Layer;
+    private layer = new Layer;
     private style: string;
+    private token;
+    private userID;
 
-    constructor(private layerService: LayerService, private layerPermissionService: LayerPermissionService, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private notificationService: NotificationService) {
+    constructor(private dialog: MatDialog, private layerService: LayerService, private layerPermissionService: LayerPermissionService, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private notificationService: NotificationService) {
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.token = currentUser && currentUser.token;
+		this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {
@@ -45,15 +51,18 @@ export class LayerDetailsComponent implements OnInit {
         this.layerService
             .Update(layer)
             .subscribe(() => {
-                var users = this.getUsersByLayer(layer)
                 var notif = this.createLayerNotification(layer)
 
-                for(let user of users) {
-                    notif.userID = user.ID;
-                    this.notificationService
-                        .Add(notif)
-                        .subscribe()
-                }
+                this.layerPermissionService.GetByLayer(layer.ID).subscribe((perms) => {
+                    for(let perm of perms) {
+                        notif.userID = perm.userID;
+                        this.notificationService
+                            .Add(notif)
+                            .subscribe(() =>
+                                this.dialog.closeAll()
+                            )
+                    }
+                })
             })
     }
 
@@ -70,7 +79,7 @@ export class LayerDetailsComponent implements OnInit {
     }
 
     private createLayerNotification(L: Layer): any {
-        var N: Notification;
+        var N = new Notification;
         N.name = L.layerName + " changed by [insert user that initiated dialog here]";
         N.description = "[insert description here]";
         N.priority = 3;
