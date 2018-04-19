@@ -24,9 +24,13 @@ export class LayerDetailsComponent implements OnInit {
     @Input() name;
 
     private layer = new Layer;
+    private layerProps = new Array<any>();
+    private changedLayerProps = new Array<any>();
+    private originalLayerProps = new Array<any>();
     private style: string;
     private token;
     private userID;
+    private user: User;
 
     constructor(private dialog: MatDialog, private layerService: LayerService, private layerPermissionService: LayerPermissionService, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private notificationService: NotificationService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -36,6 +40,7 @@ export class LayerDetailsComponent implements OnInit {
 
     ngOnInit() {
         this.getLayer(this.ID)
+        this.getUser(this.userID)
     }
 
     private getLayer(id) {
@@ -44,32 +49,57 @@ export class LayerDetailsComponent implements OnInit {
             .subscribe((res: Layer) => {
                 this.layer = res
                 this.style = JSON.stringify(this.layer.defaultStyle)
+
+                for(let prop in res) {
+                    if(res.hasOwnProperty(prop)) {
+                        this.layerProps.push(res[prop])
+                    }
+                }
+            })
+    }
+
+    private getUser(id) {
+        this.userService
+            .GetSingle(id)
+            .subscribe((res) => {
+                this.user = res
             })
     }
 
     private submit(layer) {
+        this.whichFieldsChanged(layer)
+        var notif: Notification = this.createLayerNotification(layer)
         this.layerService
             .Update(layer)
             .subscribe(() => {
-                var notif = this.createLayerNotification(layer)
-
                 this.layerPermissionService.GetByLayer(layer.ID).subscribe((perms) => {
                     for(let perm of perms) {
                         notif.userID = perm.userID;
+
                         this.notificationService
                             .Add(notif)
-                            .subscribe(() =>
+                            .subscribe((res) => {
+                                console.log(res)
                                 this.dialog.closeAll()
-                            )
+                            })
                     }
                 })
             })
     }
 
-    /*export class Notification {
-        objectType: string;
-        sourceID: number;
-    }*/
+    private whichFieldsChanged(changed: Layer) {
+        let ix = 0;
+
+        for(let property in changed) {
+            if(changed.hasOwnProperty(property)) {
+                if(changed[property] != this.layerProps[ix]) {
+                    this.originalLayerProps.push(this.layerProps[ix])
+                    this.changedLayerProps.push(changed[property])
+                }
+            }
+            ix += 1;
+        }
+    }
 
     private getUsersByLayer(L: Layer): User[] {
         var users: User[];
@@ -80,13 +110,23 @@ export class LayerDetailsComponent implements OnInit {
 
     private createLayerNotification(L: Layer): any {
         var N = new Notification;
-        N.name = L.layerName + " changed by [insert user that initiated dialog here]";
-        N.description = "[insert description here]";
+        N.name = L.layerName + ' changed by ' + this.user.firstName + " " + this.user.lastName;
+        N.description = this.parseDescription(this.originalLayerProps, this.changedLayerProps);
         N.priority = 3;
         N.read = false;
         N.objectType = "Layer";
         N.sourceID = L.ID;
 
         return N;
+    }
+
+    private parseDescription(oArr, cArr): string {
+        var description = "";
+        let flag = false;
+        let ix = 0;
+        for(let prop of oArr) {
+            description += "\"" + prop + "\" was changed to \"" + cArr[ix] + "\"\n"
+        }
+        return description;
     }
 }

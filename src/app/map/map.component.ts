@@ -54,6 +54,7 @@ export class MapComponent {
     constructor(public snackBar: MatSnackBar, private configuration: Configuration, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private layerPermissionService: LayerPermissionService, private layerService: LayerService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog, private messageService:MessageService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
+        console.log(this.token)
         this.userID = currentUser && currentUser.userID;
     }
 

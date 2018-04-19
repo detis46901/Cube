@@ -30,6 +30,8 @@ export class NotificationService {
 
         this.options = {
             headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
                 'Authorization': 'Bearer ' + this.token
             })
         }
@@ -50,7 +52,8 @@ export class NotificationService {
             .pipe(catchError(this.handleError));
     }
 
-    public Add = (toAdd: Notification): Observable<any> => {
+    public Add = (toAdd: any): Observable<any> => {
+        console.log(JSON.stringify(toAdd))
         return this._http.post(this.actionUrl + 'create', JSON.stringify(toAdd), this.options)
             .pipe(catchError(this.handleError));
     }
