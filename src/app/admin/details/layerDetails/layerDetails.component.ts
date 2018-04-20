@@ -3,19 +3,19 @@ import { NgModel } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 
 import { Layer } from '../../../../_models/layer.model';
-import { User, Notification } from '../../../../_models/user.model'; 
+import { User, Notif } from '../../../../_models/user.model'; 
 
 import { LayerService } from '../../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { UserService } from '../../../../_services/_user.service'
 import { GroupService } from '../../../../_services/_group.service';
 import { GroupMemberService } from '../../../../_services/_groupMember.service';
-import { NotificationService } from '../../../../_services/notification.service';
+import { NotifService } from '../../../../_services/notification.service';
 
 @Component({
     selector: 'layer-details',
     templateUrl: './layerDetails.component.html',
-    providers: [LayerService, LayerPermissionService, UserService, GroupService, GroupMemberService, NotificationService],
+    providers: [LayerService, LayerPermissionService, UserService, GroupService, GroupMemberService, NotifService],
     styleUrls: ['./layerDetails.component.scss']
 })
 
@@ -32,7 +32,7 @@ export class LayerDetailsComponent implements OnInit {
     private userID;
     private user: User;
 
-    constructor(private dialog: MatDialog, private layerService: LayerService, private layerPermissionService: LayerPermissionService, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private notificationService: NotificationService) {
+    constructor(private dialog: MatDialog, private layerService: LayerService, private layerPermissionService: LayerPermissionService, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private notificationService: NotifService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.token = currentUser && currentUser.token;
 		this.userID = currentUser && currentUser.userID;
@@ -68,7 +68,7 @@ export class LayerDetailsComponent implements OnInit {
 
     private submit(layer) {
         this.whichFieldsChanged(layer)
-        var notif: Notification = this.createLayerNotification(layer)
+        var notif: Notif = this.createLayerNotif(layer)
         this.layerService
             .Update(layer)
             .subscribe(() => {
@@ -108,8 +108,8 @@ export class LayerDetailsComponent implements OnInit {
         return users;
     }
 
-    private createLayerNotification(L: Layer): any {
-        var N = new Notification;
+    private createLayerNotif(L: Layer): any {
+        var N = new Notif;
         N.name = L.layerName + ' changed by ' + this.user.firstName + " " + this.user.lastName;
         N.description = this.parseDescription(this.originalLayerProps, this.changedLayerProps);
         N.priority = 3;

@@ -51,7 +51,7 @@ import { SideNavService } from '../_services/sidenav.service';
 import { MessageService } from '../_services/message.service';
 import { ImageService } from '../_services/image.service';
 import { UserValidatorService } from './admin/user/userValidator.service';
-import { NotificationService } from '../_services/notification.service';
+import { NotifService } from '../_services/notification.service';
 import { MapService } from './map/services/map.service';
 import { FilterService } from './map/services/filter.service';
 import { GeocodingService } from './map/services/geocoding.service';
@@ -97,7 +97,7 @@ import { NewUserComponent } from './admin/user/newUser/newUser.component';
 import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
 import { ProfileComponent } from './settings/profile/profile.component';
 import { ChangePictureComponent } from './settings/profile/change-picture/change-picture.component';
-import { NotificationComponent } from '../app/notification/notification.component';
+import { NotifComponent } from '../app/notification/notification.component';
 import { MeasureComponent } from './map/measure/measure.component';
 import { FilterComponent } from './map/filter/filter.component';
 import { mapStyles } from '../app/map/models/map.model';
@@ -142,7 +142,7 @@ import { EditGroupComponent } from './admin/group/editGroup/editGroup.component'
         ModuleComponent,
         DefaultsComponent,
         BoundaryComponent,
-        NotificationComponent,
+        NotifComponent,
         ServerComponent,
         //LayerControlsComponent,
         ServerNewComponent,
@@ -153,7 +153,7 @@ import { EditGroupComponent } from './admin/group/editGroup/editGroup.component'
         ProfileComponent,
         ChangePictureComponent,
         LayerDetailsComponent,
-        NotificationComponent,
+        NotifComponent,
         MeasureComponent,
         FilterComponent,
         EditGroupComponent,
@@ -250,7 +250,7 @@ import { EditGroupComponent } from './admin/group/editGroup/editGroup.component'
         mapStyles,
         ImageService,
         UserValidatorService,
-        NotificationService
+        NotifService
     ], 
 
     bootstrap: [AppComponent]

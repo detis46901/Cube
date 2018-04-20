@@ -2,9 +2,9 @@ import { Component, OnInit, Input } from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 
-import { Notification } from '../../../../_models/user.model'; 
+import { Notif } from '../../../../_models/user.model'; 
 
-import { NotificationService } from '../../../../_services/notification.service';
+import { NotifService } from '../../../../_services/notification.service';
 
 @Component({
     selector: 'parentDetails',
