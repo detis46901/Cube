@@ -63,6 +63,11 @@ export class NotifService {
             .pipe(catchError(this.handleError));
     }
 
+    public Delete = (toDelete: any): Observable<any> => {
+        return this._http.delete(this.actionUrl + 'delete?ID=' + toDelete, this.options)
+            .pipe(catchError(this.handleError));
+    }
+
     public openNotifs(id) {
         this.userID = id;
         console.log("notif-service")

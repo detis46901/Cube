@@ -112,4 +112,10 @@ export class NotifComponent implements OnInit {
         this.userPageService.GetSingle(id)
             .subscribe((page) => {this.tempObj = page})
     }
+
+    private deleteNotif(n: Notif): void {
+        this.notificationService
+            .Delete(n.ID)
+            .subscribe(() => {this.getNotifications})
+    }
 }

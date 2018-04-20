@@ -74,14 +74,16 @@ export class LayerDetailsComponent implements OnInit {
             .subscribe(() => {
                 this.layerPermissionService.GetByLayer(layer.ID).subscribe((perms) => {
                     for(let perm of perms) {
-                        notif.userID = perm.userID;
+                        if(perm.userID != this.userID) {
+                            notif.userID = perm.userID;
 
-                        this.notificationService
-                            .Add(notif)
-                            .subscribe((res) => {
-                                console.log(res)
-                                this.dialog.closeAll()
-                            })
+                            this.notificationService
+                                .Add(notif)
+                                .subscribe((res) => {
+                                    console.log(res)
+                                    this.dialog.closeAll()
+                                })
+                        }
                     }
                 })
             })
@@ -99,13 +101,6 @@ export class LayerDetailsComponent implements OnInit {
             }
             ix += 1;
         }
-    }
-
-    private getUsersByLayer(L: Layer): User[] {
-        var users: User[];
-        var perms;//this will probably be empty by the time the return statement comes in
-        this.layerPermissionService.GetByLayer(L.ID).subscribe((res) => perms = res);
-        return users;
     }
 
     private createLayerNotif(L: Layer): any {
