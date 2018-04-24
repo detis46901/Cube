@@ -15,7 +15,7 @@
         <!-- <a id="headerInbox" title="Inbox"><i class="fa fa-envelope fa-2x" aria-hidden="true"></i></a> -->
         <!-- <a id="headerLogoff" title="Logout" href="/logout"><i class="fa fa-power-off fa-2x" aria-hidden="true"></i></a>        -->
         <a id="headerLogout" title="Logout" routerLink="/logout"><h5>Logout</h5></a>
-        <a id="headerAdmin" *ngIf="user.administrator" title="Admin Menu" routerLink="/admin"><h5>Cube Data</h5></a>
+        <a id="headerAdmin" *ngIf="user.administrator" title="Admin Menu" [routerLink]="['/admin', {outlets: {admin: ['layer']}}]"><h5>Cube Data</h5></a>
         <!--<a usersettings <img src="../../assets/images/default-profile-icon.png">   -->
     </span>
 </div>

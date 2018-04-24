@@ -189,6 +189,10 @@ export class MapService {
 
                     }
                     default: {
+                        //let defStyle = {fillColor: "black", strokeColor: "green"};
+                        //let feat = new ol.Feature()
+                        //let layvec = new ol.layer.Vector({style: myStyle })
+
                         let url = this.formLayerRequest(this.mapConfig.userpagelayers[i])
                         let wmsSource = new ol.source.ImageWMS({
                             url: url,
