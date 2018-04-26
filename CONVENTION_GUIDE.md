@@ -19,7 +19,7 @@ For each file, remove and do not keep unnecessary:
 -Comments
 -Files
 
--The type "any" should never be used unless the variable is polymorphic by nature
+-The type "any" should never be used unless the variable is polymorphic by nature, or type cannot be accurately expected
 
 -All methods and variables should have a declared scope (private, public) that directly corresponds to desired scope (Make private unless public/protected is necessary)
 

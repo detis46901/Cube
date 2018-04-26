@@ -14,6 +14,7 @@ export class NewGroupComponent implements OnInit {
     private token: string;
     private userID: number;
 
+    private groups: Group[];
     private newGroup = new Group;
 
     constructor(private dialog: MatDialog, private groupService: GroupService) { 
@@ -23,12 +24,28 @@ export class NewGroupComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.groupService
+            .GetAll()
+            .subscribe((res) => {
+                this.groups = res;
+            })
     }
 
-    private addGroup(newGrp): void {
-        this.groupService
-            .Add(newGrp)
-            .subscribe(()=>this.dialog.closeAll())
+    private addGroup(newGrp:Group): void {
+        var flag = false;
+        for(let grp of this.groups) {
+            if(newGrp.name == grp.name) {
+                flag = true;
+            }
+        }
+
+        if(!flag) {
+            this.groupService
+                .Add(newGrp)
+                .subscribe(()=>this.dialog.closeAll())
+        } else {
+            alert('There is already a group with that name.')
+        }
     }
 
 }
