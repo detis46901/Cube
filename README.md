@@ -29,11 +29,11 @@ Layers are graphical data representations that are placed on the base map accord
 <span>
     <div>
         <h4>Without layer</h4>
-        <img src="./src/assets/images/README_layerOff.png">
+        <img src="./src/assets/README_layerOff.png">
     </div>
     <div>
         <h4>With layer</h4>
-        <img src="./src/assets/images/README_layerOn.png">
+        <img src="./src/assets/README_layerOn.png">
     </div>
 </span>
 
