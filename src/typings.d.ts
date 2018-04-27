@@ -4,4 +4,3 @@
 /// <reference path="../node_modules/@types/crypto-js/index.d.ts" />
 // <reference path="../typings/leaflet.d.ts" />
 /// <reference path="../typings/geojson.d.ts" />
-/// <reference path="../typings/leaflet-omnivore.d.ts" />

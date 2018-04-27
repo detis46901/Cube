@@ -1,20 +1,19 @@
 import { Injectable } from "@angular/core";
-
-import { MapConfig, mapStyles, featureList } from '../models/map.model'
+import { MapConfig, mapStyles, featureList } from '../models/map.model';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig } from '../../../_models/layer.model';
 import { LayerPermissionService } from '../../../_services/_layerPermission.service';
-import { geoJSONService } from './../services/geoJSON.service'
-import { MyCubeService } from './../services/mycube.service'
+import { geoJSONService } from './../services/geoJSON.service';
+import { MyCubeService } from './../services/mycube.service';
 import { WFSService } from './../services/wfs.service';
-import { SQLService } from './../../../_services/sql.service'
-import { MessageService } from '../../../_services/message.service'
+import { SQLService } from './../../../_services/sql.service';
+import { MessageService } from '../../../_services/message.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { when } from "q";
-import { FilterService } from '../services/filter.service'
+import { FilterService } from '../services/filter.service';
 
 @Injectable()
 export class MapService {
@@ -35,7 +34,7 @@ export class MapService {
     public http: Http
     public options: any
 
-    constructor(
+    constructor (
         private userPageLayerService: UserPageLayerService,
         private layerPermissionService: LayerPermissionService,
         private geojsonservice: geoJSONService,
@@ -46,7 +45,9 @@ export class MapService {
         private mapstyles: mapStyles,
         private filterService: FilterService,
         http: Http
-         ) {this.http = http }
+    ) {
+        this.http = http 
+    }
 
     //Will be deleted once the navigator component is changed out.
     disableLeafletMouseEvent(elementId: string) {
@@ -110,7 +111,6 @@ export class MapService {
 
     public getLayerPerms(): Promise<any> {
         let promise = new Promise((resolve, reject) => {
-            //console.log("UserID = " + this.mapConfig.userID)
             this.layerPermissionService
                 .GetByUserGroups(this.mapConfig.userID)
                 .subscribe((data: LayerPermission[]) => {
@@ -130,7 +130,6 @@ export class MapService {
 
     public getCapabilities = (url): Observable<any> => {
         return this.http.get(url)
-        //return this.http.get("https://openlayers.org/en/v4.6.4/examples/data/WMTSCapabilities.xml")
             .map((response: Response) => <any>response.text())
     }
 
@@ -723,7 +722,6 @@ export class MapService {
 
     private zoomExtents(): void {
         console.log("zoomExtents")
-
         this.mapConfig.view.animate({zoom:13, center:ol.proj.transform([-86.1336, 40.4864], 'EPSG:4326', 'EPSG:3857')})
     }
 
@@ -732,7 +730,7 @@ export class MapService {
             key: 'AqG6nmU6MBeqJnfsjQ-285hA5Iw5wgEp3krxwvP9ZpE3-nwYqO050K5SJ8D7CkAw',
             imagerySet: 'AerialWithLabels',
             maxZoom: 19
-          })
+        })
         let base = new ol.source.OSM()
         if (this.base == 'base') {
             this.base = 'aerial'
@@ -741,6 +739,5 @@ export class MapService {
             this.base = 'base'
             this.mapConfig.layers[0].setSource(base)
         }
-        }
+    }
 }
- 

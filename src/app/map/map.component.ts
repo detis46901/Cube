@@ -21,10 +21,8 @@ import { PageConfigComponent } from '../admin/user/pageConfig/pageConfig.compone
 import { MatDialog } from '@angular/material';
 import { Clipboard } from 'ts-clipboard';
 import { Configuration } from '../../_api/api.constants'
-import {MatSnackBar} from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { Feature } from 'geojson';
-
-declare var ol: any;
 
 @Component({
     moduleId: module.id,

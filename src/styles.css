@@ -15,3 +15,9 @@
 h3, h4 {
     font-family:"Roboto", sans-serif;
 }
+
+.mat-accordion, .mat-expansion-panel {
+    white-space:nowrap;
+    margin-bottom:0;
+    overflow:hidden;
+}
