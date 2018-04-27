@@ -46,10 +46,10 @@ export class HeaderComponent implements OnInit {
 
 
     private getUserItems(): void {
-        var that = this;
         this.userService
             .GetSingle(this.userID)
-            .subscribe((user: User) => {              
+            .subscribe((user: User) => {
+                this.currUser = user;              
                 this.notificationService
                     .GetByUser(user.ID)
                     .subscribe((notifs: Notif[]) => {
