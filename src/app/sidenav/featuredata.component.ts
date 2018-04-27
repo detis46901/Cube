@@ -91,4 +91,9 @@ export class FeatureDataComponent{
             })
         this.mycubeservice.sendMyCubeData(this.myCubeConfig.table, this.myCubeData[0].value)
     }
+
+    private onFileSelected(event) {
+        console.log(event.target.files[0]) //This will be used for adding an image to a comment for myCube.
+        //this.selectedFile = <File>event.target.files[0] //Send to the bytea data type field in comment table.
+    }
 }
