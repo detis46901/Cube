@@ -88,6 +88,9 @@ export class MapComponent {
                                 //   this.mapConfig.map.addOverlay(popup);
                                 // console.log(this.mapConfig.userpagelayers[index2].layer.layerName)
                                 this.mapConfig.mouseoverLayer = this.mapConfig.userpagelayers[index2]
+                                mapConfig.map.getFeaturesAtPixel(evt.pixel).forEach(element => {
+                                  //console.log(element)  
+                                })
                             }
                         })
                     }

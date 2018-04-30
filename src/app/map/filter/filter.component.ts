@@ -6,7 +6,7 @@ import { NULL_INJECTOR } from '@angular/core/src/render3/component';
 import { MapService } from '../services/map.service';
 import { SQLService } from '../../../_services/sql.service'
 import { MyCubeField } from '_models/layer.model';
-import { FilterService } from '../services/filter.service'
+import { FilterService } from '../services/style.service'
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 
 
