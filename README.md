@@ -24,9 +24,9 @@ This data is all stored in the “public” schema. There is also a “layers”
 Every user belongs to one or more groups, which are represented by job titles. This is a simple RBAC setup, modeled with Unix permissions and Windows Group Policy/Active Directory in mind. Users can additionally belong to the "Administrators" group, which provides them with (nearly) full control of data via an administrator interface. They may have to visit the database directly to alter unique identifiers and the like.
 
 ### Layers
-Layers are graphical data representations that are placed on the base map according to their location. They might represent sewer pipes, building benchmarks, easements, etc. Layers are part of the core module in order to ensure tight integration with the map. <!--Here is an example of the same area of land before and after activating a layer: -->
+Layers are graphical data representations that are placed on the base map according to their location. They might represent sewer pipes, building benchmarks, easements, etc. Layers are part of the core module in order to ensure tight integration with the map. Here is an example of the same area of land before and after activating a layer:
 
-<!-- <span>
+<span>
     <div>
         <h4>Without layer</h4>
         <img src="./src/assets/README_layerOff.png">
@@ -35,7 +35,7 @@ Layers are graphical data representations that are placed on the base map accord
         <h4>With layer</h4>
         <img src="./src/assets/README_layerOn.png">
     </div>
-</span> -->
+</span>
 
 Layers can be created via any of the following sources:
 WMS

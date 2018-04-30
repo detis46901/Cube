@@ -1,9 +1,31 @@
 <div class="profile-parent-container">
     <div class="profile-picture-content">
-        <!-- <h3>Avatar</h3> -->
         <img src="../../../assets/images/default-profile-icon.png">
     </div>
     <div class="profile-picture-actions"> 
         <button mat-button class="btn-primary" (click)="changePicture()">Change Avatar</button>
     </div>
+    <!-- <form #f="ngForm">
+        <div class="col">
+            <div class="row">
+                <mat-form-field>
+                    <input matInput name="userFirstName" [(ngModel)]="user.firstName" placeholder="First Name" value="{{user.firstName}}">
+                </mat-form-field>
+            </div>
+                
+            <div class="row">
+                <mat-form-field>
+                    <input matInput name="userLastName" [(ngModel)]="user.lastName" placeholder="Last Name" value="{{user.lastName}}">
+                </mat-form-field>
+            </div>
+
+            <div class="row">
+                <mat-form-field>
+                    <input matInput name="userEmail" [(ngModel)]="user.email" placeholder="Email" value="{{user.email}}">
+                </mat-form-field>
+            </div>
+
+            <button mat-button-primary id="detailsSubmit" (click)="submit(user)" [disabled]="!f.valid">Submit Changes</button>
+        </div>
+    </form> -->
 </div>

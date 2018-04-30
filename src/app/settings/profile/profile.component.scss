@@ -1,8 +1,11 @@
 .profile-parent-container {
-    padding: 10px 20px 10px 20px;
+    margin: 10px 20px 10px 15px;
+    padding-top:10px;
     display: block;
     position:relative;
     left:12.2%;
+    background-color: white;
+    width: 215px;
 }
 
 h3 {
@@ -17,6 +20,10 @@ img {
 }
 
 button {
-    margin: 10px 0 0 10px;
+    margin: 10px 0 10px 30px;
     background-color: #f1f2e8;
+}
+
+.row {
+    margin-left: 3px;
 }

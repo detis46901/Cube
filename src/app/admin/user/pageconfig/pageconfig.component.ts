@@ -12,7 +12,7 @@ import { UserPageLayerService } from '../../../../_services/_userPageLayer.servi
 import { MatDialog, MatDialogRef } from '@angular/material';
 
 /****************************************************************************************************************************************************
-* 2/9/19: All changes that need to happen  (Mark off as you complete)                                                                               *
+* 2/9/18: All changes that need to happen  (Mark off as you complete)                                                                               *
 *                                                                                                                                                   *
 * -"Layers" (UserPageLayers) accordion menu on map must update when a UPL is added to the current page (This may require this module sending an     *
 *   observable to a listener on the other end)                                                                                                      *
@@ -178,7 +178,8 @@ export class PageConfigComponent implements OnInit {
     public deleteUserPageLayer(userPageID: number): void {
         this.userPageLayerService
             .Delete(userPageID)
-            .subscribe(() => {
+            .subscribe((res) => {
+                console.log(res)
                 this.layerPermissions=[]
                 this.getUserPageLayers();
             });

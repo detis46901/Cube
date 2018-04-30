@@ -255,8 +255,9 @@ export class MapService {
             format: new ol.format.GeoJSON()
         })
 
-        let interval = setInterval(() => {
-           this.runInterval(layer, source)   
+        var interval = setInterval(() => {
+           var runAgain = this.runInterval(layer, source)
+           if (runAgain == 1) {clearInterval(interval)}
         }, 20000);
 
         this.getMyCubeData(layer).then((data) => {
@@ -281,7 +282,7 @@ export class MapService {
     }
     
   
-    public runInterval(layer: UserPageLayer, source: ol.source.Vector) {
+    public runInterval(layer: UserPageLayer, source: ol.source.Vector): number {
         let source2: ol.source.Vector = source
         this.getMyCubeData(layer).then((data) => {
             if (data[0]) {
@@ -300,11 +301,16 @@ export class MapService {
                             //source.getFeatureById(this.mapConfig.selectedFeature.getId()).setStyle(this.mapstyles.selected)
                             //this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected)
                         }
+                        return 1;
                     }
+                    return 0;
                     //may need to add something in here that compares new data to old data and makes sure the selected feature remains selected.
                 }
+                return 0;
             }
+            return 0;
         })
+        return 0;
     }
 
     private getMyCubeData(layer): Promise<any> {
