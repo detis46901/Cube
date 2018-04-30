@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Notification, User, UserPage } from '../../_models/user.model';
+import { Notif, User, UserPage } from '../../_models/user.model';
 import { Group } from '../../_models/group.model';
 import { GroupMember } from '../../_models/groupMember.model';
 import { Layer, UserPageLayer } from '../../_models/layer.model';
-import { NotificationService } from '../../_services/notification.service';
+import { NotifService } from '../../_services/notification.service';
 import { UserService } from '../../_services/_user.service';
 import { GroupService } from '../../_services/_group.service';
 import { GroupMemberService } from '../../_services/_groupMember.service';
@@ -16,22 +16,22 @@ import { Observable } from 'rxjs/Observable';
     selector: 'notification',
     templateUrl: './notification.component.html',
     styleUrls: ['./notification.component.scss'],
-    providers: [NotificationService, UserService, GroupService, GroupMemberService, LayerService, UserPageLayerService, UserPageService]
+    providers: [NotifService, UserService, GroupService, GroupMemberService, LayerService, UserPageLayerService, UserPageService]
 })
 
-export class NotificationComponent implements OnInit {
+export class NotifComponent implements OnInit {
     public token: string;
     public userID: number;
-    private notifications: Array<Notification>;
+    private notifications: Array<Notif>;
     private tempObj;
     
     //OR instead of below, have a map for each object type
     private sourceMap = new Map<string, any>();
     
-    constructor(private notificationService: NotificationService, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private layerService: LayerService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService) { 
+    constructor(private notificationService: NotifService, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private layerService: LayerService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService) { 
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser.token;
-        this.userID = currentUser.userID; 
+        this.userID = currentUser.userID;
     }
 
     ngOnInit() {
@@ -55,7 +55,6 @@ export class NotificationComponent implements OnInit {
                 this.getObject(notif.objectType, notif.sourceID, cb => {
                     
                 })
-
                 //this.sourceMap.set(notif.objectType+notif.sourceID, ) //i.e. (Layer4, User2, UserPage98)
             }
         }
@@ -112,5 +111,11 @@ export class NotificationComponent implements OnInit {
     private getUserPage(id: number): void {
         this.userPageService.GetSingle(id)
             .subscribe((page) => {this.tempObj = page})
+    }
+
+    private deleteNotif(n: Notif): void {
+        this.notificationService
+            .Delete(n.ID)
+            .subscribe(() => {this.getNotifications})
     }
 }

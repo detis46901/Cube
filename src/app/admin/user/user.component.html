@@ -72,7 +72,7 @@
         <ng-container matColumnDef="actionsColumn">
             <mat-header-cell class="user-lg-head" *matHeaderCellDef><button mat-button id="userCreateNew" (click)="openNewUser()"><strong>Create New User</strong></button></mat-header-cell>
             <mat-cell class="user-lg-cell" *matCellDef="let row">
-                <button mat-icon-button color="primary" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.layerName)">
+                <button mat-icon-button color="primary" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.firstName, row.currentData.lastName)">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
 

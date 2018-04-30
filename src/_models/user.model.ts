@@ -17,7 +17,7 @@ export class UserPage {
     active?: boolean;
 }
 
-export class Notification {
+export class Notif {
     ID: number;
     userID: number;
     name: string;

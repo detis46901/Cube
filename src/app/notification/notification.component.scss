@@ -1,8 +1,8 @@
 .notification-card {
     padding:0;
-    width:400px;
+    width:550px;
     max-height:800px;
-    //min-height:300px;
+    min-height:300px;
     overflow:auto;
     display:none;
     margin-right:0 auto;
@@ -12,6 +12,18 @@ mat-list-item {
     font-family:'Roboto', sans-serif;
 }
 
-h3, h5 {
+h3, h4, h5 {
     font-family: 'Roboto', sans-serif;
+}
+
+#notifX {
+    margin-left:40px;
+    position:relative;
+    bottom:5px;
+}
+
+.center-text {
+    position:relative;
+    align-content: center;
+    text-align: center;
 }

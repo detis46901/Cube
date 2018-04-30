@@ -1,13 +1,26 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Observable, Subscriber } from 'rxjs';
+import { Layer } from '../../../_models/layer.model';
+import { LayerService } from '../../../_services/_layer.service';
 
 @Component({
     selector: 'default',
     templateUrl: './default.component.html',
+    providers: [LayerService],
     styleUrls: ['./default.component.scss']
 })
 
 export class DefaultsComponent implements OnInit {
-    constructor() {}
+    private layers: Observable<Layer[]>;
 
-    ngOnInit() {}
+    constructor(private layerService: LayerService){}
+    ngOnInit() {
+        //this.layerService.GetAll().subscribe((res) => this.layers = res)
+        this.layers = this.layerService.GetAll()
+    }
+
+    time = new Observable<string>((observer: Subscriber<string>) => {
+        setInterval(() => observer.next(new Date().toString()), 1000);
+      });
 }

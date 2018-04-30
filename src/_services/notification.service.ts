@@ -6,10 +6,11 @@ import { Configuration } from '../_api/api.constants';
 import { RequestOptions, Headers } from '@angular/http';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
+import { Notif } from '../_models/user.model';
 
  
 @Injectable()
-export class NotificationService {
+export class NotifService {
     private actionUrl: string;
     public options: any;
     private token: string;
@@ -30,27 +31,44 @@ export class NotificationService {
 
         this.options = {
             headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
                 'Authorization': 'Bearer ' + this.token
             })
         }
     }
 
-    public GetByUser = (userID): Observable<Notification[]> => {
+    public GetByUser = (userID): Observable<Notif[]> => {
         return this._http.get(this.actionUrl + 'getbyuser?userID=' + userID, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetByType = (type): Observable<Notification[]> => {
+    public GetByType = (type): Observable<Notif[]> => {
         return this._http.get(this.actionUrl + 'getbytype?objectType=' + type, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetBySource = (sourceID): Observable<Notification[]> => {
+    public GetBySource = (sourceID): Observable<Notif[]> => {
         return this._http.get(this.actionUrl + 'getbysource?sourceID=' + sourceID, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public openNotifications(id) {
+    public Add = (toAdd: any): Observable<any> => {
+        return this._http.post(this.actionUrl + 'create', JSON.stringify(toAdd), this.options)
+            .pipe(catchError(this.handleError));
+    }
+
+    public Update = (toChange: any): Observable<any> => {
+        return this._http.put(this.actionUrl + 'update', JSON.stringify(toChange), this.options)
+            .pipe(catchError(this.handleError));
+    }
+
+    public Delete = (toDelete: any): Observable<any> => {
+        return this._http.delete(this.actionUrl + 'delete?ID=' + toDelete, this.options)
+            .pipe(catchError(this.handleError));
+    }
+
+    public openNotifs(id) {
         this.userID = id;
         console.log("notif-service")
     }

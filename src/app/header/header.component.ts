@@ -5,11 +5,11 @@ import { NewUserComponent } from '../admin/user/newUser/newUser.component';
 import { UserComponent } from '../admin/user/user.component';
 import { MatToolbar } from '@angular/material';
 import { PageComponent } from '../admin/user/page/page.component'
-import { User } from '../../_models/user.model';
+import { User, Notif } from '../../_models/user.model';
 import { UserPage } from '../../_models/user.model';
 import { UserService } from '../../_services/_user.service';
 import { UserPageService } from '../../_services/_userPage.service';
-import { NotificationService } from '../../_services/notification.service';
+import { NotifService } from '../../_services/notification.service';
 
 @Component({
     selector: 'header',
@@ -23,14 +23,17 @@ export class HeaderComponent implements OnInit {
     @Input() screenCode: number = 0; 
     private isOpen: boolean;
     private isNotifOpen: boolean = false;
+    private userHasUnread: boolean;
+    private shaker;
 
     private token: string;
     private userID: number;
 
     private currUser: User;
     private userPages: UserPage[];
+    private notifications: Notif[];
 
-    constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService, private notificationService: NotificationService ) {
+    constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService, private notificationService: NotifService ) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -41,11 +44,23 @@ export class HeaderComponent implements OnInit {
         this.getUserPageItems()
     }
 
+
     private getUserItems(): void {
         this.userService
             .GetSingle(this.userID)
             .subscribe((user: User) => {
-                this.currUser = user
+                this.currUser = user;              
+                this.notificationService
+                    .GetByUser(user.ID)
+                    .subscribe((notifs: Notif[]) => {
+                        this.notifications = notifs;
+                        for(let n of notifs) {
+                            if(!n.read) {
+                                this.shakeNotifications()
+                                return;
+                            }
+                        }
+                    })
             })
     }
 
@@ -156,22 +171,28 @@ export class HeaderComponent implements OnInit {
         }
     }
 
-    private openNewUser(): void {
-        // const dialogRef = this.dialog.open(NewUserComponent, {height:'370px', width:'500px'});
-        // dialogRef.afterClosed()
-        // .subscribe(() => {
-        //     this.getUserItems();
-        //     this.getUserPageItems();
-        // });
-    }
-
     private openNotifications(id): void {
-        console.log("notif opened")
+        clearInterval(this.shaker)
         if(this.isNotifOpen) {
             document.getElementById("notificationMenu").style.display = "none";
         } else {
             document.getElementById("notificationMenu").style.display = "inline-block";
+            for(let n of this.notifications) {
+                n.read = true;
+                this.notificationService
+                    .Update(n)
+                    .subscribe()
+            }
         }
         this.isNotifOpen = !this.isNotifOpen
+    }
+
+    private shakeNotifications(): void {
+        this.shaker = setInterval(function() {           
+            document.getElementById('headerNotifications').classList.add('shake');
+            setTimeout(function() {
+                document.getElementById('headerNotifications').classList.remove('shake');
+            }, 1000)
+        }, 5000)
     }
 }
