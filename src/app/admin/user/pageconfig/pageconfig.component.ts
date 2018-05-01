@@ -11,21 +11,21 @@ import { LayerPermissionService } from '../../../../_services/_layerPermission.s
 import { UserPageLayerService } from '../../../../_services/_userPageLayer.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
 
-/****************************************************************************************************************************************************
-* 2/9/18: All changes that need to happen  (Mark off as you complete)                                                                               *
-*                                                                                                                                                   *
-* -"Layers" (UserPageLayers) accordion menu on map must update when a UPL is added to the current page (This may require this module sending an     *
-*   observable to a listener on the other end)                                                                                                      *
-* -pageConfig dialog needs to have a similar system to layerPerm like "permless" list, but with layers that have already been added to UPL (dedup)  *
-* -All group handling must be accomplished:                                                                                                         *
-* 1.) Available UPL options granted by Group membership must appear in a user's pageConfig dialog for the specific page they're using, whether:     *
-*     a.) The User is added to an applicable Group, and must get all of that Group's permissions                                                    *
-*     b.) The Group is given a Layer Permission, and now when pageConfig opens, all users in that group need to get that layer available.           *
-* 2.) Revoked UPL options for each user when Group entity permission is revoked, UNLESS individual user has permission to layer still (query)       *
-* 3.) When these layer permissions become revoked, all CURRENT UPLs that the user no longer has group-given or individual-given permission to use   *
-*     in a page must be deleted from the database. i.e. (UPLs and LayerPerms) => (WHERE LayerID), but not Layers themselves.                        *
-* 4.) Deleting a layer must still delete all layerPerms and UPLs (probably not a conern really, this should still work)                             *
-****************************************************************************************************************************************************/
+/************************************************************************************************************************************************************
+* 2/9/18: All changes that need to happen  (Mark off as you complete)                                                                                       *
+*                                                                                                                                                           *
+* -"Layers" (UserPageLayers) accordion menu on map must update when a UPL is added to the current page (This may require this module sending an             *
+*   observable to a listener on the other end)                                                                                                              *
+* -pageConfig dialog needs to have a similar system to layerPerm like "permless" list, but with layers that have already been added to UPL (deduplication)  *
+* -All group handling must be accomplished:                                                                                                                 *
+* 1.) Available UPL options granted by Group membership must appear in a user's pageConfig dialog for the specific page they're using, whether:             *
+*     a.) The User is added to an applicable Group, and must get all of that Group's permissions                                                            *
+*     b.) The Group is given a Layer Permission, and now when pageConfig opens, all users in that group need to get that layer available.                   *
+* 2.) Revoked UPL options for each user when Group entity permission is revoked, UNLESS individual user has permission to layer still (query)               *
+* 3.) When these layer permissions become revoked, all CURRENT UPLs that the user no longer has group-given or individual-given permission to use           *
+*     in a page must be deleted from the database. i.e. (UPLs and LayerPerms) => (WHERE LayerID), but not Layers themselves.                                *
+*                                                                                                                                                           *
+************************************************************************************************************************************************************/
 
 @Component({
     selector: 'page-config',

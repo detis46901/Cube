@@ -31,6 +31,8 @@ export class MapService {
     public featurelist = new Array<featureList>()
     public base: string = 'base'
     private cubeData: MyCubeField[]
+    private interval: any;
+
     public http: Http
     public options: any
 
@@ -255,9 +257,8 @@ export class MapService {
             format: new ol.format.GeoJSON()
         })
 
-        var interval = setInterval(() => {
-           var runAgain = this.runInterval(layer, source)
-           if (runAgain == 1) {clearInterval(interval)}
+        this.interval = setInterval(() => {
+           this.runInterval(layer, source)
         }, 20000);
 
         this.getMyCubeData(layer).then((data) => {
@@ -282,13 +283,15 @@ export class MapService {
     }
     
   
-    public runInterval(layer: UserPageLayer, source: ol.source.Vector): number {
+    public runInterval(layer: UserPageLayer, source: ol.source.Vector) {
         let source2: ol.source.Vector = source
         this.getMyCubeData(layer).then((data) => {
             if (data[0]) {
                 if (data[0][0]['jsonb_build_object']['features']) {
+                    //clearInterval(this.interval)
                     //need to put something in here so that when an object is being edited, it doesn't update...
                     //might just be that the layer doesn't update unless something has changed.
+
                     source.clear()
                     source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']))
                    //this.filterFunction(layer, source)
@@ -301,16 +304,11 @@ export class MapService {
                             //source.getFeatureById(this.mapConfig.selectedFeature.getId()).setStyle(this.mapstyles.selected)
                             //this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected)
                         }
-                        return 1;
                     }
-                    return 0;
                     //may need to add something in here that compares new data to old data and makes sure the selected feature remains selected.
                 }
-                return 0;
             }
-            return 0;
         })
-        return 0;
     }
 
     private getMyCubeData(layer): Promise<any> {
@@ -572,31 +570,37 @@ export class MapService {
 
     private getFeatureList() {
         console.log('getting featurelist')
+        console.log(this.mapConfig.currentLayer.layer.defaultStyle)
         let k:number = 0
-        let labelName: string = this.mapConfig.currentLayer.layer.defaultStyle['listLabel']
-        if (!labelName) { labelName = this.mapConfig.currentLayer.style['listLabel'] }
-        if (labelName != null) {
-            if (labelName.length > 0)
-                this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].forEachFeature((x: ol.Feature) => {
-                    k += 1
-                    let i = this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].getFeatures().findIndex((j) => j == x)
-                    let fl = new featureList
-                    fl.label = x.get(labelName)
-                    fl.feature = x
-                    if (i > -1) {
-                        
-                        this.featurelist[i] = fl
-                    }
-                    else { this.featurelist.push(fl) }
-                })
-                this.featurelist = this.featurelist.slice(0,k)
+
+        try {
+            let labelName: string = this.mapConfig.currentLayer.layer.defaultStyle['listLabel']
+            if (!labelName) { labelName = this.mapConfig.currentLayer.style['listLabel'] }
+            if (labelName != null) {
+                if (labelName.length > 0)
+                    this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].forEachFeature((x: ol.Feature) => {
+                        k += 1
+                        let i = this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].getFeatures().findIndex((j) => j == x)
+                        let fl = new featureList
+                        fl.label = x.get(labelName)
+                        fl.feature = x
+                        if (i > -1) {
+                            
+                            this.featurelist[i] = fl
+                        }
+                        else { this.featurelist.push(fl) }
+                    })
+                    this.featurelist = this.featurelist.slice(0,k)
+            }
+            this.featurelist.sort((a, b): number => {
+                if (a.label > b.label) { return 1 }
+                if (a.label < b.label) { return -1 }
+                return 0
+            })
+        } catch(error) {
+            console.error(error)
+            clearInterval(this.interval)
         }
-        this.featurelist.sort((a, b): number => {
-            if (a.label > b.label) { return 1 }
-            if (a.label < b.label) { return -1 }
-            return 0
-        })
-        console.log('end getting featurelist')
     }
 
     private zoomToFeature(featurelist: featureList): void {
