@@ -9,10 +9,15 @@ import { NotifService } from '../../../../_services/notification.service';
 @Component({
     selector: 'parentDetails',
     templateUrl: './parentDetails.component.html',
-    styleUrls: ['./parentDetails.component.css']
+    styleUrls: ['./parentDetails.component.scss']
 })
 
 export class ParentDetailsComponent implements OnInit {
+    @Input() ID;
+    @Input() name;
+    
+    private token;
+    private userID;
 
     constructor() { }
 

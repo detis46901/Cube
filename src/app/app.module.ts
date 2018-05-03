@@ -107,7 +107,8 @@ import { MapService } from './map/services/map.service';
 import { FilterService, StyleService } from './map/services/style.service';
 import { GeocodingService } from './map/services/geocoding.service';
 import { EditGroupComponent } from './admin/group/editGroup/editGroup.component'
-import { UserDetailsComponent } from './admin/details/userDetails/userDetails.component'
+import { UserDetailsComponent } from './admin/details/userDetails/userDetails.component';
+import { ServerDetailsComponent } from './admin/details/serverDetails/serverDetails.component';
 
 @NgModule ({
     declarations: [
@@ -161,7 +162,8 @@ import { UserDetailsComponent } from './admin/details/userDetails/userDetails.co
         FilterComponent,
         EditGroupComponent,
         ParentDetailsComponent,
-        UserDetailsComponent
+        UserDetailsComponent,
+        ServerDetailsComponent
     ],
 
     entryComponents: [
@@ -179,7 +181,8 @@ import { UserDetailsComponent } from './admin/details/userDetails/userDetails.co
         EditGroupComponent,
         ChangePictureComponent,
         LayerDetailsComponent,
-        UserDetailsComponent
+        UserDetailsComponent,
+        ServerDetailsComponent
     ],
 
     imports: [

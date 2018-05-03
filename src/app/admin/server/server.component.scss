@@ -109,6 +109,10 @@ mat-table mat-header-row mat-header-cell {
     color: blue;
 }
 
+.mat-input-element:disabled {
+    color:black;
+}
+
 // .fa-pencil-alt {
 //     color: #FFBB39;
 // }

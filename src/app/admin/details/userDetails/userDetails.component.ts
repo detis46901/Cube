@@ -10,7 +10,7 @@ import { GroupMemberService } from '../../../../_services/_groupMember.service';
 import { NotifService } from '../../../../_services/notification.service';
 
 @Component({
-    selector: 'user-details',
+    selector: 'userDetails',
     templateUrl: './userDetails.component.html',
     providers: [UserService, UserService, GroupService, GroupMemberService, NotifService],
     styleUrls: ['./userDetails.component.scss']

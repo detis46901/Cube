@@ -13,6 +13,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { ServerDetailsComponent } from '../details/serverDetails/serverDetails.component';
 
 @Component({
     selector: 'server',
@@ -232,5 +233,14 @@ export class ServerComponent implements OnInit {
         .subscribe(result => {
             this.getServers();
         });
-    }    
+    }
+    
+    private openDetails(id: number, name: string): void {
+        const dialogRef = this.dialog.open(ServerDetailsComponent);
+        dialogRef.componentInstance.ID = id;
+        dialogRef.componentInstance.name = name;
+        dialogRef.afterClosed().subscribe(() => {
+            this.getServers();
+        })
+    }
 }
