@@ -12,7 +12,6 @@ import { PageComponent } from './page/page.component';
 import { PageConfigComponent } from './pageConfig/pageConfig.component';
 import { ChangePasswordComponent } from './changePassword/changePassword.component';
 import { NewUserComponent } from './newUser/newUser.component';
-import { Md5 } from 'ts-md5/dist/md5';
 import { MatDialog } from '@angular/material';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';

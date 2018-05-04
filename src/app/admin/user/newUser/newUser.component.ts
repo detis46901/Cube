@@ -3,7 +3,6 @@ import { User, UserPage } from '../../../../_models/user.model';
 import { UserService } from '../../../../_services/_user.service';
 import { GroupMember } from '../../../../_models/groupMember.model';
 import { GroupMemberService } from '../../../../_services/_groupMember.service';
-import { Md5 } from 'ts-md5/dist/md5';
 import { MatDialog } from '@angular/material';
 
 @Component({
@@ -64,7 +63,7 @@ export class NewUserComponent implements OnInit {
             }
 
             if (this.newUser.administrator) {
-                let newAdminEntry: GroupMember
+                let newAdminEntry = new GroupMember
                 newAdminEntry.groupID = 2;
                 newAdminEntry.userID = this.newUser.ID
                 this.groupMemberService

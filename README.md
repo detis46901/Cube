@@ -12,11 +12,13 @@ The front-end client application is built with Angular 5. The back-end is writte
 Main dependencies and technologies: Nodejs, Express, Gulp, Sequelize, Typescript, and PostgreSQL
 
 A PostgreSQL database is used to store all data (unless it’s referenced from another source). This data includes but is not limited to:
-Users
-Groups
-Permissions
-Layers
-Pages
+<ul>
+    <li>Users</li>
+    <li>Groups</li>
+    <li>Permissions</li>
+    <li>Layers</li>
+    <li>Pages</li>
+</ul>
 
 This data is all stored in the “public” schema. There is also a “layers” schema, which holds individual layer data. The front-end accesses the back-end via a secure API. This allows the two systems to be located on different servers if needed. It also allows the back-end to be backed up quickly if needed. This allows other systems to use the datastore directly via the API if needed (i.e. sharing a .kml file in Google Earth, etc.)
 
@@ -37,15 +39,17 @@ Layers are graphical data representations that are placed on the base map accord
     </div>
 </span>
 
-Layers can be created via any of the following sources:
-WMS
-WFS
-PostGIS table (reference)
-PostGIS table from scratch
-Shapefile (upload)
-Shapefile (reference)
-KML (upload)
-KML (reference)
+Layers can be created via any of the following sources:<br>
+<ul>
+    <li>WMS</li>
+    <li>WFS</li>
+    <li>PostGIS table (reference)</li>
+    <li>PostGIS table from scratch</li>
+    <li>Shapefile (upload)</li>
+    <li>Shapefile (reference)</li>
+    <li>KML (upload)</li>
+    <li>KML (reference)</li>
+</ul>
 
 Users can create layers (making them the owner) and share them with other users. They may then provide either view or view/edit permissions to other users/groups as needed. Shapefiles and KML files uploaded are essentially converted to PostGIS tables. Users can also edit any file that is uploaded if their permissions allow.
 
@@ -62,23 +66,25 @@ The Inbox is a link always available to the user that displays the user’s noti
 Geolocation of the user is provided in the core module. The location of each user is then accessible by any module. It also allows the core module to zoom to the user’s location if the user clicks on the geolocation button. Geolocation requires the system uses HTTPS.
 
 ### Potential Feature Modules
-Sewer Maintenance (rodding, vactoring, televising)
-Work Orders (internal)
-Work Orders (Asana) 
-Accident Analysis
-Street Closures
-Utility Locates
-Hydrology (flood management)
-Traffic Volumes
-Weather
-Pavement Management (PASER)
-Fleet Management (AVL, maintenance)
-Stormwater Management (MS4, complaints)
-Project Management (description, funding, scheduling)
-Transit (AVL, dispatch)
-Permitting
-Mapillary
-Document Management
-Open 311
+<ul>
+    <li>Sewer Maintenance (rodding, vactoring, televising)</li>
+    <li>Work Orders (internal)</li>
+    <li>Work Orders (Asana)</li>
+    <li>Accident Analysis</li>
+    <li>Street Closures</li>
+    <li>Utility Locates</li>
+    <li>Hydrology (flood management)</li>
+    <li>Traffic Volumes</li>
+    <li>Weather</li>
+    <li>Pavement Management (PASER)</li>
+    <li>Fleet Management (AVL, maintenance)</li>
+    <li>Stormwater Management (MS4, complaints)</li>
+    <li>Project Management (description, funding, scheduling)</li>
+    <li>Transit (AVL, dispatch)</li>
+    <li>Permitting</li>
+    <li>Mapillary</li>
+    <li>Document Management</li>
+    <li>Open 311</li>
+</ul>
 
 
