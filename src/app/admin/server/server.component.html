@@ -40,20 +40,14 @@
                     <button mat-button id="createServerBtn" (click)="openServerNew()"><strong>Create Server</strong></button>
                 </mat-header-cell>
                 <mat-cell class="server-md-cell" *matCellDef="let row">
+                    <button mat-button (click)="getRequest(row.currentData)">
+                        Layers
+                    </button>
                     <button *ngIf="!row.editing" mat-icon-button color="primary" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.serverName)">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
-                    
-                    <!-- <button *ngIf="row.editing" mat-icon-button color="primary" focusable="false" (click)="row.confirmEditCreate()">
-                        <i class="fa fa-check mat-icon"></i>
-                    </button> -->
-
                     <button mat-icon-button color="primary" focusable="false" (click)="confirmDelete(row.currentData)">
                         <i class="fa fa-times mat-icon"></i>
-                    </button>
-
-                    <button mat-button (click)="getRequest(row.currentData)">
-                        Layers
                     </button>
                 </mat-cell>
             </ng-container>

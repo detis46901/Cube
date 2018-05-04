@@ -1,5 +1,15 @@
 form {
     position:relative;
-    left:.7em;
-    bottom:1em;
+    // left:.7em;
+    // bottom:1em;
+}
+
+h4 {
+    display: inline;
+    position:relative;
+    right:5px;
+}
+
+mat-form-field {
+    width:99%;
 }

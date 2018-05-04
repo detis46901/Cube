@@ -39,7 +39,7 @@ Layers are graphical data representations that are placed on the base map accord
     </div>
 </span>
 
-Layers can be created via any of the following sources:<br>
+<br>Layers can be created from any of the following sources:
 <ul>
     <li>WMS</li>
     <li>WFS</li>

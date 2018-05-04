@@ -1,82 +1,81 @@
-<div id="detailsHeader" class="row">
-    <div class="col-sm-9">
-        <h4 mat-dialog-title style="position:relative; right:5px;">{{name}}</h4>
+<div class="dialog">
+    <div id="detailsHeader" class="row">
+        <div class="col-sm-9" style="position:relative; bottom:10px;">
+            <span>
+                <h4 mat-dialog-title>{{name}}</h4>
+                ID: {{layer.ID}}
+            </span>
+        </div>
+        <div class="col-sm-1 col-sm-offset-2" style="position:relative; bottom:5px;">
+            <button id="LDX" mat-dialog-close class="close">&times;</button>
+        </div>
     </div>
-    <div class="col-sm-1 col-sm-offset-2">
-        <button id="LDX" mat-dialog-close class="close">&times;</button>
-    </div>
+
+    <mat-dialog-content>
+        <form #f="ngForm">
+            <div class="col-sm-6">
+                <div class="row">
+                    <mat-form-field class="row">
+                        <input matInput name="layerDetailName" [(ngModel)]="layer.layerName" placeholder="Name">
+                    </mat-form-field>
+                </div>
+                    
+                <div class="row">
+                    <mat-form-field class="row">
+                        <input matInput name="layerDetailDesc" [(ngModel)]="layer.layerDescription" placeholder="Description">
+                    </mat-form-field>
+                </div>
+
+                <div class="row">    
+                    <mat-form-field class="row">
+                        <input matInput name="layerDetailType" [(ngModel)]="layer.layerType" placeholder="Type">
+                    </mat-form-field> 
+                </div>
+
+                <div class="row">
+                    <mat-form-field class="row">
+                        <input matInput name="layerDetailService" [(ngModel)]="layer.layerService" placeholder="Service">
+                    </mat-form-field> 
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="row">
+                    <mat-form-field>
+                        <input matInput name="layerDetailIdent" [(ngModel)]="layer.Ident" placeholder="Identity">
+                    </mat-form-field>
+                </div>
+
+                <div class="row">
+                    <mat-form-field>
+                        <input matInput name="layerDetailFormat" [(ngModel)]="layer.layerFormat" placeholder="Format">
+                    </mat-form-field>
+                </div>
+
+                <div class="row">
+                    <mat-form-field>
+                        <input matInput name="layerDetailGeom" [(ngModel)]="layer.layerGeom" placeholder="Geometry">
+                    </mat-form-field>
+                </div>
+
+                <div class="row">
+                    <mat-form-field>
+                        <input matInput name="layerDetailServer" [(ngModel)]="layer.server" placeholder="Server">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="col-sm-12 style-bar">
+                <mat-form-field>
+                    <input matInput name="layerDetailStyle" [(ngModel)]="style" placeholder="Style">
+                </mat-form-field>
+            </div>
+        </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+        <div style="position:relative; left:50%;">
+            <button mat-dialog-close id="detailsClose">Close</button>
+            <button mat-button-primary id="detailsSubmit" (click)="submit(layer)" [disabled]="!f.valid">Submit Changes</button>
+        </div>
+    </mat-dialog-actions>
 </div>
-
-<mat-dialog-content>
-    <form #f="ngForm">
-        <div class="col-sm-6">
-            <div class="row" style="position:relative; right:1em;">
-                <mat-form-field>
-                    <input matInput name="layerDetailID" [(ngModel)]="layer.ID" placeholder="ID" value="{{layer.ID}}" [disabled]="true">
-                </mat-form-field>
-            </div>
-
-            <div class="row">
-                <mat-form-field class="row">
-                    <input matInput name="layerDetailName" [(ngModel)]="layer.layerName" placeholder="Name" value="{{layer.layerName}}">
-                </mat-form-field>
-            </div>
-                
-            <div class="row">
-                <mat-form-field class="row">
-                    <input matInput name="layerDetailDesc" [(ngModel)]="layer.layerDescription" placeholder="Description" value="{{layer.layerDescription}}">
-                </mat-form-field>
-            </div>
-
-            <div class="row">    
-                <mat-form-field class="row">
-                    <input matInput name="layerDetailType" [(ngModel)]="layer.layerType" placeholder="Type" value="{{layer.layerType}}">
-                </mat-form-field> 
-            </div>
-
-            <div class="row">
-                <mat-form-field class="row">
-                    <input matInput name="layerDetailService" [(ngModel)]="layer.layerService" placeholder="Service" value="{{layer.layerService}}">
-                </mat-form-field> 
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="row">
-                <mat-form-field>
-                    <input matInput name="layerDetailIdent" [(ngModel)]="layer.Ident" placeholder="Identity" value="{{layer.layerIdent}}">
-                </mat-form-field>
-            </div>
-
-            <div class="row">
-                <mat-form-field>
-                    <input matInput name="layerDetailFormat" [(ngModel)]="layer.layerFormat" placeholder="Format" value="{{layer.layerFormat}}">
-                </mat-form-field>
-            </div>
-
-            <div class="row">
-                <mat-form-field>
-                    <input matInput name="layerDetailGeom" [(ngModel)]="layer.layerGeom" placeholder="Geometry" value="{{layer.layerGeom}}">
-                </mat-form-field>
-            </div>
-
-            <div class="row">
-                <mat-form-field>
-                    <input matInput name="layerDetailServer" [(ngModel)]="layer.server" placeholder="Server" value="{{layer.server}}">
-                </mat-form-field>
-            </div>
-
-            <div class="row">
-                <mat-form-field>
-                    <input matInput name="layerDetailStyle" placeholder="Style" value="{{style}}">
-                </mat-form-field>
-            </div>
-        </div>
-    </form>
-</mat-dialog-content>
-
-<mat-dialog-actions>
-    <div style="position:relative; left:200px;">
-        <button mat-dialog-close id="detailsClose">Close</button>
-        <button mat-button-primary id="detailsSubmit" (click)="submit(layer)" [disabled]="!f.valid">Submit Changes</button>
-    </div>
-</mat-dialog-actions>

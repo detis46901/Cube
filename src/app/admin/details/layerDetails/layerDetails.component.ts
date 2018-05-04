@@ -40,7 +40,7 @@ export class LayerDetailsComponent implements OnInit {
 
     ngOnInit() {
         this.getLayer(this.ID)
-        this.getUser(this.userID)
+        this.getUser(this.userID)      
     }
 
     private getLayer(id) {
@@ -49,6 +49,7 @@ export class LayerDetailsComponent implements OnInit {
             .subscribe((res: Layer) => {
                 this.layer = res
                 this.style = JSON.stringify(this.layer.defaultStyle)
+                console.log(res.defaultStyle["load"])
 
                 for(let prop in res) {
                     if(res.hasOwnProperty(prop)) {

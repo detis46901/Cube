@@ -92,16 +92,7 @@
                     <button mat-button id="createLayerBtn" (click)="createLayer()">Create Layer</button>
                     <button mat-button id="createMyCubeBtn" (click)="createMyCube()">Create MyCube</button>
                 </mat-header-cell>
-                <mat-cell class="layer-lg-cell" *matCellDef="let row">
-                    <button mat-icon-button color="primary" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.layerName)">
-                        <i class="fas fa-pencil-alt"></i>
-                    </button>
-                    <!-- <button *ngIf="row.editing" mat-icon-button color="primary" focusable="false" (click)="row.confirmEditCreate()">
-                        <i class="fa fa-check mat-icon"></i>
-                    </button> -->
-                    <button mat-icon-button color="primary" focusable="false" (click)="confirmDelete(row.currentData)">
-                        <i class="fa fa-times mat-icon"></i>
-                    </button>
+                <mat-cell class="layer-lg-cell" *matCellDef="let row">     
                     <button mat-button [matMenuTriggerFor]="menu2">
                         Options
                     </button>
@@ -109,7 +100,12 @@
                         <button mat-menu-item id="exlayerperm" (click)="openPermission(row.currentData.ID, row.currentData.layerName)">Permissions</button>
                         <button mat-menu-item id="openstyle" (click)="openStyle(row.currentData.ID, row.currentData.layerName)">Style</button>
                     </mat-menu>
-                    <!-- <button mat-button id="exlayerdetails" (click)="openDetails(row.currentData.ID, row.currentData.layerName)">Details</button> -->
+                    <button mat-icon-button color="primary" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.layerName)">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                    <button mat-icon-button color="primary" focusable="false" (click)="confirmDelete(row.currentData)">
+                        <i class="fa fa-times mat-icon"></i>
+                    </button>
                 </mat-cell>
             </ng-container>
             
