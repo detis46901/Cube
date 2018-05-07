@@ -109,7 +109,7 @@ export class HeaderComponent implements OnInit {
                 this.userToggle();
                 break;
             default:
-                console.log("Exception")
+                console.log("Exception")//
         }
     }
 
