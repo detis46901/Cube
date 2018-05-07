@@ -109,7 +109,7 @@ export class HeaderComponent implements OnInit {
                 this.userToggle();
                 break;
             default:
-                console.log("Exception")//
+                console.log("Exception")
         }
     }
 
@@ -172,28 +172,37 @@ export class HeaderComponent implements OnInit {
     }
 
     private openNotifications(id): void {
-        clearInterval(this.shaker)
+        //clearInterval(this.shaker)
+        //document.getElementById('headerNotifications').classList.remove('shake');
         if(this.isNotifOpen) {
             document.getElementById("notificationMenu").style.display = "none";
         } else {
-            document.getElementById("notificationMenu").style.display = "inline-block";
-            // for(let n of this.notifications) {
-            //     n.read = true;
-            //     this.notificationService
-            //         .Update(n)
-            //         .subscribe()
-            // }
+            document.getElementById("notificationMenu").style.display = "block";
+            for(let n of this.notifications) {
+                n.read = true;
+                this.notificationService
+                    .Update(n)
+                    .subscribe()
+            }
         }
         this.isNotifOpen = !this.isNotifOpen
     }
 
-    private shakeNotifications(): void {
-        console.log("How many times?")
-        this.shaker = setInterval(function() {           
+    private shakeNotifications(): void { 
+        var count = 0;
+        var itvl = setInterval(function() {
+            count++;
             document.getElementById('headerNotifications').classList.add('shake');
             setTimeout(function() {
                 document.getElementById('headerNotifications').classList.remove('shake');
+                console.log("second timeout")
             }, 1000)
-        }, 5000)
+            if(count == 4) {
+                clearInterval(itvl)
+            }
+        }, 3000)
+            
+        
+        //document.getElementById('headerNotifications').classList.remove('shake');
     }
 }
