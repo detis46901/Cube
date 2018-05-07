@@ -177,17 +177,18 @@ export class HeaderComponent implements OnInit {
             document.getElementById("notificationMenu").style.display = "none";
         } else {
             document.getElementById("notificationMenu").style.display = "inline-block";
-            for(let n of this.notifications) {
-                n.read = true;
-                this.notificationService
-                    .Update(n)
-                    .subscribe()
-            }
+            // for(let n of this.notifications) {
+            //     n.read = true;
+            //     this.notificationService
+            //         .Update(n)
+            //         .subscribe()
+            // }
         }
         this.isNotifOpen = !this.isNotifOpen
     }
 
     private shakeNotifications(): void {
+        console.log("How many times?")
         this.shaker = setInterval(function() {           
             document.getElementById('headerNotifications').classList.add('shake');
             setTimeout(function() {
