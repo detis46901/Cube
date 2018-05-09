@@ -1,7 +1,7 @@
 <div id="headerBar" class="row">
     <span id="headerLeft" class="col-sm-6">
         <h3>
-            <a id="headerSettings" title="Settings" routerLink="/settings">{{user.firstName}} {{user.lastName}}</a>
+            <a id="headerSettings" title="Settings" routerLink="/settings">{{user.firstName}}&nbsp;{{user.lastName}}</a>
             <a title="Return to map" routerLink="home"><i class="fa fa-cube"></i></a>
             <button mat-button *ngIf="screenCode == 1" id="headerNotifications" (click)="openNotifications(userID)"><i id="headerNotifIcon" class="fa fa-envelope fa-2x" aria-hidden="true"></i></button>
             <button mat-button name="editPages" *ngIf="screenCode == 3" id="settings-open-pages" (click)="openPages(userID, currUser.firstName, currUser.lastName)">Edit Pages</button>

@@ -13,7 +13,7 @@ import { UserPageService } from '../../_services/_userPage.service';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
-    selector: 'notification',
+    selector: 'app-notification',
     templateUrl: './notification.component.html',
     styleUrls: ['./notification.component.scss'],
     providers: [NotifService, UserService, GroupService, GroupMemberService, LayerService, UserPageLayerService, UserPageService]
@@ -24,6 +24,7 @@ export class NotifComponent implements OnInit {
     public userID: number;
     private notifications: Array<Notif>;
     private tempObj;
+
     
     //OR instead of below, have a map for each object type
     private sourceMap = new Map<string, any>();

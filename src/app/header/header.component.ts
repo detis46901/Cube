@@ -15,7 +15,7 @@ import { NotifService } from '../../_services/notification.service';
     selector: 'header',
     templateUrl: './header.component.html',
     styleUrls: ['header.component.scss'],
-    providers: [SideNavService, UserService, UserPageService]
+    providers: [SideNavService, UserService, UserPageService, NotifService]
 })
 
 export class HeaderComponent implements OnInit {
@@ -172,8 +172,9 @@ export class HeaderComponent implements OnInit {
     }
 
     private openNotifications(id): void {
-        //clearInterval(this.shaker)
-        //document.getElementById('headerNotifications').classList.remove('shake');
+        document.getElementById('headerNotifications').classList.remove('shake');
+        clearInterval(this.shaker)
+        
         if(this.isNotifOpen) {
             document.getElementById("notificationMenu").style.display = "none";
         } else {
@@ -189,20 +190,12 @@ export class HeaderComponent implements OnInit {
     }
 
     private shakeNotifications(): void { 
-        var count = 0;
-        var itvl = setInterval(function() {
-            count++;
+        this.shaker = setInterval(function() {
             document.getElementById('headerNotifications').classList.add('shake');
             setTimeout(function() {
                 document.getElementById('headerNotifications').classList.remove('shake');
                 console.log("second timeout")
             }, 1000)
-            if(count == 4) {
-                clearInterval(itvl)
-            }
         }, 3000)
-            
-        
-        //document.getElementById('headerNotifications').classList.remove('shake');
     }
 }
