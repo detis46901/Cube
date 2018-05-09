@@ -2,10 +2,14 @@
     <mat-list>
         <mat-list-item *ngFor="let notif of notifications">
             <!-- <span *ngFor="let priority"><i class="fas fa-exclamation"></i></span> -->
-            <h4 style="padding-right:20px;">{{notif.name}}</h4>
-            <strong></strong>
-            <h5>{{notif.description}}</h5>
-            <button id="notifX" class=close (click)="deleteNotif(notif)" aria-label="Close">&times;</button>
+            <div class="row" style="width:98%; position:relative; left:2%">
+                <span style="width:100%">
+                    <h4 style="padding-right:20px;">{{notif.name}}</h4>
+                    <button id="notifX" class=close (click)="deleteNotif(notif)" aria-label="Close">&times;</button>
+                </span>
+
+                <h5>{{notif.description}}</h5>  
+            </div>
             <mat-divider></mat-divider>
         </mat-list-item>
         <mat-list-item *ngIf="!notifications">

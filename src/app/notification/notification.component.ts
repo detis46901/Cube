@@ -117,6 +117,6 @@ export class NotifComponent implements OnInit {
     private deleteNotif(n: Notif): void {
         this.notificationService
             .Delete(n.ID)
-            .subscribe(() => {this.getNotifications})
+            .subscribe(() => {this.getNotifications()})
     }
 }

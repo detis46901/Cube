@@ -54,6 +54,7 @@ export class HeaderComponent implements OnInit {
                     .GetByUser(user.ID)
                     .subscribe((notifs: Notif[]) => {
                         this.notifications = notifs;
+                        console.log(notifs)
                         for(let n of notifs) {
                             if(!n.read) {
                                 this.shakeNotifications()
@@ -172,6 +173,12 @@ export class HeaderComponent implements OnInit {
     }
 
     private openNotifications(id): void {
+        //update notifs on click
+        //
+        // this.notificationService
+        //     .GetByUser(this.userID)
+        //     .subscribe((notifs: Notif[]) => {
+        //         this.notifications = notifs
         document.getElementById('headerNotifications').classList.remove('shake');
         clearInterval(this.shaker)
         
@@ -187,6 +194,7 @@ export class HeaderComponent implements OnInit {
             }
         }
         this.isNotifOpen = !this.isNotifOpen
+        // })
     }
 
     private shakeNotifications(): void { 

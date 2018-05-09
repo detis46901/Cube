@@ -2,22 +2,35 @@
     padding:0;
     width:550px;
     height:300px;
-    overflow:auto;
-    display:none;
+    overflow-y:auto;
+    overflow-x:hidden;
+    //display:none;
 }
 
 mat-list-item {
     font-family:'Roboto', sans-serif;
+    overflow-wrap: normal;
+    padding-top:60px;
+    padding-bottom:50px;
+}
+
+.row {
+    position:relative;
+    bottom:30px;
 }
 
 h3, h4, h5 {
     font-family: 'Roboto', sans-serif;
 }
 
+h4 {
+    display:inline;
+}
+
 #notifX {
-    margin-left:40px;
     position:relative;
-    bottom:5px;
+    left:20px;
+    float:right
 }
 
 .center-text {

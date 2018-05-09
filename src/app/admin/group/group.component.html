@@ -1,6 +1,11 @@
 <div class="group-parent-container">
     <div class="col-md">
-        <span><h4>User view</h4><mat-slide-toggle name="booBoy" [(ngModel)]="bool" value="bool" (click)="showme(bool)"></mat-slide-toggle><h4>Group view</h4></span>
+        <span>
+            <h4>User view</h4>
+            <mat-slide-toggle name="booBoy" [(ngModel)]="bool" value="bool" (click)="showme(bool)"></mat-slide-toggle>
+            <h4>Group view</h4>
+        </span>
+        
         <div class="group-list-container">
             <mat-selection-list disableRipple=true *ngIf="!bool" #groupUsers>
                 <mat-list-option *ngFor="let user of users" (click)="selectUser(user)">
