@@ -42,36 +42,38 @@
         </ng-container> -->
 
         <ng-container matColumnDef="email">
-            <mat-header-cell class="user-md-head" *matHeaderCellDef> Email </mat-header-cell>
-            <mat-cell class="user-md-cell" *matCellDef="let row">
-                <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+            <mat-header-cell class="user-lg-head" *matHeaderCellDef> Email </mat-header-cell>
+            <mat-cell class="user-lg-cell" *matCellDef="let row">
+                <mat-form-field style="width:80%" floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
                     <input matInput [formControl]="row.validator.controls['email']" [readonly]="!row.editing" [(ngModel)]="row.currentData.email">
                 </mat-form-field>
             </mat-cell>
         </ng-container>
         
+        <!-- <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                <input matInput [formControl]="row.validator.controls['active']" [readonly]="!row.editing" [(ngModel)]="row.currentData.active">
+            </mat-form-field> -->
+
+
         <ng-container matColumnDef="active">
-            <mat-header-cell class="user-sm-head" *matHeaderCellDef> Active </mat-header-cell>
+            <mat-header-cell class="user-sm-head" style="position:relative; right:1%;" *matHeaderCellDef> Active </mat-header-cell>
             <mat-cell class="user-sm-cell" *matCellDef="let row">
-                <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                    <input matInput [formControl]="row.validator.controls['active']" [readonly]="!row.editing" [(ngModel)]="row.currentData.active">
-                    <!-- <mat-checkbox formControlName="userTableActive" [formControl]="row.validator.controls[active]" [(ngModel)]="row.currentData.active"></mat-checkbox> -->
-                </mat-form-field>
+                <i *ngIf="row.currentData.active" class="fas fa-check" style="color:green"></i>
+                <i *ngIf="!row.currentData.active" style="color:#673ab7">&ndash;</i>
             </mat-cell>
         </ng-container>
         
         <ng-container matColumnDef="administrator">
-            <mat-header-cell class="user-sm-head" *matHeaderCellDef> Admin </mat-header-cell>
+            <mat-header-cell class="user-sm-head" style="position:relative; right:1.2%;" *matHeaderCellDef> Admin </mat-header-cell>
             <mat-cell class="user-sm-cell" *matCellDef="let row">
-                <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                    <input matInput [formControl]="row.validator.controls['administrator']" [readonly]="!row.editing" [(ngModel)]="row.currentData.administrator">
-                </mat-form-field>
+                <i *ngIf="row.currentData.administrator" class="fas fa-check" style="color:green"></i>
+                <i *ngIf="!row.currentData.administrator" style="color:#673ab7">&ndash;</i>
             </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="actionsColumn">
-            <mat-header-cell class="user-lg-head" *matHeaderCellDef><button mat-button id="userCreateNew" (click)="openNewUser()"><strong>Create New User</strong></button></mat-header-cell>
-            <mat-cell class="user-lg-cell" *matCellDef="let row">
+            <mat-header-cell class="user-xlg-head" *matHeaderCellDef><button mat-button id="userCreateNew" (click)="openNewUser()"><strong>Create New User</strong></button></mat-header-cell>
+            <mat-cell class="user-xlg-cell" *matCellDef="let row">
                 <button mat-button [matMenuTriggerFor]="menu">
                     Options
                 </button>

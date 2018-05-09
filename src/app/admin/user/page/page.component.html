@@ -30,7 +30,7 @@
     <form>
         <mat-radio-group id="pageBodyRows" class="row" *ngFor="let userPage of userPages; let i=index" value="userPage.default" name="pageGroup" [(ngModel)]="selectedPage">
             <span id="exPageNameCol" class="col-sm-3">
-                <i (click)="openConfDel(userPage)" class="fa fa-times" aria-hidden="true"></i>
+                <button (click)="openConfDel(userPage)"><i class="fas fa-times" aria-hidden="true"></i></button>
                 {{userPage.page}}
             </span>
 

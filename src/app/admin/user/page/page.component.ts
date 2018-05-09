@@ -98,6 +98,7 @@ export class PageComponent implements OnInit {
     }
 
     private openConfDel(userPage: UserPage): void {
+        console.log("aisd;ioasjidnasi;dfjasdiolasdf")
         const dialogRef = this.dialog.open(ConfirmDeleteComponent);
         dialogRef.componentInstance.objCode = this.objCode;
         dialogRef.componentInstance.objID = userPage.ID;

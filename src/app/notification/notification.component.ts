@@ -43,7 +43,7 @@ export class NotifComponent implements OnInit {
         this.notificationService.GetByUser(this.userID)
             .subscribe((res: any) => {
                 if(res.length > 0) {
-                    this.notifications = res
+                    this.notifications = res                 
                     this.getNotifObjects();
                 }
             })

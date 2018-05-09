@@ -52,9 +52,9 @@
             </ng-container> -->
 
             <ng-container matColumnDef="description">
-                <mat-header-cell class="layer-md-head" *matHeaderCellDef> Description </mat-header-cell>
-                <mat-cell class="layer-md-cell" *matCellDef="let row">
-                    <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
+                <mat-header-cell class="layer-lg-head" *matHeaderCellDef> Description </mat-header-cell>
+                <mat-cell class="layer-lg-cell" *matCellDef="let row">
+                    <mat-form-field style="width:80%" floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
                         <input matInput [formControl]="row.validator.controls['layerDescription']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerDescription">
                     </mat-form-field>
                 </mat-cell>
@@ -88,11 +88,11 @@
             </ng-container> -->
 
             <ng-container matColumnDef="actionsColumn">
-                <mat-header-cell class="layer-lg-head" *matHeaderCellDef>
+                <mat-header-cell class="layer-xlg-head" *matHeaderCellDef>
                     <button mat-button id="createLayerBtn" (click)="createLayer()">Create Layer</button>
                     <button mat-button id="createMyCubeBtn" (click)="createMyCube()">Create MyCube</button>
                 </mat-header-cell>
-                <mat-cell class="layer-lg-cell" *matCellDef="let row">     
+                <mat-cell class="layer-xlg-cell" *matCellDef="let row">     
                     <button mat-button [matMenuTriggerFor]="menu2">
                         Options
                     </button>

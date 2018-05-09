@@ -87,7 +87,7 @@ export class LayerPermissionComponent implements OnInit {
         this.permlessUsers = [];
 
         if(this.currDeletedPermIsUser==true && calledByDelete) {
-            //this.permlessUsers.push(this.currDeletedPermObj)
+            this.permlessUsers.push(this.currDeletedPermObj)
             console.log(this.currDeletedPermObj)
             this.currDeletedPermIsUser = null;
             this.currDeletedPermObj = null;

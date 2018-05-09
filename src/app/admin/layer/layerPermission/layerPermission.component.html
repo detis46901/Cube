@@ -12,7 +12,7 @@
     <mat-list id="layerPerm_exUserList" *ngFor="let perm of layerPermissions">
         <mat-list-item id="exLayerPerm">
             <div class="row" id="user-group-entry">
-                <i id="delUserPerm" style="width:1px; position:relative; top:3px;" (click)="deleteLayerPermission(perm)" class="fa fa-times" aria-hidden="true"></i>
+                    <i id="delUserPerm" style="width:1px; position:relative; top:3px;" (click)="deleteLayerPermission(perm)" class="fas fa-times" aria-hidden="true"></i>
                 <p *ngIf="!perm.groupID" style="width:210px">{{perm.user.firstName}}&nbsp;{{perm.user.lastName}}</p>
                 <p *ngIf="!perm.userID" style="width:210px">{{perm.group.name}}</p>
                 <mat-checkbox name="layerPermissionEdit" [(ngModel)]="perm.edit">Edit</mat-checkbox>

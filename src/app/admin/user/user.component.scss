@@ -16,13 +16,16 @@
     margin-left:20%;
 }
 
-mat-table mat-row mat-cell.user-lg-cell, mat-table mat-header-row mat-header-cell.user-lg-head {
+mat-table mat-row mat-cell.user-xlg-cell, mat-table mat-header-row mat-header-cell.user-xlg-head {
     max-width: 28%;
-    margin-left: 6%
+}
+
+mat-table mat-row mat-cell.user-lg-cell, mat-table mat-header-row mat-header-cell.user-lg-head {
+    max-width: 24%;
 }
 
 mat-table mat-row mat-cell.user-md-cell, mat-table mat-header-row mat-header-cell.user-md-head {
-    max-width: 14%;
+    max-width: 12%;
 }
 
 mat-table mat-row mat-cell.user-sm-cell, mat-table mat-header-row mat-header-cell.user-sm-head {
@@ -30,7 +33,7 @@ mat-table mat-row mat-cell.user-sm-cell, mat-table mat-header-row mat-header-cel
 }
 
 mat-table mat-header-row mat-header-cell {
-    color: blue;
+    color: #673ab7;
 }
 
 .mat-table {
