@@ -43,9 +43,12 @@ export class PageConfigComponent implements OnInit {
     private newUserPageLayer = new UserPageLayer;
     private layerPermissions = new Array<LayerPermission>();
     private userPageLayers = new Array<UserPageLayer>(); //insert instantiation if error **REMOVE**
-    private token: string;
+    
     private selectedUserPage: UserPage;
     private userGroups: Group[];
+    private availableLPs = new Array<LayerPermission>();
+
+    private token: string;
     
     constructor(private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private groupService: GroupService, private groupMemberService: GroupMemberService, private layerPermissionService: LayerPermissionService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -62,6 +65,7 @@ export class PageConfigComponent implements OnInit {
     private getGroups(): void {
         let groupIDS = new Array<GroupMember>();
         let groups = new Array<Group>();
+
         this.groupMemberService
             .GetByUser(this.userID)
             .subscribe((data: GroupMember[]) => {
@@ -102,7 +106,24 @@ export class PageConfigComponent implements OnInit {
         //     resolve(allPerms)
         // })
         // return prom;
-        this.getByUser().then(()=>this.getByGroup())
+        this.getByUser().then(() => {
+            console.log(this.layerPermissions)
+            this.getByGroup().then(() => {
+                console.log(this.layerPermissions)
+                for(let LP of this.layerPermissions) {
+                    //go through all layerpermissions a user has
+                    for(let UPL of this.userPageLayers) {
+                        //go through all upls the page currently has             //UPL
+                        if(LP.layerID !== UPL.layerID && this.availableLPs.indexOf(LP) !== -1) {
+                            //if the layerperm is not currently one of the page's upls
+                            //AND if the layerperm has not already been added to availableLPs
+                            //then push it once and only once to this array
+                            this.availableLPs.push(LP)
+                        }
+                    }
+                }
+            })
+        })
         
     }
 
@@ -132,12 +153,15 @@ export class PageConfigComponent implements OnInit {
             for(let g of this.userGroups) { //only start this logic once the previous promise has resolved by chaining it
                 this.layerPermissionService
                     .GetByGroup(g.ID)
-                    .subscribe((data: LayerPermission[]) => {
-                        console.log(data)
-                        for(let i of data) {
+                    .subscribe((LPs: LayerPermission[]) => {
+                        console.log(LPs)
+                        for(let LP of LPs) {
                             //groupPerms.push(i)
-                            this.layerPermissions.push(i)
+                            if(this.layerPermissions.indexOf(LP) == -1 ) {
+                                this.layerPermissions.push(i)
+                            }
                         }
+                        console.log(this.layerPermissions)
                         //console.log
                         resolve()
                     })
