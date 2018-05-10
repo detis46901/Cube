@@ -238,6 +238,7 @@ export class MapComponent {
     //     })
     //     return prom;
     // }
+    
 
     // private canEditLayer(layerID: number): boolean {
     //     this.getGroupMembers(this.userID).then((gms) => {
