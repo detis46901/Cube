@@ -45,10 +45,11 @@ export class PageConfigComponent implements OnInit {
     private userPageLayers = new Array<UserPageLayer>(); //insert instantiation if error **REMOVE**
     
     private selectedUserPage: UserPage;
-    private userGroups: Group[];
+    private userGroups = new Array<Group>();
     private availableLPs = new Array<LayerPermission>();
 
     private token: string;
+    private foo;
     
     constructor(private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private groupService: GroupService, private groupMemberService: GroupMemberService, private layerPermissionService: LayerPermissionService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -60,11 +61,13 @@ export class PageConfigComponent implements OnInit {
         //this.getUserPageLayers();
         //this.getLayerPermissions().then((allPerms)=>this.layerPermissions=allPerms);
           //  .then((/*ARRAY OF ALL PERMISSIONS GATHERED BY USER AND GROUPS*/) => this.layerPermissions = /*ARRAY*/); //********************* */
+        this.foo = this.groupMemberService
+        .GetByUser(this.userID)
+        
     }
 
     private getGroups(): void {
         let groupIDS = new Array<GroupMember>();
-        let groups = new Array<Group>();
 
         this.groupMemberService
             .GetByUser(this.userID)
@@ -74,10 +77,11 @@ export class PageConfigComponent implements OnInit {
                     this.groupService
                         .GetSingle(gm.groupID)
                         .subscribe((group: Group) => {
-                            groups.push(group)
+                            this.userGroups.push(group)
                         })
                 }
-                this.userGroups = groups;
+                // this.userGroups = groups;
+                console.log(this.userGroups)
                 this.getUserPageLayers();
             })
 
@@ -106,69 +110,76 @@ export class PageConfigComponent implements OnInit {
         //     resolve(allPerms)
         // })
         // return prom;
+        var layerMatch = false;
         this.getByUser().then(() => {
-            console.log(this.layerPermissions)
-            this.getByGroup().then(() => {
-                console.log(this.layerPermissions)
+            this.getByGroup().then(() => {    
+                this.availableLPs = []
                 for(let LP of this.layerPermissions) {
-                    //go through all layerpermissions a user has
-                    for(let UPL of this.userPageLayers) {
-                        //go through all upls the page currently has             //UPL
-                        if(LP.layerID !== UPL.layerID && this.availableLPs.indexOf(LP) !== -1) {
-                            //if the layerperm is not currently one of the page's upls
-                            //AND if the layerperm has not already been added to availableLPs
-                            //then push it once and only once to this array
-                            this.availableLPs.push(LP)
+                    for(let UPL of this.userPageLayers) {         
+                        if(LP.layerID == UPL.layerID) {
+                            layerMatch = true;
+                            break;                            
                         }
                     }
+                    if(!layerMatch) {
+                        console.log(LP)
+                        this.availableLPs.push(LP)
+                    }
+                    layerMatch = false;
                 }
+                console.log(this.availableLPs)
             })
         })
+
+        //Array.prototype.
+            
         
     }
 
     private getByUser(): Promise<any> {
-        var prom = new Promise ((resolve, reject) => {
+        var prom = new Promise((resolve, reject) => {
             var userPerms = new Array<LayerPermission>();
             this.layerPermissionService //run this logic as one promise
                 .GetByUser(this.userID)
                 .subscribe((data: LayerPermission[]) => {
-                    for(let i of data) {
+                    for(let LP of data) {
                         //userPerms.push(i)
-                        this.layerPermissions.push(i)
+                        this.layerPermissions.push(LP)
+                        console.log("\nU Iterated       ID:" + LP.ID + "    Name: " + LP.layer.layerName)
                     }
                     resolve();
-                });
-            //resolve(userPerms);
-            
-        });
-
+                }); 
+        })
         return prom;
+        
     }
 
     private getByGroup(): Promise<any> {
-        var prom = new Promise ((resolve, reject) => {
-            var groupPerms = new Array<LayerPermission>();
-            console.log(this.userGroups)
+        var prom = new Promise((resolve, reject) => {
             for(let g of this.userGroups) { //only start this logic once the previous promise has resolved by chaining it
+                console.log(this.userGroups)
                 this.layerPermissionService
                     .GetByGroup(g.ID)
                     .subscribe((LPs: LayerPermission[]) => {
                         console.log(LPs)
                         for(let LP of LPs) {
                             //groupPerms.push(i)
-                            if(this.layerPermissions.indexOf(LP) == -1 ) {
-                                this.layerPermissions.push(i)
-                            }
+                            console.log(this.layerPermissions.indexOf(LP))
+                            //if(this.layerPermissions.indexOf(LP) == -1) {
+                            for(let userLP of this.layerPermissions)
+                                //console.log("\nG Iterated:      ID: " + LP.ID + "    Name: " + LP.layer.layerName)
+                                if(LP.layerID != userLP.layerID) {
+                                    this.layerPermissions.push(LP)
+                                    console.log("\n\nG Adding:      ID: " + LP.ID + "    Name: " + LP.layer.layerName)
+                                }      
                         }
                         console.log(this.layerPermissions)
                         //console.log
-                        resolve()
+
                     })
             }
-            //resolve(groupPerms);
-        });
-
+            resolve();
+        })
         return prom;
     }
 

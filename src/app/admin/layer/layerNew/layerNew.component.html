@@ -18,8 +18,7 @@
                             <!--Row 1-->
                             <div class="row" style="width:100%">
                                 <mat-form-field id="nameBlock">
-                                    <input matInput id="newlayername" name="newlayername" value="newLayer.layerName" required [(ngModel)]="newLayer.layerName"
-                                        placeholder="Name">
+                                    <input matInput id="newlayername" name="newlayername" value="newLayer.layerName" required [(ngModel)]="newLayer.layerName" placeholder="Name">
                                 </mat-form-field>
 
                                 <mat-form-field id="descBlock">
@@ -31,9 +30,8 @@
                             <!--Row 2-->
                             <div class="row" style="width:100%">
                                 <mat-form-field id="idBlock">
-                                    <input matInput *ngIf="newLayer.layerIdent == null" id="newlayerident" name="newlayerident" [(ngModel)]="newLayer.layerIdent"
-                                        placeholder="Identity">
-                                    <input matInput *ngIf="newLayer.layerIdent != null" id="newlayerident2" value="{{newLayer.layerIdent}}" readonly placeholder="Identity">
+                                    <input matInput value="newLayer.layerName" id="newlayerident" name="newlayerident" [(ngModel)]="newLayer.layerIdent" placeholder="Identity">
+                                    <!-- <input matInput *ngIf="newLayer.layerIdent != null" id="newlayerident2" value="{{newLayer.layerIdent}}" readonly placeholder="Identity"> -->
                                 </mat-form-field>
 
                                 <!--Bug: choices are not working. mat-form-field is probably going to need to be split. -11/24/17-->
@@ -56,9 +54,8 @@
                             <!--Row 3-->
                             <div class="row" style="width:100%">
                                 <mat-form-field id="serviceBlock">
-                                    <input matInput *ngIf="newLayer.layerService == null" id="newlayerservice" name="newlayerservice" [(ngModel)]="newLayer.layerService"
-                                        placeholder="Service">
-                                    <input matInput *ngIf="newLayer.layerService != null" id="newlayerident2" value="{{newLayer.layerService}}" readonly placeholder="Service">
+                                    <input matInput value="newLayer.layerName" id="newlayerservice" name="newlayerservice" [(ngModel)]="newLayer.layerService" placeholder="Service">
+                                    <!-- <input matInput *ngIf="newLayer.layerService != null" id="newlayerident2" value="{{newLayer.layerService}}" readonly placeholder="Service"> -->
                                 </mat-form-field>
 
                                 <mat-form-field id="geomBlock">
@@ -75,8 +72,7 @@
                             <!--Row 4-->
                             <div class="row" style="width:100%">
                                 <mat-form-field id="servBlock">
-                                    <mat-select *ngIf="newLayer.server == null" id="newLayerServer" name="newLayerServer" [(ngModel)]="newLayer.serverID" required
-                                        placeholder="Server">
+                                    <mat-select id="newLayerServer" name="newLayerServer" [(ngModel)]="newLayer.serverID" required placeholder="Server">
                                         <mat-option [value]="server.ID" *ngFor="let server of servers">
                                             {{server.serverName}}
                                         </mat-option>
@@ -98,12 +94,12 @@
                 </mat-tab>
                 <mat-tab label="Permissions" (opened)="setStep(1)" [disabled]="!f.valid">
                     <div class="demo-tab-content">
-                        Permissions (Coming soon)
+                         Permissions (Coming soon)
                         <button mat-button (click)="tabGroup.selectedIndex = setStep(0)">Back</button>
                         <button mat-button (click)="tabGroup.selectedIndex = setStep(2)">Next</button>
                     </div>
                 </mat-tab>
-                <mat-tab label="Styles" (opened)="setStep(2)" [disabled]="!f.valid">
+                <!-- <mat-tab label="Styles" (opened)="setStep(2)" [disabled]="!f.valid">
                     <div class="demo-tab-content">
                         <mat-dialog-content>
                             <h5>
@@ -119,7 +115,7 @@
                         <button mat-button (click)="tabGroup.selectedIndex = setStep(1)">Back</button>
                         <button mat-button id="newLayerAdd" (click)="addLayer(newLayer)" [disabled]="!f.valid">Add Layer</button>
                     </div>
-                </mat-tab>
+                </mat-tab> -->
             </mat-tab-group>
         </mat-card-content>
     </mat-card>

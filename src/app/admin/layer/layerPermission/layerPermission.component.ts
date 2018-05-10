@@ -115,7 +115,6 @@ export class LayerPermissionComponent implements OnInit {
             this.currDeletedPermIsUser = null;
             this.currDeletedPermObj = null;
         }
-
         this.groupService
             .GetAll()
             .subscribe((data:Group[]) => {             
