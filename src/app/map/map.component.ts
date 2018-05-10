@@ -247,7 +247,7 @@ export class MapComponent {
     //             .subscribe((res: LayerPermission[]) => {
     //                 for(let lp of res) {
     //                     if(lp.userID == this.userID) {
-                            
+                          
     //                     } else if(lp.groupID) {
     //                         for(let g of groups) {
 
