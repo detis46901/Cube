@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User, UserPage } from '../../../../_models/user.model';
 import { UserService } from '../../../../_services/_user.service';
-import { GroupMember } from '../../../../_models/groupMember.model';
+import { GroupMember } from '../../../../_models/group.model';
 import { GroupMemberService } from '../../../../_services/_groupMember.service';
 import { MatDialog } from '@angular/material';
 

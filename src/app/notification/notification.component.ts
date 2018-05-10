@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Notif, User, UserPage } from '../../_models/user.model';
-import { Group } from '../../_models/group.model';
-import { GroupMember } from '../../_models/groupMember.model';
+import { Group, GroupMember } from '../../_models/group.model';
 import { Layer, UserPageLayer } from '../../_models/layer.model';
 import { NotifService } from '../../_services/notification.service';
 import { UserService } from '../../_services/_user.service';

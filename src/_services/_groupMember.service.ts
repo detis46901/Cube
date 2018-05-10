@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators';
 import { Configuration } from '../_api/api.constants';
 import { ParentService } from './_parent.service';
-import { GroupMember } from '../_models/groupMember.model';
+import { GroupMember } from '../_models/group.model';
  
 @Injectable()
 export class GroupMemberService extends ParentService {

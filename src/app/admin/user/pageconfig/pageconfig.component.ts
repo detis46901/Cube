@@ -1,9 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UserService } from '../../../../_services/_user.service';
 import { UserPage } from '../../../../_models/user.model';
-import { Group } from '../../../../_models/group.model';
+import { Group, GroupMember } from '../../../../_models/group.model';
 import { GroupService } from '../../../../_services/_group.service';
-import { GroupMember } from '../../../../_models/groupMember.model';
 import { GroupMemberService } from '../../../../_services/_groupMember.service';
 import { UserPageLayer, LayerPermission } from '../../../../_models/layer.model';
 import { UserPageService } from '../../../../_services/_userPage.service';
@@ -137,6 +136,7 @@ export class PageConfigComponent implements OnInit {
     }
 
     private getByUser(): Promise<any> {
+        this.layerPermissions = []
         var prom = new Promise((resolve, reject) => {
             var userPerms = new Array<LayerPermission>();
             this.layerPermissionService //run this logic as one promise

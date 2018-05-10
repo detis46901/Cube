@@ -11,8 +11,11 @@ import { LayerService } from '../../_services/_layer.service';
 import { UserPageService } from '../../_services/_userPage.service';
 import { MyCubeService } from './services/mycube.service'
 import { ServerService } from '../../_services/_server.service';
+import { GroupMemberService } from '../../_services/_groupMember.service';
+import { GroupService } from '../../_services/_group.service';
 import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig } from '../../_models/layer.model';
-import { UserPage } from '../../_models/user.model';
+import { UserPage, User } from '../../_models/user.model';
+import { Group, GroupMember } from '../../_models/group.model';
 import { UserPageLayerService } from '../../_services/_userPageLayer.service';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -29,7 +32,7 @@ import { Feature } from 'geojson';
     selector: 'map',
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.scss'],
-    providers: [ServerService, geoJSONService]
+    providers: [ServerService, geoJSONService, GroupService, GroupMemberService]
 })
 
 export class MapComponent {
@@ -49,7 +52,15 @@ export class MapComponent {
     private interval: any;
 
     
-    constructor(public snackBar: MatSnackBar, private configuration: Configuration, private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, private layerPermissionService: LayerPermissionService, private layerService: LayerService, private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog, private messageService:MessageService) {
+    constructor (
+        public snackBar: MatSnackBar, private configuration: Configuration, 
+        private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService, 
+        private layerPermissionService: LayerPermissionService, private layerService: LayerService, 
+        private userPageService: UserPageService, private userPageLayerService: UserPageLayerService, 
+        private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog, 
+        private messageService: MessageService, private groupMemberService: GroupMemberService,
+        private groupService: GroupService
+    ) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         console.log(this.token)
@@ -197,4 +208,64 @@ export class MapComponent {
         })
     }
 
+
+    //For use with layer permissions in the accordion menu
+    //
+    //USE LAYERPERMISSIONS.GETUSERGROUPS INSTEAD!!!
+    //
+    // private getGroupMembers(userID: number): Promise<any> {
+    //     var prom = new Promise((resolve, reject) => {
+    //         this.groupMemberService
+    //             .GetByUser(userID)
+    //             .subscribe((res: GroupMember[]) => {
+    //                 resolve(res)
+    //             })
+    //     })
+    //     return prom;
+    // }
+
+    // private getUserGroups(groups: Group[]): Promise<any> {
+    //     var groups = new Array<Group>();
+    //     var prom = new Promise((resolve, reject) => {
+    //         for(let g of groups) {
+    //             this.groupService
+    //                 .GetSingle(g.ID)
+    //                 .subscribe((res: Group) => {
+    //                     groups.push(res)
+    //                 })
+    //         }
+    //         resolve(groups)
+    //     })
+    //     return prom;
+    // }
+
+    // private canEditLayer(layerID: number): boolean {
+    //     this.getGroupMembers(this.userID).then((gms) => {
+    //         this.getUserGroups(gms).then((groups) => {
+    //         this.layerPermissionService
+    //             .GetByLayer(layerID)
+    //             .subscribe((res: LayerPermission[]) => {
+    //                 for(let lp of res) {
+    //                     if(lp.userID == this.userID) {
+                            
+    //                     } else if(lp.groupID) {
+    //                         for(let g of groups) {
+
+    //                         }
+    //                     } else {
+    //                         alert("Something went wrong.")
+    //                     }
+    //                 }
+    //             })
+    //         })
+    //     })
+    // }
+
+    private canEditPerm(layerID: number) {
+        
+    }
+
+    private canDeleteLayer(layerID: number) {
+        
+    }
 }

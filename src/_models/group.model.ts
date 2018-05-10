@@ -3,3 +3,9 @@ export class Group {
     name: string;
     description?: string;
 }
+
+export class GroupMember {
+    ID: number;
+    groupID: number;
+    userID: number;
+}

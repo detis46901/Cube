@@ -81,6 +81,14 @@
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
+                            <!-- <button *ngIf="canEditLayer(userpagelayer.layerID)" mat-menu-item>
+                                <i style="margin-right:15px; color:#757575;" class="fas fa-pencil-alt"></i>
+                                <span>Edit Layer</span>
+                            </button>
+                            <button *ngIf="canEditPerm(userpagelayer.layerID)" mat-menu-item>
+                                <mat-icon>assignment</mat-icon>
+                                <span>Edit Permissions</span>
+                            </button> -->
                             <button mat-menu-item disabled="true">
                                 <mat-icon>zoom_in</mat-icon>
                                 <span>Zoom To Layer</span>
@@ -101,10 +109,10 @@
                                 <mat-icon>share</mat-icon>
                                 <span>Share</span>
                             </button>
-                            <button mat-menu-item disabled="true">
+                            <!-- <button mat-menu-item disabled="true">
                                 <mat-icon>remove</mat-icon>
                                 <span>Remove From Page</span>
-                            </button>
+                            </button> -->
                             <button mat-menu-item matTooltip="Use this in an Excel Data Connection" *ngIf="userpagelayer.layer.layerType == 'MyCube'"
                                 (click)="copyToClipboard('sql/getsheets?table=' + userpagelayer.layer.ID)">
                                 <mat-icon>web</mat-icon>
@@ -119,10 +127,14 @@
                                 <mat-icon>place</mat-icon>
                                 <span>View in Google Earth</span>
                             </button>
-                            <button mat-menu-item disabled="true">
+                            <!-- <button mat-menu-item disabled="true">
                                 <mat-icon>assignment</mat-icon>
                                 <span>View Metadata</span>
-                            </button>
+                            </button> -->
+                            <!-- <button *ngIf="canDeleteLayer(userpagelayer.layerID)" mat-menu-item (click)="openConfDel(userpagelayer.layerID)">
+                                <mat-icon>delete</mat-icon>
+                                <span>Delete Layer</span>
+                            </button> -->
                         </mat-menu>
                         <mat-radio-button [disabled]="!userpagelayer.layerShown" class="example-radio-button" [value]="userpagelayer" (change)="mapService.setCurrentLayer(userpagelayer, mapConfig)">
                             <mat-slide-toggle class="example-margin" [checked]="userpagelayer.layerShown" (change)="mapService.toggleLayers(userpagelayer.loadOrder,mapConfig,i)">

@@ -2,8 +2,7 @@ import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { UserService } from '../../../_services/_user.service';
 import { User } from '../../../_models/user.model';
-import { Group } from '../../../_models/group.model';
-import { GroupMember } from '../../../_models/groupMember.model';
+import { Group, GroupMember } from '../../../_models/group.model';
 import { GroupService } from '../../../_services/_group.service';
 import { GroupMemberService } from '../../../_services/_groupMember.service'
 import { NewGroupComponent } from './newGroup/newGroup.component';
