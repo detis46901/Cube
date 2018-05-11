@@ -54,7 +54,7 @@
         <h5><b>Layer fields:</b></h5>
         <mat-list *ngFor="let newLayerField of newLayerFields">
             <mat-list-item>
-                <p (click)="deleteField(newLayerFields.indexOf(newLayerField))"><i class="fa fa-times" aria-hidden="true"></i> {{newLayerField.field}}: {{newLayerField.type}}</p> 
+                <p (click)="deleteField(newLayerFields.indexOf(newLayerField))"><i class="fa fa-trash" aria-hidden="true"></i> {{newLayerField.field}}: {{newLayerField.type}}</p> 
             </mat-list-item>
         </mat-list>
         <br>

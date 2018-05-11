@@ -22,7 +22,7 @@
         <div class="row" *ngFor="let upl of userPageLayers; let i=index">
             <div id="pageConfigLayersColumn" class="column">
                 <span>
-                    <button (click)="deleteUserPageLayer(upl.ID)"><i class="fas fa-times" aria-hidden="true"></i></button>
+                    <a (click)="deleteUserPageLayer(upl.ID)"><i class="fas fa-trash" aria-hidden="true"></i></a>
                     &nbsp;{{upl.layer.layerName}}
                 </span>
             </div>

@@ -5,8 +5,8 @@
 }
 
 h1 {
-    margin-bottom:8%;
-    margin-top:4%;
+    margin-bottom:6%;
+    margin-top:5%;
     font-family:'Raleway', sans-serif;
     text-align: center;
 }
@@ -28,20 +28,13 @@ html, body {
     position:relative;
     top:20vh;
     width:300px;
-    height:280px;
-    //border: solid 2px #d1d1d1;
+    height:300px;
     margin: 0 40vw;
 }
-
-// .login-body {
-//     width:20vw;
-//     margin:0;
-// }
 
 mat-form-field, button {
     width: 90%;
     margin: 0 5% 0 5%;
-    //margin-bottom:1vh;
 }
 
 button {

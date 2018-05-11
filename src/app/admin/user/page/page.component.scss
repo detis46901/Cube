@@ -1,14 +1,12 @@
 #pageHeader {
     width:100%;
     position:relative;
-    bottom:20px;
-    margin-bottom:0px;
 }
 
 #pageX {
     position:relative;
     left:20px;
-    top:3px;
+    //top:3px;
 }
 
 #pageContentTitleBar {
@@ -18,28 +16,30 @@
 #exPageNameCol {
     position:relative;
     top:2px;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 #exPageActiveCol {
     position:relative;
     left:7px;
-    top:3px;
+    margin-bottom: 4px;
 }
 
 #exPageDefaultCol {
-    position:relative;
-    left:20px;
-    top:3px;
+    position: relative;
+    left: 20px;
+    top: 3px;
 }
 
 #exPageOrderCol {
-    position:relative;
-    left:5px;
-    top:2px;
+    position: relative;
+    left: 5px;
+    top: 2px;
 }
 
 #pageBodyRows {
-    border-bottom:solid black 1px;
+    border-bottom: solid black 1px;
 }
 
 hr {
@@ -47,14 +47,14 @@ hr {
 }
 
 #pageClose {
-    position:relative;
-    left:15px;
+    position: relative;
+    left: 15px;
 }
 
 .newPageInputArea {
-    margin-top:3%;
+    margin-top: 3%;
 }
 
 h4[mat-dialog-title] {
-    margin-bottom:0px;
+    margin-bottom: 0px;
 }

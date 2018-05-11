@@ -7,45 +7,44 @@
 }*/
 
 #pageConfigHeader {
-    width:100%;
-    position:relative;
-    bottom:20px;
+    width: 100%;
+    position: relative;
+    bottom: 20px;
 }
 
 h4[mat-dialog-title] {
-    margin-bottom:0px;
+    margin-bottom: 0px;
 }
 
 #pageConfigX {
-    position:relative;
-    left:55px;
-    top:5px;
+    position: relative;
+    left: 55px;
+    top: 5px;
 }
 
 #pageConfigNewLayer {
-    position:relative; 
-    left:15px;
+    position: relative; 
+    left: 15px;
 }
 
 #pageConfigLayersColumn {
-    position:relative;
-    left:5%;
-    width:72%;
+    position: relative;
+    left: 5%;
+    width: 72%;
 }
 
 #pageConfigDefaultColumn {
-    width:20%;
+    width: 20%;
 }
 
 .column {
-    border-top:solid black 1px;
+    border-top: solid black 1px;
 }
 
 hr {
-    margin:0px 0px 0px 0px;
-
+    margin: 0px 0px 0px 0px;
 }
 
 mat-dialog-actions {
-    margin-bottom:0px;
+    margin-bottom: 0px;
 }

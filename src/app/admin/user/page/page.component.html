@@ -30,7 +30,7 @@
     <form>
         <mat-radio-group id="pageBodyRows" class="row" *ngFor="let userPage of userPages; let i=index" value="userPage.default" name="pageGroup" [(ngModel)]="selectedPage">
             <span id="exPageNameCol" class="col-sm-3">
-                <button (click)="openConfDel(userPage)"><i class="fas fa-times" aria-hidden="true"></i></button>
+                <a (click)="openConfDel(userPage)"><i class="fas fa-trash" aria-hidden="true"></i></a>
                 {{userPage.page}}
             </span>
 
@@ -43,9 +43,10 @@
                 <mat-radio-button id="exPageDefault" radioGroup="pageGroup" name="userPage.ID + i" (click)="updateDefaultPage(userPage)" [value]="userPage.ID"></mat-radio-button>
             </span>
 
+            <!--Allows the user to change the order of their pages using clicks on the up or down icon-->
             <span id="exPageOrderCol" class="col-sm-3">
-                <i id="orderUp" class="fa fa-arrow-up" style="margin-right:5px;" aria-hidden="true" (click)="moveUp(userPage)"></i>
-                <i id="orderDown" class="fa fa-arrow-down" aria-hidden="true" (click)="moveDown(userPage)"></i>
+                <a (click)="moveUp(userPage)"><i id="orderUp" class="fa fa-arrow-up" style="margin-right:5px;" aria-hidden="true"></i></a>
+                <a (click)="moveDown(userPage)"><i id="orderDown" class="fa fa-arrow-down" aria-hidden="true"></i></a>
             </span>
         </mat-radio-group>
     </form>
