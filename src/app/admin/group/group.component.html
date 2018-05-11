@@ -21,7 +21,7 @@
                 <mat-list-option class="group_groupSelect" *ngFor="let group of availableGroups" (click)="selectGroup(group, true)">
                     <span>
                         {{group.name}}
-                        <span style="float:right; position:relative; left:20px;">
+                        <span style="float:right; position:relative; left:10px;">
                             <button class="group_editGroup" (click)="editDetails(group)"><i class="fas fa-pencil-alt"></i></button>
                             <button class="group_deleteGroup" (click)="confDelGroup(group)"><i class="fas-fa-trash"></i></button>
                         </span>
@@ -44,7 +44,7 @@
                         {{group.name}}
                         <span style="float:right; position:relative; left:20px;">
                             <button class="group_editGroup" (click)="editDetails(group)"><i class="fas fa-pencil-alt"></i></button>
-                            <button class="group_deleteGroup" (click)="confDelGroup(group)"><i class="fa fa-trash"></i></button>
+                            <button class="group_deleteGroup" (click)="confDelGroup(group)"><i class="fas fa-trash"></i></button>
                         </span>
                     </span>
                 </mat-list-option>

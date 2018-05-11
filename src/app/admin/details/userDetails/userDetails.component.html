@@ -20,19 +20,17 @@
                 <mat-form-field class="row">
                     <input matInput name="userFirstName" [(ngModel)]="user.firstName" placeholder="First Name" value="{{user.firstName}}">
                 </mat-form-field>
-            </div>
-                
-            <div class="row">
+            
                 <mat-form-field class="row">
                     <input matInput name="userLastName" [(ngModel)]="user.lastName" placeholder="Last Name" value="{{user.lastName}}">
                 </mat-form-field>
             </div>
         </div>
+        
         <div class="col-sm-6">
-            <div class="row">
-                <mat-form-field>
-                    <input matInput name="userActive" [(ngModel)]="user.active" placeholder="Active" value="{{user.active}}">
-                </mat-form-field>
+            <div class="row" style="margin-top:15px; margin-bottom:10px">
+                <span><p style="margin-top:2px">Active:   </p></span>
+                <input id="checkbox" type="checkbox" name="userActive" [(ngModel)]="user.active" checked={{user.active}}>
             </div>
 
             <div class="row">
@@ -41,10 +39,9 @@
                 </mat-form-field>
             </div>
 
-            <div class="row">
-                <mat-form-field>
-                    <input matInput name="userAdmin" [(ngModel)]="user.administrator" placeholder="Administrator" value="{{user.administrator}}">
-                </mat-form-field>
+            <div class="row" style="margin-top:15px; margin-bottom:10px">
+                <span><p style="margin-top:2px">Admin:   </p></span>
+                <input id="checkbox" type="checkbox" name="userAdmin" [(ngModel)]="user.administrator" checked={{user.administrator}}>
             </div>
         </div>
     </form>

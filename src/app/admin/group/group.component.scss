@@ -1,31 +1,31 @@
 .group-parent-container {
-    position:relative;
-    padding:10px 10px 20px 10px;
-    display:flex;
-    width:83vw;
-    overflow:auto;
-    max-height:80vh;
+    position: relative;
+    padding: 10px 10px 20px 10px;
+    display: flex;
+    width: 83vw;
+    overflow: auto;
+    max-height: 80vh;
 }
 
 @media (max-width:1100px) {
     .group-parent-container {
-        width:900px;
-        position:absolute;
+        width: 900px;
+        position: absolute;
     }
 }
 
 .group-list-container {
-    background-color:white;
-    border:solid black 2px;
-    position:relative;
-    width:100%;
-    height:60vh;
-    max-height:60vh;
-    overflow:auto;
+    background-color: white;
+    border: solid black 2px;
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    max-height: 60vh;
+    overflow: auto;
 }
 
 .fa-check, .fa-plus {
-    color:green;
+    color: green;
 }
 
 :host ::ng-deep .mat-pseudo-checkbox {
@@ -35,21 +35,21 @@
 }
 
 button {
-    background-color:white;
-    border:none;
+    background-color: white;
+    border: none;
 }
 
 .fa-minus {
-    color:red;
+    color: red;
 }
 
 .createGroup {
-    margin-left:20px;
+    margin-left: 20px;
 }
 
 h4 {
-    display:inline-block;
-    font-family:'Roboto', sans-serif;
+    display: inline-block;
+    font-family: 'Roboto', sans-serif;
 }
 
 mat-slide-toggle {
@@ -65,9 +65,9 @@ mat-slide-toggle {
 }
 
 .transfer-controls {
-    position:relative;
-    top:28vh;
-    height:10vh;
+    position: relative;
+    top: 28vh;
+    height: 10vh;
 }
 
 .mat-list-item-focus, .group_arrow {
@@ -77,5 +77,5 @@ mat-slide-toggle {
 }
 
 .mat-selection-list {
-    padding-top:0;
+    padding-top: 0;
 }
