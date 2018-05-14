@@ -126,4 +126,3 @@ export class LayerDetailsComponent implements OnInit {
         return description;
     }
 }
-//change
