@@ -67,7 +67,7 @@ export class LayerComponent implements OnInit {
     }
 
     private createLayer(): void {
-        const dialogRef = this.dialog.open(LayerNewComponent, {height:'700px', width:'700px'});
+        const dialogRef = this.dialog.open(LayerNewComponent, {height:'600px', width:'500px'});
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });
