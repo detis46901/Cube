@@ -1,16 +1,23 @@
+<!-- box to contain entry field, header, and button -->
 <div class="login-parent">
     <mat-card class="login-box">
+        <!-- login page header  -->
         <div class="login-head">
             <h1>Cube</h1>
         </div>
-        <div class="login-body">
-            <mat-form-field>
-                <input matInput type="text" autofocus="autofocus" name="username" [(ngModel)]="model.username" #username="ngModel" required email placeholder="Username"/>
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput id="loginPassword" type="password" name="password" [(ngModel)]="model.password" #password="ngModel" required placeholder="Password" />
-            </mat-form-field>
-            <button mat-button id="loginSubmit" (click)="login()" [disabled]="loading" class="btn btn-primary">Login</button>
-        </div>
+        <!-- form to verify both password and username are filled out to avoid errors -->
+        <form #f="ngForm">
+            <div class="login-body">
+                <!-- username and password entry fields  -->
+                <mat-form-field>
+                    <input matInput type="text" autofocus="autofocus" name="username" [(ngModel)]="model.username" #username="ngModel" required email placeholder="Username"/>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput id="loginPassword" type="password" name="password" [(ngModel)]="model.password" #password="ngModel" required placeholder="Password" />
+                </mat-form-field>
+                <!-- login button -->
+                <button style="color:white; background-color:#623c65" mat-button id="loginSubmit" (click)="login()" [disabled]="!f.valid" class="btn btn-primary">Login</button>
+            </div>
+        </form>
     </mat-card>
 </div>

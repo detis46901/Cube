@@ -1,11 +1,12 @@
 .profile-parent-container {
-    margin: 10px 20px 10px 15px;
-    padding-top:10px;
-    display: block;
-    position:relative;
-    left:12.2%;
+    width: 180px;
+    height: 190px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -120px;
+    margin-left: -100px;
     background-color: white;
-    width: 215px;
 }
 
 h3 {
@@ -14,14 +15,18 @@ h3 {
 }
 
 img {
-    width: 15%;
-    height: 15%;
-    margin: 10px 0 0 10px;
+    width: 55%;
+    height: 55%;
+    top: 50%;
+    left: 50%;
+    margin-top: 20px;
 }
 
 button {
-    margin: 10px 0 10px 30px;
-    background-color: #f1f2e8;
+    margin: 10px 10px 10px 10px;
+    background-color: #623c65;
+    color: white;
+    bottom: -15px;
 }
 
 .row {

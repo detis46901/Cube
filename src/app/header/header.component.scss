@@ -1,13 +1,44 @@
-#headerSidenavToggle {
-    position:relative;
-    bottom:2px;
-}
-
 .row {
     height:53px;
     position:relative;
     z-index:1;
-    background-color:black;
+    background-color:rgb(100, 100, 100);
+}
+
+#userName {
+    color:white;
+}
+
+.material-icons {
+    font-size:30px;
+}
+
+#headerRight {
+    display:flex;
+    margin-top:10px;
+    justify-content:flex-end;
+    padding-right:2%;
+}
+
+#headerBar {
+    display: flex;
+}
+
+#headerNotifications, #settingsButton {
+    color: white;
+    position: relative;
+    bottom: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 0;
+    z-index: 1;
+}
+
+#mapButton {
+    color: white;
+    position: relative;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 h5, h4, h3 {
@@ -24,47 +55,6 @@ h5 {
 
 h3 {
     top:20%;
-}
-
-img {
-    width:25px;
-    height:25px;
-}
-
-a i {
-    top:5%;
-}
-
-#headerSettings {
-    color:white;
-}
-
-.material-icons {
-    font-size:30px;
-}
-
-#headerSidenavToggle {
-    margin-left:40px;
-}
-
-#headerRight {
-    display:flex;
-    margin-top:10px;
-    justify-content:flex-end;
-    padding-right:2%;
-}
-
-#headerBar {
-    display: flex;
-}
-
-#headerNotifications {
-    color:#337ab7;
-    position:relative;
-    bottom:5px;
-    margin-left:5px;
-    padding:0;
-    z-index:1;
 }
 
 .mat-button {

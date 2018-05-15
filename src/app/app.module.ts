@@ -61,7 +61,7 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminNavComponent } from './admin/adminNav/adminNav.component';
-import { SettingsNavComponent } from './settings/settingsnav/settingsnav.component';
+// import { SettingsNavComponent } from './settings/settingsnav/settingsnav.component';
 import { LayerComponent} from './admin/layer/layer.component';
 import { LayerPermissionComponent} from './admin/layer/layerPermission/layerPermission.component';
 import { LayerStyleComponent } from './admin/layer/layerStyle/layerStyle.component'
@@ -125,7 +125,7 @@ import { ServerDetailsComponent } from './admin/details/serverDetails/serverDeta
         LoginComponent,
         AdminComponent,
         AdminNavComponent,
-        SettingsNavComponent,
+        // SettingsNavComponent,
         GroupComponent,
         LayerComponent,
         UserComponent,
