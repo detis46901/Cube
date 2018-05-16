@@ -15,21 +15,21 @@
     <mat-menu #menu="matMenu" yPosition="below" [overlapTrigger]="false">
         <p mat-menu-item>
             <mat-icon style="vertical-align:text-bottom">settings</mat-icon>
-            <span><a style="color:purple" [routerLink]="['/settings', {outlets: {settings: ['profile']}}]" routerLinkActive="active"Profile Settings>Profile Settings</a></span>
+            <span><a style="color:black" [routerLink]="['/settings', {outlets: {settings: ['profile']}}]" routerLinkActive="active"Profile Settings>Profile Settings</a></span>
         </p>
     
         <p mat-menu-item>
             <mat-icon style="vertical-align:text-bottom">lock</mat-icon>
-            <span><a style="color:purple" [routerLink]="['/settings', {outlets: {settings: ['password']}}]" routerLinkActive="active"Profile Settings>Change Password</a></span>
+            <span><a style="color:black" [routerLink]="['/settings', {outlets: {settings: ['password']}}]" routerLinkActive="active"Profile Settings>Change Password</a></span>
         </p>
 
         <p mat-menu-item>
             <mat-icon style="vertical-align:text-bottom">vpn_key</mat-icon>
-            <span><a style="color:purple" [routerLink]="['/settings', {outlets: {settings: ['apikey']}}]" routerLinkActive="active"Profile Settings>API Key</a></span>
+            <span><a style="color:black" [routerLink]="['/settings', {outlets: {settings: ['apikey']}}]" routerLinkActive="active"Profile Settings>API Key</a></span>
         </p>
 
         <p mat-menu-item name="editPages" id="settings-open-pages" (click)="openPages(userID, currUser.firstName, currUser.lastName)">
-            <mat-icon style="vertical-align:text-bottom">restore_page</mat-icon><a style="color:purple">Edit Pages</a>
+            <mat-icon style="vertical-align:text-bottom">restore_page</mat-icon><a style="color:black">Edit Pages</a>
         </p>
     </mat-menu>
 

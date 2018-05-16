@@ -14,23 +14,23 @@
         <div class="group-list-container">
 
             <!-- creates a selectable list containing users or groups depending on the toggle -->
-            <mat-selection-list disableRipple=true *ngIf="!bool" #groupUsers>
+            <mat-selection-list disableRipple=true *ngIf="!bool">
                 <mat-list-option *ngFor="let user of users" (click)="selectUser(user)">
                     {{user.firstName}}&nbsp;{{user.lastName}}
                 </mat-list-option>
             </mat-selection-list>
 
-            <mat-selection-list disableRipple=true *ngIf="bool" #groupGroups>
+            <mat-selection-list disableRipple=true *ngIf="bool">
                 <mat-list-option (click)="openNewGroup()" style="text-align:center;">
                     Create New...
                 </mat-list-option>
 
-                <mat-list-option class="group_groupSelect" *ngFor="let group of availableGroups" (click)="selectGroup(group, true)">
+                <mat-list-option class="group_groupSelect" *ngFor="let group of availableGroups" (click)="selectGroupAdd(group)">
                     <span>
                         {{group.name}}
-                        <span style="float:right; position:relative; left:10px;">
+                        <span style="float:right; position:relative; left:20px;">
                             <button class="group_editGroup" (click)="editDetails(group)"><i class="fas fa-pencil-alt"></i></button>
-                            <button class="group_deleteGroup" (click)="confDelGroup(group)"><i class="fas-fa-trash"></i></button>
+                            <button class="group_deleteGroup" (click)="confDelGroup(group)"><i class="fas fa-trash"></i></button>
                         </span>
                     </span>
                 </mat-list-option>
@@ -80,7 +80,8 @@
     <!-- creates the final information box which houses either the group members
          or the groups that a user affiliates with, again dependant on the toggle -->
     <div class="col-md">
-        <h4>{{type}} Members</h4>
+        <h4 *ngIf="bool">Group Members</h4>
+        <h4 *ngIf="!bool">Group Affiliations</h4>
         <div class="group-list-container">
             <mat-selection-list disableRipple=true *ngIf="!bool">
                 <mat-list-option name="memberGroup" *ngFor="let group of memberGroups" (click)="selectGroupRemove(group)">
