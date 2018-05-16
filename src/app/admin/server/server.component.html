@@ -1,15 +1,20 @@
 <div class="server-parent-container">
     <div class="row">
+
+        <!-- creates the table to contain all of the server information -->
         <mat-table id="serverDataTable" #table [dataSource]="dataSource">
+
+            <!-- first column containing server ID number -->
             <ng-container matColumnDef="serverID">
-                <mat-header-cell class="server-sm-head" *matHeaderCellDef> ID </mat-header-cell>
+                <mat-header-cell class="server-sm-head" *matHeaderCellDef><Strong> ID </Strong></mat-header-cell>
                 <mat-cell class="server-sm-cell" *matCellDef="let row">
                     <b>{{row.currentData.ID}}</b>
                 </mat-cell>
             </ng-container>
 
+            <!-- second column containing the instance name of the server -->
             <ng-container matColumnDef="serverName">
-                <mat-header-cell class="server-md-head" *matHeaderCellDef> Instance Name </mat-header-cell>
+                <mat-header-cell class="server-md-head" *matHeaderCellDef><Strong> Instance Name </Strong></mat-header-cell>
                 <mat-cell class="server-md-cell" *matCellDef="let row">
                     <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
                         <input matInput [formControl]="row.validator.controls['serverName']" [readonly]="!row.editing" [(ngModel)]="row.currentData.serverName">
@@ -17,8 +22,9 @@
                 </mat-cell>
             </ng-container>
 
+            <!-- third column containing the server type -->
             <ng-container matColumnDef="serverType">
-                <mat-header-cell class="server-sm-head" *matHeaderCellDef> Server Type </mat-header-cell>
+                <mat-header-cell class="server-sm-head" *matHeaderCellDef><Strong> Server Type </Strong></mat-header-cell>
                 <mat-cell class="server-sm-cell" *matCellDef="let row">
                     <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
                         <input matInput [formControl]="row.validator.controls['serverType']" [readonly]="!row.editing" [(ngModel)]="row.currentData.serverType">
@@ -26,8 +32,9 @@
                 </mat-cell>
             </ng-container>
 
+            <!-- fourth column containing the URL of the server -->
             <ng-container matColumnDef="serverURL">
-                <mat-header-cell class="server-lg-head" *matHeaderCellDef> URL </mat-header-cell>
+                <mat-header-cell class="server-lg-head" *matHeaderCellDef><Strong> URL </Strong></mat-header-cell>
                 <mat-cell class="server-lg-cell" *matCellDef="let row">
                     <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
                         <input matInput [formControl]="row.validator.controls['serverURL']" [readonly]="!row.editing" [(ngModel)]="row.currentData.serverURL">
@@ -35,6 +42,7 @@
                 </mat-cell>
             </ng-container>
         
+            <!-- fifth column containing buttons to view and edit layers, edit the attributes of the server, and delete hte server -->
             <ng-container matColumnDef="actionsColumn">
                 <mat-header-cell class="server-md-head" *matHeaderCellDef>
                     <button mat-button id="createServerBtn" (click)="openServerNew()"><strong>Create Server</strong></button>
@@ -58,6 +66,10 @@
     </div>
 </div>
 
+<!-- 
+    Everything below this point needs to be implemented for the layers button
+ -->
+
 <div *ngIf="WMSLayers.length > 0" class="row">
         WMS Layers
     <div *ngFor="let WMSLayer of WMSLayers">
@@ -65,75 +77,6 @@
     </div>
 </div>
 
-<!-- 12/27/17 <div id="serverHeaderRow" class="row">
-    <div class="col-sm-3">
-        <div class="col-sm-8 col-sm-offset-1" style="position:relative; left:1%">
-            <h4>Instance Name</h4>
-        </div>
-    </div>
-
-    <div class="col-sm-2" style="position:relative; right:5.5%">
-        <h4>Server Type</h4>
-    </div>
-
-    <div class="col-sm-3" style="position:relative; right:5.5%">
-        <h4>URL</h4>
-    </div>
-
-    <div class="col-sm-1 col-sm-offset-1">
-        <button mat-button id="createServerBtn" (click)="openServerNew()">Create Server</button>
-    </div>
-</div>
-
-<div id="serverServersRow" class="row">
-    <form style="width:100%" class="form-inline" #e="ngForm" *ngFor="let server of servers">
-        <i id="btnOpenDelLayerServer" class="fa fa-times" (click)="openConfDel(server)"></i>
-        <mat-form-field class="col-sm-2">
-            <input matInput id="exservername" style="width:100%" ngModel required name="exservername" title="{{server.serverName}}" [(ngModel)]="server.serverName" (blur)="updateServer(server)">
-        </mat-form-field>
-        <mat-form-field class="col-sm-2">
-            <mat-select id="exservertype"  ngModel required name="exservertype" [(ngModel)]="server.serverType" (blur)="updateServer(server)">
-                <mat-option value="Geoserver">Geoserver</mat-option>
-                <mat-option value="PostGIS">PostGIS</mat-option>
-                <mat-option value="ArcGIS">ArcGIS</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <mat-form-field class="col-sm-5">
-            <input matInput id="exserverurl" ngModel required name="exserverurl" title="{{server.serverURL}}" [(ngModel)]="server.serverURL" (blur)="updateServer(server)">
-        </mat-form-field>
-        <div class="col-sm-1">
-            <button mat-button id="getRequestBtn" (click)="getRequest(server)">Layers</button>
-        </div>
-    </form>
-    <br>
-</div>
-<div style="position:absolute; height:25px;"></div>
-
-<hr> -->
-<!--<div *ngIf="displayLayers" class="row" style="position:relative; top:25px; margin-bottom:10px;">
-    <div class="col-sm-3 col-sm-offset-2" style="position:relative; left:2%">
-        <h3>Name</h3>
-    </div>
-    <div class="col-sm-3" style="position:relative; left:1%"> 
-        <h3>Format</h3>
-    </div>
-    <div>
-        <h3></h3>
-    </div>
-</div>
-
-<div *ngFor="let layer of nameArray" style="position:relative; top:20px; left:10px;">
-    <div *ngIf="displayLayers">
-        <div class="row" style="margin-bottom:5px">
-            <div class="col-sm-3 col-sm-offset-2">
-                <h5>{{layer}}</h5>
-            </div>
-            <div class="col-sm-1"> 
-                <h5>{{formatArray[nameArray.indexOf(layer)]}}</h5>
-            </div>
-        </div>
-    </div>
-</div>-->
 <div *ngIf="displayGeoserverLayers" style="position:relative; top:25px; margin-bottom:10px;">
     <table style="width:80%; position:relative; left:10%">
         <tr style="width:100%;">

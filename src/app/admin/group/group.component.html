@@ -1,12 +1,19 @@
+<!-- encompassing container to hold the three oxes and other elements -->
 <div class="group-parent-container">
+
+    <!-- creats the first box of three -->
     <div class="col-md">
+        <!-- creates a row of two headers and one sliding toggle -->
         <span>
             <h4>User view</h4>
             <mat-slide-toggle name="booBoy" [(ngModel)]="bool" value="bool" (click)="showme(bool)"></mat-slide-toggle>
             <h4>Group view</h4>
         </span>
         
+        <!-- creates the first information box  -->
         <div class="group-list-container">
+
+            <!-- creates a selectable list containing users or groups depending on the toggle -->
             <mat-selection-list disableRipple=true *ngIf="!bool" #groupUsers>
                 <mat-list-option *ngFor="let user of users" (click)="selectUser(user)">
                     {{user.firstName}}&nbsp;{{user.lastName}}
@@ -31,9 +38,12 @@
         </div>
     </div>
 
+    <!-- creates the second box for infomration including header-->
     <div class="col-md">
         <h4>{{type}}s Available</h4>
         <div class="group-list-container">
+
+            <!-- creates a selection list depending on the toggle -->
             <mat-selection-list disableRipple=true *ngIf="!bool">
                 <mat-list-option (click)="openNewGroup()" style="text-align:center;">
                     Create New...
@@ -58,6 +68,7 @@
         </div>
     </div>
 
+    <!-- sets up the two arrow buttons for moving groups and users in and out of their respective lists -->
     <div class="transfer-controls">
         <button mat-button class="group_arrow" *ngIf="!bool" (click)="addAvailableGroup(selectedAvailableGroup)" style="margin-bottom:10px;"><i style="font-size:30px;" class="fas fa-arrow-right"></i></button>
         <button mat-button class="group_arrow" *ngIf="bool" (click)="addAvailableUser(selectedAvailableUser)" style="margin-bottom:10px;"><i style="font-size:30px;" class="fas fa-arrow-right"></i></button>
@@ -66,6 +77,8 @@
         <button mat-button class="group_arrow" *ngIf="bool" (click)="removeMemberUser(selectedMemberUser)"><i style="font-size:30px;" class="fas fa-arrow-left"></i></button>
     </div>
 
+    <!-- creates the final information box which houses either the group members
+         or the groups that a user affiliates with, again dependant on the toggle -->
     <div class="col-md">
         <h4>{{type}} Members</h4>
         <div class="group-list-container">
