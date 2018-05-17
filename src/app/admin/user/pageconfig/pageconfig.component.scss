@@ -1,22 +1,27 @@
+// formatting the size of the box
 #pageConfigParent {
     width: 270px;
 }
 
+// format the header and close button
 #pageConfigHeader {
     width: 100%;
     position: relative;
+    top:-10px;
+    left:15px;
 }
 #pageX {
     position:relative;
-    right: -20px;
-    top: -10px;
-}
-.col-sm-9 {
-    top: -10px;
+    right: 20px;
+    top: 0px;
 }
 
+// spacing between the rows and columns 
 .columns {
     top: 3px;
+}
+#defaultHeader {
+    left:30px
 }
 
 h4[mat-dialog-title] {
@@ -45,9 +50,5 @@ h4[mat-dialog-title] {
 }
 
 hr {
-    margin: 0px 0px 0px 0px;
-}
-
-mat-dialog-actions {
-    margin-bottom: 0px;
+    margin: 0px 0px 5px 0px;
 }

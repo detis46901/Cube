@@ -1,9 +1,8 @@
+<div id="parentContainer">
 <!-- This defines the modal that pops up after a "Create New Layer" click event from "Layers" control
 Creates the header at the top of popup -->
 <div id="newLayerHeader" class="row">
-    <!-- <div class="col-sm-9"> -->
-        <h4 mat-dialog-title>Create New Layer</h4>
-    <!-- </div> -->
+    <h4 mat-dialog-title>Create New Layer</h4>
     <!-- 'x' close button at the top right -->
     <div class="col-sm-1 col-sm-offset-2">
         <button mat-dialog-close id="newLayerX" class="close" aria-label="Close">&times;</button>
@@ -171,7 +170,4 @@ Creates the header at the top of popup -->
 </mat-tab-group>
 
 <!--Close button at the bottom-->
-<mat-dialog-actions>
-    <button mat-dialog-close id="newLayerClose">Close</button>
-    <!-- <button mat-button id="newLayerAdd" (click)="addLayer(newLayer)" [disabled]="!f.valid">Add Layer</button> -->
-</mat-dialog-actions>
+</div>
