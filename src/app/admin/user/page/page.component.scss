@@ -14,13 +14,11 @@ html {
 }
 #pageX {
     position:relative;
-    left:20px;
-    //top:3px;
+    right: -30px;
+    top: -10px;
 }
-
-// adds a border to the different rows
-#pageContentTitleBar {
-    border-bottom:solid black 1px;
+.col-sm-9 {
+    top: -10px;
 }
 
 // formats the data rows to appropriately show user pages and related info
@@ -46,17 +44,8 @@ html {
     top: 2px;
 }
 
-#pageBodyRows {
-    border-bottom: solid black 1px;
-}
-
 hr {
     margin: 0px 0px 5px 0px;
-}
-
-#pageClose {
-    position: relative;
-    left: 15px;
 }
 
 .newPageInputArea {

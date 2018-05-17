@@ -1,51 +1,51 @@
-<div id="pageConfigHeader" class="row">
-    <div class="col-sm-9">
-        <h4 mat-dialog-title>Page: {{pageName}}</h4>
-    </div>
-    <div class="col-sm-1 col-sm-offset-1">
-        <button [mat-dialog-close]="userPageLayers" id="pageConfigX" class="close" aria-label="Close">&times;</button>
-    </div>
-</div>
-<hr>
-
-<mat-dialog-content id="pageConfigBody">
-    <div class="row">
-        <div class="col-sm-7">
-            <h4>Current Layers</h4>
+<div id="pageConfigParent">
+    <div id="pageConfigHeader" class="row">
+        <div class="col-sm-9">
+            <h4 mat-dialog-title style="overflow:hidden; white-space:nowrap">{{pageName}}</h4>
         </div>
-        <div class="col-sm-5">
-            <h4>Default On</h4>
+        <div id="pageX" style="text-align:right">
+            <button mat-dialog-close id="pageConfigX" class="close" aria-label="Close">&times;</button>
         </div>
     </div>
+    <hr>
 
-    <form style="position:relative; bottom:10px">
-        <div class="row" *ngFor="let upl of userPageLayers; let i=index">
-            <div id="pageConfigLayersColumn" class="column">
-                <span>
+    <mat-dialog-content id="pageConfigBody">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4>Current Layers</h4>
+            </div>
+            <div class="col-sm-4" style="text-align: right">
+                <h4>Default</h4>
+            </div>
+        </div>
+
+        <form>
+            <div class="row" *ngFor="let upl of userPageLayers; let i=index" style="text-align: left">
+                <span id="pageConfigLayersColumn" class="col-sm-6" style="text-align:left; overflow:hidden; white-space:nowrap">
                     <a (click)="deleteUserPageLayer(upl.ID)"><i class="fas fa-trash" aria-hidden="true"></i></a>
                     &nbsp;{{upl.layer.layerName}}
                 </span>
+                
+                <span id="pageConfigDefaultColumn" class="col-sm-4" style="text-align:right">
+                    <mat-slide-toggle [name]="upl.ID" [(ngModel)]="upl.layerON"></mat-slide-toggle>
+                </span>
             </div>
-            <div id="pageConfigDefaultColumn" class="column">
-                <mat-slide-toggle [name]="upl.ID" [(ngModel)]="upl.layerON"></mat-slide-toggle>
+        </form>
+        <hr style="top:3px">
+
+        <form #f="ngForm">
+            <div class="row">
+                <mat-form-field id="pageConfigNewLayer">
+                    <mat-select [(ngModel)]="newUserPageLayer.layerID" required name="layer" placeholder="Add Layer">
+                        <mat-option *ngFor="let layerPermission of availableLPs" [value]="layerPermission.layerID">
+                            {{layerPermission.layer.layerName}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+               
+                    <button mat-button id="pageConfigSubmit" (click)="addUserPageLayer(newUserPageLayer)" [disabled]="!f.valid">Add Layer</button>
+                
             </div>
-        </div>
-    </form>
-
-    <form #f="ngForm">
-        <div class="row">
-            <mat-form-field id="pageConfigNewLayer">
-                <mat-select [(ngModel)]="newUserPageLayer.layerID" required name="layer" placeholder="Add Layer">
-                    <mat-option *ngFor="let layerPermission of availableLPs" [value]="layerPermission.layerID">
-                        {{layerPermission.layer.layerName}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-    </form>
-</mat-dialog-content>
-
-<mat-dialog-actions id="pageConfigFooter">
-    <button [mat-dialog-close]="userPageLayers" id="matClose">Close</button>
-    <button mat-button id="pageConfigSubmit" (click)="addUserPageLayer(newUserPageLayer)" [disabled]="!f.valid">Add Layer</button>
-</mat-dialog-actions>
+        </form>
+    </mat-dialog-content>
+</div>

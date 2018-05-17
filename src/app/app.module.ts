@@ -61,7 +61,6 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminNavComponent } from './admin/adminNav/adminNav.component';
-// import { SettingsNavComponent } from './settings/settingsnav/settingsnav.component';
 import { LayerComponent} from './admin/layer/layer.component';
 import { LayerPermissionComponent} from './admin/layer/layerPermission/layerPermission.component';
 import { LayerStyleComponent } from './admin/layer/layerStyle/layerStyle.component'
@@ -77,9 +76,7 @@ import { BoundaryComponent } from './admin/boundary/boundary.component';
 import { ServerComponent } from './admin/server/server.component';
 import { ConfirmDeleteComponent } from './admin/confirmDelete/confirmDelete.component';
 import { SettingsComponent } from './settings/settings.component';
-import { UserPageComponent } from './settings/user-pages/user-pages.component';
 import { PasswordComponent } from './settings/password/password.component';
-//import { LayerControlsComponent } from './map/layer-controls/layer-controls.component';
 import { ServerNewComponent } from './admin/server/serverNew/serverNew.component';
 import { ChangePasswordComponent } from './admin/user/changePassword/changePassword.component';
 import { HeaderComponent } from './header/header.component';
@@ -125,13 +122,11 @@ import { ServerDetailsComponent } from './admin/details/serverDetails/serverDeta
         LoginComponent,
         AdminComponent,
         AdminNavComponent,
-        // SettingsNavComponent,
         GroupComponent,
         LayerComponent,
         UserComponent,
         AdminPageComponent,
         SettingsComponent,
-        UserPageComponent,
         PasswordComponent,
         FilterPipe,
         NumFilterPipe,
@@ -148,7 +143,6 @@ import { ServerDetailsComponent } from './admin/details/serverDetails/serverDeta
         BoundaryComponent,
         NotifComponent,
         ServerComponent,
-        //LayerControlsComponent,
         ServerNewComponent,
         ChangePasswordComponent,
         NewUserComponent,

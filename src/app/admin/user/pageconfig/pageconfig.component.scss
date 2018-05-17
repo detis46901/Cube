@@ -1,15 +1,22 @@
-/*#pageConfigFooter, #pageConfigHeader {
-    background-color: SCSS VARIABLE;
+#pageConfigParent {
+    width: 270px;
 }
-
-#pageConfigBody {
-    background-color: SCSS VARIABLE 2;
-}*/
 
 #pageConfigHeader {
     width: 100%;
     position: relative;
-    bottom: 20px;
+}
+#pageX {
+    position:relative;
+    right: -20px;
+    top: -10px;
+}
+.col-sm-9 {
+    top: -10px;
+}
+
+.columns {
+    top: 3px;
 }
 
 h4[mat-dialog-title] {
@@ -30,15 +37,11 @@ h4[mat-dialog-title] {
 #pageConfigLayersColumn {
     position: relative;
     left: 5%;
-    width: 72%;
+    width: 65%;
 }
 
 #pageConfigDefaultColumn {
-    width: 20%;
-}
-
-.column {
-    border-top: solid black 1px;
+    width: 35%;
 }
 
 hr {
