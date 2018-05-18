@@ -1,61 +1,34 @@
-<!-- formats the header with name and x to close window -->
-<div id="detailsHeader" class="row">
-    <div class="col-sm-6">
-        <h4 mat-dialog-title style="position:relative; right:5px;">{{name}}</h4>
-    </div>
-    <div class="col-sm-1, offset-sm-5">
-        <button style="right:-10px" id="UDX" mat-dialog-close class="close">&times;</button>
-    </div>
+<div class="row">
+    <h4 mat-dialog-title id="detailsHeader">{{name}}</h4>
+    <button mat-dialog-close class="close" id="closingX">&times;</button>
 </div>
+<hr>
 
-<!-- formats the actual content of the edit details page -->
 <mat-dialog-content>
     <form #f="ngForm">
-        <!-- user id is predefined -->
-        <div class="col-sm-6">
-            <div class="row" style="position:relative; right:1em;">
-                <mat-form-field>
-                    <input matInput name="userDetailID" [(ngModel)]="user.ID" placeholder="ID" value="{{user.ID}}" [disabled]="true">
-                </mat-form-field>
-            </div>
+        <mat-form-field class="row" id="firstNameEntry">
+            <input matInput name="userFirstName" [(ngModel)]="user.firstName" placeholder="First Name" value="{{user.firstName}}">
+        </mat-form-field>
+
+        <mat-form-field class="row" id="lastNameEntry">
+            <input matInput name="userLastName" [(ngModel)]="user.lastName" placeholder="Last Name" value="{{user.lastName}}">
+        </mat-form-field>
+        <br>
             
-            <!-- user first name and last name entry boxes if a change is required -->
-            <div class="row">
-                <mat-form-field class="row">
-                    <input matInput name="userFirstName" [(ngModel)]="user.firstName" placeholder="First Name" value="{{user.firstName}}">
-                </mat-form-field>
-                <mat-form-field class="row">
-                    <input matInput name="userLastName" [(ngModel)]="user.lastName" placeholder="Last Name" value="{{user.lastName}}">
-                </mat-form-field>
-            </div>
-        </div>
-        
-        <!-- checkbox whether the user is active or not -->
-        <div class="col-sm-6">
-            <div class="row" style="margin-top:15px; margin-bottom:10px">
-                <span><p style="margin-top:2px">Active:   </p></span>
-                <input id="checkbox" type="checkbox" name="userActive" [(ngModel)]="user.active" checked={{user.active}}>
-            </div>
+        <mat-form-field class="row" id="emailEntry">
+            <input matInput name="userEmail" [(ngModel)]="user.email" placeholder="Email" value="{{user.email}}">
+        </mat-form-field>
 
-            <!-- user email box -->
-            <div class="row">
-                <mat-form-field>
-                    <input matInput name="userEmail" [(ngModel)]="user.email" placeholder="Email" value="{{user.email}}">
-                </mat-form-field>
-            </div>
-
-            <!-- check box whether the user is an admin or not -->
-            <div class="row" style="margin-top:15px; margin-bottom:10px">
-                <span><p style="margin-top:2px">Admin:   </p></span>
-                <input id="checkbox" type="checkbox" name="userAdmin" [(ngModel)]="user.administrator" checked={{user.administrator}}>
-            </div>
-        </div>
+        <mat-form-field class="row" id="idEntry">
+            <input matInput name="userDetailID" [(ngModel)]="user.ID" placeholder="ID" value="{{user.ID}}" [disabled]="true">
+        </mat-form-field>
+        <br>
+            
+        <mat-checkbox id="userActive" name="newUserActive" [(ngModel)]="user.active">Active</mat-checkbox>
+        <mat-checkbox id="userAdmin" name="newUserAdmin" [(ngModel)]="user.administrator">Administrator</mat-checkbox>
     </form>
 </mat-dialog-content>
 
-<!-- button to submit requested changes -->
-<mat-dialog-actions>
-    <div style="position:relative; left:200px;">
-        <button style="left:-60px" mat-button mat-button-primary id="detailsSubmit" (click)="submit(user)" [disabled]="!f.valid">Submit Changes</button>
-    </div>
+<mat-dialog-actions style="justify-content:center">
+        <button mat-button id="submitChangesButton" (click)="submit(user)" [disabled]="!f.valid">Submit Changes</button>
 </mat-dialog-actions>

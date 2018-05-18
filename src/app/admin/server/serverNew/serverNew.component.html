@@ -1,22 +1,27 @@
-<!-- This defines the modal that pops up after a "Create New Server" click event from "Servers" control-->
-<div style="padding-bottom:15px;" id="newServTitle" class="row">
-    <div class="col-sm-9">
-        <h4 mat-dialog-title>Create New Server</h4>
-    </div>
-    <div class="col-sm-1 col-sm-offset-1">
-        <button mat-dialog-close id="newServX" class="close">&times;</button>
-    </div>
+<!-- Jack Reyburn -->
+<!-- This defines the modal that pops up after a "Create New Server" click event from admin server page -->
+
+<!-- Row that contains page header and closing 'x' -->
+<div class="row">
+    <!-- page header -->
+    <h4 mat-dialog-title id="newServerHeader">Create New Server</h4>
+
+    <!-- closing 'x' -->
+    <button mat-dialog-close class="close" id="closingX">&times;</button>
 </div>
+<hr>
 
-<mat-dialog-content id="newServBody">
+<mat-dialog-content>
+    <!-- form with multiple inputs for adding a new server -->
     <form #f="ngForm">
-        <mat-form-field>
-            <input matInput id="newServName" name="newServName" [(ngModel)]="newserver.serverName" required type="text" placeholder="Server Name">
+        <!-- server name input box -->
+        <mat-form-field class="row">
+            <input matInput name="newServName" [(ngModel)]="newserver.serverName" required type="text" placeholder="Server Name">
         </mat-form-field>
-        <br>
-
-        <mat-form-field>
-            <mat-select id="newServType" name="newServType" [(ngModel)]="newserver.serverType" required type="text" placeholder="Server Type">
+        
+        <!-- server type select field, drop down -->
+        <mat-form-field class="row">
+            <mat-select name="newServType" [(ngModel)]="newserver.serverType" required type="text" placeholder="Server Type">
                 <mat-option value="GeoserverWMS">Geoserver WMS</mat-option>
                 <mat-option value="GetoserverWMTS">Geoserver WMTS</mat-option>
                 <mat-option value="ArcGISWMS">ArcGIS WMS</mat-option>
@@ -26,15 +31,15 @@
                 <mat-option value="PostGIS">PostGIS</mat-option>
             </mat-select>
         </mat-form-field>
-        <br>
 
-        <mat-form-field>
-            <input matInput id="newserverurl" name="newserverurl" [(ngModel)]="newserver.serverURL" required type="text" placeholder="Server URL">
+        <!-- server URL input box -->
+        <mat-form-field class="row">
+            <input matInput name="newserverurl" [(ngModel)]="newserver.serverURL" required type="text" placeholder="Server URL">
         </mat-form-field>
     </form>
 </mat-dialog-content>
 
-<mat-dialog-actions id="newServFoot" class="row">
-    <button mat-dialog-close id="newServClose">Close</button>
-    <button mat-button id="newServAdd" (click)="addServer(newserver)" [disabled]="!f.valid">Add Server</button>
+<!-- add new server button only usable after all three boxes have been filled -->
+<mat-dialog-actions style="justify-content:center">
+    <button mat-button id="serverAddButton" (click)="addServer(newserver)" [disabled]="!f.valid">Add Server</button>
 </mat-dialog-actions>

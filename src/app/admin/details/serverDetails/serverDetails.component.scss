@@ -1,0 +1,30 @@
+// Jack Reyburn
+// This is the stylizing of the edit server details button within the admin settings
+// server page
+
+// formatting for each row setting width and position
+.row {
+    width: 300px;
+    position: relative;
+    left: 10px
+}
+
+// formatting for header positioning
+#serverNameHeader {
+    position: absolute;
+    top: -10px;
+    left: 5px;
+}
+
+// formatting for closing 'x' positioning 
+#closingX {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+}
+
+// formatting for color of submit button
+#submitButton {
+    color: white;
+    background-color: #646464;
+}

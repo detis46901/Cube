@@ -1,54 +1,49 @@
-<div id="newUserHeader" class="row">
-    <div class="col-sm-9">
-        <h4 mat-dialog-title>Create New User</h4>
-    </div>
-    <div class="col-sm-1 col-sm-offset-2">
-        <button mat-dialog-close id="newUserX" class="close" aria-label="Close">&times;</button>
-    </div>
+<!-- Jack Reyburn -->
+<!-- This deals with the modal that opens when 'Create New User' button is clicked -->
+
+<!-- Sets up the header row for the title and closing 'x' -->
+<div class="row">
+    <!-- Creates the header -->
+    <h4 mat-dialog-title id="newUserHeader">Create New User</h4>
+
+    <!-- Creates the closing 'x' -->
+    <button mat-dialog-close class="close" id="closingX">&times;</button>
 </div>
+<hr>
 
 <mat-dialog-content>
-    <form #f="ngForm" style="overflow:auto;">
-        <div class="col-sm-6">
-            <div class="row">
-                <mat-form-field id="firstNameBlock">
-                    <input matInput id="newUserFirstName" name="newUserFirstName" required [(ngModel)]="newUser.firstName" type="text" placeholder="First Name">
-                </mat-form-field>
-            </div>
+    <!-- form for the entry and check boxes -->
+    <form #f="ngForm">
+    
+        <!-- first name entry box -->
+        <span>
+        <mat-form-field class="row" id="firstNameEntry">
+            <input matInput name="newUserFirstName" required [(ngModel)]="newUser.firstName" type="text" placeholder="First Name">
+        </mat-form-field>
+    
+        <!-- last name entry box -->
+        <mat-form-field class="row" id="lastNameEntry">
+                <input matInput name="newUserLastName" required [(ngModel)]="newUser.lastName" type="text" placeholder="Last Name">
+        </mat-form-field>
+        </span>
+        <!-- email entry box -->
+        <mat-form-field class="row" id="emailEntry">
+            <input matInput name="newUserEmail" required [(ngModel)]="newUser.email" type="text" placeholder="Email">
+        </mat-form-field>
+    
+        <!-- password entry box -->
+        <mat-form-field class="row" id="passwordEntry">
+                <input matInput name="newUserPassword" [(ngModel)]="newUser.password" type="password" placeholder="Password">
+        </mat-form-field>
+        <br>
 
-            <div class="row">
-                <mat-form-field id="emailBlock">
-                    <input matInput id="newUserEmail" name="newUserEmail" required [(ngModel)]="newUser.email" type="text" placeholder="Email">
-                </mat-form-field>
-            </div>
-        </div>
-
-        <div class="col-sm-6">
-            <div class="row">
-                <mat-form-field id="lastNameBlock">
-                    <input matInput id="newUserLastName" name="newUserLastName" required [(ngModel)]="newUser.lastName" type="text" placeholder="Last Name">
-                </mat-form-field>
-            </div>
-            
-            <div class="row">
-                <mat-form-field id="passwordBlock">
-                    <input matInput id="newUserPassword" name="newUserPassword" [(ngModel)]="newUser.password" type="password" placeholder="Password">
-                </mat-form-field>
-            </div>
-        </div>
-
-        <div class="col-sm-12">
-            <div id="checkBlock" class="row">
-                <mat-checkbox id="newUserActive" name="newUserActive" [(ngModel)]="newUser.active" checked="true">Active</mat-checkbox>
-                <mat-checkbox id="newUserAdmin" name="newUserAdmin" [(ngModel)]="newUser.administrator">Administrator</mat-checkbox>
-            </div>
-        </div>
+        <!-- checkboxes for use active and admin -->
+        <mat-checkbox id="newUserActive" name="newUserActive" [(ngModel)]="newUser.active">Active</mat-checkbox>
+        <mat-checkbox id="newUserAdmin" name="newUserAdmin" [(ngModel)]="newUser.administrator">Administrator</mat-checkbox>
     </form>
 </mat-dialog-content>
 
-<mat-dialog-actions>
-    <div style="position:relative; left:65%;">
-        <button mat-dialog-close id="newLayerClose">Close</button>
-        <button mat-button id="newUserSub" (click)="addUser(newUser)" [disabled]="!f.valid">Submit</button>
-    </div>
+<!-- button to create user -->
+<mat-dialog-actions style="justify-content:center">
+    <button mat-button id="createUserButton" (click)="addUser(newUser)" [disabled]="!f.valid">Create User</button>
 </mat-dialog-actions>
