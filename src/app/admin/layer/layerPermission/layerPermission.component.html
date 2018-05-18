@@ -1,28 +1,34 @@
-<div id="permHeader" class="row">
-    <div class="col-sm-10">
-        <!-- Header 'name' Permissions -->
-        <h4 mat-dialog-title id="layerPermTitle">{{layerName}} Permissions</h4>
-    </div>
-    <div class="col-sm-2">
-        <!-- close 'x' at the top right -->
-        <button mat-dialog-close (click)="updateLayerPermissions()" id="layerPermX" class="close">&times;</button>
-    </div>
+<!-- Jack Reyburn -->
+<!-- This modal function is editing layer permissions -->
+
+<!-- creates a row to contain both the titel and the closing 'x' -->
+<div class="row">
+    <!-- header -->
+    <h4 mat-dialog-title id="layerPermissionTitle">{{layerName}} Permissions</h4>
+
+    <!-- closing 'x' -->
+    <button mat-dialog-close class="close" id="closingX" (click)="updateLayerPermissions()">&times;</button>
 </div>
 
+<!-- box to contain the current permissions -->
 <mat-dialog-content>
-    <!-- header above current permission list -->
+    <!-- title -->
     <h5><b>Current Permissions</b></h5>
-    <!-- creates a scrolling list of current permissions -->
-    <mat-list id="layerPerm_exUserList" *ngFor="let perm of layerPermissions">
-        <mat-list-item id="exLayerPerm">
-            <span class="row" id="user-group-entry">
-                <button mat-icon-button id="delUserPerm" (click)="deleteLayerPermission(perm)">
+
+    <!-- list of items, in this case current layer permissions -->
+    <mat-list *ngFor="let perm of layerPermissions">
+        <mat-list-item>
+            <span class="row">
+                <!-- delete button -->
+                <button mat-icon-button (click)="deleteLayerPermission(perm)">
                     <i style="vertical-align:baseline" class="fa fa-trash mat-icon"></i>
                 </button>
+
+                <!-- user first and last names or group name depending on who is affiliated with permission -->
                 <p *ngIf="!perm.groupID" style="width:210px">{{perm.user.firstName}}&nbsp;{{perm.user.lastName}}</p>
                 <p *ngIf="!perm.userID" style="width:210px">{{perm.group.name}}</p>
 
-                <!-- check boxes with current values that can be changed -->
+                <!-- three check boxes one for edit, delete, and grant permissions -->
                 <mat-checkbox name="layerPermissionEdit" [(ngModel)]="perm.edit">Edit</mat-checkbox>
                 <mat-checkbox name="layerPermissionDelete" [(ngModel)]="perm.delete">Delete</mat-checkbox>
                 <mat-checkbox name="layerPermissionGrant" [(ngModel)]="perm.canGrant">Grant</mat-checkbox>
@@ -34,32 +40,34 @@
         </mat-list-item>
     </mat-list>
 </mat-dialog-content>
-
 <hr>
 
+<!-- box to contain the new permissions interface -->
 <div>
     <span>
-        <!-- Creates a header with a user/group toggle for adding permissions -->
+        <!-- header including a toggle to switch between user and group selections -->
         <b>New Permission</b>
         User
         <mat-slide-toggle class="user-group-toggle" name="permission-user-group-toggle" [checked]="isGroup" (change)="switchPermType()"></mat-slide-toggle>
         Group
     </span>
     
-    <form id="permForm" class="form" #f="ngForm">
+    <!-- form holding the entry boces for user/group, permissions, and comments -->
+    <form class="form" #f="ngForm">
         <div>
-            <!-- if user is selected a list of users drops down -->
             <mat-form-field *ngIf="!isGroup"  style="width:200px; margin-right:20px">
+                <!-- drop down menu -->
                 <mat-select id="layerPermNewUser" name="layer-perm-user" [(ngModel)]="newLayerPermission.userID" required placeholder="User">
+                    <!-- user options in drop down, if user is selected in the toggle above -->
                     <mat-option [value]="user.ID" *ngFor="let user of permlessUsers">
                         {{user.firstName}} {{user.lastName}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <!-- if group is selected a list of groups drops down -->
             <mat-form-field *ngIf="isGroup" style="width:200px; margin-right:20px">
                 <mat-select id="layerPermNewGroup" name="layer-perm-group" [(ngModel)]="newLayerPermission.groupID" required placeholder="Group">
+                    <!-- group options in drop down, if group is selected in the toggle above -->
                     <mat-option [value]="group.ID" *ngFor="let group of permlessGroups">
                         {{group.name}}
                     </mat-option>
@@ -72,17 +80,14 @@
             <mat-checkbox name="newLayerPermissionGrant" [(ngModel)]="newLayerPermission.canGrant">Grant</mat-checkbox>
         </div>
 
-        <div>
-            <!-- adds a comment input box -->
-            <mat-form-field style="width:100%">
-                <textarea name="newLayerPermissionComments" [(ngModel)]="newLayerPermission.comments" matInput placeholder="Comments:"></textarea>
-            </mat-form-field>
-        </div>
+        <!-- entry box for permission comments -->
+        <mat-form-field style="width:100%">
+            <textarea name="newLayerPermissionComments" [(ngModel)]="newLayerPermission.comments" matInput placeholder="Comments:"></textarea>
+        </mat-form-field>
     </form>
 </div>
 
-<!-- adds a close and add permission button at the bottom of the screen -->
-<mat-dialog-actions>
-    <button mat-button mat-dialog-close (click)="updateLayerPermissions()" id="layerPermClose">Close</button>
-    <button mat-button [disabled]="!f.valid" (click)="addLayerPermission(newLayerPermission)">Add Permission</button>
+<!-- button to add new permission to layer -->
+<mat-dialog-actions style="justify-content:center">
+    <button mat-button id="addPermissionButton" (click)="addLayerPermission(newLayerPermission)" [disabled]="!f.valid">Add Permission</button>
 </mat-dialog-actions>    

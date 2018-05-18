@@ -1,54 +1,39 @@
-h4 {
-    position: relative;
-    bottom: 10px;
-}
+// Jack Reyburn
+// Styling of layer permissions
 
-#permHeader {
-    position:relative;
-    height:0px;
-    margin-bottom:20px;
-}
-
-#layerPermX {
-    position:relative;
-    bottom:10px;
-}
-
-#layerPermTitle {
-    position:relative;
-    bottom:15px;
-}
-
-hr {
-    margin:0;
-    padding:0;
-    border-color: #8d8d8d;
-}
-
-b {
-    margin-right:20px;
-}
-
-mat-checkbox {
-    margin-right:10px;
-}
-
-mat-slide-toggle {
-    position:relative;
-    top:3px;
-}
-
+// sets max height of current permissions box
 mat-dialog-content {
     max-height:300px;
 }
 
-#exLayerPerm {
-    padding-top:0;
+// positions the header
+#layerPermissionTitle {
+    position: relative;
+    top: -10px;
+    left: 10px;
 }
 
-#layerPermExComment {
-    position:relative;
-    bottom:20px;
-    right:5px;
-    height:20px;
+// positions the closing 'x'
+#closingX {
+    position: relative;
+    top: -25px;
+    right: -320px;
+}
+
+// formats the line break
+hr {
+    position: relative;
+    bottom: 10px;
+    border-color: #8d8d8d;
+}
+
+// formats the checkboxes to have a gap inbetween them
+mat-checkbox {
+    margin-right: 10px;
+}
+
+// colors the add permissions button
+#addPermissionButton {
+    color: white;
+    background-color: #646464;
 }

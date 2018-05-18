@@ -1,34 +1,48 @@
+<!-- Jack Reyburn -->
+<!-- Modal that handles editing existing users information -->
+
+<!-- creates a row to contain a header and a closing 'x' -->
 <div class="row">
+    <!-- header -->
     <h4 mat-dialog-title id="detailsHeader">{{name}}</h4>
+
+    <!-- closing 'x' -->
     <button mat-dialog-close class="close" id="closingX">&times;</button>
 </div>
 <hr>
 
 <mat-dialog-content>
+    <!-- contains the input boxes and checkboxes to edit user informations -->
     <form #f="ngForm">
+        <!-- first name entry box -->
         <mat-form-field class="row" id="firstNameEntry">
             <input matInput name="userFirstName" [(ngModel)]="user.firstName" placeholder="First Name" value="{{user.firstName}}">
         </mat-form-field>
 
+        <!-- last name entry box -->
         <mat-form-field class="row" id="lastNameEntry">
             <input matInput name="userLastName" [(ngModel)]="user.lastName" placeholder="Last Name" value="{{user.lastName}}">
         </mat-form-field>
         <br>
             
+        <!-- email entry box -->
         <mat-form-field class="row" id="emailEntry">
             <input matInput name="userEmail" [(ngModel)]="user.email" placeholder="Email" value="{{user.email}}">
         </mat-form-field>
 
+        <!-- id box, filled by CUBE -->
         <mat-form-field class="row" id="idEntry">
             <input matInput name="userDetailID" [(ngModel)]="user.ID" placeholder="ID" value="{{user.ID}}" [disabled]="true">
         </mat-form-field>
         <br>
             
+        <!-- checkboxes for both active users and admins -->
         <mat-checkbox id="userActive" name="newUserActive" [(ngModel)]="user.active">Active</mat-checkbox>
         <mat-checkbox id="userAdmin" name="newUserAdmin" [(ngModel)]="user.administrator">Administrator</mat-checkbox>
     </form>
 </mat-dialog-content>
 
+<!-- submit changes button -->
 <mat-dialog-actions style="justify-content:center">
         <button mat-button id="submitChangesButton" (click)="submit(user)" [disabled]="!f.valid">Submit Changes</button>
 </mat-dialog-actions>

@@ -1,27 +1,38 @@
+<!-- Jack Reyburn -->
+<!-- Modal to edit current group information -->
+
+<!-- container to hold the edit group window -->
 <div class="edit-group-dialog-container">    
+    <!-- row to hold title and close button -->
     <div id="editGroupHeader" class="row">
+        <!-- header -->
         <div class="col-sm-10">
             <h4 mat-dialog-title>Edit {{group.name}}</h4>
         </div>
+        <!-- close button -->
         <div class="col-sm-1">
-            <button mat-dialog-close id="editGroupX" class="close" aria-label="Close">&times;</button>
-        </div>
+            <button mat-dialog-close id="closingX" class="close">&times;</button>
+        </div> 
     </div>
 
+    <!-- box to hold the entry fields -->
     <mat-dialog-content>
         <form #f="ngForm">
+            <!-- name input box -->
             <mat-form-field id="nameBlock">
                 <input matInput id="editGroupName" name="editGroupName" [(ngModel)]="group.name" type="text" placeholder="Group Name" required>
             </mat-form-field>
             <br>
+
+            <!-- description input box -->
             <mat-form-field id="descBlock">
                 <textarea matInput id="editGroupDesc" name="editGroupDesc" [(ngModel)]="group.description" type="text" placeholder="Description"></textarea>
             </mat-form-field>
         </form>
     </mat-dialog-content>
 
-    <mat-dialog-actions>
-        <button mat-dialog-close id="editGroupClose">Close</button>
-        <button mat-button id="editGroupSub" (click)="updateGroup(group)" [disabled]="!f.valid">Submit</button>
+    <!-- submit changes button -->
+    <mat-dialog-actions style="justify-content:center">
+        <button mat-button id="submitButton" (click)="updateGroup(group)" [disabled]="!f.valid">Submit Changes</button>
     </mat-dialog-actions>
 </div>

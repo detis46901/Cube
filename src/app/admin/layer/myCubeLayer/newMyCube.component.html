@@ -1,56 +1,38 @@
-<!-- This defines the modal that pops up after a "Create New Layer" click event from "Layers" control-->
-<div id="myCube_newLayerHeader" class="row">
-    <div class="col-sm-9">
-        <h4 mat-dialog-title>Create New MyCube Layer</h4>
-    </div>
-    <div class="col-sm-1 col-sm-offset-2">
-        <button mat-dialog-close id="myCube_newLayerX" class="close">&times;</button>
-    </div>
+<div id="myCubeHeader">
+    <h4 mat-dialog-title id="myCubeLayerHeader">Create New MyCube Layer</h4>
+    <button mat-dialog-close class="close" id="closingX">&times;</button>
 </div>
-<hr>
 
 <mat-dialog-content>
     <form #f="ngForm">
-        <!--Row 1-->
-        <div class="row">
-            <mat-form-field id="myCube_nameBlock">
-                <input matInput id="myCube_newlayername" name="myCube_newlayername" value="{{layerName}}" required [(ngModel)]="newLayer.layerName" placeholder="Name">
-            </mat-form-field>
-            
-            <mat-form-field id="myCube_descBlock">
-                <input matInput id="myCube_newlayerdescription" name="myCube_newlayerdescription" [(ngModel)]="newLayer.layerDescription" placeholder="Description">
-            </mat-form-field>
-        </div>
-            
-        <!--Row 2-->
-        <div class="row">
-            <div class="col-sm-6">
-            <mat-form-field id="myCube_fieldBlock">
-                    <input matInput id="myCube_newlayerfield" name="myCube_newlayerfield" [(ngModel)]="newLayerField1.field" required placeholder="Field {{newLayerFields.length+1}}">
-            </mat-form-field>
-            </div>
+        <mat-form-field class="row" id="nameEntry">
+            <input matInput id="myCube_newlayername" name="myCube_newlayername" value="{{layerName}}" required [(ngModel)]="newLayer.layerName" placeholder="Name">
+        </mat-form-field>
+        
+        <mat-form-field class="row" id="descriptionEntry">
+            <input matInput id="myCube_newlayerdescription" name="myCube_newlayerdescription" [(ngModel)]="newLayer.layerDescription" placeholder="Description">
+        </mat-form-field>
+        <br>
 
-            <div class="col-sm-3">
-            <mat-form-field id="myCube_typeBlock">
-                <mat-select id="myCube_newlayertype" name="myCube_newlayertype" [(ngModel)]="newLayerField1.type" required placeholder="Data type">
-                    <mat-option value="boolean">Boolean</mat-option>
-                    <mat-option value="text">Text</mat-option>
-                    <mat-option value="integer">Integer</mat-option>
-                    <mat-option value="double precision">Double</mat-option>
-                    <mat-option value="date">Date</mat-option>
-                </mat-select>
-            </mat-form-field>
-            </div>
-            <div>
-                <mat-checkbox name="mycube_newlayerlabel" [(ngModel)]="newLayerField1.label">Use as Label</mat-checkbox>
-            </div>
-            <div class="col-sm-2">
-                <button mat-button id="myCube_addField" (click)="addField()">Add Field</button>
-            </div>
-        </div>
+        <mat-form-field class="row" id="field1Entry">
+            <input matInput id="myCube_newlayerfield" name="myCube_newlayerfield" [(ngModel)]="newLayerField1.field" required placeholder="Field {{newLayerFields.length+1}}">
+        </mat-form-field>
+        
+        <mat-form-field class="row" id="dataTypeEntry">
+            <mat-select name="myCube_newlayertype" [(ngModel)]="newLayerField1.type" required placeholder="Data type">
+                <mat-option value="boolean">Boolean</mat-option>
+                <mat-option value="text">Text</mat-option>
+                <mat-option value="integer">Integer</mat-option>
+                <mat-option value="double precision">Double</mat-option>
+                <mat-option value="date">Date</mat-option>
+            </mat-select>
+        </mat-form-field>
+            
+        <mat-checkbox name="mycube_newlayerlabel" [(ngModel)]="newLayerField1.label">Use as Label</mat-checkbox>
+           
+        <button mat-button id="myCube_addField" (click)="addField()">Add Field</button>
         <hr>
 
-        <!--Row 2-->
         <h5><b>Layer fields:</b></h5>
         <mat-list *ngFor="let newLayerField of newLayerFields">
             <mat-list-item>
@@ -62,6 +44,5 @@
 </mat-dialog-content>
 
 <mat-dialog-actions style="float:right" id="myCube_layerNewFooter">
-    <button mat-dialog-close>Close</button>
     <button mat-button [disabled]="!f.valid" (click)="addLayer(newLayer)">Add Layer</button>
 </mat-dialog-actions>
