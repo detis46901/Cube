@@ -1,3 +1,8 @@
+mat-header-row {
+    background-color: #7e7e7e;
+    color:white;
+}
+
 //formats the position and size of the table
 .mat-table {
     position: absolute;
@@ -55,5 +60,5 @@ mat-table mat-row mat-cell.layer-sm-cell, mat-table mat-header-row mat-header-ce
 }
 
 mat-table mat-header-row mat-header-cell {
-    color: #673ab7;
+    color: white;
 }

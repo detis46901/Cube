@@ -47,9 +47,12 @@
         <!-- header for the current added fields -->
         <h5><b>Layer fields:</b></h5>
         <mat-list *ngFor="let newLayerField of newLayerFields">
-            <mat-list-item>
+            <span>
                 <p (click)="deleteField(newLayerFields.indexOf(newLayerField))"><i class="fa fa-trash" aria-hidden="true"></i> {{newLayerField.field}}: {{newLayerField.type}}</p> 
-            </mat-list-item>
+            </span>
+            <span id="exPageDefaultCol" class="col-sm-3">
+                <mat-radio-button id="exPageDefault" radioGroup="pageGroup" name="userPage.ID + i" (click)="updateDefaultPage(userPage)" [value]="userPage.ID"></mat-radio-button>
+            </span>
         </mat-list>
         <br>    
     </form>

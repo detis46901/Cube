@@ -1,3 +1,16 @@
+// Jack Reyburn 
+// styles the user page in admin settings
+
+// colors the header
+mat-header-row {
+    background-color: #7e7e7e;
+}
+
+// Colors the headers white
+mat-table mat-header-row mat-header-cell {
+    color: white;
+}
+
 //formats the entire table including size and positioning
 .mat-table {
     top: 50%;
@@ -21,6 +34,7 @@
     }
 }
 
+// formats and positions the rows
 .row {
     display:flex;
     flex-direction:column;
@@ -52,7 +66,4 @@ mat-table mat-row mat-cell.user-md-cell, mat-table mat-header-row mat-header-cel
 }
 mat-table mat-row mat-cell.user-sm-cell, mat-table mat-header-row mat-header-cell.user-sm-head {
     max-width: 8%;
-}
-mat-table mat-header-row mat-header-cell {
-    color: #673ab7;
 }

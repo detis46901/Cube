@@ -1,14 +1,20 @@
+// Jack Reyburn
+// Styles the header
+
+// formats the rows
 .row {
     height:53px;
     position:relative;
     z-index:1;
-    background-color:rgb(100, 100, 100);
+    background-color:#7e7e7e;
 }
 
+// formats user name
 #userName {
     color:white;
 }
 
+// sizes the icons
 .material-icons {
     font-size:30px;
 }
@@ -24,6 +30,7 @@
     display: flex;
 }
 
+// styles the left buttons
 #headerNotifications, #settingsButton {
     color: white;
     position: relative;
@@ -33,7 +40,6 @@
     padding: 0;
     z-index: 1;
 }
-
 #mapButton {
     color: white;
     position: relative;
@@ -41,39 +47,32 @@
     margin-right: 10px;
 }
 
+// formats the header text
 h5, h4, h3 {
-    color:white;
-    margin:0px 0px 0px 10px;
-    top:15%;
-    position:relative;
+    color: white;
+    margin: 0px 0px 0px 10px;
+    top: 20%;
+    position: relative;
     font-family: 'Roboto', sans-serif;
 }
 
-h5 {
-    top:20%;
-}
-
-h3 {
-    top:20%;
-}
-
+// shrinks the box containin the notifications button
 .mat-button {
-    min-width:25px;
+    min-width: 25px;
 }
 
-button:focus {
-    outline:none;
-    width:25px;
+:focus {
+    outline: none;
 }
 
-a {
-    margin-left:10px;
-}
+// a {
+//     margin-left: 10px;
+// }
 
-h3 a {
-    margin-left:5px;
-    z-index:5;
-}
+// h3 a {
+//     margin-left: 5px;
+//     z-index: 5;
+// }
 
 .shake {
     animation: shake 0.82s;

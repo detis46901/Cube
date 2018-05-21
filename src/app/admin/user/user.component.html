@@ -1,3 +1,6 @@
+<!-- Jack Reyburn -->
+<!-- User page in admin settings -->
+
 <div class="row">    
     <!-- table to contain all of the user information -->
     <mat-table id="userDataTable" #table [dataSource]="dataSource">
@@ -61,7 +64,7 @@
         <!-- seventh column containing button to create new user, user options, edit user layers, or delete -->
         <ng-container matColumnDef="actionsColumn">
             <!-- create new user button -->
-            <mat-header-cell class="user-xlg-head" *matHeaderCellDef><button style="background-color:#646464" mat-button id="userCreateNew" (click)="openNewUser()"><strong style="color:white"> Create New User </strong></button></mat-header-cell>
+            <mat-header-cell class="user-xlg-head" *matHeaderCellDef><button style="border:1px solid white; color:white" mat-button id="userCreateNew" (click)="openNewUser()"><strong> Create New User </strong></button></mat-header-cell>
             <mat-cell class="user-xlg-cell" *matCellDef="let row">
                 <button mat-button [matMenuTriggerFor]="menu">
                     Options
@@ -88,11 +91,11 @@
                 </mat-menu>
 
                 <!-- edit user button -->
-                <button mat-icon-button color="primary" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.firstName, row.currentData.lastName)">
+                <button mat-icon-button style="color:#7e7e7e" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.firstName, row.currentData.lastName)">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
                 <!-- delete user button -->
-                <button mat-icon-button color="primary" focusable="false" (click)="openConfDel(row.currentData)">
+                <button mat-icon-button style="color:#7e7e7e" focusable="false" (click)="openConfDel(row.currentData)">
                     <i class="fa fa-trash mat-icon"></i>
                 </button>
             </mat-cell>

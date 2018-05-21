@@ -228,7 +228,7 @@ export class ServerComponent implements OnInit {
     
 
     private openServerNew(): void {
-        const dialogRef = this.dialog.open(ServerNewComponent, {height:'300px', width:'350px'});
+        const dialogRef = this.dialog.open(ServerNewComponent, {height:'300px', width:'360px'});
         dialogRef.afterClosed()
         .subscribe(result => {
             this.getServers();
@@ -236,7 +236,7 @@ export class ServerComponent implements OnInit {
     }
     
     private openDetails(id: number, name: string): void {
-        const dialogRef = this.dialog.open(ServerDetailsComponent);
+        const dialogRef = this.dialog.open(ServerDetailsComponent, {width:'320px'});
         dialogRef.componentInstance.ID = id;
         dialogRef.componentInstance.name = name;
         dialogRef.afterClosed().subscribe(() => {

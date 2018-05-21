@@ -45,8 +45,8 @@
             being able to edit current layers or delete them -->
             <ng-container matColumnDef="actionsColumn">
                 <mat-header-cell class="layer-xlg-head" *matHeaderCellDef>
-                    <button style="background-color:#646464" mat-button id="createLayerBtn" (click)="createLayer()"><a style="color:white">Create Layer</a></button>
-                    <button style="background-color:#646464" mat-button id="createMyCubeBtn" (click)="createMyCube()"><a style="color:white">Create MyCube</a></button>
+                    <button style="border:1px solid white" mat-button id="createLayerBtn" (click)="createLayer()"><a style="color:white">Create Layer</a></button>
+                    <button style="border:1px solid white" mat-button id="createMyCubeBtn" (click)="createMyCube()"><a style="color:white">Create MyCube</a></button>
                 </mat-header-cell>
                 <mat-cell class="layer-xlg-cell" *matCellDef="let row">     
                     <button mat-button [matMenuTriggerFor]="menu2">
@@ -57,12 +57,12 @@
                         <button mat-menu-item id="openstyle" (click)="openStyle(row.currentData.ID, row.currentData.layerName)">Style</button>
                     </mat-menu>
                     <span>
-                    <button mat-icon-button color="primary" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.layerName)">
+                    <button mat-icon-button style="color:#7e7e7e" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.layerName)">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
                     </span>
                     <span>
-                    <button mat-icon-button color="primary" focusable="false" (click)="confirmDelete(row.currentData)">
+                    <button mat-icon-button style="color:#7e7e7e" focusable="false" (click)="confirmDelete(row.currentData)">
                         <i class="fa fa-trash mat-icon"></i>
                     </button>
                     </span>

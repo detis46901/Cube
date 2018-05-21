@@ -1,3 +1,24 @@
+// Jack Reyburn
+// Formats the server page
+
+// colors the header row
+mat-header-row {
+    background-color: #7e7e7e;
+}
+
+// COlors the headers white
+mat-table mat-header-row mat-header-cell {
+    color: white;
+}
+
+#createServerButton {
+    border:1px solid white;
+}
+
+:focus {
+    outline: none;
+}
+
 //formats the table including size and positioning
 .mat-table {
     position: absolute;
@@ -20,12 +41,7 @@
     }
 }
 
-// makes all of the headers a purple color
-#strong {
-    color: #623c65;
-}
-
-// formats teh rows and columns 
+// formats the rows and columns 
 .row {
     display:flex;
     flex-direction:column;
@@ -55,7 +71,3 @@ mat-table mat-row mat-cell.server-md-cell, mat-table mat-header-row mat-header-c
 mat-table mat-row mat-cell.server-sm-cell, mat-table mat-header-row mat-header-cell.server-sm-head {
     max-width: 10%;
 }
-mat-table mat-header-row mat-header-cell {
-    color: #623c65;
-}
-

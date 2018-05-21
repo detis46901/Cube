@@ -1,11 +1,17 @@
+<!-- Jack Reyburn -->
+<!-- header for the entire app -->
+
 <div id="headerBar" class="row">
     <span id="headerLeft" class="col-sm-6">
         <!-- Name and the 3 buttons for settings, map, and messages -->
         <h3>
+            <!-- username -->
             <a id="headerSettings" title="Settings">{{user.firstName}}&nbsp;{{user.lastName}}</a>
+            <!-- settings button -->
             <button button mat-icon-button [matMenuTriggerFor]="menu">
                 <mat-icon id="settingsButton">settings</mat-icon>
             </button>
+            <!-- map button -->
             <a id="mapButton" title="Return to map" routerLink="home"><i class="fa fa-cube"></i></a>
             <button mat-button *ngIf="screenCode == 1" id="headerNotifications" (click)="openNotifications(userID)"><i id="headerNotifIcon" class="fa fa-envelope fa-2x" aria-hidden="true"></i></button>
         </h3>       
@@ -13,21 +19,25 @@
 
     <!-- Settings menu including api key, password, page edit, and profile settings -->
     <mat-menu #menu="matMenu" yPosition="below" [overlapTrigger]="false">
+        <!-- user settings -->
         <p mat-menu-item>
             <mat-icon style="vertical-align:text-bottom">settings</mat-icon>
             <span><a style="color:black" [routerLink]="['/settings', {outlets: {settings: ['profile']}}]" routerLinkActive="active"Profile Settings>Profile Settings</a></span>
         </p>
     
+        <!-- password change -->
         <p mat-menu-item>
             <mat-icon style="vertical-align:text-bottom">lock</mat-icon>
             <span><a style="color:black" [routerLink]="['/settings', {outlets: {settings: ['password']}}]" routerLinkActive="active"Profile Settings>Change Password</a></span>
         </p>
 
+        <!-- vpn key -->
         <p mat-menu-item>
             <mat-icon style="vertical-align:text-bottom">vpn_key</mat-icon>
             <span><a style="color:black" [routerLink]="['/settings', {outlets: {settings: ['apikey']}}]" routerLinkActive="active"Profile Settings>API Key</a></span>
         </p>
 
+        <!-- edit user pages -->
         <p mat-menu-item name="editPages" id="settings-open-pages" (click)="openPages(userID, currUser.firstName, currUser.lastName)">
             <mat-icon style="vertical-align:text-bottom">restore_page</mat-icon><a style="color:black">Edit Pages</a>
         </p>
