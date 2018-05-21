@@ -1,5 +1,18 @@
 // Jack Reyburn
 
+#newGroupHeader {
+    width: 300px;
+    left: 10px;
+    top: -10px;
+    margin-bottom: -10px;
+}
+
+#closingX {
+    position: absolute;
+    right: 20px;
+    top: 5px;
+}
+
 // formatting the input boxes
 #nameBlock, #descBlock {
     width: 280px;

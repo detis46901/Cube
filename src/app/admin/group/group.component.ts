@@ -193,7 +193,7 @@ export class GroupComponent implements OnInit {
                     this.userService
                         .GetSingle(gm.userID)
                         .subscribe((user) => {
-                            tempA.push(user)
+                            tempA.push(user.user)
                         })
                 }             
 

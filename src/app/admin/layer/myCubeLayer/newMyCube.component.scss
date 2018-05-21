@@ -9,26 +9,47 @@ mat-dialog-content {
     width: 450px;
 }
 
+// formats and positions the header
 #myCubeHeader {
     position: relative;
-    width: 300px;
-    left: 5px;
+    width: 410px;
 }
-
 #myCubeLayerHeader {
     position: relative;
     top: -10px;
-    left: -5px;
+    left: 0px;
+    margin-bottom: -10px;
 }
 
 // positions the closing 'x'
 #closingX {
-    position: relative;
-    top: -60px;
-    right: -100px;
+    position: absolute;
+    top: -10px;
+    right: -10px;
 }
 
+// spaces the entry boces from the header
+#descriptionEntry, #nameEntry {
+    margin-top: -10px;
+    position: relative;
+}
+
+// spaces the entry boxes from each other
 #descriptionEntry, #dataTypeEntry {
     position: relative;
     left: 50px;
+}
+
+// colors the field button
+#addFieldButton {
+    color: white;
+    background-color: #646464;
+    left:165px;
+}
+
+// colors the layer button and positioning
+#addLayerButton {
+    color: white;
+    background-color: #646464;
+    left: 162px;
 }
