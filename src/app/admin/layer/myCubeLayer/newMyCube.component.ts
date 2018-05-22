@@ -79,6 +79,21 @@ export class newMyCubeComponent implements OnInit {
             });
     }
 
+    // method to update label field when one of the radio buttons is clicked
+    
+    private updateLabelField(labelField: MyCubeField): void {
+        for (let tempage of this.newLayerFields) {
+            if (tempage.label == true) {
+                tempage.label = false;;
+            }
+        }
+        for (let tempage of this.newLayerFields) {
+            if (tempage.field == labelField.field) {
+                tempage.label = true;
+            }
+        } 
+    }
+
     private createTable(id): void {
         this.sqlservice
             .Create(id)
