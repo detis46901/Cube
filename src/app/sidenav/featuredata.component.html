@@ -1,58 +1,50 @@
-<mat-card class="example-card" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 0px; padding:5px 5px 5px 5px;">
-    <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-        <mat-card-title></mat-card-title>
-        <mat-card-subtitle></mat-card-subtitle>
-    </mat-card-header>
+<!-- Jack Reyburn -->
+<!-- handles the my cube feature and comments menus -->
 
-    <div *ngIf="message">
-        <mat-accordion class="message-data" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 0px; padding:0px 0px 0px 0px; max-height: 35 0px;">
-            <mat-expansion-panel [expanded]=t rue>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Feature Data
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <div [innerHTML]="message"></div>
-            </mat-expansion-panel>
-        </mat-accordion>
-        <!-- <div><iframe [src]="message"></iframe></div> -->
-    </div>
-</mat-card>
-
-<div *ngIf="myCubeData" style="position: absolute; bottom: 5px; right: 5px; padding:0px 0px 0px 0px">
-    <mat-accordion class="comment-data" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 384px; padding:0px 0px 0px 0px;">
+<div *ngIf="myCubeData">
+    <!-- first accordian menu for added comments -->
+    <mat-accordion class="comment-data" style="width: 400px; background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 384px">
         <mat-expansion-panel>
             <mat-expansion-panel-header>
+                <!-- header -->
                 <mat-panel-title>
                     Comments ({{myCubeComments.length}})
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <div *ngFor="let myCubeComment of myCubeComments">
+
+            <!-- box for comments -->
+            <div *ngFor="let myCubeComment of myCubeComments" style="position:relative">
                 <span>
-                    <mat-checkbox></mat-checkbox>
-                    <input type="file" (change)="onFileSelected($event)">
-                    <button *ngIf="userID == myCubeComment.userid" mat-button (click)='deleteMyCubeComment(myCubeConfig.table, myCubeComment.id)'>
-                        <mat-icon>delete</mat-icon>
-                    </button>
+                    <!-- name and date -->
                     <b>{{myCubeComment.firstName}} {{myCubeComment.lastName}}</b>
                     <i>{{myCubeComment.createdat | date:'MMM dd':'-0500'}} at {{myCubeComment.createdat | date:'h:ma':'-0500'}}</i>
-                    <br> {{myCubeComment.comment}}
+                    
+                    <!-- delete button -->
+                    <button id="trashButton" *ngIf="userID == myCubeComment.userid" mat-button (click)='deleteMyCubeComment(myCubeConfig.table, myCubeComment.id)'>
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <br> 
+                    <!-- comment -->
+                    <div style="word-wrap:normal; width:380px">
+                        {{myCubeComment.comment}}
+                    </div>
                     <br>
+                    <input type="file" (change)="onFileSelected($event)">
+                    <hr>
                 </span>
             </div>
+            <!-- comment input that is used as enter is pressed -->
             <mat-form-field style="width:100%">
-                <input matInput id="comment" [(ngModel)]="newComment" placeholder="New Comment" (blur)="addMyCubeComment()">
+                <input matInput id="comment" [(ngModel)]="newComment" placeholder="New Comment" (keyup.enter)="addMyCubeComment()">
             </mat-form-field>
-            <mat-hint align="start">
-                <strong>Don't use single quotes right now.</strong>
-            </mat-hint>
         </mat-expansion-panel>
     </mat-accordion>
 
-    <mat-accordion class="feature-data" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 0px; padding:0px 0px 0px 0px;">
-        <mat-expansion-panel [expanded]=t rue>
+    <!-- second accordian menu handling features -->
+    <mat-accordion class="feature-data" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 0px">
+        <mat-expansion-panel>
             <mat-expansion-panel-header>
+                <!-- header -->
                 <mat-panel-title>
                     Feature Data
                 </mat-panel-title>
@@ -61,18 +53,21 @@
                 <div *ngIf="myCube.type=='id'"></div>
                 <div *ngIf="myCube.type=='geom'"></div>
                 <div *ngIf="myCube.type=='integer'">
+                    <!-- input field -->
                     <mat-form-field style="width:100%">
                         <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}"
                             [(ngModel)]="myCube.value" (blur)="updateMyCube(myCube)">
                     </mat-form-field>
                 </div>
                 <div *ngIf="myCube.type=='double precision'">
+                    <!-- input field -->
                     <mat-form-field style="width:100%">
                         <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}"
                             [(ngModel)]="myCube.value" (blur)="updateMyCube(myCube)">
                     </mat-form-field>
                 </div>
                 <div *ngIf="myCube.type=='boolean'">
+                    <!-- checkbox for contracting -->
                     <mat-checkbox [disabled]="!myCubeConfig.edit" [(ngModel)]="myCube.value" (change)="updateMyCube(myCube)">{{myCube.field}}</mat-checkbox>
                 </div>
                 <div *ngIf="myCube.type=='text'" matTooltip="No crazy symbols yet" matTooltipPosition="above" matTooltipShowDelay="1000">

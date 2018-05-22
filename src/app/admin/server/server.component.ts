@@ -101,7 +101,7 @@ export class ServerComponent implements OnInit {
     }
         
     private getGeoserver(serv: Server): void {
-        let url = serv.serverURL + '/wms?request=getCapabilities&service=WMS';
+        let url = serv.serverURL + '?request=getCapabilities&service=WMS';
         this.getCapabilities(url)
         .subscribe((data) => {
             let parser = new ol.format.WMSCapabilities();

@@ -52,7 +52,7 @@
         </div>
 
         <!-- Creates the list of radio items -->
-        <mat-radio-group *ngFor="let newLayerField of newLayerFields" name="layerFieldGroup" value="newLayerField.layer" [(ngModel)] = "newLayerField1.label">
+        <mat-radio-group *ngFor="let newLayerField of newLayerFields" name="layerFieldGroup" value="newLayerField.layer" [(ngModel)] = "newLayerField1.label" style="height:200px">
             <!-- Delete button and layer field and type -->
             <span class="col-sm-8">
                 <p (click)="deleteField(newLayerFields.indexOf(newLayerField))"><i class="fa fa-trash"></i> {{newLayerField.field}}: {{newLayerField.type}}</p> 
