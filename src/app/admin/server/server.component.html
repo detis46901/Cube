@@ -58,10 +58,10 @@
                     <button mat-button (click)="getRequest(row.currentData)">
                         Layers
                     </button>
-                    <button *ngIf="!row.editing" mat-icon-button style="color:#7e7e7e" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.serverName)">
+                    <button *ngIf="!row.editing" mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.serverName)">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
-                    <button mat-icon-button style="color:#7e7e7e" focusable="false" (click)="openConfDel(row.currentData)">
+                    <button mat-icon-button style="color:#7e7e7e" title="Delete Server" focusable="false" (click)="openConfDel(row.currentData)">
                         <i class="fa fa-trash mat-icon"></i>
                     </button>
                 </mat-cell>

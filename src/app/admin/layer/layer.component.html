@@ -57,12 +57,12 @@
                         <button mat-menu-item id="openstyle" (click)="openStyle(row.currentData.ID, row.currentData.layerName)">Style</button>
                     </mat-menu>
                     <span>
-                    <button mat-icon-button style="color:#7e7e7e" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.layerName)">
+                    <button mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.layerName)">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
                     </span>
                     <span>
-                    <button mat-icon-button style="color:#7e7e7e" focusable="false" (click)="confirmDelete(row.currentData)">
+                    <button mat-icon-button style="color:#7e7e7e" title="Delete Layer" focusable="false" (click)="confirmDelete(row.currentData)">
                         <i class="fa fa-trash mat-icon"></i>
                     </button>
                     </span>

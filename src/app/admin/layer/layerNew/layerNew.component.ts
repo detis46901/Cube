@@ -11,7 +11,7 @@ import { MatDialog } from '@angular/material';
 import { LayerPermissionComponent } from '../layerPermission/layerPermission.component';
 import { User } from '../../../../_models/user.model';
 import { GroupService } from '../../../../_services/_group.service';
-
+import { Group } from '../../../../_models/group.model';
 
 @Component({
     selector: 'layer-new',
@@ -28,7 +28,8 @@ export class LayerNewComponent implements OnInit {
     //@Input() layerServer: Server;
     @Input() layerName: string;
 
-    private permlessGroups = new Array<User>(); 
+    private permlessUsers = new Array<User>()
+    private permlessGroups = new Array<Group>(); 
     private token: string;
     private userID: number;
     private step = 0;
@@ -54,12 +55,17 @@ export class LayerNewComponent implements OnInit {
     private layer = new Layer;
     private newLayerPermission = new LayerPermission;
 
+    private currDeletedPermObj: any; //Group or User Object
+    private currDeletedPermIsUser: boolean; //True if it is a User object from the permission.
+    private permNames = new Array<string>();
+
+
     //steps that should occur in this component
     //identify the layer
     //provide permissions
     //place on userpages?
 
-    constructor(private layerservice: LayerService, private layerPermissionService: LayerPermissionService, private dialog: MatDialog, private serverService: ServerService, private groupService: GroupService) {
+    constructor(private layerservice: LayerService, private layerPermissionService: LayerPermissionService, private dialog: MatDialog, private serverService: ServerService, private groupService: GroupService, private userService: UserService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;

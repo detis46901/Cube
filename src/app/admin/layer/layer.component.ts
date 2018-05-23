@@ -74,7 +74,7 @@ export class LayerComponent implements OnInit {
     }
 
     private createMyCube(): void {
-        const dialogRef = this.dialog.open(newMyCubeComponent, {height:'430px', width:'480px'});
+        const dialogRef = this.dialog.open(newMyCubeComponent, {height:'520px', width:'480px'});
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });

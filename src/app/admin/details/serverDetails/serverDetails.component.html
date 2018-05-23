@@ -25,6 +25,12 @@
             <input matInput name="serverName" [(ngModel)]="server.serverName" placeholder="Server Name" value="{{server.serverName}}">
         </mat-form-field>
         <br>
+
+        <!-- server type can be changed by admin user -->
+        <mat-form-field class="row">
+            <input matInput name="serverType" [(ngModel)]="server.serverType" placeholder="Server Type" value="{{server.serverType}}">
+        </mat-form-field>
+        <br>
     
         <!-- server URL can be changed by admin user -->
         <mat-form-field class="row">

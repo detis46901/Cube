@@ -91,11 +91,11 @@
                 </mat-menu>
 
                 <!-- edit user button -->
-                <button mat-icon-button style="color:#7e7e7e" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.firstName, row.currentData.lastName)">
+                <button mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.firstName, row.currentData.lastName)">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
                 <!-- delete user button -->
-                <button mat-icon-button style="color:#7e7e7e" focusable="false" (click)="openConfDel(row.currentData)">
+                <button mat-icon-button style="color:#7e7e7e" title="Delete User" focusable="false" (click)="openConfDel(row.currentData)">
                     <i class="fa fa-trash mat-icon"></i>
                 </button>
             </mat-cell>

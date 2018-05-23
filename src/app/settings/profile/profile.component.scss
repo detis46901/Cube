@@ -1,34 +1,47 @@
+// Jack Reyburn
+// Styling for user settings
+
+// formatting and positioning for parent container
 .profile-parent-container {
-    width: 180px;
-    height: 190px;
+    width: 240px;
+    height: 480px;
     position: absolute;
     top: 50%;
     left: 50%;
-    margin-top: -120px;
+    margin-top: -200px;
     margin-left: -100px;
     background-color: white;
 }
 
+// formats header
 h3 {
-    margin: 10px;
-    font-family: 'Roboto', sans-serif;
+    bottom:-40px;
 }
 
+// formatting and positioning for profile image
 img {
     width: 55%;
     height: 55%;
     top: 50%;
     left: 50%;
-    margin-top: 20px;
+    margin-top: 0px;
 }
 
-button {
+// positioning of change avatar button
+.btn-primary {
     margin: 10px 10px 10px 10px;
-    background-color: #623c65;
-    color: white;
     bottom: -15px;
 }
 
-.row {
+// formatting of both buttons
+button {
+    background-color: #623c65;
+    color: white;
+    width: 180px;
+}
+
+// formatting for the input boxes
+.mat-form-field {
     margin-left: 3px;
+    left:40px;
 }
