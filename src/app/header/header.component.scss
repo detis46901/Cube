@@ -61,6 +61,15 @@ h5, h4, h3 {
     min-width: 25px;
 }
 
+#logoutButton, #adminSettingsButton {
+    position: relative;
+    color: white;
+    border: 1px solid white;
+    top: -5px;
+    margin-left: 5px;
+    left: 5px;
+}
+
 :focus {
     outline: none;
 }

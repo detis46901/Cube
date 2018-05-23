@@ -45,8 +45,10 @@
 
     <!-- logout and administrator settings -->
     <span id="headerRight" class="col-sm-3 col-sm-offset-3">
-        <a id="headerLogout" routerLink="/logout"><h5>Logout</h5></a>
-        <a id="headerAdmin" *ngIf="user.administrator" [routerLink]="['/admin', {outlets: {admin: ['layer']}}]"><h5>Admin Settings</h5></a>
+        <button mat-button id="logoutButton" routerLink="/logout">Logout</button>
+        <button mat-button id="adminSettingsButton" [routerLink]="['/admin', {outlets: {admin: ['layer']}}]">Admin Settings</button>
+        <!-- <a id="headerLogout" routerLink="/logout"><h5>Logout</h5></a> -->
+        <!-- <a id="headerAdmin" *ngIf="user.administrator" [routerLink]="['/admin', {outlets: {admin: ['layer']}}]"><h5>Admin Settings</h5></a> -->
     </span>
 </div>
 
