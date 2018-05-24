@@ -13,7 +13,7 @@
             </button>
             <!-- map button -->
             <a id="mapButton" title="Return to map" routerLink="home"><i class="fa fa-cube"></i></a>
-            <button mat-button *ngIf="screenCode == 1" id="headerNotifications" (click)="openNotifications(userID)"><i id="headerNotifIcon" class="fa fa-envelope fa-2x"></i></button>
+            <button mat-icon-button *ngIf="screenCode == 1" id="headerNotifications" title="Notifications" (click)="openNotifications(userID)"><i id="headerNotifIcon" class="fa fa-envelope fa-2x"></i></button>
         </h3>       
     </span>
 

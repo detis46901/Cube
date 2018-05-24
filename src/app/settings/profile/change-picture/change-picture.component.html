@@ -1,8 +1,12 @@
+<!-- Jack Reyburn -->
+<!-- formats the modal from the change avatar button -->
+
 <div class="change-picture-parent-container">
     <div class="change-picture-header">
+        <!-- header and closing x -->
         <h4>
             <strong>Change Avatar</strong>
-            <button [mat-dialog-close] class="close" aria-label="Close">&times;</button>
+            <button [mat-dialog-close] id="closingX" class="close" aria-label="Close">&times;</button>
         </h4>
     </div>
 
@@ -24,8 +28,8 @@
         </div>
     </mat-dialog-content>
 
-    <mat-dialog-actions>
-        <button mat-dialog-close id="newGroupClose">Cancel</button>
-        <button mat-button (click)="onUpload()">Ok</button>
+    <!-- ok button -->
+    <mat-dialog-actions style="justify-content:center">
+        <button mat-button id="okButton" (click)="onUpload()">Ok</button>
     </mat-dialog-actions>
 </div>

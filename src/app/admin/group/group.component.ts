@@ -62,7 +62,7 @@ export class GroupComponent implements OnInit {
         this.groupService
             .GetAll()
             .subscribe((data) => {
-                this.availableGroups = data;
+                this.groups = data;
             }, error => {
                 console.error(error);
             });
@@ -175,6 +175,17 @@ export class GroupComponent implements OnInit {
                 }             
 
                 this.memberGroups = tempA
+
+                console.log(this.groups)
+                console.log(tempA)
+                for (let group of this.groups) {
+                    if (tempA.indexOf(group) === -1) {
+                       tempB.push(group)
+                    }
+                } 
+
+                this.availableGroups = tempB
+                
             })  
     }
 

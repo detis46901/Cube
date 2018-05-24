@@ -72,7 +72,9 @@ export class LayerNewComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (this.serverLayer) { this.newLayer = this.serverLayer }
+        if (this.serverLayer) { 
+            this.newLayer = this.serverLayer 
+        }
         console.log(this.newLayer)
         this.getServers();
     }

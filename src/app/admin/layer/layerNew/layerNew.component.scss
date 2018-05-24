@@ -1,63 +1,35 @@
-mat-dialog-container {
-    height: 100px;
-}
+// Jack Reyburn
+// Styles the new layer window
 
-.demo-tab-group {
-    border: 1px solid #e8e8e8;
-  }
-  
-.demo-tab-content {
-    padding: 16px;
-  }
-  
+// formats the header row
 #newLayerHeader {
     width: 100%;
-    height: 0px;
     position: relative;
     left: 15px;
-    bottom: 10px;
+    bottom: 15px;
+    height: 0px;
 }
 
+// formats and positions the closing x
 #newLayerX {
-    position: relative;
-    left: 175px;
+    position: absolute;
+    right: -140px;
 }
 
-#newLayerClose, #newLayerAdd {
-    position: relative;
-    bottom: 0px;
-    height: 34px;
-}
-
-// input, select {
-//     position:absolute;
-//     left:30px;
-//     width:134px;
-//     height:24px;
-//     margin-bottom:8px;
-// }
-
-// label {
-//     position:relative;
-//     direction:rtl;
-//     left:38px;
-//     top:3px;
-// }
-
-h4 {
-    color:black;
-}
-
+// spaces the input boxes
 #nameBlock, #idBlock, #servBlock, #serviceBlock {
     position: relative; 
     left: 4%;
     margin-bottom: 5px;
-    margin-top: 0px;
 }
-
 #descBlock, #typeBlock, #geomBlock, #formBlock {
     position: relative; 
     left: 12%;
     margin-bottom: 5px;
-    margin-top: 0px;
+}
+
+// formats the add layer button
+#addLayerButton {
+    background-color: #7e7e7e;
+    color: white;
 }

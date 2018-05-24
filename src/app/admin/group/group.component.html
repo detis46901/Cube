@@ -25,7 +25,7 @@
                     Create New...
                 </mat-list-option>
 
-                <mat-list-option class="group_groupSelect" *ngFor="let group of availableGroups" (click)="selectGroup(group)">
+                <mat-list-option class="group_groupSelect" *ngFor="let group of groups" (click)="selectGroup(group)">
                     <span>
                         {{group.name}}
                         <span style="float:right; position:relative; left:20px">
@@ -61,7 +61,7 @@
             </mat-selection-list>
 
             <mat-selection-list disableRipple=true *ngIf="bool">
-                <mat-list-option *ngFor="let user of users" (click)="selectUserAdd(user)">
+                <mat-list-option *ngFor="let user of availableUsers" (click)="selectUserAdd(user)">
                     {{user.firstName}}&nbsp;{{user.lastName}}
                 </mat-list-option>
             </mat-selection-list>

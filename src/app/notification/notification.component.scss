@@ -1,3 +1,6 @@
+// Jack Reyburn
+// Styling for notifications pane
+
 #notificationMenu {
     padding:0;
     width:550px;
@@ -7,6 +10,7 @@
     display:none;
 }
 
+// formats each individual notification
 mat-list-item {
     font-family:'Roboto', sans-serif;
     overflow-wrap: normal;
@@ -27,6 +31,7 @@ h4 {
     display:inline;
 }
 
+// formats and positions the delete button
 #notifX {
     position:relative;
     left:20px;

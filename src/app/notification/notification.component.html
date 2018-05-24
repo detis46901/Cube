@@ -1,17 +1,27 @@
+<!-- Jack Reyburn -->
+<!-- Notification popup -->
+
+<!-- Container to old notifications -->
 <mat-card id="notificationMenu" class="container pull-left notification-card">
     <mat-list>
+        
+        <!-- creates a list of  -->
         <mat-list-item *ngFor="let notif of notifications">
-            <!-- <span *ngFor="let priority"><i class="fas fa-exclamation"></i></span> -->
             <div class="row" style="width:98%; position:relative; left:2%">
+
+                <!-- notification and delete button in one row -->
                 <span style="width:100%">
                     <h4 style="padding-right:20px;">{{notif.name}}</h4>
                     <button id="notifX" class=close (click)="deleteNotif(notif)" aria-label="Close">&times;</button>
                 </span>
 
+                <!-- notification description -->
                 <h5>{{notif.description}}</h5>  
             </div>
             <mat-divider></mat-divider>
         </mat-list-item>
+
+        <!-- place holder when there are no notifications -->
         <mat-list-item *ngIf="!notifications">
             <h4>Nothing to see here.</h4>
         </mat-list-item>
