@@ -43,6 +43,7 @@ export class GroupComponent implements OnInit {
     private userGroupMembers;
 
     private availableGroups;
+    private availableUsers;
     private memberGroups;
     private memberUsers;
     private showGroup: boolean;
@@ -176,22 +177,24 @@ export class GroupComponent implements OnInit {
 
                 this.memberGroups = tempA
 
-                console.log(this.groups)
-                console.log(tempA)
+                // loop to compare member groups to all groups and form an array for available groups to display
                 for (let group of this.groups) {
-                    if (tempA.indexOf(group) === -1) {
-                       tempB.push(group)
+                    var counter = 0;
+                    for (var i=0; i<tempA.length; i++) {
+                        if (group.name != tempA[i].name) {
+                            counter++;
+                        }
                     }
-                } 
-
+                    if (counter == tempA.length) {
+                        tempB.push(group);
+                    }
+                }
                 this.availableGroups = tempB
-                
             })  
     }
 
     private selectGroup(group: Group, color): void {
         //this.userSelectionList.deselectAll();
-        if(color)this.colorIcons(group)
         this.selectedGroup = group;
         this.groupMemberService
             .GetByGroup(group.ID)
@@ -200,16 +203,47 @@ export class GroupComponent implements OnInit {
                 var tempA = new Array<User>();
                 var tempB = new Array<User>();
 
+                // initializes required variables to build available user array
+                var indexArray = new Array<any>();
+                for (var i = 0; i < this.users.length; i++) {
+                    indexArray.push(i);
+                }
+                var counter = 0;
+
+                // first for loop gets the user information using observable
                 for(let gm of data) {
                     this.userService
                         .GetSingle(gm.userID)
                         .subscribe((user) => {
                             tempA.push(user)
-                        })
-                }             
 
-                this.memberUsers = tempA
-            })
+                            // for loop that compares all users to users in a specific group
+                            // if they match at any poin it wil replace the index array value with -1
+                            var indexOfUser = 0;
+                            for (let user1 of this.users) {
+                                if (user1.ID == user.ID) {
+                                    indexOfUser = this.users.indexOf(user1);
+                                    indexArray[indexOfUser] = -1;
+                                }
+                            }
+                            counter++;
+
+                            // once the counter hits the number of users in a group
+                            if (counter == data.length) {
+                                // if the index is not -1 it sets the appropriate user to availabler users array
+                                for (let index of indexArray) {
+                                    if (index != -1) {
+                                        tempB.push(this.users[index]);
+                                    }
+                                }
+                            }
+
+                            this.availableUsers = tempB;
+                            this.memberUsers = tempA;
+                        })
+                }
+                
+            })   
     }
 
     private selectUserAdd(user: User) {
@@ -221,7 +255,6 @@ export class GroupComponent implements OnInit {
     }
 
     private selectGroupAdd(group: Group) {
-        this.colorIcons(group)
         this.selectedAvailableGroup = group;
         //this.selectedMemberGroup = null;
     }
@@ -232,7 +265,6 @@ export class GroupComponent implements OnInit {
     }
 
     private removeMemberGroup(group: Group) {
-        console.log(group)
         for(let assoc of this.userGroupMembers) {
             if(assoc.groupID == group.ID) {
                 this.groupMemberService
@@ -307,23 +339,6 @@ export class GroupComponent implements OnInit {
         } else {
             console.log("go to groups")
             this.type = "User"
-        }
-    }
-
-    private colorIcons(g) {
-        var groupOptions = (<HTMLElement[]><any>document.getElementsByClassName("group_groupSelect"))
-        var buttons = (<HTMLElement[]><any>document.getElementsByClassName("group_deleteGroup"))
-        var buttons2 = (<HTMLElement[]><any>document.getElementsByClassName("group_editGroup"))
-
-        for(let i=0; i<buttons.length; i++) {
-            if(this.availableGroups.indexOf(g) == i) {
-                buttons[i].style.backgroundColor = "#FFCD7E";
-                buttons2[i].style.backgroundColor = "#FFCD7E";
-            } else {
-                buttons[i].style.backgroundColor = "white";
-                buttons2[i].style.backgroundColor = "white";
-            }
-            groupOptions[i].addEventListener("blur", () => { buttons[i].style.background="white"; buttons2[i].style.background="white";})
         }
     }
 }
