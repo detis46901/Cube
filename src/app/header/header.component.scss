@@ -1,50 +1,22 @@
-#headerSidenavToggle {
-    position:relative;
-    bottom:2px;
-}
+// Jack Reyburn
+// Styles the header
 
+// formats the rows
 .row {
     height:53px;
     position:relative;
     z-index:1;
-    background-color:black;
+    background-color:#7e7e7e;
 }
 
-h5, h4, h3 {
-    color:white;
-    margin:0px 0px 0px 10px;
-    top:15%;
-    position:relative;
-    font-family: 'Roboto', sans-serif;
-}
-
-h5 {
-    top:20%;
-}
-
-h3 {
-    top:20%;
-}
-
-img {
-    width:25px;
-    height:25px;
-}
-
-a i {
-    top:5%;
-}
-
-#headerSettings {
+// formats user name
+#userName {
     color:white;
 }
 
+// sizes the icons
 .material-icons {
     font-size:30px;
-}
-
-#headerSidenavToggle {
-    margin-left:40px;
 }
 
 #headerRight {
@@ -58,32 +30,61 @@ a i {
     display: flex;
 }
 
+// styles the left buttons
+#headerNotifications, #settingsButton {
+    color: white;
+    position: relative;
+    bottom: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 0;
+    z-index: 1;
+}
+#mapButton {
+    color: white;
+    position: relative;
+    margin-left: 10px;
+    margin-right: 10px;
+}
 #headerNotifications {
-    color:#337ab7;
-    position:relative;
-    bottom:5px;
-    margin-left:5px;
-    padding:0;
-    z-index:1;
+    margin-left: 5px;
 }
 
+// formats the header text
+h5, h4, h3 {
+    color: white;
+    margin: 0px 0px 0px 10px;
+    top: 20%;
+    position: relative;
+    font-family: 'Roboto', sans-serif;
+}
+
+// shrinks the box containin the notifications button
 .mat-button {
-    min-width:25px;
+    min-width: 25px;
 }
 
-button:focus {
-    outline:none;
-    width:25px;
+#logoutButton, #adminSettingsButton {
+    position: relative;
+    color: white;
+    border: 1px solid white;
+    top: -5px;
+    margin-left: 5px;
+    left: 5px;
 }
 
-a {
-    margin-left:10px;
+:focus {
+    outline: none;
 }
 
-h3 a {
-    margin-left:5px;
-    z-index:5;
-}
+// a {
+//     margin-left: 10px;
+// }
+
+// h3 a {
+//     margin-left: 5px;
+//     z-index: 5;
+// }
 
 .shake {
     animation: shake 0.82s;

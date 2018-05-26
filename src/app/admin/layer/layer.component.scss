@@ -1,5 +1,29 @@
-h4 {
-    color:black;
+mat-header-row {
+    background-color: #7e7e7e;
+    color:white;
+}
+
+//formats the position and size of the table
+.mat-table {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: 50px;
+    margin-left: -420px;
+
+    overflow: auto;
+    max-height: 80vh;
+}
+@media (min-width:1200px) {
+    .mat-form-field, .mat-table {
+        width: 1000px;
+    }
+}
+
+@media (max-width:1284px) {
+    .mat-form-field, .mat-table {
+        width: 800px;
+    }
 }
 
 .row {
@@ -9,55 +33,32 @@ h4 {
     left:15px;
 }
 
+//removes lines under each data point in the table
 :host ::ng-deep .mat-input-underline {
     background-position: 0;
     background-color: transparent;
     display: none;
 }
 
-.layer-parent-container {
-    padding-left:2px;
-}
-
+//adjusts the size of each of the columns in the table
 mat-table mat-header-row mat-header-cell.layer-xlg-head {
     max-width: 28%;
     margin-left: 4%;
 }
-
 mat-table mat-row mat-cell.layer-xlg-cell {
-    max-width: 25%;
+    max-width: 20%;
     margin-left: 7%;
 }
-
 mat-table mat-row mat-cell.layer-lg-cell, mat-table mat-header-row mat-header-cell.layer-lg-head {
     max-width: 20%;
 }
-
 mat-table mat-row mat-cell.layer-md-cell, mat-table mat-header-row mat-header-cell.layer-md-head {
     max-width: 18%;
 }
-
 mat-table mat-row mat-cell.layer-sm-cell, mat-table mat-header-row mat-header-cell.layer-sm-head {
     max-width: 8%;
 }
 
 mat-table mat-header-row mat-header-cell {
-    color: #673ab7;
-}
-
-.mat-table {
-    overflow:auto;
-    max-height:80vh;
-}
-
-@media (min-width:1200px) {
-    .mat-form-field, .mat-table {
-        width:1100px;
-    }
-}
-
-@media (max-width:1284px) {
-    .mat-form-field, .mat-table {
-        width:800px;
-    }
+    color: white;
 }

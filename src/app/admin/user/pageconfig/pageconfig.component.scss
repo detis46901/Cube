@@ -1,15 +1,27 @@
-/*#pageConfigFooter, #pageConfigHeader {
-    background-color: SCSS VARIABLE;
+// formatting the size of the box
+#pageConfigParent {
+    width: 270px;
 }
 
-#pageConfigBody {
-    background-color: SCSS VARIABLE 2;
-}*/
-
+// format the header and close button
 #pageConfigHeader {
     width: 100%;
     position: relative;
-    bottom: 20px;
+    top:-10px;
+    left:15px;
+}
+#pageX {
+    position:relative;
+    right: 20px;
+    top: 0px;
+}
+
+// spacing between the rows and columns 
+.columns {
+    top: 3px;
+}
+#defaultHeader {
+    left:30px
 }
 
 h4[mat-dialog-title] {
@@ -30,21 +42,13 @@ h4[mat-dialog-title] {
 #pageConfigLayersColumn {
     position: relative;
     left: 5%;
-    width: 72%;
+    width: 65%;
 }
 
 #pageConfigDefaultColumn {
-    width: 20%;
-}
-
-.column {
-    border-top: solid black 1px;
+    width: 35%;
 }
 
 hr {
-    margin: 0px 0px 0px 0px;
-}
-
-mat-dialog-actions {
-    margin-bottom: 0px;
+    margin: 0px 0px 5px 0px;
 }

@@ -1,44 +1,47 @@
-h3, h4 {
-    color: black;
+// Jack Reyburn
+// Formats the server page
+
+// colors the header row
+mat-header-row {
+    background-color: #7e7e7e;
 }
 
-hr {
-    width:100%; 
-    position:relative; 
-    top:25px; 
-    border-width:3px; 
-    border-color:black;
+// COlors the headers white
+mat-table mat-header-row mat-header-cell {
+    color: white;
 }
 
-td {
-    position: relative;
-    margin-bottom: 5px;
+#createServerButton {
+    border:1px solid white;
 }
 
-#exserverurl {
-    width:75%;
+:focus {
+    outline: none;
 }
 
-#btnOpenDelLayerServer {
-    position:relative; 
-    margin-right:5px
+//formats the table including size and positioning
+.mat-table {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: 50px;
+    margin-left: -475px;
+
+    overflow:auto;
+    max-height:80vh;
+}
+@media (min-width:1200px) {
+    .mat-form-field, .mat-table {
+        width:1100px;
+    }
+}
+@media (max-width:1284px) {
+    .mat-form-field, .mat-table {
+        width:800px;
+    }
 }
 
-#serverHeaderRow {
-    position:relative; 
-    top:10px; 
-    left:10px;
-}
-
-#serverServersRow {
-    position:relative; 
-    left:3%; 
-    width:100%; 
-    top:15px;
-}
-
-/////////////////////////
-
+// formats the rows and columns 
 .row {
     display:flex;
     flex-direction:column;
@@ -46,59 +49,25 @@ td {
     left:15px;
 }
 
-@media (max-width:1284px) {
-    mat-table mat-header-row mat-header-cell.server-lg-head {
-        max-width: 32%;
-        margin-left: 4%;
-    }
-    
-    mat-table mat-row mat-cell.server-lg-cell {
-        max-width: 32%;
-        margin-left: 4%;
-    }
-}
-
+// removes the lines below each data entry 
 :host ::ng-deep .mat-input-underline {
     background-position: 0;
     background-color: transparent;
     display: none;
 }
 
+// formats the columns to fit appropriately
 mat-table mat-header-row mat-header-cell.server-lg-head {
     max-width: 42%;
     margin-left: 4%;
 }
-
 mat-table mat-row mat-cell.server-lg-cell {
     max-width: 39%;
     margin-left: 4%;
 }
-
 mat-table mat-row mat-cell.server-md-cell, mat-table mat-header-row mat-header-cell.server-md-head {
     max-width: 18%;
 }
-
 mat-table mat-row mat-cell.server-sm-cell, mat-table mat-header-row mat-header-cell.server-sm-head {
     max-width: 10%;
-}
-
-mat-table mat-header-row mat-header-cell {
-    color: blue;
-}
-
-.mat-table {
-    overflow:auto;
-    max-height:80vh;
-}
-
-@media (min-width:1200px) {
-    .mat-form-field, .mat-table {
-        width:1100px;
-    }
-}
-
-@media (max-width:1284px) {
-    .mat-form-field, .mat-table {
-        width:800px;
-    }
 }

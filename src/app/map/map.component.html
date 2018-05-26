@@ -5,7 +5,7 @@
         <measure *ngIf="measureOn" [mapConfig]="mapConfig"></measure>
         <filter *ngIf="mapConfig.filterShow" [mapConfig]="mapConfig"></filter>
     </mat-accordion>
-    <div>
+    <div style="width:300px">
         <mat-accordion class="example-headers-align">
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
@@ -18,11 +18,7 @@
                 </mat-expansion-panel-header>
                 <table *ngFor="let userPage of mapConfig.userpages" style="position:relative; width:100%; right:4px" data-toggle="buttons">
                     <tr>
-                        <td>
-                            <button mat-button (click)="setPage(userPage)" style="text-align: left">{{userPage.page}}</button>
-                            <!--(click)="setUserPageLayers(activePage)", {{activePage.page}}-->
-                        </td>
-                        <td style="position:absolute; right:4px">
+                        <span>
                             <button button mat-icon-button [matMenuTriggerFor]="menu">
                                 <mat-icon>more_vert</mat-icon>
                             </button>
@@ -46,7 +42,11 @@
                                     <span>Disable alerts</span>
                                 </button>
                             </mat-menu>
-                        </td>
+                        </span>
+                        <span style="text-align: left">
+                            <button mat-button style="text-align:left" (click)="setPage(userPage)" >{{userPage.page}}</button>
+                            <!--(click)="setUserPageLayers(activePage)", {{activePage.page}}-->
+                        </span>
                     </tr>
                 </table>
                 <br>

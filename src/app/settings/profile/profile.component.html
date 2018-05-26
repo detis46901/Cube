@@ -1,31 +1,47 @@
-<div class="profile-parent-container">
+<!-- Jack Reyburn -->
+<!-- User settings -->
+
+<!-- container for the settings with text align centered -->
+<div style="text-align:center" class="profile-parent-container">
+
+    <!-- header -->
+    <h3>Profile Settings</h3>
+
+    <!-- contains default image, needs to hold current image for each user -->
     <div class="profile-picture-content">
         <img src="../../../assets/images/default-profile-icon.png">
     </div>
+    
+    <!-- button to change profile picture -->
     <div class="profile-picture-actions"> 
         <button mat-button class="btn-primary" (click)="changePicture()">Change Avatar</button>
     </div>
-    <!-- <form #f="ngForm">
-        <div class="col">
-            <div class="row">
-                <mat-form-field>
-                    <input matInput name="userFirstName" [(ngModel)]="user.firstName" placeholder="First Name" value="{{user.firstName}}">
-                </mat-form-field>
-            </div>
-                
-            <div class="row">
-                <mat-form-field>
-                    <input matInput name="userLastName" [(ngModel)]="user.lastName" placeholder="Last Name" value="{{user.lastName}}">
-                </mat-form-field>
-            </div>
+    <br>
 
-            <div class="row">
-                <mat-form-field>
-                    <input matInput name="userEmail" [(ngModel)]="user.email" placeholder="Email" value="{{user.email}}">
-                </mat-form-field>
-            </div>
-
-            <button mat-button-primary id="detailsSubmit" (click)="submit(user)" [disabled]="!f.valid">Submit Changes</button>
+    <!-- form for chanes in user's ame and email -->
+    <form #f="ngForm">
+        <!-- first name input box -->
+        <div class="row">
+            <mat-form-field>
+                <input matInput name="userFirstName" [(ngModel)]="user.firstName" placeholder="First Name" value="{{user.firstName}}">
+            </mat-form-field>
         </div>
-    </form> -->
+            
+        <!-- last name input box -->
+        <div class="row">
+            <mat-form-field>
+                <input matInput name="userLastName" [(ngModel)]="user.lastName" placeholder="Last Name" value="{{user.lastName}}">
+            </mat-form-field>
+        </div>
+
+        <!-- email input box -->
+        <div class="row">
+            <mat-form-field>
+                <input matInput name="userEmail" [(ngModel)]="user.email" placeholder="Email" value="{{user.email}}">
+            </mat-form-field>
+        </div>
+
+        <!-- submit changes button -->
+        <button mat-button id="detailsSubmit" (click)="submit(user)" [disabled]="!f.valid">Submit Changes</button>
+    </form>
 </div>

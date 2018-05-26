@@ -1,39 +1,45 @@
-<div id="detailsHeader" class="row">
-    <div class="col-sm-9">
-        <h4 mat-dialog-title style="position:relative; right:5px; bottom:5px;">{{name}}</h4>
-    </div>
-    <div class="col-sm-1 col-sm-offset-1">
-        <button id="SDX" mat-dialog-close class="close">&times;</button>
-    </div>
+<!-- Jack Reyburn -->
+<!-- This is the modal event from clicking the 'pencil' or edit button within the admin server page -->
+
+<!-- Row to include server edit details header and a closing 'x' -->
+<div class="row">
+    <!-- header -->
+    <h4 mat-dialog-title id="serverNameHeader">{{name}}</h4>
+
+    <!-- closing 'x' -->
+    <button mat-dialog-close class="close" id="closingX">&times;</button>
 </div>
+<hr>
 
 <mat-dialog-content>
+    <!-- form with input boxes for server changes -->
     <form #f="ngForm">
-        <div class="col-sm-6">
-            <div class="row" style="position:relative; right:1em;">
-                <mat-form-field>
-                    <input matInput name="serverDetailID" [(ngModel)]="server.ID" placeholder="ID" value="{{server.ID}}" [disabled]="true">
-                </mat-form-field>
-            </div>
+        <!-- server ID is set by CUBE -->
+        <mat-form-field class="row">
+            <input matInput name="serverDetailID" [(ngModel)]="server.ID" placeholder="ID" value="{{server.ID}}" [disabled]="true">
+        </mat-form-field>
+        <br>
 
-            <div class="row">
-                <mat-form-field class="row">
-                    <input matInput name="serverName" [(ngModel)]="server.serverName" placeholder="Server Name" value="{{server.serverName}}">
-                </mat-form-field>
-            </div>
-                
-            <div class="row">
-                <mat-form-field class="row">
-                    <input matInput name="serverURL" [(ngModel)]="server.serverURL" placeholder="Server URL" value="{{server.serverURL}}">
-                </mat-form-field>
-            </div>
-        </div>
+        <!-- server name can be changed by admin user -->
+        <mat-form-field class="row">
+            <input matInput name="serverName" [(ngModel)]="server.serverName" placeholder="Server Name" value="{{server.serverName}}">
+        </mat-form-field>
+        <br>
+
+        <!-- server type can be changed by admin user -->
+        <mat-form-field class="row">
+            <input matInput name="serverType" [(ngModel)]="server.serverType" placeholder="Server Type" value="{{server.serverType}}">
+        </mat-form-field>
+        <br>
+    
+        <!-- server URL can be changed by admin user -->
+        <mat-form-field class="row">
+            <input matInput name="serverURL" [(ngModel)]="server.serverURL" placeholder="Server URL" value="{{server.serverURL}}">
+        </mat-form-field>
     </form>
 </mat-dialog-content>
 
-<mat-dialog-actions>
-    <div>
-        <button mat-dialog-close id="detailsClose">Close</button>
-        <button mat-button-primary id="detailsSubmit" (click)="submit(server)" [disabled]="!f.valid">Submit Changes</button>
-    </div>
+<!-- button to submit changes -->
+<mat-dialog-actions style="justify-content: center">
+    <button mat-button id="submitButton" (click)="submit(server)" [disabled]="!f.valid">Submit Changes</button>
 </mat-dialog-actions>

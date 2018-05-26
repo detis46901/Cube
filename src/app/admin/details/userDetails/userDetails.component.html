@@ -1,58 +1,48 @@
-<div id="detailsHeader" class="row">
-    <div class="col-sm-9">
-        <h4 mat-dialog-title style="position:relative; right:5px;">{{name}}</h4>
-    </div>
-    <div class="col-sm-1 col-sm-offset-2">
-        <button id="UDX" mat-dialog-close class="close">&times;</button>
-    </div>
+<!-- Jack Reyburn -->
+<!-- Modal that handles editing existing users information -->
+
+<!-- creates a row to contain a header and a closing 'x' -->
+<div class="row">
+    <!-- header -->
+    <h4 mat-dialog-title id="detailsHeader">{{name}}</h4>
+
+    <!-- closing 'x' -->
+    <button mat-dialog-close class="close" id="closingX">&times;</button>
 </div>
+<hr>
 
 <mat-dialog-content>
+    <!-- contains the input boxes and checkboxes to edit user informations -->
     <form #f="ngForm">
-        <div class="col-sm-6">
-            <div class="row" style="position:relative; right:1em;">
-                <mat-form-field>
-                    <input matInput name="userDetailID" [(ngModel)]="user.ID" placeholder="ID" value="{{user.ID}}" [disabled]="true">
-                </mat-form-field>
-            </div>
+        <!-- first name entry box -->
+        <mat-form-field class="row" id="firstNameEntry">
+            <input matInput name="userFirstName" [(ngModel)]="user.firstName" placeholder="First Name" value="{{user.firstName}}">
+        </mat-form-field>
 
-            <div class="row">
-                <mat-form-field class="row">
-                    <input matInput name="userFirstName" [(ngModel)]="user.firstName" placeholder="First Name" value="{{user.firstName}}">
-                </mat-form-field>
-            </div>
-                
-            <div class="row">
-                <mat-form-field class="row">
-                    <input matInput name="userLastName" [(ngModel)]="user.lastName" placeholder="Last Name" value="{{user.lastName}}">
-                </mat-form-field>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="row">
-                <mat-form-field>
-                    <input matInput name="userActive" [(ngModel)]="user.active" placeholder="Active" value="{{user.active}}">
-                </mat-form-field>
-            </div>
+        <!-- last name entry box -->
+        <mat-form-field class="row" id="lastNameEntry">
+            <input matInput name="userLastName" [(ngModel)]="user.lastName" placeholder="Last Name" value="{{user.lastName}}">
+        </mat-form-field>
+        <br>
+            
+        <!-- email entry box -->
+        <mat-form-field class="row" id="emailEntry">
+            <input matInput name="userEmail" [(ngModel)]="user.email" placeholder="Email" value="{{user.email}}">
+        </mat-form-field>
 
-            <div class="row">
-                <mat-form-field>
-                    <input matInput name="userEmail" [(ngModel)]="user.email" placeholder="Email" value="{{user.email}}">
-                </mat-form-field>
-            </div>
-
-            <div class="row">
-                <mat-form-field>
-                    <input matInput name="userAdmin" [(ngModel)]="user.administrator" placeholder="Administrator" value="{{user.administrator}}">
-                </mat-form-field>
-            </div>
-        </div>
+        <!-- id box, filled by CUBE -->
+        <mat-form-field class="row" id="idEntry">
+            <input matInput name="userDetailID" [(ngModel)]="user.ID" placeholder="ID" value="{{user.ID}}" [disabled]="true">
+        </mat-form-field>
+        <br>
+            
+        <!-- checkboxes for both active users and admins -->
+        <mat-checkbox id="userActive" name="newUserActive" [(ngModel)]="user.active">Active</mat-checkbox>
+        <mat-checkbox id="userAdmin" name="newUserAdmin" [(ngModel)]="user.administrator">Administrator</mat-checkbox>
     </form>
 </mat-dialog-content>
 
-<mat-dialog-actions>
-    <div style="position:relative; left:200px;">
-        <button mat-dialog-close id="detailsClose">Close</button>
-        <button mat-button-primary id="detailsSubmit" (click)="submit(user)" [disabled]="!f.valid">Submit Changes</button>
-    </div>
+<!-- submit changes button -->
+<mat-dialog-actions style="justify-content:center">
+        <button mat-button id="submitChangesButton" (click)="submit(user)" [disabled]="!f.valid">Submit Changes</button>
 </mat-dialog-actions>

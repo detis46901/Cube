@@ -1,16 +1,48 @@
-#newUserX {
-    position:relative;
-    top:6px;
-}
+// Jack Reyburn
+// Styles the new user component
 
-#newUserActive {
-    margin-right: 10px;
-}
-
-mat-form-field {
-    width:95%;
-}
-
+// formats and positions all rows 
 .row {
-    overflow:auto;
+    width: 160px;
+    position: relative;
+    left: 10px;
 }
+
+// formats the box containing the input boxes
+mat-dialog-content {
+    width: 380px;
+    height: 150px;
+}
+
+// positions the header
+#newUserHeader {
+    position: absolute;
+    top: -10px;
+    left: 5px;
+}
+
+// positions the closing 'x'
+#closingX {
+    position: absolute;
+    top: -10px;
+    right: -180px;
+}
+
+// creates a gap between the two entry boxes on the same lines
+#lastNameEntry, #passwordEntry {
+    position: relative;
+    left: 50px;
+}
+
+// positions the admin checkbox 
+#newUserAdmin {
+    position: relative;
+    left: 100px;
+}
+
+// colors the create user button
+#createUserButton {
+    color: white;
+    background-color: #646464;
+}
+

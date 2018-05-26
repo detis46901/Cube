@@ -184,7 +184,7 @@ export class UserComponent implements OnInit {
     }
 
     private openNewUser(): void {
-        const dialogRef = this.dialog.open(NewUserComponent, {width:"400px"});//need to make this responsive
+        const dialogRef = this.dialog.open(NewUserComponent, {width:"380px"});//need to make this responsive
         dialogRef.afterClosed()
         .subscribe(() => {
             this.getUserItems();

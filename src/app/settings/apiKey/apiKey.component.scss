@@ -1,4 +1,10 @@
 .api-key-parent-container {
-    position:relative;
-    left:12.2%;
+    width: 250px;
+    height: 70px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -100px;
+    background-color: white;
 }

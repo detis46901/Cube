@@ -1,3 +1,25 @@
+// Jack Reyburn
+// Styles the edit existing groups modal
+
+#editGroupHeader {
+    left: 10px;
+    top: -10px;
+    margin-bottom: -10px;
+}
+
+#closingX {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+// formats the entry fields
 #nameBlock, #descBlock {
     width: 280px;
+}
+
+// colors the submit button
+#submitButton {
+    color: white;
+    background-color: #646464;
 }

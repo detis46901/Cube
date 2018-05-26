@@ -101,7 +101,7 @@ export class ServerComponent implements OnInit {
     }
         
     private getGeoserver(serv: Server): void {
-        let url = serv.serverURL + '/wms?request=getCapabilities&service=WMS';
+        let url = serv.serverURL + '?request=getCapabilities&service=WMS';
         this.getCapabilities(url)
         .subscribe((data) => {
             let parser = new ol.format.WMSCapabilities();
@@ -228,7 +228,7 @@ export class ServerComponent implements OnInit {
     
 
     private openServerNew(): void {
-        const dialogRef = this.dialog.open(ServerNewComponent, {height:'300px', width:'350px'});
+        const dialogRef = this.dialog.open(ServerNewComponent, {height:'300px', width:'360px'});
         dialogRef.afterClosed()
         .subscribe(result => {
             this.getServers();
@@ -236,7 +236,7 @@ export class ServerComponent implements OnInit {
     }
     
     private openDetails(id: number, name: string): void {
-        const dialogRef = this.dialog.open(ServerDetailsComponent);
+        const dialogRef = this.dialog.open(ServerDetailsComponent, {width:'320px'});
         dialogRef.componentInstance.ID = id;
         dialogRef.componentInstance.name = name;
         dialogRef.afterClosed().subscribe(() => {

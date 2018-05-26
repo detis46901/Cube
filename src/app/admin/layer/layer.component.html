@@ -1,16 +1,17 @@
 <div class="layer-parent-container">
     <div class="row">
+        <!-- table for storing and editing all layer information in house -->
         <mat-table id="layerDataTable" #table [dataSource]="dataSource">
+
+            <!-- first column used to contain layer id numbers -->
             <ng-container matColumnDef="layerID">
                 <mat-header-cell class="layer-sm-head" *matHeaderCellDef> ID </mat-header-cell>
                 <mat-cell class="layer-sm-cell" *matCellDef="let row">
                     <b>{{row.currentData.ID}}</b>
-                    <!-- <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                        <input matInput [formControl]="row.validator.controls['ID']" [readonly]="!row.editing" [(ngModel)]="row.currentData.ID">
-                    </mat-form-field> -->
                 </mat-cell>
             </ng-container>
             
+            <!-- second column containing the name of the layer -->
             <ng-container matColumnDef="name">
                 <mat-header-cell class="layer-md-head" *matHeaderCellDef> Name </mat-header-cell>
                 <mat-cell class="layer-md-cell" *matCellDef="let row">
@@ -20,37 +21,7 @@
                 </mat-cell>
             </ng-container>
 
-            <!-- <ng-container matColumnDef="identity">
-                <mat-header-cell class="layer-md-head" *matHeaderCellDef> Identity </mat-header-cell>
-                <mat-cell class="layer-md-cell" *matCellDef="let row">
-                    <mat-form-field #input floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                        <input matInput [formControl]="row.validator.controls['layerIdent']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerIdent">
-                    </mat-form-field>
-                </mat-cell>
-            </ng-container> -->
-            
-            <!-- <ng-container matColumnDef="service">
-                <mat-header-cell class="layer-sm-head" *matHeaderCellDef> Service </mat-header-cell>
-                <mat-cell class="layer-sm-cell" *matCellDef="let row">
-                    <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                        <input matInput [formControl]="row.validator.controls['layerService']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerService">
-                    </mat-form-field>
-                </mat-cell>
-            </ng-container> -->
-            
-            <!-- <ng-container matColumnDef="server">
-                <mat-header-cell class="layer-md-head" *matHeaderCellDef> Server </mat-header-cell>
-                <mat-cell class="layer-md-cell" *matCellDef="let row">
-                    <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                        <mat-select [formControl]="row.validator.controls['serverID']" [(ngModel)]="row.currentData.serverID">
-                            <mat-option *ngFor="let server of servers" [value]="server.ID">
-                                {{server.serverName}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </mat-cell>
-            </ng-container> -->
-
+            <!-- third column containing the layer description -->
             <ng-container matColumnDef="description">
                 <mat-header-cell class="layer-lg-head" *matHeaderCellDef> Description </mat-header-cell>
                 <mat-cell class="layer-lg-cell" *matCellDef="let row">
@@ -60,15 +31,7 @@
                 </mat-cell>
             </ng-container>
             
-            <!-- <ng-container matColumnDef="format">
-                <mat-header-cell class="layer-md-head" *matHeaderCellDef> Format </mat-header-cell>
-                <mat-cell class="layer-md-cell" *matCellDef="let row">
-                    <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                        <input matInput [formControl]="row.validator.controls['layerFormat']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerFormat">
-                    </mat-form-field>
-                </mat-cell>
-            </ng-container> -->
-            
+            <!-- fourth column containing type -->
             <ng-container matColumnDef="type">
                 <mat-header-cell class="layer-md-head" *matHeaderCellDef> Type </mat-header-cell>
                 <mat-cell class="layer-md-cell" *matCellDef="let row">
@@ -78,34 +41,31 @@
                 </mat-cell>
             </ng-container>
 
-            <!-- <ng-container matColumnDef="geometry">
-                <mat-header-cell class="layer-sm-head" *matHeaderCellDef> Geometry </mat-header-cell>
-                <mat-cell class="layer-sm-cell" *matCellDef="let row">
-                    <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                        <input matInput [formControl]="row.validator.controls['layerGeom']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerGeom">
-                    </mat-form-field>
-                </mat-cell>
-            </ng-container> -->
-
+            <!-- fifth and final column used for containing button to add new layers as well as
+            being able to edit current layers or delete them -->
             <ng-container matColumnDef="actionsColumn">
                 <mat-header-cell class="layer-xlg-head" *matHeaderCellDef>
-                    <button mat-button id="createLayerBtn" (click)="createLayer()">Create Layer</button>
-                    <button mat-button id="createMyCubeBtn" (click)="createMyCube()">Create MyCube</button>
+                    <button style="border:1px solid white" mat-button id="createLayerBtn" (click)="createLayer()"><a style="color:white">Create Layer</a></button>
+                    <button style="border:1px solid white" mat-button id="createMyCubeBtn" (click)="createMyCube()"><a style="color:white">Create MyCube</a></button>
                 </mat-header-cell>
                 <mat-cell class="layer-xlg-cell" *matCellDef="let row">     
                     <button mat-button [matMenuTriggerFor]="menu2">
-                        Options
+                        <a>Options</a>
                     </button>
                     <mat-menu #menu2="matMenu" [overlapTrigger]="false">
                         <button mat-menu-item id="exlayerperm" (click)="openPermission(row.currentData.ID, row.currentData.layerName)">Permissions</button>
                         <button mat-menu-item id="openstyle" (click)="openStyle(row.currentData.ID, row.currentData.layerName)">Style</button>
                     </mat-menu>
-                    <button mat-icon-button color="primary" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.layerName)">
+                    <span>
+                    <button mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.layerName)">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
-                    <button mat-icon-button color="primary" focusable="false" (click)="confirmDelete(row.currentData)">
+                    </span>
+                    <span>
+                    <button mat-icon-button style="color:#7e7e7e" title="Delete Layer" focusable="false" (click)="confirmDelete(row.currentData)">
                         <i class="fa fa-trash mat-icon"></i>
                     </button>
+                    </span>
                 </mat-cell>
             </ng-container>
             
@@ -114,8 +74,6 @@
         </mat-table>
     </div>
 
-
-    
     <!-- <span ngbDropdown>   
         <button id="sortBtn" type="button" class="btn-primary" ngbDropdownToggle>Sort Layers</button>
         <div id="sortDrop" class="dropdown-menu dropdown-menu-right" aria-labelledby="options">

@@ -1,81 +1,74 @@
+// formats the box surrounding hte three elements for groups to be sized and positioned appropriately
 .group-parent-container {
-    position:relative;
-    padding:10px 10px 20px 10px;
-    display:flex;
-    width:83vw;
-    overflow:auto;
-    max-height:80vh;
+    background-color: #7e7e7e;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -270px;
+    margin-left: -750px;
+    padding: 10px 10px 20px 10px;
+    display: flex;
+    width: 83vw;
+    max-height: 80vh;
 }
-
 @media (max-width:1100px) {
     .group-parent-container {
-        width:900px;
-        position:absolute;
+        width: 900px;
+        position: absolute;
     }
 }
 
+// formats the three containers that include the group, user and member information
 .group-list-container {
-    background-color:white;
-    border:solid black 2px;
-    position:relative;
-    width:100%;
-    height:60vh;
-    max-height:60vh;
-    overflow:auto;
+    background-color: white;
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    max-height: 60vh;
+    overflow: auto;
 }
 
-.fa-check, .fa-plus {
-    color:green;
-}
-
+// removes lines below each of the entries to clean things up
 :host ::ng-deep .mat-pseudo-checkbox {
     background-position: 0;
     background-color: transparent;
     display: none;
 }
 
+// removes the border from the edit and trash can buttons
 button {
-    background-color:white;
-    border:none;
+    background-color: white;
+    border: none;
 }
 
-.fa-minus {
-    color:red;
-}
-
+// aligns create new.. button properly
 .createGroup {
-    margin-left:20px;
+    margin-left: 20px;
 }
 
+// formats the 3 headers 
 h4 {
-    display:inline-block;
-    font-family:'Roboto', sans-serif;
+    display: inline-block;
+    font-family: 'Roboto', sans-serif;
+    color: white;
 }
 
+// aligns the slider
 mat-slide-toggle {
     margin: 0 10px;
 }
 
-:host ::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
-    background-color: #FFBB39;
-}
-
-:host ::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
-    background-color: #FFCD7E
-}
-
+// positions the two arrow buttons
 .transfer-controls {
-    position:relative;
-    top:28vh;
-    height:10vh;
+    position: relative;
+    top: 28vh;
+    height: 10vh;
 }
 
-.mat-list-item-focus, .group_arrow {
-    background-color: #FFCD7E;
-    //background: #FFCA65;
-    //background: #FFBB39;
+// formats the arrow buttons to match colors
+.group_arrow {
+    background-color: #623c65;
 }
-
-.mat-selection-list {
-    padding-top:0;
+.fa-arrow-left, .fa-arrow-right {
+    color: white;
 }

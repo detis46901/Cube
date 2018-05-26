@@ -8,12 +8,16 @@ import { Layer, WMSLayer } from '../../../../_models/layer.model';
 import { Server } from '../../../../_models/server.model';
 import { LayerPermission } from '../../../../_models/layer.model';
 import { MatDialog } from '@angular/material';
+import { LayerPermissionComponent } from '../layerPermission/layerPermission.component';
+import { User } from '../../../../_models/user.model';
+import { GroupService } from '../../../../_services/_group.service';
+import { Group } from '../../../../_models/group.model';
 
 @Component({
     selector: 'layer-new',
     templateUrl: './layerNew.component.html',
     styleUrls: ['./layerNew.component.scss'],
-    providers: [UserService, Configuration, LayerService, LayerPermissionService, ServerService],
+    providers: [UserService, Configuration, LayerService, LayerPermissionService, ServerService, LayerPermissionComponent],
 })
 
 export class LayerNewComponent implements OnInit {
@@ -23,9 +27,13 @@ export class LayerNewComponent implements OnInit {
     @Input() serverCalled: boolean = false;
     //@Input() layerServer: Server;
     @Input() layerName: string;
+
+    private permlessUsers = new Array<User>()
+    private permlessGroups = new Array<Group>(); 
     private token: string;
     private userID: number;
     private step = 0;
+    private isGroup: boolean = false;
     setStep(index: number) {
         this.step = index;
     }
@@ -45,6 +53,11 @@ export class LayerNewComponent implements OnInit {
     private newLayerServer = new Server;
     private servers: Array<Server>;
     private layer = new Layer;
+    private newLayerPermission = new LayerPermission;
+
+    private currDeletedPermObj: any; //Group or User Object
+    private currDeletedPermIsUser: boolean; //True if it is a User object from the permission.
+    private permNames = new Array<string>();
 
 
     //steps that should occur in this component
@@ -52,14 +65,16 @@ export class LayerNewComponent implements OnInit {
     //provide permissions
     //place on userpages?
 
-    constructor(private layerservice: LayerService, private layerPermissionService: LayerPermissionService, private dialog: MatDialog, private serverService: ServerService) {
+    constructor(private layerservice: LayerService, private layerPermissionService: LayerPermissionService, private dialog: MatDialog, private serverService: ServerService, private groupService: GroupService, private userService: UserService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {
-        if (this.serverLayer) { this.newLayer = this.serverLayer }
+        if (this.serverLayer) { 
+            this.newLayer = this.serverLayer 
+        }
         console.log(this.newLayer)
         this.getServers();
     }
@@ -88,5 +103,9 @@ export class LayerNewComponent implements OnInit {
         this.layerservice
             .Add(this.layer)
             .subscribe(() => this.dialog.closeAll());
+    }
+
+    private switchPermType() {
+        this.isGroup = !this.isGroup;
     }
 }

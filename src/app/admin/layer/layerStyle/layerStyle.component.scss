@@ -1,66 +1,32 @@
-#delUserStyle {
-    margin-right:10px;
-    position: relative;
-    right: 10px;
-}
+// Jack Reyburn
+// styles the layer styles page
 
-h4 {
-    position: relative;
-    bottom: 10px;
-}
-
+// positions the header
 #styleHeader {
-    position:relative;
-    height:0px;
-    margin-bottom:20px;
+    position: relative;
+    top: -10px;
+    left: 5px;
 }
 
-#exitMod {
-    position:relative;
-    
+// positions the close button
+#closingX {
+    position: relative;
+    top: -10px;
+    right: -180px;
 }
 
-#layerStyleX {
-    position:relative;
-    bottom:10px;
-}
-
-#layerStyleTitle {
-    position:relative;
-    bottom:15px;
-}
-
-hr {
-    margin:0;
-    padding:0;
-    border-color: #8d8d8d;
-}
-
-b {
-    margin-right:20px;
-}
-
-mat-checkbox {
-    margin-right:10px;
-}
-
-mat-slide-toggle {
-    position:relative;
-    top:3px;
-}
-
+// sets a max height where a scroll bar will be introduced
 mat-dialog-content {
     max-height:300px;
-    max-width: 300px;
 }
 
-#exLayerStyle {
-    padding-top:0;
+// sets the width of the text area
+mat-form-field {
+    width: 300px;
 }
 
-#layerStyleExComment {
-    position:relative;
-    bottom:20px;
-    right:5px;
-    height:20px;
+// fills the form field and sets a default height
+textarea {
+    width: 100%;
+    height: 200px;
 }

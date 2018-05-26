@@ -67,14 +67,14 @@ export class LayerComponent implements OnInit {
     }
 
     private createLayer(): void {
-        const dialogRef = this.dialog.open(LayerNewComponent, {height:'700px', width:'700px'});
+        const dialogRef = this.dialog.open(LayerNewComponent, {height:'450px', width:'450px'});
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });
     }
 
     private createMyCube(): void {
-        const dialogRef = this.dialog.open(newMyCubeComponent, {height:'350px', width:'500px'});
+        const dialogRef = this.dialog.open(newMyCubeComponent, {height:'520px', width:'480px'});
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });

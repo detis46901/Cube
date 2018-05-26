@@ -1,16 +1,10 @@
 .user-bg {
-    background-image:linear-gradient(to bottom, #99ccff, #4d88ff);
-    position:absolute;
     width:100vw;
     height:100vh;
-}
-
-settings-nav {
+    background-image: url("../../assets/blur1.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
     position:absolute;
-    width:12%;
-    height:32%;
-    top:53px;
-    color:#b3daff;
 }
 
 router-outlet {

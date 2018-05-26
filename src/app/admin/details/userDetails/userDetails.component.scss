@@ -1,5 +1,47 @@
-form {
-    position:relative;
-    left:.7em;
-    bottom:1em;
+// Jack Reyburn
+// Styling of user details
+
+// formats and positions all rows
+.row {
+    width: 160px;
+    position: relative;
+    left: 10px;
+}
+
+// formats the box containing the inputs
+mat-dialog-content {
+    width: 380px;
+    height: 150px;
+}
+
+// positions the header
+#detailsHeader {
+    position: absolute;
+    top: -10px;
+    left: 5px;
+}
+
+// positions the closing 'x'
+#closingX {
+    position: absolute;
+    top: -10px;
+    right: -180px;
+}
+
+// provides a gap between entry boxes on the same line
+#lastNameEntry, #idEntry {
+    position: relative;
+    left: 50px;
+}
+
+// positions the admin checkbox
+#userAdmin {
+    position: relative;
+    left: 100px;
+}
+
+// colors the submit button
+#submitChangesButton {
+    color: white;
+    background-color: #646464;
 }

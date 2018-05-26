@@ -1,54 +1,51 @@
+// formats the scroll bar to be invisible (not working)
+html {
+    overflow: hidden;   
+}
+::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
+}
+
+// formats the page header and the popup window 
 #pageHeader {
     width:100%;
     position:relative;
 }
-
 #pageX {
     position:relative;
-    left:20px;
-    //top:3px;
+    right: -30px;
+    top: -10px;
+}
+.col-sm-9 {
+    top: -10px;
 }
 
-#pageContentTitleBar {
-    border-bottom:solid black 1px;
-}
-
+// formats the data rows to appropriately show user pages and related info
 #exPageNameCol {
     position:relative;
     top:2px;
     overflow: hidden;
     white-space: nowrap;
 }
-
 #exPageActiveCol {
     position:relative;
     left:7px;
     margin-bottom: 4px;
 }
-
 #exPageDefaultCol {
     position: relative;
     left: 20px;
     top: 3px;
 }
-
 #exPageOrderCol {
     position: relative;
     left: 5px;
     top: 2px;
 }
 
-#pageBodyRows {
-    border-bottom: solid black 1px;
-}
-
 hr {
     margin: 0px 0px 5px 0px;
-}
-
-#pageClose {
-    position: relative;
-    left: 15px;
 }
 
 .newPageInputArea {

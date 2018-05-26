@@ -19,8 +19,8 @@ export class LayerPermissionComponent implements OnInit {
     @Input() layerID: number;
     @Input() layerName: string;
     private closeResult: string;
-    private permlessUsers = new Array<User>();
-    private permlessGroups = new Array<Group>();
+    public permlessUsers = new Array<User>();
+    public permlessGroups = new Array<Group>();
     private newLayerPermission = new LayerPermission;
     private layerPermissions = new Array<LayerPermission>();
     private token: string;
@@ -173,7 +173,7 @@ export class LayerPermissionComponent implements OnInit {
         this.currDeletedPermObj = perm
         //perm.groupID ? this.currDeletedPermIsUser=false : this.currDeletedPermIsUser=true;
 
-        if(!perm.groupID) {
+        if (!perm.groupID) {
             this.currDeletedPermIsUser = true;
         } else {
             this.currDeletedPermIsUser = false;
