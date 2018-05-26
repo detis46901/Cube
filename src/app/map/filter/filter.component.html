@@ -11,7 +11,7 @@
                     <mat-option *ngFor="let column of columns" [value]="column">
                       {{ column.field }}
                     </mat-option>
-                  </mat-select>
+                  </mat-select><br>
                   <mat-radio-group [(ngModel)]="filterOperator" placeholder="Operator">
                         <mat-radio-button *ngFor="let operator of operators" [value]="operator">
                           {{ operator.viewValue }}

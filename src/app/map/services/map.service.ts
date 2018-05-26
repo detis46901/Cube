@@ -262,18 +262,17 @@ export class MapService {
         }, 20000);
 
         this.getMyCubeData(layer).then((data) => {
-            let source2: ol.source.Vector = source
+           
             if (data[0][0]['jsonb_build_object']['features']) {
                 source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']))
                 //this.filterFunction(layer, source)
-                source2 = this.filterService.filterFunction(layer, source)
             }
             //this.filterfunction(source,layer)
-            this.vectorlayer = new ol.layer.Vector({ source: source2, style: stylefunction })
+            this.vectorlayer = new ol.layer.Vector({ source: source, style: stylefunction })
             this.vectorlayer.setVisible(layer.layerON)
             this.mapConfig.map.addLayer(this.vectorlayer)
             this.mapConfig.layers.push(this.vectorlayer)
-            this.mapConfig.sources.push(source2)
+            this.mapConfig.sources.push(source)
             this.mapConfig.userpagelayers[index].loadOrder = this.mapConfig.layers.length
             if (init == false) {
                 this.mapConfig.map.addLayer(this.vectorlayer)
@@ -284,7 +283,9 @@ export class MapService {
     
   
     public runInterval(layer: UserPageLayer, source: ol.source.Vector) {
-        let source2: ol.source.Vector = source
+        let stylefunction = ((feature) => {
+            return (this.styleService.styleFunction(feature, layer, "load"))
+        })
         this.getMyCubeData(layer).then((data) => {
             if (data[0]) {
                 if (data[0][0]['jsonb_build_object']['features']) {
@@ -294,8 +295,14 @@ export class MapService {
 
                     source.clear()
                     source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']))
-                   //this.filterFunction(layer, source)
-                   source2 = this.filterService.filterFunction(layer, source)
+                    let index = this.mapConfig.userpagelayers.findIndex(x => x == layer)
+                    console.log(index)
+                    //this.mapConfig.layers[index].setStyle(stylefunction) 
+                    source.forEachFeature(feat => {
+                        console.log("runInterval and feat = " + feat)
+                        feat.setStyle(stylefunction)
+                    })
+                    //this.filterFunction(layer, source)
                     if (this.mapConfig.currentLayer == layer) {
                         this.getFeatureList()
                         if (this.mapConfig.selectedFeature) {
