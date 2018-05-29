@@ -44,7 +44,8 @@ export class ServerService extends ParentService {
                 break;
             case "ArcGIS": 
                 if (type=="layer") {path += "/MapServer"}
-                actionUrl = serv.serverURL + path + '?f=pjson'; 
+                actionUrl = serv.serverURL + '?f=pjson'; 
+                console.log(actionUrl)
                 break;
         }     
         return this._http.get(actionUrl, options/*, this.options*/)

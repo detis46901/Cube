@@ -58,7 +58,7 @@
                 </mat-form-field>
                
                 <!-- add layer button -->
-                <button style="position:relative; left:15px" mat-button id="pageConfigSubmit" (click)="addUserPageLayer(newUserPageLayer)" [disabled]="!f.valid">Add Layer</button>
+                <button style="position:relative; left:15px" mat-button id="pageConfigSubmit" (click)="addUserPageLayer(newUserPageLayer)" onClick="window.location.reload()" [disabled]="!f.valid">Add Layer</button>
             </div>
         </form>
     </mat-dialog-content>

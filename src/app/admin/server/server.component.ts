@@ -84,9 +84,11 @@ export class ServerComponent implements OnInit {
     }
 
     private getRequest(serv: Server): void {
+        console.log("getRequest")
+        console.log(serv)
         let url: string
         switch (serv.serverType) {
-            case "GeoserverWMS": {
+            case "Geoserver": {
                 this.getGeoserver(serv)
                 break
             }
@@ -94,16 +96,20 @@ export class ServerComponent implements OnInit {
                 url = serv.serverURL + '/gwc/service/wmts?request=getcapabilities';
                 break
             case "ArcGIS":
-                url = serv.serverURL + 'f=pjson';
+                //serv.serverURL = serv.serverURL + '?f=pjson';
+                this.WMSRequest(serv, "Folder")
                 break;
         }
   
     }
         
     private getGeoserver(serv: Server): void {
-        let url = serv.serverURL + '?request=getCapabilities&service=WMS';
+        console.log("getGeoserver")
+        let url = serv.serverURL //+ '?request=getCapabilities&service=WMS';
+        console.log(url)
         this.getCapabilities(url)
         .subscribe((data) => {
+            console.log(data)
             let parser = new ol.format.WMSCapabilities();
             let result = parser.read(data)
             console.log(result)
@@ -111,29 +117,29 @@ export class ServerComponent implements OnInit {
             this.WMSLayers = result['Capability']['Layer']['Layer']
             this.currServer = serv
         })
-        this.currServer = serv;
-        this.clearArrays();
-        this.displayGeoserverLayers = true;
+        // this.currServer = serv;
+        // this.clearArrays();
+        // this.displayGeoserverLayers = true;
 
-        this.serverService.getCapabilities(serv)
-            .subscribe((response: string) => {
-                this.parseGeoserver(response);
-            });
+        // this.serverService.getCapabilities(serv)
+        //     .subscribe((response: string) => {
+        //         this.parseGeoserver(response);
+        //     });
     }
 
-    private parseGeoserver(response: string): void {
-        //list is returned with two elements at indeces 0 and 1 that do not represent valid objects, and must be trimmed off via shift()
-        let list = response.split('<Layer');
-        list.shift();
-        list.shift();
+    // private parseGeoserver(response: string): void {
+    //     //list is returned with two elements at indeces 0 and 1 that do not represent valid objects, and must be trimmed off via shift()
+    //     let list = response.split('<Layer');
+    //     list.shift();
+    //     list.shift();
 
-        for (let i of list) {
-            let name = i.substr(i.indexOf('<Name>') + 6, (i.indexOf('</Name>') - (i.indexOf('<Name>') + 6)));
-            let format = i.substr(i.indexOf('<Format>') + 8, (i.indexOf('</Format>') - (i.indexOf('<Format>') + 8)));
-            this.folderArray.push(name);
-            this.formatArray.push(format);
-        }
-    }
+    //     for (let i of list) {
+    //         let name = i.substr(i.indexOf('<Name>') + 6, (i.indexOf('</Name>') - (i.indexOf('<Name>') + 6)));
+    //         let format = i.substr(i.indexOf('<Format>') + 8, (i.indexOf('</Format>') - (i.indexOf('<Format>') + 8)));
+    //         this.folderArray.push(name);
+    //         this.formatArray.push(format);
+    //     }
+    // }
 
     private getLayers(serv: Server): void {
         let path: string = '';
@@ -147,6 +153,7 @@ export class ServerComponent implements OnInit {
     }
 
     private parseLayers(response: string): void {
+        console.log(response['folders'])
         let list = JSON.parse(response);
         if (list.folders) {
             for (let i of list.folders) {
@@ -165,12 +172,12 @@ export class ServerComponent implements OnInit {
         }
     }
 
-    private WMSRequest(path: string, type: string): void {
-        console.log("WMSRequest " + path)
-        this.path = '/' + path;
+    private WMSRequest(server: Server, type: string): void {
+        console.log("WMSRequest " + server.serverURL)
+        this.path = '/' + server.serverURL;
         this.clearArrays();
         this.displayFolders = true;
-        this.serverService.getFolders(this.currServer, this.path, type, this.options)
+        this.serverService.getFolders(server, this.path, type, this.options)
             .subscribe((response: string) => {
                 this.parseLayers(response);
             });

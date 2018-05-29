@@ -87,7 +87,7 @@ export class MapComponent {
                         this.mapConfig.map.forEachLayerAtPixel((evt.pixel), layers => {
                             //console.log(layers)
                             let index = this.mapConfig.layers.findIndex(x => x == layers)
-                            if (index > 0 ) {
+                            if (index > 0) {
                                 let index2 = this.mapConfig.userpagelayers.findIndex (z => z.loadOrder-1 == index)
                                 // let features = this.mapConfig.map.getFeaturesAtPixel(evt.pixel)
                                 // let popup = new ol.Overlay({
