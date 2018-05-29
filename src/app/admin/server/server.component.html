@@ -88,12 +88,12 @@
         <tr style="width:100%;">
             <th style="width:40%"><h2>Name</h2></th>
             <th><h2 style="position:relative; top:7px">Format</h2><button type="button" class="close" aria-label="Close" style="position:relative; color:black; left:30%; bottom:16px;" (click)="clearArrays()">&times;</button></th>
-            <!--<th><h3 style="position:relative; top:7.5px;">Create Layer</h3></th>-->
+            <th><h3 style="position:relative; top:7.5px;">Create Layer</h3></th>
         </tr>
         <tr *ngFor="let layer of folderArray">
             <td><h4>{{layer}}</h4></td>
             <td><h4>{{formatArray[folderArray.indexOf(layer)]}}</h4></td>
-            <!--<td><input type='radio' name="create" value="toCreate"></td>-->
+            <td><input type='radio' name="create" value="toCreate"></td>
             <td><button mat-button (click)="createGeoserverLayer(layer)">Create Layer</button></td>
         </tr>
     </table>
@@ -104,31 +104,31 @@
         <tr style="width:100%;">
             <th style="width:40%"><h2>Folders</h2></th>
             <th><h2 style="position:relative; top:7px">Format</h2><button type="button" class="close" aria-label="Close" style="position:relative; color:black; left:30%; bottom:16px;" (click)="clearArrays()">&times;</button></th>
-            <!--<th><h3 style="position:relative; top:7.5px;">Create Layer</h3></th>-->
+            <th><h3 style="position:relative; top:7.5px;">Create Layer</h3></th>
         </tr>
         <tr *ngFor="let layer of folderArray">
             <td><h4><button mat-button (click)="WMSRequest(layer, 'service')">{{layer}}</button></h4></td>
             <td><h4>Format</h4></td>
-            <!--<td><input type='radio' name="create" value="toCreate"></td>-->
+            <td><input type='radio' name="create" value="toCreate"></td>
         </tr>
     </table>
     <table style="width:80%; position:relative; left:10%">
         <tr style="width:100%;">
             <th style="width:40%"><h2>Services</h2></th>
             <th><h2 style="position:relative; top:7px">Format</h2><button type="button" class="close" aria-label="Close" style="position:relative; color:black; left:30%; bottom:16px;" (click)="clearArrays()">&times;</button></th>
-            <!--<th><h3 style="position:relative; top:7.5px;">Create Layer</h3></th>-->
+            <th><h3 style="position:relative; top:7.5px;">Create Layer</h3></th>
         </tr>
         <tr *ngFor="let service of serviceArray">
             <td><h4><button mat-button (click)="WMSRequest(service.name, 'layer')">{{service.name}}</button></h4></td>
             <td><h4>Format</h4></td>
-            <!--<td><input type='radio' name="create" value="toCreate"></td>-->
+            <td><input type='radio' name="create" value="toCreate"></td>
         </tr>
         <tr *ngFor="let layer of layerArray">
                 <th style="width:40%"><h2>Layers</h2></th>
                 <th style="width:40%"><h2>Format</h2>   
                 <td><h4>{{layer.name}}</h4></td>
                 <td><h4>Format</h4></td>
-                <!--<td><input type='radio' name="create" value="toCreate"></td>-->
+                <td><input type='radio' name="create" value="toCreate"></td>
                 <td><button mat-button (click)="createLayer(layerArray.indexOf(layer), layer.name)">Create Layer</button></td>
         </tr>
     </table>

@@ -111,14 +111,14 @@ export class ServerComponent implements OnInit {
             this.WMSLayers = result['Capability']['Layer']['Layer']
             this.currServer = serv
         })
-        // this.currServer = serv;
-        // this.clearArrays();
-        // this.displayGeoserverLayers = true;
+        this.currServer = serv;
+        this.clearArrays();
+        this.displayGeoserverLayers = true;
 
-        // this.serverService.getCapabilities(serv)
-        //     .subscribe((response: string) => {
-        //         this.parseGeoserver(response);
-        //     });
+        this.serverService.getCapabilities(serv)
+            .subscribe((response: string) => {
+                this.parseGeoserver(response);
+            });
     }
 
     private parseGeoserver(response: string): void {

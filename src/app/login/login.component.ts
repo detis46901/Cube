@@ -37,25 +37,45 @@ export class LoginComponent implements OnInit {
     ngOnDestroy() {
         //emit this.token to application for use with API calls
     }
- 
-    login() {
-        let that = this;
-        console.log(this.model)
-        this.loading = true;
-        let username:string = this.model.username
-        this.userService
-            .login(username.toLowerCase(), this.model.password)
-            .subscribe(res => {
-                if (res) {
-                    console.log(localStorage.getItem('currentUser'))
+
+    private login(): void {
+        if(!this.model.username) {
+            alert("Please enter a value for username.");
+            this.clearInputs();
+            return;
+        } 
+        if(this.model.username && !this.model.password) {
+            alert("Please enter a value for password.");
+            this.clearInputs();
+            return;
+        }
+        if(!this.model.username && !this.model.password) {
+            alert("Please enter a value for username and password.");
+            this.clearInputs();
+            return;
+        }
+        else {
+            console.log("hello")
+            let that = this;
+            this.loading = true;
+            let username:string = this.model.username
+            this.userService.login(username.toLowerCase(), this.model.password)
+                .subscribe(res => {
                     this.token = res
-                    this.loading=false;
-                    this.router.navigate(['/']);
-                } else {
-                    this.loading=false;
-                    this.model.password="";
-                }
-            })
+                    this.loading = false;
+                    this.router.navigate(['/'])
+                }, error => {
+                    this.loading = false;
+                    alert("Incorrect password or username.")
+                })
+        }
+
+        this.clearInputs();
+    }
+
+    private clearInputs(): void {
+        this.model.username = "";
+        this.model.password = ""
     }
 
     getUser(userID): void {

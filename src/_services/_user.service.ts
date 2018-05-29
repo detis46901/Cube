@@ -97,6 +97,7 @@ export class UserService /*extends ParentService*/ {
     }
 
     public login(username: string, password: string) {
+        username.toLowerCase;
         return this._http.post(this.actionUrl + "login", {email: username, password: password})
         .map((response) => {
             if(response.ok) {

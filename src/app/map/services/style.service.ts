@@ -10,8 +10,8 @@ import { interaction } from 'openlayers';
 export class StyleService {
     constructor() { }
     public styleFunction(feature, layer: UserPageLayer, mode: string): ol.style.Style {
-        console.log(this.filterFunction(feature, layer))
-        console.log("styleFunction")
+        //console.log(this.filterFunction(feature, layer))
+        //console.log("styleFunction")
         let color: string
         let width: number
         if (layer.style) { color = layer.style[mode]['color']; width = layer.style[mode]['width'] }
@@ -72,7 +72,7 @@ export class StyleService {
                 // console.log(filterValue)
             }
         }
-        console.log (feat)
+        //console.log (feat)
         if (filterColumn) {
             if (filterColumn && filterOperator) {
                 switch (filterOperator) {
@@ -105,8 +105,8 @@ export class StyleService {
                     case ("isGreaterThan"): {
                         console.log("isGreaterThan")
                         if (parseInt(feat.get(filterColumn)) > parseInt(filterValue)) {
-                            console.log(parseInt(feat.get(filterColumn)))
-                            console.log(parseInt(filterValue))
+                            //console.log(parseInt(feat.get(filterColumn)))
+                            //console.log(parseInt(filterValue))
                             visible = true
                         }
                         else {
