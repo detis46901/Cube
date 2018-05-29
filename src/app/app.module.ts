@@ -101,7 +101,7 @@ import { mapStyles } from '../app/map/models/map.model';
 import { ParentDetailsComponent } from './admin/details/parentDetails/parentDetails.component';
 import { LayerDetailsComponent } from './admin/details/layerDetails/layerDetails.component';
 import { MapService } from './map/services/map.service';
-import { FilterService, StyleService } from './map/services/style.service';
+import { StyleService } from './map/services/style.service';
 import { GeocodingService } from './map/services/geocoding.service';
 import { EditGroupComponent } from './admin/group/editGroup/editGroup.component'
 import { UserDetailsComponent } from './admin/details/userDetails/userDetails.component';
@@ -226,7 +226,6 @@ import { ServerDetailsComponent } from './admin/details/serverDetails/serverDeta
     providers: [
         UserService, 
         MapService,
-        FilterService,
         StyleService,
         GeocodingService, 
         AuthGuard, 

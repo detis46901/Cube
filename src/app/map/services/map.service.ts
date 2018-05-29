@@ -13,7 +13,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { when } from "q";
-import { FilterService, StyleService } from '../services/style.service'
+import { StyleService } from '../services/style.service'
 
 @Injectable()
 export class MapService {
@@ -45,7 +45,7 @@ export class MapService {
         private messageService: MessageService,
         private sqlService: SQLService,
         private mapstyles: mapStyles,
-        private filterService: FilterService,
+        
         private styleService: StyleService,
         http: Http
     ) {
@@ -251,15 +251,14 @@ export class MapService {
             return (this.styleService.styleFunction(feature, layer, "load"))
         })
         let index = this.mapConfig.userpagelayers.findIndex(x => x == layer)
-        let allLayersOff: boolean = true;
-        let nextActive: UserPageLayer;
         let source = new ol.source.Vector({
             format: new ol.format.GeoJSON()
         })
 
-        this.interval = setInterval(() => {
-           this.runInterval(layer, source)
-        }, 20000);
+        // This sets up the autoupate function.  It's not running right now, so I'm temporarily shutting it down.
+        // this.interval = setInterval(() => {
+        //    this.runInterval(layer, source)
+        // }, 20000);
 
         this.getMyCubeData(layer).then((data) => {
            
@@ -347,6 +346,9 @@ export class MapService {
     }
 
     private setCurrentLayer(layer: UserPageLayer, mapconfig: MapConfig): void {
+        let stylefunction = ((feature) => {
+            return (this.styleService.styleFunction(feature, layer, "load"))
+        })
         this.mapConfig.filterOn = false
         this.mapConfig = mapconfig
         this.mapConfig.editmode = false
@@ -364,7 +366,7 @@ export class MapService {
                     //feat.setStyle(this.styleFunction(element, 'load'))
                      //console.log('set feature style back to load')
                  })
-            this.mapConfig.layers[element.loadOrder-1].setStyle(this.styleService.styleFunction(element, element, 'load')) //resets all the feature styles to "load"
+            this.mapConfig.layers[element.loadOrder-1].setStyle(stylefunction) //resets all the feature styles to "load"
             }
         });
         let index = this.mapConfig.userpagelayers.findIndex(x => x == layer)
@@ -450,6 +452,9 @@ export class MapService {
     }
 
     private setCurrentMyCube(layer: UserPageLayer) {
+        let stylefunction = ((feature) => {
+            return (this.styleService.styleFunction(feature, layer, "current"))
+        })
         this.featurelist = []
         this.shown = true
         this.mapConfig.editmode = layer.layerPermissions.edit
@@ -461,7 +466,7 @@ export class MapService {
         if (this.modkey) { 
             ol.Observable.unByKey(this.modkey) //removes the previous modify even if there was one.
         }
-        this.mapConfig.layers[layer.loadOrder-1].setStyle(this.styleService.styleFunction("", layer,'current'))
+        this.mapConfig.layers[layer.loadOrder-1].setStyle(stylefunction)
         this.getFeatureList()
         this.evkey = this.mapConfig.map.on('singleclick', (e) => {
             if (this.mapConfig.selectedFeature) {

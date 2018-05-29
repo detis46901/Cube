@@ -6,8 +6,8 @@ import { NULL_INJECTOR } from '@angular/core/src/render3/component';
 import { MapService } from '../services/map.service';
 import { SQLService } from '../../../_services/sql.service'
 import { MyCubeField } from '_models/layer.model';
-import { FilterService } from '../services/style.service'
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
+import { StyleService } from '../services/style.service'
 
 
 
@@ -42,7 +42,7 @@ export class FilterComponent implements OnInit, OnDestroy {
     { value: 'contains', viewValue: 'Contains'}
   ];
 
-  constructor(private mapService: MapService, private sqlSerivce: SQLService, private filterService: FilterService, private userPageLayerService: UserPageLayerService) {
+  constructor(private mapService: MapService, private styleService: StyleService,private sqlSerivce: SQLService, private userPageLayerService: UserPageLayerService) {
   }
 
   ngOnInit() {
@@ -66,7 +66,7 @@ export class FilterComponent implements OnInit, OnDestroy {
 
   private updateColumn() {
     this.filterValue = ""
-    this.operators = this.filterService.getoperator(this.filterColumn.type)
+    this.operators = this.styleService.getoperator(this.filterColumn.type)
   }
 
   private clearFilter() {

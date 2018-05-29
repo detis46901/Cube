@@ -7,139 +7,10 @@ import { interaction } from 'openlayers';
 
 
 @Injectable()
-export class FilterService {
-    constructor(protected _http: Http) {
-    }
-    public filterFunction(feature: ol.Feature, layer: UserPageLayer, mapSource: ol.source.Vector): ol.source.Vector {
-        console.log("filterFunction")
-        let filterType: string
-        let filterLabel: string
-        let filterColumn: string
-        let filterOperator: string
-        let filterValue: any
-        let filteredSource: ol.source.Vector = mapSource
-
-        if (layer.style) {
-            //console.log(layer.style)
-            filterColumn = layer.style['filter']['column']
-            filterOperator = layer.style['filter']['operator']
-            filterValue = layer.style['filter']['value']
-            // console.log(filterColumn)
-            // console.log(filterOperator)
-            // console.log(filterValue)
-        }
-        else {
-            if (layer.layer.defaultStyle['filter']) {
-                filterColumn = layer.layer.defaultStyle['filter']['column']
-                filterOperator = layer.layer.defaultStyle['filter']['operator']
-                filterValue = layer.layer.defaultStyle['filter']['value']
-                // console.log(filterColumn)
-                // console.log(filterOperator)
-                // console.log(filterValue)
-            }
-        }
-        if (filterColumn) {
-            mapSource.forEachFeature((feat) => {
-                if (feat) {
-                    if (filterColumn && filterOperator) {
-                        switch (filterOperator) {
-                            case ("isEqual"): {
-                                if (feat.get(filterColumn) == filterValue) {
-                                    filteredSource.addFeature(feat)
-                                }
-                                else {
-                                    if (filterValue == false) {
-                                        if (feat.get(filterColumn) == null) { }
-                                        else { mapSource.removeFeature(feat) }
-                                    }
-                                    else { mapSource.removeFeature(feat) }
-                                }
-                                break
-                            }
-                            case ("isNotEqual"): {
-                                if (feat.get(filterColumn) != filterValue) {
-                                    filteredSource.addFeature(feat)
-                                }
-                                else {
-                                    if (filterValue == false) {
-                                        if (feat.get(filterColumn) == null) { filteredSource.addFeature(feat) }
-                                        else { mapSource.removeFeature(feat) }
-                                    }
-                                    else { mapSource.removeFeature(feat) }
-                                }
-                                break
-                            }
-                            case ("isGreaterThan"): {
-                                console.log("isGreaterThan")
-                                if (parseInt(feat.get(filterColumn)) > parseInt(filterValue)) {
-                                    console.log(parseInt(feat.get(filterColumn)))
-                                    console.log(parseInt(filterValue))
-                                    filteredSource.addFeature(feat)
-                                }
-                                else {
-                                    mapSource.removeFeature(feat)
-                                }
-                                break
-                            }
-                            case ("isLessThan"): {
-                                console.log("isLessThan")
-                                if (parseInt(feat.get(filterColumn)) < parseInt(filterValue)) {
-                                    filteredSource.addFeature(feat)
-                                }
-                                else {
-                                    mapSource.removeFeature(feat)
-                                }
-                                break
-                            }
-                        }
-                        //this.mapConfig.filterOn = true  This needs to be turned on somehow.
-                    }
-                }
-            })
-        }
-        mapSource = filteredSource
-        return (filteredSource)
-    }
-
-    getoperator(tp: string) {
-        switch (tp) {
-            case "boolean": {
-                return ([
-                    { value: 'isEqual', viewValue: 'Equal' },
-                    { value: 'isNotEqual', viewValue: 'Not Equal' }
-                ])
-            }
-            case "text": {
-                return ([
-                    { value: 'isEqual', viewValue: 'Equal' },
-                    { value: 'isNotEqual', viewValue: 'Not Equal' },
-                    { value: 'contains', viewValue: 'Contains' }
-                ])
-            }
-            case "date": {
-                return ([
-                    { value: 'isEqual', viewValue: 'Equal' },
-                    { value: 'isNotEqual', viewValue: 'Not Equal' },
-                    { value: 'isGreaterThan', viewValue: 'After' },
-                    { value: 'isLessThan', viewValue: 'Before' }
-                ])
-            }
-            case "double precision": {
-                return ([
-                    { value: 'isEqual', viewValue: 'Equal' },
-                    { value: 'isNotEqual', viewValue: 'Not Equal' },
-                    { value: 'isGreaterThan', viewValue: 'Greater Than' },
-                    { value: 'isLessThan', viewValue: 'Less Than' }
-                ])
-            }
-        }
-    }
-}
-
 export class StyleService {
     constructor() { }
     public styleFunction(feature, layer: UserPageLayer, mode: string): ol.style.Style {
-        this.filterFunction(feature, layer)
+        console.log(this.filterFunction(feature, layer))
         console.log("styleFunction")
         let color: string
         let width: number
@@ -258,5 +129,38 @@ export class StyleService {
             }
         }
         return (true)
+    }
+    getoperator(tp: string) {
+        switch (tp) {
+            case "boolean": {
+                return ([
+                    { value: 'isEqual', viewValue: 'Equal' },
+                    { value: 'isNotEqual', viewValue: 'Not Equal' }
+                ])
+            }
+            case "text": {
+                return ([
+                    { value: 'isEqual', viewValue: 'Equal' },
+                    { value: 'isNotEqual', viewValue: 'Not Equal' },
+                    { value: 'contains', viewValue: 'Contains' }
+                ])
+            }
+            case "date": {
+                return ([
+                    { value: 'isEqual', viewValue: 'Equal' },
+                    { value: 'isNotEqual', viewValue: 'Not Equal' },
+                    { value: 'isGreaterThan', viewValue: 'After' },
+                    { value: 'isLessThan', viewValue: 'Before' }
+                ])
+            }
+            case "double precision": {
+                return ([
+                    { value: 'isEqual', viewValue: 'Equal' },
+                    { value: 'isNotEqual', viewValue: 'Not Equal' },
+                    { value: 'isGreaterThan', viewValue: 'Greater Than' },
+                    { value: 'isLessThan', viewValue: 'Less Than' }
+                ])
+            }
+        }
     }
 }
