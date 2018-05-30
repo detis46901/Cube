@@ -9,6 +9,7 @@ import { UserPageService } from '../../../../_services/_userPage.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { UserPageLayerService } from '../../../../_services/_userPageLayer.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
+import { MapConfig } from '../../../map/models/map.model';
 
 /************************************************************************************************************************************************************
 * 2/9/18: All changes that need to happen  (Mark off as you complete)                                                                                       *
@@ -49,8 +50,11 @@ export class PageConfigComponent implements OnInit {
 
     private token: string;
     private foo;
+
     
-    constructor(private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private groupService: GroupService, private groupMemberService: GroupMemberService, private layerPermissionService: LayerPermissionService) {
+    constructor(private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, 
+        private groupService: GroupService, private groupMemberService: GroupMemberService, 
+        private layerPermissionService: LayerPermissionService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
     }
@@ -62,7 +66,6 @@ export class PageConfigComponent implements OnInit {
           //  .then((/*ARRAY OF ALL PERMISSIONS GATHERED BY USER AND GROUPS*/) => this.layerPermissions = /*ARRAY*/); //********************* */
         this.foo = this.groupMemberService
         .GetByUser(this.userID)
-        
     }
 
     private getGroups(): void {
@@ -184,7 +187,7 @@ export class PageConfigComponent implements OnInit {
     }
 
     private addUserPageLayer(newUserPageLayer: UserPageLayer): void {
-        console.log(newUserPageLayer)
+        var element = <HTMLInputElement> document.getElementById("pageConfigSubmit");
         
         this.newUserPageLayer.userPageID = this.pageID ;
         this.newUserPageLayer.userID = this.userID ;
@@ -218,5 +221,10 @@ export class PageConfigComponent implements OnInit {
                 this.layerPermissions=[]
                 this.getUserPageLayers();
             });
+    }
+
+    public enableSubmit(): void {
+        var element = <HTMLInputElement> document.getElementById("pageConfigSubmit");
+        element.disabled = false;
     }
 }

@@ -44,22 +44,26 @@
                 </span>
             </div>
         </form>
-        <hr style="top:3px">
+        <hr>
 
         <!-- box to contain the add new layer input box and confirm button -->
         <form #f="ngForm">
             <div class="row">
                 <mat-form-field id="pageConfigNewLayer">
                     <mat-select [(ngModel)]="newUserPageLayer.layerID" required name="layer" placeholder="Add Layer">
-                        <mat-option *ngFor="let layerPermission of availableLPs" [value]="layerPermission.layerID">
+                        <mat-option *ngFor="let layerPermission of availableLPs" [value]="layerPermission.layerID" (click)="enableSubmit()">
                             {{layerPermission.layer.layerName}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
                
                 <!-- add layer button -->
-                <button style="position:relative; left:15px" mat-button id="pageConfigSubmit" (click)="addUserPageLayer(newUserPageLayer)" onClick="window.location.reload()" [disabled]="!f.valid">Add Layer</button>
+                <button style="position:relative; left:15px" mat-button id="pageConfigSubmit" (click)="addUserPageLayer(newUserPageLayer)" [disabled]="!f.valid">Add Layer</button>
             </div>
         </form>
     </mat-dialog-content>
+
+    <mat-dialog-actions style="justify-content:center">
+        <button mat-button id="submitChangesButton" onClick="window.location.reload()">Submit Changes</button>
+    </mat-dialog-actions>
 </div>

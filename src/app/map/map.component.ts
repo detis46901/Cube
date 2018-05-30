@@ -63,7 +63,6 @@ export class MapComponent {
     ) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        console.log(this.token)
         this.userID = currentUser && currentUser.userID;
     }
 
@@ -76,8 +75,8 @@ export class MapComponent {
     //Angular component initialization
     ngOnInit() {
         this.mapConfig.userID = this.userID
-         this.getDefaultPage()
-         .then(() => this.mapService.initMap(this.mapConfig)
+        this.getDefaultPage()
+        .then(() => this.mapService.initMap(this.mapConfig)
             .then((mapConfig) => {
                 this.mapConfig = mapConfig  //Not sure if this is necessary.  Just in case.
                 let ptkey = this.mapConfig.map.on('pointermove', (evt) => {
@@ -85,7 +84,6 @@ export class MapComponent {
                     mapConfig.map.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
                     if (mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
                         this.mapConfig.map.forEachLayerAtPixel((evt.pixel), layers => {
-                            //console.log(layers)
                             let index = this.mapConfig.layers.findIndex(x => x == layers)
                             if (index > 0) {
                                 let index2 = this.mapConfig.userpagelayers.findIndex (z => z.loadOrder-1 == index)
@@ -96,10 +94,8 @@ export class MapComponent {
                                 //   });
                                 //   //popup.setPosition(evt.coordinate);
                                 //   this.mapConfig.map.addOverlay(popup);
-                                // console.log(this.mapConfig.userpagelayers[index2].layer.layerName)
                                 this.mapConfig.mouseoverLayer = this.mapConfig.userpagelayers[index2]
                                 mapConfig.map.getFeaturesAtPixel(evt.pixel).forEach(element => {
-                                  //console.log(element)  
                                 })
                             }
                         })
@@ -107,10 +103,9 @@ export class MapComponent {
                     else { this.mapConfig.mouseoverLayer = null}
                 }, {hitTolerance: 5})
                 mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
-                //console.log("Map Initialized")
             })    
-         )
-        }
+        )
+    }
 
     getDefaultPage(): Promise<any> {  
         let promise = new Promise ((resolve, reject) => { 
@@ -132,6 +127,7 @@ export class MapComponent {
 
     //Gets userPageLayers by page.ID, changes pages
     private setPage(page: UserPage): void {
+        console.log(this.mapConfig)
         this.mapConfig.currentpage = page
         this.mapConfig.currentLayer = new UserPageLayer
         this.currPage = page.page;
@@ -160,14 +156,10 @@ export class MapComponent {
         
     private cleanPage(): void {
         for (let k=1; k< this.mapConfig.layers.length; k) {
-            console.log(k + " of " + this.mapConfig.layers.length)
             this.mapConfig.map.removeLayer(this.mapConfig.layers[k])
             this.mapConfig.layers.splice(k,1)
-            console.log(this.mapConfig.layers)
             this.mapConfig.currentLayerName = null
             this.mapService.featurelist = []
-            
-
         }
         this.mapConfig.sources = []
         this.mapConfig.filterOn = false
@@ -184,7 +176,6 @@ export class MapComponent {
         this.snackBar.open("Copied to the clipboard", "", {
             duration: 2000,
           });
-        console.log(this.configuration.outsideServerWithApiUrl + url + '&apikey=' + this.token)
     }
 
     private copyGSToClipboard(url:string) {

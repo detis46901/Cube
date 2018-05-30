@@ -24,9 +24,9 @@
     left:30px
 }
 
-h4[mat-dialog-title] {
-    margin-bottom: 0px;
-}
+// h4[mat-dialog-title] {
+//     margin-bottom: 0px;
+// }
 
 #pageConfigX {
     position: relative;
@@ -51,4 +51,9 @@ h4[mat-dialog-title] {
 
 hr {
     margin: 0px 0px 5px 0px;
+}
+
+#submitChangesButton {
+    color: white;
+    background-color: #7e7e7e;
 }
