@@ -14,6 +14,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { ServerDetailsComponent } from '../details/serverDetails/serverDetails.component';
+import { ServerLayersComponent } from './serverLayers/serverLayers.component';
 
 @Component({
     selector: 'server',
@@ -84,8 +85,6 @@ export class ServerComponent implements OnInit {
     }
 
     private getRequest(serv: Server): void {
-        console.log("getRequest")
-        console.log(serv)
         let url: string
         switch (serv.serverType) {
             case "Geoserver": {
@@ -100,7 +99,6 @@ export class ServerComponent implements OnInit {
                 this.WMSRequest(serv, "Folder")
                 break;
         }
-  
     }
         
     private getGeoserver(serv: Server): void {
@@ -240,6 +238,11 @@ export class ServerComponent implements OnInit {
         .subscribe(result => {
             this.getServers();
         });
+    }
+
+    private openLayers(name: string) {
+        const dialogRef = this.dialog.open(ServerLayersComponent, {width:'360px'});
+        dialogRef.componentInstance.name = name;
     }
     
     private openDetails(id: number, name: string): void {

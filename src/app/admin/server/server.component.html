@@ -55,7 +55,7 @@
                     <button mat-button id="createServerButton" (click)="openServerNew()"><strong>Create Server</strong></button>
                 </mat-header-cell>
                 <mat-cell class="server-md-cell" *matCellDef="let row">
-                    <button mat-button (click)="getRequest(row.currentData)">
+                    <button mat-button (click)="openLayers(row.currentData.serverName)">
                         Layers
                     </button>
                     <button *ngIf="!row.editing" mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.serverName)">
@@ -76,7 +76,7 @@
     Everything below this point needs to be implemented for the layers button
  -->
 
-<div *ngIf="WMSLayers.length > 0" class="row">
+<!-- <div *ngIf="WMSLayers.length > 0" class="row">
         WMS Layers
     <div *ngFor="let WMSLayer of WMSLayers">
         <button mat-button (click)="createGeoserverLayer(WMSLayer)">{{WMSLayer.Title}}</button>
@@ -132,4 +132,4 @@
                 <td><button mat-button (click)="createLayer(layerArray.indexOf(layer), layer.name)">Create Layer</button></td>
         </tr>
     </table>
-</div>
+</div> -->

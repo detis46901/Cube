@@ -106,7 +106,7 @@ import { GeocodingService } from './map/services/geocoding.service';
 import { EditGroupComponent } from './admin/group/editGroup/editGroup.component'
 import { UserDetailsComponent } from './admin/details/userDetails/userDetails.component';
 import { ServerDetailsComponent } from './admin/details/serverDetails/serverDetails.component';
-import { ServerLayerssComponent } from './admin/server/serverLayers/serverLayers.component';
+import { ServerLayersComponent } from './admin/server/serverLayers/serverLayers.component';
 
 @NgModule ({
     declarations: [
@@ -159,7 +159,7 @@ import { ServerLayerssComponent } from './admin/server/serverLayers/serverLayers
         ParentDetailsComponent,
         UserDetailsComponent,
         ServerDetailsComponent,
-        ServerLayerssComponent
+        ServerLayersComponent
     ],
 
     entryComponents: [
@@ -178,7 +178,8 @@ import { ServerLayerssComponent } from './admin/server/serverLayers/serverLayers
         ChangePictureComponent,
         LayerDetailsComponent,
         UserDetailsComponent,
-        ServerDetailsComponent
+        ServerDetailsComponent,
+        ServerLayersComponent
     ],
 
     imports: [
