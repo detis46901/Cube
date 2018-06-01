@@ -1,0 +1,17 @@
+.row {
+    position: relative;
+    top: -10px;
+    width: 340px;
+}
+
+#serverLayerHeader {
+    position: absolute;
+    left: 10px;
+    top: 0px;
+}
+
+#closingX {
+    position:absolute;
+    top:0px;
+    right:10px;
+}
