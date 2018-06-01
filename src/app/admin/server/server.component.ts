@@ -84,22 +84,22 @@ export class ServerComponent implements OnInit {
         this.displayGeoserverLayers = false;
     }
 
-    private getRequest(serv: Server): void {
-        let url: string
-        switch (serv.serverType) {
-            case "Geoserver": {
-                this.getGeoserver(serv)
-                break
-            }
-            case "GeoserverWMTS":
-                url = serv.serverURL + '/gwc/service/wmts?request=getcapabilities';
-                break
-            case "ArcGIS":
-                //serv.serverURL = serv.serverURL + '?f=pjson';
-                this.WMSRequest(serv, "Folder")
-                break;
-        }
-    }
+    // private getRequest(serv: Server): void {
+    //     let url: string
+    //     switch (serv.serverType) {
+    //         case "Geoserver": {
+    //             this.getGeoserver(serv)
+    //             break
+    //         }
+    //         case "GeoserverWMTS":
+    //             url = serv.serverURL + '/gwc/service/wmts?request=getcapabilities';
+    //             break
+    //         case "ArcGIS":
+    //             //serv.serverURL = serv.serverURL + '?f=pjson';
+    //             this.WMSRequest(serv, "Folder")
+    //             break;
+    //     }
+    // }
         
     private getGeoserver(serv: Server): void {
         console.log("getGeoserver")
@@ -139,47 +139,47 @@ export class ServerComponent implements OnInit {
     //     }
     // }
 
-    private getLayers(serv: Server): void {
-        let path: string = '';
-        this.currServer = serv;
-        this.clearArrays();
-        this.displayFolders = true;
-        this.serverService.getFolders(serv, path, "none", this.options)
-            .subscribe((result: string) => {
-                this.parseLayers(result);
-            });
-    }
+    // private getLayers(serv: Server): void {
+    //     let path: string = '';
+    //     this.currServer = serv;
+    //     this.clearArrays();
+    //     this.displayFolders = true;
+    //     this.serverService.getFolders(serv, path, "none", this.options)
+    //         .subscribe((result: string) => {
+    //             this.parseLayers(result);
+    //         });
+    // }
 
-    private parseLayers(response: string): void {
-        console.log(response['folders'])
-        let list = JSON.parse(response);
-        if (list.folders) {
-            for (let i of list.folders) {
-                this.folderArray.push(i);
-            }
-        }
-        if (list.services) {
-            for (let i of list.services) {
-                this.serviceArray.push(i);
-            }
-        }
-        if (list.layers) {
-            for (let i of list.layers) {
-                this.layerArray.push(i);
-            }
-        }
-    }
+    // private parseLayers(response: string): void {
+    //     console.log(response['folders'])
+    //     let list = JSON.parse(response);
+    //     if (list.folders) {
+    //         for (let i of list.folders) {
+    //             this.folderArray.push(i);
+    //         }
+    //     }
+    //     if (list.services) {
+    //         for (let i of list.services) {
+    //             this.serviceArray.push(i);
+    //         }
+    //     }
+    //     if (list.layers) {
+    //         for (let i of list.layers) {
+    //             this.layerArray.push(i);
+    //         }
+    //     }
+    // }
 
-    private WMSRequest(server: Server, type: string): void {
-        console.log("WMSRequest " + server.serverURL)
-        this.path = '/' + server.serverURL;
-        this.clearArrays();
-        this.displayFolders = true;
-        this.serverService.getFolders(server, this.path, type, this.options)
-            .subscribe((response: string) => {
-                this.parseLayers(response);
-            });
-    }
+    // private WMSRequest(server: Server, type: string): void {
+    //     console.log("WMSRequest " + server.serverURL)
+    //     this.path = '/' + server.serverURL;
+    //     this.clearArrays();
+    //     this.displayFolders = true;
+    //     this.serverService.getFolders(server, this.path, type, this.options)
+    //         .subscribe((response: string) => {
+    //             this.parseLayers(response);
+    //         });
+    // }
 
     private openConfDel(server: Server): void {
         const dialogRef = this.dialog.open(ConfirmDeleteComponent);
@@ -211,25 +211,25 @@ export class ServerComponent implements OnInit {
             });
     }
 
-    private createLayer(index: number, name: string): void {
-        const dialogRef = this.dialog.open(LayerNewComponent, {height:'700px', width:'700px'});
-        dialogRef.componentInstance.layerName = name;
-        dialogRef.componentInstance.layerIdent = (String)(index);
-        dialogRef.componentInstance.layerServiceField = this.path;
-        //dialogRef.componentInstance.layerType = this.serviceArray[index]['type'];
-        //dialogRef.componentInstance.layerServer = this.currServer;
-    }
+    // private createLayer(index: number, name: string): void {
+    //     const dialogRef = this.dialog.open(LayerNewComponent, {height:'700px', width:'700px'});
+    //     dialogRef.componentInstance.layerName = name;
+    //     dialogRef.componentInstance.layerIdent = (String)(index);
+    //     dialogRef.componentInstance.layerServiceField = this.path;
+    //     //dialogRef.componentInstance.layerType = this.serviceArray[index]['type'];
+    //     //dialogRef.componentInstance.layerServer = this.currServer;
+    // }
 
-    private createGeoserverLayer(WMSLayer: WMSLayer): void {
-        const dialogRef = this.dialog.open(LayerNewComponent, {height:'700px', width:'700px'});
-        this.newLayer.layerName = WMSLayer.Title
-        this.newLayer.layerIdent = WMSLayer.Name
-        this.newLayer.layerService = "None"
-        this.newLayer.server = this.currServer
-        this.newLayer.layerType = "Geoserver WMS"
-        //dialogRef.componentInstance.layerServer = this.currServer;
-        dialogRef.componentInstance.serverLayer = this.newLayer
-    }
+    // private createGeoserverLayer(WMSLayer: WMSLayer): void {
+    //     const dialogRef = this.dialog.open(LayerNewComponent, {height:'700px', width:'700px'});
+    //     this.newLayer.layerName = WMSLayer.Title
+    //     this.newLayer.layerIdent = WMSLayer.Name
+    //     this.newLayer.layerService = "None"
+    //     this.newLayer.server = this.currServer
+    //     this.newLayer.layerType = "Geoserver WMS"
+    //     //dialogRef.componentInstance.layerServer = this.currServer;
+    //     dialogRef.componentInstance.serverLayer = this.newLayer
+    // }
     
 
     private openServerNew(): void {

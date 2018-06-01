@@ -25,7 +25,7 @@ export class LayerNewComponent implements OnInit {
     @Input() serverLayer: Layer;
     @Input() layerIdent: string;
     @Input() serverCalled: boolean = false;
-    //@Input() layerServer: Server;
+    @Input() layerServer: Server;
     @Input() layerName: string;
 
     private permlessUsers = new Array<User>()
