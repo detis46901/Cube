@@ -9,16 +9,18 @@ import { interaction } from 'openlayers';
 @Injectable()
 export class StyleService {
     constructor() { }
-    public styleFunction(feature, layer: UserPageLayer, mode: string): ol.style.Style {
+    public styleFunction(feature: ol.Feature, layer: UserPageLayer, mode: string): ol.style.Style {
         //console.log(this.filterFunction(feature, layer))
         //console.log("styleFunction")
         let color: string
         let width: number
+        //console.log(feature)
+        //console.log(this.filterFunction(feature, layer))
         if (layer.style) { color = layer.style[mode]['color']; width = layer.style[mode]['width'] }
         else { color = layer.layer.defaultStyle[mode]['color']; width = layer.layer.defaultStyle[mode]['width'] }
         //console.log(mode)
         //console.log(color)
-        let load = new ol.style.Style({
+        let style = new ol.style.Style({
             image: new ol.style.Circle({
                 radius: 5,
                 fill: null,
@@ -42,10 +44,10 @@ export class StyleService {
                 }),
             })
         });
-        return load
+        return style
     }
     public filterFunction(feat: ol.Feature, layer: UserPageLayer): boolean {
-        console.log("filterFunction")
+        //console.log("filterFunction")
         let filterType: string
         let filterLabel: string
         let filterColumn: string
@@ -58,18 +60,18 @@ export class StyleService {
             filterColumn = layer.style['filter']['column']
             filterOperator = layer.style['filter']['operator']
             filterValue = layer.style['filter']['value']
-            // console.log(filterColumn)
-            // console.log(filterOperator)
-            // console.log(filterValue)
+            console.log(filterColumn)
+            console.log(filterOperator)
+            console.log(filterValue)
         }
         else {
             if (layer.layer.defaultStyle['filter']) {
                 filterColumn = layer.layer.defaultStyle['filter']['column']
                 filterOperator = layer.layer.defaultStyle['filter']['operator']
                 filterValue = layer.layer.defaultStyle['filter']['value']
-                // console.log(filterColumn)
-                // console.log(filterOperator)
-                // console.log(filterValue)
+                console.log(filterColumn)
+                console.log(filterOperator)
+                console.log(filterValue)
             }
         }
         //console.log (feat)
@@ -77,7 +79,8 @@ export class StyleService {
             if (filterColumn && filterOperator) {
                 switch (filterOperator) {
                     case ("isEqual"): {
-                        if (feat.get(filterColumn) == filterValue) {
+
+                        if (feat.get(filterValue) == filterValue) {
                             visible = true
                         }
                         else {
@@ -128,7 +131,7 @@ export class StyleService {
                 //this.mapConfig.filterOn = true  This needs to be turned on somehow.
             }
         }
-        return (true)
+        return (visible)
     }
     getoperator(tp: string) {
         switch (tp) {

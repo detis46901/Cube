@@ -161,13 +161,13 @@ export class MapService {
                                 //console.log(data)
                                 let parser = new ol.format.WMTSCapabilities();
                                 let result = parser.read(data)
-                                //console.log(result)
+                                console.log(result)
                                 let options = ol.source.WMTS.optionsFromCapabilities(result, {
                                     layer: this.mapConfig.userpagelayers[i].layer.layerIdent,
                                     matrixSet: 'EPSG:3857'
                                 });
-                                //console.log(mapConfig.userpagelayers[i].layer.layerIdent)
-                                //console.log(options)
+                                console.log(mapConfig.userpagelayers[i].layer.layerIdent)
+                                console.log(options)
                                 let wmsSource = new ol.source.WMTS(options)
                                 this.setLoadEvent(this.mapConfig.userpagelayers[i], wmsSource)
                                 let wmsLayer = new ol.layer.Tile({
@@ -283,8 +283,13 @@ export class MapService {
 
 
     public runInterval(layer: UserPageLayer, source: ol.source.Vector) {
-        let stylefunction = ((feature) => {
+        let stylefunction = ((feature, resolution) => {
+            if (this.mapConfig.currentLayer == layer) {
+                return (this.styleService.styleFunction(feature, layer, "current"))
+            }
+            else {
             return (this.styleService.styleFunction(feature, layer, "load"))
+        }
         })
         this.getMyCubeData(layer).then((data) => {
             if (data[0]) {
@@ -299,7 +304,7 @@ export class MapService {
                     console.log(index)
                     //this.mapConfig.layers[index].setStyle(stylefunction) 
                     source.forEachFeature(feat => {
-                        console.log("runInterval and feat = " + feat)
+                        //console.log("runInterval and feat = " + feat.getId())
                         feat.setStyle(stylefunction)
                     })
                     //this.filterFunction(layer, source)
@@ -525,7 +530,7 @@ export class MapService {
             ol.Observable.unByKey(this.modkey) //removes the previous modify even if there was one.
         }
         this.myCubeService.clearMyCubeData()
-        this.mapConfig.layers[layer.loadOrder - 1].setStyle(this.styleService.styleFunction("", layer, 'current'))
+        //this.mapConfig.layers[layer.loadOrder - 1].setStyle(this.styleService.styleFunction("", layer, 'current'))
     }
 
     private draw(mapconfig: MapConfig, featurety: any) {
