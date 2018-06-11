@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-
 import { Layer } from '../../../../_models/layer.model';
 import { User, Notif } from '../../../../_models/user.model'; 
-
+import { ServerService } from '../../../../_services/_server.service';
+import { Server } from '../../../../_models/server.model';
 import { LayerService } from '../../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { UserService } from '../../../../_services/_user.service'
@@ -15,7 +15,7 @@ import { NotifService } from '../../../../_services/notification.service';
 @Component({
     selector: 'layer-details',
     templateUrl: './layerDetails.component.html',
-    providers: [LayerService, LayerPermissionService, UserService, GroupService, GroupMemberService, NotifService],
+    providers: [LayerService, LayerPermissionService, ServerService, UserService, GroupService, GroupMemberService, NotifService],
     styleUrls: ['./layerDetails.component.scss']
 })
 
@@ -31,16 +31,26 @@ export class LayerDetailsComponent implements OnInit {
     private token;
     private userID;
     private user: User;
+    private servers: Array<Server>;
 
-    constructor(private dialog: MatDialog, private layerService: LayerService, private layerPermissionService: LayerPermissionService, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private notificationService: NotifService) {
+    constructor(private dialog: MatDialog, private layerService: LayerService, private layerPermissionService: LayerPermissionService, private serverService: ServerService, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private notificationService: NotifService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.token = currentUser && currentUser.token;
 		this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {
-        this.getLayer(this.ID)
-        this.getUser(this.userID)      
+        this.getLayer(this.ID);
+        this.getUser(this.userID);
+        this.getServers();    
+    }
+
+    private getServers(): void {
+        this.serverService
+            .GetAll()
+            .subscribe((data) => {
+                this.servers = data;
+            });
     }
 
     private getLayer(id) {

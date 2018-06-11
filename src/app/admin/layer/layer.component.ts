@@ -93,7 +93,7 @@ export class LayerComponent implements OnInit {
     }
 
     private openDetails(id: number, name: string): void {
-        const dialogRef = this.dialog.open(LayerDetailsComponent, {width:'400px'});
+        const dialogRef = this.dialog.open(LayerDetailsComponent, {width:'450px'});
         dialogRef.componentInstance.ID = id;
         dialogRef.componentInstance.name = name;
         dialogRef.afterClosed().subscribe(() => {

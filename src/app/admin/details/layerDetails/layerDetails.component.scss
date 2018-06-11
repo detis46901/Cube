@@ -1,38 +1,38 @@
 // Jack Reyburn
 // Styling of layer details
 
-// formatting and positioning all rows
-.row {
-    width: 170px;
-    position: relative;
-    left: 10px;
-}
-
 // positioning headers
 #detailsHeader {
-    position: absolute;
-    top: -10px;
-    left: 5px;
+    width: 100%;
+    position: relative;
+    left: 15px;
+    bottom: 15px;
+    height: 0px;
 }
 
 // positioning closing 'x'
 #closingX {
     position: absolute;
-    top: -10px;
-    right: -180px;
+    right: 0px;
 }
 
-// provides a space in between entry boxes that are on the same line
+#layerNameEntry, #layerTypeEntry, #layerIdentityEntry, #layerGeometryEntry {
+    position: relative; 
+    left: 4%;
+    margin-bottom: 5px;
+}
+
 #layerDescriptionEntry, #layerServiceEntry, #layerFormatEntry, #layerServerEntry {
-    position: relative;
-    left: 50px;
+    position: relative; 
+    left: 12%;
+    margin-bottom: 5px;
 }
 
-// positions and formats style entry box
 #layerStyleEntry {
-    width: 350px;
     position: relative;
-    left: 100;
+    width: 90%;
+    left: 4%;
+    margin-bottom: 5px;
 }
 
 // colors the submit changes button
