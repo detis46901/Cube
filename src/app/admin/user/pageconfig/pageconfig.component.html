@@ -47,7 +47,7 @@
         <hr>
 
         <!-- box to contain the add new layer input box and confirm button -->
-        <form #f="ngForm">
+        <form class="form" #f="ngForm">
             <div class="row">
                 <mat-form-field id="pageConfigNewLayer">
                     <mat-select [(ngModel)]="newUserPageLayer.layerID" required name="layer" placeholder="Add Layer">
@@ -64,6 +64,6 @@
     </mat-dialog-content>
 
     <mat-dialog-actions style="justify-content:center">
-        <button mat-button id="submitChangesButton" onClick="window.location.reload()">Submit Changes</button>
+        <button mat-button id="submitChangesButton">Submit Changes</button>
     </mat-dialog-actions>
 </div>
