@@ -227,4 +227,10 @@ export class PageConfigComponent implements OnInit {
         var element = <HTMLInputElement> document.getElementById("pageConfigSubmit");
         element.disabled = false;
     }
+
+    private addButton(newUserPageLayer: UserPageLayer): void {
+        this.addUserPageLayer(newUserPageLayer);
+        var element = <HTMLInputElement> document.getElementById("pageConfigSubmit");
+        element.disabled = true;
+    }
 }
