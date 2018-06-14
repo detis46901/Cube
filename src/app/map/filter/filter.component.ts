@@ -46,6 +46,7 @@ export class FilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.mapConfig.filterOn = false;
     if (this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] != "") {
       console.log(JSON.stringify(this.mapConfig.currentLayer.layer.defaultStyle['filter']['column']))
       this.mapConfig.filterOn = true
