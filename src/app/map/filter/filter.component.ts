@@ -46,15 +46,29 @@ export class FilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.mapConfig.filterOn = false;
-    if (this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] != "") {
-      console.log(JSON.stringify(this.mapConfig.currentLayer.layer.defaultStyle['filter']['column']))
-      this.mapConfig.filterOn = true
-      this.filterColumn['field'] = this.mapConfig.currentLayer.layer.defaultStyle['filter']['column']
-      this.filterOperator = this.mapConfig.currentLayer.layer.defaultStyle['filter']['operator']
-      this.filterColumn['value'] = this.mapConfig.currentLayer.layer.defaultStyle['filter']['value']
+    try {
+      if (this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] != "") {
+        this.filterColumn['field'] = this.mapConfig.currentLayer.layer.defaultStyle['filter']['column']
+        this.filterOperator = this.mapConfig.currentLayer.layer.defaultStyle['filter']['operator']
+        this.filterColumn['value'] = this.mapConfig.currentLayer.layer.defaultStyle['filter']['value']
+      }  
     }
-    console.log(this.mapConfig.currentLayer.layerID)
+    catch(e) {
+      console.log('No Default Filter');
+    }
+
+    try {
+      if (this.mapConfig.currentLayer.style['filter']['column'] != "") {
+        this.filterColumn['field'] = this.mapConfig.currentLayer.style['filter']['column']
+        this.filterOperator = this.mapConfig.currentLayer.style['filter']['operator']
+        this.filterColumn['value'] = this.mapConfig.currentLayer.style['filter']['value']
+      }
+    }
+    catch(e) {
+      console.log('No UserPageLayer Filter');
+    }
+    
+    console.log(this.filterColumn)
     this.sqlSerivce.GetSchema(this.mapConfig.currentLayer.layerID)
       .subscribe((data) => {
         console.log(data)

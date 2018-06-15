@@ -255,8 +255,21 @@ export class MapService {
         let source = new ol.source.Vector({
             format: new ol.format.GeoJSON()
         })
-
-        // This sets up the autoupate function.  It's not running right now, so I'm temporarily shutting it down.
+        
+        try {
+            if (layer.style['filter']['column'] == "") {
+                console.log('No UserPageLayer filter.  Pulling Default filter')
+                layer.style['filter']['column'] = layer.layer.defaultStyle['filter']['column']
+                layer.style['filter']['operator']= layer.layer.defaultStyle['filter']['operator']
+                layer.style['filter']['value']= layer.layer.defaultStyle['filter']['value']
+              }
+              console.log(layer.style)
+          }
+          catch(e) {
+            console.log('No Default Filter');
+          }
+      
+        // This sets up the auto-update function.  It's not running right now, so I'm temporarily shutting it down.
         // this.interval = setInterval(() => {
         //    this.runInterval(layer, source)
         // }, 20000);
@@ -448,14 +461,21 @@ export class MapService {
         else { this.messageService.sendMessage(message) };
     }
 
-    private clearMessage(): void {
-        this.messageService.clearMessage();
-    }
-
     private setCurrentMyCube(layer: UserPageLayer) {
         let stylefunction = ((feature) => {
             return (this.styleService.styleFunction(feature, layer, "current"))
         })
+        try {
+            if (layer.style['filter']['column']) {
+                this.mapConfig.filterOn = true}
+            else {
+                this.mapConfig.filterOn = false
+            }
+          }
+          catch(e) {
+            console.log('No Filter');
+          }
+        
         this.featurelist = []
         this.shown = true
         this.mapConfig.editmode = layer.layerPermissions.edit
