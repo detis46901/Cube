@@ -44,5 +44,5 @@
 
 <!-- submit changes button -->
 <mat-dialog-actions style="justify-content:center">
-        <button mat-button id="submitChangesButton" (click)="submit(user)" [disabled]="!f.valid">Submit Changes</button>
+    <button mat-dialog-close id="submitChangesButton" (click)="submit(user)" [disabled]="!f.valid">Submit Changes</button>
 </mat-dialog-actions>

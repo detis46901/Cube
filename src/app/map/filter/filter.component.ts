@@ -8,6 +8,7 @@ import { SQLService } from '../../../_services/sql.service'
 import { MyCubeField } from '_models/layer.model';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { StyleService } from '../services/style.service'
+import { LayerService } from '../../../_services/_layer.service';
 
 
 
@@ -42,22 +43,11 @@ export class FilterComponent implements OnInit, OnDestroy {
     { value: 'contains', viewValue: 'Contains'}
   ];
 
-  constructor(private mapService: MapService, private styleService: StyleService,private sqlSerivce: SQLService, private userPageLayerService: UserPageLayerService) {
+  constructor(private mapService: MapService, private styleService: StyleService,private sqlSerivce: SQLService, private userPageLayerService: UserPageLayerService, private layerService: LayerService) {
   }
 
   ngOnInit() {
-    try {
-      if (this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] != "") {
-        this.filterColumn['field'] = this.mapConfig.currentLayer.layer.defaultStyle['filter']['column']
-        this.filterOperator = this.mapConfig.currentLayer.layer.defaultStyle['filter']['operator']
-        this.filterColumn['value'] = this.mapConfig.currentLayer.layer.defaultStyle['filter']['value']
-      }  
-    }
-    catch(e) {
-      console.log('No Default Filter');
-    }
-
-    try {
+   try {
       if (this.mapConfig.currentLayer.style['filter']['column'] != "") {
         this.filterColumn['field'] = this.mapConfig.currentLayer.style['filter']['column']
         this.filterOperator = this.mapConfig.currentLayer.style['filter']['operator']
@@ -114,7 +104,7 @@ export class FilterComponent implements OnInit, OnDestroy {
   }
 
   private saveToPage():void {
-    console.log("Saving to Layer")
+    console.log("Saving to Page")
     if (!this.mapConfig.currentLayer.style) {
       this.mapConfig.currentLayer.style = this.mapConfig.currentLayer.layer.defaultStyle
     }
@@ -124,6 +114,20 @@ export class FilterComponent implements OnInit, OnDestroy {
     console.log(this.mapConfig.currentLayer)
     this.userPageLayerService
     .Update(this.mapConfig.currentLayer)
+    .subscribe((data) => {
+      console.log(data)
+    })
+  }
+
+  private saveToLayer(): void {
+    console.log("saving to layer")
+    this.mapConfig.currentLayer.layer.defaultStyle = this.mapConfig.currentLayer.style;
+    this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] = this.filterColumn['field'];
+    this.mapConfig.currentLayer.layer.defaultStyle['filter']['operator'] = this.filterOperator['value'];
+    this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = this.filterValue;
+    console.log(this.mapConfig.currentLayer)
+    this.layerService
+    .Update(this.mapConfig.currentLayer.layer)
     .subscribe((data) => {
       console.log(data)
     })

@@ -30,6 +30,6 @@
 
     <!-- submit changes button -->
     <mat-dialog-actions style="justify-content:center">
-        <button mat-button id="submitButton" (click)="updateGroup(group)" [disabled]="!f.valid">Submit Changes</button>
+        <button mat-dialog-close id="submitButton" (click)="updateGroup(group)" [disabled]="!f.valid">Submit Changes</button>
     </mat-dialog-actions>
 </div>
