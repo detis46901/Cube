@@ -57,14 +57,18 @@ export class FilterComponent implements OnInit, OnDestroy {
     catch(e) {
       console.log('No UserPageLayer Filter');
     }
-    
-    console.log(this.filterColumn)
+
     this.sqlSerivce.GetSchema(this.mapConfig.currentLayer.layerID)
       .subscribe((data) => {
-        console.log(data)
         this.columns = data.slice(2, data.length)
-
-      })
+        console.log(this.columns)
+        
+          //this.filterColumn.type = "boolean" //needs to be dynamic
+          this.updateColumn()
+        }
+      )
+  
+      
   }
 
   ngOnDestroy() {
@@ -72,7 +76,13 @@ export class FilterComponent implements OnInit, OnDestroy {
 
   private updateColumn() {
     this.filterValue = ""
-    this.operators = this.styleService.getoperator(this.filterColumn.type)
+    if (this.filterColumn['field']) {
+      this.columns.forEach(x => {
+        if (this.filterColumn['field'] == x.field) {
+          this.filterColumn.type = x.type
+        } 
+      })}
+    this.operators = this.getoperator(this.filterColumn.type)
   }
 
   private clearFilter() {
@@ -132,4 +142,37 @@ export class FilterComponent implements OnInit, OnDestroy {
       console.log(data)
     })
   }
+  getoperator(tp: string) {
+    switch (tp) {
+        case "boolean": {
+            return ([
+                { value: 'isEqual', viewValue: 'Equal' },
+                { value: 'isNotEqual', viewValue: 'Not Equal' }
+            ])
+        }
+        case "text": {
+            return ([
+                { value: 'isEqual', viewValue: 'Equal' },
+                { value: 'isNotEqual', viewValue: 'Not Equal' },
+                { value: 'contains', viewValue: 'Contains' }
+            ])
+        }
+        case "date": {
+            return ([
+                { value: 'isEqual', viewValue: 'Equal' },
+                { value: 'isNotEqual', viewValue: 'Not Equal' },
+                { value: 'isGreaterThan', viewValue: 'After' },
+                { value: 'isLessThan', viewValue: 'Before' }
+            ])
+        }
+        case "double precision": {
+            return ([
+                { value: 'isEqual', viewValue: 'Equal' },
+                { value: 'isNotEqual', viewValue: 'Not Equal' },
+                { value: 'isGreaterThan', viewValue: 'Greater Than' },
+                { value: 'isLessThan', viewValue: 'Less Than' }
+            ])
+        }
+    }
+}
 }

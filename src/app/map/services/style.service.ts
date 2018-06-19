@@ -133,37 +133,5 @@ export class StyleService {
         }
         return (visible)
     }
-    getoperator(tp: string) {
-        switch (tp) {
-            case "boolean": {
-                return ([
-                    { value: 'isEqual', viewValue: 'Equal' },
-                    { value: 'isNotEqual', viewValue: 'Not Equal' }
-                ])
-            }
-            case "text": {
-                return ([
-                    { value: 'isEqual', viewValue: 'Equal' },
-                    { value: 'isNotEqual', viewValue: 'Not Equal' },
-                    { value: 'contains', viewValue: 'Contains' }
-                ])
-            }
-            case "date": {
-                return ([
-                    { value: 'isEqual', viewValue: 'Equal' },
-                    { value: 'isNotEqual', viewValue: 'Not Equal' },
-                    { value: 'isGreaterThan', viewValue: 'After' },
-                    { value: 'isLessThan', viewValue: 'Before' }
-                ])
-            }
-            case "double precision": {
-                return ([
-                    { value: 'isEqual', viewValue: 'Equal' },
-                    { value: 'isNotEqual', viewValue: 'Not Equal' },
-                    { value: 'isGreaterThan', viewValue: 'Greater Than' },
-                    { value: 'isLessThan', viewValue: 'Less Than' }
-                ])
-            }
-        }
-    }
+    
 }

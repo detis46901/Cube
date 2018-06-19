@@ -87,7 +87,6 @@ export class LayerDetailsComponent implements OnInit {
                     for(let perm of perms) {
                         if(perm.userID != this.userID) {
                             notif.userID = perm.userID;
-
                             this.notificationService
                                 .Add(notif)
                                 .subscribe((res) => {
