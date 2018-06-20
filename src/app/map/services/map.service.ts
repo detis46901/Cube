@@ -185,10 +185,11 @@ export class MapService {
                                 //console.log("Done")
                                 j++
                                 //console.log("j=" + j)
-                                if (j == this.mapConfig.userpagelayers.length) { resolve() }
+                                if (j == this.mapConfig.userpagelayers.length) {
+                                    resolve()
+                                }
                             })
                         break
-
                     }
                     default: {
                         //let defStyle = {fillColor: "black", strokeColor: "green"};
@@ -294,15 +295,14 @@ export class MapService {
         //source = new ol.source.Vector({ features: (new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' })).readFeatures(data[0][0]['jsonb_build_object']) })}
     }
 
-
     public runInterval(layer: UserPageLayer, source: ol.source.Vector) {
         let stylefunction = ((feature, resolution) => {
             if (this.mapConfig.currentLayer == layer) {
                 return (this.styleService.styleFunction(feature, layer, "current"))
             }
             else {
-            return (this.styleService.styleFunction(feature, layer, "load"))
-        }
+                return (this.styleService.styleFunction(feature, layer, "load"))
+            }
         })
         this.getMyCubeData(layer).then((data) => {
             if (data[0]) {
@@ -344,11 +344,9 @@ export class MapService {
                     //source = new ol.source.Vector()
                     resolve(data)//source = new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' })).readFeatures(data[0][0]['jsonb_build_object']) })                
                 })
-
         })
         return promise
     }
-
 
     private formLayerRequest(layer: UserPageLayer): string {
         switch (layer.layer.layerType) {
@@ -454,6 +452,7 @@ export class MapService {
             console.log("error")
         })
     }
+
     private sendMessage(message: string): void {
         message = message.split("<body>")[1]
         message = message.split("</body>")[0]
@@ -512,7 +511,6 @@ export class MapService {
         });
 
         this.myCubeService.prebuildMyCube(layer) //This needs a lot of work
-
     }
 
     private selectFeature(layer: UserPageLayer, refresh: boolean = false) {
@@ -584,9 +582,9 @@ export class MapService {
             this.mapConfig.map.changed()
             ol.Observable.unByKey(this.modkey)
             this.mapConfig.map.removeInteraction(draw)
-
         })
     }
+
     private delete(mapconfig: MapConfig, featurety: any) {
         this.mapConfig.selectedFeatures.forEach((feat) => {
             mapconfig.sources[mapconfig.currentLayer.loadOrder - 1].removeFeature(feat)
@@ -607,7 +605,6 @@ export class MapService {
         console.log('getting featurelist')
         console.log(this.mapConfig.currentLayer.layer.defaultStyle)
         let k: number = 0
-
         try {
             let labelName: string = this.mapConfig.currentLayer.layer.defaultStyle['listLabel']
             if (!labelName) { labelName = this.mapConfig.currentLayer.style['listLabel'] }

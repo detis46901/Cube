@@ -10,8 +10,6 @@ import { UserPageLayerService } from '../../../_services/_userPageLayer.service'
 import { StyleService } from '../services/style.service'
 import { LayerService } from '../../../_services/_layer.service';
 
-
-
 //import { MangolMap } from './../../core/_index';
 
 declare var ol: any;
@@ -67,8 +65,6 @@ export class FilterComponent implements OnInit, OnDestroy {
           this.updateColumn()
         }
       )
-  
-      
   }
 
   ngOnDestroy() {
@@ -83,18 +79,6 @@ export class FilterComponent implements OnInit, OnDestroy {
         } 
       })}
     this.operators = this.getoperator(this.filterColumn.type)
-  }
-
-  private clearFilter() {
-    this.mapConfig.filterOn = false
-    this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] = null
-    this.mapConfig.currentLayer.layer.defaultStyle['filter']['operator'] = null
-    this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = null
-    this.mapConfig.currentLayer.style['filter']['column'] = null
-    this.mapConfig.currentLayer.style['filter']['operator'] = null
-    this.mapConfig.currentLayer.style['filter']['value'] = null
-    
-    this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1])
   }
 
   private close() {
@@ -114,13 +98,12 @@ export class FilterComponent implements OnInit, OnDestroy {
   }
 
   private saveToPage():void {
-    console.log("Saving to Page")
     if (!this.mapConfig.currentLayer.style) {
       this.mapConfig.currentLayer.style = this.mapConfig.currentLayer.layer.defaultStyle
     }
-    this.mapConfig.currentLayer.style['filter']['column'] = this.filterColumn['field']
-    this.mapConfig.currentLayer.style['filter']['operator'] = this.filterOperator['value']
-    this.mapConfig.currentLayer.style['filter']['value'] = this.filterValue 
+    this.mapConfig.currentLayer.style['filter']['column'] = this.filterColumn['field'];
+    this.mapConfig.currentLayer.style['filter']['operator'] = this.filterOperator;
+    this.mapConfig.currentLayer.style['filter']['value'] = this.filterColumn.value; 
     console.log(this.mapConfig.currentLayer)
     this.userPageLayerService
     .Update(this.mapConfig.currentLayer)
@@ -130,18 +113,36 @@ export class FilterComponent implements OnInit, OnDestroy {
   }
 
   private saveToLayer(): void {
-    console.log("saving to layer")
     this.mapConfig.currentLayer.layer.defaultStyle = this.mapConfig.currentLayer.style;
     this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] = this.filterColumn['field'];
-    this.mapConfig.currentLayer.layer.defaultStyle['filter']['operator'] = this.filterOperator['value'];
-    this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = this.filterValue;
-    console.log(this.mapConfig.currentLayer)
+    this.mapConfig.currentLayer.layer.defaultStyle['filter']['operator'] = this.filterOperator;
+    this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = this.filterColumn.value;
     this.layerService
     .Update(this.mapConfig.currentLayer.layer)
     .subscribe((data) => {
       console.log(data)
     })
   }
+
+  private clear(): void {
+    this.filterColumn.field = "";
+    this.filterOperator = "";
+    this.filterColumn.value = "";
+    this.filterValue = "";
+  }
+
+    // private clearFilter() {
+  //   this.mapConfig.filterOn = false
+  //   this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] = null
+  //   this.mapConfig.currentLayer.layer.defaultStyle['filter']['operator'] = null
+  //   this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = null
+  //   this.mapConfig.currentLayer.style['filter']['column'] = null
+  //   this.mapConfig.currentLayer.style['filter']['operator'] = null
+  //   this.mapConfig.currentLayer.style['filter']['value'] = null
+    
+  //   this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1])
+  // }
+
   getoperator(tp: string) {
     switch (tp) {
         case "boolean": {

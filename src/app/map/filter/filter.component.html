@@ -15,31 +15,47 @@
     </mat-select>
     <br>
 
-    <mat-radio-group [(ngModel)]="filterOperator" placeholder="Operator">
+    <mat-select [(ngModel)]="filterOperator" placeholder="Operator">
+        <mat-option *ngFor="let operator of operators" [value]="operator.value">
+            {{operator.viewValue}}
+        </mat-option>
+    </mat-select>
+    <br>
+
+    <mat-select [(ngModel)]="filterColumn.value" *ngIf="filterColumn.type == 'boolean'" placeholder="boolean">
+        <mat-option [value]="true">
+            true
+        </mat-option>
+        <mat-option [value]="false">
+            false
+        </mat-option>
+    </mat-select>
+
+    <!-- <mat-radio-group [(ngModel)]="filterOperator" placeholder="Operator">
         <mat-radio-button *ngFor="let operator of operators" [value]="operator.viewValue">
             {{ operator.viewValue }}
         </mat-radio-button>
     </mat-radio-group>
-    <br>
+    <br> -->
 
-    <mat-radio-group *ngIf="filterColumn.type == 'boolean'" placeholder="boolean">
-        <mat-radio-button [checked]="filterColumn.value">
+    <!-- <mat-radio-group *ngIf="filterColumn.type == 'boolean'" placeholder="boolean">
+        <mat-radio-button>
             True
         </mat-radio-button>
-        <mat-radio-button [checked]="False">
+        <mat-radio-button>
             False
         </mat-radio-button>
-    </mat-radio-group>
+    </mat-radio-group> -->
 
     <mat-form-field *ngIf="filterColumn.type == 'text' || filterColumn.type == 'double precision'"><input matInput [(ngModel)]="filterValue" placeholder="Value"></mat-form-field>
-    <mat-form-field *ngIf="filterColumn.type == 'date'"><input matInput [matDatepicker]="picker" placeholder="Date" [(ngModel)]="filtervalue">
+    <mat-form-field *ngIf="filterColumn.type == 'date'"><input matInput [matDatepicker]="picker" placeholder="Date" [(ngModel)]="filterValue">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
     <mat-action-row>        
         <button mat-button (click)="applyFilter()">Apply</button>
-        <button mat-button (click)="clearFilter()">Clear</button>
+        <button mat-button (click)="clear()">Clear</button>
         <button mat-button (click)="saveToPage()">Save to Page</button>
         <button mat-button (click)="saveToLayer()">Save to Layer</button>
         <button mat-button (click)="close()">Close</button>
