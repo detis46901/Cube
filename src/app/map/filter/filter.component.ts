@@ -87,7 +87,12 @@ export class FilterComponent implements OnInit, OnDestroy {
 
   private applyFilter(mtype: string) {
     console.log(this.filterOperator['value'])
-    this.mapConfig.filterOn = true
+    if (this.filterColumn['field'] == "") {
+      this.mapConfig.filterOn = false;
+    }
+    else {
+      this.mapConfig.filterOn = true
+    }
     console.log(this.mapConfig.currentLayer.layer.defaultStyle)
     this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] = this.filterColumn['field']
     this.mapConfig.currentLayer.layer.defaultStyle['filter']['operator'] = this.filterOperator['value']
@@ -116,6 +121,7 @@ export class FilterComponent implements OnInit, OnDestroy {
     this.mapConfig.currentLayer.layer.defaultStyle = this.mapConfig.currentLayer.style;
     this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] = this.filterColumn['field'];
     this.mapConfig.currentLayer.layer.defaultStyle['filter']['operator'] = this.filterOperator;
+    this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = this.filterColumn.value;
     this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = this.filterColumn.value;
     this.layerService
     .Update(this.mapConfig.currentLayer.layer)
