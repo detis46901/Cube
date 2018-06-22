@@ -41,7 +41,9 @@ export class FilterComponent implements OnInit, OnDestroy {
     { value: 'contains', viewValue: 'Contains'}
   ];
 
-  constructor(private mapService: MapService, private styleService: StyleService,private sqlSerivce: SQLService, private userPageLayerService: UserPageLayerService, private layerService: LayerService) {
+  constructor(private mapService: MapService, private styleService: StyleService,
+    private sqlSerivce: SQLService, private userPageLayerService: UserPageLayerService, 
+    private layerService: LayerService) {
   }
 
   ngOnInit() {
@@ -55,7 +57,6 @@ export class FilterComponent implements OnInit, OnDestroy {
     catch(e) {
       console.log('No UserPageLayer Filter');
     }
-
     this.sqlSerivce.GetSchema(this.mapConfig.currentLayer.layerID)
       .subscribe((data) => {
         this.columns = data.slice(2, data.length)
@@ -151,35 +152,35 @@ export class FilterComponent implements OnInit, OnDestroy {
 
   getoperator(tp: string) {
     switch (tp) {
-        case "boolean": {
-            return ([
-                { value: 'isEqual', viewValue: 'Equal' },
-                { value: 'isNotEqual', viewValue: 'Not Equal' }
-            ])
-        }
-        case "text": {
-            return ([
-                { value: 'isEqual', viewValue: 'Equal' },
-                { value: 'isNotEqual', viewValue: 'Not Equal' },
-                { value: 'contains', viewValue: 'Contains' }
-            ])
-        }
-        case "date": {
-            return ([
-                { value: 'isEqual', viewValue: 'Equal' },
-                { value: 'isNotEqual', viewValue: 'Not Equal' },
-                { value: 'isGreaterThan', viewValue: 'After' },
-                { value: 'isLessThan', viewValue: 'Before' }
-            ])
-        }
-        case "double precision": {
-            return ([
-                { value: 'isEqual', viewValue: 'Equal' },
-                { value: 'isNotEqual', viewValue: 'Not Equal' },
-                { value: 'isGreaterThan', viewValue: 'Greater Than' },
-                { value: 'isLessThan', viewValue: 'Less Than' }
-            ])
-        }
+      case "boolean": {
+          return ([
+              { value: 'isEqual', viewValue: 'Equal' },
+              { value: 'isNotEqual', viewValue: 'Not Equal' }
+          ])
+      }
+      case "text": {
+          return ([
+              { value: 'isEqual', viewValue: 'Equal' },
+              { value: 'isNotEqual', viewValue: 'Not Equal' },
+              { value: 'contains', viewValue: 'Contains' }
+          ])
+      }
+      case "date": {
+          return ([
+              { value: 'isEqual', viewValue: 'Equal' },
+              { value: 'isNotEqual', viewValue: 'Not Equal' },
+              { value: 'isGreaterThan', viewValue: 'After' },
+              { value: 'isLessThan', viewValue: 'Before' }
+          ])
+      }
+      case "double precision": {
+          return ([
+              { value: 'isEqual', viewValue: 'Equal' },
+              { value: 'isNotEqual', viewValue: 'Not Equal' },
+              { value: 'isGreaterThan', viewValue: 'Greater Than' },
+              { value: 'isLessThan', viewValue: 'Less Than' }
+          ])
+      }
     }
-}
+  }
 }

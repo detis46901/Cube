@@ -27,7 +27,8 @@ export class LayerDetailsComponent implements OnInit {
     private layerProps = new Array<any>();
     private changedLayerProps = new Array<any>();
     private originalLayerProps = new Array<any>();
-    private style: string;
+    private style: JSON;
+    private tempstyle: string;
     private token;
     private userID;
     private user: User;
@@ -58,7 +59,8 @@ export class LayerDetailsComponent implements OnInit {
             .GetSingle(id)
             .subscribe((res: Layer) => {
                 this.layer = res
-                this.style = JSON.stringify(this.layer.defaultStyle)
+                this.tempstyle = JSON.stringify(this.layer.defaultStyle)
+                this.style = this.layer.defaultStyle
                 console.log(res.defaultStyle["load"])
 
                 for(let prop in res) {
@@ -78,6 +80,8 @@ export class LayerDetailsComponent implements OnInit {
     }
 
     private submit(layer) {
+        this.layer.defaultStyle = this.style;
+
         this.whichFieldsChanged(layer)
         var notif: Notif = this.createLayerNotif(layer)
         this.layerService
