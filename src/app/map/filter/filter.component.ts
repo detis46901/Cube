@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostBinding, NgModule, ModuleWithProviders, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, HostBinding, NgModule, ModuleWithProviders, OnDestroy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonToggleChange } from '@angular/material';
 import { MapConfig } from '../models/map.model'
@@ -82,13 +82,15 @@ export class FilterComponent implements OnInit, OnDestroy {
     this.operators = this.getoperator(this.filterColumn.type)
   }
 
+  // closes the filter menu
   private close() {
     this.mapConfig.filterShow = false
   }
 
+  // applies the filter to the map and only shows the appllicable items //not fully working
   private applyFilter(mtype: string) {
     console.log(this.filterOperator['value'])
-    if (this.filterColumn['field'] == "") {
+    if (this.filterColumn['field'] == "" || this.filterColumn['field'] == "") {
       this.mapConfig.filterOn = false;
     }
     else {
@@ -103,6 +105,7 @@ export class FilterComponent implements OnInit, OnDestroy {
     this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1])
   }
 
+  // Saves the current styles to the current user page
   private saveToPage():void {
     if (!this.mapConfig.currentLayer.style) {
       this.mapConfig.currentLayer.style = this.mapConfig.currentLayer.layer.defaultStyle
@@ -118,6 +121,7 @@ export class FilterComponent implements OnInit, OnDestroy {
     })
   }
 
+  // saves the current filter to the layer for everyone to view and edit
   private saveToLayer(): void {
     this.mapConfig.currentLayer.layer.defaultStyle = this.mapConfig.currentLayer.style;
     this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] = this.filterColumn['field'];
@@ -131,6 +135,7 @@ export class FilterComponent implements OnInit, OnDestroy {
     })
   }
 
+  // clears the entry fields and sets them to bank strings
   private clear(): void {
     this.filterColumn.field = "";
     this.filterOperator = "";
@@ -138,7 +143,7 @@ export class FilterComponent implements OnInit, OnDestroy {
     this.filterValue = "";
   }
 
-    // private clearFilter() {
+  // private clearFilter() {
   //   this.mapConfig.filterOn = false
   //   this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] = null
   //   this.mapConfig.currentLayer.layer.defaultStyle['filter']['operator'] = null

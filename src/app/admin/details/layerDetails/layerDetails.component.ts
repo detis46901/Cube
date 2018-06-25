@@ -27,14 +27,15 @@ export class LayerDetailsComponent implements OnInit {
     private layerProps = new Array<any>();
     private changedLayerProps = new Array<any>();
     private originalLayerProps = new Array<any>();
-    private style: JSON;
-    private tempstyle: string;
+    private style: string;
     private token;
     private userID;
     private user: User;
     private servers: Array<Server>;
 
-    constructor(private dialog: MatDialog, private layerService: LayerService, private layerPermissionService: LayerPermissionService, private serverService: ServerService, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private notificationService: NotifService) {
+    constructor(private dialog: MatDialog, private layerService: LayerService, private layerPermissionService: LayerPermissionService, 
+        private serverService: ServerService, private userService: UserService, private groupService: GroupService, 
+        private groupMemberService: GroupMemberService, private notificationService: NotifService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.token = currentUser && currentUser.token;
 		this.userID = currentUser && currentUser.userID;
@@ -59,8 +60,7 @@ export class LayerDetailsComponent implements OnInit {
             .GetSingle(id)
             .subscribe((res: Layer) => {
                 this.layer = res
-                this.tempstyle = JSON.stringify(this.layer.defaultStyle)
-                this.style = this.layer.defaultStyle
+                this.style = JSON.stringify(this.layer.defaultStyle)
                 console.log(res.defaultStyle["load"])
 
                 for(let prop in res) {
@@ -80,10 +80,9 @@ export class LayerDetailsComponent implements OnInit {
     }
 
     private submit(layer) {
-        this.layer.defaultStyle = this.style;
-
         this.whichFieldsChanged(layer)
         var notif: Notif = this.createLayerNotif(layer)
+        this.layer.defaultStyle = JSON.parse(this.style);
         this.layerService
             .Update(layer)
             .subscribe(() => {

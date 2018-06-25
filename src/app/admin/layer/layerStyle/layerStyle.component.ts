@@ -111,9 +111,7 @@ export class LayerStyleComponent implements OnInit {
     
 
     private updateLayerStyle(layer: Layer): void {
-        console.log(this.defaultStyle)
-        layer.defaultStyle = JSON.parse(this.defaultStyle)
-        console.log (layer.defaultStyle)
+        this.layer.defaultStyle = JSON.parse(this.defaultStyle);
         this.layerService
             .Update(layer)
             .subscribe((result) => {
