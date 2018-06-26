@@ -44,6 +44,8 @@ export class StyleService {
                 }),
             })
         });
+        //console.log(this.filterFunction(feature, layer))
+        if (this.filterFunction(feature, layer) == false) {style = new ol.style.Style ({})}
         return style
     }
     public filterFunction(feat: ol.Feature, layer: UserPageLayer): boolean {
@@ -60,9 +62,9 @@ export class StyleService {
             filterColumn = layer.style['filter']['column']
             filterOperator = layer.style['filter']['operator']
             filterValue = layer.style['filter']['value']
-            console.log(filterColumn)
-            console.log(filterOperator)
-            console.log(filterValue)
+            //console.log(filterColumn)
+            //console.log(filterOperator)
+            //console.log(filterValue)
         }
         else {
             if (layer.layer.defaultStyle['filter']) {
@@ -79,8 +81,9 @@ export class StyleService {
             if (filterColumn && filterOperator) {
                 switch (filterOperator) {
                     case ("isEqual"): {
-
-                        if (feat.get(filterValue) == filterValue) {
+                        console.log(filterValue)
+                        console.log(feat.get(filterColumn))
+                        if (feat.get(filterColumn) == filterValue) {
                             visible = true
                         }
                         else {
