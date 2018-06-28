@@ -55,7 +55,7 @@ export class StyleService {
         let filterColumn: string
         let filterOperator: string
         let filterValue: any
-        let visible: boolean = false
+        let visible: boolean = true
 
         if (layer.style) {
             //console.log(layer.style)
@@ -81,19 +81,33 @@ export class StyleService {
             if (filterColumn && filterOperator) {
                 switch (filterOperator) {
                     case ("isEqual"): {
-                        console.log(filterValue)
-                        console.log(feat.get(filterColumn))
-                        if (feat.get(filterColumn) == filterValue) {
-                            visible = true
+                        if (filterColumn === "Complete") {
+                            console.log("true")
+                            var d1 = new Date(filterValue)
+                            var d2 = new Date(feat.get(filterColumn))
+                            console.log(d1)
+                            console.log(d2)
+                            if (d1.getTime() == d2.getTime()) {
+                                console.log("hello")
+                                visible = true;
+                            }
+                            else {
+                                visible = false;
+                            }
                         }
                         else {
-                            if (filterValue == false) {
-                                if (feat.get(filterColumn) == null) { }
+                            if (feat.get(filterColumn) == filterValue) {
+                                visible = true
+                            }
+                            else {
+                                if (filterValue == false) {
+                                    if (feat.get(filterColumn) == null) { }
+                                    else { visible = false }
+                                }
                                 else { visible = false }
                             }
-                            else { visible = false }
+                            break
                         }
-                        break
                     }
                     case ("isNotEqual"): {
                         if (feat.get(filterColumn) != filterValue) {
@@ -111,8 +125,6 @@ export class StyleService {
                     case ("isGreaterThan"): {
                         console.log("isGreaterThan")
                         if (parseInt(feat.get(filterColumn)) > parseInt(filterValue)) {
-                            //console.log(parseInt(feat.get(filterColumn)))
-                            //console.log(parseInt(filterValue))
                             visible = true
                         }
                         else {
@@ -121,7 +133,7 @@ export class StyleService {
                         break
                     }
                     case ("isLessThan"): {
-                        console.log("isLessThan")
+        
                         if (parseInt(feat.get(filterColumn)) < parseInt(filterValue)) {
                             visible = true
                         }
@@ -129,6 +141,14 @@ export class StyleService {
                             visible = false
                         }
                         break
+                    }
+                    case("contains"): {
+                        if (feat.get(filterColumn) != null && feat.get(filterColumn).indexOf(filterValue) + 1) {
+                            visible = true;
+                        }
+                        else {
+                            visible = false;
+                        }
                     }
                 }
                 //this.mapConfig.filterOn = true  This needs to be turned on somehow.
