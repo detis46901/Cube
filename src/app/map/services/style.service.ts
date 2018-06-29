@@ -81,19 +81,16 @@ export class StyleService {
             if (filterColumn && filterOperator) {
                 switch (filterOperator) {
                     case ("isEqual"): {
-                        if (filterColumn === "Complete") {
-                            console.log("true")
+                        if (filterColumn === "Complete" && feat.get(filterColumn) != null) {
                             var d1 = new Date(filterValue)
                             var d2 = new Date(feat.get(filterColumn))
-                            console.log(d1)
-                            console.log(d2)
-                            if (d1.getTime() == d2.getTime()) {
-                                console.log("hello")
+                            if (d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDay() === d2.getDay()) {
                                 visible = true;
                             }
                             else {
                                 visible = false;
                             }
+                            break;
                         }
                         else {
                             if (feat.get(filterColumn) == filterValue) {
@@ -106,41 +103,90 @@ export class StyleService {
                                 }
                                 else { visible = false }
                             }
-                            break
+                            break;
                         }
                     }
                     case ("isNotEqual"): {
-                        if (feat.get(filterColumn) != filterValue) {
-                            visible = true
+                        if (filterColumn === "Complete" && feat.get(filterColumn) != null) {
+                            var d1 = new Date(filterValue)
+                            var d2 = new Date(feat.get(filterColumn))
+                            if (d1.getFullYear() !== d2.getFullYear() && d1.getMonth() && d2.getMonth() && d1.getDay() !== d2.getDay()) {
+                                visible = true;
+                            }
+                            else {
+                                visible = false;
+                            }
+                            break;
                         }
                         else {
-                            if (filterValue == false) {
-                                if (feat.get(filterColumn) == null) { visible = true }
+                            if (feat.get(filterColumn) != filterValue) {
+                                visible = true
+                            }
+                            else {
+                                if (filterValue == false) {
+                                    if (feat.get(filterColumn) == null) { visible = true }
+                                    else { visible = false }
+                                }
                                 else { visible = false }
                             }
-                            else { visible = false }
+                            break
                         }
-                        break
                     }
                     case ("isGreaterThan"): {
-                        console.log("isGreaterThan")
-                        if (parseInt(feat.get(filterColumn)) > parseInt(filterValue)) {
-                            visible = true
+                        if (filterColumn === "Complete" && feat.get(filterColumn) != null) {
+                            var d1 = new Date(filterValue)
+                            var d2 = new Date(feat.get(filterColumn))
+                            if (d1.getFullYear() < d2.getFullYear()) {
+                                visible = true;
+                            }
+                            else if (d1.getFullYear() === d2.getFullYear() && d1.getMonth() < d2.getMonth()) {
+                                visible = true;
+                            }
+                            else if (d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDay() < d2.getDay()) {
+                                visible = true;
+                            }
+                            else {
+                                visible = false;
+                            }
+                            break;
                         }
                         else {
-                            visible = false
+                            if (parseInt(feat.get(filterColumn)) > parseInt(filterValue)) {
+                                visible = true
+                            }
+                            else {
+                                visible = false
+                            }
+                            break
                         }
-                        break
                     }
                     case ("isLessThan"): {
-        
-                        if (parseInt(feat.get(filterColumn)) < parseInt(filterValue)) {
-                            visible = true
+                        if (filterColumn === "Complete" && feat.get(filterColumn) != null) {
+                            var d1 = new Date(filterValue)
+                            var d2 = new Date(feat.get(filterColumn))
+                            if (d1.getFullYear() > d2.getFullYear()) {
+                                visible = true;
+                            }
+                            else if (d1.getFullYear() === d2.getFullYear() && d1.getMonth() > d2.getMonth()) {
+                                visible = true;
+                            }
+                            else if (d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDay() > d2.getDay()) {
+                                visible = true;
+                            }
+                            else {
+                                visible = false;
+                            }
+                            break;
                         }
                         else {
-                            visible = false
+                            if (parseInt(feat.get(filterColumn)) < parseInt(filterValue)) {
+                                visible = true
+                            }
+                            else {
+                                visible = false
+                            }
+                            break
                         }
-                        break
                     }
                     case("contains"): {
                         if (feat.get(filterColumn) != null && feat.get(filterColumn).indexOf(filterValue) + 1) {
