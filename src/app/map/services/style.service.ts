@@ -119,12 +119,12 @@ export class StyleService {
                             break;
                         }
                         else {
-                            if (feat.get(filterColumn) != filterValue) {
+                            if (feat.get(filterColumn) != filterValue && feat.get(filterColumn) != null) {
                                 visible = true
                             }
                             else {
-                                if (filterValue == false) {
-                                    if (feat.get(filterColumn) == null) { visible = true }
+                                if (filterValue == true) {
+                                    if (feat.get(filterColumn) == null) {}
                                     else { visible = false }
                                 }
                                 else { visible = false }

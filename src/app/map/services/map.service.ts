@@ -271,9 +271,9 @@ export class MapService {
           }
       
         // This sets up the auto-update function.  It's not running right now, so I'm temporarily shutting it down.
-        // this.interval = setInterval(() => {
-        //    this.runInterval(layer, source)
-        // }, 20000);
+         this.interval = setInterval(() => {
+            this.runInterval(layer, source)
+         }, 20000);
 
         this.getMyCubeData(layer).then((data) => {
 

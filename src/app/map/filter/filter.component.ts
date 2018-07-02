@@ -88,7 +88,7 @@ export class FilterComponent implements OnInit, OnDestroy {
   }
 
   // applies the filter to the map and only shows the appllicable items //not fully working
-  private applyFilter(mtype: string) {
+  private applyFilter() {
     console.log(this.filterOperator['value'])
     if (this.filterColumn['field'] == "" || this.filterColumn['field'] == "") {
       this.mapConfig.filterOn = false;
@@ -97,11 +97,11 @@ export class FilterComponent implements OnInit, OnDestroy {
       this.mapConfig.filterOn = true
     }
     console.log(this.mapConfig.currentLayer.layer.defaultStyle)
-    this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] = this.filterColumn['field']
-    this.mapConfig.currentLayer.layer.defaultStyle['filter']['operator'] = this.filterOperator['value']
-    this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = this.filterValue
-    if (this.filterValue == "true") { this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = true }
-    if (this.filterValue == "false") { this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = false }
+    this.mapConfig.currentLayer.style['filter']['column'] = this.filterColumn['field']
+    this.mapConfig.currentLayer.style['filter']['operator'] = this.filterOperator
+    this.mapConfig.currentLayer.style['filter']['value'] = this.filterColumn.value
+    if (this.filterValue == "true") { this.mapConfig.currentLayer.style['filter']['value'] = true }
+    if (this.filterValue == "false") { this.mapConfig.currentLayer.style['filter']['value'] = false }
     this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1])
   }
 
@@ -141,6 +141,7 @@ export class FilterComponent implements OnInit, OnDestroy {
     this.filterOperator = "";
     this.filterColumn.value = "";
     this.filterValue = "";
+    this.applyFilter()
   }
 
   // private clearFilter() {
