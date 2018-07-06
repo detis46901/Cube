@@ -69,6 +69,19 @@ export class FilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+
+  }
+
+  private disableCheck(): boolean {
+    if ((this.filterColumn.field == "" || this.filterColumn.field == null) && (this.filterOperator == "" || this.filterOperator == null) && (this.filterColumn.value == "" || this.filterColumn.value == null)) {
+      return true;
+    }
+    else if ((this.filterColumn.field != "" || this.filterColumn.field != null) && (this.filterOperator != "" || this.filterOperator != null) && (this.filterColumn.value != "" || this.filterColumn.value != null)) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   private updateColumn() {
