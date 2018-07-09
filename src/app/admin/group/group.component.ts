@@ -189,7 +189,12 @@ export class GroupComponent implements OnInit {
                         tempB.push(group);
                     }
                 }
-                this.availableGroups = tempB
+                if (this.groups.length == 0) {
+                    this.availableGroups = this.groups;
+                }
+                else {
+                    this.availableGroups = tempB
+                }
             })  
     }
 
@@ -237,8 +242,13 @@ export class GroupComponent implements OnInit {
                                     }
                                 }
                             }
-
-                            this.availableUsers = tempB;
+                            if (this.users.length == 0) {
+                                this.availableUsers = this.users;
+                            }
+                            else {
+                                this.availableUsers = tempB;
+                            }
+                            
                             this.memberUsers = tempA;
                         })
                 }

@@ -114,8 +114,10 @@ export class PageConfigComponent implements OnInit {
         // return prom;
         var layerMatch = false;
         this.getByUser().then(() => {
-            this.getByGroup().then(() => {    
+            this.getByGroup().then(() => {
+                console.log("in getbygroup")
                 this.availableLPs = []
+                console.log(this.layerPermissions)
                 for(let LP of this.layerPermissions) {
                     for(let UPL of this.userPageLayers) {         
                         if(LP.layerID == UPL.layerID) {
@@ -148,7 +150,7 @@ export class PageConfigComponent implements OnInit {
                     for(let LP of data) {
                         //userPerms.push(i)
                         this.layerPermissions.push(LP)
-                        console.log("\nU Iterated       ID:" + LP.ID + "    Name: " + LP.layer.layerName)
+                        // console.log("\nU Iterated       ID:" + LP.ID + "    Name: " + LP.layer.layerName)
                     }
                     resolve();
                 }); 
@@ -167,18 +169,15 @@ export class PageConfigComponent implements OnInit {
                         console.log(LPs)
                         for(let LP of LPs) {
                             //groupPerms.push(i)
-                            console.log(this.layerPermissions.indexOf(LP))
                             //if(this.layerPermissions.indexOf(LP) == -1) {
                             for(let userLP of this.layerPermissions)
-                                //console.log("\nG Iterated:      ID: " + LP.ID + "    Name: " + LP.layer.layerName)
+                            //console.log(this.layerPermissions)
+                                // console.log("\nG Iterated:      ID: " + LP.ID + "    Name: " + LP.layer.layerName)
                                 if(LP.layerID != userLP.layerID) {
                                     this.layerPermissions.push(LP)
-                                    console.log("\n\nG Adding:      ID: " + LP.ID + "    Name: " + LP.layer.layerName)
                                 }      
                         }
-                        console.log(this.layerPermissions)
-                        //console.log
-
+                       //console.log(this.layerPermissions)
                     })
             }
             resolve();

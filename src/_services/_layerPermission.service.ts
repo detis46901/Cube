@@ -32,6 +32,7 @@ export class LayerPermissionService extends ParentService {
     }
 
     public GetByGroup = (groupid): Observable<LayerPermission[]> => {
+        console.log(this.actionUrl + 'getbygroup?groupID=' + groupid, this.options)
         return this._http.get(this.actionUrl + 'getbygroup?groupID=' + groupid, this.options)
             .pipe(catchError(this.handleError));
     }
