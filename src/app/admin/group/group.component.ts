@@ -205,6 +205,7 @@ export class GroupComponent implements OnInit {
             .GetByGroup(group.ID)
             .subscribe((data) => {
                 this.userGroupMembers = data;
+                console.log(data)
                 var tempA = new Array<User>();
                 var tempB = new Array<User>();
 
@@ -215,44 +216,52 @@ export class GroupComponent implements OnInit {
                 }
                 var counter = 0;
 
-                // first for loop gets the user information using observable
-                for(let gm of data) {
+                if (!data) {
                     this.userService
-                        .GetSingle(gm.userID)
-                        .subscribe((user) => {
-                            tempA.push(user)
-
-                            // for loop that compares all users to users in a specific group
-                            // if they match at any poin it wil replace the index array value with -1
-                            var indexOfUser = 0;
-                            for (let user1 of this.users) {
-                                if (user1.ID == user.ID) {
-                                    indexOfUser = this.users.indexOf(user1);
-                                    indexArray[indexOfUser] = -1;
-                                }
-                            }
-                            counter++;
-
-                            // once the counter hits the number of users in a group
-                            if (counter == data.length) {
-                                // if the index is not -1 it sets the appropriate user to availabler users array
-                                for (let index of indexArray) {
-                                    if (index != -1) {
-                                        tempB.push(this.users[index]);
-                                    }
-                                }
-                            }
-                            if (this.users.length == 0) {
-                                this.availableUsers = this.users;
-                            }
-                            else {
-                                this.availableUsers = tempB;
-                            }
-                            
-                            this.memberUsers = tempA;
+                        .GetAll()
+                        .subscribe((data) => {
+                            this.availableUsers = data;
                         })
                 }
-                
+                // first for loop gets the user information using observable
+                else {
+                    for(let gm of data) {
+                        this.userService
+                            .GetSingle(gm.userID)
+                            .subscribe((user) => {
+                                tempA.push(user)
+                                console.log(tempA)
+
+                                // for loop that compares all users to users in a specific group
+                                // if they match at any poin it wil replace the index array value with -1
+                                var indexOfUser = 0;
+                                for (let user1 of this.users) {
+                                    if (user1.ID == user.ID) {
+                                        indexOfUser = this.users.indexOf(user1);
+                                        indexArray[indexOfUser] = -1;
+                                    }
+                                }
+                                counter++;
+
+                                // once the counter hits the number of users in a group
+                                if (counter == data.length) {
+                                    // if the index is not -1 it sets the appropriate user to available users array
+                                    for (let index of indexArray) {
+                                        if (index != -1) {
+                                            tempB.push(this.users[index]);
+                                        }
+                                    }
+                                }
+                                
+                                // this.availableUsers = tempB;
+                                
+                                
+                                this.memberUsers = tempA;
+
+                                this.availableUsers = tempB;
+                            })
+                    }
+                }
             })   
     }
 

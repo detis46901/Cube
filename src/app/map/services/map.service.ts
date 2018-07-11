@@ -617,10 +617,11 @@ export class MapService {
                         fl.label = x.get(labelName)
                         fl.feature = x
                         if (i > -1) {
-
                             this.featurelist[i] = fl
                         }
-                        else { this.featurelist.push(fl) }
+                        else { 
+                            this.featurelist.push(fl) 
+                        }
                     })
                 this.featurelist = this.featurelist.slice(0, k)
             }

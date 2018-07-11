@@ -181,9 +181,9 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <div class="featurelist">
+                <div class="featurelist" style="display: inline-block; overflow-x: hidden; text-overflow: ellipsis">
                     <div *ngFor="let fl of mapService.featurelist">
-                        <a style="cursor: pointer;" (click)="mapService.zoomToFeature(fl)">{{fl.label}}</a>
+                        <a style="cursor: pointer" (click)="mapService.zoomToFeature(fl)">{{fl.label}}</a>
                     </div>
                 </div>
 
