@@ -1,6 +1,6 @@
 import { Component, ViewChild, AfterViewInit, ElementRef} from '@angular/core';
 import { MapService } from './services/map.service';
-import { MapConfig } from './models/map.model'
+import { MapConfig } from './models/map.model';
 import { WFSService } from './services/wfs.service';
 import { Location } from './core/location.class';
 import { geoJSONService } from './services/geoJSON.service'
@@ -19,11 +19,11 @@ import { Group, GroupMember } from '../../_models/group.model';
 import { UserPageLayerService } from '../../_services/_userPageLayer.service';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { MessageService } from '../../_services/message.service'
+import { MessageService } from '../../_services/message.service';
 import { PageConfigComponent } from '../admin/user/pageConfig/pageConfig.component';
 import { MatDialog } from '@angular/material';
 import { Clipboard } from 'ts-clipboard';
-import { Configuration } from '../../_api/api.constants'
+import { Configuration } from '../../_api/api.constants';
 import { MatSnackBar } from '@angular/material';
 import { Feature } from 'geojson';
 
@@ -74,19 +74,18 @@ export class MapComponent {
     
     //Angular component initialization
     ngOnInit() {
-        this.mapConfig.userID = this.userID
+        this.mapConfig.userID = this.userID;
         this.getDefaultPage()
         .then(() => this.mapService.initMap(this.mapConfig)
             .then((mapConfig) => {
                 this.mapConfig = mapConfig  //Not sure if this is necessary.  Just in case.
                 let ptkey = this.mapConfig.map.on('pointermove', (evt) => {
-                    mapConfig.map.getTargetElement().style.cursor =
-                    mapConfig.map.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
+                    mapConfig.map.getTargetElement().style.cursor = mapConfig.map.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
                     if (mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
                         this.mapConfig.map.forEachLayerAtPixel((evt.pixel), layers => {
-                            let index = this.mapConfig.layers.findIndex(x => x == layers)
+                            let index = this.mapConfig.layers.findIndex(x => x == layers);
                             if (index > 0) {
-                                let index2 = this.mapConfig.userpagelayers.findIndex (z => z.loadOrder-1 == index)
+                                let index2 = this.mapConfig.userpagelayers.findIndex (z => z.loadOrder-1 == index);
                                 // let features = this.mapConfig.map.getFeaturesAtPixel(evt.pixel)
                                 // let popup = new ol.Overlay({
                                 //     element: document.getElementById('popup'),
@@ -112,28 +111,29 @@ export class MapComponent {
         this.userPageService
             .GetActiveByUserID(this.userID)
             .subscribe((data: UserPage[]) => {
-                this.mapConfig.name = "Current"
-                this.mapConfig.userpages = data
-                let index = this.mapConfig.userpages.findIndex(x => x.default == true)
-                this.mapConfig.defaultpage = this.mapConfig.userpages[index]
-                this.mapConfig.currentpage = this.mapConfig.userpages[index]
-                this.currPage = this.mapConfig.userpages[index].page
-                this.mapConfig.selectedFeature = null
-                resolve()
+                this.mapConfig.name = "Current";
+                this.mapConfig.userpages = data;
+                let index = this.mapConfig.userpages.findIndex(x => x.default == true);
+                this.mapConfig.defaultpage = this.mapConfig.userpages[index];
+                this.mapConfig.currentpage = this.mapConfig.userpages[index];
+                this.currPage = this.mapConfig.userpages[index].page;
+                this.mapConfig.selectedFeature = null;
+                resolve();
             });
         })
-        return promise
+        return promise;
     }
 
     //Gets userPageLayers by page.ID, changes pages
     private setPage(page: UserPage): void {
-        console.log(this.mapConfig)
-        this.mapConfig.currentpage = page
-        this.mapConfig.currentLayer = new UserPageLayer
+        console.log(this.mapConfig);
+        this.mapConfig.currentpage = page;
+        this.mapConfig.currentLayer = new UserPageLayer;
         this.currPage = page.page;
         this.mapService.getUserPageLayers(this.mapConfig)
-        .then(() => this.mapService.getLayerPerms())
-        .then(() => {this.cleanPage();})
+            .then(() => this.mapService.getLayerPerms())
+                .then(() => {this.cleanPage();
+            })
         //this.mapService.getUserPageLayers(page);
         this.noLayers = true;
     }
@@ -156,17 +156,17 @@ export class MapComponent {
         
     private cleanPage(): void {
         for (let k=1; k< this.mapConfig.layers.length; k) {
-            this.mapConfig.map.removeLayer(this.mapConfig.layers[k])
-            this.mapConfig.layers.splice(k,1)
-            this.mapConfig.currentLayerName = null
-            this.mapService.featurelist = []
+            this.mapConfig.map.removeLayer(this.mapConfig.layers[k]);
+            this.mapConfig.layers.splice(k,1);
+            this.mapConfig.currentLayerName = null;
+            this.mapService.featurelist = [];
         }
-        this.mapConfig.sources = []
-        this.mapConfig.filterOn = false
-        this.mapConfig.sources.push(new ol.source.OSM())
+        this.mapConfig.sources = [];
+        this.mapConfig.filterOn = false;
+        this.mapConfig.sources.push(new ol.source.OSM());
         this.mapService.loadLayers(this.mapConfig, false).then(() => {  
-            this.mapConfig.currentLayerName = null
-            this.mapConfig.editmode = false
+            this.mapConfig.currentLayerName = null;
+            this.mapConfig.editmode = false;
             this.noLayers = true;
         })
     }
@@ -179,26 +179,25 @@ export class MapComponent {
     }
 
     private copyGSToClipboard(url:string) {
-        Clipboard.copy('=IMPORTHTML("' + this.configuration.outsideServerWithApiUrl + url + '&apikey=' + this.token + '", "table", 1)')
+        Clipboard.copy('=IMPORTHTML("' + this.configuration.outsideServerWithApiUrl + url + '&apikey=' + this.token + '", "table", 1)');
         this.snackBar.open("Copied to the clipboard", "", {
             duration: 2000,
           });
     }
 
     private setDefaultPage(userpage: UserPage) {
-        this.mapConfig.defaultpage.default = false
+        this.mapConfig.defaultpage.default = false;
         this.userPageService
         .Update(this.mapConfig.defaultpage)
-        .subscribe()
+        .subscribe();
 
-        userpage.default = true
+        userpage.default = true;
         this.userPageService
         .Update(userpage)
         .subscribe((data) => {
-            this.mapConfig.defaultpage = userpage
+            this.mapConfig.defaultpage = userpage;
         })
     }
-
 
     //For use with layer permissions in the accordion menu
     //
