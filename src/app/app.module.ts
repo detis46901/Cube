@@ -69,10 +69,7 @@ import { PageConfigComponent} from './admin/user/pageConfig/pageConfig.component
 import { LayerNewComponent } from './admin/layer/layerNew/layerNew.component';
 import { newMyCubeComponent } from './admin/layer/myCubeLayer/newMyCube.component';
 import { UserComponent } from './admin/user/user.component';
-import { AdminPageComponent } from './admin/adminPage/adminPage.component';
-import { ModuleComponent } from './admin/module/module.component';
 import { DefaultsComponent } from './admin/default/default.component';
-import { BoundaryComponent } from './admin/boundary/boundary.component';
 import { ServerComponent } from './admin/server/server.component';
 import { ConfirmDeleteComponent } from './admin/confirmDelete/confirmDelete.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -87,7 +84,6 @@ import { MapComponent } from './map/map.component';
 import { MarkerComponent } from '../app/map/marker/marker.component';
 import { PMMarkerComponent } from '../app/map/marker/PMmarker.component'
 import { NavigatorComponent } from '../app/map/navigator/navigator.component';
-import { PagesComponent } from './pages/pages.component';
 import { GroupComponent } from './admin/group/group.component';
 import { NewGroupComponent } from './admin/group/newGroup/newGroup.component';
 import { NewUserComponent } from './admin/user/newUser/newUser.component';
@@ -98,7 +94,6 @@ import { NotifComponent } from '../app/notification/notification.component';
 import { MeasureComponent } from './map/measure/measure.component';
 import { FilterComponent } from './map/filter/filter.component';
 import { mapStyles } from '../app/map/models/map.model';
-import { ParentDetailsComponent } from './admin/details/parentDetails/parentDetails.component';
 import { LayerDetailsComponent } from './admin/details/layerDetails/layerDetails.component';
 import { MapService } from './map/services/map.service';
 import { StyleService } from './map/services/style.service';
@@ -126,7 +121,6 @@ import { ServerLayersComponent } from './admin/server/serverLayers/serverLayers.
         GroupComponent,
         LayerComponent,
         UserComponent,
-        AdminPageComponent,
         SettingsComponent,
         PasswordComponent,
         FilterPipe,
@@ -139,9 +133,7 @@ import { ServerLayersComponent } from './admin/server/serverLayers/serverLayers.
         LayerNewComponent,
         newMyCubeComponent,
         ConfirmDeleteComponent,
-        ModuleComponent,
         DefaultsComponent,
-        BoundaryComponent,
         NotifComponent,
         ServerComponent,
         ServerNewComponent,
@@ -156,7 +148,6 @@ import { ServerLayersComponent } from './admin/server/serverLayers/serverLayers.
         MeasureComponent,
         FilterComponent,
         EditGroupComponent,
-        ParentDetailsComponent,
         UserDetailsComponent,
         ServerDetailsComponent,
         ServerLayersComponent

@@ -1,3 +1,4 @@
+<!-- header and x button -->
 <div class="row" style="width:100%">
     <div class="col-sm-10">
         <h4 mat-dialog-title>Delete {{objectType}}</h4>
@@ -7,11 +8,13 @@
     </div>
 </div>
 
+<!-- warning message about deleting -->
 <mat-dialog-content>Are you sure you want to permanently delete "{{objName}}"?</mat-dialog-content>
 <mat-dialog-content *ngIf="dependentWarning">
     <b>Deleting this object will delete its dependents.</b>
 </mat-dialog-content>
 
+<!-- buttons to confirm delete or to not delete -->
 <hr>
 <mat-dialog-actions>
     <button mat-button id="confDelClick" [mat-dialog-close]="objCode">Delete</button>

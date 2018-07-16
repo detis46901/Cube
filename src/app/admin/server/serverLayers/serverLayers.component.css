@@ -1,15 +1,18 @@
+/* positions each row */
 .row {
     position: relative;
     top: -10px;
     width: 340px;
 }
 
+/* positioning the header */
 #serverLayerHeader {
     position: absolute;
     left: 10px;
     top: 0px;
 }
 
+/* positioning of the closing x */
 #closingX {
     position:absolute;
     top:0px;

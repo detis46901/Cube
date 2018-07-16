@@ -71,9 +71,6 @@ export class StyleService {
                 filterColumn = layer.layer.defaultStyle['filter']['column']
                 filterOperator = layer.layer.defaultStyle['filter']['operator']
                 filterValue = layer.layer.defaultStyle['filter']['value']
-                console.log(filterColumn)
-                console.log(filterOperator)
-                console.log(filterValue)
             }
         }
         //console.log (feat)

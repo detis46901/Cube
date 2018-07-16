@@ -1,24 +1,23 @@
-#warning {
-    position: absolute;
-    display: block;
-}
-
+// closing x positioning
 #closingX {
     position: absolute;
     right: -10px;
     top: -10px;
 }
 
+// header formatting
 h4 {
     position: relative;
     bottom: 5px;
 }
 
+// no button formatting and positioning
 #noClick {
     position: relative;
     left: 5px;
 }
 
+// button formatting
 #confDelClick, #noClick {
     background-color: #7e7e7e;
     color: white;

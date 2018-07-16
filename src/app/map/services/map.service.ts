@@ -321,7 +321,6 @@ export class MapService {
                     source.clear();
                     source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
                     let index = this.mapConfig.userpagelayers.findIndex(x => x == layer);
-                    console.log(index);
                     //this.mapConfig.layers[index].setStyle(stylefunction) 
                     source.forEachFeature(feat => {
                         //console.log("runInterval and feat = " + feat.getId())

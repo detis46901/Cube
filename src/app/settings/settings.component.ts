@@ -40,5 +40,3 @@ export class SettingsComponent{
             
     }
 }
-
-//User settings tab, should be a lot like the admin menu in look and feel

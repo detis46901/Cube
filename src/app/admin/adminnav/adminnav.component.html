@@ -1,7 +1,11 @@
 <mat-sidenav-container>
     <mat-sidenav #sidenav class="example-sidenav">Admin Home</mat-sidenav>
+
+    <!-- contains the admin settings options  -->
     <mat-sidenav-content>
         <mat-list role="admin-menu">
+
+            <!-- each individual option routes to a location within the admin page -->
             <mat-list-item role="admin-menu-item"><h4>Admin Settings</h4></mat-list-item>
             <mat-list-item role="admin-menu-item"><a [routerLink]="['/admin', {outlets: {admin: ['server']}}]" routerLinkActive="active">Servers</a></mat-list-item>
             <mat-list-item role="admin-menu-item"><a [routerLink]="['/admin', {outlets: {admin: ['user']}}]" routerLinkActive="active">Users</a></mat-list-item>

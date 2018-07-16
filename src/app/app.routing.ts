@@ -8,11 +8,8 @@ import { AdminComponent } from './admin/admin.component';
 import { GroupComponent } from './admin/group/group.component';
 import { LayerComponent } from './admin/layer/layer.component';
 import { UserComponent } from './admin/user/user.component';
-import { ModuleComponent } from './admin/module/module.component';
 import { DefaultsComponent } from './admin/default/default.component';
-import { BoundaryComponent } from './admin/boundary/boundary.component';
 import { ServerComponent } from './admin/server/server.component';
-import { AdminPageComponent } from './admin/adminPage/adminPage.component';
 import { SettingsComponent } from './settings/settings.component';
 import { PasswordComponent } from './settings/password/password.component';
 import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
@@ -39,11 +36,8 @@ const appRoutes: Routes = [
     {path: 'admin', component: AdminComponent, canActivate: [AdminGuard], children: [
         {path: 'user', component: UserComponent, outlet: 'admin'},
         {path: 'group', component: GroupComponent, outlet: 'admin'},
-        {path: 'module', component: ModuleComponent, outlet: 'admin'},
         {path: 'layer', component: LayerComponent, outlet: 'admin'},
-        {path: 'page', component: AdminPageComponent, outlet: 'admin'},
         {path: 'default', component: DefaultsComponent, outlet: 'admin'},
-        {path: 'boundary', component: BoundaryComponent, outlet: 'admin'},
         {path: 'server', component: ServerComponent, outlet: 'admin'}
     ]},
 
