@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostBinding, NgModule, ModuleWithProviders, OnDestroy} from '@angular/core';
+import { Component, OnInit, Input, HostBinding, NgModule, ModuleWithProviders, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonToggleChange } from '@angular/material';
 import { MapConfig } from '../models/map.model'
@@ -36,35 +36,35 @@ export class FilterComponent implements OnInit, OnDestroy {
   booleanoperators = [
     { value: 'isEqual', viewValue: 'Equal' },
     { value: 'isNotEqual', viewValue: 'Not Equal' },
-    { value: 'isGreaterThan', viewValue: 'Greater Than'},
-    { value: 'isLessThan', viewValue: 'Less Than'},
-    { value: 'contains', viewValue: 'Contains'}
+    { value: 'isGreaterThan', viewValue: 'Greater Than' },
+    { value: 'isLessThan', viewValue: 'Less Than' },
+    { value: 'contains', viewValue: 'Contains' }
   ];
 
   constructor(private mapService: MapService, private styleService: StyleService,
-    private sqlSerivce: SQLService, private userPageLayerService: UserPageLayerService, 
+    private sqlSerivce: SQLService, private userPageLayerService: UserPageLayerService,
     private layerService: LayerService) {
   }
 
   ngOnInit() {
-   try {
+    try {
       if (this.mapConfig.currentLayer.style['filter']['column'] != "") {
         this.filterColumn['field'] = this.mapConfig.currentLayer.style['filter']['column']
         this.filterOperator = this.mapConfig.currentLayer.style['filter']['operator']
         this.filterColumn['value'] = this.mapConfig.currentLayer.style['filter']['value']
       }
     }
-    catch(e) {
+    catch (e) {
       console.log('No UserPageLayer Filter');
     }
     this.sqlSerivce.GetSchema(this.mapConfig.currentLayer.layerID)
       .subscribe((data) => {
         this.columns = data.slice(2, data.length)
         console.log(this.columns)
-        
-          //this.filterColumn.type = "boolean" //needs to be dynamic
-          this.updateColumn()
-        }
+
+        //this.filterColumn.type = "boolean" //needs to be dynamic
+        this.updateColumn()
+      }
       )
   }
 
@@ -90,8 +90,9 @@ export class FilterComponent implements OnInit, OnDestroy {
       this.columns.forEach(x => {
         if (this.filterColumn['field'] == x.field) {
           this.filterColumn.type = x.type
-        } 
-      })}
+        }
+      })
+    }
     this.operators = this.getoperator(this.filterColumn.type)
   }
 
@@ -103,7 +104,7 @@ export class FilterComponent implements OnInit, OnDestroy {
   // applies the filter to the map and only shows the appllicable items //not fully working
   private applyFilter() {
     console.log(this.filterOperator['value'])
-    if (this.filterColumn['field'] == "" || this.filterColumn['field'] == "") {
+    if (this.filterColumn['field'] == "" || this.filterColumn['field'] == null) {
       this.mapConfig.filterOn = false;
     }
     else {
@@ -113,25 +114,29 @@ export class FilterComponent implements OnInit, OnDestroy {
     this.mapConfig.currentLayer.style['filter']['column'] = this.filterColumn['field']
     this.mapConfig.currentLayer.style['filter']['operator'] = this.filterOperator
     this.mapConfig.currentLayer.style['filter']['value'] = this.filterColumn.value
-    if (this.filterValue == "true") { this.mapConfig.currentLayer.style['filter']['value'] = true }
-    if (this.filterValue == "false") { this.mapConfig.currentLayer.style['filter']['value'] = false }
+    if (this.filterValue == "true") { 
+      this.mapConfig.currentLayer.style['filter']['value'] = true 
+    }
+    if (this.filterValue == "false") { 
+      this.mapConfig.currentLayer.style['filter']['value'] = false 
+    }
     this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1])
   }
 
   // Saves the current styles to the current user page
-  private saveToPage():void {
+  private saveToPage(): void {
     if (!this.mapConfig.currentLayer.style) {
       this.mapConfig.currentLayer.style = this.mapConfig.currentLayer.layer.defaultStyle
     }
     this.mapConfig.currentLayer.style['filter']['column'] = this.filterColumn['field'];
     this.mapConfig.currentLayer.style['filter']['operator'] = this.filterOperator;
-    this.mapConfig.currentLayer.style['filter']['value'] = this.filterColumn.value; 
+    this.mapConfig.currentLayer.style['filter']['value'] = this.filterColumn.value;
     console.log(this.mapConfig.currentLayer)
     this.userPageLayerService
-    .Update(this.mapConfig.currentLayer)
-    .subscribe((data) => {
-      console.log(data)
-    })
+      .Update(this.mapConfig.currentLayer)
+      .subscribe((data) => {
+        console.log(data)
+      })
   }
 
   // saves the current filter to the layer for everyone to view and edit
@@ -142,10 +147,10 @@ export class FilterComponent implements OnInit, OnDestroy {
     this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = this.filterColumn.value;
     this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = this.filterColumn.value;
     this.layerService
-    .Update(this.mapConfig.currentLayer.layer)
-    .subscribe((data) => {
-      console.log(data)
-    })
+      .Update(this.mapConfig.currentLayer.layer)
+      .subscribe((data) => {
+        console.log(data)
+      })
   }
 
   // clears the entry fields and sets them to bank strings
@@ -165,40 +170,40 @@ export class FilterComponent implements OnInit, OnDestroy {
   //   this.mapConfig.currentLayer.style['filter']['column'] = null
   //   this.mapConfig.currentLayer.style['filter']['operator'] = null
   //   this.mapConfig.currentLayer.style['filter']['value'] = null
-    
+
   //   this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1])
   // }
 
   getoperator(tp: string) {
     switch (tp) {
       case "boolean": {
-          return ([
-              { value: 'isEqual', viewValue: 'Equal' },
-              { value: 'isNotEqual', viewValue: 'Not Equal' }
-          ])
+        return ([
+          { value: 'isEqual', viewValue: 'Equal' },
+          { value: 'isNotEqual', viewValue: 'Not Equal' }
+        ])
       }
       case "text": {
-          return ([
-              { value: 'isEqual', viewValue: 'Equal' },
-              { value: 'isNotEqual', viewValue: 'Not Equal' },
-              { value: 'contains', viewValue: 'Contains' }
-          ])
+        return ([
+          { value: 'isEqual', viewValue: 'Equal' },
+          { value: 'isNotEqual', viewValue: 'Not Equal' },
+          { value: 'contains', viewValue: 'Contains' }
+        ])
       }
       case "date": {
-          return ([
-              { value: 'isEqual', viewValue: 'Equal' },
-              { value: 'isNotEqual', viewValue: 'Not Equal' },
-              { value: 'isGreaterThan', viewValue: 'After' },
-              { value: 'isLessThan', viewValue: 'Before' }
-          ])
+        return ([
+          { value: 'isEqual', viewValue: 'Equal' },
+          { value: 'isNotEqual', viewValue: 'Not Equal' },
+          { value: 'isGreaterThan', viewValue: 'After' },
+          { value: 'isLessThan', viewValue: 'Before' }
+        ])
       }
       case "double precision": {
-          return ([
-              { value: 'isEqual', viewValue: 'Equal' },
-              { value: 'isNotEqual', viewValue: 'Not Equal' },
-              { value: 'isGreaterThan', viewValue: 'Greater Than' },
-              { value: 'isLessThan', viewValue: 'Less Than' }
-          ])
+        return ([
+          { value: 'isEqual', viewValue: 'Equal' },
+          { value: 'isNotEqual', viewValue: 'Not Equal' },
+          { value: 'isGreaterThan', viewValue: 'Greater Than' },
+          { value: 'isLessThan', viewValue: 'Less Than' }
+        ])
       }
     }
   }

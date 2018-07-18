@@ -45,7 +45,6 @@ export class MapService {
         private messageService: MessageService,
         private sqlService: SQLService,
         private mapstyles: mapStyles,
-
         private styleService: StyleService,
         http: Http
     ) {
@@ -139,10 +138,10 @@ export class MapService {
     //loadLayers will load during map init and load the layers that should come on by themselves with the "layerON" property set (in userPageLayers)
     public loadLayers(mapConfig: MapConfig, init: boolean): Promise<any> {
         let j = 0;
-        if (this.evkey) { 
+        if (this.evkey) {
             ol.Observable.unByKey(this.evkey);
         }  //removes the previous click event if there was one.
-        if (this.modkey) { 
+        if (this.modkey) {
             ol.Observable.unByKey(this.modkey);
         } //removes the previous modify even if there was one.
         this.myCubeService.clearMyCubeData();
@@ -155,8 +154,8 @@ export class MapService {
                         this.loadMyCube(init, this.mapConfig.userpagelayers[i]);
                         j++;
                         //console.log("j=" + j)
-                        if (j == this.mapConfig.userpagelayers.length) { 
-                            resolve(); 
+                        if (j == this.mapConfig.userpagelayers.length) {
+                            resolve();
                         }
                         break;
                     }
@@ -224,8 +223,8 @@ export class MapService {
                         }
                         j++;
                         //console.log("j=" + j)
-                        if (j == this.mapConfig.userpagelayers.length) { 
-                            resolve(); 
+                        if (j == this.mapConfig.userpagelayers.length) {
+                            resolve();
                         }
                     }
                 }
@@ -263,24 +262,24 @@ export class MapService {
         let source = new ol.source.Vector({
             format: new ol.format.GeoJSON()
         })
-        
+
         try {
             if (layer.style['filter']['column'] == "") {
                 console.log('No UserPageLayer filter.  Pulling Default filter');
                 layer.style['filter']['column'] = layer.layer.defaultStyle['filter']['column'];
-                layer.style['filter']['operator']= layer.layer.defaultStyle['filter']['operator'];
-                layer.style['filter']['value']= layer.layer.defaultStyle['filter']['value'];
-              }
-              console.log(layer.style);
-          }
-          catch(e) {
+                layer.style['filter']['operator'] = layer.layer.defaultStyle['filter']['operator'];
+                layer.style['filter']['value'] = layer.layer.defaultStyle['filter']['value'];
+            }
+            console.log(layer.style);
+        }
+        catch (e) {
             console.log('No Default Filter');
-          }
-      
+        }
+
         // This sets up the auto-update function.  It's not running right now, so I'm temporarily shutting it down.
-         this.interval = setInterval(() => {
+        this.interval = setInterval(() => {
             this.runInterval(layer, source);
-         }, 20000);
+        }, 20000);
 
         this.getMyCubeData(layer).then((data) => {
 
@@ -331,8 +330,8 @@ export class MapService {
                         this.getFeatureList();
                         if (this.mapConfig.selectedFeature) {
                             this.mapConfig.selectedFeature = source.getFeatureById(this.mapConfig.selectedFeature.getId());
-                            if (this.mapConfig.selectedFeature) { 
-                                this.selectFeature(layer, true) 
+                            if (this.mapConfig.selectedFeature) {
+                                this.selectFeature(layer, true)
                             } //need to make sure the feature still exists
                             //source.getFeatureById(this.mapConfig.selectedFeature.getId()).setStyle(this.mapstyles.selected)
                             //this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected)
@@ -378,12 +377,12 @@ export class MapService {
         this.modify = null;
         this.mapConfig.currentLayer = layer;
         this.myCubeService.clearMyCubeData(); //cleans the selected myCube data off the screen
-        if (this.mapConfig.selectedFeature) { 
+        if (this.mapConfig.selectedFeature) {
             this.mapConfig.selectedFeature.setStyle(null);
         }  //fixes a selected feature's style
         this.mapConfig.currentLayerName = layer.layer.layerName  //Puts the current name in the component
-        if (layer.layerON) { 
-            this.mapConfig.currentLayer = layer; 
+        if (layer.layerON) {
+            this.mapConfig.currentLayer = layer;
         }
         this.mapConfig.userpagelayers.forEach(element => {
             if (element.layer.layerType == "MyCube") {
@@ -401,18 +400,18 @@ export class MapService {
                 }
                 if (x.layerShown === true && x.layer.layerType != "MyCube") {
                     switch (x.layer.layerType) {
-                        case ("MyCube"): { 
-                            this.shown = true; 
+                        case ("MyCube"): {
+                            this.shown = true;
                             break;
                         }
-                        default: { 
+                        default: {
                             this.shown = false;
                         }
                     }
-                    if (this.evkey) { 
-                        ol.Observable.unByKey(this.evkey); 
+                    if (this.evkey) {
+                        ol.Observable.unByKey(this.evkey);
                     }
-                    if (this.modkey) { 
+                    if (this.modkey) {
                         ol.Observable.unByKey(this.modkey);
                     } //removes the previous modify even if there was one.
                     this.evkey = this.createClick(layer, index);
@@ -477,10 +476,10 @@ export class MapService {
     private sendMessage(message: string): void {
         message = message.split("<body>")[1];
         message = message.split("</body>")[0];
-        if (message.length < 10) { 
+        if (message.length < 10) {
             this.messageService.clearMessage();
         }
-        else { 
+        else {
             this.messageService.sendMessage(message);
         }
     }
@@ -497,10 +496,10 @@ export class MapService {
                 this.mapConfig.filterOn = false;
             }
         }
-        catch(e) {
+        catch (e) {
             console.log('No Filter');
         }
-        
+
         this.featurelist = [];
         this.shown = true;
         this.mapConfig.editmode = layer.layerPermissions.edit;
@@ -531,7 +530,7 @@ export class MapService {
                 });
             if (hit) {
                 this.selectFeature(layer);
-            } 
+            }
             else {
                 this.clearFeature(layer);
             }
@@ -580,11 +579,12 @@ export class MapService {
 
     private draw(mapconfig: MapConfig, featurety: any) {
         this.mapConfig = mapconfig;
-        if (this.modkey) { 
-            ol.Observable.unByKey(this.modkey); 
+        if (this.modkey) {
+            ol.Observable.unByKey(this.modkey);
         } //removes the previous modify even if there was one.
         this.mapConfig.map.removeInteraction(this.modify);
         this.modify = null;
+
         let src = new ol.source.Vector();
         let vector = new ol.layer.Vector({
             source: src,
@@ -631,38 +631,44 @@ export class MapService {
     }
 
     private getFeatureList() {
-        console.log('getting featurelist');
         console.log(this.mapConfig.currentLayer.layer.defaultStyle);
         let k: number = 0;
         try {
             let labelName: string = this.mapConfig.currentLayer.layer.defaultStyle['listLabel'];
-            if (!labelName) { 
-                labelName = this.mapConfig.currentLayer.style['listLabel']; 
+            if (!labelName) {
+                labelName = this.mapConfig.currentLayer.style['listLabel'];
             }
-            if (labelName != null) {
-                if (labelName.length > 0) {
-                    this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].forEachFeature((x: ol.Feature) => {
-                        k += 1;
-                        let i = this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].getFeatures().findIndex((j) => j == x);
-                        let fl = new featureList;
+            
+            if (labelName != null && labelName.length != 0) {
+                this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].forEachFeature((x: ol.Feature) => {
+                    k += 1;
+                    let i = this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].getFeatures().findIndex((j) => j == x);
+                    let fl = new featureList;
+                    console.log(this.styleService.filterFunction(x,this.mapConfig.currentLayer));
+                    if (this.styleService.filterFunction(x,this.mapConfig.currentLayer)) {
                         fl.label = x.get(labelName);
                         fl.feature = x;
-                        if (i > -1) {
+                        // console.log(this.featurelist)
+                        if (i > -1 && fl != null) {
                             this.featurelist[i] = fl;
                         }
-                        else { 
-                            this.featurelist.push(fl); 
-                        }
-                    })
-                this.featurelist = this.featurelist.slice(0, k);
-                }
+
+                        // else {
+                        //     this.featurelist.push(fl);
+                        // }
+                        this.featurelist = this.featurelist.slice(0, k);
+                    }
+                })
             }
+
+            console.log(this.featurelist)
+
             this.featurelist.sort((a, b): number => {
-                if (a.label > b.label) { 
+                if (a.label > b.label) {
                     return 1;
                 }
-                if (a.label < b.label) { 
-                    return -1; 
+                if (a.label < b.label) {
+                    return -1;
                 }
                 return 0;
             })
