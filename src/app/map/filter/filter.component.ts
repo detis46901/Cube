@@ -60,7 +60,6 @@ export class FilterComponent implements OnInit, OnDestroy {
     this.sqlSerivce.GetSchema(this.mapConfig.currentLayer.layerID)
       .subscribe((data) => {
         this.columns = data.slice(2, data.length)
-        console.log(this.columns)
 
         //this.filterColumn.type = "boolean" //needs to be dynamic
         this.updateColumn()
@@ -103,14 +102,12 @@ export class FilterComponent implements OnInit, OnDestroy {
 
   // applies the filter to the map and only shows the appllicable items //not fully working
   private applyFilter() {
-    console.log(this.filterOperator['value'])
     if (this.filterColumn['field'] == "" || this.filterColumn['field'] == null) {
       this.mapConfig.filterOn = false;
     }
     else {
       this.mapConfig.filterOn = true
     }
-    console.log(this.mapConfig.currentLayer.layer.defaultStyle)
     this.mapConfig.currentLayer.style['filter']['column'] = this.filterColumn['field']
     this.mapConfig.currentLayer.style['filter']['operator'] = this.filterOperator
     this.mapConfig.currentLayer.style['filter']['value'] = this.filterColumn.value
@@ -131,7 +128,6 @@ export class FilterComponent implements OnInit, OnDestroy {
     this.mapConfig.currentLayer.style['filter']['column'] = this.filterColumn['field'];
     this.mapConfig.currentLayer.style['filter']['operator'] = this.filterOperator;
     this.mapConfig.currentLayer.style['filter']['value'] = this.filterColumn.value;
-    console.log(this.mapConfig.currentLayer)
     this.userPageLayerService
       .Update(this.mapConfig.currentLayer)
       .subscribe((data) => {

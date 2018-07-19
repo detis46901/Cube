@@ -206,7 +206,6 @@ export class GroupComponent implements OnInit {
             .GetByGroup(group.ID)
             .subscribe((data) => {
                 this.userGroupMembers = data;
-                console.log(data);
                 var tempA = new Array<User>();
                 var tempB = new Array<User>();
 
@@ -231,7 +230,6 @@ export class GroupComponent implements OnInit {
                             .GetSingle(gm.userID)
                             .subscribe((user) => {
                                 tempA.push(user);
-                                console.log(tempA);
 
                                 // for loop that compares all users to users in a specific group
                                 // if they match at any poin it wil replace the index array value with -1

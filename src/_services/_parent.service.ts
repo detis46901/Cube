@@ -19,7 +19,6 @@ export class ParentService {
     constructor(protected _http: HttpClient, protected configuration: Configuration) {
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
-            console.log (this.token)
         } catch(err) {
             console.log("Could not find user in local storage. Did you reinstall your browser or delete cookies?\n"+err)
         }

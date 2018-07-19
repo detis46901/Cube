@@ -54,7 +54,6 @@ export class HeaderComponent implements OnInit {
                     .GetByUser(user.ID)
                     .subscribe((notifs: Notif[]) => {
                         this.notifications = notifs;
-                        console.log(notifs)
                         for(let n of notifs) {
                             if(!n.read) {
                                 this.shakeNotifications()

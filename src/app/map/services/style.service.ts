@@ -10,16 +10,14 @@ import { interaction } from 'openlayers';
 export class StyleService {
     constructor() { }
     public styleFunction(feature: ol.Feature, layer: UserPageLayer, mode: string): ol.style.Style {
-        //console.log(this.filterFunction(feature, layer))
-        //console.log("styleFunction")
         let color: string
         let width: number
-        //console.log(feature)
-        //console.log(this.filterFunction(feature, layer))
-        if (layer.style) { color = layer.style[mode]['color']; width = layer.style[mode]['width'] }
-        else { color = layer.layer.defaultStyle[mode]['color']; width = layer.layer.defaultStyle[mode]['width'] }
-        //console.log(mode)
-        //console.log(color)
+        if (layer.style) { 
+            color = layer.style[mode]['color']; width = layer.style[mode]['width'] 
+        }
+        else { 
+            color = layer.layer.defaultStyle[mode]['color']; width = layer.layer.defaultStyle[mode]['width'] 
+        }
         let style = new ol.style.Style({
             image: new ol.style.Circle({
                 radius: 5,
@@ -44,12 +42,10 @@ export class StyleService {
                 }),
             })
         });
-        //console.log(this.filterFunction(feature, layer))
         if (this.filterFunction(feature, layer) == false) {style = new ol.style.Style ({})}
         return style
     }
     public filterFunction(feat: ol.Feature, layer: UserPageLayer): boolean {
-        //console.log("filterFunction")
         let filterType: string
         let filterLabel: string
         let filterColumn: string
@@ -58,13 +54,9 @@ export class StyleService {
         let visible: boolean = true
 
         if (layer.style) {
-            //console.log(layer.style)
             filterColumn = layer.style['filter']['column']
             filterOperator = layer.style['filter']['operator']
             filterValue = layer.style['filter']['value']
-            //console.log(filterColumn)
-            //console.log(filterOperator)
-            //console.log(filterValue)
         }
         else {
             if (layer.layer.defaultStyle['filter']) {
@@ -73,7 +65,6 @@ export class StyleService {
                 filterValue = layer.layer.defaultStyle['filter']['value']
             }
         }
-        //console.log (feat)
         if (filterColumn) {
             if (filterColumn && filterOperator) {
                 switch (filterOperator) {

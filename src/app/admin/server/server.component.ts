@@ -102,16 +102,11 @@ export class ServerComponent implements OnInit {
     // }
         
     private getGeoserver(serv: Server): void {
-        console.log("getGeoserver")
         let url = serv.serverURL //+ '?request=getCapabilities&service=WMS';
-        console.log(url)
         this.getCapabilities(url)
         .subscribe((data) => {
-            console.log(data)
             let parser = new ol.format.WMSCapabilities();
             let result = parser.read(data)
-            console.log(result)
-            console.log(result['Capability']['Layer']['Layer'])
             this.WMSLayers = result['Capability']['Layer']['Layer']
             this.currServer = serv
         })

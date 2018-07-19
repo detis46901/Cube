@@ -153,7 +153,6 @@ export class MapService {
                         this.mapConfig.userpagelayers[i].layerShown = this.mapConfig.userpagelayers[i].layerON;
                         this.loadMyCube(init, this.mapConfig.userpagelayers[i]);
                         j++;
-                        //console.log("j=" + j)
                         if (j == this.mapConfig.userpagelayers.length) {
                             resolve();
                         }
@@ -162,16 +161,12 @@ export class MapService {
                     case "WMTS": {
                         this.getCapabilities(this.mapConfig.userpagelayers[i].layer.server.serverURL)
                             .subscribe((data) => {
-                                //console.log(data)
                                 let parser = new ol.format.WMTSCapabilities();
                                 let result = parser.read(data);
-                                console.log(result);
                                 let options = ol.source.WMTS.optionsFromCapabilities(result, {
                                     layer: this.mapConfig.userpagelayers[i].layer.layerIdent,
                                     matrixSet: 'EPSG:3857'
                                 });
-                                console.log(mapConfig.userpagelayers[i].layer.layerIdent);
-                                console.log(options);
                                 let wmsSource = new ol.source.WMTS(options);
                                 this.setLoadEvent(this.mapConfig.userpagelayers[i], wmsSource);
                                 let wmsLayer = new ol.layer.Tile({
@@ -186,9 +181,7 @@ export class MapService {
                                 if (init == false) {
                                     mapConfig.map.addLayer(wmsLayer);
                                 }
-                                //console.log("Done")
                                 j++;
-                                //console.log("j=" + j)
                                 if (j == this.mapConfig.userpagelayers.length) {
                                     resolve();
                                 }
@@ -222,15 +215,12 @@ export class MapService {
                             mapConfig.map.addLayer(wmsLayer);
                         }
                         j++;
-                        //console.log("j=" + j)
                         if (j == this.mapConfig.userpagelayers.length) {
                             resolve();
                         }
                     }
                 }
             }
-
-            //console.log(this.mapConfig.userpagelayers.length)
         })
         return promise;
     }
@@ -270,7 +260,6 @@ export class MapService {
                 layer.style['filter']['operator'] = layer.layer.defaultStyle['filter']['operator'];
                 layer.style['filter']['value'] = layer.layer.defaultStyle['filter']['value'];
             }
-            console.log(layer.style);
         }
         catch (e) {
             console.log('No Default Filter');
@@ -601,7 +590,6 @@ export class MapService {
 
             this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
                 .subscribe((data) => {
-                    console.log(data);
                     e.feature.setId(data[0].id);
                     e.feature.setProperties(data[0]);
                     this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].addFeature(e.feature);
@@ -631,8 +619,8 @@ export class MapService {
     }
 
     private getFeatureList() {
-        console.log(this.mapConfig.currentLayer.layer.defaultStyle);
         let k: number = 0;
+        let tempList = new Array<featureList>();
         try {
             let labelName: string = this.mapConfig.currentLayer.layer.defaultStyle['listLabel'];
             if (!labelName) {
@@ -641,27 +629,20 @@ export class MapService {
             
             if (labelName != null && labelName.length != 0) {
                 this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].forEachFeature((x: ol.Feature) => {
-                    k += 1;
                     let i = this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].getFeatures().findIndex((j) => j == x);
                     let fl = new featureList;
-                    console.log(this.styleService.filterFunction(x,this.mapConfig.currentLayer));
                     if (this.styleService.filterFunction(x,this.mapConfig.currentLayer)) {
                         fl.label = x.get(labelName);
                         fl.feature = x;
-                        // console.log(this.featurelist)
+                        
                         if (i > -1 && fl != null) {
-                            this.featurelist[i] = fl;
+                            tempList.push(fl);
+                            k += 1;
                         }
-
-                        // else {
-                        //     this.featurelist.push(fl);
-                        // }
-                        this.featurelist = this.featurelist.slice(0, k);
                     }
+                    this.featurelist = tempList.slice(0, k);
                 })
             }
-
-            console.log(this.featurelist)
 
             this.featurelist.sort((a, b): number => {
                 if (a.label > b.label) {
@@ -691,7 +672,6 @@ export class MapService {
     }
 
     private zoomExtents(): void {
-        console.log("zoomExtents");
         this.mapConfig.view.animate({ zoom: 13, center: ol.proj.transform([-86.1336, 40.4864], 'EPSG:4326', 'EPSG:3857') })
     }
 

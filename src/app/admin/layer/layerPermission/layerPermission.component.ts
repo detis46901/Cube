@@ -88,7 +88,6 @@ export class LayerPermissionComponent implements OnInit {
 
         if(this.currDeletedPermIsUser==true && calledByDelete) {
             this.permlessUsers.push(this.currDeletedPermObj)
-            console.log(this.currDeletedPermObj)
             this.currDeletedPermIsUser = null;
             this.currDeletedPermObj = null;
         }
@@ -111,7 +110,6 @@ export class LayerPermissionComponent implements OnInit {
         
         if(this.currDeletedPermIsUser==false && calledByDelete) {
             //this.permlessGroups.push(this.currDeletedPermObj)
-            console.log(this.currDeletedPermObj)
             this.currDeletedPermIsUser = null;
             this.currDeletedPermObj = null;
         }

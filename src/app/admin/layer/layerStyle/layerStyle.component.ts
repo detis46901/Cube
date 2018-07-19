@@ -53,11 +53,9 @@ export class LayerStyleComponent implements OnInit {
     }
 
     private getLayerItem(calledByDelete: boolean): void {
-        console.log(this.layerID)
         this.layerService
             .GetSingle(this.layerID)
             .subscribe((data:Layer) => {
-                console.log(data)
                 this.layer = data;
                 this.defaultStyle = JSON.stringify(this.layer.defaultStyle)
             });
@@ -69,7 +67,6 @@ export class LayerStyleComponent implements OnInit {
 
         if(this.currDeletedPermIsUser==true && calledByDelete) {
             //this.permlessUsers.push(this.currDeletedPermObj)
-            console.log(this.currDeletedPermObj)
             this.currDeletedPermIsUser = null;
             this.currDeletedPermObj = null;
         }
@@ -92,7 +89,6 @@ export class LayerStyleComponent implements OnInit {
         
         if(this.currDeletedPermIsUser==false && calledByDelete) {
             //this.permlessGroups.push(this.currDeletedPermObj)
-            console.log(this.currDeletedPermObj)
             this.currDeletedPermIsUser = null;
             this.currDeletedPermObj = null;
         }
@@ -115,7 +111,6 @@ export class LayerStyleComponent implements OnInit {
         this.layerService
             .Update(layer)
             .subscribe((result) => {
-                console.log(result)
                 this.getLayerItem(false);
             });
     }

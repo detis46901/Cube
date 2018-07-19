@@ -75,7 +75,6 @@ export class LayerNewComponent implements OnInit {
         if (this.serverLayer) { 
             this.newLayer = this.serverLayer 
         }
-        console.log(this.newLayer)
         this.getServers();
     }
 

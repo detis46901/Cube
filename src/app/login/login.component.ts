@@ -55,7 +55,6 @@ export class LoginComponent implements OnInit {
             return;
         }
         else {
-            console.log("hello")
             let that = this;
             this.loading = true;
             let username:string = this.model.username

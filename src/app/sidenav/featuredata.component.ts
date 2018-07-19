@@ -64,9 +64,6 @@ export class FeatureDataComponent{
             mycube.value = mycube.value.toJSON()
         }
         //document.getElementById("featureData").style.display = "block";
-        console.log(this.myCubeData[0].value)
-        console.log(mycube.type)
-        console.log(mycube.value)
         this.sqlservice
             .Update(this.myCubeConfig.table, this.myCubeData[0].value, mycube.field, mycube.type, mycube.value)
             .subscribe()

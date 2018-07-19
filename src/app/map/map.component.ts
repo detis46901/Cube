@@ -126,7 +126,6 @@ export class MapComponent {
 
     //Gets userPageLayers by page.ID, changes pages
     private setPage(page: UserPage): void {
-        console.log(this.mapConfig);
         this.mapConfig.currentpage = page;
         this.mapConfig.currentLayer = new UserPageLayer;
         this.currPage = page.page;

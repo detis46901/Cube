@@ -22,7 +22,6 @@ export class ServerService extends ParentService {
         switch(serv.serverType) {
             case "GeoserverWMS": 
                 actionUrl = serv.serverURL + '/wms?request=getCapabilities&service=WMS'; 
-                console.log(actionUrl)
                 break;
             case "GeoserverWMTS":
                 actionUrl = serv.serverURL + '/gwc/service/wmts?request=getcapabilities';

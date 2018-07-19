@@ -83,7 +83,6 @@ export class PageConfigComponent implements OnInit {
                         })
                 }
                 // this.userGroups = groups;
-                console.log(this.userGroups);
                 this.getUserPageLayers();
             })
 
@@ -117,7 +116,6 @@ export class PageConfigComponent implements OnInit {
             this.getByGroup().then(() => {
                 console.log("in getbygroup");
                 this.availableLPs = [];
-                console.log(this.layerPermissions);
                 for(let LP of this.layerPermissions) {
                     for(let UPL of this.userPageLayers) {         
                         if(LP.layerID == UPL.layerID) {
@@ -126,12 +124,10 @@ export class PageConfigComponent implements OnInit {
                         }
                     }
                     if(!layerMatch) {
-                        console.log(LP);
                         this.availableLPs.push(LP);
                     }
                     layerMatch = false;
                 }
-                console.log(this.availableLPs);
             })
         })
         //Array.prototype.
@@ -158,22 +154,18 @@ export class PageConfigComponent implements OnInit {
     private getByGroup(): Promise<any> {
         var prom = new Promise((resolve, reject) => {
             for(let g of this.userGroups) { //only start this logic once the previous promise has resolved by chaining it
-                console.log(this.userGroups);
                 this.layerPermissionService
                     .GetByGroup(g.ID)
                     .subscribe((LPs: LayerPermission[]) => {
-                        console.log(LPs);
                         for(let LP of LPs) {
                             //groupPerms.push(i)
                             //if(this.layerPermissions.indexOf(LP) == -1) {
                             for(let userLP of this.layerPermissions)
-                            //console.log(this.layerPermissions)
                                 // console.log("\nG Iterated:      ID: " + LP.ID + "    Name: " + LP.layer.layerName)
                                 if(LP.layerID != userLP.layerID) {
                                     this.layerPermissions.push(LP);
                                 }      
                         }
-                       //console.log(this.layerPermissions)
                     })
             }
             resolve();
@@ -211,7 +203,6 @@ export class PageConfigComponent implements OnInit {
         this.userPageLayerService
             .Delete(userPageID)
             .subscribe((res) => {
-                console.log(res)
                 this.layerPermissions=[];
                 this.getUserPageLayers();
             });

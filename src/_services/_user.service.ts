@@ -18,7 +18,6 @@ export class UserService /*extends ParentService*/ {
         this.headers = new Headers();
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
-            //console.log(this.token)
         } catch(err) {
             console.log("Could not find user in local storage. Did you reinstall your browser or delete cookies?\n"+err)
         }

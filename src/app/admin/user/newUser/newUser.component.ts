@@ -71,7 +71,6 @@ export class NewUserComponent implements OnInit {
                     .subscribe()
             }
 
-            console.log(this.newUser)
             this.userService
                 .Add(this.newUser)
                 .subscribe((res) => {
