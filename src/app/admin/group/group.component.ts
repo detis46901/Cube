@@ -199,68 +199,50 @@ export class GroupComponent implements OnInit {
             })  
     }
 
-    private selectGroup(group: Group, color): void {
+    private selectGroup(group: Group): void {
         //this.userSelectionList.deselectAll();
         this.selectedGroup = group;
         this.groupMemberService
             .GetByGroup(group.ID)
             .subscribe((data) => {
                 this.userGroupMembers = data;
-                var tempA = new Array<User>();
+                var tempA = new Array<GroupMember>();
                 var tempB = new Array<User>();
+                var tempC = new Array<User>();
 
-                // initializes required variables to build available user array
-                var indexArray = new Array<any>();
-                for (var i = 0; i < this.users.length; i++) {
-                    indexArray.push(i);
-                }
-                var counter = 0;
+                for(let user of data) {
+                    tempA.push(user);
+                }    
 
-                if (!data) {
-                    this.userService
-                        .GetAll()
-                        .subscribe((data) => {
-                            this.availableUsers = data;
-                        })
-                }
-                // first for loop gets the user information using observable
-                else {
-                    for(let gm of data) {
-                        this.userService
-                            .GetSingle(gm.userID)
-                            .subscribe((user) => {
-                                tempA.push(user);
-
-                                // for loop that compares all users to users in a specific group
-                                // if they match at any poin it wil replace the index array value with -1
-                                var indexOfUser = 0;
-                                for (let user1 of this.users) {
-                                    if (user1.ID == user.ID) {
-                                        indexOfUser = this.users.indexOf(user1);
-                                        indexArray[indexOfUser] = -1;
-                                    }
-                                }
-                                counter++;
-
-                                // once the counter hits the number of users in a group
-                                if (counter == data.length) {
-                                    // if the index is not -1 it sets the appropriate user to available users array
-                                    for (let index of indexArray) {
-                                        if (index != -1) {
-                                            tempB.push(this.users[index]);
-                                        }
-                                    }
-                                }
-                                
-                                // this.availableUsers = tempB;
-                                
-                                
-                                this.memberUsers = tempA;
-
-                                this.availableUsers = tempB;
-                            })
+                for (let user of this.users) {
+                    var counter = 0;
+                    for (var i = 0; i < tempA.length; i++) {
+                        if (user.ID != tempA[i].userID) {
+                            counter ++;
+                        }
+                    }
+                    
+                    if (counter == tempA.length) {
+                        tempB.push(user);
                     }
                 }
+
+                if (tempA.length == 0) {
+                    this.availableUsers = this.users;
+                }
+                else {
+                    this.availableUsers = tempB;
+                }
+
+                for (let user of data) {
+                    this.userService
+                        .GetSingle(user.userID)
+                        .subscribe((user) => {
+                            tempC.push(user)
+                        })
+                }
+
+                this.memberUsers = tempC;
             })   
     }
 
@@ -304,7 +286,7 @@ export class GroupComponent implements OnInit {
                     .subscribe(() => {
                         this.getGroupItems();
                         this.getUserItems();
-                        this.selectGroup(this.selectedGroup, false);
+                        this.selectGroup(this.selectedGroup);
                     });
             }
         }
@@ -346,7 +328,7 @@ export class GroupComponent implements OnInit {
             .subscribe(() => {
                 this.getGroupItems();
                 this.getUserItems();
-                this.selectGroup(this.selectedGroup, false);
+                this.selectGroup(this.selectedGroup);
             });        
     }
 
@@ -354,7 +336,8 @@ export class GroupComponent implements OnInit {
         if(b) {
             console.log("go to users");
             this.type = "Group";
-        } else {
+        } 
+        else {
             console.log("go to groups");
             this.type = "User";
         }
