@@ -102,6 +102,7 @@ import { EditGroupComponent } from './admin/group/editGroup/editGroup.component'
 import { UserDetailsComponent } from './admin/details/userDetails/userDetails.component';
 import { ServerDetailsComponent } from './admin/details/serverDetails/serverDetails.component';
 import { ServerLayersComponent } from './admin/server/serverLayers/serverLayers.component';
+import { StyleComponent } from './map/style/style.component';
 
 @NgModule ({
     declarations: [
@@ -150,7 +151,8 @@ import { ServerLayersComponent } from './admin/server/serverLayers/serverLayers.
         EditGroupComponent,
         UserDetailsComponent,
         ServerDetailsComponent,
-        ServerLayersComponent
+        ServerLayersComponent,
+        StyleComponent
     ],
 
     entryComponents: [
