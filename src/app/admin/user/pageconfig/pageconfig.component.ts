@@ -134,6 +134,7 @@ export class PageConfigComponent implements OnInit {
     }
 
     private getByUser(): Promise<any> {
+        console.log("get by user")
         this.layerPermissions = [];
         var prom = new Promise((resolve, reject) => {
             var userPerms = new Array<LayerPermission>();
@@ -152,6 +153,7 @@ export class PageConfigComponent implements OnInit {
     }
 
     private getByGroup(): Promise<any> {
+        console.log("get by group")
         var prom = new Promise((resolve, reject) => {
             for(let g of this.userGroups) { //only start this logic once the previous promise has resolved by chaining it
                 this.layerPermissionService
@@ -160,11 +162,13 @@ export class PageConfigComponent implements OnInit {
                         for(let LP of LPs) {
                             //groupPerms.push(i)
                             //if(this.layerPermissions.indexOf(LP) == -1) {
-                            for(let userLP of this.layerPermissions)
+                            for(let userLP of this.layerPermissions) {
                                 // console.log("\nG Iterated:      ID: " + LP.ID + "    Name: " + LP.layer.layerName)
                                 if(LP.layerID != userLP.layerID) {
                                     this.layerPermissions.push(LP);
-                                }      
+                                    break;
+                                }  
+                            }       
                         }
                     })
             }
