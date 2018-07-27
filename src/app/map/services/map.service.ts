@@ -17,7 +17,6 @@ import { StyleService } from '../services/style.service'
 
 @Injectable()
 export class MapService {
-    public map: L.Map; //needs to be removed once marker and pmmarker are removed.
     public noLayers: boolean;
     private shown: boolean = false;
     public mapConfig: MapConfig;
@@ -46,7 +45,8 @@ export class MapService {
         private sqlService: SQLService,
         private mapstyles: mapStyles,
         private styleService: StyleService,
-        http: Http
+        http: Http,
+        
     ) {
         this.http = http;
     }
@@ -159,14 +159,21 @@ export class MapService {
                         break;
                     }
                     case "WMTS": {
+                        console.log("At WMTS")
+                        console.log(this.mapConfig.userpagelayers[i].layer.server.serverURL)
                         this.getCapabilities(this.mapConfig.userpagelayers[i].layer.server.serverURL)
                             .subscribe((data) => {
+                                //console.log(data)
                                 let parser = new ol.format.WMTSCapabilities();
+                                //console.log("At Parser")
                                 let result = parser.read(data);
+                                //console.log(result)
+                                console.log(this.mapConfig.userpagelayers[i].layer.layerIdent)
                                 let options = ol.source.WMTS.optionsFromCapabilities(result, {
                                     layer: this.mapConfig.userpagelayers[i].layer.layerIdent,
                                     matrixSet: 'EPSG:3857'
                                 });
+                                console.log(options)
                                 let wmsSource = new ol.source.WMTS(options);
                                 this.setLoadEvent(this.mapConfig.userpagelayers[i], wmsSource);
                                 let wmsLayer = new ol.layer.Tile({
@@ -414,6 +421,7 @@ export class MapService {
 
     private createClick(layer, index) {
         let evkey = this.mapConfig.map.on('singleclick', (evt: any) => {
+            console.log("click")
             let url2 = this.formLayerRequest(layer);
             let wmsSource = new ol.source.ImageWMS({
                 url: url2,
@@ -518,6 +526,7 @@ export class MapService {
                     hitTolerance: 5
                 });
             if (hit) {
+                console.log("feature hit")
                 this.selectFeature(layer);
             }
             else {

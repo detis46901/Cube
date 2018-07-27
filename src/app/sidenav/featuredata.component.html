@@ -1,7 +1,22 @@
 <!-- Jack Reyburn -->
 <!-- handles the my cube feature and comments menus -->
-
+<div *ngIf="message">
+     <!-- second accordian menu handling features -->
+     <mat-accordion class="feature-data" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 0px">
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <!-- header -->
+                    <mat-panel-title>
+                        Feature Data
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div [innerHTML]="message" style="height: 260px; overflow: auto">
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+</div>
 <div *ngIf="myCubeData">
+    Mycube Data
     <!-- first accordian menu for added comments -->
     <mat-accordion class="comment-data" style="width: 400px; background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 384px">
         <mat-expansion-panel>
@@ -49,7 +64,7 @@
                     Feature Data
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <div style="height: 260px; overflow: scroll">
+            <div style="height: 260px; overflow: auto">
                 <div *ngFor="let myCube of myCubeData">
                     <div *ngIf="myCube.type=='id'"></div>
                     <div *ngIf="myCube.type=='geom'"></div>

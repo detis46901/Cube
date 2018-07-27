@@ -46,7 +46,7 @@ export class MyCubeService extends SQLService{
     }
 
     sendMessage(message: string) {
-        this.messageSubject.next({text:message});
+        this.messageSubject.next(message);
     }
 
     clearMessage() {
@@ -69,7 +69,6 @@ export class MyCubeService extends SQLService{
     
     sendMyCubeData(table: number, featureid: string | number) {
         let id = featureid
-        
         this.GetSchema(table)
             .subscribe((data: MyCubeField[]) => {
                 this.cubeData = data
@@ -117,8 +116,8 @@ export class MyCubeService extends SQLService{
             // }
         this.getComments(table, id)
             .subscribe((cdata: any) => {
-                console.log(cdata[0]);this.mycubesubject.next(this.cubeData);
-                this.mycubecomment.next(cdata[0])
+                this.mycubesubject.next(this.cubeData);
+                                this.mycubecomment.next(cdata[0])
             })
         })
     }
