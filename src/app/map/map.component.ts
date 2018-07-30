@@ -4,8 +4,6 @@ import { MapConfig } from './models/map.model';
 import { WFSService } from './services/wfs.service';
 import { Location } from './core/location.class';
 import { geoJSONService } from './services/geoJSON.service'
-import { NavigatorComponent } from './navigator/navigator.component';
-import { PMMarkerComponent } from './marker/PMmarker.component';
 import { LayerPermissionService } from '../../_services/_layerPermission.service';
 import { LayerService } from '../../_services/_layer.service';
 import { UserPageService } from '../../_services/_userPage.service';
