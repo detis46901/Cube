@@ -24,6 +24,7 @@ hr {
 .example-headers-align .mat-expansion-panel-header-description {
   flex-basis: 0;
   width: 254px;
+  overflow-wrap: break-word;
 }
 
 .feature-data .mat-expansion-panel-header-description {
@@ -40,4 +41,8 @@ hr {
 .comment-data .mat-expansion-panel-header-description {
   justify-content: space-between;
   align-items: center;
+}
+
+.message-data {
+  width: 354px;
 }

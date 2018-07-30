@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter} from '@angular/core';
+import { Component, Input, Output, EventEmitter, Sanitizer} from '@angular/core';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { SideNavService } from "../../_services/sidenav.service"
@@ -8,6 +8,7 @@ import { MyCubeService } from "../map/services/mycube.service"
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import {FormControl} from '@angular/forms';
 import { DatePipe } from '@angular/common';
+
 
 @Component({
     moduleId: module.id,
@@ -34,7 +35,8 @@ export class FeatureDataComponent{
     @Input() canEdit: boolean;
     
    
-    ngOnInit() {}
+    ngOnInit() {
+    }
 
     public hideMenu() {
     }

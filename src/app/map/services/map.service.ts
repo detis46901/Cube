@@ -14,6 +14,7 @@ import 'rxjs/add/operator/map';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { when } from "q";
 import { StyleService } from '../services/style.service'
+import { DomSanitizer } from "../../../../node_modules/@angular/platform-browser";
 
 @Injectable()
 export class MapService {
@@ -45,6 +46,7 @@ export class MapService {
         private sqlService: SQLService,
         private mapstyles: mapStyles,
         private styleService: StyleService,
+        private sanitizer: DomSanitizer,
         http: Http,
         
     ) {
@@ -477,7 +479,7 @@ export class MapService {
             this.messageService.clearMessage();
         }
         else {
-            this.messageService.sendMessage(message);
+            this.messageService.sendMessage(this.sanitizer.bypassSecurityTrustHtml(message)); //This allows the service to render the actual HTML unsanitized
         }
     }
 
@@ -699,5 +701,10 @@ export class MapService {
             this.base = 'base';
             this.mapConfig.layers[0].setSource(base);
         }
+    }
+
+    public stopInterval() {
+        clearInterval(this.interval)
+        console.log("Stopping Interval")
     }
 }

@@ -49,6 +49,7 @@ export class ParentService {
     }
 
     public Add = (toAdd: any): Observable<any> => {
+        console.log("adding: " + this.actionUrl)
         return this._http.post(this.actionUrl + 'create', JSON.stringify(toAdd), this.options)
             .pipe(catchError(this.handleError));
     }
