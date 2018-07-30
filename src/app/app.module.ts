@@ -81,7 +81,6 @@ import { SideNavComponent } from './sidenav/sidenav.component';
 import { FeatureDataComponent } from './sidenav/featuredata.component'
 import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
-import { MarkerComponent } from '../app/map/marker/marker.component';
 import { GroupComponent } from './admin/group/group.component';
 import { NewGroupComponent } from './admin/group/newGroup/newGroup.component';
 import { NewUserComponent } from './admin/user/newUser/newUser.component';
@@ -106,7 +105,6 @@ import { StyleComponent } from './map/style/style.component';
     declarations: [
         AppComponent,
         MapComponent,
-        MarkerComponent,
         PageComponent,
         HeaderComponent,
         SideNavComponent,
