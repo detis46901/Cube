@@ -10,7 +10,7 @@
 
       <!-- Shows whether a filter is on or off -->
       <mat-panel-description>
-          <span *ngIf="mapConfig.filterOn">On</span><span *ngIf="!mapConfig.filterOn">Off</span>
+          <span *ngIf="mapConfig.styleOn">On</span><span *ngIf="!mapConfig.styleOn">Off</span>
       </mat-panel-description>
   </mat-expansion-panel-header>
 
@@ -52,7 +52,7 @@
 
   <!-- buttons to apply, clear, save to page or layer, and close -->
   <mat-action-row>        
-      <button mat-button (click)="applyFilter()">Apply</button>
+      <button mat-button (click)="applyStyle()">Apply</button>
       <button mat-button (click)="clear()">Clear</button>
       <button mat-button (click)="saveToPage()">Save to Page</button>
       <button mat-button (click)="saveToLayer()">Save to Layer</button>

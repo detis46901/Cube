@@ -31,6 +31,8 @@ export class MapConfig {
     mouseoverLayer?: UserPageLayer;
     filterOn?: boolean;
     filterShow?: boolean;
+    styleShow?: boolean;
+    styleOn?: boolean;
 }
 
 export class featureList {

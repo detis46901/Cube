@@ -4,6 +4,7 @@
     <mat-accordion class="tool-container">
         <measure *ngIf="measureOn" [mapConfig]="mapConfig"></measure>
         <filter *ngIf="mapConfig.filterShow" [mapConfig]="mapConfig"></filter>
+        <style *ngIf="mapConfig.styleShow" [mapConfig]="mapConfig"></style>
     </mat-accordion>
     <div style="width:300px">
         <mat-accordion class="example-headers-align">
@@ -100,6 +101,10 @@
                             <button *ngIf="mapConfig.currentLayer == userpagelayer" mat-menu-item (click)="mapConfig.filterShow = !mapConfig.filterShow">
                                 <mat-icon>filter_list</mat-icon>
                                 <span>Filter</span>
+                            </button>
+                            <button *ngIf="mapConfig.currentLayer == userpagelayer" mat-menu-item (click)="mapConfig.styleShow = !mapConfig.styleShow">
+                                <mat-icon>filter_list</mat-icon>
+                                <span>Style</span>
                             </button>
                             <button mat-menu-item disabled="true">
                                 <mat-icon>star</mat-icon>

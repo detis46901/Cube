@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostBinding, NgModule, ModuleWithProviders, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, HostBinding, NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonToggleChange } from '@angular/material';
 import { MapConfig } from '../models/map.model'
@@ -21,7 +21,7 @@ declare var ol: any;
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss']
 })
-export class FilterComponent implements OnInit, OnDestroy {
+export class FilterComponent implements OnInit {
   @Input() mapConfig: MapConfig;
   //filter stuff
   private layer: ol.layer.Vector = null;
@@ -65,10 +65,6 @@ export class FilterComponent implements OnInit, OnDestroy {
         this.updateColumn()
       }
       )
-  }
-
-  ngOnDestroy() {
-
   }
 
   private disableCheck(): boolean {
