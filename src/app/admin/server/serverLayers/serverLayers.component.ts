@@ -8,7 +8,7 @@ import { LayerNewComponent } from '../../layer/layerNew/layerNew.component';
 @Component({
     selector: 'app-serverLayers',
     templateUrl: './serverLayers.component.html',
-    styleUrls: ['./serverLayers.component.css']
+    styleUrls: ['./serverLayers.component.scss']
 })
 
 export class ServerLayersComponent implements OnInit {

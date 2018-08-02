@@ -11,9 +11,9 @@ import { StyleService } from '../services/style.service';
 import { LayerService } from '../../../_services/_layer.service';
 
 @Component({
-    selector: 'style',
+    selector: 'styletoolbar',
     templateUrl: './style.component.html',
-    styleUrls: ['./style.component.css']
+    styleUrls: ['./style.component.scss']
 })
 export class StyleComponent implements OnInit {
     @Input() mapConfig: MapConfig;
@@ -40,6 +40,7 @@ export class StyleComponent implements OnInit {
         private layerService: LayerService) { }
 
     ngOnInit() {
+        console.log("howdy")
         try {
             if (this.mapConfig.currentLayer.style['filter']['column'] != "") {
                 this.styleColumn['field'] = this.mapConfig.currentLayer.style['filter']['column']

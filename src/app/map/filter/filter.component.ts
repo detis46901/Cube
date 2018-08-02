@@ -17,7 +17,7 @@ declare var ol: any;
 
 
 @Component({
-    selector: 'filter',
+    selector: 'filtertoolbar',
     templateUrl: './filter.component.html',
     styleUrls: ['./filter.component.scss']
 })
