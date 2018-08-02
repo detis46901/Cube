@@ -24,11 +24,11 @@ export class NotifComponent implements OnInit {
     private notifications: Array<Notif>;
     private tempObj;
 
-    
+
     //OR instead of below, have a map for each object type
     private sourceMap = new Map<string, any>();
-    
-    constructor(private notificationService: NotifService, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private layerService: LayerService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService) { 
+
+    constructor(private notificationService: NotifService, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private layerService: LayerService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser.token;
         this.userID = currentUser.userID;
@@ -41,19 +41,19 @@ export class NotifComponent implements OnInit {
     private getNotifications(): void {
         this.notificationService.GetByUser(this.userID)
             .subscribe((res: any) => {
-                if(res.length > 0) {
-                    this.notifications = res                 
+                if (res.length > 0) {
+                    this.notifications = res
                     this.getNotifObjects();
                 }
             })
     }
 
     private getNotifObjects(): void {
-        for(let notif of this.notifications) {
-            if(notif.sourceID && notif.objectType) {
+        for (let notif of this.notifications) {
+            if (notif.sourceID && notif.objectType) {
                 var obj;
                 this.getObject(notif.objectType, notif.sourceID, cb => {
-                    
+
                 })
                 //this.sourceMap.set(notif.objectType+notif.sourceID, ) //i.e. (Layer4, User2, UserPage98)
             }
@@ -61,7 +61,7 @@ export class NotifComponent implements OnInit {
     }
 
     private getObject(type: string, sourceID: number, cb): any {
-        switch(type) {
+        switch (type) {
             case 'User': {
                 //cb(this.getUser(sourceID));
                 break;
@@ -90,32 +90,32 @@ export class NotifComponent implements OnInit {
 
     private getUser(id: number, cb): void {
         this.userService.GetSingle(id)
-            .subscribe((user) => { (user)})
+            .subscribe((user) => { (user) })
     }
 
     private getGroup(id: number): void {
         this.groupService.GetSingle(id)
-            .subscribe((group) => {this.tempObj = group})
+            .subscribe((group) => { this.tempObj = group })
     }
 
     private getLayer(id: number): void {
         this.layerService.GetSingle(id)
-            .subscribe((layer) => {console.log(layer)})
+            .subscribe((layer) => { console.log(layer) })
     }
 
     private getUserPageLayer(id: number): void {
         this.userPageLayerService.GetSingle(id)
-            .subscribe((upl) => {this.tempObj = upl})
+            .subscribe((upl) => { this.tempObj = upl })
     }
 
     private getUserPage(id: number): void {
         this.userPageService.GetSingle(id)
-            .subscribe((page) => {this.tempObj = page})
+            .subscribe((page) => { this.tempObj = page })
     }
 
     private deleteNotif(n: Notif): void {
         this.notificationService
             .Delete(n.ID)
-            .subscribe(() => {this.getNotifications()})
+            .subscribe(() => { this.getNotifications() })
     }
 }

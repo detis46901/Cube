@@ -10,7 +10,7 @@ import { UserPageLayer } from '../_models/layer.model';
 @Injectable()
 export class UserPageLayerService extends ParentService {
     protected actionUrl: string;
- 
+
     constructor(protected _http: HttpClient, protected configuration: Configuration) {
         super(_http, configuration);
         this.actionUrl = this.configuration.serverWithApiUrl + 'userpagelayer/';

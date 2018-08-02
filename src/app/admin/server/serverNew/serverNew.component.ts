@@ -14,7 +14,7 @@ export class ServerNewComponent implements OnInit {
     private server = new Server;
     private newserver = new Server;
 
-    constructor(private dialog: MatDialog, private serverService: ServerService) {}
+    constructor(private dialog: MatDialog, private serverService: ServerService) { }
 
     ngOnInit() {
         this.newserver.serverName = '';

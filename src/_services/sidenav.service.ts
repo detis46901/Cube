@@ -12,12 +12,12 @@ let markerData: string;
 
 @Injectable()
 
-export class SideNavService extends SQLService{
-   private subject = new Subject<any>();
-   private mycubesubject = new Subject<MyCubeField[]>();
-   private mycubeconfig = new Subject<MyCubeConfig>();
-   private cubeData: MyCubeField[]
-   
+export class SideNavService extends SQLService {
+    private subject = new Subject<any>();
+    private mycubesubject = new Subject<MyCubeField[]>();
+    private mycubeconfig = new Subject<MyCubeConfig>();
+    private cubeData: MyCubeField[]
+
 
     public toggleHidden(): void {
         isOpen = !isOpen;
@@ -45,7 +45,7 @@ export class SideNavService extends SQLService{
 
     sendMessage(message: string) {
         console.log("Arrived at sendMessage")
-        this.subject.next({text:message});
+        this.subject.next({ text: message });
     }
 
     clearMessage() {
@@ -68,28 +68,28 @@ export class SideNavService extends SQLService{
                 this.cubeData[1].type = "geom"
                 this.getsingle(table, message["id"])
                 //the value of the geometry field will be undefined because it isn't sent in the geoJSON.
-                 for(let i=0; i<properties.length; i++) {
-                     propList.push(properties[i].substring(1, properties[i].indexOf(":")-1));
-                     this.cubeData[i+1].value = message[propList[i]]
-                 }                       
+                for (let i = 0; i < properties.length; i++) {
+                    propList.push(properties[i].substring(1, properties[i].indexOf(":") - 1));
+                    this.cubeData[i + 1].value = message[propList[i]]
+                }
             })
     }
 
     getsingle(table, id) {
         this.GetSingle(table, id)
-        .subscribe((sdata: JSON) => {
-            // for(let i=0; i<properties.length; i++) {
-            //     console.log(JSON.stringify(sdata))
-            //     propList.push(properties[i].substring(1, properties[i].indexOf(":")-1));
-               
-            //     this.cubeData[i+1].value = data[0][0][propList[i]]
-            //     console.log(data[propList[i]])
-            //}
-            // for (let z = 2; z==sdata[0][0].length; z++) {
-                
-            // }
-            this.mycubesubject.next(this.cubeData);
-        })
+            .subscribe((sdata: JSON) => {
+                // for(let i=0; i<properties.length; i++) {
+                //     console.log(JSON.stringify(sdata))
+                //     propList.push(properties[i].substring(1, properties[i].indexOf(":")-1));
+
+                //     this.cubeData[i+1].value = data[0][0][propList[i]]
+                //     console.log(data[propList[i]])
+                //}
+                // for (let z = 2; z==sdata[0][0].length; z++) {
+
+                // }
+                this.mycubesubject.next(this.cubeData);
+            })
 
     }
 
@@ -102,12 +102,11 @@ export class SideNavService extends SQLService{
     }
 
     public setMyCubeConfig(table: number, edit: boolean) {
-        let mycubeconfig= new MyCubeConfig
+        let mycubeconfig = new MyCubeConfig
         mycubeconfig.table = table
         mycubeconfig.edit = edit
         this.mycubeconfig.next(mycubeconfig)
     }
-        
 
     public getMyCubeConfig(): Observable<MyCubeConfig> {
         return this.mycubeconfig.asObservable();

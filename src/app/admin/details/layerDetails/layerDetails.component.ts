@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Layer } from '../../../../_models/layer.model';
-import { User, Notif } from '../../../../_models/user.model'; 
+import { User, Notif } from '../../../../_models/user.model';
 import { ServerService } from '../../../../_services/_server.service';
 import { Server } from '../../../../_models/server.model';
 import { LayerService } from '../../../../_services/_layer.service';
@@ -33,18 +33,18 @@ export class LayerDetailsComponent implements OnInit {
     private user: User;
     private servers: Array<Server>;
 
-    constructor(private dialog: MatDialog, private layerService: LayerService, private layerPermissionService: LayerPermissionService, 
-        private serverService: ServerService, private userService: UserService, private groupService: GroupService, 
+    constructor(private dialog: MatDialog, private layerService: LayerService, private layerPermissionService: LayerPermissionService,
+        private serverService: ServerService, private userService: UserService, private groupService: GroupService,
         private groupMemberService: GroupMemberService, private notificationService: NotifService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		this.token = currentUser && currentUser.token;
-		this.userID = currentUser && currentUser.userID;
+        this.token = currentUser && currentUser.token;
+        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {
         this.getLayer(this.ID);
         this.getUser(this.userID);
-        this.getServers();    
+        this.getServers();
     }
 
     private getServers(): void {
@@ -63,8 +63,8 @@ export class LayerDetailsComponent implements OnInit {
                 this.style = JSON.stringify(this.layer.defaultStyle)
                 console.log(res.defaultStyle["load"])
 
-                for(let prop in res) {
-                    if(res.hasOwnProperty(prop)) {
+                for (let prop in res) {
+                    if (res.hasOwnProperty(prop)) {
                         this.layerProps.push(res[prop])
                     }
                 }
@@ -87,8 +87,8 @@ export class LayerDetailsComponent implements OnInit {
             .Update(layer)
             .subscribe(() => {
                 this.layerPermissionService.GetByLayer(layer.ID).subscribe((perms) => {
-                    for(let perm of perms) {
-                        if(perm.userID != this.userID) {
+                    for (let perm of perms) {
+                        if (perm.userID != this.userID) {
                             notif.userID = perm.userID;
                             this.notificationService
                                 .Add(notif)
@@ -105,9 +105,9 @@ export class LayerDetailsComponent implements OnInit {
     private whichFieldsChanged(changed: Layer) {
         let ix = 0;
 
-        for(let property in changed) {
-            if(changed.hasOwnProperty(property)) {
-                if(changed[property] != this.layerProps[ix]) {
+        for (let property in changed) {
+            if (changed.hasOwnProperty(property)) {
+                if (changed[property] != this.layerProps[ix]) {
                     this.originalLayerProps.push(this.layerProps[ix])
                     this.changedLayerProps.push(changed[property])
                 }
@@ -132,7 +132,7 @@ export class LayerDetailsComponent implements OnInit {
         var description = "";
         let flag = false;
         let ix = 0;
-        for(let prop of oArr) {
+        for (let prop of oArr) {
             description += "\"" + prop + "\" was changed to \"" + cArr[ix] + "\"\n"
         }
         return description;

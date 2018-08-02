@@ -17,7 +17,7 @@ export class NewGroupComponent implements OnInit {
     private groups: Group[];
     private newGroup = new Group;
 
-    constructor(private dialog: MatDialog, private groupService: GroupService) { 
+    constructor(private dialog: MatDialog, private groupService: GroupService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -31,21 +31,20 @@ export class NewGroupComponent implements OnInit {
             })
     }
 
-    private addGroup(newGrp:Group): void {
+    private addGroup(newGrp: Group): void {
         var flag = false;
-        for(let grp of this.groups) {
-            if(newGrp.name == grp.name) {
+        for (let grp of this.groups) {
+            if (newGrp.name == grp.name) {
                 flag = true;
             }
         }
 
-        if(!flag) {
+        if (!flag) {
             this.groupService
                 .Add(newGrp)
-                .subscribe(()=>this.dialog.closeAll())
+                .subscribe(() => this.dialog.closeAll())
         } else {
             alert('There is already a group with that name.')
         }
     }
-
 }

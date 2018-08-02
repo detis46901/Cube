@@ -3,16 +3,16 @@
 
 <!-- Row to include server edit details header and a closing 'x' -->
 <div class="row">
-  <!-- header -->
-  <h4 mat-dialog-title id="serverLayerHeader">{{name}} Layers</h4>
+    <!-- header -->
+    <h4 mat-dialog-title id="serverLayerHeader">{{name}} Layers</h4>
 
-  <!-- closing 'x' -->
-  <button mat-dialog-close class="close" id="closingX">&times;</button>
+    <!-- closing 'x' -->
+    <button mat-dialog-close class="close" id="closingX">&times;</button>
 </div>
 <hr>
 
 <mat-selection-list disableRipple=true>
-  <mat-list-option *ngFor="let layer of serverLayers" (click)="openCreateLayer()">
-    <!-- layer name does here -->
-  </mat-list-option>
+    <mat-list-option *ngFor="let layer of serverLayers" (click)="openCreateLayer()">
+        <!-- layer name does here -->
+    </mat-list-option>
 </mat-selection-list>

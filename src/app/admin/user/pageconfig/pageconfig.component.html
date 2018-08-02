@@ -19,7 +19,7 @@
     <!-- box containing the layer information and buttons -->
     <mat-dialog-content id="pageConfigBody">
         <div class="row">
-            
+
             <!-- table headers -->
             <div class="col-sm-6">
                 <h4>Current Layers</h4>
@@ -34,10 +34,12 @@
             <div class="row" *ngFor="let upl of userPageLayers; let i=index" style="text-align: left">
                 <!-- trash button to delete pages and current layer names are the first column -->
                 <span id="pageConfigLayersColumn" class="col-sm-6" style="position:relative; left:0px; text-align:left; overflow:hidden; white-space:nowrap">
-                    <a (click)="deleteUserPageLayer(upl.ID)"><i class="fas fa-trash" aria-hidden="true"></i></a>
+                    <a (click)="deleteUserPageLayer(upl.ID)">
+                        <i class="fas fa-trash" aria-hidden="true"></i>
+                    </a>
                     &nbsp;{{upl.layer.layerName}}
                 </span>
-                
+
                 <!-- default layer toggle -->
                 <span id="pageConfigDefaultColumn" class="col-sm-4" style="text-align:right">
                     <mat-slide-toggle [name]="upl.ID" [(ngModel)]="upl.layerON"></mat-slide-toggle>
@@ -56,7 +58,7 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-               
+
                 <!-- add layer button -->
                 <button style="position:relative; left:15px" mat-button id="pageConfigSubmit" (click)="addButton(newUserPageLayer)" [disabled]="!f.valid">Add Layer</button>
             </div>

@@ -8,9 +8,9 @@ import { User } from '../../_models/user.model';
     templateUrl: './settings.component.html',
     providers: [UserService, Configuration],
     styleUrls: ['./settings.component.scss'],
-    })
+})
 
-export class SettingsComponent{
+export class SettingsComponent {
     //Screen code (see home.component.ts)
     private screen = 3;
 
@@ -32,11 +32,10 @@ export class SettingsComponent{
     public getAllItems(userid): void {
         this.dataService
             .GetSingle(userid)
-            .subscribe((data:User) => {
+            .subscribe((data: User) => {
                 return this.user = data;
             }, error => {
                 return console.error(error);
             });
-            
     }
 }

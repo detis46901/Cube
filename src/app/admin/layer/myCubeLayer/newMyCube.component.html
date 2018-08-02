@@ -12,12 +12,14 @@
     <form #f="ngForm">
         <!-- name entry box -->
         <mat-form-field class="row" id="nameEntry">
-            <input matInput id="myCube_newlayername" name="myCube_newlayername" value="{{layerName}}" required [(ngModel)]="newLayer.layerName" placeholder="Name">
+            <input matInput id="myCube_newlayername" name="myCube_newlayername" value="{{layerName}}" required [(ngModel)]="newLayer.layerName"
+                placeholder="Name">
         </mat-form-field>
-        
+
         <!-- description entry box -->
         <mat-form-field class="row" id="descriptionEntry">
-            <input matInput id="myCube_newlayerdescription" name="myCube_newlayerdescription" [(ngModel)]="newLayer.layerDescription" placeholder="Description">
+            <input matInput id="myCube_newlayerdescription" name="myCube_newlayerdescription" [(ngModel)]="newLayer.layerDescription"
+                placeholder="Description">
         </mat-form-field>
         <br>
 
@@ -25,7 +27,7 @@
         <mat-form-field class="row" id="field1Entry">
             <input matInput id="myCube_newlayerfield" name="myCube_newlayerfield" [(ngModel)]="newLayerField1.field" required placeholder="Field {{newLayerFields.length+1}}">
         </mat-form-field>
-        
+
         <!-- data entry box -->
         <mat-form-field class="row" id="dataTypeEntry">
             <mat-select name="myCube_newlayertype" [(ngModel)]="newLayerField1.type" required placeholder="Data type">
@@ -36,7 +38,7 @@
                 <mat-option value="date">Date</mat-option>
             </mat-select>
         </mat-form-field>
-                    
+
         <!-- add field button -->
         <mat-dialog-actions>
             <button mat-button id="addFieldButton" (click)="addField()">Add Field</button>
@@ -45,17 +47,23 @@
 
         <!-- header for the current added fields -->
         <div class="col-sm-8">
-            <h5><b>Layer fields:</b></h5>
+            <h5>
+                <b>Layer fields:</b>
+            </h5>
         </div>
         <div class="col-sm-2">
-            <h5><b> Label:</b></h5>
+            <h5>
+                <b> Label:</b>
+            </h5>
         </div>
 
         <!-- Creates the list of radio items -->
-        <mat-radio-group *ngFor="let newLayerField of newLayerFields" name="layerFieldGroup" value="newLayerField.layer" [(ngModel)] = "newLayerField1.label" style="height:200px">
+        <mat-radio-group *ngFor="let newLayerField of newLayerFields" name="layerFieldGroup" value="newLayerField.layer" [(ngModel)]="newLayerField1.label"
+            style="height:200px">
             <!-- Delete button and layer field and type -->
             <span class="col-sm-8">
-                <p (click)="deleteField(newLayerFields.indexOf(newLayerField))"><i class="fa fa-trash"></i> {{newLayerField.field}}: {{newLayerField.type}}</p> 
+                <p (click)="deleteField(newLayerFields.indexOf(newLayerField))">
+                    <i class="fa fa-trash"></i> {{newLayerField.field}}: {{newLayerField.type}}</p>
             </span>
 
             <!-- radio button that changes whether the field is the label or not -->
@@ -63,7 +71,7 @@
                 <mat-radio-button radioGroup="layerFieldGroup" [value]="newLayerField.label" (click)="updateLabelField(newLayerField)"></mat-radio-button>
             </span>
         </mat-radio-group>
-        <br>    
+        <br>
     </form>
 </mat-dialog-content>
 

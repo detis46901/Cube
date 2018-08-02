@@ -21,7 +21,7 @@ export class AdminComponent {
     constructor(private dataService: UserService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID; 
+        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {

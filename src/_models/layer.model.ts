@@ -36,7 +36,7 @@ export class UserPageLayer {
     layerON: boolean;
     createdAt: string;
     updatedAt: string;
-    userID: number;    
+    userID: number;
     userPageID: number;
     layerID: number;
     style: JSON;

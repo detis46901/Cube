@@ -1,4 +1,4 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ServerService } from '../../../../_services/_server.service';
 import { Server } from '../../../../_models/server.model';
 import { Layer, WMSLayer } from '../../../../_models/layer.model';
@@ -85,6 +85,6 @@ export class ServerLayersComponent implements OnInit {
     }
 
     private openCreateLayer() {
-        const dialogRef = this.dialog.open(LayerNewComponent, {width: '360px'});
+        const dialogRef = this.dialog.open(LayerNewComponent, { width: '360px' });
     }
 }

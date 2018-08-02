@@ -48,7 +48,7 @@ export class MapService {
         private styleService: StyleService,
         private sanitizer: DomSanitizer,
         http: Http,
-        
+
     ) {
         this.http = http;
     }
@@ -637,15 +637,15 @@ export class MapService {
             if (!labelName) {
                 labelName = this.mapConfig.currentLayer.style['listLabel'];
             }
-            
+
             if (labelName != null && labelName.length != 0) {
                 this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].forEachFeature((x: ol.Feature) => {
                     let i = this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].getFeatures().findIndex((j) => j == x);
                     let fl = new featureList;
-                    if (this.styleService.filterFunction(x,this.mapConfig.currentLayer)) {
+                    if (this.styleService.filterFunction(x, this.mapConfig.currentLayer)) {
                         fl.label = x.get(labelName);
                         fl.feature = x;
-                        
+
                         if (i > -1 && fl != null) {
                             tempList.push(fl);
                             k += 1;

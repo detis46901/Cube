@@ -17,7 +17,8 @@ Creates the header at the top of popup -->
         <div class="row" style="width:100%">
             <!-- Layer name entry box -->
             <mat-form-field id="nameBlock">
-                <input matInput id="newlayername" name="newlayername" value="newLayer.layerName" required [(ngModel)]="newLayer.layerName" placeholder="Name">
+                <input matInput id="newlayername" name="newlayername" value="newLayer.layerName" required [(ngModel)]="newLayer.layerName"
+                    placeholder="Name">
             </mat-form-field>
 
             <!-- Description entry box -->
@@ -55,7 +56,8 @@ Creates the header at the top of popup -->
         <div class="row" style="width:100%">
             <!-- Service entry box -->
             <mat-form-field id="serviceBlock">
-                <input matInput value="newLayer.layerName" id="newlayerservice" name="newlayerservice" [(ngModel)]="newLayer.layerService" placeholder="Service">
+                <input matInput value="newLayer.layerName" id="newlayerservice" name="newlayerservice" [(ngModel)]="newLayer.layerService"
+                    placeholder="Service">
                 <!-- <input matInput *ngIf="newLayer.layerService != null" id="newlayerident2" value="{{newLayer.layerService}}" readonly placeholder="Service"> -->
             </mat-form-field>
 

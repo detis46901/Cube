@@ -18,8 +18,8 @@ export class ApiKeyComponent implements OnInit {
 
     constructor(private userService: UserService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-          this.token = currentUser && currentUser.token;
-          this.userID = currentUser && currentUser.userID; 
+        this.token = currentUser && currentUser.token;
+        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {

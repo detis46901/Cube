@@ -1,12 +1,12 @@
-import { Component, Input, Output, EventEmitter, Sanitizer} from '@angular/core';
+import { Component, Input, Output, EventEmitter, Sanitizer } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { SideNavService } from "../../_services/sidenav.service"
-import { MyCubeField, MyCubeConfig, MyCubeComment }from "../../_models/layer.model"
+import { MyCubeField, MyCubeConfig, MyCubeComment } from "../../_models/layer.model"
 import { SQLService } from "../../_services/sql.service"
 import { MyCubeService } from "../map/services/mycube.service"
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
-import {FormControl} from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 
 
@@ -17,15 +17,15 @@ import { DatePipe } from '@angular/common';
     styleUrls: ['featuredata.component.scss'],
     providers: [SideNavService]
 })
-export class FeatureDataComponent{ 
+export class FeatureDataComponent {
     public serializedDate = new FormControl((new Date()).toISOString());
     public newComment: string;
     public userID: number;
 
-    constructor(private sideNavService: SideNavService, private sqlservice: SQLService, private mycubeservice: MyCubeService){
-         // subscribe to map component messages
-         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-         this.userID = currentUser && currentUser.userID;
+    constructor(private sideNavService: SideNavService, private sqlservice: SQLService, private mycubeservice: MyCubeService) {
+        // subscribe to map component messages
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.userID = currentUser && currentUser.userID;
     }
 
     @Input() message: any
@@ -33,8 +33,8 @@ export class FeatureDataComponent{
     @Input() myCubeData: MyCubeField[];
     @Input() myCubeConfig: MyCubeConfig;
     @Input() canEdit: boolean;
-    
-   
+
+
     ngOnInit() {
     }
 
@@ -50,7 +50,7 @@ export class FeatureDataComponent{
     }
 
     drawPolygonClick() {
-        
+
     }
 
 

@@ -2,8 +2,8 @@
 <!-- This deals with the edit details button in layers portion of admin settings -->
 
 <!-- creates a row to hold title, id, and a closing 'x' -->
-<div class = "row" id="detailsHeader">
-     <!--layer name and ID in one row  -->
+<div class="row" id="detailsHeader">
+    <!--layer name and ID in one row  -->
     <h4 mat-dialog-title>{{name}} ID: {{layer.ID}}</h4>
 
     <!-- closing 'x' button -->
@@ -28,7 +28,7 @@
         <br>
 
         <!-- type entry box -->
-        <div class ="row" style="width:100%">
+        <div class="row" style="width:100%">
             <mat-form-field id="layerTypeEntry">
                 <mat-select id="newlayertype" name="newlayertype" [(ngModel)]="layer.layerType" required placeholder="Type">
                     <mat-option value="PostGIS">PostGIS</mat-option>
@@ -45,12 +45,12 @@
             <!-- service entry box -->
             <mat-form-field id="layerServiceEntry">
                 <input matInput name="layerDetailService" [(ngModel)]="layer.layerService" placeholder="Service">
-            </mat-form-field> 
+            </mat-form-field>
         </div>
         <br>
 
         <!-- identity entry box -->
-        <div class = "row" style="width:100%">
+        <div class="row" style="width:100%">
             <mat-form-field id="layerIdentityEntry">
                 <input matInput name="layerDetailIdent" [(ngModel)]="layer.layerIdent" placeholder="Identity">
             </mat-form-field>
@@ -63,7 +63,7 @@
         <br>
 
         <!-- geometry entry box -->
-        <div class = "row" style="width:100%">
+        <div class="row" style="width:100%">
             <mat-form-field id="layerGeometryEntry">
                 <input matInput name="layerDetailGeom" [(ngModel)]="layer.layerGeom" placeholder="Geometry">
             </mat-form-field>
@@ -84,7 +84,7 @@
         <div class="row" id="layerStyleEntry">
             <mat-form-field id="layerStyleEntry">
                 <input matInput name="layerDetailStyle" [(ngModel)]="style" placeholder="Style">
-            </mat-form-field> 
+            </mat-form-field>
         </div>
     </form>
 </mat-dialog-content>

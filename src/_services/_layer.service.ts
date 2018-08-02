@@ -9,7 +9,7 @@ import { Layer } from '../_models/layer.model'
 @Injectable()
 export class LayerService extends ParentService {
     protected actionUrl: string;
-    
+
     constructor(protected _http: HttpClient, protected configuration: Configuration) {
         super(_http, configuration);
         this.actionUrl = this.configuration.serverWithApiUrl + 'layer/';

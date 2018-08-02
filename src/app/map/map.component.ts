@@ -73,7 +73,7 @@ export class MapComponent {
     ngOnDestroy() {
         this.mapService.stopInterval()
     }
-    
+
     //Angular component initialization
     ngOnInit() {
         this.mapConfig.userID = this.userID;

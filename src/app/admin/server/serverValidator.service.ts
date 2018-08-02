@@ -8,7 +8,7 @@ export class ServerValidatorService implements ValidatorService {
         return new FormGroup({
             'ID': new FormControl(null, Validators.required),
             'serverName': new FormControl(null, Validators.required),
-            'serverType': new FormControl({value:null, disabled:true}, Validators.required),
+            'serverType': new FormControl({ value: null, disabled: true }, Validators.required),
             'serverURL': new FormControl(null, Validators.required)
         });
     }

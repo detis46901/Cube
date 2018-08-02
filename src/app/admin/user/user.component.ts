@@ -17,7 +17,7 @@ import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { UserValidatorService } from './userValidator.service';
-import { UserDetailsComponent} from '../details/userDetails/userDetails.component';
+import { UserDetailsComponent } from '../details/userDetails/userDetails.component';
 //import { UserDataSource } from './userTable/userData';
 
 //Material Table list
@@ -26,7 +26,7 @@ import { UserDetailsComponent} from '../details/userDetails/userDetails.componen
 @Component({
     selector: 'user',
     templateUrl: './user.component.html',
-    providers: [UserService, UserPageLayerService, UserPageService, Configuration, PagePipe, NumFilterPipe, {provide: ValidatorService, useClass: UserValidatorService}],
+    providers: [UserService, UserPageLayerService, UserPageService, Configuration, PagePipe, NumFilterPipe, { provide: ValidatorService, useClass: UserValidatorService }],
     styleUrls: ['./user.component.scss'],
 })
 
@@ -46,7 +46,7 @@ export class UserComponent implements OnInit {
 
     private userColumns = ['userID', 'firstName', 'lastName', 'email', 'active', 'administrator', 'actionsColumn']
     private dataSource: TableDataSource<User>;
-    
+
     constructor(private userValidator: UserValidatorService, private userService: UserService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private dialog: MatDialog) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
@@ -136,9 +136,9 @@ export class UserComponent implements OnInit {
         dialogRef.componentInstance.lastName = lastName;
 
         dialogRef.afterClosed()
-        .subscribe(() => {
-            this.getUserPageItems();
-        });
+            .subscribe(() => {
+                this.getUserPageItems();
+            });
     }
 
     private openConfDel(user: User): void {
@@ -148,21 +148,21 @@ export class UserComponent implements OnInit {
         dialogRef.componentInstance.objName = user.firstName + ' ' + user.lastName;
 
         dialogRef.afterClosed()
-        .subscribe(result => {
-            if (result == this.objCode) {
-                this.deleteUser(user.ID);
-            }
-            this.getUserPageItems();
-        });
+            .subscribe(result => {
+                if (result == this.objCode) {
+                    this.deleteUser(user.ID);
+                }
+                this.getUserPageItems();
+            });
     }
 
     private getUserPageItem(pageID: number, userID: number): void {
         let pName: string;
         this.userPageService
             .GetSingle(pageID)
-            .subscribe((data:UserPage) => {
+            .subscribe((data: UserPage) => {
                 pName = data.page;
-                this.openPageConfig(pageID, userID, pName);               
+                this.openPageConfig(pageID, userID, pName);
             });
     }
 
@@ -173,24 +173,24 @@ export class UserComponent implements OnInit {
         dialogRef.componentInstance.pageName = name;
 
         dialogRef.afterClosed()
-        .subscribe((response: UserPageLayer[]) => {
-            if(response != null) {
-                for(let i of response) {
-                    this.userPageLayerService.Update(i).subscribe();
+            .subscribe((response: UserPageLayer[]) => {
+                if (response != null) {
+                    for (let i of response) {
+                        this.userPageLayerService.Update(i).subscribe();
+                    }
+                    this.getUserPageItems();
                 }
-                this.getUserPageItems();
-            }
-        });
+            });
     }
 
     private openNewUser(): void {
-        const dialogRef = this.dialog.open(NewUserComponent, {width:"380px"});//need to make this responsive
+        const dialogRef = this.dialog.open(NewUserComponent, { width: "380px" });//need to make this responsive
         dialogRef.afterClosed()
-        .subscribe(() => {
-            this.getUserItems();
-            this.getUserPageItems();
-            //call userTableService method and subcribe to refresh list in userTable.
-        });
+            .subscribe(() => {
+                this.getUserItems();
+                this.getUserPageItems();
+                //call userTableService method and subcribe to refresh list in userTable.
+            });
     }
 
     private openDetails(id: number, fName: string, lName: string) {
@@ -199,10 +199,10 @@ export class UserComponent implements OnInit {
         dialogRef.componentInstance.ID = id;
         dialogRef.componentInstance.name = fName + " " + lName;
         dialogRef.afterClosed()
-        .subscribe(() => {
-            this.getUserItems();
-            this.getUserPageItems();
-        })
+            .subscribe(() => {
+                this.getUserItems();
+                this.getUserPageItems();
+            })
     }
 
     private boo(row) {

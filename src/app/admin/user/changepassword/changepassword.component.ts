@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject} from '@angular/core';
-import { MatDialog, MatDialogRef, MatInputModule, MAT_DIALOG_DATA} from '@angular/material';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialog, MatDialogRef, MatInputModule, MAT_DIALOG_DATA } from '@angular/material';
 import { UserService } from '../../../../_services/_user.service';
 import { User } from '../../../../_models/user.model';
 
@@ -12,7 +12,7 @@ import { User } from '../../../../_models/user.model';
 
 export class ChangePasswordComponent implements OnInit {
     private userID: number;
-    private user: User;   
+    private user: User;
     private oldPw: string = "";
     private newPw: string = "";
     private confPw: string = "";
@@ -28,7 +28,7 @@ export class ChangePasswordComponent implements OnInit {
     private getUserItems(userID: number): void {
         this.userService
             .GetSingle(userID)
-            .subscribe((data:User) => {
+            .subscribe((data: User) => {
                 this.user = data;
             });
     }
@@ -45,9 +45,9 @@ export class ChangePasswordComponent implements OnInit {
         //         alert("Current password is incorrect.")
         //     }
         // })
-        if(this.newPw == this.oldPw) {
+        if (this.newPw == this.oldPw) {
             alert("New password matches old password.")
-        } else if(this.newPw != this.confPw) {
+        } else if (this.newPw != this.confPw) {
             alert("Confirm password entry did not match new password entry.")
         } else {
             this.userService.updatePassword(this.user, this.oldPw, this.newPw)

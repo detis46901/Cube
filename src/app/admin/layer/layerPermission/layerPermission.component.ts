@@ -52,13 +52,13 @@ export class LayerPermissionComponent implements OnInit {
     private getPermissionItems(calledByDelete: boolean): void {
         this.layerPermissionService
             .GetByLayer(this.layerID)
-            .subscribe((data:LayerPermission[]) => {
+            .subscribe((data: LayerPermission[]) => {
                 this.layerPermissions = data;
-                for(let p of data) {
+                for (let p of data) {
                     //If permission applies to a user
-                    if(p.userID && !p.groupID) {
+                    if (p.userID && !p.groupID) {
                         //If user is the owner of the layer
-                        if(p.owner) {
+                        if (p.owner) {
                             this.layerOwner = p.userID
                         }
                         this.userService
@@ -67,8 +67,8 @@ export class LayerPermissionComponent implements OnInit {
                                 //Add name to an array for checking for "Permissionless" users
                                 this.permNames.push(u.firstName + " " + u.lastName);
                             });
-                    //If permission applies to a group
-                    } else if(p.groupID && !p.userID) {
+                        //If permission applies to a group
+                    } else if (p.groupID && !p.userID) {
                         this.groupService
                             .GetSingle(p.groupID)
                             .subscribe((g: Group) => {
@@ -86,7 +86,7 @@ export class LayerPermissionComponent implements OnInit {
     private getUserItems(calledByDelete: boolean): void {
         this.permlessUsers = [];
 
-        if(this.currDeletedPermIsUser==true && calledByDelete) {
+        if (this.currDeletedPermIsUser == true && calledByDelete) {
             this.permlessUsers.push(this.currDeletedPermObj)
             this.currDeletedPermIsUser = null;
             this.currDeletedPermObj = null;
@@ -94,10 +94,10 @@ export class LayerPermissionComponent implements OnInit {
 
         this.userService
             .GetAll()
-            .subscribe((data:User[]) => {             
-                for(let u of data) {
+            .subscribe((data: User[]) => {
+                for (let u of data) {
                     //If no existing permission exists for the user
-                    if(this.permNames.indexOf(u.firstName + " " + u.lastName) == -1) {
+                    if (this.permNames.indexOf(u.firstName + " " + u.lastName) == -1) {
                         this.permlessUsers.push(u);
                     }
                 }
@@ -107,24 +107,24 @@ export class LayerPermissionComponent implements OnInit {
     //2/9/18 this is the last part that needs fixed to get the list to return correctly
     private getGroupItems(calledByDelete: boolean): void {
         this.permlessGroups = [];
-        
-        if(this.currDeletedPermIsUser==false && calledByDelete) {
+
+        if (this.currDeletedPermIsUser == false && calledByDelete) {
             //this.permlessGroups.push(this.currDeletedPermObj)
             this.currDeletedPermIsUser = null;
             this.currDeletedPermObj = null;
         }
         this.groupService
             .GetAll()
-            .subscribe((data:Group[]) => {             
-                for(let g of data) {
+            .subscribe((data: Group[]) => {
+                for (let g of data) {
                     //If no existing permission exists for the group
-                    if(this.permNames.indexOf(g.name) == -1) {
+                    if (this.permNames.indexOf(g.name) == -1) {
                         this.permlessGroups.push(g);
                     }
                 }
             });
     }
-    
+
     private initNewPermission(): void {
         this.newLayerPermission.edit = false;
         this.newLayerPermission.delete = false;
@@ -136,12 +136,12 @@ export class LayerPermissionComponent implements OnInit {
         this.newLayerPermission.layerID = null;
         this.newLayerPermission.groupID = null;
     }
-    
+
     private addLayerPermission(newLayerPermission: LayerPermission): void {
         this.newLayerPermission = newLayerPermission;
         this.newLayerPermission.layerID = this.layerID;
         this.newLayerPermission.grantedBy = this.userID;
-        
+
         this.layerPermissionService
             .Add(this.newLayerPermission)
             .subscribe(() => {
@@ -160,7 +160,7 @@ export class LayerPermissionComponent implements OnInit {
     }
 
     private updateLayerPermissions(): void {
-        for(let p of this.layerPermissions) {
+        for (let p of this.layerPermissions) {
             this.updateLayerPermission(p)
         }
     }

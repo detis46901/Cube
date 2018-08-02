@@ -20,7 +20,7 @@ export class NewUserComponent implements OnInit {
     private newUser = new User;
     private users: Array<User>;
 
-    constructor(private dialog: MatDialog, private userService: UserService, private groupMemberService: GroupMemberService) { 
+    constructor(private dialog: MatDialog, private userService: UserService, private groupMemberService: GroupMemberService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -33,7 +33,7 @@ export class NewUserComponent implements OnInit {
     private getUserItems(): void {
         this.userService
             .GetAll()
-            .subscribe((data:User[]) => {
+            .subscribe((data: User[]) => {
                 this.users = data;
             });
     }
@@ -79,5 +79,4 @@ export class NewUserComponent implements OnInit {
                 });
         }
     }
-
 }

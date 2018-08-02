@@ -5,18 +5,17 @@ import { Observable } from 'rxjs/Observable';
 import { LayerClass, LayerPermission, UserPageLayer } from '../../../_models/layer.model';
 import { interaction } from 'openlayers';
 
-
 @Injectable()
 export class StyleService {
     constructor() { }
     public styleFunction(feature: ol.Feature, layer: UserPageLayer, mode: string): ol.style.Style {
         let color: string
         let width: number
-        if (layer.style) { 
-            color = layer.style[mode]['color']; width = layer.style[mode]['width'] 
+        if (layer.style) {
+            color = layer.style[mode]['color']; width = layer.style[mode]['width']
         }
-        else { 
-            color = layer.layer.defaultStyle[mode]['color']; width = layer.layer.defaultStyle[mode]['width'] 
+        else {
+            color = layer.layer.defaultStyle[mode]['color']; width = layer.layer.defaultStyle[mode]['width']
         }
         let style = new ol.style.Style({
             image: new ol.style.Circle({
@@ -42,7 +41,7 @@ export class StyleService {
                 }),
             })
         });
-        if (this.filterFunction(feature, layer) == false) {style = new ol.style.Style ({})}
+        if (this.filterFunction(feature, layer) == false) { style = new ol.style.Style({}) }
         return style
     }
     public filterFunction(feat: ol.Feature, layer: UserPageLayer): boolean {
@@ -112,7 +111,7 @@ export class StyleService {
                             }
                             else {
                                 if (filterValue == true) {
-                                    if (feat.get(filterColumn) == null) {}
+                                    if (feat.get(filterColumn) == null) { }
                                     else { visible = false }
                                 }
                                 else { visible = false }
@@ -176,7 +175,7 @@ export class StyleService {
                             break
                         }
                     }
-                    case("contains"): {
+                    case ("contains"): {
                         if (feat.get(filterColumn) != null && feat.get(filterColumn).indexOf(filterValue) + 1) {
                             visible = true;
                         }
@@ -190,5 +189,4 @@ export class StyleService {
         }
         return (visible)
     }
-    
 }

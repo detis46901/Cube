@@ -14,23 +14,23 @@
 <mat-dialog-content>
     <!-- form for the entry and check boxes -->
     <form #f="ngForm">
-    
+
         <!-- first name entry box -->
         <span>
-        <mat-form-field class="row" id="firstNameEntry">
-            <input matInput name="newUserFirstName" required [(ngModel)]="newUser.firstName" type="text" placeholder="First Name">
-        </mat-form-field>
-    
-        <!-- last name entry box -->
-        <mat-form-field class="row" id="lastNameEntry">
-            <input matInput name="newUserLastName" required [(ngModel)]="newUser.lastName" type="text" placeholder="Last Name">
-        </mat-form-field>
+            <mat-form-field class="row" id="firstNameEntry">
+                <input matInput name="newUserFirstName" required [(ngModel)]="newUser.firstName" type="text" placeholder="First Name">
+            </mat-form-field>
+
+            <!-- last name entry box -->
+            <mat-form-field class="row" id="lastNameEntry">
+                <input matInput name="newUserLastName" required [(ngModel)]="newUser.lastName" type="text" placeholder="Last Name">
+            </mat-form-field>
         </span>
         <!-- email entry box -->
         <mat-form-field class="row" id="emailEntry">
             <input matInput name="newUserEmail" required [(ngModel)]="newUser.email" type="text" placeholder="Email">
         </mat-form-field>
-    
+
         <!-- password entry box -->
         <mat-form-field class="row" id="passwordEntry">
             <input matInput name="newUserPassword" [(ngModel)]="newUser.password" type="password" placeholder="Password">

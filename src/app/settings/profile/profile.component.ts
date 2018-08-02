@@ -39,7 +39,7 @@ export class ProfileComponent implements OnInit {
         dialogRef.componentInstance.userID = this.userID;
 
         dialogRef.afterClosed()
-            .subscribe(()=>console.log("closed"));
+            .subscribe(() => console.log("closed"));
     }
 
     private submit(user: User) {

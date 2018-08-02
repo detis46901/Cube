@@ -6,13 +6,25 @@
         <mat-list role="admin-menu">
 
             <!-- each individual option routes to a location within the admin page -->
-            <mat-list-item role="admin-menu-item"><h4>Admin Settings</h4></mat-list-item>
-            <mat-list-item role="admin-menu-item"><a [routerLink]="['/admin', {outlets: {admin: ['server']}}]" routerLinkActive="active">Servers</a></mat-list-item>
-            <mat-list-item role="admin-menu-item"><a [routerLink]="['/admin', {outlets: {admin: ['user']}}]" routerLinkActive="active">Users</a></mat-list-item>
-            <mat-list-item role="admin-menu-item"><a [routerLink]="['/admin', {outlets: {admin: ['layer']}}]" routerLinkActive="active">Layers</a></mat-list-item>
-            <mat-list-item role="admin-menu-item"><a [routerLink]="['/admin', {outlets: {admin: ['group']}}]" routerLinkActive="active">Groups</a></mat-list-item>
-            <mat-list-item role="admin-menu-item"><a [routerLink]="['/admin', {outlets: {admin: ['default']}}]" routerLinkActive="active">Defaults</a></mat-list-item>
+            <mat-list-item role="admin-menu-item">
+                <h4>Admin Settings</h4>
+            </mat-list-item>
+            <mat-list-item role="admin-menu-item">
+                <a [routerLink]="['/admin', {outlets: {admin: ['server']}}]" routerLinkActive="active">Servers</a>
+            </mat-list-item>
+            <mat-list-item role="admin-menu-item">
+                <a [routerLink]="['/admin', {outlets: {admin: ['user']}}]" routerLinkActive="active">Users</a>
+            </mat-list-item>
+            <mat-list-item role="admin-menu-item">
+                <a [routerLink]="['/admin', {outlets: {admin: ['layer']}}]" routerLinkActive="active">Layers</a>
+            </mat-list-item>
+            <mat-list-item role="admin-menu-item">
+                <a [routerLink]="['/admin', {outlets: {admin: ['group']}}]" routerLinkActive="active">Groups</a>
+            </mat-list-item>
+            <mat-list-item role="admin-menu-item">
+                <a [routerLink]="['/admin', {outlets: {admin: ['default']}}]" routerLinkActive="active">Defaults</a>
+            </mat-list-item>
             <!-- <mat-list-item role="admin-menu-item">Eager load data tables</mat-list-item> -->
         </mat-list>
-    </mat-sidenav-content>    
+    </mat-sidenav-content>
 </mat-sidenav-container>

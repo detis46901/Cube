@@ -1,15 +1,23 @@
 <mat-expansion-panel [expanded]=true>
     <mat-expansion-panel-header>
         <mat-panel-title>
-            <span class="measure-help" id="measure-help" matTooltip="Click once to start measurement. Click again to create an angle. Double-click to end measurement. Click the arrow to measure length, click the box to measure area."><i class="fas fa-question"></i></span>
+            <span class="measure-help" id="measure-help" matTooltip="Click once to start measurement. Click again to create an angle. Double-click to end measurement. Click the arrow to measure length, click the box to measure area.">
+                <i class="fas fa-question"></i>
+            </span>
         </mat-panel-title>
         <mat-panel-description>
-            <span *ngIf="!value"><strong>Awaiting measurement</strong></span>
-            <span *ngIf="measureType == 'LineString' && value"><strong>Length: {{value}} {{unit}}</strong></span>
-            <span *ngIf="measureType == 'Polygon' && value"><strong>Area: {{value}} {{unit}}</strong></span>
+            <span *ngIf="!value">
+                <strong>Awaiting measurement</strong>
+            </span>
+            <span *ngIf="measureType == 'LineString' && value">
+                <strong>Length: {{value}} {{unit}}</strong>
+            </span>
+            <span *ngIf="measureType == 'Polygon' && value">
+                <strong>Area: {{value}} {{unit}}</strong>
+            </span>
         </mat-panel-description>
     </mat-expansion-panel-header>
-    
+
     <mat-action-row style="display:flex; padding-left:10px">
         <button mat-button *ngIf="measureType == 'LineString'" (click)="changeUnit('feet',1)">Feet</button>
         <button mat-button *ngIf="measureType == 'LineString'" (click)="changeUnit('miles',1/5280)">Miles</button>
@@ -21,6 +29,6 @@
         </button>
         <button mat-icon-button (click)="measure('Polygon')">
             <mat-icon matTooltip="Measure Area">crop_din</mat-icon>
-        </button>       
+        </button>
     </mat-action-row>
 </mat-expansion-panel>

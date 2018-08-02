@@ -48,7 +48,7 @@ export class GroupComponent implements OnInit {
     private memberUsers;
     private showGroup: boolean;
 
-    constructor(private userService: UserService, private groupService: GroupService, 
+    constructor(private userService: UserService, private groupService: GroupService,
         private groupMemberService: GroupMemberService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
@@ -73,7 +73,7 @@ export class GroupComponent implements OnInit {
     private getUserItems(): void {
         this.userService
             .GetAll()
-            .subscribe((data:User[]) => {
+            .subscribe((data: User[]) => {
                 this.users = data;
             }, error => {
                 console.error(error);
@@ -84,7 +84,7 @@ export class GroupComponent implements OnInit {
         this.group.name = newGroup;
         this.groupService
             // .Add(this.group, this.token)
-            .Add(this.group)            
+            .Add(this.group)
             .subscribe(() => {
                 this.getGroupItems();
                 this.getUserItems();
@@ -130,7 +130,7 @@ export class GroupComponent implements OnInit {
     }
 
     private editDetails(group: Group) {
-        const dialogRef = this.dialog.open(EditGroupComponent, {width:'325px'});
+        const dialogRef = this.dialog.open(EditGroupComponent, { width: '325px' });
         dialogRef.componentInstance.group = group;
         dialogRef.afterClosed()
             .subscribe(() => {
@@ -149,7 +149,7 @@ export class GroupComponent implements OnInit {
     }
 
     private openNewGroup() {
-        const dialogRef = this.dialog.open(NewGroupComponent, {width:'325px'});
+        const dialogRef = this.dialog.open(NewGroupComponent, { width: '325px' });
         dialogRef.afterClosed()
             .subscribe(() => {
                 this.getGroupItems();
@@ -172,16 +172,16 @@ export class GroupComponent implements OnInit {
                 var tempA = new Array<Group>();
                 var tempB = new Array<Group>();
 
-                for(let group of data) {
+                for (let group of data) {
                     tempA.push(group.group);
-                }             
+                }
 
                 this.memberGroups = tempA;
 
                 // loop to compare member groups to all groups and form an array for available groups to display
                 for (let group of this.groups) {
                     var counter = 0;
-                    for (var i=0; i<tempA.length; i++) {
+                    for (var i = 0; i < tempA.length; i++) {
                         if (group.name != tempA[i].name) {
                             counter++;
                         }
@@ -196,7 +196,7 @@ export class GroupComponent implements OnInit {
                 else {
                     this.availableGroups = tempB;
                 }
-            })  
+            })
     }
 
     private selectGroup(group: Group): void {
@@ -210,18 +210,18 @@ export class GroupComponent implements OnInit {
                 var tempB = new Array<User>();
                 var tempC = new Array<User>();
 
-                for(let user of data) {
+                for (let user of data) {
                     tempA.push(user);
-                }    
+                }
 
                 for (let user of this.users) {
                     var counter = 0;
                     for (var i = 0; i < tempA.length; i++) {
                         if (user.ID != tempA[i].userID) {
-                            counter ++;
+                            counter++;
                         }
                     }
-                    
+
                     if (counter == tempA.length) {
                         tempB.push(user);
                     }
@@ -243,7 +243,7 @@ export class GroupComponent implements OnInit {
                 }
 
                 this.memberUsers = tempC;
-            })   
+            })
     }
 
     private selectUserAdd(user: User) {
@@ -265,8 +265,8 @@ export class GroupComponent implements OnInit {
     }
 
     private removeMemberGroup(group: Group) {
-        for(let assoc of this.userGroupMembers) {
-            if(assoc.groupID == group.ID) {
+        for (let assoc of this.userGroupMembers) {
+            if (assoc.groupID == group.ID) {
                 this.groupMemberService
                     .Delete(assoc.ID)
                     .subscribe(() => {
@@ -279,8 +279,8 @@ export class GroupComponent implements OnInit {
     }
 
     private removeMemberUser(user: User) {
-        for(let assoc of this.userGroupMembers) {
-            if(assoc.userID == user.ID) {
+        for (let assoc of this.userGroupMembers) {
+            if (assoc.userID == user.ID) {
                 this.groupMemberService
                     .Delete(assoc.ID)
                     .subscribe(() => {
@@ -294,49 +294,49 @@ export class GroupComponent implements OnInit {
 
     private addAvailableGroup(group: Group) {
         var flag = false;
-        for(let g of this.memberGroups) {
-            if(group.ID === g.ID) {
+        for (let g of this.memberGroups) {
+            if (group.ID === g.ID) {
                 return;
             }
         }
 
-        let groupMember = new GroupMember;        
+        let groupMember = new GroupMember;
         groupMember.groupID = group.ID;
-        groupMember.userID = this.selectedUser.ID;   
+        groupMember.userID = this.selectedUser.ID;
         this.groupMemberService
             .Add(groupMember)
             .subscribe(() => {
                 this.getGroupItems();
                 this.getUserItems();
                 this.selectUser(this.selectedUser);
-            });        
+            });
     }
 
     private addAvailableUser(user: User) {
         var flag = false;
-        for(let u of this.memberUsers) {
-            if(user.ID === u.ID) {
+        for (let u of this.memberUsers) {
+            if (user.ID === u.ID) {
                 return;
             }
         }
 
-        let groupMember = new GroupMember;        
+        let groupMember = new GroupMember;
         groupMember.userID = user.ID;
-        groupMember.groupID = this.selectedGroup.ID;   
+        groupMember.groupID = this.selectedGroup.ID;
         this.groupMemberService
             .Add(groupMember)
             .subscribe(() => {
                 this.getGroupItems();
                 this.getUserItems();
                 this.selectGroup(this.selectedGroup);
-            });        
+            });
     }
 
     private showme(b) {
-        if(b) {
+        if (b) {
             console.log("go to users");
             this.type = "Group";
-        } 
+        }
         else {
             console.log("go to groups");
             this.type = "User";

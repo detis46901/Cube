@@ -24,7 +24,7 @@
             <input matInput name="userLastName" [(ngModel)]="user.lastName" placeholder="Last Name" value="{{user.lastName}}">
         </mat-form-field>
         <br>
-            
+
         <!-- email entry box -->
         <mat-form-field class="row" id="emailEntry">
             <input matInput name="userEmail" [(ngModel)]="user.email" placeholder="Email" value="{{user.email}}">
@@ -35,7 +35,7 @@
             <input matInput name="userDetailID" [(ngModel)]="user.ID" placeholder="ID" value="{{user.ID}}" [disabled]="true">
         </mat-form-field>
         <br>
-            
+
         <!-- checkboxes for both active users and admins -->
         <mat-checkbox id="userActive" name="newUserActive" [(ngModel)]="user.active">Active</mat-checkbox>
         <mat-checkbox id="userAdmin" name="newUserAdmin" [(ngModel)]="user.administrator">Administrator</mat-checkbox>

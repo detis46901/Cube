@@ -6,4 +6,4 @@ import { Component } from '@angular/core';
     styleUrls: ['./adminNav.component.scss']
 })
 
-export class AdminNavComponent {}
+export class AdminNavComponent { }

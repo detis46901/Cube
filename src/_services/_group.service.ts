@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Configuration } from '../_api/api.constants';
 import { ParentService } from './_parent.service';
 import { Group } from '../_models/group.model';
- 
+
 @Injectable()
 export class GroupService extends ParentService {
     protected actionUrl: string;

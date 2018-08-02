@@ -4,5 +4,5 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class PasswordChangeService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 }

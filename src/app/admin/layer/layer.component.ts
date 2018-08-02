@@ -14,7 +14,7 @@ import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component
 import { newMyCubeComponent } from './myCubeLayer/newMyCube.component';
 import { ServerService } from '../../../_services/_server.service';
 import { Server } from '../../../_models/server.model';
-import { MatDialog, MatDialogConfig  } from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material';
 import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { LayerValidatorService } from './layerValidator.service';
 import { LayerDetailsComponent } from '../details/layerDetails/layerDetails.component';
@@ -22,7 +22,7 @@ import { LayerDetailsComponent } from '../details/layerDetails/layerDetails.comp
 @Component({
     selector: 'layer',
     templateUrl: './layer.component.html',
-    providers: [UserService, Configuration, LayerService, LayerPermissionService, UserPageLayerService, ServerService, SQLService, {provide: ValidatorService, useClass: LayerValidatorService}],
+    providers: [UserService, Configuration, LayerService, LayerPermissionService, UserPageLayerService, ServerService, SQLService, { provide: ValidatorService, useClass: LayerValidatorService }],
     styleUrls: ['./layer.component.scss']
 })
 
@@ -67,14 +67,14 @@ export class LayerComponent implements OnInit {
     }
 
     private createLayer(): void {
-        const dialogRef = this.dialog.open(LayerNewComponent, {height:'450px', width:'450px'});
+        const dialogRef = this.dialog.open(LayerNewComponent, { height: '450px', width: '450px' });
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });
     }
 
     private createMyCube(): void {
-        const dialogRef = this.dialog.open(newMyCubeComponent, {height:'520px', width:'480px'});
+        const dialogRef = this.dialog.open(newMyCubeComponent, { height: '520px', width: '480px' });
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });
@@ -93,7 +93,7 @@ export class LayerComponent implements OnInit {
     }
 
     private openDetails(id: number, name: string): void {
-        const dialogRef = this.dialog.open(LayerDetailsComponent, {width:'450px'});
+        const dialogRef = this.dialog.open(LayerDetailsComponent, { width: '450px' });
         dialogRef.componentInstance.ID = id;
         dialogRef.componentInstance.name = name;
         dialogRef.afterClosed().subscribe(() => {
@@ -125,26 +125,26 @@ export class LayerComponent implements OnInit {
 
     private deletePermission(layerID: number) {
         this.layerPermissionService
-        .GetByLayer(layerID)
-        .subscribe(result => {
-            for (let i of result) {
-                this.layerPermissionService
-                    .Delete(i.ID)
-                    .subscribe((res) => {});
-            }
-        });
+            .GetByLayer(layerID)
+            .subscribe(result => {
+                for (let i of result) {
+                    this.layerPermissionService
+                        .Delete(i.ID)
+                        .subscribe((res) => { });
+                }
+            });
     }
 
     private deleteUPL(layerID: number): void {
         this.userPageLayerService
-        .GetByLayer(layerID)
-        .subscribe((res: UserPageLayer[]) => {
-            for(let i of res) {
-                this.userPageLayerService
-                    .Delete(i.ID)
-                    .subscribe((res) => {})
-            }
-        });
+            .GetByLayer(layerID)
+            .subscribe((res: UserPageLayer[]) => {
+                for (let i of res) {
+                    this.userPageLayerService
+                        .Delete(i.ID)
+                        .subscribe((res) => { })
+                }
+            });
 
     }
 
@@ -152,7 +152,7 @@ export class LayerComponent implements OnInit {
         this.layerService
             .GetSingle(layerID)
             .subscribe((result: Layer) => {
-                if (result.layerType=='MyCube') {
+                if (result.layerType == 'MyCube') {
                     this.sqlservice.deleteTable(result.ID)
                         .subscribe()
                     this.sqlservice.deleteCommentTable(result.ID)
@@ -162,11 +162,11 @@ export class LayerComponent implements OnInit {
 
         this.layerService
             .Delete(layerID)
-                .subscribe(() => {
-                    this.getLayerItems();
-                });
+            .subscribe(() => {
+                this.getLayerItems();
+            });
     }
-     
+
     // 2/2/18: Keep this here to remind you: DON'T do it this way, when you get to it, implement using the pagination/sorting features of mat-table
     private sortLayers(code: string): void {
         let indexList: Array<number> = [];
@@ -174,31 +174,31 @@ export class LayerComponent implements OnInit {
         let temp: Array<any> = [];
 
         switch (code) {
-        case ('AZ'):
-            this.orderAZ();
-            break;
-        case ('ZA'):
-            break;
-        case ('TYPE'):
-            break;
-        case ('OLD_NEW'):
-            break;
-        case ('NEW_OLD'):
-            break;
-        case ('GEOM'):
-            break;
-        case ('SERVER'):
-            break;
-        default:
-            alert('"' + code + '" is not a valid code.');
-            break;
+            case ('AZ'):
+                this.orderAZ();
+                break;
+            case ('ZA'):
+                break;
+            case ('TYPE'):
+                break;
+            case ('OLD_NEW'):
+                break;
+            case ('NEW_OLD'):
+                break;
+            case ('GEOM'):
+                break;
+            case ('SERVER'):
+                break;
+            default:
+                alert('"' + code + '" is not a valid code.');
+                break;
         }
     }
 
     private orderAZ(): void {
         let indexList: Array<number> = [];
         let list, temp = this.layers;
-        for (let i=0; i<list.length; i++) {
+        for (let i = 0; i < list.length; i++) {
             temp[i] = list[i].layerName;
         }
     }

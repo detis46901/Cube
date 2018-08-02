@@ -29,7 +29,7 @@ export class LayerNewComponent implements OnInit {
     @Input() layerName: string;
 
     private permlessUsers = new Array<User>()
-    private permlessGroups = new Array<Group>(); 
+    private permlessGroups = new Array<Group>();
     private token: string;
     private userID: number;
     private step = 0;
@@ -72,8 +72,8 @@ export class LayerNewComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (this.serverLayer) { 
-            this.newLayer = this.serverLayer 
+        if (this.serverLayer) {
+            this.newLayer = this.serverLayer
         }
         this.getServers();
     }

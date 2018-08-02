@@ -27,8 +27,8 @@ export class ServerDetailsComponent implements OnInit {
 
     constructor(private dialog: MatDialog, private serverService: ServerService, private userService: UserService, private notificationService: NotifService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		this.token = currentUser && currentUser.token;
-		this.userID = currentUser && currentUser.userID;
+        this.token = currentUser && currentUser.token;
+        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {
@@ -68,7 +68,6 @@ export class ServerDetailsComponent implements OnInit {
     //                 for(let perm of perms) {
     //                     if(perm.userID != this.userID) {
     //                         notif.userID = perm.userID;
-
     //                         this.notificationService
     //                             .Add(notif)
     //                             .subscribe((res) => {
@@ -84,9 +83,9 @@ export class ServerDetailsComponent implements OnInit {
     private whichFieldsChanged(changed: Server) {
         let ix = 0;
 
-        for(let property in changed) {
-            if(changed.hasOwnProperty(property)) {
-                if(changed[property] != this.serverProps[ix]) {
+        for (let property in changed) {
+            if (changed.hasOwnProperty(property)) {
+                if (changed[property] != this.serverProps[ix]) {
                     this.originalServerProps.push(this.serverProps[ix])
                     this.changedServerProps.push(changed[property])
                 }
@@ -111,7 +110,7 @@ export class ServerDetailsComponent implements OnInit {
         var description = "";
         let flag = false;
         let ix = 0;
-        for(let prop of oArr) {
+        for (let prop of oArr) {
             description += "\"" + prop + "\" was changed to \"" + cArr[ix] + "\"\n"
         }
         return description;

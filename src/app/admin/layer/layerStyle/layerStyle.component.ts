@@ -55,7 +55,7 @@ export class LayerStyleComponent implements OnInit {
     private getLayerItem(calledByDelete: boolean): void {
         this.layerService
             .GetSingle(this.layerID)
-            .subscribe((data:Layer) => {
+            .subscribe((data: Layer) => {
                 this.layer = data;
                 this.defaultStyle = JSON.stringify(this.layer.defaultStyle)
             });
@@ -65,7 +65,7 @@ export class LayerStyleComponent implements OnInit {
     private getUserItems(calledByDelete: boolean): void {
         this.permlessUsers = [];
 
-        if(this.currDeletedPermIsUser==true && calledByDelete) {
+        if (this.currDeletedPermIsUser == true && calledByDelete) {
             //this.permlessUsers.push(this.currDeletedPermObj)
             this.currDeletedPermIsUser = null;
             this.currDeletedPermObj = null;
@@ -73,10 +73,10 @@ export class LayerStyleComponent implements OnInit {
 
         this.userService
             .GetAll()
-            .subscribe((data:User[]) => {             
-                for(let u of data) {
+            .subscribe((data: User[]) => {
+                for (let u of data) {
                     //If no existing permission exists for the user
-                    if(this.permNames.indexOf(u.firstName + " " + u.lastName) == -1) {
+                    if (this.permNames.indexOf(u.firstName + " " + u.lastName) == -1) {
                         this.permlessUsers.push(u);
                     }
                 }
@@ -86,8 +86,8 @@ export class LayerStyleComponent implements OnInit {
     //2/9/18 this is the last part that needs fixed to get the list to return correctly
     private getGroupItems(calledByDelete: boolean): void {
         this.permlessGroups = [];
-        
-        if(this.currDeletedPermIsUser==false && calledByDelete) {
+
+        if (this.currDeletedPermIsUser == false && calledByDelete) {
             //this.permlessGroups.push(this.currDeletedPermObj)
             this.currDeletedPermIsUser = null;
             this.currDeletedPermObj = null;
@@ -95,16 +95,16 @@ export class LayerStyleComponent implements OnInit {
 
         this.groupService
             .GetAll()
-            .subscribe((data:Group[]) => {             
-                for(let g of data) {
+            .subscribe((data: Group[]) => {
+                for (let g of data) {
                     //If no existing permission exists for the group
-                    if(this.permNames.indexOf(g.name) == -1) {
+                    if (this.permNames.indexOf(g.name) == -1) {
                         this.permlessGroups.push(g);
                     }
                 }
             });
     }
-    
+
 
     private updateLayerStyle(layer: Layer): void {
         this.layer.defaultStyle = JSON.parse(this.defaultStyle);
@@ -114,5 +114,4 @@ export class LayerStyleComponent implements OnInit {
                 this.getLayerItem(false);
             });
     }
-
 }

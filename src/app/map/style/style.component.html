@@ -1,61 +1,65 @@
 <!-- Drop down panel to show the filter options when they are requested -->
 
 <mat-expansion-panel [expanded]=true>
-  <mat-expansion-panel-header>
+    <mat-expansion-panel-header>
 
-      <!-- panel title -->
-      <mat-panel-title>
-          Style
-      </mat-panel-title>
+        <!-- panel title -->
+        <mat-panel-title>
+            Style
+        </mat-panel-title>
 
-      <!-- Shows whether a filter is on or off -->
-      <mat-panel-description>
-          <span *ngIf="mapConfig.styleOn">On</span><span *ngIf="!mapConfig.styleOn">Off</span>
-      </mat-panel-description>
-  </mat-expansion-panel-header>
+        <!-- Shows whether a filter is on or off -->
+        <mat-panel-description>
+            <span *ngIf="mapConfig.styleOn">On</span>
+            <span *ngIf="!mapConfig.styleOn">Off</span>
+        </mat-panel-description>
+    </mat-expansion-panel-header>
 
-  <!-- drop down menu to select which filter to display -->
-  <!-- automatically shows the already applied filter, regardless of whether the filter was saved to a page or saved to the layer -->
-  <mat-select [(ngModel)]="filterColumn.field" (selectionChange) = "updateColumn()" placeholder="Column">
-      <mat-option *ngFor="let column of columns" [value]="column.field">
-          {{ column.field }}
-      </mat-option>
-  </mat-select>
-  <br>
+    <!-- drop down menu to select which filter to display -->
+    <!-- automatically shows the already applied filter, regardless of whether the filter was saved to a page or saved to the layer -->
+    <mat-select [(ngModel)]="filterColumn.field" (selectionChange)="updateColumn()" placeholder="Column">
+        <mat-option *ngFor="let column of columns" [value]="column.field">
+            {{ column.field }}
+        </mat-option>
+    </mat-select>
+    <br>
 
-  <!-- drop down menu to select operator -->
-  <!-- shows the already applied operator automically -->
-  <mat-select [(ngModel)]="filterOperator" placeholder="Operator">
-      <mat-option *ngFor="let operator of operators" [value]="operator.value">
-          {{operator.viewValue}}
-      </mat-option>
-  </mat-select>
-  <br> 
+    <!-- drop down menu to select operator -->
+    <!-- shows the already applied operator automically -->
+    <mat-select [(ngModel)]="filterOperator" placeholder="Operator">
+        <mat-option *ngFor="let operator of operators" [value]="operator.value">
+            {{operator.viewValue}}
+        </mat-option>
+    </mat-select>
+    <br>
 
-  <!-- drop down menu for true or false is boolean operator is chosen -->
-  <!-- shows already selected option -->
-  <mat-select [(ngModel)]="filterColumn.value" *ngIf="filterColumn.type == 'boolean'" placeholder="boolean">
-      <mat-option [value]="true">
-          true
-      </mat-option>
-      <mat-option [value]="false">
-          false
-      </mat-option>
-  </mat-select>
-  
-  <!-- shows either a calender or a entry box depending on the selected operator -->
-  <mat-form-field *ngIf="filterColumn.type == 'text' || filterColumn.type == 'double precision'"><input matInput [(ngModel)]="filterColumn.value" placeholder="Value"></mat-form-field>
-  <mat-form-field *ngIf="filterColumn.type == 'date'"><input matInput [matDatepicker]="picker" placeholder="Date" [(ngModel)]="filterColumn.value">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
+    <!-- drop down menu for true or false is boolean operator is chosen -->
+    <!-- shows already selected option -->
+    <mat-select [(ngModel)]="filterColumn.value" *ngIf="filterColumn.type == 'boolean'" placeholder="boolean">
+        <mat-option [value]="true">
+            true
+        </mat-option>
+        <mat-option [value]="false">
+            false
+        </mat-option>
+    </mat-select>
 
-  <!-- buttons to apply, clear, save to page or layer, and close -->
-  <mat-action-row>        
-      <button mat-button (click)="applyStyle()">Apply</button>
-      <button mat-button (click)="clear()">Clear</button>
-      <button mat-button (click)="saveToPage()">Save to Page</button>
-      <button mat-button (click)="saveToLayer()">Save to Layer</button>
-      <button mat-button (click)="close()">Close</button>
-  </mat-action-row>
+    <!-- shows either a calender or a entry box depending on the selected operator -->
+    <mat-form-field *ngIf="filterColumn.type == 'text' || filterColumn.type == 'double precision'">
+        <input matInput [(ngModel)]="filterColumn.value" placeholder="Value">
+    </mat-form-field>
+    <mat-form-field *ngIf="filterColumn.type == 'date'">
+        <input matInput [matDatepicker]="picker" placeholder="Date" [(ngModel)]="filterColumn.value">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <!-- buttons to apply, clear, save to page or layer, and close -->
+    <mat-action-row>
+        <button mat-button (click)="applyStyle()">Apply</button>
+        <button mat-button (click)="clear()">Clear</button>
+        <button mat-button (click)="saveToPage()">Save to Page</button>
+        <button mat-button (click)="saveToLayer()">Save to Layer</button>
+        <button mat-button (click)="close()">Close</button>
+    </mat-action-row>
 </mat-expansion-panel>

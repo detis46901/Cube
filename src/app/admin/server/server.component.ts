@@ -20,14 +20,14 @@ import { ServerLayersComponent } from './serverLayers/serverLayers.component';
     selector: 'server',
     templateUrl: './server.component.html',
     styleUrls: ['./server.component.scss'],
-    providers: [ServerService, {provide: ValidatorService, useClass: ServerValidatorService}]
+    providers: [ServerService, { provide: ValidatorService, useClass: ServerValidatorService }]
 })
 
 export class ServerComponent implements OnInit {
     private objCode = 6;
     private token: string;
     private options: any;
-    
+
     private toCreate: boolean = false;
 
     private servers: Array<Server>;
@@ -46,10 +46,11 @@ export class ServerComponent implements OnInit {
 
     private serverColumns = ['serverID', 'serverName', 'serverType', 'serverURL', 'actionsColumn']
     private dataSource: TableDataSource<Server>;
-    private http:Http
+    private http: Http
 
     constructor(private serverService: ServerService, private dialog: MatDialog, private serverValidator: ValidatorService, http: Http
-         ) {this.http = http 
+    ) {
+    this.http = http
         this.options = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -72,7 +73,7 @@ export class ServerComponent implements OnInit {
             });
     }
 
-    public getCapabilities = (url): Observable<any> => {        
+    public getCapabilities = (url): Observable<any> => {
         return this.http.get(url)
             .map((response: Response) => <any>response.text())
     }
@@ -100,16 +101,16 @@ export class ServerComponent implements OnInit {
     //             break;
     //     }
     // }
-        
+
     private getGeoserver(serv: Server): void {
         let url = serv.serverURL //+ '?request=getCapabilities&service=WMS';
         this.getCapabilities(url)
-        .subscribe((data) => {
-            let parser = new ol.format.WMSCapabilities();
-            let result = parser.read(data)
-            this.WMSLayers = result['Capability']['Layer']['Layer']
-            this.currServer = serv
-        })
+            .subscribe((data) => {
+                let parser = new ol.format.WMSCapabilities();
+                let result = parser.read(data)
+                this.WMSLayers = result['Capability']['Layer']['Layer']
+                this.currServer = serv
+            })
         // this.currServer = serv;
         // this.clearArrays();
         // this.displayGeoserverLayers = true;
@@ -225,23 +226,23 @@ export class ServerComponent implements OnInit {
     //     //dialogRef.componentInstance.layerServer = this.currServer;
     //     dialogRef.componentInstance.serverLayer = this.newLayer
     // }
-    
+
 
     private openServerNew(): void {
-        const dialogRef = this.dialog.open(ServerNewComponent, {height:'300px', width:'360px'});
+        const dialogRef = this.dialog.open(ServerNewComponent, { height: '300px', width: '360px' });
         dialogRef.afterClosed()
-        .subscribe(result => {
-            this.getServers();
-        });
+            .subscribe(result => {
+                this.getServers();
+            });
     }
 
     private openLayers(name: string) {
-        const dialogRef = this.dialog.open(ServerLayersComponent, {width:'360px'});
+        const dialogRef = this.dialog.open(ServerLayersComponent, { width: '360px' });
         dialogRef.componentInstance.name = name;
     }
-    
+
     private openDetails(id: number, name: string): void {
-        const dialogRef = this.dialog.open(ServerDetailsComponent, {width:'320px'});
+        const dialogRef = this.dialog.open(ServerDetailsComponent, { width: '320px' });
         dialogRef.componentInstance.ID = id;
         dialogRef.componentInstance.name = name;
         dialogRef.afterClosed().subscribe(() => {

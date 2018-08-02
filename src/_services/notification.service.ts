@@ -8,7 +8,7 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
 import { Notif } from '../_models/user.model';
 
- 
+
 @Injectable()
 export class NotifService {
     private actionUrl: string;
@@ -21,8 +21,8 @@ export class NotifService {
         this.headers = new HttpHeaders();
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
-        } catch(err) {
-            console.log("Could not find user in local storage. Did you reinstall your browser or delete cookies?\n"+err)
+        } catch (err) {
+            console.log("Could not find user in local storage. Did you reinstall your browser or delete cookies?\n" + err)
         }
 
         // this.headers.append('Authorization', 'Bearer ' + this.token);
@@ -81,8 +81,8 @@ export class NotifService {
             // The backend returned an unsuccessful response code.
             // The response body may contain clues as to what went wrong,
             console.error(
-              `Backend returned code ${error.status}, ` +
-              `body was: ${error.error}`);
+                `Backend returned code ${error.status}, ` +
+                `body was: ${error.error}`);
         }
         // return an ErrorObservable with a user-facing error message
         return new ErrorObservable('Something bad happened; please try again later.');

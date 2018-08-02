@@ -9,7 +9,7 @@
             <mat-slide-toggle name="booBoy" [(ngModel)]="bool" value="bool" (click)="showme(bool)"></mat-slide-toggle>
             <h4>Group view</h4>
         </span>
-        
+
         <!-- creates the first information box  -->
         <div class="group-list-container">
 
@@ -29,8 +29,12 @@
                     <span>
                         {{group.name}}
                         <span style="float:right; position:relative; left:20px">
-                            <button class="group_editGroup" style="color:#7e7e7e" title="Edit Details" (click)="editDetails(group)"><i class="fas fa-pencil-alt"></i></button>
-                            <button class="group_deleteGroup" style="color:#7e7e7e" title="Delete Group" (click)="confDelGroup(group)"><i class="fas fa-trash"></i></button>
+                            <button class="group_editGroup" style="color:#7e7e7e" title="Edit Details" (click)="editDetails(group)">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                            <button class="group_deleteGroup" style="color:#7e7e7e" title="Delete Group" (click)="confDelGroup(group)">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </span>
                     </span>
                 </mat-list-option>
@@ -53,8 +57,12 @@
                     <span>
                         {{group.name}}
                         <span style="float:right; position:relative; left:20px;">
-                            <button class="group_editGroup" style="color:#7e7e7e" title="Edit Details" (click)="editDetails(group)"><i class="fas fa-pencil-alt"></i></button>
-                            <button class="group_deleteGroup" style="color:#7e7e7e" title="Delete Group" (click)="confDelGroup(group)"><i class="fas fa-trash"></i></button>
+                            <button class="group_editGroup" style="color:#7e7e7e" title="Edit Details" (click)="editDetails(group)">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                            <button class="group_deleteGroup" style="color:#7e7e7e" title="Delete Group" (click)="confDelGroup(group)">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </span>
                     </span>
                 </mat-list-option>
@@ -63,18 +71,26 @@
             <mat-selection-list disableRipple=true *ngIf="bool">
                 <mat-list-option *ngFor="let user of availableUsers" (click)="selectUserAdd(user)">
                     {{user.firstName}}&nbsp;{{user.lastName}}
-                </mat-list-option> 
+                </mat-list-option>
             </mat-selection-list>
         </div>
     </div>
 
     <!-- sets up the two arrow buttons for moving groups and users in and out of their respective lists -->
     <div class="transfer-controls">
-        <button mat-button class="group_arrow" *ngIf="!bool" (click)="addAvailableGroup(selectedAvailableGroup)" style="margin-bottom:10px;"><i style="font-size:30px;" class="fas fa-arrow-right"></i></button>
-        <button mat-button class="group_arrow" *ngIf="bool" (click)="addAvailableUser(selectedAvailableUser)" style="margin-bottom:10px;"><i style="font-size:30px;" class="fas fa-arrow-right"></i></button>
+        <button mat-button class="group_arrow" *ngIf="!bool" (click)="addAvailableGroup(selectedAvailableGroup)" style="margin-bottom:10px;">
+            <i style="font-size:30px;" class="fas fa-arrow-right"></i>
+        </button>
+        <button mat-button class="group_arrow" *ngIf="bool" (click)="addAvailableUser(selectedAvailableUser)" style="margin-bottom:10px;">
+            <i style="font-size:30px;" class="fas fa-arrow-right"></i>
+        </button>
         <br>
-        <button mat-button class="group_arrow" *ngIf="!bool" (click)="removeMemberGroup(selectedMemberGroup)"><i style="font-size:30px;" class="fas fa-arrow-left"></i></button>
-        <button mat-button class="group_arrow" *ngIf="bool" (click)="removeMemberUser(selectedMemberUser)"><i style="font-size:30px;" class="fas fa-arrow-left"></i></button>
+        <button mat-button class="group_arrow" *ngIf="!bool" (click)="removeMemberGroup(selectedMemberGroup)">
+            <i style="font-size:30px;" class="fas fa-arrow-left"></i>
+        </button>
+        <button mat-button class="group_arrow" *ngIf="bool" (click)="removeMemberUser(selectedMemberUser)">
+            <i style="font-size:30px;" class="fas fa-arrow-left"></i>
+        </button>
     </div>
 
     <!-- creates the final information box which houses either the group members

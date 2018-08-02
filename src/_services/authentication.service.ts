@@ -10,12 +10,12 @@ export class AuthenticationService {
     private token: string;
     private actionUrl: string;
 
-    constructor(private http: HttpClient, private configuration: Configuration) {  
+    constructor(private http: HttpClient, private configuration: Configuration) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.actionUrl = configuration.serverWithApiUrl + 'authenticate';
     }
- 
+
     // clear token, remove user from local storage to log user out
     logout(): void {
         this.token = null;

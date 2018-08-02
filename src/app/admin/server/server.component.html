@@ -10,7 +10,9 @@
             <!-- first column containing server ID number -->
             <ng-container matColumnDef="serverID">
                 <!-- header -->
-                <mat-header-cell class="server-sm-head" *matHeaderCellDef><Strong> ID </Strong></mat-header-cell>
+                <mat-header-cell class="server-sm-head" *matHeaderCellDef>
+                    <Strong> ID </Strong>
+                </mat-header-cell>
                 <mat-cell class="server-sm-cell" *matCellDef="let row">
                     <b>{{row.currentData.ID}}</b>
                 </mat-cell>
@@ -19,7 +21,9 @@
             <!-- second column containing the instance name of the server -->
             <ng-container matColumnDef="serverName">
                 <!-- header -->
-                <mat-header-cell class="server-md-head" *matHeaderCellDef><Strong> Instance Name </Strong></mat-header-cell>
+                <mat-header-cell class="server-md-head" *matHeaderCellDef>
+                    <Strong> Instance Name </Strong>
+                </mat-header-cell>
                 <mat-cell class="server-md-cell" *matCellDef="let row">
                     <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
                         <input matInput [formControl]="row.validator.controls['serverName']" [readonly]="!row.editing" [(ngModel)]="row.currentData.serverName">
@@ -30,7 +34,9 @@
             <!-- third column containing the server type -->
             <ng-container matColumnDef="serverType">
                 <!-- header -->
-                <mat-header-cell class="server-sm-head" *matHeaderCellDef><Strong> Server Type </Strong></mat-header-cell>
+                <mat-header-cell class="server-sm-head" *matHeaderCellDef>
+                    <Strong> Server Type </Strong>
+                </mat-header-cell>
                 <mat-cell class="server-sm-cell" *matCellDef="let row">
                     <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
                         <input matInput [formControl]="row.validator.controls['serverType']" [readonly]="!row.editing" [(ngModel)]="row.currentData.serverType">
@@ -41,18 +47,22 @@
             <!-- fourth column containing the URL of the server -->
             <ng-container matColumnDef="serverURL">
                 <!-- header -->
-                <mat-header-cell class="server-lg-head" *matHeaderCellDef><Strong> URL </Strong></mat-header-cell>
+                <mat-header-cell class="server-lg-head" *matHeaderCellDef>
+                    <Strong> URL </Strong>
+                </mat-header-cell>
                 <mat-cell class="server-lg-cell" *matCellDef="let row">
                     <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
                         <input matInput [formControl]="row.validator.controls['serverURL']" [readonly]="!row.editing" [(ngModel)]="row.currentData.serverURL">
                     </mat-form-field>
                 </mat-cell>
             </ng-container>
-        
+
             <!-- fifth column containing buttons to view and edit layers, edit the attributes of the server, and delete hte server -->
             <ng-container matColumnDef="actionsColumn">
                 <mat-header-cell class="server-md-head" *matHeaderCellDef>
-                    <button mat-button id="createServerButton" (click)="openServerNew()"><strong>Create Server</strong></button>
+                    <button mat-button id="createServerButton" (click)="openServerNew()">
+                        <strong>Create Server</strong>
+                    </button>
                 </mat-header-cell>
                 <mat-cell class="server-md-cell" *matCellDef="let row">
                     <button mat-button (click)="openLayers(row.currentData.serverName)">

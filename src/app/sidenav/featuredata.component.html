@@ -1,19 +1,19 @@
 <!-- Jack Reyburn -->
 <!-- handles the my cube feature and comments menus -->
 <div *ngIf="message">
-     <!-- second accordian menu handling features -->
-     <mat-accordion class="message-data" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 0px">
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <!-- header -->
-                    <mat-panel-title>
-                        Feature Data
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <div [innerHTML]="message" style="height: 260px; overflow: auto">
-                </div>
-            </mat-expansion-panel>
-        </mat-accordion>
+    <!-- second accordian menu handling features -->
+    <mat-accordion class="message-data" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 0px">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <!-- header -->
+                <mat-panel-title>
+                    Feature Data
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div [innerHTML]="message" style="height: 260px; overflow: auto">
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
 </div>
 <div *ngIf="myCubeData">
     Mycube Data
@@ -33,12 +33,12 @@
                     <!-- name and date -->
                     <b>{{myCubeComment.firstName}} {{myCubeComment.lastName}}</b>
                     <i>{{myCubeComment.createdat | date:'MMM dd':'-0500'}} at {{myCubeComment.createdat | date:'h:ma':'-0500'}}</i>
-                    
+
                     <!-- delete button -->
                     <button id="trashButton" *ngIf="userID == myCubeComment.userid" mat-button (click)='deleteMyCubeComment(myCubeConfig.table, myCubeComment.id)'>
                         <mat-icon>delete</mat-icon>
                     </button>
-                    <br> 
+                    <br>
                     <!-- comment -->
                     <div style="word-wrap:normal; width:380px">
                         {{myCubeComment.comment}}
@@ -71,15 +71,15 @@
                     <div *ngIf="myCube.type=='integer'">
                         <!-- input field -->
                         <mat-form-field style="width:90%">
-                            <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}"
-                                [(ngModel)]="myCube.value" (blur)="updateMyCube(myCube)">
+                            <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}" [(ngModel)]="myCube.value"
+                                (blur)="updateMyCube(myCube)">
                         </mat-form-field>
                     </div>
                     <div *ngIf="myCube.type=='double precision'">
                         <!-- input field -->
                         <mat-form-field style="width:90%">
-                            <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}"
-                                [(ngModel)]="myCube.value" (blur)="updateMyCube(myCube)">
+                            <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}" [(ngModel)]="myCube.value"
+                                (blur)="updateMyCube(myCube)">
                         </mat-form-field>
                     </div>
                     <div *ngIf="myCube.type=='boolean'">
@@ -88,8 +88,8 @@
                     </div>
                     <div *ngIf="myCube.type=='text'" matTooltip="No crazy symbols yet" matTooltipPosition="above" matTooltipShowDelay="1000">
                         <mat-form-field style="width:90%">
-                            <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}"
-                                [(ngModel)]="myCube.value" (blur)="updateMyCube(myCube)">
+                            <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}" [(ngModel)]="myCube.value"
+                                (blur)="updateMyCube(myCube)">
                         </mat-form-field>
                     </div>
                     <div *ngIf="myCube.type=='date'">

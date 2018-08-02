@@ -15,7 +15,7 @@ export class ChangePictureComponent implements OnInit {
     @Input() userID;
     private selectedFile: File = null;
 
-    constructor(private http: HttpClient, private imageService: ImageService) {     
+    constructor(private http: HttpClient, private imageService: ImageService) {
     }
 
     ngOnInit() {

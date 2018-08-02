@@ -20,7 +20,7 @@ import { NotifService } from '../../_services/notification.service';
 
 export class HeaderComponent implements OnInit {
     @Input() user: User;
-    @Input() screenCode: number = 0; 
+    @Input() screenCode: number = 0;
     private isOpen: boolean;
     private isNotifOpen: boolean = false;
     private userHasUnread: boolean;
@@ -33,7 +33,7 @@ export class HeaderComponent implements OnInit {
     private userPages: UserPage[];
     private notifications: Notif[];
 
-    constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService, private notificationService: NotifService ) {
+    constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService, private notificationService: NotifService) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -49,13 +49,13 @@ export class HeaderComponent implements OnInit {
         this.userService
             .GetSingle(this.userID)
             .subscribe((user: User) => {
-                this.currUser = user;              
+                this.currUser = user;
                 this.notificationService
                     .GetByUser(user.ID)
                     .subscribe((notifs: Notif[]) => {
                         this.notifications = notifs;
-                        for(let n of notifs) {
-                            if(!n.read) {
+                        for (let n of notifs) {
+                            if (!n.read) {
                                 this.shakeNotifications()
                                 return;
                             }
@@ -79,9 +79,9 @@ export class HeaderComponent implements OnInit {
         dialogRef.componentInstance.lastName = this.currUser.lastName;
 
         dialogRef.afterClosed()
-        .subscribe(() => {
-            this.getUserPageItems();
-        });
+            .subscribe(() => {
+                this.getUserPageItems();
+            });
     }
 
     private menuToggle(sCode: number): void {
@@ -91,7 +91,7 @@ export class HeaderComponent implements OnInit {
             this.isOpen = this.sideNavService.getHidden();
         }
 
-        switch(sCode) {
+        switch (sCode) {
             case 0:
                 //throw exception here for a call without a screen code (will default to 0 as assigned above)
                 console.log("Exception")
@@ -119,7 +119,7 @@ export class HeaderComponent implements OnInit {
         // 2/2/18 What I was trying to do below is to get some typical menu functions (file, edit, view, etc.) available on the header navigation bar.
         //document.getElementById("headerCreateUserBtn").style.visibility = "hidden"; //Figure this out to appear only on admin/user. create buttons could go in header.
 
-        if(!this.isOpen) {
+        if (!this.isOpen) {
             document.getElementById("mySidenav").style.display = "block";
             document.getElementById("mySidenav").style.width = "250px";
             document.getElementById("place-input").style.position = "absolute";
@@ -146,7 +146,7 @@ export class HeaderComponent implements OnInit {
     //Code 2
     public adminToggle() {
         document.getElementById("headerCreateUserBtn").style.visibility = "visible";
-        if(!this.isOpen) {
+        if (!this.isOpen) {
             document.getElementById("admin_nav").style.display = "block";
             document.getElementById("admin_nav").style.width = "230px";
             this.sideNavService.toggleHidden();
@@ -160,7 +160,7 @@ export class HeaderComponent implements OnInit {
     //Code 3
     public userToggle() {
         document.getElementById("headerCreateUserBtn").style.visibility = "hidden";
-        if(!this.isOpen) {
+        if (!this.isOpen) {
             document.getElementById("settings_nav").style.display = "block";
             document.getElementById("settings_nav").style.width = "230px";
             this.sideNavService.toggleHidden();
@@ -180,12 +180,12 @@ export class HeaderComponent implements OnInit {
         //         this.notifications = notifs
         document.getElementById('headerNotifications').classList.remove('shake');
         clearInterval(this.shaker)
-        
-        if(this.isNotifOpen) {
+
+        if (this.isNotifOpen) {
             document.getElementById("notificationMenu").style.display = "none";
         } else {
             document.getElementById("notificationMenu").style.display = "block";
-            for(let n of this.notifications) {
+            for (let n of this.notifications) {
                 n.read = true;
                 this.notificationService
                     .Update(n)
@@ -196,10 +196,10 @@ export class HeaderComponent implements OnInit {
         // })
     }
 
-    private shakeNotifications(): void { 
-        this.shaker = setInterval(function() {
+    private shakeNotifications(): void {
+        this.shaker = setInterval(function () {
             document.getElementById('headerNotifications').classList.add('shake');
-            setTimeout(function() {
+            setTimeout(function () {
                 document.getElementById('headerNotifications').classList.remove('shake');
                 console.log("second timeout")
             }, 1000)

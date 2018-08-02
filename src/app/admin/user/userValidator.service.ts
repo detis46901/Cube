@@ -9,10 +9,10 @@ export class UserValidatorService implements ValidatorService {
             'ID': new FormControl(null, Validators.required),
             'firstName': new FormControl(null, Validators.required),
             'lastName': new FormControl(null, Validators.required),
-            'roleID': new FormControl({value:null, disabled:true}, Validators.required),
+            'roleID': new FormControl({ value: null, disabled: true }, Validators.required),
             'email': new FormControl(null, Validators.required),
-            'active': new FormControl({value:null, disabled:true}, Validators.required),
-            'administrator': new FormControl({value:null, disabled:true}, Validators.required)
+            'active': new FormControl({ value: null, disabled: true }, Validators.required),
+            'administrator': new FormControl({ value: null, disabled: true }, Validators.required)
         });
     }
 }

@@ -22,14 +22,16 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatMenuModule } from '@angular/material/menu'
-import { MatRadioModule, MatIconModule, MatCardModule, MatDialogModule, MatSelectModule, MatListModule, 
-         MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, 
-         MatFormFieldModule, MatProgressSpinnerModule, MatToolbarModule, MatNativeDateModule } from '@angular/material';
-import {MatChipsModule} from '@angular/material/chips';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatTooltipModule} from '@angular/material/tooltip'
-import {MatSnackBarModule} from '@angular/material/snack-bar'
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {
+    MatRadioModule, MatIconModule, MatCardModule, MatDialogModule, MatSelectModule, MatListModule,
+    MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule,
+    MatFormFieldModule, MatProgressSpinnerModule, MatToolbarModule, MatNativeDateModule
+} from '@angular/material';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTooltipModule } from '@angular/material/tooltip'
+import { MatSnackBarModule } from '@angular/material/snack-bar'
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import 'hammerjs';
 
@@ -41,7 +43,7 @@ import { LayerService } from '../_services/_layer.service';
 import { LayerPermissionService } from '../_services/_layerPermission.service';
 import { UserPageLayerService } from '../_services/_userPageLayer.service';
 import { UserPageService } from '../_services/_userPage.service';
-import { AuthenticationService} from '../_services/authentication.service';
+import { AuthenticationService } from '../_services/authentication.service';
 import { SQLService } from '../_services/sql.service'
 import { ServerService } from '../_services/_server.service';
 import { geoJSONService } from './map/services/geoJSON.service';
@@ -61,11 +63,11 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminNavComponent } from './admin/adminNav/adminNav.component';
-import { LayerComponent} from './admin/layer/layer.component';
-import { LayerPermissionComponent} from './admin/layer/layerPermission/layerPermission.component';
+import { LayerComponent } from './admin/layer/layer.component';
+import { LayerPermissionComponent } from './admin/layer/layerPermission/layerPermission.component';
 import { LayerStyleComponent } from './admin/layer/layerStyle/layerStyle.component'
-import { PageComponent} from './admin/user/page/page.component';
-import { PageConfigComponent} from './admin/user/pageConfig/pageConfig.component';
+import { PageComponent } from './admin/user/page/page.component';
+import { PageConfigComponent } from './admin/user/pageConfig/pageConfig.component';
 import { LayerNewComponent } from './admin/layer/layerNew/layerNew.component';
 import { newMyCubeComponent } from './admin/layer/myCubeLayer/newMyCube.component';
 import { UserComponent } from './admin/user/user.component';
@@ -101,7 +103,7 @@ import { ServerDetailsComponent } from './admin/details/serverDetails/serverDeta
 import { ServerLayersComponent } from './admin/server/serverLayers/serverLayers.component';
 import { StyleComponent } from './map/style/style.component';
 
-@NgModule ({
+@NgModule({
     declarations: [
         AppComponent,
         MapComponent,
@@ -152,11 +154,11 @@ import { StyleComponent } from './map/style/style.component';
     entryComponents: [
         LayerNewComponent,
         newMyCubeComponent,
-        ChangePasswordComponent, 
+        ChangePasswordComponent,
         LayerPermissionComponent,
         LayerStyleComponent,
-        PageComponent, 
-        PageConfigComponent, 
+        PageComponent,
+        PageConfigComponent,
         ConfirmDeleteComponent,
         ServerNewComponent,
         NewUserComponent,
@@ -214,17 +216,17 @@ import { StyleComponent } from './map/style/style.component';
     ],
 
     providers: [
-        UserService, 
+        UserService,
         MapService,
         StyleService,
-        GeocodingService, 
-        AuthGuard, 
-        AdminGuard, 
-        AuthenticationService, 
-        UserService, 
+        GeocodingService,
+        AuthGuard,
+        AdminGuard,
+        AuthenticationService,
+        UserService,
         GroupService,
         GroupMemberService,
-        LayerService, 
+        LayerService,
         LayerPermissionService,
         SQLService,
         UserPageLayerService,
@@ -241,9 +243,9 @@ import { StyleComponent } from './map/style/style.component';
         ImageService,
         UserValidatorService,
         NotifService
-    ], 
+    ],
 
     bootstrap: [AppComponent]
 })
 
-export class AppModule {}
+export class AppModule { }

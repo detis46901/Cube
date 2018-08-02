@@ -7,17 +7,17 @@ import { Configuration } from '../_api/api.constants';
     selector: 'app',
     providers: [UserService, Configuration],
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']  
+    styleUrls: ['./app.component.scss']
 })
 
 export class AppComponent {
     private user = new User;
     private myItems: User[];
 
-    constructor(private dataService: UserService) {}
+    constructor(private dataService: UserService) { }
 
     ngOnInit() {
-        this.getAllItems();  
+        this.getAllItems();
     }
 
     private getAllItems(): void {
@@ -25,7 +25,7 @@ export class AppComponent {
             .GetAll()
             .subscribe((data: User[]) => {
                 this.myItems = data,
-                error => console.error(error)
-            });            
+                    error => console.error(error)
+            });
     }
 }
