@@ -3,7 +3,7 @@
 <div class="container-fluid pull-right" style="background: rgba(255,255,255,0)">
     <mat-accordion class="tool-container">
         <measure *ngIf="measureOn" [mapConfig]="mapConfig"></measure>
-        <filtertoolbar *ngIf="mapConfig.filterShow" [mapConfig]="mapConfig"></filtertoolbarS>
+        <filtertoolbar *ngIf="mapConfig.filterShow" [mapConfig]="mapConfig"></filtertoolbar>
         <styletoolbar *ngIf="mapConfig.styleShow" [mapConfig]="mapConfig"></styletoolbar>
     </mat-accordion>
     <div style="width:300px">
