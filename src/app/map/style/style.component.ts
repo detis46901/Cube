@@ -27,6 +27,16 @@ export class StyleComponent implements OnInit {
     public styleValue: string | boolean
     public columns: MyCubeField[]
     public operators: { value: string; viewValue: string; }[]
+    colors = [
+        { value: '#FF2D2D', viewValue: 'Red' },
+        { value: '#FF7800', viewValue: 'Orange' },
+        { value: '#F3FF00', viewValue: 'Yellow' },
+        { value: '#4DFF00', viewValue: 'Green' },
+        { value: '#0023FF', viewValue: 'Blue' },
+        { value: '#8000FF', viewValue: 'Purple' },
+        { value: '#F000FF', viewValue: 'Pink' },
+        { value: '#000000', viewValue: 'Black' },
+    ]
     booleanoperators = [
         { value: 'isEqual', viewValue: 'Equal' },
         { value: 'isNotEqual', viewValue: 'Not Equal' },
@@ -35,14 +45,14 @@ export class StyleComponent implements OnInit {
         { value: 'contains', viewValue: 'Contains' }
     ];
 
+
     constructor(private mapService: MapService, private styleService: StyleService,
         private sqlSerivce: SQLService, private userPageLayerService: UserPageLayerService,
         private layerService: LayerService) { }
 
     ngOnInit() {
-        console.log("howdy")
         try {
-            if (this.mapConfig.currentLayer.style['filter']['column'] != "") {
+            if (this.mapConfig.currentLayer.style['filter']['column'] != "" || this.mapConfig.currentLayer.style['filter']['column'] != null) {
                 this.styleColumn['field'] = this.mapConfig.currentLayer.style['filter']['column']
                 this.styleOperator = this.mapConfig.currentLayer.style['filter']['operator']
                 this.styleColumn['value'] = this.mapConfig.currentLayer.style['filter']['value']

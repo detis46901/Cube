@@ -17,25 +17,25 @@
 
     <!-- drop down menu to select which filter to display -->
     <!-- automatically shows the already applied filter, regardless of whether the filter was saved to a page or saved to the layer -->
-    <mat-select [(ngModel)]="filterColumn.field" (selectionChange)="updateColumn()" placeholder="Column">
+    <!-- <mat-select [(ngModel)]="filterColumn.field" (selectionChange)="updateColumn()" placeholder="Column">
         <mat-option *ngFor="let column of columns" [value]="column.field">
             {{ column.field }}
         </mat-option>
     </mat-select>
-    <br>
+    <br> -->
 
     <!-- drop down menu to select operator -->
     <!-- shows the already applied operator automically -->
-    <mat-select [(ngModel)]="filterOperator" placeholder="Operator">
+    <!-- <mat-select [(ngModel)]="filterOperator" placeholder="Operator">
         <mat-option *ngFor="let operator of operators" [value]="operator.value">
             {{operator.viewValue}}
         </mat-option>
     </mat-select>
-    <br>
+    <br> -->
 
     <!-- drop down menu for true or false is boolean operator is chosen -->
     <!-- shows already selected option -->
-    <mat-select [(ngModel)]="filterColumn.value" *ngIf="filterColumn.type == 'boolean'" placeholder="boolean">
+    <!-- <mat-select [(ngModel)]="filterColumn.value" *ngIf="filterColumn.type == 'boolean'" placeholder="boolean">
         <mat-option [value]="true">
             true
         </mat-option>
@@ -43,16 +43,24 @@
             false
         </mat-option>
     </mat-select>
+    <br> -->
 
     <!-- shows either a calender or a entry box depending on the selected operator -->
-    <mat-form-field *ngIf="filterColumn.type == 'text' || filterColumn.type == 'double precision'">
+    <!-- <mat-form-field *ngIf="filterColumn.type == 'text' || filterColumn.type == 'double precision'">
         <input matInput [(ngModel)]="filterColumn.value" placeholder="Value">
     </mat-form-field>
     <mat-form-field *ngIf="filterColumn.type == 'date'">
         <input matInput [matDatepicker]="picker" placeholder="Date" [(ngModel)]="filterColumn.value">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
+    </mat-form-field> -->
+
+    <mat-select placeholder="Color">
+        <mat-option *ngFor="let color of colors" [value]="color">
+            {{ color.viewValue }}
+        </mat-option>
+    </mat-select>
+    <br>
 
     <!-- buttons to apply, clear, save to page or layer, and close -->
     <mat-action-row>
