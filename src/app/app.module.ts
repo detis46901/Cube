@@ -54,6 +54,7 @@ import { MessageService } from '../_services/message.service';
 import { ImageService } from '../_services/image.service';
 import { UserValidatorService } from './admin/user/userValidator.service';
 import { NotifService } from '../_services/notification.service';
+import { SocketService } from '../_services/socket.service';
 //import { MapService } from './map/services/map.service';
 //import { FilterService } from './map/services/filter.service';
 //import { GeocodingService } from './map/services/geocoding.service';
@@ -242,7 +243,8 @@ import { StyleComponent } from './map/style/style.component';
         mapStyles,
         ImageService,
         UserValidatorService,
-        NotifService
+        NotifService,
+        SocketService
     ],
 
     bootstrap: [AppComponent]

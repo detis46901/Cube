@@ -85,7 +85,8 @@ export class MapService {
                             attribution: false,
                             zoom: null
                         })
-                    }); resolve(this.mapConfig);
+                    });
+                    resolve(this.mapConfig);
                 })
                 )
         })
@@ -100,8 +101,9 @@ export class MapService {
                 .subscribe((data: UserPageLayer[]) => {
                     this.mapConfig.userpagelayers = data;
                     if (data.length != 0) {
-                        //if (this.mapConfig.userpagelayers[0].layerON == true) {this.mapConfig.currentLayer = this.mapConfig.userpagelayers[0]}
-                        //this.mapConfig.currentLayerName = this.mapConfig.userpagelayers[0].layer.layerName
+                        // if (this.mapConfig.userpagelayers[0].layerON == true) {this.mapConfig.currentLayer = this.mapConfig.userpagelayers[0]}
+                        // this.mapConfig.currentLayerName = this.mapConfig.userpagelayers[0].layer.layerName
+                        //this.mapConfig.editmode = this.mapConfig.userpagelayers[0].layerPermissions.edit
                     }
                     else {
                         this.mapConfig.currentLayer = new UserPageLayer;
@@ -528,7 +530,6 @@ export class MapService {
                     hitTolerance: 5
                 });
             if (hit) {
-                console.log("feature hit")
                 this.selectFeature(layer);
             }
             else {

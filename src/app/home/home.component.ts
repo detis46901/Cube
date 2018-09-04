@@ -7,6 +7,7 @@ import { MyCubeService } from '../map/services/mycube.service'
 import { WFSService } from '../map/services/wfs.service';
 import { Subscription } from 'rxjs/Subscription';
 import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../_models/layer.model'
+import { SocketService} from '../../_services/socket.service'
 
 @Component({
     selector: 'home',
@@ -35,7 +36,7 @@ export class HomeComponent {
     private myCubeConfig: MyCubeConfig;
     private messageSubscription: Subscription;
 
-    constructor(private dataService: UserService, private sideNavService: SideNavService, private myCubeService: MyCubeService, private WFSservice: WFSService, private messageService: MessageService) {
+    constructor(private socketService: SocketService, private dataService: UserService, private sideNavService: SideNavService, private myCubeService: MyCubeService, private WFSservice: WFSService, private messageService: MessageService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -49,6 +50,7 @@ export class HomeComponent {
     ngOnInit() {
         this.getAllItems(this.userID);
         this.message = null
+        //this.socketService.initSocket() This may be used later.  This initializes a WebSocket
     }
 
     private getAllItems(userID: number): void {

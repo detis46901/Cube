@@ -10,7 +10,7 @@
         <mat-accordion class="example-headers-align">
 
             <!-- panel for managing user pages -->
-            <mat-expansion-panel>
+            <mat-expansion-panel [expanded]="toolbar === 'Pages'" (opened)="setToolbar('Pages')">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         <strong>Pages</strong>
@@ -68,7 +68,7 @@
             </mat-expansion-panel>
 
             <!-- panel for managing layers within the current user page layer -->
-            <mat-expansion-panel id="layerExpansion" [expanded]=t rue>
+            <mat-expansion-panel id="layerExpansion" [expanded]="toolbar === 'Layers'" (opened)="setToolbar('Layers')">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         <strong>Layers</strong>

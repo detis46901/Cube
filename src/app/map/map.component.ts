@@ -48,6 +48,7 @@ export class MapComponent {
     private currPage: any = ''; //Could be "none"
     private noLayers: boolean;
     private interval: any;
+    private toolbar: any;
 
 
     constructor(
@@ -104,6 +105,7 @@ export class MapComponent {
                         else { this.mapConfig.mouseoverLayer = null }
                     }, { hitTolerance: 5 })
                     mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
+                    this.toolbar = "Layers"
                 })
             )
     }
@@ -138,6 +140,11 @@ export class MapComponent {
             })
         //this.mapService.getUserPageLayers(page);
         this.noLayers = true;
+        this.toolbar = "Layers"
+    }
+
+    private setToolbar(bar:string) {
+        this.toolbar = bar
     }
 
     private openPageConfig(pageID: number, userID: number, name: string): void {
@@ -164,6 +171,7 @@ export class MapComponent {
             this.mapService.featurelist = [];
         }
         this.mapConfig.sources = [];
+        this.mapConfig.editmode = false
         this.mapConfig.filterOn = false;
         this.mapConfig.sources.push(new ol.source.OSM());
         this.mapService.loadLayers(this.mapConfig, false).then(() => {

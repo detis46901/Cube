@@ -21,6 +21,7 @@ export class FeatureDataComponent {
     public serializedDate = new FormControl((new Date()).toISOString());
     public newComment: string;
     public userID: number;
+    public open: boolean;
 
     constructor(private sideNavService: SideNavService, private sqlservice: SQLService, private mycubeservice: MyCubeService) {
         // subscribe to map component messages
@@ -36,6 +37,7 @@ export class FeatureDataComponent {
 
 
     ngOnInit() {
+        this.open = true
     }
 
     public hideMenu() {

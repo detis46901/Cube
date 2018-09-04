@@ -28,7 +28,7 @@ export class ParentService {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'Authorization': 'Bearer ' + this.token,
-                'Access-Control-Allow-Origin': '*'
+                //'Access-Control-Allow-Origin': '*'
             })
         }
     }
