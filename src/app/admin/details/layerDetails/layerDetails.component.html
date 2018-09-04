@@ -35,7 +35,7 @@
                     <mat-option value="Geoserver">Geoserver</mat-option>
                     <mat-option value="MapServer">MapServer</mat-option>
                     <mat-option value="WMS">WMS</mat-option>
-                    <mat-option value="WMTS">WMS</mat-option>
+                    <mat-option value="WMTS">WMTS</mat-option>
                     <mat-option value="KML-Link">KML-Link</mat-option>
                     <mat-option value="KML-Drive">KML-Drive</mat-option>
                     <mat-option value="GeoJSON">GeoJSON</mat-option>
@@ -70,12 +70,12 @@
 
             <!-- service entry box -->
             <mat-form-field id="layerServerEntry">
-                <mat-select id="newLayerServer" name="newLayerServer" [(ngModel)]="layer.server" required placeholder="Server">
+                <mat-select id="newLayerServer" name="newLayerServer" [(ngModel)]="layer.serverID" required placeholder="Server">
                     <mat-option [value]="server.ID" *ngFor="let server of servers">
                         {{server.serverName}}
                     </mat-option>
                 </mat-select>
-                <input matInput *ngIf="layer.server != null" id="newlayerserver2" value="{{layer.server.serverName}}" readonly placeholder="Server">
+                
             </mat-form-field>
         </div>
         <br>
