@@ -40,6 +40,10 @@
                                     <mat-icon>settings</mat-icon>
                                     <span>Edit Layers</span>
                                 </button>
+                                <button mat-menu-item (click)="openPageConfig(userPage.ID, userPage.userID, userPage.page)">
+                                    <mat-icon>share</mat-icon>
+                                    <span>Share Page</span>
+                                </button>
                                 <button disabled="true" mat-menu-item>
                                     <mat-icon>notifications_off</mat-icon>
                                     <span>Disable alerts</span>
