@@ -98,6 +98,10 @@
                                 <mat-icon>zoom_in</mat-icon>
                                 <span>Zoom To Layer</span>
                             </button>
+                            <button mat-menu-item disabled="true">
+                                <mat-icon>style</mat-icon>
+                                <span>Layer Style</span>
+                            </button>
                             <button *ngIf="mapConfig.currentLayer == userpagelayer" mat-menu-item (click)="mapConfig.filterShow = !mapConfig.filterShow">
                                 <mat-icon>filter_list</mat-icon>
                                 <span>Filter</span>
