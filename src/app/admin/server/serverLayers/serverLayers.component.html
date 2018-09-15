@@ -4,15 +4,58 @@
 <!-- Row to include server edit details header and a closing 'x' -->
 <div class="row">
     <!-- header -->
-    <h4 mat-dialog-title id="serverLayerHeader">{{name}} Layers</h4>
+    <h4 mat-dialog-title id="serverLayerHeader">{{server.serverName}} Layers</h4>
 
     <!-- closing 'x' -->
     <button mat-dialog-close class="close" id="closingX">&times;</button>
 </div>
 <hr>
 
-<mat-selection-list disableRipple=true>
-    <mat-list-option *ngFor="let layer of serverLayers" (click)="openCreateLayer()">
-        <!-- layer name does here -->
+<!-- <mat-selection-list disableRipple=false>
+    <mat-list-option *ngFor="let layer of layers" (click)="openCreateLayer()">
+        {{layer.Title}}
     </mat-list-option>
 </mat-selection-list>
+<mat-selection-list disableRipple=false>
+    <mat-list-option *ngFor="let folder of folders" (click)="getServices(folder)">
+        {{folder}}
+    </mat-list-option>
+</mat-selection-list>
+<mat-selection-list disableRipple=false>
+    <mat-list-option *ngFor="let service of services" (click)="getArcGISLayers(service)">
+        {{service.name}}
+    </mat-list-option>
+</mat-selection-list> -->
+<table>
+    <tr>
+        <td>
+            <mat-list>
+                <h3 matSubheader>Folders</h3>
+                <mat-list-item *ngFor="let folder of folders" (click)="getServices(folder)">
+                    <mat-icon matListIcon>folder</mat-icon>
+                    <h4 matLine>{{folder}}</h4>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+            </mat-list>
+        </td>
+        <td>
+            <mat-list>
+                <h3 matSubheader>Services</h3>
+                <mat-list-item *ngFor="let service of services" (click)="getArcGISLayers(service)">
+                    <mat-icon matListIcon>Services</mat-icon>
+                    <h4 matLine>{{service.name}}</h4>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+            </mat-list>
+        </td>
+        <td>
+            <mat-list>
+                <h3 matSubheader>Layers</h3>
+                <mat-list-item *ngFor="let layer of layers" (click)="openCreateLayer()">
+                    <mat-icon matListIcon>Layers</mat-icon>
+                    <h4 matLine>{{layer.Title}}</h4>
+                </mat-list-item>
+            </mat-list>
+        </td>
+    </tr>
+</table>

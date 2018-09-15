@@ -65,7 +65,7 @@
                     </button>
                 </mat-header-cell>
                 <mat-cell class="server-md-cell" *matCellDef="let row">
-                    <button mat-button (click)="openLayers(row.currentData.serverName)">
+                    <button mat-button (click)="openLayers(row.currentData.ID)">
                         Layers
                     </button>
                     <button *ngIf="!row.editing" mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.serverName)">

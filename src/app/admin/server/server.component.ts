@@ -236,9 +236,9 @@ export class ServerComponent implements OnInit {
             });
     }
 
-    private openLayers(name: string) {
-        const dialogRef = this.dialog.open(ServerLayersComponent, { width: '360px' });
-        dialogRef.componentInstance.name = name;
+    private openLayers(ID: number) {
+        const dialogRef = this.dialog.open(ServerLayersComponent, { width: '760px' });
+        dialogRef.componentInstance.ID = ID;
     }
 
     private openDetails(id: number, name: string): void {
