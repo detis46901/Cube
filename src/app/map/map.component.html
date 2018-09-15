@@ -40,6 +40,10 @@
                                     <mat-icon>settings</mat-icon>
                                     <span>Edit Layers</span>
                                 </button>
+                                <button mat-menu-item (click)="openPageConfig(userPage.ID, userPage.userID, userPage.page)">
+                                    <mat-icon>share</mat-icon>
+                                    <span>Share Page</span>
+                                </button>
                                 <button disabled="true" mat-menu-item>
                                     <mat-icon>notifications_off</mat-icon>
                                     <span>Disable alerts</span>
@@ -97,6 +101,10 @@
                             <button mat-menu-item disabled="true">
                                 <mat-icon>zoom_in</mat-icon>
                                 <span>Zoom To Layer</span>
+                            </button>
+                            <button mat-menu-item disabled="true">
+                                <mat-icon>style</mat-icon>
+                                <span>Layer Style</span>
                             </button>
                             <button *ngIf="mapConfig.currentLayer == userpagelayer" mat-menu-item (click)="mapConfig.filterShow = !mapConfig.filterShow">
                                 <mat-icon>filter_list</mat-icon>
