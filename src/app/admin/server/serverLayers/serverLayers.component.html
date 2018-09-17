@@ -26,36 +26,55 @@
         {{service.name}}
     </mat-list-option>
 </mat-selection-list> -->
-<table>
-    <tr>
-        <td>
-            <mat-list>
-                <h3 matSubheader>Folders</h3>
-                <mat-list-item *ngFor="let folder of folders" (click)="getServices(folder)">
-                    <mat-icon matListIcon>folder</mat-icon>
-                    <h4 matLine>{{folder}}</h4>
-                </mat-list-item>
-                <mat-divider></mat-divider>
-            </mat-list>
-        </td>
-        <td>
-            <mat-list>
-                <h3 matSubheader>Services</h3>
-                <mat-list-item *ngFor="let service of services" (click)="getArcGISLayers(service)">
-                    <mat-icon matListIcon>Services</mat-icon>
-                    <h4 matLine>{{service.name}}</h4>
-                </mat-list-item>
-                <mat-divider></mat-divider>
-            </mat-list>
-        </td>
-        <td>
-            <mat-list>
-                <h3 matSubheader>Layers</h3>
-                <mat-list-item *ngFor="let layer of layers" (click)="openCreateLayer()">
-                    <mat-icon matListIcon>Layers</mat-icon>
-                    <h4 matLine>{{layer.Title}}</h4>
-                </mat-list-item>
-            </mat-list>
-        </td>
-    </tr>
-</table>
+<mat-tab-group *ngIf="server.serverType == 'ArcGIS'" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
+    <mat-tab label="Home">
+        <mat-list class="matlist">
+            <h3 matSubheader>Folders</h3>
+            <mat-list-item *ngFor="let folder of folders" (click)="getServices(folder)">
+                <mat-icon matListIcon>folder</mat-icon>
+                <h4 matLine>{{folder}}</h4>
+            </mat-list-item>
+        </mat-list>
+    </mat-tab>
+    <mat-tab label="Folder">
+        <mat-list class="matlist">
+            <h3 matSubheader>Services</h3>
+            <mat-list-item *ngFor="let service of services" (click)="getArcGISLayers(service)">
+                <mat-icon matListIcon>Services</mat-icon>
+                <h4 matLine>{{service.name}}</h4>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+        </mat-list>
+    </mat-tab>
+    <mat-tab label="Layer">
+        <mat-list class="matlist">
+            <h3 matSubheader>Layers</h3>
+            <mat-list-item *ngFor="let layer of layers" (click)="openCreateLayer(layer)">
+                <mat-icon matListIcon>Layers</mat-icon>
+                <h4 matLine>{{layer.Title}}</h4>
+            </mat-list-item>
+        </mat-list>
+    </mat-tab>
+</mat-tab-group>
+<mat-tab-group *ngIf="server.serverType == 'Geoserver'" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
+    <mat-tab label="Layers">
+        <mat-list class="matlist">
+            <h3 matSubheader>Layers</h3>
+            <mat-list-item *ngFor="let layer of layers" (click)="openCreateLayer(layer)">
+                <mat-icon matListIcon>Layers</mat-icon>
+                <h4 matLine mat-dialog-close>{{layer.Title}}</h4>
+            </mat-list-item>
+        </mat-list>
+    </mat-tab>
+</mat-tab-group>
+<mat-tab-group *ngIf="server.serverType == 'WMTS'" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
+    <mat-tab label="Layers">
+        <mat-list class="matlist">
+            <h3 matSubheader>Layers</h3>
+            <mat-list-item *ngFor="let layer of layers" (click)="openCreateLayer(layer)">
+                <mat-icon matListIcon>Layers</mat-icon>
+                <h4 matLine mat-dialog-close>{{layer.Title}}</h4>
+            </mat-list-item>
+        </mat-list>
+    </mat-tab>
+</mat-tab-group>

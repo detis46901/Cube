@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
 import { UserService } from '../../../../_services/_user.service';
 import { Configuration } from '../../../../_api/api.constants';
 import { LayerService } from '../../../../_services/_layer.service';
@@ -12,6 +12,7 @@ import { LayerPermissionComponent } from '../layerPermission/layerPermission.com
 import { User } from '../../../../_models/user.model';
 import { GroupService } from '../../../../_services/_group.service';
 import { Group } from '../../../../_models/group.model';
+import {MAT_DIALOG_DATA} from '@angular/material';
 
 @Component({
     selector: 'layer-new',
@@ -65,15 +66,18 @@ export class LayerNewComponent implements OnInit {
     //provide permissions
     //place on userpages?
 
-    constructor(private layerservice: LayerService, private layerPermissionService: LayerPermissionService, private dialog: MatDialog, private serverService: ServerService, private groupService: GroupService, private userService: UserService) {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private layerservice: LayerService, private layerPermissionService: LayerPermissionService, private dialog: MatDialog, private serverService: ServerService, private groupService: GroupService, private userService: UserService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {
-        if (this.serverLayer) {
-            this.newLayer = this.serverLayer
+
+        if (this.data) {
+            console.log("Coming from server dialog")
+            console.log(this.data['serverLayer'])
+            this.newLayer = this.data['serverLayer']
         }
         this.getServers();
     }
@@ -101,7 +105,9 @@ export class LayerNewComponent implements OnInit {
 
         this.layerservice
             .Add(this.layer)
-            .subscribe(() => this.dialog.closeAll());
+            .subscribe((data) => {
+            console.log(data)
+            this.dialog.closeAll()});
     }
 
     private switchPermType() {

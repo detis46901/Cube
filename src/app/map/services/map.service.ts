@@ -135,7 +135,7 @@ export class MapService {
     }
 
     public getCapabilities = (url): Observable<any> => {
-        return this.http.get(url)
+        return this.http.get(url + "?request=GetCapabilities")
             .map((response: Response) => <any>response.text());
     }
 
@@ -200,9 +200,6 @@ export class MapService {
                         break;
                     }
                     default: {
-                        //let defStyle = {fillColor: "black", strokeColor: "green"};
-                        //let feat = new ol.Feature()
-                        //let layvec = new ol.layer.Vector({style: myStyle })
 
                         let url = this.formLayerRequest(this.mapConfig.userpagelayers[i]);
                         let wmsSource = new ol.source.ImageWMS({
@@ -247,6 +244,7 @@ export class MapService {
                 this.mapConfig.currentLayerName = "";
             }
             //could add something here that would move to the next layerShown=true.  Not sure.
+            this.mapConfig.editmode = false
         }
         else {
             mapConfig.layers[loadOrder - 1].setVisible(true);
