@@ -113,4 +113,10 @@ export class LayerNewComponent implements OnInit {
     private switchPermType() {
         this.isGroup = !this.isGroup;
     }
+
+    private checkLength() {
+        if (this.newLayer.layerName.length > 20) {
+            console.log("this might be too long")
+        }
+    }
 }

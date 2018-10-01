@@ -268,6 +268,8 @@ export class MapService {
                 layer.style['filter']['column'] = layer.layer.defaultStyle['filter']['column'];
                 layer.style['filter']['operator'] = layer.layer.defaultStyle['filter']['operator'];
                 layer.style['filter']['value'] = layer.layer.defaultStyle['filter']['value'];
+                layer.style['load']['color'] = layer.layer.defaultStyle['load']['color'];
+                layer.style['current']['color'] = layer.layer.defaultStyle['current']['color']
             }
         }
         catch (e) {

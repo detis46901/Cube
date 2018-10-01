@@ -156,10 +156,10 @@
 
                         <!-- button to disable or enable layer layer view on the map, radio button to enable user interaction with specified layer -->
                         <mat-radio-button [disabled]="!userpagelayer.layerShown" class="example-radio-button" [value]="userpagelayer" (change)="mapService.setCurrentLayer(userpagelayer, mapConfig)">
-                            <mat-slide-toggle class="example-margin" [checked]="userpagelayer.layerShown" (change)="mapService.toggleLayers(userpagelayer.loadOrder,mapConfig,i)">
-                                <b *ngIf="userpagelayer == mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}} {{userpagelayer.layer.ID}}</b>
-                                <i *ngIf="userpagelayer.loadStatus=='Loading'">{{userpagelayer.layer.layerName}} {{userpagelayer.layer.ID}}</i>
-                                <span *ngIf="userpagelayer.loadStatus!='Loading' &&  userpagelayer != mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}} {{userpagelayer.layer.ID}}</span>
+                            <mat-slide-toggle matTooltip="{{userpagelayer.layer.ID}}" class="example-margin" [checked]="userpagelayer.layerShown" (change)="mapService.toggleLayers(userpagelayer.loadOrder,mapConfig,i)">
+                                <b *ngIf="userpagelayer == mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</b>
+                                <i *ngIf="userpagelayer.loadStatus=='Loading'">{{userpagelayer.layer.layerName}}</i>
+                                <span *ngIf="userpagelayer.loadStatus!='Loading' &&  userpagelayer != mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</span>
                             </mat-slide-toggle>
                             <br>
                         </mat-radio-button>

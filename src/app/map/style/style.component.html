@@ -54,18 +54,33 @@
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
     </mat-form-field> -->
-
-    <mat-select placeholder="Color">
-        <mat-option *ngFor="let color of colors" [value]="color">
+<form>
+    <mat-form-field>
+    <mat-select placeholder="Color" [(ngModel)]="selectedColor" name="color">
+        <mat-option *ngFor="let color of colors" [value]="color.value">
             {{ color.viewValue }}
         </mat-option>
     </mat-select>
+</mat-form-field>
     <br>
+</form>
+
+    <form>
+        <mat-form-field>
+            <mat-select placeholder="List Title" [(ngModel)]="selectedListTitle" name="listTitle">
+                <mat-option *ngFor="let column of columns" [value]="column.field">
+                    {{column.field}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+    </form>
+ 
+   
 
     <!-- buttons to apply, clear, save to page or layer, and close -->
     <mat-action-row>
         <button mat-button (click)="applyStyle()">Apply</button>
-        <button mat-button (click)="clear()">Clear</button>
         <button mat-button (click)="saveToPage()">Save to Page</button>
         <button mat-button (click)="saveToLayer()">Save to Layer</button>
         <button mat-button (click)="close()">Close</button>

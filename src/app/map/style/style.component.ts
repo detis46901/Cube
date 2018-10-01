@@ -26,6 +26,8 @@ export class StyleComponent implements OnInit {
     public styleOperator: string
     public styleValue: string | boolean
     public columns: MyCubeField[]
+    public selectedListTitle: string = "No Title"
+    public selectedColor: string = '#000000'
     public operators: { value: string; viewValue: string; }[]
     colors = [
         { value: '#FF2D2D', viewValue: 'Red' },
@@ -52,14 +54,21 @@ export class StyleComponent implements OnInit {
 
     ngOnInit() {
         try {
-            if (this.mapConfig.currentLayer.style['filter']['column'] != "" || this.mapConfig.currentLayer.style['filter']['column'] != null) {
-                this.styleColumn['field'] = this.mapConfig.currentLayer.style['filter']['column']
-                this.styleOperator = this.mapConfig.currentLayer.style['filter']['operator']
-                this.styleColumn['value'] = this.mapConfig.currentLayer.style['filter']['value']
+            if (this.mapConfig.currentLayer.style['load']['color'] != "" || this.mapConfig.currentLayer.style['load']['color'] != null) {
+                this.selectedColor = this.mapConfig.currentLayer.style['load']['color']
             }
         }
         catch (e) {
             console.log('No UserPageLayer Style');
+        }
+
+        try {
+            if (this.mapConfig.currentLayer.style['listLabel']) {
+                this.selectedListTitle = this.mapConfig.currentLayer.style['listLabel']
+            }
+        }
+        catch(e) {
+            this.selectedListTitle = ""
         }
         this.sqlSerivce.GetSchema(this.mapConfig.currentLayer.layerID)
             .subscribe((data) => {
@@ -92,6 +101,7 @@ export class StyleComponent implements OnInit {
             })
         }
         this.operators = this.getoperator(this.styleColumn.type)
+        console.log(this.columns)
     }
 
     // closes the style menu
@@ -107,15 +117,10 @@ export class StyleComponent implements OnInit {
         else {
             this.mapConfig.styleOn = true
         }
-        this.mapConfig.currentLayer.style['filter']['column'] = this.styleColumn['field']
-        this.mapConfig.currentLayer.style['filter']['operator'] = this.styleOperator
-        this.mapConfig.currentLayer.style['filter']['value'] = this.styleColumn.value
-        if (this.styleValue == "true") {
-            this.mapConfig.currentLayer.style['filter']['value'] = true
-        }
-        if (this.styleValue == "false") {
-            this.mapConfig.currentLayer.style['filter']['value'] = false
-        }
+        this.mapConfig.currentLayer.style['load']['color'] = this.selectedColor
+        this.mapConfig.currentLayer.style['current']['color'] = this.selectedColor
+        this.mapConfig.currentLayer.style['listLabel'] = this.selectedListTitle;
+
         this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1])
     }
 
@@ -124,9 +129,10 @@ export class StyleComponent implements OnInit {
         if (!this.mapConfig.currentLayer.style) {
             this.mapConfig.currentLayer.style = this.mapConfig.currentLayer.layer.defaultStyle
         }
-        this.mapConfig.currentLayer.style['filter']['column'] = this.styleColumn['field'];
-        this.mapConfig.currentLayer.style['filter']['operator'] = this.styleOperator;
-        this.mapConfig.currentLayer.style['filter']['value'] = this.styleColumn.value;
+        
+        this.mapConfig.currentLayer.style['load']['color'] = this.selectedColor
+        this.mapConfig.currentLayer.style['current']['color'] = this.selectedColor
+        this.mapConfig.currentLayer.style['listLabel'] = this.selectedListTitle;
         this.userPageLayerService
             .Update(this.mapConfig.currentLayer)
             .subscribe((data) => {
@@ -147,27 +153,6 @@ export class StyleComponent implements OnInit {
                 console.log(data)
             })
     }
-
-    // clears the entry fields and sets them to bank strings
-    private clear(): void {
-        this.styleColumn.field = "";
-        this.styleOperator = "";
-        this.styleColumn.value = "";
-        this.styleValue = "";
-        this.applyStyle()
-    }
-
-    // private clearStyle() {
-    //   this.mapConfig.StyleOn = false
-    //   this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] = null
-    //   this.mapConfig.currentLayer.layer.defaultStyle['filter']['operator'] = null
-    //   this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = null
-    //   this.mapConfig.currentLayer.style['filter']['column'] = null
-    //   this.mapConfig.currentLayer.style['filter']['operator'] = null
-    //   this.mapConfig.currentLayer.style['filter']['value'] = null
-
-    //   this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1])
-    // }
 
     getoperator(tp: string) {
         switch (tp) {

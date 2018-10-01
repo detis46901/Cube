@@ -18,7 +18,7 @@ Creates the header at the top of popup -->
             <!-- Layer name entry box -->
             <mat-form-field id="nameBlock">
                 <input matInput id="newlayername" name="newlayername" value="newLayer.layerName" required [(ngModel)]="newLayer.layerName"
-                    placeholder="Name">
+                    placeholder="Name" (change)="checkLength()">
             </mat-form-field>
 
             <!-- Description entry box -->

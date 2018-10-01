@@ -17,7 +17,7 @@
         <!-- name entry box -->
         <div class="row" style="width:100%">
             <mat-form-field id="layerNameEntry">
-                <input matInput name="layerDetailName" [(ngModel)]="layer.layerName" placeholder="Name">
+                <input matInput name="layerDetailName" [(ngModel)]="layer.layerName" placeholder="Name" (change)="checkLength()">
             </mat-form-field>
 
             <!-- description entry box -->

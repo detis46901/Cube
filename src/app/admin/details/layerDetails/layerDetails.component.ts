@@ -137,4 +137,10 @@ export class LayerDetailsComponent implements OnInit {
         }
         return description;
     }
+
+    private checkLength() {
+        if (this.layer.layerName.length > 20) {
+            console.log("Might be too long")
+        }
+    }
 }

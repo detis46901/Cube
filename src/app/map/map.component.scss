@@ -83,6 +83,8 @@ p {
     display: inline-flex;
     flex-direction: column;
     text-align: left;
+    word-wrap: break-word;
+    overflow: auto;
 }
   
 .example-radio-button {

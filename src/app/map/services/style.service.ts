@@ -53,9 +53,17 @@ export class StyleService {
         let visible: boolean = true
 
         if (layer.style) {
-            filterColumn = layer.style['filter']['column']
-            filterOperator = layer.style['filter']['operator']
-            filterValue = layer.style['filter']['value']
+            try {
+                if (layer.style['filter']['column'] != "" || layer.style['filter']['column'] != null) {
+                    filterColumn = layer.style['filter']['column']
+                    filterOperator = layer.style['filter']['operator']
+                    filterValue = layer.style['filter']['value']
+                }
+            }
+            catch (e) {
+                //console.log('No Filter');
+            }
+
         }
         else {
             if (layer.layer.defaultStyle['filter']) {
