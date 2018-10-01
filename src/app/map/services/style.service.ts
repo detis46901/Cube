@@ -11,10 +11,12 @@ export class StyleService {
     public styleFunction(feature: ol.Feature, layer: UserPageLayer, mode: string): ol.style.Style {
         let color: string
         let width: number
+        //console.log(layer.layer.defaultStyle[mode])
         if (layer.style) {
             color = layer.style[mode]['color']; width = layer.style[mode]['width']
         }
         else {
+            console.log(mode)
             color = layer.layer.defaultStyle[mode]['color']; width = layer.layer.defaultStyle[mode]['width']
         }
         let style = new ol.style.Style({

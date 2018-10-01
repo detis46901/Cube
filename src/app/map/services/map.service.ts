@@ -264,11 +264,18 @@ export class MapService {
 
         try {
             if (layer.style['filter']['column'] == "") {
-                console.log('No UserPageLayer filter.  Pulling Default filter');
+                console.log('No UserPageLayer filter.  Pulling Default filter from style');
                 layer.style['filter']['column'] = layer.layer.defaultStyle['filter']['column'];
                 layer.style['filter']['operator'] = layer.layer.defaultStyle['filter']['operator'];
                 layer.style['filter']['value'] = layer.layer.defaultStyle['filter']['value'];
             }
+            console.log(layer.style['load']['color'])
+            if (layer.style['load']['color'] == "") {
+                console.log("No UserPageLayer style.  Pulling Default style");
+                layer.style['load']['color'] = layer.layer.defaultStyle['load']['color']
+                layer.style['load']['width'] = layer.layer.defaultStyle['load']['width']
+            }
+            
         }
         catch (e) {
             console.log('No Default Filter');
