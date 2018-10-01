@@ -60,6 +60,7 @@ export class PageConfigComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.layerPermissions = [];
         this.getGroups();
         //this.getUserPageLayers();
         //this.getLayerPermissions().then((allPerms)=>this.layerPermissions=allPerms);
@@ -135,7 +136,7 @@ export class PageConfigComponent implements OnInit {
 
     private getByUser(): Promise<any> {
         console.log("get by user")
-        this.layerPermissions = [];
+        
         var prom = new Promise((resolve, reject) => {
             var userPerms = new Array<LayerPermission>();
             this.layerPermissionService //run this logic as one promise
@@ -146,6 +147,7 @@ export class PageConfigComponent implements OnInit {
                         this.layerPermissions.push(LP);
                         // console.log("\nU Iterated       ID:" + LP.ID + "    Name: " + LP.layer.layerName)
                     }
+                    console.log(this.layerPermissions)
                     resolve();
                 });
         })
@@ -185,7 +187,6 @@ export class PageConfigComponent implements OnInit {
         this.newUserPageLayer.layerON = true;
         this.newUserPageLayer.layerID = newUserPageLayer.layerID;
         this.userPageLayerService
-            //.Add(this.newUserPageLayer, this.token)
             .Add(this.newUserPageLayer)
             .subscribe(() => {
                 this.layerPermissions = [];
