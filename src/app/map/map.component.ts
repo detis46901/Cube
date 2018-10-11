@@ -269,4 +269,7 @@ export class MapComponent {
     private canDeleteLayer(layerID: number) {
 
     }
+    private isolate(layer:UserPageLayer) {
+        this.mapService.isolate(layer)
+    }
 }

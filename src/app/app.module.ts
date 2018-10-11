@@ -27,6 +27,7 @@ import {
     MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule,
     MatFormFieldModule, MatProgressSpinnerModule, MatToolbarModule, MatNativeDateModule
 } from '@angular/material';
+import {MatDividerModule} from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTooltipModule } from '@angular/material/tooltip'
@@ -213,7 +214,8 @@ import { StyleComponent } from './map/style/style.component';
         MatNativeDateModule,
         MatListModule,
         MatTooltipModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatDividerModule
     ],
 
     providers: [

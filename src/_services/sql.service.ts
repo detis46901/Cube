@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Configuration } from '../_api/api.constants';
-import { MyCubeField } from '../_models/layer.model';
+import { MyCubeField, MyCubeComment } from '../_models/layer.model';
 
 @Injectable()
 export class SQLService {
@@ -68,9 +68,9 @@ export class SQLService {
             .catch(this.handleError);
     }
 
-    public addComment = (table: number, featureID: number, comment: string, userID: number): Observable<any> => {
-        console.log(this.actionUrl + 'addcomment?table=' + table + '&featureID=' + featureID + '&comment=' + comment + '&userID=' + userID)
-        return this._http.get(this.actionUrl + 'addcomment?table=' + table + '&featureID=' + featureID + '&comment=' + comment + '&userID=' + userID, this.options)
+    public addComment = (table: number, comment:MyCubeComment): Observable<any> => {
+        console.log(this.actionUrl + 'addcomment?table=' + table + '&comment=' + JSON.stringify(comment))
+        return this._http.get(this.actionUrl + 'addcomment?table=' + table + '&comment=' + comment, this.options)
             .map((response: Response) => <any>response.json())
             .catch(this.handleError);
     }

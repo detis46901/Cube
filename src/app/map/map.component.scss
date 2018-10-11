@@ -13,9 +13,10 @@
 }
 
 .featurelist {
-    height:150px;
+    position: relative;
     max-width: 300px;
-    overflow: auto;
+    overflow-y: auto;
+    max-height: 550px;
 }
 
 .example-headers-align .mat-expansion-panel-header-description {
@@ -85,6 +86,12 @@ p {
     text-align: left;
     word-wrap: break-word;
     overflow: auto;
+}
+
+span.layer-name {
+    white-space: nowrap; 
+    overflow: auto;
+    text-overflow: ellipsis; 
 }
   
 .example-radio-button {

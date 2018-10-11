@@ -63,12 +63,11 @@ export class MyCubeConfig {
 export class MyCubeComment {
     id: number;
     userID: number;
-    comment: string;
+    comment: string = "";
     geom: string;
     featureID: number;
+    auto: boolean;
     createdat: Date;
-    firstName: string;
-    lastName: string;
 }
 
 export class WMSLayer {

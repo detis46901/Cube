@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { MapConfig, mapStyles, featureList } from '../models/map.model';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
-import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig } from '../../../_models/layer.model';
+import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig, MyCubeComment } from '../../../_models/layer.model';
 import { LayerPermissionService } from '../../../_services/_layerPermission.service';
 import { geoJSONService } from './../services/geoJSON.service';
 import { MyCubeService } from './../services/mycube.service';
@@ -15,6 +15,7 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { when } from "q";
 import { StyleService } from '../services/style.service'
 import { DomSanitizer } from "../../../../node_modules/@angular/platform-browser";
+import { interaction } from "openlayers";
 
 @Injectable()
 export class MapService {
@@ -234,22 +235,20 @@ export class MapService {
     }
 
     //Reads index of layer in dropdown, layer, and if it is shown or not. Needs to remove a layer if a new one is selected
-    private toggleLayers(loadOrder: number, mapConfig: MapConfig, index): void {
-        if (mapConfig.userpagelayers[index].layerShown === true) {
-            mapConfig.layers[loadOrder - 1].setVisible(false);
-            mapConfig.userpagelayers[index].layerShown = false;
-
-            if (this.mapConfig.currentLayer == this.mapConfig.userpagelayers[index]) {
+    private toggleLayers(layer: UserPageLayer): void {
+        this.mapConfig.layers[layer.loadOrder - 1].setVisible(!layer.layerShown)
+        layer.layerShown = !layer.layerShown;
+        if (layer.layerShown === false) {
+            if (this.mapConfig.currentLayer == layer) {
                 this.mapConfig.currentLayer = new UserPageLayer;
                 this.mapConfig.currentLayerName = "";
+                this.clearFeature(layer)
             }
             //could add something here that would move to the next layerShown=true.  Not sure.
-            this.mapConfig.editmode = false
+            this.mapConfig.editmode = this.mapConfig.currentLayer.layerPermissions.edit
         }
         else {
-            mapConfig.layers[loadOrder - 1].setVisible(true);
-            mapConfig.userpagelayers[index].layerShown = true;
-            this.setCurrentLayer(mapConfig.userpagelayers[index], mapConfig);
+            this.setCurrentLayer(layer, this.mapConfig);
         }
     }
 
@@ -378,12 +377,15 @@ export class MapService {
 
     private setCurrentLayer(layer: UserPageLayer, mapconfig: MapConfig): void {
         this.mapConfig.filterOn = false;
-        this.mapConfig = mapconfig;
+        this.mapConfig.filterShow = false;
+        this.mapConfig.styleShow = false;
+        //this.mapConfig = mapconfig;
         this.mapConfig.editmode = false;
         this.mapConfig.map.removeInteraction(this.modify);
         this.modify = null;
         this.mapConfig.currentLayer = layer;
-        this.myCubeService.clearMyCubeData(); //cleans the selected myCube data off the screen
+        //this.myCubeService.clearMyCubeData(); //cleans the selected myCube data off the screen
+        this.clearFeature(layer)
         if (this.mapConfig.selectedFeature) {
             this.mapConfig.selectedFeature.setStyle(null);
         }  //fixes a selected feature's style
@@ -586,6 +588,7 @@ export class MapService {
     }
 
     private draw(mapconfig: MapConfig, featurety: any) {
+        let featureID: number
         this.mapConfig = mapconfig;
         if (this.modkey) {
             ol.Observable.unByKey(this.modkey);
@@ -609,10 +612,21 @@ export class MapService {
 
             this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
                 .subscribe((data) => {
-                    e.feature.setId(data[0].id);
+                    featureID = data[0].id
+                    e.feature.setId(featureID);
                     e.feature.setProperties(data[0]);
                     this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].addFeature(e.feature);
                     this.getFeatureList();
+                })
+            let comment: MyCubeComment
+            comment.auto = true
+            comment.comment = "Object Created"
+            comment.featureID = featureID
+            comment.geom = JSON.parse(featurejson)
+            comment.userID = 1
+            this.sqlService.addComment(this.mapConfig.currentLayer.layer.ID, comment)
+                .subscribe((data) => {
+                    console.log(data)
                 })
             this.mapConfig.map.removeLayer(vector);
             this.mapConfig.map.changed();
@@ -714,5 +728,12 @@ export class MapService {
     public stopInterval() {
         clearInterval(this.interval)
         console.log("Stopping Interval")
+    }
+
+    public isolate(layer:UserPageLayer) {
+        console.log(layer)
+        console.log(this.mapConfig.userpagelayers)
+        this.mapConfig.userpagelayers.forEach((x)=> console.log(x))
+        console.log(this.mapConfig.userpagelayers.find((x)=>x==layer))
     }
 }

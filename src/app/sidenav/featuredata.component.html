@@ -2,7 +2,7 @@
 <!-- handles the my cube feature and comments menus -->
 <div *ngIf="message">
     <!-- second accordian menu handling features -->
-    <mat-accordion class="message-data" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 0px">
+    <mat-accordion class="message-data" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; left: 0px">
         <mat-expansion-panel [expanded]="open === true">
             <mat-expansion-panel-header>
                 <!-- header -->
@@ -16,9 +16,8 @@
     </mat-accordion>
 </div>
 <div *ngIf="myCubeData">
-    Mycube Data
     <!-- first accordian menu for added comments -->
-    <mat-accordion class="comment-data" style="width: 400px; background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 384px">
+    <mat-accordion class="comment-data" style="width: 400px; background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; left: 384px">
         <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <!-- header -->
@@ -50,13 +49,13 @@
             </div>
             <!-- comment input that is used as enter is pressed -->
             <mat-form-field style="width:100%">
-                <input matInput id="comment" [(ngModel)]="newComment" placeholder="New Comment" (keyup.enter)="addMyCubeComment()">
+                <input matInput id="comment" [(ngModel)]="newComment.comment" placeholder="New Comment" (keyup.enter)="addMyCubeComment()">
             </mat-form-field>
         </mat-expansion-panel>
     </mat-accordion>
 
     <!-- second accordian menu handling features -->
-    <mat-accordion class="feature-data" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; right: 0px">
+    <mat-accordion class="feature-data" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; left: 0px">
         <mat-expansion-panel [expanded]="open === true">
             <mat-expansion-panel-header>
                 <!-- header -->

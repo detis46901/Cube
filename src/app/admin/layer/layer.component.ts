@@ -35,7 +35,7 @@ export class LayerComponent implements OnInit {
     private layers: Layer[];
     private servers: Server[];
 
-    private layerColumns = ['layerID', 'name', /*'identity', 'service', 'server', */'description', /*'format', */'type', /*'geometry', */'actionsColumn'];
+    private layerColumns = ['layerID', 'name', /*'identity', 'service', 'server', 'description',*/ /*'format', */'type', /*'geometry', */'actionsColumn'];
     private dataSource: TableDataSource<Layer>;
 
     constructor(private layerValidator: ValidatorService, private layerService: LayerService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {

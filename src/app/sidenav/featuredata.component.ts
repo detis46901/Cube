@@ -19,7 +19,7 @@ import { DatePipe } from '@angular/common';
 })
 export class FeatureDataComponent {
     public serializedDate = new FormControl((new Date()).toISOString());
-    public newComment: string;
+    public newComment = new MyCubeComment
     public userID: number;
     public open: boolean;
 
@@ -76,11 +76,13 @@ export class FeatureDataComponent {
     private addMyCubeComment() {
         console.log("Adding MyCube Comment " + this.newComment)
         console.log("feature id is= " + this.myCubeData[0].value)
+        this.newComment.featureID = this.myCubeData[0].value
+        this.newComment.userID = this.userID
         this.sqlservice
-            .addComment(this.myCubeConfig.table, this.myCubeData[0].value, this.newComment, this.userID)
+            .addComment(this.myCubeConfig.table, this.newComment)
             .subscribe()
         this.mycubeservice.sendMyCubeData(this.myCubeConfig.table, this.myCubeData[0].value)
-        this.newComment = ""
+        this.newComment = null
     }
 
     private deleteMyCubeComment(table, id) {
