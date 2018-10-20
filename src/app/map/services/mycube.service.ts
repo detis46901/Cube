@@ -3,6 +3,8 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 import { SQLService } from '../../../_services/sql.service'
 import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../../_models/layer.model'
+import { interaction } from "openlayers";
+
 
 //Must be declared here in order to mitigate a bug where toggling sidenav via view dropdown doesn't work unless clicked twice.
 let isOpen: boolean = true;
@@ -65,10 +67,12 @@ export class MyCubeService extends SQLService {
                 this.cubeData[0].type = "id"
                 this.cubeData[1].type = "geom"
             })
+        console.log('Schema Prebuilt')
     }
 
-    sendMyCubeData(table: number, featureid: string | number) {
-        let id = featureid
+    sendMyCubeData(table: number, feature: ol.Feature) {
+        this.getMyCubeDataFromFeature(feature)
+        let id = feature.getId()
         this.GetSchema(table)
             .subscribe((data: MyCubeField[]) => {
                 this.cubeData = data
@@ -76,50 +80,36 @@ export class MyCubeService extends SQLService {
                 this.cubeData[0].type = "id"
                 this.cubeData[1].type = "geom"
                 this.getsingle(table, id)
-
-                //the value of the geometry field will be undefined because it isn't sent in the geoJSON.
-                //  for(let i=0; i<this.cubeData.length; i++) {
-                //      propList.push(properties[i].substring(1, properties[i].indexOf(":")-1));
-
-                //      this.cubeData[i+1].value = message[propList[i]]
-                //      console.log(message[propList[i]])
-                //  }
-                // console.log(this.cubeData)                  
             })
-        //this.subject.next({text:this.cubeData[0].field})    
     }
 
     getsingle(table, id) {
         this.GetSingle(table, id)
             .subscribe((sdata: JSON) => {
-                // for(let i=0; i<properties.length; i++) {
-                //     console.log(JSON.stringify(sdata))
-                //     propList.push(properties[i].substring(1, properties[i].indexOf(":")-1));
-
-                //     this.cubeData[i+1].value = data[0][0][propList[i]]
-                //     console.log(data[propList[i]])
-                //}
-
                 let z = 0
                 for (var key in sdata[0][0]) {
                     if (sdata[0][0].hasOwnProperty(key)) {
-                        //console.log(key + ": " + sdata[0][0][key]);
                         if (z != 0) { this.cubeData[z].value = sdata[0][0][key] }
-                        //console.log(z, this.cubeData[z].value)
                         z++
                     }
                 }
+                this.loadComments(table, id)
+            })
+    }
 
-                // for (let z = 2; z==sdata[0].length; z++) {
-                //     console.log(sdata[0][z])
-                //     this.cubeData[z].value = sdata[0][z]
-                // }
-                this.getComments(table, id)
+    loadComments(table, id) {
+        this.getComments(table, id)
                     .subscribe((cdata: any) => {
                         this.mycubesubject.next(this.cubeData);
                         this.mycubecomment.next(cdata[0])
                     })
-            })
+    }
+
+    getMyCubeDataFromFeature(feature: ol.Feature) {
+        this.cubeData.forEach((item) => {
+            item.value = feature.get(item.field)
+        })
+        this.mycubesubject.next(this.cubeData)
     }
 
     clearMyCubeData() {

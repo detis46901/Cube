@@ -16,8 +16,8 @@ export class MapConfig {
     userID?: number;
     map?: ol.Map;
     view?: ol.View;
-    sources?= new Array;
-    layers? = new Array;
+    sources?= new Array;  //to delete
+    layers? = new Array;  //to delete
     selectedFeature?: ol.Feature;
     selectedFeatures?: ol.Collection<ol.Feature> = new ol.Collection<ol.Feature>()
     userpages?: UserPage[];
@@ -29,10 +29,11 @@ export class MapConfig {
     editmode?: boolean;
     layerpermission?: LayerPermission[];
     mouseoverLayer?: UserPageLayer;
+    drawMode?: string;
     filterOn?: boolean;
     filterShow?: boolean;
     styleShow?: boolean;
-    styleOn?: boolean;
+    styleOn?: boolean;  //to delete
 }
 
 export class featureList {

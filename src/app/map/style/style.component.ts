@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { UserPageLayer } from '../../../_models/layer.model'
 import { CommonModule } from '@angular/common';
 import { MatButtonToggleChange } from '@angular/material';
 import { MapConfig } from '../models/map.model';
@@ -121,7 +122,7 @@ export class StyleComponent implements OnInit {
         this.mapConfig.currentLayer.style['current']['color'] = this.selectedColor
         this.mapConfig.currentLayer.style['listLabel'] = this.selectedListTitle;
 
-        this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1])
+        this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.currentLayer.source)
     }
 
     // Saves the current styles to the current user page
@@ -129,12 +130,15 @@ export class StyleComponent implements OnInit {
         if (!this.mapConfig.currentLayer.style) {
             this.mapConfig.currentLayer.style = this.mapConfig.currentLayer.layer.defaultStyle
         }
+        this.applyStyle()
         
-        this.mapConfig.currentLayer.style['load']['color'] = this.selectedColor
-        this.mapConfig.currentLayer.style['current']['color'] = this.selectedColor
-        this.mapConfig.currentLayer.style['listLabel'] = this.selectedListTitle;
+        //these lines are required because the UserPageLayer has objects in it that won't save right
+        let UPLSave = new UserPageLayer
+        UPLSave.ID = this.mapConfig.currentLayer.ID
+        UPLSave.style = this.mapConfig.currentLayer.style
+    
         this.userPageLayerService
-            .Update(this.mapConfig.currentLayer)
+            .Update(UPLSave)
             .subscribe((data) => {
                 console.log(data)
             })
@@ -143,10 +147,6 @@ export class StyleComponent implements OnInit {
     // saves the current style to the layer for everyone to view and edit
     private saveToLayer(): void {
         this.mapConfig.currentLayer.layer.defaultStyle = this.mapConfig.currentLayer.style;
-        this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] = this.styleColumn['field'];
-        this.mapConfig.currentLayer.layer.defaultStyle['filter']['operator'] = this.styleOperator;
-        this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = this.styleColumn.value;
-        this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = this.styleColumn.value;
         this.layerService
             .Update(this.mapConfig.currentLayer.layer)
             .subscribe((data) => {

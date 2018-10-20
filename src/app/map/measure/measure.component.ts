@@ -18,7 +18,7 @@ declare var ol: any;
 export class MeasureComponent implements OnInit, OnDestroy {
     @Input() mapConfig: MapConfig;
     //measure stuff
-    private measureOn: boolean = false;
+    private measureShow: boolean = false;
     private layer: ol.layer.Vector = null;
     public draw: ol.interaction.Draw
     public value: number

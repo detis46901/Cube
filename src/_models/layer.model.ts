@@ -46,6 +46,9 @@ export class UserPageLayer {
     layerShown: boolean;
     loadOrder: number;
     loadStatus: string;
+    source: any
+    olLayer: any;
+    updateInterval: any;
 }
 
 export class MyCubeField {
@@ -53,6 +56,7 @@ export class MyCubeField {
     type: string;
     value?: any;
     label?: boolean
+    changed?: boolean
 }
 
 export class MyCubeConfig {
@@ -61,11 +65,12 @@ export class MyCubeConfig {
 }
 
 export class MyCubeComment {
+    table: number;
     id: number;
     userID: number;
     comment: string = "";
     geom: string;
-    featureID: number;
+    featureID: string | number;
     auto: boolean;
     createdat: Date;
 }

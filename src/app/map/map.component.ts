@@ -81,25 +81,14 @@ export class MapComponent {
         this.getDefaultPage()
             .then(() => this.mapService.initMap(this.mapConfig)
                 .then((mapConfig) => {
-                    this.mapConfig = mapConfig  //Not sure if this is necessary.  Just in case.
                     let ptkey = this.mapConfig.map.on('pointermove', (evt) => {
                         mapConfig.map.getTargetElement().style.cursor = mapConfig.map.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
                         if (mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
                             this.mapConfig.map.forEachLayerAtPixel((evt.pixel), layers => {
-                                let index = this.mapConfig.layers.findIndex(x => x == layers);
-                                if (index > 0) {
-                                    let index2 = this.mapConfig.userpagelayers.findIndex(z => z.loadOrder - 1 == index);
-                                    // let features = this.mapConfig.map.getFeaturesAtPixel(evt.pixel)
-                                    // let popup = new ol.Overlay({
-                                    //     element: document.getElementById('popup'),
-                                    //     position: evt.coordinate,
-                                    //   });
-                                    //   //popup.setPosition(evt.coordinate);
-                                    //   this.mapConfig.map.addOverlay(popup);
-                                    this.mapConfig.mouseoverLayer = this.mapConfig.userpagelayers[index2]
-                                    mapConfig.map.getFeaturesAtPixel(evt.pixel).forEach(element => {
-                                    })
-                                }
+                                let index = this.mapConfig.userpagelayers.findIndex(z => z.olLayer == layers); 
+                                 if (index > -1) {
+                                    this.mapConfig.mouseoverLayer = this.mapConfig.userpagelayers[index]
+                                 }
                             })
                         }
                         else { this.mapConfig.mouseoverLayer = null }
@@ -170,10 +159,10 @@ export class MapComponent {
             this.mapConfig.currentLayerName = null;
             this.mapService.featurelist = [];
         }
-        this.mapConfig.sources = [];
+        //this.mapConfig.sources = [];
         this.mapConfig.editmode = false
         this.mapConfig.filterOn = false;
-        this.mapConfig.sources.push(new ol.source.OSM());
+        //this.mapConfig.sources.push(new ol.source.OSM());
         this.mapService.loadLayers(this.mapConfig, false).then(() => {
             this.mapConfig.currentLayerName = null;
             this.mapConfig.editmode = false;

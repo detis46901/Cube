@@ -1,4 +1,5 @@
 import 'rxjs/add/operator/map';
+import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -68,11 +69,14 @@ export class SQLService {
             .catch(this.handleError);
     }
 
-    public addComment = (table: number, comment:MyCubeComment): Observable<any> => {
-        console.log(this.actionUrl + 'addcomment?table=' + table + '&comment=' + JSON.stringify(comment))
-        return this._http.get(this.actionUrl + 'addcomment?table=' + table + '&comment=' + comment, this.options)
-            .map((response: Response) => <any>response.json())
-            .catch(this.handleError);
+    public addCommentWithGeom = (comment:MyCubeComment): Observable<any> => {
+        return this._http.post(this.actionUrl + 'addcommentwithgeom',JSON.stringify(comment), this.options)
+            .pipe(catchError(this.handleError));
+    }
+
+    public addCommentWithoutGeom = (comment:MyCubeComment): Observable<any> => {
+        return this._http.post(this.actionUrl + 'addcommentwithoutgeom',JSON.stringify(comment), this.options)
+            .pipe(catchError(this.handleError));
     }
 
     public setSRID = (table: number): Observable<any> => {

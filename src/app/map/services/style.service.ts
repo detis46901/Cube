@@ -1,22 +1,36 @@
 import 'rxjs/add/operator/map';
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { LayerClass, LayerPermission, UserPageLayer } from '../../../_models/layer.model';
-import { interaction } from 'openlayers';
+import { UserPageLayer } from '../../../_models/layer.model';
 
 @Injectable()
 export class StyleService {
     constructor() { }
+    public setDefaultStyleandFilter(layer: UserPageLayer) {
+        try {
+            if (layer.style['filter']['column'] == "") {
+                layer.style['filter']['column'] = layer.layer.defaultStyle['filter']['column'];
+                layer.style['filter']['operator'] = layer.layer.defaultStyle['filter']['operator'];
+                layer.style['filter']['value'] = layer.layer.defaultStyle['filter']['value'];
+                layer.style['load']['color'] = layer.layer.defaultStyle['load']['color'];
+                layer.style['current']['color'] = layer.layer.defaultStyle['current']['color']
+            }
+            if (layer.style['load']['color'] == "") {
+                layer.style['load']['color'] = layer.layer.defaultStyle['load']['color']
+                layer.style['load']['width'] = layer.layer.defaultStyle['load']['width']
+            }
+
+        }
+        catch (e) {
+            //No Default Filter
+        }
+    }
     public styleFunction(feature: ol.Feature, layer: UserPageLayer, mode: string): ol.style.Style {
         let color: string
         let width: number
-        //console.log(layer.layer.defaultStyle[mode])
         if (layer.style) {
             color = layer.style[mode]['color']; width = layer.style[mode]['width']
         }
         else {
-            console.log(mode)
             color = layer.layer.defaultStyle[mode]['color']; width = layer.layer.defaultStyle[mode]['width']
         }
         let style = new ol.style.Style({
@@ -47,8 +61,6 @@ export class StyleService {
         return style
     }
     public filterFunction(feat: ol.Feature, layer: UserPageLayer): boolean {
-        let filterType: string
-        let filterLabel: string
         let filterColumn: string
         let filterOperator: string
         let filterValue: any

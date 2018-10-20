@@ -113,7 +113,7 @@ export class FilterComponent implements OnInit {
         if (this.filterValue == "false") {
             this.mapConfig.currentLayer.style['filter']['value'] = false
         }
-        this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1])
+        this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.currentLayer.olLayer)
     }
 
     // Saves the current styles to the current user page
@@ -153,18 +153,6 @@ export class FilterComponent implements OnInit {
         this.filterValue = "";
         this.applyFilter()
     }
-
-    // private clearFilter() {
-    //   this.mapConfig.filterOn = false
-    //   this.mapConfig.currentLayer.layer.defaultStyle['filter']['column'] = null
-    //   this.mapConfig.currentLayer.layer.defaultStyle['filter']['operator'] = null
-    //   this.mapConfig.currentLayer.layer.defaultStyle['filter']['value'] = null
-    //   this.mapConfig.currentLayer.style['filter']['column'] = null
-    //   this.mapConfig.currentLayer.style['filter']['operator'] = null
-    //   this.mapConfig.currentLayer.style['filter']['value'] = null
-
-    //   this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1])
-    // }
 
     getoperator(tp: string) {
         switch (tp) {
