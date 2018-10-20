@@ -31,6 +31,10 @@ export class StyleService {
             color = layer.style[mode]['color']; width = layer.style[mode]['width']
         }
         else {
+<<<<<<< HEAD
+=======
+            //console.log(mode)
+>>>>>>> aa404080dd340180059ec72d6e10416543500849
             color = layer.layer.defaultStyle[mode]['color']; width = layer.layer.defaultStyle[mode]['width']
         }
         let style = new ol.style.Style({
