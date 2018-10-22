@@ -5,6 +5,7 @@ import { MyCubeService } from "../map/services/mycube.service"
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { FormControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+var Autolinker = require('autolinker');
 
 
 @Component({
@@ -20,6 +21,10 @@ export class FeatureDataComponent {
     public open: boolean;
     public showAuto: boolean = false;
     public commentText: string
+    public formattedText: string
+    public Autolinker = new Autolinker()
+    public editCube: MyCubeField
+
 
     constructor(private sqlservice: SQLService, private mycubeservice: MyCubeService) {
         // subscribe to map component messages
@@ -38,22 +43,6 @@ export class FeatureDataComponent {
         this.open = true
     }
 
-    public hideMenu() {
-    }
-
-    drawLineClick() {
-
-    }
-
-    drawPointClick() {
-
-    }
-
-    drawPolygonClick() {
-
-    }
-
-
     private clearMyCubeData(): void {
         this.myCubeData = null
     }
@@ -63,7 +52,6 @@ export class FeatureDataComponent {
     }
     private updateMyCube(mycube: MyCubeField): void {
         if (mycube.changed) {
-            console.log('Updating changed field')
             if (mycube.type == "date") {
                 mycube.value = mycube.value.toJSON()
             }

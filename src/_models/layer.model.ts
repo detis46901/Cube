@@ -57,6 +57,7 @@ export class MyCubeField {
     value?: any;
     label?: boolean
     changed?: boolean
+    links? = new Array<string>()
 }
 
 export class MyCubeConfig {

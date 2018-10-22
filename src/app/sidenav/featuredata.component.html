@@ -104,7 +104,18 @@
                         <mat-form-field style="width:90%">
                             <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}"
                                 [(ngModel)]="myCube.value" (change)="myCube.changed = true" (blur)="updateMyCube(myCube)">
-                        </mat-form-field>
+                        </mat-form-field><br>
+                        <!-- <span [innerHTML]="myCube.value | linky"></span> -->
+                        <div *ngIf="myCube.value != null">
+                            <div *ngFor="let url of Autolinker.parse(myCube.value)">
+                                <div [innerHTML]="url.url | linky: {truncate: 32}"></div>
+                                <div [innerHTML]="url.email | linky: {truncate: 32}"></div>
+                                <!-- <span [innerHTML]="'<a href'"></span> -->
+                            </div>
+                        <!-- <span *ngFor="let url of myCube.links">
+                            {{url}}
+                        </span> -->
+                    </div>
                     </div>
                     <div *ngIf="myCube.type=='date'">
                         <mat-form-field style="width:90%">

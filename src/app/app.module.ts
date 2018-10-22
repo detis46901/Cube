@@ -104,6 +104,7 @@ import { UserDetailsComponent } from './admin/details/userDetails/userDetails.co
 import { ServerDetailsComponent } from './admin/details/serverDetails/serverDetails.component';
 import { ServerLayersComponent } from './admin/server/serverLayers/serverLayers.component';
 import { StyleComponent } from './map/style/style.component';
+import { LinkyModule } from 'ngx-linky';
 
 @NgModule({
     declarations: [
@@ -150,7 +151,7 @@ import { StyleComponent } from './map/style/style.component';
         UserDetailsComponent,
         ServerDetailsComponent,
         ServerLayersComponent,
-        StyleComponent
+        StyleComponent,
     ],
 
     entryComponents: [
@@ -215,7 +216,8 @@ import { StyleComponent } from './map/style/style.component';
         MatListModule,
         MatTooltipModule,
         MatSnackBarModule,
-        MatDividerModule
+        MatDividerModule,
+        LinkyModule
     ],
 
     providers: [
