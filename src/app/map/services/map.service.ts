@@ -72,7 +72,7 @@ export class MapService {
         this.mapConfig.sources.push(new ol.source.OSM());
         this.mapConfig.layers.push(osm_layer);
         //continues the initialization
-        let promise = new Promise((resolve, reject) => {
+        let promise = new Promise((resolve) => {
             this.getUserPageLayers(this.mapConfig)  //only sending an argument because I have to.
                 .then(() => this.getLayerPerms())
                 .then(() => this.loadLayers(this.mapConfig, true).then(() => {
@@ -190,11 +190,11 @@ export class MapService {
                                 });
                                 userpagelayer.layerShown = userpagelayer.layerON;
                                 wmsLayer.setVisible(userpagelayer.layerON);
-                                this.mapConfig.layers.push(wmsLayer);  //will eventually delete
+                                //this.mapConfig.layers.push(wmsLayer);  //will eventually delete
                                 userpagelayer.olLayer = wmsLayer
                                 //this.mapConfig.sources.push(wmsSource); //will eventuall delete
                                 userpagelayer.source = wmsSource
-                                userpagelayer.loadOrder = this.mapConfig.layers.length; //will eventually delete
+                                //userpagelayer.loadOrder = this.mapConfig.layers.length; //will eventually delete
                                 if (init == false) {
                                     mapConfig.map.addLayer(wmsLayer);
                                 }
@@ -208,15 +208,15 @@ export class MapService {
                     default: {
 
                         let url = this.formLayerRequest(userpagelayer);
-                        let wmsSource = new ol.source.ImageWMS({
+                        let wmsSource = new ol.source.TileWMS({
                             url: url,
-                            params: { 'LAYERS': userpagelayer.layer.layerIdent },
+                            params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
                             projection: 'EPSG:4326',
                             serverType: 'geoserver',
                             crossOrigin: 'anonymous'
                         });
                         this.setLoadEvent(userpagelayer, wmsSource);
-                        let wmsLayer = new ol.layer.Image({
+                        let wmsLayer = new ol.layer.Tile({
                             source: wmsSource
                         });
 
@@ -285,7 +285,7 @@ export class MapService {
             this.vectorlayer = new ol.layer.Vector({ source: source, style: stylefunction });
             this.vectorlayer.setVisible(layer.layerON);
             this.mapConfig.map.addLayer(this.vectorlayer);
-            this.mapConfig.layers.push(this.vectorlayer); // to delete
+            //this.mapConfig.layers.push(this.vectorlayer); // to delete
             layer.olLayer = this.vectorlayer
             //this.mapConfig.sources.push(source); //to delete
             layer.source = source
@@ -310,7 +310,6 @@ export class MapService {
                     //clearInterval(this.interval)
                     //need to put something in here so that when an object is being edited, it doesn't update...
                     //might just be that the layer doesn't update unless something has changed.
-
                     source.clear();
                     source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
                     let index = this.mapConfig.userpagelayers.findIndex(x => x == layer);
@@ -387,7 +386,7 @@ export class MapService {
                     return (this.styleService.styleFunction(feature, element, "load"));
                 })
                 //this.mapConfig.layers[element.loadOrder - 1].setStyle(stylefunction); //resets all the feature styles to "load"
-                layer.olLayer.setStyle(stylefunction)
+                element.olLayer.setStyle(stylefunction)
             }
         });
         let index = this.mapConfig.userpagelayers.findIndex(x => x == layer);
@@ -776,9 +775,15 @@ export class MapService {
     }
 
     public isolate(layer: UserPageLayer) {
-        console.log(layer)
-        console.log(this.mapConfig.userpagelayers)
-        this.mapConfig.userpagelayers.forEach((x) => console.log(x))
-        console.log(this.mapConfig.userpagelayers.find((x) => x == layer))
+        //console.log(layer)
+        //console.log(this.mapConfig.userpagelayers)
+        this.mapConfig.userpagelayers.forEach((x) => 
+        {
+            if (x.ID != layer.ID) {
+                x.olLayer.setVisible(false)
+                x.layerShown = false;
+            }
+        })
+        // console.log(this.mapConfig.userpagelayers.find((x) => x == layer))
     }
 }

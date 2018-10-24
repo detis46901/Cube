@@ -67,7 +67,6 @@ export class MyCubeService extends SQLService {
                 this.cubeData[0].type = "id"
                 this.cubeData[1].type = "geom"
             })
-        console.log('Schema Prebuilt')
     }
 
     sendMyCubeData(table: number, feature: ol.Feature) {

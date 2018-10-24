@@ -73,6 +73,7 @@ export class MapComponent {
 
     ngOnDestroy() {
         this.mapService.stopInterval()
+        //need to run stop interval on all the userpagelayers
     }
 
     //Angular component initialization
@@ -122,12 +123,16 @@ export class MapComponent {
         this.mapConfig.currentpage = page;
         this.mapConfig.currentLayer = new UserPageLayer;
         this.currPage = page.page;
+        this.cleanPage()
         this.mapService.getUserPageLayers(this.mapConfig)
             .then(() => this.mapService.getLayerPerms())
             .then(() => {
-                this.cleanPage();
+                this.mapService.loadLayers(this.mapConfig, false).then(() => {
+                    this.mapConfig.currentLayerName = "";
+                    this.mapConfig.editmode = false;
+                    this.noLayers = true;
+                })
             })
-        //this.mapService.getUserPageLayers(page);
         this.noLayers = true;
         this.toolbar = "Layers"
     }
@@ -153,21 +158,17 @@ export class MapComponent {
     }
 
     private cleanPage(): void {
-        for (let k = 1; k < this.mapConfig.layers.length; k) {
-            this.mapConfig.map.removeLayer(this.mapConfig.layers[k]);
-            this.mapConfig.layers.splice(k, 1);
-            this.mapConfig.currentLayerName = null;
-            this.mapService.featurelist = [];
-        }
+        this.mapConfig.userpagelayers.forEach((x) => {
+            this.mapService.stopInterval()
+            this.mapConfig.map.removeLayer(x.olLayer)
+            this.mapConfig.currentLayerName = "";
+            this.mapService.featurelist = []
+        })
         //this.mapConfig.sources = [];
         this.mapConfig.editmode = false
         this.mapConfig.filterOn = false;
         //this.mapConfig.sources.push(new ol.source.OSM());
-        this.mapService.loadLayers(this.mapConfig, false).then(() => {
-            this.mapConfig.currentLayerName = null;
-            this.mapConfig.editmode = false;
-            this.noLayers = true;
-        })
+       
     }
 
     private copyToClipboard(url: string) {
@@ -259,6 +260,7 @@ export class MapComponent {
 
     }
     private isolate(layer:UserPageLayer) {
+        console.log(layer)
         this.mapService.isolate(layer)
     }
 }

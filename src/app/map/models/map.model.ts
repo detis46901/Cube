@@ -16,16 +16,16 @@ export class MapConfig {
     userID?: number;
     map?: ol.Map;
     view?: ol.View;
-    sources?= new Array;  //to delete
-    layers? = new Array;  //to delete
+    sources?= new Array;  // holds only the base layer
+    layers? = new Array;  // holds only the base layer
     selectedFeature?: ol.Feature;
     selectedFeatures?: ol.Collection<ol.Feature> = new ol.Collection<ol.Feature>()
     userpages?: UserPage[];
-    defaultpage?: UserPage;
+    defaultpage?: UserPage;  //This looks like a duplicate that is also in userpages[]
     currentpage?: UserPage;
     userpagelayers?: UserPageLayer[];
     currentLayer? = new UserPageLayer;
-    currentLayerName?: string;
+    currentLayerName?: string = "";
     editmode?: boolean;
     layerpermission?: LayerPermission[];
     mouseoverLayer?: UserPageLayer;
@@ -33,7 +33,6 @@ export class MapConfig {
     filterOn?: boolean;
     filterShow?: boolean;
     styleShow?: boolean;
-    styleOn?: boolean;  //to delete
 }
 
 export class featureList {

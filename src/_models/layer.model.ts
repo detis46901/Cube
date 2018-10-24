@@ -43,7 +43,7 @@ export class UserPageLayer {
     layer = new Layer;
     layerPermissions = new LayerPermission;
     serverID: number;
-    layerShown: boolean;
+    layerShown: boolean;  //Need to get rid of this.  LayerOn should be sufficient.
     loadOrder: number;
     loadStatus: string;
     source: any

@@ -65,6 +65,9 @@
                         <button mat-icon-button (click)="measureShow = !measureShow">
                             <mat-icon matTooltip="Measure Toolbar">trending_flat</mat-icon>
                         </button>
+                        <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false" matTooltip="Isolate" (click)="isolate(mapConfig.currentLayer)">
+                            <mat-icon>filter_tilt_shift</mat-icon>
+                        </button>
                         <button mat-icon-button (click)="mapService.zoomExtents()">
                             <mat-icon matTooltip="Return Home">zoom_out_map</mat-icon>
                         </button>
@@ -126,14 +129,6 @@
                                 <mat-icon>zoom_in</mat-icon>
                                 <span>Zoom To Layer</span>
                             </button>
-                            <button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'" mat-menu-item (click)="mapConfig.filterShow = !mapConfig.filterShow">
-                                <mat-icon>filter_list</mat-icon>
-                                <span>Filter</span>
-                            </button>
-                            <button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'" mat-menu-item (click)="mapConfig.styleShow = !mapConfig.styleShow">
-                                <mat-icon>style</mat-icon>
-                                <span>Style</span>
-                            </button>
                             <button mat-menu-item disabled="true">
                                 <mat-icon>star</mat-icon>
                                 <span>Default On</span>
@@ -145,10 +140,6 @@
                             <button mat-menu-item disabled="true">
                                 <mat-icon>share</mat-icon>
                                 <span>Share</span>
-                            </button>
-                            <button mat-menu-item disabled="false" (click)="isolate(userpagelayer)">
-                                <mat-icon>filter_tilt_shift</mat-icon>
-                                <span>Isolate</span>
                             </button>
                             <!-- <button mat-menu-item disabled="true">
                                 <mat-icon>remove</mat-icon>
@@ -200,13 +191,16 @@
                         <button mat-icon-button (click)="measureShow = !measureShow">
                             <mat-icon [ngClass]="measureShow ? 'selected-icon' : 'none'" matTooltip="Measure Toolbar">trending_flat</mat-icon>
                         </button>
+                        <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false" matTooltip="Isolate" (click)="isolate(mapConfig.currentLayer)">
+                            <mat-icon>filter_tilt_shift</mat-icon>
+                        </button>
                         <button mat-icon-button (click)="mapService.zoomExtents()">
                             <mat-icon matTooltip="Return Home">zoom_out_map</mat-icon>
                         </button>
                         <button mat-icon-button (click)="mapService.toggleBasemap()">
                             <mat-icon matTooltip="Satellite Images">map</mat-icon>
                         </button>
-                        <mat-divider *ngIf="mapConfig.editmode"></mat-divider>
+                        <mat-divider *ngIf="mapConfig.editmode || mapConfig.currentLayer.layer.layerType=='MyCube'"></mat-divider>
                         <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'" (click)="mapConfig.filterShow = !mapConfig.filterShow">
                             <mat-icon [ngClass]="mapConfig.filterShow ? 'selected-icon' : 'none'" matTooltip="Filter">filter_list</mat-icon>
                         </button>
@@ -251,6 +245,9 @@
                     <div style="text-align:right">
                         <button mat-icon-button (click)="measureShow = !measureShow">
                             <mat-icon matTooltip="Measure Toolbar">trending_flat</mat-icon>
+                        </button>
+                        <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false" matTooltip="Isolate" (click)="isolate(mapConfig.currentLayer)">
+                            <mat-icon>filter_tilt_shift</mat-icon>
                         </button>
                         <button mat-icon-button (click)="mapService.zoomExtents()">
                             <mat-icon matTooltip="Return Home">zoom_out_map</mat-icon>

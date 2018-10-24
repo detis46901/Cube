@@ -113,10 +113,10 @@ export class StyleComponent implements OnInit {
     // applies the style to the map and only shows the appllicable items //not fully working
     private applyStyle() {
         if (this.styleColumn['field'] == "" || this.styleColumn['field'] == null) {
-            this.mapConfig.styleOn = false;
+            //this.mapConfig.styleOn = false;
         }
         else {
-            this.mapConfig.styleOn = true
+            //this.mapConfig.styleOn = true
         }
         this.mapConfig.currentLayer.style['load']['color'] = this.selectedColor
         this.mapConfig.currentLayer.style['current']['color'] = this.selectedColor

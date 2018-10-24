@@ -113,7 +113,7 @@ export class FilterComponent implements OnInit {
         if (this.filterValue == "false") {
             this.mapConfig.currentLayer.style['filter']['value'] = false
         }
-        this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.currentLayer.olLayer)
+        this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.currentLayer.source)
     }
 
     // Saves the current styles to the current user page
