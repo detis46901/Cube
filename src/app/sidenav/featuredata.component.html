@@ -62,8 +62,8 @@
             <mat-form-field style="width:100%">
                 <input matInput id="comment" [(ngModel)]="commentText" placeholder="New Comment" (keyup.enter)="addMyCubeComment()">
             </mat-form-field>
-            <br><button id="showAuto" mat-button (click)='showAuto = !showAuto'>{{showAuto ? 'Hide Geometries' : 'Show
-                Geometries'}}</button>
+            <br><button id="showAuto" mat-button (click)='showAuto = !showAuto'>{{showAuto ? 'Hide Feature Changes' : 'Show
+                Feature Changes'}}</button>
             <!-- <input type="file" (change)="onFileSelected($event)"> -->
         </mat-expansion-panel>
     </mat-accordion>
@@ -99,7 +99,7 @@
                         <!-- checkbox for contracting -->
                         <mat-checkbox [disabled]="!myCubeConfig.edit" [(ngModel)]="myCube.value" (change)="myCube.changed = true; updateMyCube(myCube)">{{myCube.field}}</mat-checkbox>
                     </div>
-                    <div *ngIf="myCube.type=='text'" matTooltip="No crazy symbols yet" matTooltipPosition="above"
+                    <div *ngIf="myCube.type=='text'" matTooltip="No single quotes yet" matTooltipPosition="above"
                         matTooltipShowDelay="1000">
                         <mat-form-field style="width:90%">
                             <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}"

@@ -47,12 +47,13 @@ export class PageConfigComponent implements OnInit {
     private selectedUserPage: UserPage;
     private userGroups = new Array<Group>();
     private availableLPs = new Array<LayerPermission>();
+    private selectedLP = new LayerPermission
 
     private token: string;
     private foo;
 
 
-    constructor(private userPageLayerService: UserPageLayerService, private userPageService: UserPageService,
+    constructor(public userPageLayerService: UserPageLayerService, private userPageService: UserPageService,
         private groupService: GroupService, private groupMemberService: GroupMemberService,
         private layerPermissionService: LayerPermissionService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -99,21 +100,9 @@ export class PageConfigComponent implements OnInit {
     }
 
     private getLayerPermissions() {
-        // var prom = new Promise ((resolve, reject) => {
-        //     var allPerms = new Array<LayerPermission>();
-        //     this.getByUser()
-        //         .then((userPerms) => {
-        //             allPerms.push.apply(allPerms, userPerms)
-        //                 this.getByGroup()
-        //                     .then((groupPerms) => {
-        //                         allPerms.push.apply(allPerms, groupPerms)
-        //                     })
-        //         });
-        //     resolve(allPerms)
-        // })
-        // return prom;
         var layerMatch = false;
         this.getByUser().then(() => {
+            console.log('getting by groups')
             this.getByGroup().then(() => {
                 console.log("in getbygroup");
                 this.availableLPs = [];
@@ -136,7 +125,7 @@ export class PageConfigComponent implements OnInit {
 
     private getByUser(): Promise<any> {
         console.log("get by user")
-        
+
         var prom = new Promise((resolve, reject) => {
             var userPerms = new Array<LayerPermission>();
             this.layerPermissionService //run this logic as one promise
@@ -155,7 +144,7 @@ export class PageConfigComponent implements OnInit {
     }
 
     private getByGroup(): Promise<any> {
-        console.log("get by group")
+        //This method is ugly and needs work.
         var prom = new Promise((resolve, reject) => {
             for (let g of this.userGroups) { //only start this logic once the previous promise has resolved by chaining it
                 this.layerPermissionService
@@ -164,12 +153,17 @@ export class PageConfigComponent implements OnInit {
                         for (let LP of LPs) {
                             //groupPerms.push(i)
                             //if(this.layerPermissions.indexOf(LP) == -1) {
-                            for (let userLP of this.layerPermissions) {
-                                // console.log("\nG Iterated:      ID: " + LP.ID + "    Name: " + LP.layer.layerName)
-                                if (LP.layerID != userLP.layerID) {
-                                    this.layerPermissions.push(LP);
-                                    break;
+                            if (this.layerPermissions.length > 0) {
+                                for (let userLP of this.layerPermissions) {
+                                    // console.log("\nG Iterated:      ID: " + LP.ID + "    Name: " + LP.layer.layerName)
+                                    if (LP.layerID != userLP.layerID) {
+                                        this.layerPermissions.push(LP);
+                                        break;
+                                    }
                                 }
+                            }
+                            else {
+                                this.layerPermissions.push(LP)
                             }
                         }
                     })
@@ -181,11 +175,12 @@ export class PageConfigComponent implements OnInit {
 
     private addUserPageLayer(newUserPageLayer: UserPageLayer): void {
         var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
-
+        console.log(this.selectedLP)
         this.newUserPageLayer.userPageID = this.pageID;
         this.newUserPageLayer.userID = this.userID;
         this.newUserPageLayer.layerON = true;
         this.newUserPageLayer.layerID = newUserPageLayer.layerID;
+        this.newUserPageLayer.style = this.selectedLP.layer.defaultStyle
         this.userPageLayerService
             .Add(this.newUserPageLayer)
             .subscribe(() => {
@@ -194,12 +189,17 @@ export class PageConfigComponent implements OnInit {
             });
     }
 
-    private updateUserPageLayer(userPage: UserPage): void {
+    private updateUserPageLayer(userPageLayer: UserPageLayer): void {
+        let uplSave = new UserPageLayer
+        uplSave.ID = userPageLayer.ID
+        uplSave.layerON = userPageLayer.layerON
+        console.log(uplSave)
         this.userPageLayerService
-            .Update(userPage)
-            .subscribe(() => {
-                this.layerPermissions = [];
-                this.getUserPageLayers();
+            .Update(uplSave)
+            .subscribe((data) => {
+                console.log(data)
+                //this.layerPermissions = [];
+                //this.getUserPageLayers();
             });
     }
 
@@ -213,8 +213,9 @@ export class PageConfigComponent implements OnInit {
             });
     }
 
-    public enableSubmit(): void {
+    public enableSubmit(LP: LayerPermission): void {
         var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
+        this.selectedLP = LP
         element.disabled = false;
     }
 

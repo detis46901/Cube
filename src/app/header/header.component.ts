@@ -29,7 +29,7 @@ export class HeaderComponent implements OnInit {
     private token: string;
     private userID: number;
 
-    private currUser: User;
+    private currUser = new User;
     private userPages: UserPage[];
     private notifications: Notif[];
 

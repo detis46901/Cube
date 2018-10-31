@@ -15,7 +15,7 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { when } from "q";
 import { StyleService } from '../services/style.service'
 import { DomSanitizer } from "../../../../node_modules/@angular/platform-browser";
-import { interaction } from "openlayers";
+import { interaction, layer } from "openlayers";
 
 @Injectable()
 export class MapService {
@@ -159,7 +159,7 @@ export class MapService {
                 switch (userpagelayer.layer.layerType) {
                     case "MyCube": {
                         userpagelayer.layerShown = userpagelayer.layerON;
-                        this.loadMyCube(init, userpagelayer);
+                        this.loadMyCube(userpagelayer);
                         j++;
                         if (j == this.mapConfig.userpagelayers.length) {
                             resolve();
@@ -262,11 +262,10 @@ export class MapService {
         }
     }
 
-    public loadMyCube(init: boolean, layer: UserPageLayer) {
+    public loadMyCube(layer: UserPageLayer) {
         let stylefunction = ((feature) => {
             return (this.styleService.styleFunction(feature, layer, "load"));
         })
-        let index = this.mapConfig.userpagelayers.findIndex(x => x == layer);
         let source = new ol.source.Vector({
             format: new ol.format.GeoJSON()
         })
@@ -285,13 +284,8 @@ export class MapService {
             this.vectorlayer = new ol.layer.Vector({ source: source, style: stylefunction });
             this.vectorlayer.setVisible(layer.layerON);
             this.mapConfig.map.addLayer(this.vectorlayer);
-            //this.mapConfig.layers.push(this.vectorlayer); // to delete
             layer.olLayer = this.vectorlayer
-            //this.mapConfig.sources.push(source); //to delete
             layer.source = source
-            if (init == false) {
-                this.mapConfig.map.addLayer(this.vectorlayer);
-            }
         })
     }
 
@@ -421,7 +415,7 @@ export class MapService {
     }
 
     private createClick(layer, index) {
-        let evkey = this.mapConfig.map.on('singleclick', (evt: any) => {
+        let evkey = this.mapConfig.map.on('click', (evt: any) => {
             console.log("click")
             let url2 = this.formLayerRequest(layer);
             let wmsSource = new ol.source.ImageWMS({
@@ -449,22 +443,22 @@ export class MapService {
     private setLoadEvent(layer: UserPageLayer, source: ol.source.Source) {
         source.on('tileloadstart', () => {
             layer.loadStatus = "Loading";
-            console.log(layer.layer.layerName + " loading");
+            // console.log(layer.layer.layerName + " loading");
         })
         source.on('tileloadend', () => {
             layer.loadStatus = "Loaded";
-            console.log(layer.layer.layerName + " loaded");
+            // console.log(layer.layer.layerName + " loaded");
         })
         source.on('tileloaderror', () => {
-            console.log("error");
+            // console.log("error");
         })
         source.on('imageloadstart', () => {
             layer.loadStatus = "Loading";
-            console.log(layer.layer.layerName + " loading");
+            // console.log(layer.layer.layerName + " loading");
         })
         source.on('imageloadend', () => {
             layer.loadStatus = "Loaded";
-            console.log(layer.layer.layerName + " loaded");
+            // console.log(layer.layer.layerName + " loaded");
         })
         source.on('imageloaderror', () => {
             console.log("error");
@@ -497,7 +491,7 @@ export class MapService {
         catch (e) {
             console.log('No Filter');
         }
-
+        
         this.featurelist = [];
         this.shown = true;
         this.mapConfig.editmode = layer.layerPermissions.edit;
@@ -512,7 +506,7 @@ export class MapService {
         //this.mapConfig.layers[layer.loadOrder - 1].setStyle(stylefunction);
         layer.olLayer.setStyle(stylefunction);
         this.getFeatureList();
-        this.evkey = this.mapConfig.map.on('singleclick', (e) => {
+        this.evkey = this.mapConfig.map.on('click', (e) => {
             if (this.mapConfig.selectedFeature) {
                 this.mapConfig.selectedFeature.setStyle(null);
             }
@@ -639,7 +633,15 @@ export class MapService {
                 let featurejson = new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(e.feature);
                 this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
                     .subscribe((data) => {
-                        featureID = data[0].id
+                        console.log(data)
+                        try{featureID = data[0].id}
+                        catch(e) {
+                            this.sqlService.fixGeometry(this.mapConfig.currentLayer.layer.ID)
+                            .subscribe((data) => {
+                                console.log(data)
+
+                            })
+                        }
                         e.feature.setId(featureID);
                         e.feature.setProperties(data[0]);
                         //this.mapConfig.sources[this.mapConfig.currentLayer.loadOrder - 1].addFeature(e.feature);
@@ -698,9 +700,10 @@ export class MapService {
         let tempList = new Array<featureList>();
         try {
             let labelName: string = this.mapConfig.currentLayer.layer.defaultStyle['listLabel'];
-            if (!labelName) {
+            if (this.mapConfig.currentLayer.style['listLabel'] != null) {
                 labelName = this.mapConfig.currentLayer.style['listLabel'];
             }
+
 
             if (labelName != null && labelName.length != 0) {
                 this.mapConfig.currentLayer.source.forEachFeature((x: ol.Feature) => {
@@ -785,5 +788,17 @@ export class MapService {
             }
         })
         // console.log(this.mapConfig.userpagelayers.find((x) => x == layer))
+    }
+
+    public toggleDefaultON(layer: UserPageLayer) {
+        layer.layerON = !layer.layerON
+        let templayer = new UserPageLayer
+        templayer.ID = layer.ID
+        templayer.layerON = layer.layerON
+        this.userPageLayerService
+            .Update(templayer)
+            .subscribe((data) => {
+                console.log(data)
+            })
     }
 }

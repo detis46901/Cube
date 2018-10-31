@@ -88,8 +88,17 @@ export class SQLService {
             .map((response: Response) => <any>response.json())
             .catch(this.handleError)
     }
-    public Update = (table: number, id: string, field: string, type: string, value: any): Observable<any> => {
-        return this._http.get(this.actionUrl + 'update?table=' + table + "&id=" + id + "&field=" + field + "&type=" + type + "&value=" + value, this.options)
+
+    public fixGeometry = (table: number): Observable<any> => {
+        return this._http.get(this.actionUrl + 'fixGeometry?table=' + table, this.options)
+            .map((response: Response) => <any>response.json())
+            .catch(this.handleError)
+    }
+
+    public Update = (table: number, id: string, MyCubeField: MyCubeField): Observable<any> => {
+        console.log(JSON.stringify(MyCubeField))
+        console.log(this.actionUrl + 'update', '{"table":' + table + ',"id":' + id + ',"mycubefield":' + JSON.stringify(MyCubeField) + '}')
+        return this._http.put(this.actionUrl + 'update', '{"table":' + table + ',"id":' + id + ',"mycubefield":' + JSON.stringify(MyCubeField) + '}', this.options)
             .map((response: Response) => <any>response.json())
             .catch(this.handleError);
     }
@@ -131,7 +140,8 @@ export class SQLService {
     }
 
     protected handleError(error: Response) {
-        console.error(error);
+        console.error('this is an error: ' + error);
         return Observable.throw(error.json().error || 'any error');
     }
+
 }

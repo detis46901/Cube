@@ -129,9 +129,18 @@
                                 <mat-icon>zoom_in</mat-icon>
                                 <span>Zoom To Layer</span>
                             </button>
-                            <button mat-menu-item disabled="true">
+                            <button *ngIf="userpagelayer.layerON; else defaultoff" (click)="mapService.toggleDefaultON(userpagelayer)" mat-menu-item>
+                            <mat-icon>done</mat-icon>
+                            <span>Default to Off</span>
+                        </button>
+                        <ng-template #defaultoff>
+                            <button mat-menu-item (click)="mapService.toggleDefaultON(userpagelayer)">
                                 <mat-icon>star</mat-icon>
-                                <span>Default On</span>
+                                <span>Default to On</span>
+                            </button></ng-template>
+                            <button mat-menu-item disabled="true">
+                                <mat-icon>remove_circle_outline</mat-icon>
+                                <span>Remove Layer From Page</span>
                             </button>
                             <button mat-menu-item disabled="true">
                                 <mat-icon>opacity</mat-icon>

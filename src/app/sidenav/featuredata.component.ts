@@ -55,9 +55,16 @@ export class FeatureDataComponent {
             if (mycube.type == "date") {
                 mycube.value = mycube.value.toJSON()
             }
+            if (mycube.type == "text") {
+                console.log("mycube.type = text")
+                let ntext: RegExp = /'/g
+                mycube.value = mycube.value.replace(ntext, "''")
+                console.log(mycube.value)
+
+            }
             //document.getElementById("featureData").style.display = "block";
             this.sqlservice
-                .Update(this.myCubeConfig.table, this.myCubeData[0].value, mycube.field, mycube.type, mycube.value)
+                .Update(this.myCubeConfig.table, this.myCubeData[0].value, mycube)
                 .subscribe((data) => {
                     this.newComment.auto = true
                     this.newComment.comment = mycube.field + " changed to " + mycube.value
@@ -71,6 +78,11 @@ export class FeatureDataComponent {
                             this.commentText = ""
                             this.mycubeservice.loadComments(this.myCubeConfig.table, this.myCubeData[0].value)
                         })
+                    if (mycube.type == "text") {
+                        let ntext: RegExp = /''/g
+                        mycube.value = mycube.value.replace(ntext, "'")
+
+                    }
                 })
 
             mycube.changed = false
@@ -79,7 +91,10 @@ export class FeatureDataComponent {
 
     private addMyCubeComment() {
         this.newComment.comment = this.commentText
-        console.log("Adding MyCube Comment " + this.newComment)
+        let ntext: RegExp = /'/g
+        this.newComment.comment = this.newComment.comment.replace(ntext, "''")
+
+        console.log(this.newComment.comment)
         console.log("feature id is= " + this.myCubeData[0].value)
         this.newComment.table = this.myCubeConfig.table
         this.newComment.featureID = this.myCubeData[0].value
