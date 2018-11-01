@@ -129,7 +129,7 @@
                                 <mat-icon>zoom_in</mat-icon>
                                 <span>Zoom To Layer</span>
                             </button>
-                            <button *ngIf="userpagelayer.layerON; else defaultoff" (click)="mapService.toggleDefaultON(userpagelayer)" mat-menu-item>
+                            <button *ngIf="userpagelayer.defaultON; else defaultoff" (click)="mapService.toggleDefaultON(userpagelayer)" mat-menu-item>
                             <mat-icon>done</mat-icon>
                             <span>Default to Off</span>
                         </button>

@@ -178,7 +178,7 @@ export class PageConfigComponent implements OnInit {
         console.log(this.selectedLP)
         this.newUserPageLayer.userPageID = this.pageID;
         this.newUserPageLayer.userID = this.userID;
-        this.newUserPageLayer.layerON = true;
+        this.newUserPageLayer.defaultON = true;
         this.newUserPageLayer.layerID = newUserPageLayer.layerID;
         this.newUserPageLayer.style = this.selectedLP.layer.defaultStyle
         this.userPageLayerService
@@ -192,7 +192,7 @@ export class PageConfigComponent implements OnInit {
     private updateUserPageLayer(userPageLayer: UserPageLayer): void {
         let uplSave = new UserPageLayer
         uplSave.ID = userPageLayer.ID
-        uplSave.layerON = userPageLayer.layerON
+        uplSave.defaultON = userPageLayer.defaultON
         console.log(uplSave)
         this.userPageLayerService
             .Update(uplSave)
