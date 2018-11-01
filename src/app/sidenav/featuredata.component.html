@@ -99,7 +99,7 @@
                         <!-- checkbox for contracting -->
                         <mat-checkbox [disabled]="!myCubeConfig.edit" [(ngModel)]="myCube.value" (change)="myCube.changed = true; updateMyCube(myCube)">{{myCube.field}}</mat-checkbox>
                     </div>
-                    <div *ngIf="myCube.type=='text'" matTooltip="No single quotes yet" matTooltipPosition="above"
+                    <div *ngIf="myCube.type=='text'" matTooltip="" matTooltipPosition="above"
                         matTooltipShowDelay="1000">
                         <mat-form-field style="width:90%">
                             <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}"

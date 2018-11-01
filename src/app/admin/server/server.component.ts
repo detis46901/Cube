@@ -15,6 +15,7 @@ import 'rxjs/add/operator/map';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { ServerDetailsComponent } from '../details/serverDetails/serverDetails.component';
 import { ServerLayersComponent } from './serverLayers/serverLayers.component';
+import * as ol from 'openlayers'
 
 @Component({
     selector: 'server',

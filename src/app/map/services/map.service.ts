@@ -104,12 +104,7 @@ export class MapService {
                 .GetPageLayers(this.mapConfig.currentpage.ID)
                 .subscribe((data: UserPageLayer[]) => {
                     this.mapConfig.userpagelayers = data;
-                    if (data.length != 0) {
-                        // if (this.mapConfig.userpagelayers[0].layerON == true) {this.mapConfig.currentLayer = this.mapConfig.userpagelayers[0]}
-                        // this.mapConfig.currentLayerName = this.mapConfig.userpagelayers[0].layer.layerName
-                        //this.mapConfig.editmode = this.mapConfig.userpagelayers[0].layerPermissions.edit
-                    }
-                    else {
+                    if (data.length == 0) {
                         this.mapConfig.currentLayer = new UserPageLayer;
                         this.mapConfig.currentLayerName = "";
                     }
@@ -158,7 +153,7 @@ export class MapService {
             this.mapConfig.userpagelayers.forEach(userpagelayer => {
                 switch (userpagelayer.layer.layerType) {
                     case "MyCube": {
-                        userpagelayer.layerShown = userpagelayer.layerON;
+                        userpagelayer.layerShown = userpagelayer.defaultON;
                         this.loadMyCube(userpagelayer);
                         j++;
                         if (j == this.mapConfig.userpagelayers.length) {
@@ -188,8 +183,8 @@ export class MapService {
                                     opacity: 1,
                                     source: new ol.source.WMTS(options)
                                 });
-                                userpagelayer.layerShown = userpagelayer.layerON;
-                                wmsLayer.setVisible(userpagelayer.layerON);
+                                userpagelayer.layerShown = userpagelayer.defaultON;
+                                wmsLayer.setVisible(userpagelayer.defaultON);
                                 //this.mapConfig.layers.push(wmsLayer);  //will eventually delete
                                 userpagelayer.olLayer = wmsLayer
                                 //this.mapConfig.sources.push(wmsSource); //will eventuall delete
@@ -220,8 +215,8 @@ export class MapService {
                             source: wmsSource
                         });
 
-                        userpagelayer.layerShown = userpagelayer.layerON;
-                        wmsLayer.setVisible(userpagelayer.layerON);
+                        userpagelayer.layerShown = userpagelayer.defaultON;
+                        wmsLayer.setVisible(userpagelayer.defaultON);
                         this.mapConfig.layers.push(wmsLayer);  //to delete
                         userpagelayer.olLayer = wmsLayer
                         //this.mapConfig.sources.push(wmsSource); //to delete
@@ -282,7 +277,7 @@ export class MapService {
                 source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
             }
             this.vectorlayer = new ol.layer.Vector({ source: source, style: stylefunction });
-            this.vectorlayer.setVisible(layer.layerON);
+            this.vectorlayer.setVisible(layer.defaultON);
             this.mapConfig.map.addLayer(this.vectorlayer);
             layer.olLayer = this.vectorlayer
             layer.source = source
@@ -371,7 +366,7 @@ export class MapService {
             this.mapConfig.selectedFeature.setStyle(null);
         }  //fixes a selected feature's style
         this.mapConfig.currentLayerName = layer.layer.layerName  //Puts the current name in the component
-        if (layer.layerON) {
+        if (layer.defaultON) {
             this.mapConfig.currentLayer = layer;
         }
         this.mapConfig.userpagelayers.forEach(element => {
@@ -791,10 +786,10 @@ export class MapService {
     }
 
     public toggleDefaultON(layer: UserPageLayer) {
-        layer.layerON = !layer.layerON
+        layer.defaultON = !layer.defaultON
         let templayer = new UserPageLayer
         templayer.ID = layer.ID
-        templayer.layerON = layer.layerON
+        templayer.defaultON = layer.defaultON
         this.userPageLayerService
             .Update(templayer)
             .subscribe((data) => {

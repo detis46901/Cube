@@ -33,7 +33,7 @@ export class LayerClass extends Layer {
 
 export class UserPageLayer {
     ID: number;
-    layerON: boolean;
+    defaultON: boolean;
     createdAt: string;
     updatedAt: string;
     userID: number;

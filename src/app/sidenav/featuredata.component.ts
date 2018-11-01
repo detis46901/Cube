@@ -4,12 +4,12 @@ import { SQLService } from "../../_services/sql.service"
 import { MyCubeService } from "../map/services/mycube.service"
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { FormControl } from '@angular/forms';
-import { DatePipe } from '@angular/common';
-var Autolinker = require('autolinker');
+import {  } from '@angular/forms';
+var Autolinker = require( 'autolinker' );
 
 
 @Component({
-    moduleId: module.id,
+    moduleId: "module.id",
     selector: 'featuredata',
     templateUrl: './featuredata.component.html',
     styleUrls: ['featuredata.component.scss']
@@ -30,6 +30,7 @@ export class FeatureDataComponent {
         // subscribe to map component messages
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.userID = currentUser && currentUser.userID;
+
     }
 
     @Input() message: any
