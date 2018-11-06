@@ -49,7 +49,7 @@ import { SQLService } from '../_services/sql.service'
 import { ServerService } from '../_services/_server.service';
 import { geoJSONService } from './map/services/geoJSON.service';
 import { MyCubeService } from './/map/services/mycube.service';
-import { WFSService } from './map/services/wfs.service';
+import { WMSService } from './map/services/wms.service';
 import { SideNavService } from '../_services/sidenav.service';
 import { MessageService } from '../_services/message.service';
 import { ImageService } from '../_services/image.service';
@@ -241,7 +241,7 @@ import { LinkyModule } from 'ngx-linky';
         ServerService,
         geoJSONService,
         MyCubeService,
-        WFSService,
+        WMSService,
         SideNavService,
         MessageService,
         mapStyles,

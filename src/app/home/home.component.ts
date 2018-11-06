@@ -4,7 +4,7 @@ import { User } from '../../_models/user.model';
 import { SideNavService } from '../../_services/sidenav.service';
 import { MessageService } from '../../_services/message.service'
 import { MyCubeService } from '../map/services/mycube.service'
-import { WFSService } from '../map/services/wfs.service';
+import { WMSService } from '../map/services/wms.service';
 import { Subscription } from 'rxjs/Subscription';
 import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../_models/layer.model'
 import { SocketService} from '../../_services/socket.service'
@@ -13,7 +13,7 @@ import { SocketService} from '../../_services/socket.service'
     selector: 'home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    providers: [SideNavService, WFSService]
+    providers: [SideNavService, WMSService]
 })
 
 export class HomeComponent {
@@ -36,15 +36,10 @@ export class HomeComponent {
     private myCubeConfig: MyCubeConfig;
     private messageSubscription: Subscription;
 
-    constructor(private socketService: SocketService, private dataService: UserService, private sideNavService: SideNavService, private myCubeService: MyCubeService, private WFSservice: WFSService, private messageService: MessageService) {
+    constructor(private socketService: SocketService, private dataService: UserService, private sideNavService: SideNavService, private myCubeService: MyCubeService, private wmsService: WMSService, private messageService: MessageService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
-        this.subscription = this.messageService.getMessage().subscribe(message => { this.message = message; this.myCubeData = null });
-        this.myCubeSubscription = this.myCubeService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; this.message = null });
-        this.myCubeCommentSubscription = this.myCubeService.getMyCubeComments().subscribe(myCubeComments => { this.myCubeComments = myCubeComments })
-        this.editSubscription = this.myCubeService.getMyCubeConfig().subscribe(data => { this.myCubeConfig = data });
-        this.messageSubscription = this.myCubeService.getMessage().subscribe(data => this.message = data)
     }
 
     ngOnInit() {
@@ -62,8 +57,5 @@ export class HomeComponent {
     }
 
     ngOnDestroy() {
-        this.subscription.unsubscribe()
-        this.myCubeSubscription.unsubscribe()
-        this.editSubscription.unsubscribe()
     }
 }

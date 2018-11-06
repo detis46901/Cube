@@ -1,7 +1,7 @@
 import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { MapService } from './services/map.service';
 import { MapConfig } from './models/map.model';
-import { WFSService } from './services/wfs.service';
+import { WMSService } from './services/wms.service';
 import { Location } from './core/location.class';
 import { geoJSONService } from './services/geoJSON.service'
 import { LayerPermissionService } from '../../_services/_layerPermission.service';
@@ -11,13 +11,13 @@ import { MyCubeService } from './services/mycube.service'
 import { ServerService } from '../../_services/_server.service';
 import { GroupMemberService } from '../../_services/_groupMember.service';
 import { GroupService } from '../../_services/_group.service';
-import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig } from '../../_models/layer.model';
+import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig, MyCubeComment } from '../../_models/layer.model';
 import { UserPage, User } from '../../_models/user.model';
 import { Group, GroupMember } from '../../_models/group.model';
 import { UserPageLayerService } from '../../_services/_userPageLayer.service';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { MessageService } from '../../_services/message.service';
+//import { MessageService } from '../../_services/message.service';
 import { PageConfigComponent } from '../admin/user/pageConfig/pageConfig.component';
 import { MatDialog } from '@angular/material';
 import { Clipboard } from 'ts-clipboard';
@@ -49,15 +49,19 @@ export class MapComponent {
     private noLayers: boolean;
     private interval: any;
     private toolbar: any;
+    private message: any;
+    private myCubeData: MyCubeField;
+    private myCubeComments: MyCubeComment[]
+
 
 
     constructor(
         public snackBar: MatSnackBar, private configuration: Configuration,
-        private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService,
+        private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WMSService,
         private layerPermissionService: LayerPermissionService, private layerService: LayerService,
         private userPageService: UserPageService, private userPageLayerService: UserPageLayerService,
         private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog,
-        private messageService: MessageService, private groupMemberService: GroupMemberService,
+        private groupMemberService: GroupMemberService,
         private groupService: GroupService
     ) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -69,6 +73,7 @@ export class MapComponent {
     ngAfterViewInit() {
         //mapConfig.map.setTarget(this.mapElement.nativeElement.id)
         //this.refreshLayers()
+
     }
 
     ngOnDestroy() {
@@ -83,19 +88,25 @@ export class MapComponent {
             .then(() => this.mapService.initMap(this.mapConfig)
                 .then((mapConfig) => {
                     let ptkey = this.mapConfig.map.on('pointermove', (evt) => {
-                        mapConfig.map.getTargetElement().style.cursor = mapConfig.map.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
                         if (mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
-                            this.mapConfig.map.forEachLayerAtPixel((evt.pixel), layers => {
-                                let index = this.mapConfig.userpagelayers.findIndex(z => z.olLayer == layers); 
-                                 if (index > -1) {
+                            this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+                                let index = this.mapConfig.userpagelayers.findIndex(z => z.olLayer == layer);
+                                if (index > -1) {
                                     this.mapConfig.mouseoverLayer = this.mapConfig.userpagelayers[index]
-                                 }
+                                    if (this.mapConfig.mouseoverLayer.olLayer == this.mapConfig.currentLayer.olLayer) {
+                                        mapConfig.map.getTargetElement().style.cursor = mapConfig.map.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
+                                    }
+                                }
                             })
                         }
-                        else { this.mapConfig.mouseoverLayer = null }
-                    }, { hitTolerance: 5 })
+                        else {
+                            this.mapConfig.mouseoverLayer = null;
+                            mapConfig.map.getTargetElement().style.cursor = '';
+                        }
+                    }, { hitTolerance: 20 })
                     mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
                     this.toolbar = "Layers"
+                    //this.setDefaultPageLayer()  At some point, the default layer needs to be set current
                 })
             )
     }
@@ -137,7 +148,7 @@ export class MapComponent {
         this.toolbar = "Layers"
     }
 
-    private setToolbar(bar:string) {
+    private setToolbar(bar: string) {
         this.toolbar = bar
     }
 
@@ -168,7 +179,7 @@ export class MapComponent {
         this.mapConfig.editmode = false
         this.mapConfig.filterOn = false;
         //this.mapConfig.sources.push(new ol.source.OSM());
-       
+
     }
 
     private copyToClipboard(url: string) {
@@ -199,59 +210,16 @@ export class MapComponent {
             })
     }
 
-    //For use with layer permissions in the accordion menu
-    //
-    //USE LAYERPERMISSIONS.GETUSERGROUPS INSTEAD!!!
-    //
-    // private getGroupMembers(userID: number): Promise<any> {
-    //     var prom = new Promise((resolve, reject) => {
-    //         this.groupMemberService
-    //             .GetByUser(userID)
-    //             .subscribe((res: GroupMember[]) => {
-    //                 resolve(res)
-    //             })
-    //     })
-    //     return prom;
-    // }
-
-    // private getUserGroups(groups: Group[]): Promise<any> {
-    //     var groups = new Array<Group>();
-    //     var prom = new Promise((resolve, reject) => {
-    //         for(let g of groups) {
-    //             this.groupService
-    //                 .GetSingle(g.ID)
-    //                 .subscribe((res: Group) => {
-    //                     groups.push(res)
-    //                 })
-    //         }
-    //         resolve(groups)
-    //     })
-    //     return prom;
-    // }
-
-
-    // private canEditLayer(layerID: number): boolean {
-    //     this.getGroupMembers(this.userID).then((gms) => {
-    //         this.getUserGroups(gms).then((groups) => {
-    //         this.layerPermissionService
-    //             .GetByLayer(layerID)
-    //             .subscribe((res: LayerPermission[]) => {
-    //                 for(let lp of res) {
-    //                     if(lp.userID == this.userID) {
-
-    //                     } else if(lp.groupID) {
-    //                         for(let g of groups) {
-
-    //                         }
-    //                     } else {
-    //                         alert("Something went wrong.")
-    //                     }
-    //                 }
-    //             })
-    //         })
-    //     })
-    // }
-
+    private setDefaultPageLayer() {
+        console.log('setting default page layer')
+        this.mapConfig.userpagelayers.forEach((userpagelayer) => {
+            if (this.mapConfig.currentpage.defaultLayer == userpagelayer.ID) {
+                console.log('default layer fount')
+                console.log(userpagelayer)
+                this.mapService.setCurrentLayer(userpagelayer)
+            }
+        })
+    }
     private canEditPerm(layerID: number) {
 
     }
@@ -259,7 +227,7 @@ export class MapComponent {
     private canDeleteLayer(layerID: number) {
 
     }
-    private isolate(layer:UserPageLayer) {
+    private isolate(layer: UserPageLayer) {
         console.log(layer)
         this.mapService.isolate(layer)
     }

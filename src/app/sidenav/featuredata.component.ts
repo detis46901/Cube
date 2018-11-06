@@ -2,14 +2,17 @@ import { Component, Input, Output, EventEmitter, Sanitizer } from '@angular/core
 import { MyCubeField, MyCubeConfig, MyCubeComment } from "../../_models/layer.model"
 import { SQLService } from "../../_services/sql.service"
 import { MyCubeService } from "../map/services/mycube.service"
+import { WMSService } from '../map/services/wms.service'
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { FormControl } from '@angular/forms';
 import {  } from '@angular/forms';
+import { MapConfig } from 'app/map/models/map.model';
+import { Subscription } from 'rxjs/Subscription';
 var Autolinker = require( 'autolinker' );
 
 
 @Component({
-    moduleId: "module.id",
+    moduleId: module.id,
     selector: 'featuredata',
     templateUrl: './featuredata.component.html',
     styleUrls: ['featuredata.component.scss']
@@ -24,24 +27,36 @@ export class FeatureDataComponent {
     public formattedText: string
     public Autolinker = new Autolinker()
     public editCube: MyCubeField
+    public myCubeData: MyCubeField[]
+    public myCubeConfig: MyCubeConfig;
+    public myCubeComments: MyCubeComment[]
+    public subscription: Subscription
+    public message: string;
+    private myCubeSubscription: Subscription;
+    private myCubeCommentSubscription: Subscription;
+    private editSubscription: Subscription;
 
 
-    constructor(private sqlservice: SQLService, private mycubeservice: MyCubeService) {
+    constructor(private sqlservice: SQLService, private myCubeService: MyCubeService, private wmsService: WMSService) {
         // subscribe to map component messages
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.userID = currentUser && currentUser.userID;
-
+        this.subscription = this.myCubeService.getWMS().subscribe(message => { this.message = message; this.myCubeData = null });
+        this.myCubeSubscription = this.myCubeService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; this.message = null });
+        this.myCubeCommentSubscription = this.myCubeService.getMyCubeComments().subscribe(myCubeComments => { this.myCubeComments = myCubeComments })
+        this.editSubscription = this.myCubeService.getMyCubeConfig().subscribe(data => { this.myCubeConfig = data });
+        
     }
 
-    @Input() message: any
-    @Input() myCubeComments: MyCubeComment[]
-    @Input() myCubeData: MyCubeField[];
-    @Input() myCubeConfig: MyCubeConfig;
     @Input() canEdit: boolean;
+    @Input() mapConfig: MapConfig
 
 
     ngOnInit() {
         this.open = true
+        this.myCubeData = this.mapConfig.myCubeData
+        this.myCubeConfig = this.mapConfig.myCubeConfig
+        this.myCubeComments = this.mapConfig.myCubeComment
     }
 
     private clearMyCubeData(): void {
@@ -77,7 +92,7 @@ export class FeatureDataComponent {
                         .addCommentWithoutGeom(this.newComment)
                         .subscribe((data) => {
                             this.commentText = ""
-                            this.mycubeservice.loadComments(this.myCubeConfig.table, this.myCubeData[0].value)
+                            this.myCubeService.loadComments(this.myCubeConfig.table, this.myCubeData[0].value)
                         })
                     if (mycube.type == "text") {
                         let ntext: RegExp = /''/g
@@ -101,21 +116,24 @@ export class FeatureDataComponent {
         this.newComment.featureID = this.myCubeData[0].value
         this.newComment.userID = this.userID
         this.newComment.auto = false
+        this.myCubeComments.push(this.newComment)
         this.sqlservice
             .addCommentWithoutGeom(this.newComment)
-            .subscribe()
-        this.mycubeservice.loadComments(this.myCubeConfig.table, this.myCubeData[0].value)
+            .subscribe(() => {
+                this.myCubeService.loadComments(this.myCubeConfig.table, this.myCubeData[0].value)
+            })
         this.commentText = ""
     }
 
-    private deleteMyCubeComment(table, id) {
-        console.log("Deleting comment " + table, id)
+    private deleteMyCubeComment(table, comment:MyCubeComment) {
+        console.log("Deleting comment " + table)
+        this.myCubeComments.splice(this.myCubeComments.indexOf(comment))
         this.sqlservice
-            .deleteComment(table, id)
+            .deleteComment(table, comment.id)
             .subscribe((result) => {
-                console.log(result)
+                this.myCubeService.loadComments(this.myCubeConfig.table, this.myCubeData[0].value)
             })
-        this.mycubeservice.loadComments(this.myCubeConfig.table, this.myCubeData[0].value)
+        
     }
 
     private onFileSelected(event) {

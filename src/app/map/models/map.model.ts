@@ -1,4 +1,4 @@
-import { LayerClass, LayerPermission, UserPageLayer } from '../../../_models/layer.model';
+import { LayerClass, LayerPermission, UserPageLayer, MyCubeField, MyCubeComment, MyCubeConfig } from '../../../_models/layer.model';
 import { Server } from '../../../_models/server.model';
 import { User, UserPage } from '../../../_models/user.model';
 import { Feature } from 'openlayers';
@@ -33,6 +33,10 @@ export class MapConfig {
     filterOn?: boolean;
     filterShow?: boolean;
     styleShow?: boolean;
+    featureDataShow: boolean;
+    myCubeConfig: MyCubeConfig;
+    myCubeData: MyCubeField[]
+    myCubeComment: MyCubeComment[]
 }
 
 export class featureList {

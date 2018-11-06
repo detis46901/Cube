@@ -6,16 +6,12 @@ import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../../_models/layer
 import { interaction } from "openlayers";
 
 
-//Must be declared here in order to mitigate a bug where toggling sidenav via view dropdown doesn't work unless clicked twice.
-let isOpen: boolean = true;
-let geoData: Array<string>;
-let markerData: string;
-
+//need to get wmsSubject to wmsService, but for some reason, it doesn't work over there.
 
 @Injectable()
 
 export class MyCubeService extends SQLService {
-    private messageSubject = new Subject<any>();
+    private WMSSubject = new Subject<any>();
     private mycubesubject = new Subject<MyCubeField[]>();
     private mycubeconfig = new Subject<MyCubeConfig>();
     private mycubecomment = new Subject<MyCubeComment[]>();
@@ -23,40 +19,27 @@ export class MyCubeService extends SQLService {
     private tempCubeData: MyCubeField[]
 
 
-    public toggleHidden(): void {
-        isOpen = !isOpen;
+    sendWMS(message: string) {
+        this.WMSSubject.next(message);
     }
 
-    public setGeoData(data: Array<string>): void {
-        geoData = data;
+    clearWMS() {
+        this.WMSSubject.next();
     }
 
-    public setMarkerData(data: string): void {
-        markerData = data;
+    getWMS(): Observable<any> {
+        return this.WMSSubject.asObservable();
     }
 
-    public getHidden(): boolean {
-        return isOpen;
-    }
-
-    public getGeoData(): Array<string> {
-        return geoData;
-    }
-
-    public getMarkerData(): string {
-        return markerData;
-    }
-
-    sendMessage(message: string) {
-        this.messageSubject.next(message);
-    }
-
-    clearMessage() {
-        this.messageSubject.next();
-    }
-
-    getMessage(): Observable<any> {
-        return this.messageSubject.asObservable();
+    public parseAndSendWMS(WMS: string): void {
+        WMS = WMS.split("<body>")[1];
+        WMS = WMS.split("</body>")[0];
+        if (WMS.length < 10) {
+            this.clearWMS();
+        }
+        else {
+            this.sendWMS(WMS); //This allows the service to render the actual HTML unsanitized
+        }
     }
 
     //This needs a lot of work.  This should create an array of arrays for all of the features in the layer.
@@ -69,21 +52,26 @@ export class MyCubeService extends SQLService {
             })
     }
 
-    sendMyCubeData(table: number, feature: ol.Feature) {
+    public getAndSendMyCubeData (table: number, feature: ol.Feature):Promise<any> {
         this.getMyCubeDataFromFeature(feature)
-        let id = feature.getId()
+        let promise = new Promise(resolve => {
+            let id = feature.getId()
         this.GetSchema(table)
             .subscribe((data: MyCubeField[]) => {
                 this.cubeData = data
                 this.cubeData[0].value = id
                 this.cubeData[0].type = "id"
                 this.cubeData[1].type = "geom"
-                this.getsingle(table, id)
+                this.getsingle(table, id).then(() => {resolve(this.cubeData)})
+
             })
+          });
+          return promise
     }
 
-    getsingle(table, id) {
-        this.GetSingle(table, id)
+    getsingle(table, id):Promise<any> {
+        let promise = new Promise(resolve => {
+            this.GetSingle(table, id)
             .subscribe((sdata: JSON) => {
                 let z = 0
                 for (var key in sdata[0][0]) {
@@ -93,15 +81,19 @@ export class MyCubeService extends SQLService {
                     }
                 }
                 this.loadComments(table, id)
+                resolve()
             })
+        })
+        return promise
     }
 
-    loadComments(table, id) {
+    loadComments(table, id): any {
+        console.log('loading comments')
         this.getComments(table, id)
-                    .subscribe((cdata: any) => {
-                        this.mycubesubject.next(this.cubeData);
-                        this.mycubecomment.next(cdata[0])
-                    })
+            .subscribe((cdata: any) => {
+                this.mycubesubject.next(this.cubeData);
+                this.mycubecomment.next(cdata[0])
+            })
     }
 
     getMyCubeDataFromFeature(feature: ol.Feature) {
@@ -132,9 +124,12 @@ export class MyCubeService extends SQLService {
         mycubeconfig.table = table
         mycubeconfig.edit = edit
         this.mycubeconfig.next(mycubeconfig)
+        return mycubeconfig
     }
 
     public getMyCubeConfig(): Observable<MyCubeConfig> {
         return this.mycubeconfig.asObservable();
     }
+
+
 }   
