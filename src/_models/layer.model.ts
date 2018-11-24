@@ -1,4 +1,6 @@
 import { Server } from './server.model'
+import { MyCubeStyle } from './style.model'
+
 export class Layer {
     ID: number;
     layerName: string;
@@ -10,7 +12,7 @@ export class Layer {
     layerGeom: string;
     serverID: number;
     server: Server;
-    defaultStyle: JSON;
+    defaultStyle: MyCubeStyle;
 }
 
 export class LayerPermission {
@@ -39,11 +41,11 @@ export class UserPageLayer {
     userID: number;
     userPageID: number;
     layerID: number;
-    style: JSON;
+    style: MyCubeStyle;
     layer = new Layer;
     layerPermissions = new LayerPermission;
     serverID: number;
-    layerShown: boolean;  //Need to get rid of this.  LayerOn should be sufficient.
+    layerShown: boolean;
     loadOrder: number;
     loadStatus: string;
     source: any

@@ -17,7 +17,6 @@ import { Group, GroupMember } from '../../_models/group.model';
 import { UserPageLayerService } from '../../_services/_userPageLayer.service';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-//import { MessageService } from '../../_services/message.service';
 import { PageConfigComponent } from '../admin/user/pageConfig/pageConfig.component';
 import { MatDialog } from '@angular/material';
 import { Clipboard } from 'ts-clipboard';
@@ -41,6 +40,7 @@ export class MapComponent {
     private token: string;
     private userID: number;
     private headers: Headers;
+    private measureShow: boolean = false;
     private userPageLayers: Array<UserPageLayer> = [];
     private userPages: UserPage[];
     private activePages = new Array<UserPage>();
@@ -178,6 +178,10 @@ export class MapComponent {
         //this.mapConfig.sources = [];
         this.mapConfig.editmode = false
         this.mapConfig.filterOn = false;
+        this.mapConfig.filterShow = false;
+        this.mapConfig.styleShow = false
+        this.myCubeService.clearMyCubeData();
+        this.myCubeService.clearWMS();
         //this.mapConfig.sources.push(new ol.source.OSM());
 
     }

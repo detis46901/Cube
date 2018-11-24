@@ -81,8 +81,8 @@ import { PasswordComponent } from './settings/password/password.component';
 import { ServerNewComponent } from './admin/server/serverNew/serverNew.component';
 import { ChangePasswordComponent } from './admin/user/changePassword/changePassword.component';
 import { HeaderComponent } from './header/header.component';
-import { SideNavComponent } from './sidenav/sidenav.component';
-import { FeatureDataComponent } from './sidenav/featuredata.component'
+import { SideNavComponent } from './featuredata/sidenav.component';
+import { FeatureDataComponent } from './featuredata/featuredata.component'
 import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
 import { GroupComponent } from './admin/group/group.component';
@@ -181,7 +181,6 @@ import { LinkyModule } from 'ngx-linky';
         HttpClientModule,
         HttpClientJsonpModule,
         HttpModule,
-        //MNgbodule.forRoot(),
         Routing,
         RouterModule.forRoot([
             {

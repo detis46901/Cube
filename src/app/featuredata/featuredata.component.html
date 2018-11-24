@@ -1,6 +1,7 @@
 <!-- Jack Reyburn -->
 <!-- handles the my cube feature and comments menus -->
-<div *ngIf="message">
+<!-- message is WMS Data -->
+<div *ngIf="message"> 
     <!-- second accordian menu handling features -->
     <mat-accordion class="message-data" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; left: 0px">
         <mat-expansion-panel [expanded]="open === true">
@@ -17,7 +18,7 @@
 </div>
 <div *ngIf="myCubeData">
     <!-- first accordian menu for added comments -->
-    <mat-accordion class="comment-data" style="width: 400px; background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; left: 384px">
+    <mat-accordion class="comment-data" style="width: 400px; background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; left: 354px">
         <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <!-- header -->

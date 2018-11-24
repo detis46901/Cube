@@ -1,18 +1,13 @@
 import { Http, Headers, Response, RequestOptions } from "@angular/http";
-import { Location } from "../core/location.class";
 import { Injectable } from "@angular/core";
 import { Observable } from 'rxjs'
 import { Subject } from 'rxjs/Subject';
-import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig, MyCubeComment } from '../../../_models/layer.model';
-import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
-
-
+import { UserPageLayer } from '../../../_models/layer.model';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mergeMap";
-
 @Injectable()
-
 
 export class WMSService {
     http: Http;
@@ -22,39 +17,36 @@ export class WMSService {
     public styleHead: Headers;
     public popupText = new Subject<string>();
     popupText$ = this.popupText.asObservable();
-    private subject = new Subject<any>();
     private messageSubject = new Subject<any>();
     public sanitizedURL: SafeResourceUrl
 
     constructor(http: Http, public sanitizer: DomSanitizer) {
         this.http = http;
-
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json'); //maybe it should be text/plain.  Most servers don't allow the application/json.  But text/plain fails on Geoserver
         this.headers.append('Accept', 'application/json');  //same as above
         this.headers.append('Authorization', 'Bearer ' + this.token);
         this.headers.append('Access-Control-Allow-Origin', '*');
         this.options = new RequestOptions({ headers: this.headers })
-
         this.styleHead = new Headers();
         this.styleHead.append('Content-Type', 'application/vnd.ogc.sld+xml')
         this.styleHead.append('Accept', 'application/json');
 
     }
 
-    sendMessage(message: any) {
-        console.log(message)
-        this.messageSubject.next(message);
-    }
+    // sendMessage(message: any) {
+    //     console.log(message)
+    //     this.messageSubject.next(message);
+    // }
 
-    clearMessage() {
-        this.messageSubject.next(null);
-    }
+    // clearMessage() {
+    //     this.messageSubject.next(null);
+    // }
 
-    getMessage(): Observable<any> {
-        console.log("in Get Message")
-        return this.messageSubject.asObservable();
-    }
+    // getMessage(): Observable<any> {
+    //     console.log("in Get Message")
+    //     return this.messageSubject.asObservable();
+    // }
 
     getfeatureinfo(URL, mouseDown: boolean) {
         return this.http.get(URL)
@@ -96,42 +88,33 @@ export class WMSService {
                     let temp3 = temp2[0].replace(" ", "<BR>")
                     let re = /'"'/gi
                     temp3 = temp3.replace('\"', " ")
-                    //temp3 = temp3.replace('"'," ")
                     temp = temp3
                 }
-
-                // this.popupText.next(temp)
-                //7/13/17 This allows click events to create sidenav popup information, while allowing mousemove events to change the cursor icon to a pointing hand without updating popup.
-                // if (!mouseDown)
-                //     {this.popupText.next(temp)}
                 return temp;
             })
     }
+
     public getCapabilities = (url): Observable<any> => {
         return this.http.get(url + "?request=GetCapabilities")
             .map((response: Response) => <any>response.text());
     }
-    public setLoadEvent(layer: UserPageLayer, source: ol.source.Source) {
-        source.on('tileloadstart', () => {
+
+    public setLoadStatus(layer: UserPageLayer) {
+        layer.source.on('tileloadstart', () => {
             layer.loadStatus = "Loading";
-            // console.log(layer.layer.layerName + " loading");
         })
-        source.on('tileloadend', () => {
+        layer.source.on('tileloadend', () => {
             layer.loadStatus = "Loaded";
-            // console.log(layer.layer.layerName + " loaded");
         })
-        source.on('tileloaderror', () => {
-            // console.log("error");
+        layer.source.on('tileloaderror', () => {
         })
-        source.on('imageloadstart', () => {
+        layer.source.on('imageloadstart', () => {
             layer.loadStatus = "Loading";
-            // console.log(layer.layer.layerName + " loading");
         })
-        source.on('imageloadend', () => {
+        layer.source.on('imageloadend', () => {
             layer.loadStatus = "Loaded";
-            // console.log(layer.layer.layerName + " loaded");
         })
-        source.on('imageloaderror', () => {
+        layer.source.on('imageloaderror', () => {
             console.log("error");
         })
     }
@@ -149,5 +132,4 @@ export class WMSService {
             }
         }
     }
-
 }

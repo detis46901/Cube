@@ -1,12 +1,13 @@
 <div #mapElement id="mapid"></div>
 <featuredata id="featureData" [mapConfig]="mapConfig"></featuredata>
+<mat-accordion class="tool-container">
+    <filtertoolbar *ngIf="mapConfig.filterShow" [mapConfig]="mapConfig"></filtertoolbar>
+    <styletoolbar *ngIf="mapConfig.styleShow" [mapConfig]="mapConfig"></styletoolbar>
+    <measure *ngIf="mapConfig.measureShow" [mapConfig]="mapConfig"></measure>
+</mat-accordion>
 <div class="pull-right" style="background: rgba(255,255,255,0); right:0px; top:53px; position:absolute">
     <!-- add class pull-right to move it right -->
-    <mat-accordion class="tool-container">
-        <measure *ngIf="measureShow" [mapConfig]="mapConfig"></measure>
-        <filtertoolbar *ngIf="mapConfig.filterShow" [mapConfig]="mapConfig"></filtertoolbar>
-        <styletoolbar *ngIf="mapConfig.styleShow" [mapConfig]="mapConfig"></styletoolbar>
-    </mat-accordion>
+   
     <div style="width:300px">
         <mat-accordion class="example-headers-align">
 
@@ -62,8 +63,8 @@
                 <br>
                 <mat-action-row>
                     <div style="text-align:right">
-                        <button mat-icon-button (click)="measureShow = !measureShow">
-                            <mat-icon matTooltip="Measure Toolbar">trending_flat</mat-icon>
+                        <button mat-icon-button (click)="mapConfig.measureShow = !mapConfig.measureShow">
+                            <mat-icon [ngClass]="mapConfig.measureShow ? 'selected-icon' : 'none'" matTooltip="Measure Toolbar">trending_flat</mat-icon>
                         </button>
                         <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false" matTooltip="Isolate" (click)="isolate(mapConfig.currentLayer)">
                             <mat-icon>filter_tilt_shift</mat-icon>
@@ -197,8 +198,8 @@
                 <!-- action row diretly beneath layers with many different options for interaction -->
                 <mat-action-row>
                     <div style="text-align:right">
-                        <button mat-icon-button (click)="measureShow = !measureShow">
-                            <mat-icon [ngClass]="measureShow ? 'selected-icon' : 'none'" matTooltip="Measure Toolbar">trending_flat</mat-icon>
+                        <button mat-icon-button (click)="mapConfig.measureShow = !mapConfig.measureShow">
+                            <mat-icon [ngClass]="mapConfig.measureShow ? 'selected-icon' : 'none'" matTooltip="Measure Toolbar">trending_flat</mat-icon>
                         </button>
                         <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false" matTooltip="Isolate" (click)="isolate(mapConfig.currentLayer)">
                             <mat-icon>filter_tilt_shift</mat-icon>
@@ -252,8 +253,8 @@
                 <!-- my cube options below feature list -->
                 <mat-action-row style="text-align:left">
                     <div style="text-align:right">
-                        <button mat-icon-button (click)="measureShow = !measureShow">
-                            <mat-icon matTooltip="Measure Toolbar">trending_flat</mat-icon>
+                        <button mat-icon-button (click)="mapConfig.measureShow = !mapConfig.measureShow">
+                            <mat-icon [ngClass]="mapConfig.measureShow ? 'selected-icon' : 'none'" matTooltip="Measure Toolbar">trending_flat</mat-icon>
                         </button>
                         <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false" matTooltip="Isolate" (click)="isolate(mapConfig.currentLayer)">
                             <mat-icon>filter_tilt_shift</mat-icon>

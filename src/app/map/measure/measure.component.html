@@ -16,19 +16,23 @@
                 <strong>Area: {{value}} {{unit}}</strong>
             </span>
         </mat-panel-description>
+       
     </mat-expansion-panel-header>
-
+    
     <mat-action-row style="display:flex; padding-left:10px">
-        <button mat-button *ngIf="measureType == 'LineString'" (click)="changeUnit('feet',1)">Feet</button>
-        <button mat-button *ngIf="measureType == 'LineString'" (click)="changeUnit('miles',1/5280)">Miles</button>
-        <button mat-button *ngIf="measureType == 'Polygon'" (click)="changeUnit('square feet',1)">Square Feet</button>
-        <button mat-button *ngIf="measureType == 'Polygon'" (click)="changeUnit('acres',1/43560)">Acres</button>
-        <button mat-button *ngIf="measureType == 'Polygon'" (click)="changeUnit('square miles',1/(43560*640))">Square Miles</button>
+        <div>
+            <button mat-button *ngIf="measureType == 'LineString'" (click)="changeUnit('feet',1)">Feet</button>
+            <button mat-button *ngIf="measureType == 'LineString'" (click)="changeUnit('miles',1/5280)">Miles</button>
+            <button mat-button *ngIf="measureType == 'Polygon'" (click)="changeUnit('square feet',1)">Sq. Feet</button>
+            <button mat-button *ngIf="measureType == 'Polygon'" (click)="changeUnit('acres',1/43560)">Acres</button>
+            <button mat-button *ngIf="measureType == 'Polygon'" (click)="changeUnit('square miles',1/(43560*640))">Sq. Miles</button>
+        </div>
         <button mat-icon-button (click)="measure('LineString')">
             <mat-icon matTooltip="Measure Length">trending_flat</mat-icon>
         </button>
         <button mat-icon-button (click)="measure('Polygon')">
             <mat-icon matTooltip="Measure Area">crop_din</mat-icon>
         </button>
+        <button mat-button (click)="mapConfig.measureShow=false">Close</button>
     </mat-action-row>
 </mat-expansion-panel>

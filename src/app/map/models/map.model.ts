@@ -33,6 +33,7 @@ export class MapConfig {
     filterOn?: boolean;
     filterShow?: boolean;
     styleShow?: boolean;
+    measureShow?: boolean;
     featureDataShow: boolean;
     myCubeConfig: MyCubeConfig;
     myCubeData: MyCubeField[]

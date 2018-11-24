@@ -74,7 +74,7 @@ export class SQLService {
             .pipe(catchError(this.handleError));
     }
 
-    public addCommentWithoutGeom = (comment:MyCubeComment): Observable<any> => {
+    public addCommentWithoutGeom = (comment:MyCubeComment): Observable<any> => {        
         return this._http.post(this.actionUrl + 'addcommentwithoutgeom',JSON.stringify(comment), this.options)
             .pipe(catchError(this.handleError));
     }

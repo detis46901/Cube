@@ -55,8 +55,8 @@ export class StyleComponent implements OnInit {
 
     ngOnInit() {
         try {
-            if (this.mapConfig.currentLayer.style['load']['color'] != "" || this.mapConfig.currentLayer.style['load']['color'] != null) {
-                this.selectedColor = this.mapConfig.currentLayer.style['load']['color']
+            if (this.mapConfig.currentLayer.style['load'].color != "" || this.mapConfig.currentLayer.style['load'].color != null) {
+                this.selectedColor = this.mapConfig.currentLayer.style['load'].color
             }
         }
         catch (e) {
@@ -64,8 +64,8 @@ export class StyleComponent implements OnInit {
         }
 
         try {
-            if (this.mapConfig.currentLayer.style['listLabel']) {
-                this.selectedListTitle = this.mapConfig.currentLayer.style['listLabel']
+            if (this.mapConfig.currentLayer.style.listLabel) {
+                this.selectedListTitle = this.mapConfig.currentLayer.style.listLabel
             }
         }
         catch(e) {
@@ -74,9 +74,6 @@ export class StyleComponent implements OnInit {
         this.sqlSerivce.GetSchema(this.mapConfig.currentLayer.layerID)
             .subscribe((data) => {
                 this.columns = data.slice(2, data.length)
-
-                //this.styleColumn.type = "boolean" //needs to be dynamic
-                this.updateColumn()
             })
     }
 
@@ -92,19 +89,6 @@ export class StyleComponent implements OnInit {
         }
     }
 
-    private updateColumn() {
-        this.styleValue = ""
-        if (this.styleColumn['field']) {
-            this.columns.forEach(x => {
-                if (this.styleColumn['field'] == x.field) {
-                    this.styleColumn.type = x.type
-                }
-            })
-        }
-        this.operators = this.getoperator(this.styleColumn.type)
-        console.log(this.columns)
-    }
-
     // closes the style menu
     private close() {
         this.mapConfig.styleShow = false
@@ -112,17 +96,12 @@ export class StyleComponent implements OnInit {
 
     // applies the style to the map and only shows the appllicable items //not fully working
     private applyStyle() {
-        if (this.styleColumn['field'] == "" || this.styleColumn['field'] == null) {
-            //this.mapConfig.styleOn = false;
-        }
-        else {
-            //this.mapConfig.styleOn = true
-        }
-        this.mapConfig.currentLayer.style['load']['color'] = this.selectedColor
-        this.mapConfig.currentLayer.style['current']['color'] = this.selectedColor
-        this.mapConfig.currentLayer.style['listLabel'] = this.selectedListTitle;
-
-        this.mapService.runInterval(this.mapConfig.currentLayer, this.mapConfig.currentLayer.source)
+        // if (this.styleColumn['field'] == "" || this.styleColumn['field'] == null) {}
+        // else {}
+        this.mapConfig.currentLayer.style.load.color = this.selectedColor
+        this.mapConfig.currentLayer.style.current.color = this.selectedColor
+        this.mapConfig.currentLayer.style.listLabel = this.selectedListTitle;
+        this.mapService.runInterval(this.mapConfig.currentLayer)
     }
 
     // Saves the current styles to the current user page
@@ -131,12 +110,10 @@ export class StyleComponent implements OnInit {
             this.mapConfig.currentLayer.style = this.mapConfig.currentLayer.layer.defaultStyle
         }
         this.applyStyle()
-        
         //these lines are required because the UserPageLayer has objects in it that won't save right
         let UPLSave = new UserPageLayer
         UPLSave.ID = this.mapConfig.currentLayer.ID
         UPLSave.style = this.mapConfig.currentLayer.style
-    
         this.userPageLayerService
             .Update(UPLSave)
             .subscribe((data) => {
@@ -144,7 +121,7 @@ export class StyleComponent implements OnInit {
             })
     }
 
-    // saves the current style to the layer for everyone to view and edit
+    // saves the current style to the layer for everyone to view and edit (if they don't already have a style)
     private saveToLayer(): void {
         this.mapConfig.currentLayer.layer.defaultStyle = this.mapConfig.currentLayer.style;
         this.layerService
@@ -152,39 +129,5 @@ export class StyleComponent implements OnInit {
             .subscribe((data) => {
                 console.log(data)
             })
-    }
-
-    getoperator(tp: string) {
-        switch (tp) {
-            case "boolean": {
-                return ([
-                    { value: 'isEqual', viewValue: 'Equal' },
-                    { value: 'isNotEqual', viewValue: 'Not Equal' }
-                ])
-            }
-            case "text": {
-                return ([
-                    { value: 'isEqual', viewValue: 'Equal' },
-                    { value: 'isNotEqual', viewValue: 'Not Equal' },
-                    { value: 'contains', viewValue: 'Contains' }
-                ])
-            }
-            case "date": {
-                return ([
-                    { value: 'isEqual', viewValue: 'Equal' },
-                    { value: 'isNotEqual', viewValue: 'Not Equal' },
-                    { value: 'isGreaterThan', viewValue: 'After' },
-                    { value: 'isLessThan', viewValue: 'Before' }
-                ])
-            }
-            case "double precision": {
-                return ([
-                    { value: 'isEqual', viewValue: 'Equal' },
-                    { value: 'isNotEqual', viewValue: 'Not Equal' },
-                    { value: 'isGreaterThan', viewValue: 'Greater Than' },
-                    { value: 'isLessThan', viewValue: 'Less Than' }
-                ])
-            }
-        }
     }
 }

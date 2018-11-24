@@ -16,9 +16,8 @@ export class MyCubeService extends SQLService {
     private mycubeconfig = new Subject<MyCubeConfig>();
     private mycubecomment = new Subject<MyCubeComment[]>();
     private cubeData: MyCubeField[]
-    private tempCubeData: MyCubeField[]
 
-
+    //needs to move to wmsService but for some reason it doesn't work there.
     sendWMS(message: string) {
         this.WMSSubject.next(message);
     }
@@ -31,7 +30,7 @@ export class MyCubeService extends SQLService {
         return this.WMSSubject.asObservable();
     }
 
-    public parseAndSendWMS(WMS: string): void {
+    public parseAndSendWMS(WMS: string): void { //this really need to be in the WMS service, but I think there's a 
         WMS = WMS.split("<body>")[1];
         WMS = WMS.split("</body>")[0];
         if (WMS.length < 10) {
@@ -42,7 +41,6 @@ export class MyCubeService extends SQLService {
         }
     }
 
-    //This needs a lot of work.  This should create an array of arrays for all of the features in the layer.
     prebuildMyCube(layer) {
         this.GetSchema(layer.layer.ID)
             .subscribe((data) => {
@@ -63,7 +61,6 @@ export class MyCubeService extends SQLService {
                 this.cubeData[0].type = "id"
                 this.cubeData[1].type = "geom"
                 this.getsingle(table, id).then(() => {resolve(this.cubeData)})
-
             })
           });
           return promise
@@ -80,15 +77,14 @@ export class MyCubeService extends SQLService {
                         z++
                     }
                 }
-                this.loadComments(table, id)
                 resolve()
             })
         })
+        this.loadComments(table, id)
         return promise
     }
 
     loadComments(table, id): any {
-        console.log('loading comments')
         this.getComments(table, id)
             .subscribe((cdata: any) => {
                 this.mycubesubject.next(this.cubeData);
@@ -131,5 +127,28 @@ export class MyCubeService extends SQLService {
         return this.mycubeconfig.asObservable();
     }
 
-
+    public createAutoMyCubeComment(auto: boolean, commentText: string, featureID: string | number, layerID: number, userID: number, geom?:any):Promise<any> {
+        let comment = new MyCubeComment()
+        let promise = new Promise ((resolve) => {
+            comment.auto = auto
+            comment.comment = commentText
+            comment.featureID = featureID
+            comment.table = layerID
+            comment.userID = userID
+            comment.geom = geom
+            if(geom != undefined) {
+                this.addCommentWithGeom(comment)
+                .subscribe((data) => {
+                resolve()
+                })
+            }
+            else {
+                this.addCommentWithoutGeom(comment)
+                .subscribe((data) => {
+                resolve()
+                })
+            }
+        })
+        return promise
+    }
 }   

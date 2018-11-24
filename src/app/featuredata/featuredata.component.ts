@@ -1,9 +1,8 @@
-import { Component, Input, Output, EventEmitter, Sanitizer } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MyCubeField, MyCubeConfig, MyCubeComment } from "../../_models/layer.model"
 import { SQLService } from "../../_services/sql.service"
 import { MyCubeService } from "../map/services/mycube.service"
 import { WMSService } from '../map/services/wms.service'
-import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { FormControl } from '@angular/forms';
 import {  } from '@angular/forms';
 import { MapConfig } from 'app/map/models/map.model';
@@ -51,7 +50,6 @@ export class FeatureDataComponent {
     @Input() canEdit: boolean;
     @Input() mapConfig: MapConfig
 
-
     ngOnInit() {
         this.open = true
         this.myCubeData = this.mapConfig.myCubeData
@@ -66,52 +64,37 @@ export class FeatureDataComponent {
     private clearMessage(): void {
         this.message = null
     }
+
     private updateMyCube(mycube: MyCubeField): void {
         if (mycube.changed) {
             if (mycube.type == "date") {
                 mycube.value = mycube.value.toJSON()
             }
             if (mycube.type == "text") {
-                console.log("mycube.type = text")
                 let ntext: RegExp = /'/g
                 mycube.value = mycube.value.replace(ntext, "''")
-                console.log(mycube.value)
-
             }
-            //document.getElementById("featureData").style.display = "block";
             this.sqlservice
                 .Update(this.myCubeConfig.table, this.myCubeData[0].value, mycube)
                 .subscribe((data) => {
-                    this.newComment.auto = true
-                    this.newComment.comment = mycube.field + " changed to " + mycube.value
-                    this.newComment.featureID = this.myCubeData[0].value
-                    this.newComment.table = this.myCubeConfig.table
-                    this.newComment.userID = this.userID
-                    this.newComment.geom = null
-                    this.sqlservice
-                        .addCommentWithoutGeom(this.newComment)
-                        .subscribe((data) => {
-                            this.commentText = ""
-                            this.myCubeService.loadComments(this.myCubeConfig.table, this.myCubeData[0].value)
+                    this.myCubeService.createAutoMyCubeComment(true, mycube.field + " changed to " + mycube.value, this.myCubeData[0].value, this.myCubeConfig.table, this.userID)
+                    .then(() => {
+                        this.commentText = ""
+                        this.myCubeService.loadComments(this.myCubeConfig.table, this.myCubeData[0].value)
+                    })
                         })
                     if (mycube.type == "text") {
                         let ntext: RegExp = /''/g
                         mycube.value = mycube.value.replace(ntext, "'")
-
                     }
-                })
-
+                }
             mycube.changed = false
         }
-    }
 
     private addMyCubeComment() {
         this.newComment.comment = this.commentText
         let ntext: RegExp = /'/g
         this.newComment.comment = this.newComment.comment.replace(ntext, "''")
-
-        console.log(this.newComment.comment)
-        console.log("feature id is= " + this.myCubeData[0].value)
         this.newComment.table = this.myCubeConfig.table
         this.newComment.featureID = this.myCubeData[0].value
         this.newComment.userID = this.userID
@@ -126,7 +109,6 @@ export class FeatureDataComponent {
     }
 
     private deleteMyCubeComment(table, comment:MyCubeComment) {
-        console.log("Deleting comment " + table)
         this.myCubeComments.splice(this.myCubeComments.indexOf(comment))
         this.sqlservice
             .deleteComment(table, comment.id)

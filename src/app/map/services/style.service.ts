@@ -7,16 +7,16 @@ export class StyleService {
     constructor() { }
     public setDefaultStyleandFilter(layer: UserPageLayer) {
         try {
-            if (layer.style['filter']['column'] == "") {
-                layer.style['filter']['column'] = layer.layer.defaultStyle['filter']['column'];
-                layer.style['filter']['operator'] = layer.layer.defaultStyle['filter']['operator'];
-                layer.style['filter']['value'] = layer.layer.defaultStyle['filter']['value'];
-                layer.style['load']['color'] = layer.layer.defaultStyle['load']['color'];
-                layer.style['current']['color'] = layer.layer.defaultStyle['current']['color']
+            if (layer.style.filter.column == "") {
+                layer.style.filter.column = layer.layer.defaultStyle.filter.column;
+                layer.style.filter.operator = layer.layer.defaultStyle.filter.operator;
+                layer.style.filter.value = layer.layer.defaultStyle.filter.value;
+                layer.style.load.color = layer.layer.defaultStyle.load.color;
+                layer.style.current.color = layer.layer.defaultStyle.current.color
             }
-            if (layer.style['load']['color'] == "") {
-                layer.style['load']['color'] = layer.layer.defaultStyle['load']['color']
-                layer.style['load']['width'] = layer.layer.defaultStyle['load']['width']
+            if (layer.style.load.color == "") {
+                layer.style.load.color = layer.layer.defaultStyle.load.color
+                layer.style.load.width = layer.layer.defaultStyle.load.width
             }
 
         }
@@ -28,10 +28,10 @@ export class StyleService {
         let color: string
         let width: number
         if (layer.style) {
-            color = layer.style[mode]['color']; width = layer.style[mode]['width']
+            color = layer.style[mode].color; width = layer.style[mode].width
         }
         else {
-            color = layer.layer.defaultStyle[mode]['color']; width = layer.layer.defaultStyle[mode]['width']
+            color = layer.layer.defaultStyle[mode].color; width = layer.layer.defaultStyle[mode].width
         }
         let style = new ol.style.Style({
             image: new ol.style.Circle({
@@ -68,10 +68,10 @@ export class StyleService {
 
         if (layer.style) {
             try {
-                if (layer.style['filter']['column'] != "" || layer.style['filter']['column'] != null) {
-                    filterColumn = layer.style['filter']['column']
-                    filterOperator = layer.style['filter']['operator']
-                    filterValue = layer.style['filter']['value']
+                if (layer.style.filter.column != "" || layer.style.filter.column != null) {
+                    filterColumn = layer.style.filter.column
+                    filterOperator = layer.style.filter.operator
+                    filterValue = layer.style.filter.value
                 }
             }
             catch (e) {
@@ -80,10 +80,10 @@ export class StyleService {
 
         }
         else {
-            if (layer.layer.defaultStyle['filter']) {
-                filterColumn = layer.layer.defaultStyle['filter']['column']
-                filterOperator = layer.layer.defaultStyle['filter']['operator']
-                filterValue = layer.layer.defaultStyle['filter']['value']
+            if (layer.layer.defaultStyle.filter) {
+                filterColumn = layer.layer.defaultStyle.filter.column
+                filterOperator = layer.layer.defaultStyle.filter.operator
+                filterValue = layer.layer.defaultStyle.filter.value
             }
         }
         if (filterColumn) {
