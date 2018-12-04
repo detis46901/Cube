@@ -5,9 +5,10 @@
     <styletoolbar *ngIf="mapConfig.styleShow" [mapConfig]="mapConfig"></styletoolbar>
     <measure *ngIf="mapConfig.measureShow" [mapConfig]="mapConfig"></measure>
 </mat-accordion>
+<app-feature-modules *ngIf="mapConfig.modulesShow" class="module-container" [mapConfig]="mapConfig"></app-feature-modules>
 <div class="pull-right" style="background: rgba(255,255,255,0); right:0px; top:53px; position:absolute">
     <!-- add class pull-right to move it right -->
-   
+
     <div style="width:300px">
         <mat-accordion class="example-headers-align">
 
@@ -66,7 +67,8 @@
                         <button mat-icon-button (click)="mapConfig.measureShow = !mapConfig.measureShow">
                             <mat-icon [ngClass]="mapConfig.measureShow ? 'selected-icon' : 'none'" matTooltip="Measure Toolbar">trending_flat</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false" matTooltip="Isolate" (click)="isolate(mapConfig.currentLayer)">
+                        <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false" matTooltip="Isolate"
+                            (click)="isolate(mapConfig.currentLayer)">
                             <mat-icon>filter_tilt_shift</mat-icon>
                         </button>
                         <button mat-icon-button (click)="mapService.zoomExtents()">
@@ -130,15 +132,16 @@
                                 <mat-icon>zoom_in</mat-icon>
                                 <span>Zoom To Layer</span>
                             </button>
-                            <button *ngIf="userpagelayer.defaultON; else defaultoff" (click)="mapService.toggleDefaultON(userpagelayer)" mat-menu-item>
-                            <mat-icon>done</mat-icon>
-                            <span>Default to Off</span>
-                        </button>
-                        <ng-template #defaultoff>
-                            <button mat-menu-item (click)="mapService.toggleDefaultON(userpagelayer)">
-                                <mat-icon>star</mat-icon>
-                                <span>Default to On</span>
-                            </button></ng-template>
+                            <button *ngIf="userpagelayer.defaultON; else defaultoff" (click)="mapService.toggleDefaultON(userpagelayer)"
+                                mat-menu-item>
+                                <mat-icon>done</mat-icon>
+                                <span>Default to Off</span>
+                            </button>
+                            <ng-template #defaultoff>
+                                <button mat-menu-item (click)="mapService.toggleDefaultON(userpagelayer)">
+                                    <mat-icon>star</mat-icon>
+                                    <span>Default to On</span>
+                                </button></ng-template>
                             <button mat-menu-item disabled="true">
                                 <mat-icon>remove_circle_outline</mat-icon>
                                 <span>Remove Layer From Page</span>
@@ -201,7 +204,8 @@
                         <button mat-icon-button (click)="mapConfig.measureShow = !mapConfig.measureShow">
                             <mat-icon [ngClass]="mapConfig.measureShow ? 'selected-icon' : 'none'" matTooltip="Measure Toolbar">trending_flat</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false" matTooltip="Isolate" (click)="isolate(mapConfig.currentLayer)">
+                        <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false" matTooltip="Isolate"
+                            (click)="isolate(mapConfig.currentLayer)">
                             <mat-icon>filter_tilt_shift</mat-icon>
                         </button>
                         <button mat-icon-button (click)="mapService.zoomExtents()">
@@ -256,7 +260,8 @@
                         <button mat-icon-button (click)="mapConfig.measureShow = !mapConfig.measureShow">
                             <mat-icon [ngClass]="mapConfig.measureShow ? 'selected-icon' : 'none'" matTooltip="Measure Toolbar">trending_flat</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false" matTooltip="Isolate" (click)="isolate(mapConfig.currentLayer)">
+                        <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false" matTooltip="Isolate"
+                            (click)="isolate(mapConfig.currentLayer)">
                             <mat-icon>filter_tilt_shift</mat-icon>
                         </button>
                         <button mat-icon-button (click)="mapService.zoomExtents()">

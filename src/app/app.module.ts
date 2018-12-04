@@ -7,6 +7,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { HttpModule, ConnectionBackend, Http } from '@angular/http';
 import { Routes, RouterModule } from '@angular/router';
+import { LinkyModule } from 'ngx-linky';
+import { FeatureModulesModule } from './feature-modules/feature-modules.module'
 import { Routing } from './app.routing';
 import { BaseRequestOptions } from '@angular/http';
 import { AuthGuard } from '../_guards/auth.guard';
@@ -56,6 +58,7 @@ import { ImageService } from '../_services/image.service';
 import { UserValidatorService } from './admin/user/userValidator.service';
 import { NotifService } from '../_services/notification.service';
 import { SocketService } from '../_services/socket.service';
+import { FeatureModulesService } from '../app/feature-modules/feature-modules.service'
 //import { MapService } from './map/services/map.service';
 //import { FilterService } from './map/services/filter.service';
 //import { GeocodingService } from './map/services/geocoding.service';
@@ -104,7 +107,7 @@ import { UserDetailsComponent } from './admin/details/userDetails/userDetails.co
 import { ServerDetailsComponent } from './admin/details/serverDetails/serverDetails.component';
 import { ServerLayersComponent } from './admin/server/serverLayers/serverLayers.component';
 import { StyleComponent } from './map/style/style.component';
-import { LinkyModule } from 'ngx-linky';
+
 
 @NgModule({
     declarations: [
@@ -216,7 +219,8 @@ import { LinkyModule } from 'ngx-linky';
         MatTooltipModule,
         MatSnackBarModule,
         MatDividerModule,
-        LinkyModule
+        LinkyModule,
+        FeatureModulesModule
     ],
 
     providers: [
@@ -247,7 +251,8 @@ import { LinkyModule } from 'ngx-linky';
         ImageService,
         UserValidatorService,
         NotifService,
-        SocketService
+        SocketService,
+        FeatureModulesService
     ],
 
     bootstrap: [AppComponent]

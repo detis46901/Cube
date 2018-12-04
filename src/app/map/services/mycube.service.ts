@@ -50,35 +50,43 @@ export class MyCubeService extends SQLService {
             })
     }
 
-    public getAndSendMyCubeData (table: number, feature: ol.Feature):Promise<any> {
-        this.getMyCubeDataFromFeature(feature)
+    public getAndSendMyCubeData(table: number, feature: ol.Feature): Promise<any> {
+        //this.getMyCubeDataFromFeature(feature)
         let promise = new Promise(resolve => {
-            let id = feature.getId()
-        this.GetSchema(table)
-            .subscribe((data: MyCubeField[]) => {
-                this.cubeData = data
-                this.cubeData[0].value = id
-                this.cubeData[0].type = "id"
-                this.cubeData[1].type = "geom"
-                this.getsingle(table, id).then(() => {resolve(this.cubeData)})
-            })
-          });
-          return promise
+            let id: number | string
+            if (feature.getId() != undefined) {
+                id = feature.getId()
+            }
+            else {
+                console.log(feature.getProperties()['features'][0]['c'])
+                id = feature.getProperties()['features'][0]['c']
+            }
+            console.log(id)
+            this.GetSchema(table)
+                .subscribe((data: MyCubeField[]) => {
+                    this.cubeData = data
+                    this.cubeData[0].value = id
+                    this.cubeData[0].type = "id"
+                    this.cubeData[1].type = "geom"
+                    this.getsingle(table, id).then(() => { resolve(this.cubeData) })
+                })
+        });
+        return promise
     }
 
-    getsingle(table, id):Promise<any> {
+    getsingle(table, id): Promise<any> {
         let promise = new Promise(resolve => {
             this.GetSingle(table, id)
-            .subscribe((sdata: JSON) => {
-                let z = 0
-                for (var key in sdata[0][0]) {
-                    if (sdata[0][0].hasOwnProperty(key)) {
-                        if (z != 0) { this.cubeData[z].value = sdata[0][0][key] }
-                        z++
+                .subscribe((sdata: JSON) => {
+                    let z = 0
+                    for (var key in sdata[0][0]) {
+                        if (sdata[0][0].hasOwnProperty(key)) {
+                            if (z != 0) { this.cubeData[z].value = sdata[0][0][key] }
+                            z++
+                        }
                     }
-                }
-                resolve()
-            })
+                    resolve()
+                })
         })
         this.loadComments(table, id)
         return promise
@@ -87,6 +95,7 @@ export class MyCubeService extends SQLService {
     loadComments(table, id): any {
         this.getComments(table, id)
             .subscribe((cdata: any) => {
+                console.log(cdata)
                 this.mycubesubject.next(this.cubeData);
                 this.mycubecomment.next(cdata[0])
             })
@@ -127,26 +136,27 @@ export class MyCubeService extends SQLService {
         return this.mycubeconfig.asObservable();
     }
 
-    public createAutoMyCubeComment(auto: boolean, commentText: string, featureID: string | number, layerID: number, userID: number, geom?:any):Promise<any> {
+    public createAutoMyCubeComment(auto: boolean, commentText: string, featureID: string | number, layerID: number, userID: number, geom?: any): Promise<any> {
         let comment = new MyCubeComment()
-        let promise = new Promise ((resolve) => {
+        let promise = new Promise((resolve) => {
             comment.auto = auto
             comment.comment = commentText
             comment.featureID = featureID
             comment.table = layerID
             comment.userID = userID
             comment.geom = geom
-            if(geom != undefined) {
+            if (geom != undefined) {
                 this.addCommentWithGeom(comment)
-                .subscribe((data) => {
-                resolve()
-                })
+                    .subscribe((data) => {
+                        resolve()
+                    })
             }
             else {
                 this.addCommentWithoutGeom(comment)
-                .subscribe((data) => {
-                resolve()
-                })
+                    .subscribe((data) => {
+                        console.log(data)
+                        resolve()
+                    })
             }
         })
         return promise

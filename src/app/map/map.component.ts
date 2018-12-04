@@ -106,6 +106,7 @@ export class MapComponent {
                     }, { hitTolerance: 20 })
                     mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
                     this.toolbar = "Layers"
+                    this.mapConfig.modulesShow = true
                     //this.setDefaultPageLayer()  At some point, the default layer needs to be set current
                 })
             )

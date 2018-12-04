@@ -10,6 +10,7 @@ import { SQLService } from './../../../_services/sql.service';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { StyleService } from '../services/style.service'
+import { FeatureModulesService } from "app/feature-modules/feature-modules.service";
 
 @Injectable()
 export class MapService {
@@ -38,6 +39,7 @@ export class MapService {
         private sqlService: SQLService,
         private mapstyles: mapStyles,
         private styleService: StyleService,
+        private featuremodulesservice: FeatureModulesService
     ) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.userID = currentUser && currentUser.userID;
@@ -199,6 +201,10 @@ export class MapService {
     }
 
     public loadMyCube(layer: UserPageLayer) {
+        if (layer.layerID == 87) {
+            this.featuremodulesservice.loadLayer(this.mapConfig, layer)
+            return
+        }
         let stylefunction = ((feature) => {
             return (this.styleService.styleFunction(feature, layer, "load"));
         })
@@ -216,6 +222,7 @@ export class MapService {
             if (data[0][0]['jsonb_build_object']['features']) {
                 source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
             }
+            console.log(data[0][0]['jsonb_build_object'])
             this.vectorlayer = new ol.layer.Vector({ source: source, style: stylefunction });
             this.vectorlayer.setVisible(layer.defaultON);
             this.mapConfig.map.addLayer(this.vectorlayer);
@@ -409,9 +416,11 @@ export class MapService {
     }
 
     private selectFeature(layer: UserPageLayer, refresh: boolean = false) {
+        console.log("Selecting feature")
         this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected);
         if (refresh == false) {
             this.mapConfig.myCubeConfig = this.myCubeService.setMyCubeConfig(layer.layer.ID, layer.layerPermissions.edit);
+            console.log(this.mapConfig.selectedFeature)
             this.myCubeService.getAndSendMyCubeData(layer.layer.ID, this.mapConfig.selectedFeature).then(data => {
                 this.mapConfig.myCubeData = data
                 this.mapConfig.featureDataShow = true;

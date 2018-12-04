@@ -1,7 +1,7 @@
 <!-- Jack Reyburn -->
 <!-- handles the my cube feature and comments menus -->
 <!-- message is WMS Data -->
-<div *ngIf="message"> 
+<div *ngIf="message">
     <!-- second accordian menu handling features -->
     <mat-accordion class="message-data" style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; left: 0px">
         <mat-expansion-panel [expanded]="open === true">
@@ -24,7 +24,7 @@
                 <!-- header -->
                 <mat-panel-title>
                     <span *ngIf="myCubeComments != null"> Comments ({{myCubeComments.length}})</span>
-                   
+
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <!-- box for comments -->
@@ -63,7 +63,8 @@
             <mat-form-field style="width:100%">
                 <input matInput id="comment" [(ngModel)]="commentText" placeholder="New Comment" (keyup.enter)="addMyCubeComment()">
             </mat-form-field>
-            <br><button id="showAuto" mat-button (click)='showAuto = !showAuto'>{{showAuto ? 'Hide Feature Changes' : 'Show
+            <br><button id="showAuto" mat-button (click)='showAuto = !showAuto'>{{showAuto ? 'Hide Feature Changes' :
+                'Show
                 Feature Changes'}}</button>
             <!-- <input type="file" (change)="onFileSelected($event)"> -->
         </mat-expansion-panel>
@@ -100,8 +101,7 @@
                         <!-- checkbox for contracting -->
                         <mat-checkbox [disabled]="!myCubeConfig.edit" [(ngModel)]="myCube.value" (change)="myCube.changed = true; updateMyCube(myCube)">{{myCube.field}}</mat-checkbox>
                     </div>
-                    <div *ngIf="myCube.type=='text'" matTooltip="" matTooltipPosition="above"
-                        matTooltipShowDelay="1000">
+                    <div *ngIf="myCube.type=='text' || myCube.type == 'character varying'" matTooltip="" matTooltipPosition="above" matTooltipShowDelay="1000">
                         <mat-form-field style="width:90%">
                             <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}"
                                 [(ngModel)]="myCube.value" (change)="myCube.changed = true" (blur)="updateMyCube(myCube)">
@@ -113,10 +113,7 @@
                                 <div [innerHTML]="url.email | linky: {truncate: 32}"></div>
                                 <!-- <span [innerHTML]="'<a href'"></span> -->
                             </div>
-                        <!-- <span *ngFor="let url of myCube.links">
-                            {{url}}
-                        </span> -->
-                    </div>
+                        </div>
                     </div>
                     <div *ngIf="myCube.type=='date'">
                         <mat-form-field style="width:90%">

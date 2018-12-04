@@ -35,6 +35,7 @@ export class MapConfig {
     styleShow?: boolean;
     measureShow?: boolean;
     featureDataShow: boolean;
+    modulesShow?: boolean;
     myCubeConfig: MyCubeConfig;
     myCubeData: MyCubeField[]
     myCubeComment: MyCubeComment[]

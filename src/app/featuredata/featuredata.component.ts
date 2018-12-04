@@ -102,7 +102,8 @@ export class FeatureDataComponent {
         this.myCubeComments.push(this.newComment)
         this.sqlservice
             .addCommentWithoutGeom(this.newComment)
-            .subscribe(() => {
+            .subscribe((data) => {
+                console.log(data)
                 this.myCubeService.loadComments(this.myCubeConfig.table, this.myCubeData[0].value)
             })
         this.commentText = ""
