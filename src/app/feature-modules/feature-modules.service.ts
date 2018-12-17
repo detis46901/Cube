@@ -18,6 +18,8 @@ export class FeatureModulesService {
   }
 
   public setCurrentLayer() {
+    console.log('setting current layer')
+    // this.locatesservice.setCurrentLayer(MapConfig, layer)
 
   }
 

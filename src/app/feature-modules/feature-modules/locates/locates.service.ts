@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+  import { Injectable } from '@angular/core';
 import { UserPageLayer } from '_models/layer.model';
 import { MapConfig } from 'app/map/models/map.model';
 import { geoJSONService } from 'app/map/services/geoJSON.service';
@@ -11,6 +11,7 @@ export class LocatesService {
   constructor(private geojsonservice: geoJSONService) { }
 
   public loadLayer(mapConfig: MapConfig, layer: UserPageLayer) {
+    //Need to provide for clustering if the number of objects gets too high
     console.log(mapConfig)
     console.log(mapConfig.userpagelayers)
     layer = mapConfig.userpagelayers[8]
@@ -22,8 +23,6 @@ export class LocatesService {
     })
 
     this.setDefaultStyleandFilter(layer)
-
-
     this.getMyCubeData(layer).then((data) => {
       if (data[0][0]['jsonb_build_object']['features']) {
         source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
@@ -37,10 +36,10 @@ export class LocatesService {
       this.vectorlayer = new ol.layer.Vector({
         source: source,
         style: function (feature) {
-          var size = feature.get('features').length;
-          var style = styleCache[size];
-          if (!style) {
-            style = new ol.style.Style({
+          //var size = feature.get('features').length;
+          //var style = styleCache[size];
+          //if (!style) {
+            let style = new ol.style.Style({
               image: new ol.style.Circle({
                 radius: 10,
                 stroke: new ol.style.Stroke({
@@ -50,15 +49,15 @@ export class LocatesService {
                   color: '#3399CC'
                 })
               }),
-              text: new ol.style.Text({
-                text: size.toString(),
-                fill: new ol.style.Fill({
-                  color: '#fff'
-                })
-              })
+              // text: new ol.style.Text({
+              //   text: '1',
+              //   fill: new ol.style.Fill({
+              //     color: '#fff'
+              //   })
+              // })
             });
-            styleCache[size] = style;
-          }
+            //styleCache[size] = style;
+          //}
           return style;
         }
       });
@@ -70,6 +69,7 @@ export class LocatesService {
   }
 
   public styleFunction(feature: ol.Feature, layer: UserPageLayer, mode: string): ol.style.Style {
+    console.log('Does Stylefunction get called in locates.service?')
     let color: string
     let width: number
     if (layer.style) {
@@ -91,16 +91,16 @@ export class LocatesService {
         color: color,
         width: width
       }),
-      text: new ol.style.Text({
-        font: '12px Calibri,sans-serif',
-        fill: new ol.style.Fill({
-          color: '#000'
-        }),
-        stroke: new ol.style.Stroke({
-          color: '#fff',
-          width: 1
-        }),
-      })
+      // text: new ol.style.Text({
+      //   font: '12px Calibri,sans-serif',
+      //   fill: new ol.style.Fill({
+      //     color: '#000'
+      //   }),
+      //   stroke: new ol.style.Stroke({
+      //     color: '#fff',
+      //     width: 1
+      //   }),
+      // })
     });
     return style
   }
@@ -120,7 +120,7 @@ export class LocatesService {
 
     }
     catch (e) {
-      //No Default Filter
+      console.log('No Default Filter')
     }
   }
 
@@ -134,4 +134,8 @@ export class LocatesService {
     })
     return promise;
   }
+
+  public setCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer) {
+   
+}
 }

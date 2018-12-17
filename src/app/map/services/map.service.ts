@@ -308,12 +308,6 @@ export class MapService {
             this.setCurrentMyCube(layer)
         }
         if (layer.layerShown === true && layer.layer.layerType != "MyCube") {
-            if (this.evkey) {
-                ol.Observable.unByKey(this.evkey);
-            }
-            if (this.modkey) {
-                ol.Observable.unByKey(this.modkey);
-            } //removes the previous modify even if there was one.
             this.evkey = this.createClick(layer);
         }
     }
@@ -322,6 +316,7 @@ export class MapService {
         let stylefunction = ((feature) => {
             return (this.styleService.styleFunction(feature, layer, "current"));
         })
+        
         try {
             if (layer.style.filter.column) {
                 this.mapConfig.filterOn = true;
@@ -334,15 +329,8 @@ export class MapService {
             //console.log('No Filter');
         }
         this.mapConfig.editmode = layer.layerPermissions.edit;
-        this.mapConfig.map.removeInteraction(this.modify);
-        this.modify = null;
         this.featurelist = [];
-        if (this.evkey) {
-            ol.Observable.unByKey(this.evkey);
-        }
-        if (this.modkey) {
-            ol.Observable.unByKey(this.modkey); //removes the previous modify even if there was one.
-        }
+       
         layer.olLayer.setStyle(stylefunction);
         this.getFeatureList();
         this.evkey = this.mapConfig.map.on('click', (e) => {
@@ -389,6 +377,12 @@ export class MapService {
                 element.olLayer.setStyle(stylefunction)
             }
         });
+        if (this.evkey) {
+            ol.Observable.unByKey(this.evkey);
+        }
+        if (this.modkey) {
+            ol.Observable.unByKey(this.modkey); //removes the previous modify even if there was one.
+        }
     }
 
     private createClick(layer) { //this is for WMS layers
