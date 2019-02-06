@@ -98,7 +98,7 @@
 
                 <!-- edit layers button -->
                 <button mat-button [matMenuTriggerFor]="menu2">
-                    Edit Layers
+                    Edit Page
                 </button>
                 <mat-menu #menu2="matMenu" [overlapTrigger]="false">
                     <button mat-menu-item id="openConfig" *ngFor="let userpage of (userPages | pagefilter: (row.currentData.ID))" (click)="getUserPageItem(userpage.ID, row.currentData.ID)">

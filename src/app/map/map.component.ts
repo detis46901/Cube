@@ -22,7 +22,7 @@ import { MatDialog } from '@angular/material';
 import { Clipboard } from 'ts-clipboard';
 import { Configuration } from '../../_api/api.constants';
 import { MatSnackBar } from '@angular/material';
-import { Feature } from 'geojson';
+//import { Feature } from 'geojson';
 
 @Component({
     moduleId: module.id,

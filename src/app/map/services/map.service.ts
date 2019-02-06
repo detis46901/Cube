@@ -582,7 +582,23 @@ export class MapService {
 
     //required (called from html)
     private zoomExtents(): void {
-        this.mapConfig.view.animate({ zoom: 12.5, center: ol.proj.transform([-86.1336, 40.4864], 'EPSG:4326', 'EPSG:3857') })
+            this.mapConfig.view.animate({ zoom: 12.5, center: ol.proj.transform([-86.1336, 40.4864], 'EPSG:4326', 'EPSG:3857') })
+        
+    }
+
+    private zoomToLayer() {
+        //this needs to be fed the layer and work with it instead of the featurelist.
+        let collection = new ol.geom.GeometryCollection
+        let feats = new Array<ol.geom.Geometry>()
+        for (let i of this.featurelist) {
+            feats.push(i.feature.getGeometry())
+            
+        }
+        collection.setGeometries(feats)
+         this.mapConfig.view.fit(collection.getExtent(), {
+             duration: 1000,
+             maxZoom: 18
+         })
     }
 
     //required (called from html)

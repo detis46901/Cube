@@ -18,6 +18,7 @@
 
     <!-- box containing the layer information and buttons -->
     <mat-dialog-content id="pageConfigBody">
+        <!-- <table><tr><td> -->
         <div class="row">
 
             <!-- table headers -->
@@ -47,7 +48,6 @@
             </div>
         </form>
         <hr>
-
         <!-- box to contain the add new layer input box and confirm button -->
         <form class="form" #f="ngForm">
             <div class="row">
@@ -63,6 +63,50 @@
                 <button style="position:relative; left:15px" mat-button id="pageConfigSubmit" (click)="addButton(newUserPageLayer, layerPermission)" [disabled]="!f.valid">Add Layer</button>
             </div>
         </form>
+            <div class="row">
+
+                    <!-- table headers -->
+                    <div class="col-sm-6">
+                        <h4>Current Modules</h4>
+                    </div>
+                    <div style="position:relative; right:-20px" id="defaultHeader" class="col-sm-3">
+                        <h4>Default</h4>
+                    </div>
+                </div>
+       <!-- form that holds both the default value and the layer name of the page -->
+       <form>
+            <div class="row" *ngFor="let upi of userPageInstances; let i=index" style="text-align: left">
+                <!-- trash button to delete pages and current layer names are the first column -->
+                <span id="pageConfigLayersColumn" class="col-sm-6" style="position:relative; left:0px; text-align:left; overflow:hidden; white-space:nowrap">
+                    <a (click)="deleteUserPageInstance(upi.ID)">
+                        <i class="fas fa-trash" aria-hidden="true"></i>
+                    </a>
+                    &nbsp;{{upi.module_instance.name}}
+                </span>
+
+                <!-- default layer toggle -->
+                <span id="pageConfigDefaultColumn" class="col-sm-4" style="text-align:right">
+                    <mat-slide-toggle [name]="upi.ID" [(ngModel)]="upi.defaultON" (change)="updateUserPageInstance(upi)"></mat-slide-toggle>
+                </span>
+            </div>
+        </form>
+        <hr>
+        <!-- box to contain the add new layer input box and confirm button -->
+        <form class="form" #f="ngForm">
+            <div class="row">
+                <mat-form-field id="pageConfigNewInstance">
+                    <mat-select [(ngModel)]="newUserPageInstance.moduleInstanceID" required name="instance" placeholder="Add Instance">
+                        <mat-option *ngFor="let modulePermission of modulePermissions" [value]="modulePermission.moduleInstanceID" (click)="enableSubmit(modulePermission)">
+                            {{modulePermission.module_instance.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- add layer button -->
+                <button style="position:relative; left:15px" mat-button id="pageConfigSubmit" (click)="addInstance(newUserPageInstance, modulePermission)" [disabled]="!f.valid">Add Instance</button>
+            </div>
+        </form>
+    <!-- </td></tr></table> -->
     </mat-dialog-content>
 
     <mat-dialog-actions style="justify-content:center">

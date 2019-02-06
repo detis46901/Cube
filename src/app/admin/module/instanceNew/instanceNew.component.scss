@@ -1,0 +1,35 @@
+// Jack Reyburn
+// Styles the new layer window
+
+// formats the header row
+#newLayerHeader {
+    width: 100%;
+    position: relative;
+    left: 15px;
+    bottom: 15px;
+    height: 0px;
+}
+
+// formats and positions the closing x
+#newLayerX {
+    position: absolute;
+    right: -140px;
+}
+
+// spaces the input boxes
+#nameBlock, #idBlock, #servBlock, #serviceBlock {
+    position: relative; 
+    left: 4%;
+    margin-bottom: 5px;
+}
+#descBlock, #typeBlock, #geomBlock, #formBlock {
+    position: relative; 
+    left: 12%;
+    margin-bottom: 5px;
+}
+
+// formats the add layer button
+#addLayerButton {
+    background-color: #7e7e7e;
+    color: white;
+}

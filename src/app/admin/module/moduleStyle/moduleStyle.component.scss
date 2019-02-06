@@ -1,0 +1,32 @@
+// Jack Reyburn
+// styles the layer styles page
+
+// positions the header
+#styleHeader {
+    position: relative;
+    top: -10px;
+    left: 5px;
+}
+
+// positions the close button
+#closingX {
+    position: relative;
+    top: -10px;
+    right: -180px;
+}
+
+// sets a max height where a scroll bar will be introduced
+mat-dialog-content {
+    max-height:300px;
+}
+
+// sets the width of the text area
+mat-form-field {
+    width: 300px;
+}
+
+// fills the form field and sets a default height
+textarea {
+    width: 100%;
+    height: 200px;
+}

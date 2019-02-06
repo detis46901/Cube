@@ -3,7 +3,7 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
 import { Location } from "../core/location.class";
 import { Injectable } from "@angular/core";
-import * as L from "leaflet";
+//import * as L from "leaflet";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mergeMap";
 

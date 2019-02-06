@@ -7,6 +7,7 @@ import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { GroupComponent } from './admin/group/group.component';
 import { LayerComponent } from './admin/layer/layer.component';
+import { InstanceComponent } from './admin/module/instance.component';
 import { UserComponent } from './admin/user/user.component';
 import { DefaultsComponent } from './admin/default/default.component';
 import { ServerComponent } from './admin/server/server.component';
@@ -16,6 +17,7 @@ import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
 import { ProfileComponent } from './settings/profile/profile.component';
 
 import { LayerPermissionComponent } from './admin/layer/layerPermission/layerPermission.component'
+import { ModulePermissionComponent } from './admin/module/modulePermission/modulePermission.component'
 
 
 const appRoutes: Routes = [
@@ -40,6 +42,7 @@ const appRoutes: Routes = [
             { path: 'user', component: UserComponent, outlet: 'admin' },
             { path: 'group', component: GroupComponent, outlet: 'admin' },
             { path: 'layer', component: LayerComponent, outlet: 'admin' },
+            { path: 'module', component: InstanceComponent, outlet: 'admin' },
             { path: 'default', component: DefaultsComponent, outlet: 'admin' },
             { path: 'server', component: ServerComponent, outlet: 'admin' }
         ]
@@ -47,6 +50,8 @@ const appRoutes: Routes = [
 
     // new Layer Modal Settings
     { path: 'layerNew', component: LayerPermissionComponent },
+    { path: 'moduleNew', component: ModulePermissionComponent },
+    
     // otherwise redirect to home
     { path: '**', redirectTo: '' }
 ];

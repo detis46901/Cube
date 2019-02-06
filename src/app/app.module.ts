@@ -1,7 +1,6 @@
 //Angular/Miscellaneous
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-//import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
@@ -44,6 +43,7 @@ import { GroupService } from '../_services/_group.service';
 import { GroupMemberService } from '../_services/_groupMember.service';
 import { LayerService } from '../_services/_layer.service';
 import { LayerPermissionService } from '../_services/_layerPermission.service';
+import { ModulePermissionService } from '../_services/_modulePermission.service';
 import { UserPageLayerService } from '../_services/_userPageLayer.service';
 import { UserPageService } from '../_services/_userPage.service';
 import { AuthenticationService } from '../_services/authentication.service';
@@ -69,7 +69,9 @@ import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminNavComponent } from './admin/adminNav/adminNav.component';
 import { LayerComponent } from './admin/layer/layer.component';
+import { InstanceComponent } from './admin/module/instance.component';
 import { LayerPermissionComponent } from './admin/layer/layerPermission/layerPermission.component';
+import { ModulePermissionComponent } from './admin/module/modulePermission/modulePermission.component';
 import { LayerStyleComponent } from './admin/layer/layerStyle/layerStyle.component'
 import { PageComponent } from './admin/user/page/page.component';
 import { PageConfigComponent } from './admin/user/pageConfig/pageConfig.component';
@@ -99,6 +101,7 @@ import { MeasureComponent } from './map/measure/measure.component';
 import { FilterComponent } from './map/filter/filter.component';
 import { mapStyles } from '../app/map/models/map.model';
 import { LayerDetailsComponent } from './admin/details/layerDetails/layerDetails.component';
+import { InstanceDetailsComponent } from './admin/details/instanceDetails/instanceDetails.component';
 import { MapService } from './map/services/map.service';
 import { StyleService } from './map/services/style.service';
 import { GeocodingService } from './map/services/geocoding.service';
@@ -123,6 +126,7 @@ import { StyleComponent } from './map/style/style.component';
         AdminNavComponent,
         GroupComponent,
         LayerComponent,
+        InstanceComponent,
         UserComponent,
         SettingsComponent,
         PasswordComponent,
@@ -130,6 +134,7 @@ import { StyleComponent } from './map/style/style.component';
         NumFilterPipe,
         PagePipe,
         LayerPermissionComponent,
+        ModulePermissionComponent,
         LayerStyleComponent,
         PageComponent,
         PageConfigComponent,
@@ -147,6 +152,7 @@ import { StyleComponent } from './map/style/style.component';
         ProfileComponent,
         ChangePictureComponent,
         LayerDetailsComponent,
+        InstanceDetailsComponent,
         NotifComponent,
         MeasureComponent,
         FilterComponent,
@@ -162,6 +168,7 @@ import { StyleComponent } from './map/style/style.component';
         newMyCubeComponent,
         ChangePasswordComponent,
         LayerPermissionComponent,
+        ModulePermissionComponent,
         LayerStyleComponent,
         PageComponent,
         PageConfigComponent,
@@ -236,6 +243,7 @@ import { StyleComponent } from './map/style/style.component';
         GroupMemberService,
         LayerService,
         LayerPermissionService,
+        ModulePermissionService,
         SQLService,
         UserPageLayerService,
         UserPageService,

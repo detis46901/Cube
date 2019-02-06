@@ -5,9 +5,12 @@ import { Group, GroupMember } from '../../../../_models/group.model';
 import { GroupService } from '../../../../_services/_group.service';
 import { GroupMemberService } from '../../../../_services/_groupMember.service';
 import { UserPageLayer, LayerPermission } from '../../../../_models/layer.model';
+import { UserPageInstance, ModulePermission } from '../../../../_models/module.model'
 import { UserPageService } from '../../../../_services/_userPage.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
+import { ModulePermissionService } from '../../../../_services/_modulePermission.service'
 import { UserPageLayerService } from '../../../../_services/_userPageLayer.service';
+import { UserPageInstanceService } from '../../../../_services/_userPageInstance.service'
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { MapConfig } from '../../../map/models/map.model';
 
@@ -30,7 +33,7 @@ import { MapConfig } from '../../../map/models/map.model';
 @Component({
     selector: 'page-config',
     templateUrl: './pageConfig.component.html',
-    providers: [UserService, GroupService, GroupMemberService, UserPageLayerService, UserPageService],
+    providers: [UserService, GroupService, GroupMemberService, UserPageLayerService, UserPageService, ModulePermissionService, UserPageInstanceService],
     styleUrls: ['./pageConfig.component.scss']
 })
 
@@ -41,9 +44,11 @@ export class PageConfigComponent implements OnInit {
 
     private newUserPage: string;
     private newUserPageLayer = new UserPageLayer;
+    private newUserPageInstance = new UserPageInstance;
     private layerPermissions = new Array<LayerPermission>();
+    private modulePermissions = new Array<ModulePermission>();
     private userPageLayers = new Array<UserPageLayer>(); //insert instantiation if error **REMOVE**
-
+    private userPageInstances = new Array<UserPageInstance>();
     private selectedUserPage: UserPage;
     private userGroups = new Array<Group>();
     private availableLPs = new Array<LayerPermission>();
@@ -55,13 +60,14 @@ export class PageConfigComponent implements OnInit {
 
     constructor(public userPageLayerService: UserPageLayerService, private userPageService: UserPageService,
         private groupService: GroupService, private groupMemberService: GroupMemberService,
-        private layerPermissionService: LayerPermissionService) {
+        private layerPermissionService: LayerPermissionService, private modulePermissionService: ModulePermissionService, public userPageInstanceService: UserPageInstanceService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
     }
 
     ngOnInit() {
         this.layerPermissions = [];
+        this.modulePermissions = [];
         this.getGroups();
         //this.getUserPageLayers();
         //this.getLayerPermissions().then((allPerms)=>this.layerPermissions=allPerms);
@@ -86,6 +92,7 @@ export class PageConfigComponent implements OnInit {
                 }
                 // this.userGroups = groups;
                 this.getUserPageLayers();
+                this.getUserPageInstances();
             })
 
     }
@@ -98,6 +105,16 @@ export class PageConfigComponent implements OnInit {
                 this.getLayerPermissions();
             });
     }
+
+    private getUserPageInstances(): void {
+        this.userPageInstanceService
+            .GetPageInstances(this.pageID)
+            .subscribe((data: UserPageInstance[]) => {
+                this.userPageInstances = data;
+                console.log(data)
+            });
+    }
+
 
     private getLayerPermissions() {
         var layerMatch = false;
@@ -137,6 +154,14 @@ export class PageConfigComponent implements OnInit {
                         // console.log("\nU Iterated       ID:" + LP.ID + "    Name: " + LP.layer.layerName)
                     }
                     console.log(this.layerPermissions)
+                    this.modulePermissionService
+                    .GetByUser(this.userID)
+                    .subscribe((data: ModulePermission[]) => {
+                        console.log(data)
+                        for (let LP of data) {
+                            this.modulePermissions.push(LP);
+                        }
+                    })
                     resolve();
                 });
         })
@@ -167,6 +192,26 @@ export class PageConfigComponent implements OnInit {
                             }
                         }
                     })
+                    this.modulePermissionService
+                    .GetByGroup(g.ID)
+                    .subscribe((LPs: ModulePermission[]) => {
+                        for (let LP of LPs) {
+                            //groupPerms.push(i)
+                            //if(this.layerPermissions.indexOf(LP) == -1) {
+                            if (this.modulePermissions.length > 0) {
+                                for (let userLP of this.modulePermissions) {
+                                    // console.log("\nG Iterated:      ID: " + LP.ID + "    Name: " + LP.layer.layerName)
+                                    if (LP.moduleInstanceID != userLP.moduleInstanceID) {
+                                        this.modulePermissions.push(LP);
+                                        break;
+                                    }
+                                }
+                            }
+                            else {
+                                this.modulePermissions.push(LP)
+                            }
+                        }
+                    })
             }
             resolve();
         })
@@ -189,6 +234,22 @@ export class PageConfigComponent implements OnInit {
             });
     }
 
+    private addUserPageInstance(newUserPageInstance: UserPageInstance): void {
+        var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
+        console.log(this.selectedLP)
+        this.newUserPageInstance.userPageID = this.pageID;
+        this.newUserPageInstance.userID = this.userID;
+        this.newUserPageInstance.defaultON = true;
+        this.newUserPageInstance.moduleInstanceID = newUserPageInstance.moduleInstanceID;
+        this.newUserPageInstance.style = null
+        this.userPageInstanceService
+            .Add(this.newUserPageInstance)
+            .subscribe(() => {
+                this.layerPermissions = [];
+                this.getUserPageInstances();
+            });
+    }
+
     private updateUserPageLayer(userPageLayer: UserPageLayer): void {
         let uplSave = new UserPageLayer
         uplSave.ID = userPageLayer.ID
@@ -204,12 +265,21 @@ export class PageConfigComponent implements OnInit {
     }
 
     // 2/8/18: Must do the same update function that layerPermission needs as well, needs to update available list of objects to add correctly
-    public deleteUserPageLayer(userPageID: number): void {
+    public deleteUserPageLayer(userPageLayerID: number): void {
         this.userPageLayerService
-            .Delete(userPageID)
+            .Delete(userPageLayerID)
             .subscribe((res) => {
                 this.layerPermissions = [];
                 this.getUserPageLayers();
+            });
+    }
+
+    public deleteUserPageInstance(userPageInstanceID: number): void {
+        this.userPageInstanceService
+            .Delete(userPageInstanceID)
+            .subscribe((res) => {
+                this.layerPermissions = [];
+                this.getUserPageInstances();
             });
     }
 
@@ -224,4 +294,11 @@ export class PageConfigComponent implements OnInit {
         var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
         element.disabled = true;
     }
+    private addInstance(newUserPageInstance: UserPageInstance): void {
+        this.addUserPageInstance(newUserPageInstance);
+        var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
+        element.disabled = true;
+    }
+
+    
 }

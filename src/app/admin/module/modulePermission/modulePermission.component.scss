@@ -1,0 +1,43 @@
+// Jack Reyburn
+// Styling of layer permissions
+
+.mat-dialog-container {
+    position: relative;
+}
+
+// sets max height of current permissions box
+mat-dialog-content {
+    max-height: 300px;
+}
+
+// positions the header
+#layerPermissionTitle {
+    position: relative;
+    top: -10px;
+    left: 10px;
+}
+
+// positions the closing 'x'
+#closingX {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+}
+
+// formats the line break
+hr {
+    position: relative;
+    bottom: 10px;
+    border-color: #8d8d8d;
+}
+
+// formats the checkboxes to have a gap inbetween them
+mat-checkbox {
+    margin-right: 10px;
+}
+
+// colors the add permissions button
+#addPermissionButton {
+    color: white;
+    background-color: #646464;
+}
