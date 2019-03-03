@@ -1,0 +1,47 @@
+<!-- Jack Reyburn -->
+<!-- This modal open the style edit window for layers -->
+
+<!-- creates a row to cotnain the header and the close button -->
+<div class="row">
+    <!-- header -->
+    <h4 id="styleHeader">
+        <b>Current Styles</b>
+        <button mat-dialog-close class="close" id="closingX" >&times;</button>
+    </h4>    
+</div>
+<hr>
+
+<!-- container to hold the text area to view and edit json styles -->
+<mat-dialog-content>
+        <!-- text area in which the admin can edit styles -->
+        <!-- <mat-form-field>
+            <textarea matInput name="layerStyle" [(ngModel)]="settings" placeholder="JSON Style"></textarea>
+        </mat-form-field> -->
+        <div *ngFor="let setting of settingsArray">
+            <div *ngIf="setting.type=='integer'">
+                <!-- input field -->
+                <mat-form-field style="width:90%">
+                    <input matInput id="textinput" ngModel required placeholder="{{setting.name}}" [(ngModel)]="setting.value"
+                        (change)="setting.changed = true">
+                </mat-form-field>
+            </div>
+            <div *ngIf="setting.type=='double precision'">
+                <!-- input field -->
+                <mat-form-field style="width:90%">
+                    <input matInput id="textinput" ngModel required placeholder="{{setting.name}}" [(ngModel)]="setting.value"
+                        (change)="setting.changed = true">
+                </mat-form-field>
+            </div>
+            <div *ngIf="setting.type=='boolean'">
+                <!-- checkbox for contracting -->
+                <mat-checkbox [(ngModel)]="setting.value">{{setting.name}}</mat-checkbox>
+            </div>
+            <div *ngIf="setting.type=='text' || setting.type == 'character varying'" matTooltip="" matTooltipPosition="above" matTooltipShowDelay="1000">
+                <mat-form-field style="width:90%">
+                    <input matInput id="textinput" name="textbox" ngModel placeholder="{{setting.name}}"
+                        [(ngModel)]="setting.value" (change)="setting.changed = true">
+                </mat-form-field><br>
+            </div>
+        </div>
+    <button mat-button (click)="updateSettings()">Update Settings</button>
+</mat-dialog-content>

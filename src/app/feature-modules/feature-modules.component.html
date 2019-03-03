@@ -1,3 +1,3 @@
-<mat-accordion>
-  <app-locates [mapConfig]="mapConfig"></app-locates>
+<mat-accordion *ngFor="let userPageInstance of mapConfig.userpageinstances">
+  <app-locates *ngIf="userPageInstance.module_instance.module.identity == 'locates'" [mapConfig]="mapConfig" [instanceID]="userPageInstance.module_instance.ID"></app-locates>
 </mat-accordion>

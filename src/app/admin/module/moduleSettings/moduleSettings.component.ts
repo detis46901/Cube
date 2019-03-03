@@ -4,24 +4,26 @@ import { User } from '../../../../_models/user.model';
 import { GroupService } from '../../../../_services/_group.service';
 import { Group } from '../../../../_models/group.model';
 import { Configuration } from '../../../../_api/api.constants';
-import { LayerService } from '../../../../_services/_layer.service';
+import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
-import { Layer } from '../../../../_models/layer.model';
-import { layer } from 'openlayers';
+import { ModuleInstance } from '../../../../_models/module.model';
+import { layer, Object } from 'openlayers';
+import { jsonpCallbackContext } from '@angular/common/http/src/module';
 
 @Component({
     selector: 'module-style',
-    templateUrl: './moduleStyle.component.html',
-    styleUrls: ['./moduleStyle.component.scss'],
-    providers: [UserService, GroupService, Configuration, LayerService, LayerPermissionService]
+    templateUrl: './moduleSettings.component.html',
+    styleUrls: ['./moduleSettings.component.scss'],
+    providers: [UserService, GroupService, Configuration, ModuleInstanceService, LayerPermissionService]
 })
 
-export class ModuleStyleComponent implements OnInit {
+export class ModuleSettingsComponent implements OnInit {
     @Input() instanceID: number;
     @Input() instanceName: string;
     private closeResult: string;
-    private layer: Layer
-    private defaultStyle: string;
+    private moduleInstance: ModuleInstance
+    private settings: string;
+    private settingsArray = new Array<JSON>();
     private permlessUsers = new Array<User>();
     private permlessGroups = new Array<Group>();
     private token: string;
@@ -33,32 +35,27 @@ export class ModuleStyleComponent implements OnInit {
     private currDeletedPermObj: any; //Group or User Object
     private currDeletedPermIsUser: boolean; //True if it is a User object from the permission.
 
-    constructor(private layerService: LayerService, private userService: UserService, private groupService: GroupService) {
+    constructor(private moduleInstanceService: ModuleInstanceService, private userService: UserService, private groupService: GroupService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {
-        this.getLayerItem(false);
-        this.layer = new Layer
-        this.defaultStyle = ""
-        // this.newLayerPermission.edit = false;
-        // this.newLayerPermission.delete = false;
-        // this.newLayerPermission.owner = false;
-        // this.newLayerPermission.canGrant = false;
-
-        //Initialize mat-slide-toggle state to user
-        //this.isUser = true;
+        this.getInstanceSettings();
     }
 
-    private getLayerItem(calledByDelete: boolean): void {
-        this.layerService
+    private getInstanceSettings(): void {
+        this.moduleInstanceService
             .GetSingle(this.instanceID)
-            .subscribe((data: Layer) => {
-                this.layer = data;
-                this.defaultStyle = JSON.stringify(this.layer.defaultStyle)
+            .subscribe((data: ModuleInstance) => {
+                this.moduleInstance = data;
+                this.settings = JSON.stringify(this.moduleInstance.settings)
+                for (let i of this.moduleInstance.settings['settings']) {
+                    this.settingsArray.push(i['setting'])
+                }
             });
+
     }
 
     //2/9/18 this is the last part that needs fixed to get the list to return correctly
@@ -106,12 +103,23 @@ export class ModuleStyleComponent implements OnInit {
     }
 
 
-    private updateLayerStyle(layer: Layer): void {
-        this.layer.defaultStyle = JSON.parse(this.defaultStyle);
-        this.layerService
-            .Update(layer)
+    private updateSettings(moduleInstance: ModuleInstance): void {
+        let tempJSON:JSON = JSON.parse('{"settings":[{}]}')
+        let i:number = 0
+
+        this.settingsArray.forEach((each) => {
+            let temp2JSON:JSON = JSON.parse('{"setting":"temp"}')
+            temp2JSON["setting"] = each
+            tempJSON["settings"][i] = temp2JSON
+            i=i+1
+        })
+        console.log(JSON.stringify(tempJSON))
+        let tempStart:JSON = JSON.parse(`{"settings":[{"setting":{"name":"myCube Layer Identity (integer)","type":"integer","value":0}}]}`)
+        this.moduleInstance.settings = tempJSON
+        this.moduleInstanceService
+            .Update(this.moduleInstance)
             .subscribe((result) => {
-                this.getLayerItem(false);
+                console.log("Settings Updated")
             });
     }
 }

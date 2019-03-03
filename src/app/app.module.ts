@@ -45,6 +45,7 @@ import { LayerService } from '../_services/_layer.service';
 import { LayerPermissionService } from '../_services/_layerPermission.service';
 import { ModulePermissionService } from '../_services/_modulePermission.service';
 import { UserPageLayerService } from '../_services/_userPageLayer.service';
+import { UserPageInstanceService } from '../_services/_userPageInstance.service';
 import { UserPageService } from '../_services/_userPage.service';
 import { AuthenticationService } from '../_services/authentication.service';
 import { SQLService } from '../_services/sql.service'
@@ -110,6 +111,7 @@ import { UserDetailsComponent } from './admin/details/userDetails/userDetails.co
 import { ServerDetailsComponent } from './admin/details/serverDetails/serverDetails.component';
 import { ServerLayersComponent } from './admin/server/serverLayers/serverLayers.component';
 import { StyleComponent } from './map/style/style.component';
+import { ModuleSettingsComponent } from './admin/module/moduleSettings/moduleSettings.component'
 
 
 @NgModule({
@@ -161,6 +163,7 @@ import { StyleComponent } from './map/style/style.component';
         ServerDetailsComponent,
         ServerLayersComponent,
         StyleComponent,
+        ModuleSettingsComponent
     ],
 
     entryComponents: [
@@ -181,7 +184,8 @@ import { StyleComponent } from './map/style/style.component';
         LayerDetailsComponent,
         UserDetailsComponent,
         ServerDetailsComponent,
-        ServerLayersComponent
+        ServerLayersComponent,
+        ModuleSettingsComponent
     ],
 
     imports: [
@@ -260,7 +264,8 @@ import { StyleComponent } from './map/style/style.component';
         UserValidatorService,
         NotifService,
         SocketService,
-        FeatureModulesService
+        FeatureModulesService,
+        UserPageInstanceService
     ],
 
     bootstrap: [AppComponent]

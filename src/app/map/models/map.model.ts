@@ -2,6 +2,7 @@ import { LayerClass, LayerPermission, UserPageLayer, MyCubeField, MyCubeComment,
 import { Server } from '../../../_models/server.model';
 import { User, UserPage } from '../../../_models/user.model';
 import { Feature } from 'openlayers';
+import { UserPageInstance } from '_models/module.model';
 
 export interface MapConfigView {
     projection: string;
@@ -18,14 +19,18 @@ export class MapConfig {
     view?: ol.View;
     sources?= new Array;  // holds only the base layer
     layers? = new Array;  // holds only the base layer
+    evkey: any; //current click event
     selectedFeature?: ol.Feature;
     selectedFeatures?: ol.Collection<ol.Feature> = new ol.Collection<ol.Feature>()
     userpages?: UserPage[];
     defaultpage?: UserPage;  //This looks like a duplicate that is also in userpages[]
     currentpage?: UserPage;
     userpagelayers?: UserPageLayer[];
+    userpageinstances?: UserPageInstance[];
+    userpageinstancelist?: string;
     currentLayer? = new UserPageLayer;
     currentLayerName?: string = "";
+    featureList? =  new Array<featureList>();
     editmode?: boolean;
     layerpermission?: LayerPermission[];
     mouseoverLayer?: UserPageLayer;

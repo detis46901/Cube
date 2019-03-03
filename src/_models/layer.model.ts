@@ -1,5 +1,6 @@
 import { Server } from './server.model'
 import { MyCubeStyle } from './style.model'
+import { UserPageInstance } from './module.model'
 
 export class Layer {
     ID: number;
@@ -51,6 +52,7 @@ export class UserPageLayer {
     source: any
     olLayer: any;
     updateInterval: any;
+    userPageInstanceID: number;
 }
 
 export class MyCubeField {

@@ -3,13 +3,17 @@ export class Module {
     identity: string;
     name: string;
     description: string;
+    defaultInstanceSettings: JSON;
+    defaultUserSettings: JSON;
 }
 
 export class ModuleInstance {
     ID?: number;
     name: string;
     description: string;
-    moduleID: number
+    settings: JSON;
+    moduleID: number;
+    module: Module
 }
 
 export class ModulePermission {
@@ -31,6 +35,6 @@ export class UserPageInstance {
     defaultON?: boolean;
     userPageID?: number;
     moduleInstanceID?: number;
-    style: JSON;
+    module_instance: ModuleInstance;
     instanceOrder: number;
 }

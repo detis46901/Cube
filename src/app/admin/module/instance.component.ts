@@ -8,7 +8,7 @@ import { UserPageInstanceService } from '../../../_services/_userPageInstance.se
 import { SQLService } from '../../../_services/sql.service';
 import { Module, ModuleInstance, ModulePermission, UserPageInstance } from '../../../_models/module.model';
 import { ModulePermissionComponent } from './modulePermission/modulePermission.component';
-import { ModuleStyleComponent } from './moduleStyle/moduleStyle.component';
+import { ModuleSettingsComponent } from './moduleSettings/moduleSettings.component';
 import { InstanceNewComponent } from './instanceNew/instanceNew.component';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
 import { ModuleService } from '../../../_services/_module.service';
@@ -80,7 +80,7 @@ export class InstanceComponent implements OnInit {
     }
 
     private openSettings(instanceid: number, instancename: string): void {
-        const dialogRef = this.dialog.open(ModuleStyleComponent);
+        const dialogRef = this.dialog.open(ModuleSettingsComponent, { height: '450px', width: '450px'});
         dialogRef.componentInstance.instanceID = instanceid;
         dialogRef.componentInstance.instanceName = instancename;
     }

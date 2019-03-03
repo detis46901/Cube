@@ -101,19 +101,39 @@
                         <!-- checkbox for contracting -->
                         <mat-checkbox [disabled]="!myCubeConfig.edit" [(ngModel)]="myCube.value" (change)="myCube.changed = true; updateMyCube(myCube)">{{myCube.field}}</mat-checkbox>
                     </div>
-                    <div *ngIf="myCube.type=='text' || myCube.type == 'character varying'" matTooltip="" matTooltipPosition="above" matTooltipShowDelay="1000">
-                        <mat-form-field style="width:90%">
-                            <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel required placeholder="{{myCube.field}}"
-                                [(ngModel)]="myCube.value" (change)="myCube.changed = true" (blur)="updateMyCube(myCube)">
-                        </mat-form-field><br>
-                        <!-- <span [innerHTML]="myCube.value | linky"></span> -->
-                        <div *ngIf="myCube.value != null">
-                            <div *ngFor="let url of Autolinker.parse(myCube.value)">
-                                <div [innerHTML]="url.url | linky: {truncate: 32}"></div>
-                                <div [innerHTML]="url.email | linky: {truncate: 32}"></div>
-                                <!-- <span [innerHTML]="'<a href'"></span> -->
-                            </div>
-                        </div>
+                    <div *ngIf="myCube.value != null">
+                            <div *ngIf="myCube.type=='text' && myCube.value.length > 20 || myCube.type == 'character varying' && myCube.value.length > 20"
+                                    matTooltip="" matTooltipPosition="above" matTooltipShowDelay="1000">
+                                    <mat-form-field style="width:90%">
+                                        <textarea matInput rows="3" [disabled]="!myCubeConfig.edit" id="textinput" ngModel required
+                                            placeholder="{{myCube.field}}" [(ngModel)]="myCube.value" (change)="myCube.changed = true"
+                                            (blur)="updateMyCube(myCube)"></textarea>
+                                    </mat-form-field><br>
+                                    <!-- <span [innerHTML]="myCube.value | linky"></span> -->
+                                    <div *ngIf="myCube.value != null">
+                                        <div *ngFor="let url of Autolinker.parse(myCube.value)">
+                                            <div [innerHTML]="url.url | linky: {truncate: 32}"></div>
+                                            <div [innerHTML]="url.email | linky: {truncate: 32}"></div>
+                                            <!-- <span [innerHTML]="'<a href'"></span> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="myCube.type=='text' && myCube.value.length <= 20 || myCube.type == 'character varying' && myCube.value.length <= 20"
+                                        matTooltip="" matTooltipPosition="above" matTooltipShowDelay="1000">
+                                        <mat-form-field style="width:90%">
+                                            <input matInput rows="3" [disabled]="!myCubeConfig.edit" id="textinput" ngModel required
+                                                placeholder="{{myCube.field}}" [(ngModel)]="myCube.value" (change)="myCube.changed = true"
+                                                (blur)="updateMyCube(myCube)">
+                                        </mat-form-field><br>
+                                        <!-- <span [innerHTML]="myCube.value | linky"></span> -->
+                                        <div *ngIf="myCube.value != null">
+                                            <div *ngFor="let url of Autolinker.parse(myCube.value)">
+                                                <div [innerHTML]="url.url | linky: {truncate: 32}"></div>
+                                                <div [innerHTML]="url.email | linky: {truncate: 32}"></div>
+                                                <!-- <span [innerHTML]="'<a href'"></span> -->
+                                            </div>
+                                        </div>
+                                    </div>
                     </div>
                     <div *ngIf="myCube.type=='date'">
                         <mat-form-field style="width:90%">

@@ -33,7 +33,6 @@ export class geoJSONService {
         return ob
     }
     public GetSome = (layerID: number, where:string): Observable<GeoJSON.GeoJsonObject> => {
-        console.log(where)
         let ob = this._http.get(this.actionUrl + 'some?table=' + layerID +'&where=' + where, this.options)
             .map((response: Response) => <GeoJSON.GeoJsonObject[]>response.json())
             .catch(this.handleError);

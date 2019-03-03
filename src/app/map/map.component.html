@@ -5,7 +5,7 @@
     <styletoolbar *ngIf="mapConfig.styleShow" [mapConfig]="mapConfig"></styletoolbar>
     <measure *ngIf="mapConfig.measureShow" [mapConfig]="mapConfig"></measure>
 </mat-accordion>
-<app-feature-modules *ngIf="mapConfig.modulesShow" class="module-container" [mapConfig]="mapConfig"></app-feature-modules>
+<app-feature-modules class="module-container" [mapConfig]="mapConfig"></app-feature-modules>
 <div class="pull-right" style="background: rgba(255,255,255,0); right:0px; top:53px; position:absolute">
     <!-- add class pull-right to move it right -->
 
@@ -242,13 +242,13 @@
             <mat-expansion-panel *ngIf="mapConfig.currentLayer.layer.layerType == 'MyCube'">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        Feature List ({{mapService.featurelist.length}})
+                        Feature List ({{mapConfig.featureList.length}})
                         <span *ngIf="mapConfig.filterOn"> - Filtered</span>
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
                 <div class="featurelist" style="overflow-x: hidden; text-overflow: ellipsis; overflow-y:auto">
-                    <div *ngFor="let fl of mapService.featurelist">
+                    <div *ngFor="let fl of mapConfig.featureList">
                         <a *ngIf="fl.feature != mapConfig.selectedFeature" style="cursor: pointer" (click)="mapService.zoomToFeature(fl)">{{fl.label}}</a>
                         <a *ngIf="fl.feature == mapConfig.selectedFeature" style="cursor: pointer" (click)="mapService.zoomToFeature(fl)"><b>{{fl.label}}</b></a>
                     </div>

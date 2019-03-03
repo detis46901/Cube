@@ -13,7 +13,7 @@
 
             <!-- second column containing the name of the instance -->
             <ng-container matColumnDef="name">
-                <mat-header-cell class="instance-md-head" *matHeaderCellDef> Name </mat-header-cell>
+                <mat-header-cell class="instance-md-head" *matHeaderCellDef> Instance Name </mat-header-cell>
                 <mat-cell class="instance-md-cell" *matCellDef="let row">
                     <mat-form-field #input style="width:80%" floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
                         <input matInput [formControl]="row.validator.controls['name']" [readonly]="!row.editing" [(ngModel)]="row.currentData.name">
@@ -48,9 +48,9 @@
                     <button style="border:1px solid white" mat-button id="createInstnaceBtn" (click)="createInstance()">
                         <a style="color:white">Create Instance</a>
                     </button>
-                    <!-- <button style="border:1px solid white" mat-button id="createMyCubeBtn" (click)="createMyCube()">
-                        <a style="color:white">Create MyCube</a>
-                    </button> -->
+                    <button disabled style="border:1px solid white" mat-button id="createMyCubeBtn" (click)="createMyCube()">
+                        <a style="color:white">Set Up Module</a>
+                    </button>
                 </mat-header-cell>
                 <mat-cell class="instance-xlg-cell" *matCellDef="let row">
                     <button mat-button [matMenuTriggerFor]="menu2">

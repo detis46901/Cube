@@ -18,8 +18,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LocatesService } from '../locates/locates.service'
-
+import { locateStyles } from './locates.model'
 
 
 @NgModule({
@@ -51,10 +52,12 @@ import { LocatesService } from '../locates/locates.service'
     MatTooltipModule,
     MatSnackBarModule,
     MatDividerModule,
+    FormsModule,
+    ReactiveFormsModule
 
   ],
   declarations: [LocatesComponent],
-  providers: [LocatesService],
+  providers: [LocatesService, locateStyles],
   exports:[LocatesComponent]
 })
 export class LocatesModule { }

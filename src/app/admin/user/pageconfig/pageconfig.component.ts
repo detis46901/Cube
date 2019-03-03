@@ -241,7 +241,6 @@ export class PageConfigComponent implements OnInit {
         this.newUserPageInstance.userID = this.userID;
         this.newUserPageInstance.defaultON = true;
         this.newUserPageInstance.moduleInstanceID = newUserPageInstance.moduleInstanceID;
-        this.newUserPageInstance.style = null
         this.userPageInstanceService
             .Add(this.newUserPageInstance)
             .subscribe(() => {

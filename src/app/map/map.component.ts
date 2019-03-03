@@ -137,6 +137,7 @@ export class MapComponent {
         this.currPage = page.page;
         this.cleanPage()
         this.mapService.getUserPageLayers(this.mapConfig)
+            .then(() => this.mapService.getUserPageInstances(this.mapConfig))
             .then(() => this.mapService.getLayerPerms())
             .then(() => {
                 this.mapService.loadLayers(this.mapConfig, false).then(() => {
@@ -174,7 +175,7 @@ export class MapComponent {
             this.mapService.stopInterval()
             this.mapConfig.map.removeLayer(x.olLayer)
             this.mapConfig.currentLayerName = "";
-            this.mapService.featurelist = []
+            this.mapConfig.featureList = []
         })
         //this.mapConfig.sources = [];
         this.mapConfig.editmode = false
