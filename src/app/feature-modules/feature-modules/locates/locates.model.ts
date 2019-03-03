@@ -1,3 +1,5 @@
+import * as ol from 'openlayers';
+
 export class Locate {
     ticket: string;
     id: number;

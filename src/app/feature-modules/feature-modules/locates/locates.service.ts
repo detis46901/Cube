@@ -13,6 +13,7 @@ import { catchError } from 'rxjs/operators';
 import { SQLService } from './../../../../_services/sql.service';
 import { Subject } from 'rxjs/Subject';
 import { MyCubeService } from './../../../map/services/mycube.service'
+import * as ol from 'openlayers';
 
 
 

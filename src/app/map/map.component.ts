@@ -22,6 +22,7 @@ import { MatDialog } from '@angular/material';
 import { Clipboard } from 'ts-clipboard';
 import { Configuration } from '../../_api/api.constants';
 import { MatSnackBar } from '@angular/material';
+import * as ol from 'openlayers';
 //import { Feature } from 'geojson';
 
 @Component({
@@ -87,7 +88,7 @@ export class MapComponent {
         this.getDefaultPage()
             .then(() => this.mapService.initMap(this.mapConfig)
                 .then((mapConfig) => {
-                    let ptkey = this.mapConfig.map.on('pointermove', (evt) => {
+                    let ptkey = this.mapConfig.map.on('pointermove', (evt:any) => {
                         if (mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
                             this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
                                 let index = this.mapConfig.userpagelayers.findIndex(z => z.olLayer == layer);

@@ -10,6 +10,7 @@ import 'rxjs/add/operator/map';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import {FormControl} from '@angular/forms';
+import * as ol from 'openlayers';
 
 
 @Component({

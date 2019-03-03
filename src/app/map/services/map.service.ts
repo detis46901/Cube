@@ -13,6 +13,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { StyleService } from '../services/style.service'
 import { FeatureModulesService } from "app/feature-modules/feature-modules.service";
+import * as ol from 'openlayers';
 
 @Injectable()
 export class MapService {
@@ -374,7 +375,7 @@ export class MapService {
     }
 
     private createMyCubeClickEvent(layer: UserPageLayer) {
-        this.mapConfig.evkey = this.mapConfig.map.on('click', (e) => {
+        this.mapConfig.evkey = this.mapConfig.map.on('click', (e:any) => {
             if (this.mapConfig.selectedFeature) {
                 if (layer.userPageInstanceID > 0 ) {
                     if (!this.featuremodulesservice.unstyleSelectedFeature(this.mapConfig, layer)) {
@@ -385,7 +386,7 @@ export class MapService {
                
             }
             var hit = false;
-            this.mapConfig.map.forEachFeatureAtPixel(e.pixel, (feature: ol.Feature, selectedLayer: any) => {
+            this.mapConfig.map.forEachFeatureAtPixel(e, (feature: ol.Feature, selectedLayer: any) => {
                 this.selectedLayer = selectedLayer;
                 if (selectedLayer === layer.olLayer) {
                     hit = true;

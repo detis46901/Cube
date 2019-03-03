@@ -1,6 +1,7 @@
 import 'rxjs/add/operator/map';
 import { Injectable } from '@angular/core';
 import { UserPageLayer } from '../../../_models/layer.model';
+import * as ol from 'openlayers';
 
 @Injectable()
 export class StyleService {

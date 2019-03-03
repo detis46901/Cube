@@ -3,6 +3,7 @@ import { Server } from '../../../_models/server.model';
 import { User, UserPage } from '../../../_models/user.model';
 import { Feature } from 'openlayers';
 import { UserPageInstance } from '_models/module.model';
+import * as ol from 'openlayers';
 
 export interface MapConfigView {
     projection: string;
