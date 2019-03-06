@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
 import { Configuration } from '../_api/api.constants';
 import { ParentService } from './_parent.service';
 import { Group } from '../_models/group.model';

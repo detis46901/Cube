@@ -1,4 +1,5 @@
 import { Http, Headers, Response, RequestOptions } from "@angular/http";
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from "@angular/core";
 import { Observable } from 'rxjs'
 import { Subject } from 'rxjs/Subject';
@@ -10,28 +11,25 @@ import "rxjs/add/operator/mergeMap";
 @Injectable()
 
 export class WMSService {
-    http: Http;
+    http: HttpClient;
     public headers: Headers;
-    public options: RequestOptions;
+    public options: any;
     private token: string;
-    public styleHead: Headers;
     public popupText = new Subject<string>();
     popupText$ = this.popupText.asObservable();
     private messageSubject = new Subject<any>();
     public sanitizedURL: SafeResourceUrl
 
-    constructor(http: Http, public sanitizer: DomSanitizer) {
+    constructor(http: HttpClient, public sanitizer: DomSanitizer) {
         this.http = http;
-        this.headers = new Headers();
-        this.headers.append('Content-Type', 'application/json'); //maybe it should be text/plain.  Most servers don't allow the application/json.  But text/plain fails on Geoserver
-        this.headers.append('Accept', 'application/json');  //same as above
-        this.headers.append('Authorization', 'Bearer ' + this.token);
-        this.headers.append('Access-Control-Allow-Origin', '*');
-        this.options = new RequestOptions({ headers: this.headers })
-        this.styleHead = new Headers();
-        this.styleHead.append('Content-Type', 'application/vnd.ogc.sld+xml')
-        this.styleHead.append('Accept', 'application/json');
-
+        this.options = {
+            headers: new HttpHeaders({
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + this.token,
+                'Access-Control-Allow-Origin': '*'
+            })
+        };
     }
 
     // sendMessage(message: any) {
@@ -49,10 +47,11 @@ export class WMSService {
     // }
 
     getfeatureinfo(URL, mouseDown: boolean) {
-        return this.http.get(URL)
+        return this.http.request("GET", URL, {responseType: 'text'})
             .map((responseData) => {
+                console.log(responseData)
                 let temp: string = responseData['_body']
-
+                try{
                 //This "if" block captures layer features with no pre-formatted "content.ftl" file
                 if (temp.startsWith("<table")) {
                     let formattedHead: Array<string> = [];
@@ -90,6 +89,9 @@ export class WMSService {
                     temp3 = temp3.replace('\"', " ")
                     temp = temp3
                 }
+            }
+                catch{return responseData}
+
                 return temp;
             })
     }

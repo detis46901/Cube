@@ -2,7 +2,7 @@ import 'rxjs/add/operator/map';
 import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Configuration } from '../_api/api.constants';
 import { MyCubeField, MyCubeComment } from '../_models/layer.model';
 

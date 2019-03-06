@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/map';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Configuration } from '../_api/api.constants';
 import { ParentService } from './_parent.service';

@@ -58,7 +58,6 @@ import { MessageService } from '../_services/message.service';
 import { ImageService } from '../_services/image.service';
 import { UserValidatorService } from './admin/user/userValidator.service';
 import { NotifService } from '../_services/notification.service';
-import { SocketService } from '../_services/socket.service';
 import { FeatureModulesService } from '../app/feature-modules/feature-modules.service'
 //import { MapService } from './map/services/map.service';
 //import { FilterService } from './map/services/filter.service';
@@ -263,7 +262,6 @@ import { ModuleSettingsComponent } from './admin/module/moduleSettings/moduleSet
         ImageService,
         UserValidatorService,
         NotifService,
-        SocketService,
         FeatureModulesService,
         UserPageInstanceService
     ],

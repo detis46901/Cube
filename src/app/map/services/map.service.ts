@@ -386,7 +386,7 @@ export class MapService {
                
             }
             var hit = false;
-            this.mapConfig.map.forEachFeatureAtPixel(e, (feature: ol.Feature, selectedLayer: any) => {
+            this.mapConfig.map.forEachFeatureAtPixel(e.pixel, (feature: ol.Feature, selectedLayer: any) => {
                 this.selectedLayer = selectedLayer;
                 if (selectedLayer === layer.olLayer) {
                     hit = true;
@@ -471,6 +471,9 @@ export class MapService {
             else {
                 this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected);
             }
+        }
+        else {
+            this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected);
         }
        
         if (refresh == false) {
