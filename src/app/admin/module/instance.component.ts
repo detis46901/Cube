@@ -17,11 +17,13 @@ import { MatDialog, MatDialogConfig } from '@angular/material';
 import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { InstanceValidatorService } from './instanceValidator.service';
 import { InstanceDetailsComponent } from '../details/instanceDetails/instanceDetails.component';
+import { FeatureModulesAdminService } from '../../feature-modules/feature-modules-admin.service'
+
 
 @Component({
     selector: 'instance',
     templateUrl: './instance.component.html',
-    providers: [UserService, Configuration, ModuleInstanceService, ModulePermissionService, UserPageInstanceService, ModuleService, SQLService, { provide: ValidatorService, useClass: InstanceValidatorService }],
+    providers: [UserService, Configuration, ModuleInstanceService, ModulePermissionService, UserPageInstanceService, ModuleService, SQLService, FeatureModulesAdminService, { provide: ValidatorService, useClass: InstanceValidatorService }],
     styleUrls: ['./instance.component.scss']
 })
 
@@ -37,7 +39,7 @@ export class InstanceComponent implements OnInit {
     private instanceColumns = ['instanceID', 'name', /*'identity', 'service', 'server', 'description',*/ /*'format', */'description', /*'geometry', */'actionsColumn'];
     private dataSource: TableDataSource<ModuleInstance>;
 
-    constructor(private instanceValidator: ValidatorService, private moduleInstanceService: ModuleInstanceService, private dialog: MatDialog, private modulePermissionService: ModulePermissionService, private userPageInstanceService: UserPageInstanceService, private moduleService: ModuleService, private sqlservice: SQLService) {
+    constructor(private instanceValidator: ValidatorService, private moduleInstanceService: ModuleInstanceService, private dialog: MatDialog, private modulePermissionService: ModulePermissionService, private userPageInstanceService: UserPageInstanceService, private moduleService: ModuleService, private sqlservice: SQLService, private featureModuleAdminService: FeatureModulesAdminService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser.token;
         this.userID = currentUser.userID;
@@ -55,6 +57,7 @@ export class InstanceComponent implements OnInit {
                 console.log(instances)
                 this.instances = instances;
                 this.dataSource = new TableDataSource<ModuleInstance>(instances, ModuleInstance, this.instanceValidator);
+                console.log(this.instances)
             });
     }
 
@@ -66,12 +69,12 @@ export class InstanceComponent implements OnInit {
             });
     }
 
-    private createInstance(): void {
-        const dialogRef = this.dialog.open(InstanceNewComponent, { height: '450px', width: '450px' });
-        dialogRef.afterClosed().subscribe(() => {
-            this.getInstanceItems();
-        });
-    }
+    // private createInstance(): void {
+    //     const dialogRef = this.dialog.open(InstanceNewComponent, { height: '450px', width: '450px' });
+    //     dialogRef.afterClosed().subscribe(() => {
+    //         this.getInstanceItems();
+    //     });
+    // }
 
     private openPermission(instanceid: number, instancename: string): void {
         const dialogRef = this.dialog.open(ModulePermissionComponent);
@@ -80,9 +83,16 @@ export class InstanceComponent implements OnInit {
     }
 
     private openSettings(instanceid: number, instancename: string): void {
-        const dialogRef = this.dialog.open(ModuleSettingsComponent, { height: '450px', width: '450px'});
+        const dialogRef = this.dialog.open(ModuleSettingsComponent, { height: '450px', width: '450px' });
         dialogRef.componentInstance.instanceID = instanceid;
         dialogRef.componentInstance.instanceName = instancename;
+    }
+
+    private createInstance(): void {
+        const dialogRef = this.dialog.open(ModuleSettingsComponent, { height: '450px', width: '450px' });
+        dialogRef.afterClosed().subscribe(() => {
+            this.getInstanceItems();
+        })
     }
 
     private openDetails(id: number, name: string): void {
@@ -95,6 +105,7 @@ export class InstanceComponent implements OnInit {
     }
 
     private confirmDelete(instance: ModuleInstance): void {
+        console.log(instance)
         const dialogRef = this.dialog.open(ConfirmDeleteComponent);
         dialogRef.componentInstance.objCode = this.objCode;
         dialogRef.componentInstance.objID = instance.ID;
@@ -102,6 +113,21 @@ export class InstanceComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result == this.objCode) {
                 this.deleteInstance(instance.ID);
+                this.userPageInstanceService.GetByInstance(instance.ID)
+                    .subscribe((x: UserPageInstance[]) => {
+                        console.log(x)
+                        x.forEach((y) => {
+                            this.userPageInstanceService.Delete(y.ID)
+                                .subscribe()
+                        })
+                    })
+                this.modulePermissionService.GetByInstance(instance.ID)
+                .subscribe((x:ModulePermission[]) => {
+                    x.forEach(x => {
+                        this.modulePermissionService.Delete(x.ID)
+                    })
+                })
+                this.featureModuleAdminService.deleteModuleInstance(instance)
             }
         });
     }

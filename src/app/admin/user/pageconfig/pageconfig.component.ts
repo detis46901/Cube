@@ -13,6 +13,7 @@ import { UserPageLayerService } from '../../../../_services/_userPageLayer.servi
 import { UserPageInstanceService } from '../../../../_services/_userPageInstance.service'
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { MapConfig } from '../../../map/models/map.model';
+import { FeatureModulesAdminService } from '../../../feature-modules/feature-modules-admin.service'
 
 /************************************************************************************************************************************************************
 * 2/9/18: All changes that need to happen  (Mark off as you complete)                                                                                       *
@@ -33,7 +34,7 @@ import { MapConfig } from '../../../map/models/map.model';
 @Component({
     selector: 'page-config',
     templateUrl: './pageConfig.component.html',
-    providers: [UserService, GroupService, GroupMemberService, UserPageLayerService, UserPageService, ModulePermissionService, UserPageInstanceService],
+    providers: [UserService, GroupService, GroupMemberService, UserPageLayerService, UserPageService, ModulePermissionService, UserPageInstanceService, FeatureModulesAdminService],
     styleUrls: ['./pageConfig.component.scss']
 })
 
@@ -60,7 +61,7 @@ export class PageConfigComponent implements OnInit {
 
     constructor(public userPageLayerService: UserPageLayerService, private userPageService: UserPageService,
         private groupService: GroupService, private groupMemberService: GroupMemberService,
-        private layerPermissionService: LayerPermissionService, private modulePermissionService: ModulePermissionService, public userPageInstanceService: UserPageInstanceService) {
+        private layerPermissionService: LayerPermissionService, private modulePermissionService: ModulePermissionService, private dialog: MatDialog, public userPageInstanceService: UserPageInstanceService, public featureModuleAdminService: FeatureModulesAdminService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
     }
@@ -68,7 +69,8 @@ export class PageConfigComponent implements OnInit {
     ngOnInit() {
         this.layerPermissions = [];
         this.modulePermissions = [];
-        this.getGroups();
+        //this.getGroups();
+        this.getAllByUser();
         //this.getUserPageLayers();
         //this.getLayerPermissions().then((allPerms)=>this.layerPermissions=allPerms);
         //  .then((/*ARRAY OF ALL PERMISSIONS GATHERED BY USER AND GROUPS*/) => this.layerPermissions = /*ARRAY*/); //********************* */
@@ -76,33 +78,29 @@ export class PageConfigComponent implements OnInit {
             .GetByUser(this.userID)
     }
 
-    private getGroups(): void {
-        let groupIDS = new Array<GroupMember>();
+    private getAllByUser() {
+        this.layerPermissionService.GetByUserGroups(this.userID)
+        .subscribe((x: LayerPermission[]) => {
+            console.log(x)
+            this.layerPermissions = x.filter(LP => LP.layer.layerType != 'Module')
 
-        this.groupMemberService
-            .GetByUser(this.userID)
-            .subscribe((data: GroupMember[]) => {
-                groupIDS = data;
-                for (let gm of data) {
-                    this.groupService
-                        .GetSingle(gm.groupID)
-                        .subscribe((group: Group) => {
-                            this.userGroups.push(group);
-                        })
-                }
-                // this.userGroups = groups;
-                this.getUserPageLayers();
-                this.getUserPageInstances();
-            })
-
+        })
+        this.modulePermissionService.GetByUserGroups(this.userID)
+        .subscribe((y: ModulePermission[]) => {
+            console.log(y)
+            this.modulePermissions = y
+        })
+        this.getUserPageLayers();
+        this.getUserPageInstances();
     }
+
 
     private getUserPageLayers(): void {
         this.userPageLayerService
             .GetPageLayers(this.pageID)
             .subscribe((data: UserPageLayer[]) => {
                 this.userPageLayers = data;
-                this.getLayerPermissions();
+                // this.getLayerPermissions();
             });
     }
 
@@ -113,109 +111,6 @@ export class PageConfigComponent implements OnInit {
                 this.userPageInstances = data;
                 console.log(data)
             });
-    }
-
-
-    private getLayerPermissions() {
-        var layerMatch = false;
-        this.getByUser().then(() => {
-            console.log('getting by groups')
-            this.getByGroup().then(() => {
-                console.log("in getbygroup");
-                this.availableLPs = [];
-                for (let LP of this.layerPermissions) {
-                    for (let UPL of this.userPageLayers) {
-                        if (LP.layerID == UPL.layerID) {
-                            layerMatch = true;
-                            break;
-                        }
-                    }
-                    if (!layerMatch) {
-                        this.availableLPs.push(LP);
-                    }
-                    layerMatch = false;
-                }
-            })
-        })
-        //Array.prototype.
-    }
-
-    private getByUser(): Promise<any> {
-        console.log("get by user")
-
-        var prom = new Promise((resolve, reject) => {
-            var userPerms = new Array<LayerPermission>();
-            this.layerPermissionService //run this logic as one promise
-                .GetByUser(this.userID)
-                .subscribe((data: LayerPermission[]) => {
-                    for (let LP of data) {
-                        //userPerms.push(i)
-                        this.layerPermissions.push(LP);
-                        // console.log("\nU Iterated       ID:" + LP.ID + "    Name: " + LP.layer.layerName)
-                    }
-                    console.log(this.layerPermissions)
-                    this.modulePermissionService
-                    .GetByUser(this.userID)
-                    .subscribe((data: ModulePermission[]) => {
-                        console.log(data)
-                        for (let LP of data) {
-                            this.modulePermissions.push(LP);
-                        }
-                    })
-                    resolve();
-                });
-        })
-        return prom;
-    }
-
-    private getByGroup(): Promise<any> {
-        //This method is ugly and needs work.
-        var prom = new Promise((resolve, reject) => {
-            for (let g of this.userGroups) { //only start this logic once the previous promise has resolved by chaining it
-                this.layerPermissionService
-                    .GetByGroup(g.ID)
-                    .subscribe((LPs: LayerPermission[]) => {
-                        for (let LP of LPs) {
-                            //groupPerms.push(i)
-                            //if(this.layerPermissions.indexOf(LP) == -1) {
-                            if (this.layerPermissions.length > 0) {
-                                for (let userLP of this.layerPermissions) {
-                                    // console.log("\nG Iterated:      ID: " + LP.ID + "    Name: " + LP.layer.layerName)
-                                    if (LP.layerID != userLP.layerID) {
-                                        this.layerPermissions.push(LP);
-                                        break;
-                                    }
-                                }
-                            }
-                            else {
-                                this.layerPermissions.push(LP)
-                            }
-                        }
-                    })
-                    this.modulePermissionService
-                    .GetByGroup(g.ID)
-                    .subscribe((LPs: ModulePermission[]) => {
-                        for (let LP of LPs) {
-                            //groupPerms.push(i)
-                            //if(this.layerPermissions.indexOf(LP) == -1) {
-                            if (this.modulePermissions.length > 0) {
-                                for (let userLP of this.modulePermissions) {
-                                    // console.log("\nG Iterated:      ID: " + LP.ID + "    Name: " + LP.layer.layerName)
-                                    if (LP.moduleInstanceID != userLP.moduleInstanceID) {
-                                        this.modulePermissions.push(LP);
-                                        break;
-                                    }
-                                }
-                            }
-                            else {
-                                this.modulePermissions.push(LP)
-                            }
-                        }
-                    })
-            }
-            resolve();
-        })
-        return prom;
     }
 
     private addUserPageLayer(newUserPageLayer: UserPageLayer): void {
@@ -230,22 +125,29 @@ export class PageConfigComponent implements OnInit {
             .Add(this.newUserPageLayer)
             .subscribe(() => {
                 this.layerPermissions = [];
+                this.getAllByUser()
                 this.getUserPageLayers();
             });
     }
 
     private addUserPageInstance(newUserPageInstance: UserPageInstance): void {
+        console.log(newUserPageInstance)
         var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
         console.log(this.selectedLP)
         this.newUserPageInstance.userPageID = this.pageID;
         this.newUserPageInstance.userID = this.userID;
         this.newUserPageInstance.defaultON = true;
-        this.newUserPageInstance.moduleInstanceID = newUserPageInstance.moduleInstanceID;
+        this.newUserPageInstance.moduleInstanceID = newUserPageInstance.module_instance.ID;
+        this.newUserPageInstance.module_instance = newUserPageInstance.module_instance
         this.userPageInstanceService
             .Add(this.newUserPageInstance)
-            .subscribe(() => {
+            .subscribe((data: UserPageInstance) => {
+                console.log(data)
+                newUserPageInstance.ID = data.ID
                 this.layerPermissions = [];
+                this.featureModuleAdminService.addModuleToPage(newUserPageInstance)
                 this.getUserPageInstances();
+                this.getUserPageLayers()
             });
     }
 
@@ -273,13 +175,33 @@ export class PageConfigComponent implements OnInit {
             });
     }
 
-    public deleteUserPageInstance(userPageInstanceID: number): void {
-        this.userPageInstanceService
-            .Delete(userPageInstanceID)
-            .subscribe((res) => {
-                this.layerPermissions = [];
-                this.getUserPageInstances();
-            });
+    public deleteUserPageInstance(userPageInstance: UserPageInstance): void {
+        //this.featureModuleAdminService.removeModuleFromPage(userPageInstance)
+        this.userPageLayers.forEach(x => {
+            if (x.userPageInstanceID == userPageInstance.ID) {
+                this.deleteUserPageLayer(x.ID)
+                this.userPageInstanceService
+                .Delete(userPageInstance.ID)
+                .subscribe((res) => {
+                    console.log(res)
+                    this.layerPermissions = [];
+                    this.getUserPageInstances();
+                    
+                });    
+            }
+            else {
+                this.userPageInstanceService
+                .Delete(userPageInstance.ID)
+                .subscribe((res) => {
+                    console.log(res)
+                    this.layerPermissions = [];
+                    this.getUserPageInstances();
+                    
+                }); 
+            }
+        })
+       
+        
     }
 
     public enableSubmit(LP: LayerPermission): void {
@@ -299,5 +221,7 @@ export class PageConfigComponent implements OnInit {
         element.disabled = true;
     }
 
-    
+    public closeDialog() {
+        this.dialog.closeAll()
+    }
 }

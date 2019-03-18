@@ -165,6 +165,16 @@ export class LayerComponent implements OnInit {
             .subscribe(() => {
                 this.getLayerItems();
             });
+        this.layerPermissionService.GetByLayer(layerID)
+        .subscribe((x) => {
+            x.forEach((y) => {
+                console.log(y)
+                this.layerPermissionService.Delete(y.ID)
+                .subscribe((z) => {
+                    console.log(z)
+                })
+            })
+        })
     }
 
     // 2/2/18: Keep this here to remind you: DON'T do it this way, when you get to it, implement using the pagination/sorting features of mat-table

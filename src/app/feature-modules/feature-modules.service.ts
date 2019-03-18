@@ -4,13 +4,15 @@ import { UserPageLayer } from '_models/layer.model';
 
 //add the service name
 import {LocatesService } from '../feature-modules/feature-modules/locates/locates.service'
+import { OpenAerialMapService} from '../feature-modules/feature-modules/open-aerial-map/open-aerial-map.service'
+
 
 
 @Injectable()
 export class FeatureModulesService {
 
   //add [module identity] + 'service: ' + [module service name]
-  constructor(public locatesservice: LocatesService) { }
+  constructor(public locatesservice: LocatesService, public openAerialMapservice: OpenAerialMapService) { }
 
   public determineModule() {
 
@@ -22,7 +24,12 @@ export class FeatureModulesService {
     let j = 'this.' + tempInstance.module_instance.module.identity + 'service'
     return eval(j + '.loadLayer(mapConfig, layer)')
   }
-
+  public unloadLayer(mapConfig:MapConfig, layer:UserPageLayer):boolean {
+    let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
+    let tempInstance = mapConfig.userpageinstances[tempinstancerow]
+    let j = 'this.' + tempInstance.module_instance.module.identity + 'service'
+    return eval(j + '.unloadLayer(mapConfig, layer)')
+  }
   public setCurrentLayer(mapConfig:MapConfig, layer:UserPageLayer):boolean {
     let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
     let tempInstance = mapConfig.userpageinstances[tempinstancerow]
@@ -61,12 +68,10 @@ export class FeatureModulesService {
     let j = 'this.' + tempInstance.module_instance.module.identity + 'service'
     return eval(j + '.unstyleSelectedFeature(mapConfig, layer)')
   }
-
   public getFeatureList(mapConfig:MapConfig, layer:UserPageLayer):boolean {
     let i = '.getFeatureList(mapConfig, layer)'
     return eval(this.getItentity(mapConfig, layer) + i)
   }
-
   public getItentity(mapConfig: MapConfig, layer:UserPageLayer): string {
     let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
     let tempInstance = mapConfig.userpageinstances[tempinstancerow]

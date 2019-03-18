@@ -6,7 +6,7 @@
 
         <!-- title header -->
         <div style="width:80%">
-            <h4 mat-dialog-title style="overflow:hidden; white-space:nowrap">{{pageName}}</h4>
+            <h4 mat-dialog-title style="overflow:hidden; white-space:nowrap">Open Aerial Map WMTS Items</h4>
         </div>
 
         <!-- closing button -->
@@ -35,7 +35,7 @@
             <div class="row" *ngFor="let upl of userPageLayers; let i=index" style="text-align: left">
                 <!-- trash button to delete pages and current layer names are the first column -->
                 <span id="pageConfigLayersColumn" class="col-sm-6" style="position:relative; left:0px; text-align:left; overflow:hidden; white-space:nowrap">
-                    <a *ngIf="upl.userPageInstanceID == null" (click)="deleteUserPageLayer(upl.ID)">
+                    <a (click)="deleteUserPageLayer(upl.ID)">
                         <i class="fas fa-trash" aria-hidden="true"></i>
                     </a>
                     &nbsp;{{upl.layer.layerName}}
@@ -78,7 +78,7 @@
             <div class="row" *ngFor="let upi of userPageInstances; let i=index" style="text-align: left">
                 <!-- trash button to delete pages and current layer names are the first column -->
                 <span id="pageConfigLayersColumn" class="col-sm-6" style="position:relative; left:0px; text-align:left; overflow:hidden; white-space:nowrap">
-                    <a (click)="deleteUserPageInstance(upi)">
+                    <a (click)="deleteUserPageInstance(upi.ID)">
                         <i class="fas fa-trash" aria-hidden="true"></i>
                     </a>
                     &nbsp;{{upi.module_instance.name}}
@@ -95,8 +95,8 @@
         <form class="form" #f="ngForm">
             <div class="row">
                 <mat-form-field id="pageConfigNewInstance">
-                    <mat-select [(ngModel)]="newUserPageInstance.module_instance" required name="instance" placeholder="Add Instance">
-                        <mat-option *ngFor="let modulePermission of modulePermissions" [value]="modulePermission.module_instance" (click)="enableSubmit(modulePermission)">
+                    <mat-select [(ngModel)]="newUserPageInstance.moduleInstanceID" required name="instance" placeholder="Add Instance">
+                        <mat-option *ngFor="let modulePermission of modulePermissions" [value]="modulePermission.moduleInstanceID" (click)="enableSubmit(modulePermission)">
                             {{modulePermission.module_instance.name}}
                         </mat-option>
                     </mat-select>
@@ -110,6 +110,6 @@
     </mat-dialog-content>
 
     <mat-dialog-actions style="justify-content:center">
-        <button mat-button id="submitChangesButton" (click)="closeDialog()">Close</button>
+        <button mat-button id="submitChangesButton" onClick="window.location.reload()">Submit Changes</button>
     </mat-dialog-actions>
 </div>

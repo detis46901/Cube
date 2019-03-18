@@ -172,4 +172,7 @@ export class PageComponent implements OnInit {
             this.updateUserPage(swap);
         }
     }
+    public closeDialog() {
+        this.dialog.closeAll()
+    }
 }

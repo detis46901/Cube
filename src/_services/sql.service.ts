@@ -110,6 +110,7 @@ export class SQLService {
     }
 
     public addColumn = (table: number, field: MyCubeField): Observable<any> => {
+        console.log(field)
         return this._http.get(this.actionUrl + 'addColumn?table=' + table + '&field=' + field.field + '&type=' + field.type + '&label=' + field.label, this.options)
             .catch(this.handleError)
     }

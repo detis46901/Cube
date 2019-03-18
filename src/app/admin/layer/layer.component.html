@@ -66,7 +66,7 @@
                         </button>
                     </span>
                     <span>
-                        <button mat-icon-button style="color:#7e7e7e" title="Delete Layer" focusable="false" (click)="confirmDelete(row.currentData)">
+                        <button mat-icon-button *ngIf="row.currentData.layerType != 'Module'" style="color:#7e7e7e" title="Delete Layer" focusable="false" (click)="confirmDelete(row.currentData)">    
                             <i class="fa fa-trash mat-icon"></i>
                         </button>
                     </span>

@@ -2,7 +2,7 @@ import { LayerClass, LayerPermission, UserPageLayer, MyCubeField, MyCubeComment,
 import { Server } from '../../../_models/server.model';
 import { User, UserPage } from '../../../_models/user.model';
 import { Feature } from 'openlayers';
-import { UserPageInstance } from '_models/module.model';
+import { UserPageInstance, ModulePermission } from '_models/module.model';
 import * as ol from 'openlayers';
 
 export interface MapConfigView {
@@ -34,6 +34,7 @@ export class MapConfig {
     featureList? =  new Array<featureList>();
     editmode?: boolean;
     layerpermission?: LayerPermission[];
+    modulepermission?: ModulePermission[];
     mouseoverLayer?: UserPageLayer;
     drawMode?: string;
     filterOn?: boolean;

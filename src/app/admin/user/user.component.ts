@@ -174,6 +174,7 @@ export class UserComponent implements OnInit {
 
         dialogRef.afterClosed()
             .subscribe((response: UserPageLayer[]) => {
+                console.log("openPageConfig afterClosed")
                 if (response != null) {
                     for (let i of response) {
                         this.userPageLayerService.Update(i).subscribe();

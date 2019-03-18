@@ -19,12 +19,14 @@ import { MatTooltipModule } from '@angular/material/tooltip'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { LocatesModule } from './feature-modules/locates/locates.module';
+import { openAerialMapModule } from './feature-modules/open-aerial-map/open-aerial-map.module';
 
 @NgModule({
   imports: [
     CommonModule,
     MatExpansionModule,
     LocatesModule,
+    openAerialMapModule,
     FormsModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,

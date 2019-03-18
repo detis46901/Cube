@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LocatesComponent } from './locates.component';
 //Angular Material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -12,6 +11,7 @@ import {
     MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule,
     MatFormFieldModule, MatProgressSpinnerModule, MatToolbarModule, MatNativeDateModule
 } from '@angular/material';
+import {MatSliderModule} from '@angular/material/slider'
 import {MatDividerModule} from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -19,15 +19,17 @@ import { MatTooltipModule } from '@angular/material/tooltip'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LocatesService } from '../locates/locates.service'
-import { LocatesAdminService } from '../locates/locates-admin.service'
-import { locateStyles } from './locates.model'
-import { ModuleInstanceService } from './../../../../_services/_moduleInstance.service'
+import { LocatesService } from '../locates/locates.service';
+import { OpenAerialMapComponent } from './open-aerial-map.component'
+import { OpenAerialMapConfigComponent } from './open-aerial-map-config.component'
+import { OpenAerialMapService } from './open-aerial-map.service'
+import { OpenAerialMapAdminService } from './open-aerial-map-admin.service'
 
 
 @NgModule({
   imports: [
     CommonModule,
+    BrowserAnimationsModule,
     MatExpansionModule,
     MatCardModule,
     MatSidenavModule,
@@ -54,12 +56,16 @@ import { ModuleInstanceService } from './../../../../_services/_moduleInstance.s
     MatTooltipModule,
     MatSnackBarModule,
     MatDividerModule,
+    MatSliderModule,
     FormsModule,
     ReactiveFormsModule
 
   ],
-  declarations: [LocatesComponent],
-  providers: [LocatesService, LocatesAdminService, locateStyles, ModuleInstanceService],
-  exports:[LocatesComponent]
+  declarations: [OpenAerialMapComponent, OpenAerialMapConfigComponent],
+  entryComponents: [
+    OpenAerialMapConfigComponent
+],
+  providers: [OpenAerialMapService, OpenAerialMapAdminService],
+  exports:[OpenAerialMapComponent]
 })
-export class LocatesModule { }
+export class openAerialMapModule { }

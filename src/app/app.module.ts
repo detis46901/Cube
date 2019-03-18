@@ -44,6 +44,7 @@ import { GroupMemberService } from '../_services/_groupMember.service';
 import { LayerService } from '../_services/_layer.service';
 import { LayerPermissionService } from '../_services/_layerPermission.service';
 import { ModulePermissionService } from '../_services/_modulePermission.service';
+import { ModuleService } from '../_services/_module.service'
 import { UserPageLayerService } from '../_services/_userPageLayer.service';
 import { UserPageInstanceService } from '../_services/_userPageInstance.service';
 import { UserPageService } from '../_services/_userPage.service';
@@ -70,6 +71,7 @@ import { AdminComponent } from './admin/admin.component';
 import { AdminNavComponent } from './admin/adminNav/adminNav.component';
 import { LayerComponent } from './admin/layer/layer.component';
 import { InstanceComponent } from './admin/module/instance.component';
+import { InstanceNewComponent } from './admin/module/instanceNew/instanceNew.component'
 import { LayerPermissionComponent } from './admin/layer/layerPermission/layerPermission.component';
 import { ModulePermissionComponent } from './admin/module/modulePermission/modulePermission.component';
 import { LayerStyleComponent } from './admin/layer/layerStyle/layerStyle.component'
@@ -162,7 +164,8 @@ import { ModuleSettingsComponent } from './admin/module/moduleSettings/moduleSet
         ServerDetailsComponent,
         ServerLayersComponent,
         StyleComponent,
-        ModuleSettingsComponent
+        ModuleSettingsComponent,
+        InstanceNewComponent
     ],
 
     entryComponents: [
@@ -184,7 +187,8 @@ import { ModuleSettingsComponent } from './admin/module/moduleSettings/moduleSet
         UserDetailsComponent,
         ServerDetailsComponent,
         ServerLayersComponent,
-        ModuleSettingsComponent
+        ModuleSettingsComponent,
+        InstanceNewComponent
     ],
 
     imports: [
@@ -263,7 +267,8 @@ import { ModuleSettingsComponent } from './admin/module/moduleSettings/moduleSet
         UserValidatorService,
         NotifService,
         FeatureModulesService,
-        UserPageInstanceService
+        UserPageInstanceService,
+        ModuleService
     ],
 
     bootstrap: [AppComponent]

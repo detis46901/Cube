@@ -144,6 +144,10 @@ export class LocatesService {
     return true
   }
 
+  public unloadLayer(mapConfig: MapConfig, layer:UserPageLayer): boolean {
+    return true
+  }
+
   public selectFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
     this.sqlService.GetSingle(this.layer.layerID, mapConfig.selectedFeature.get('id'))
     .subscribe((data:Locate) => {

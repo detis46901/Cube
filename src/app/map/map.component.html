@@ -41,11 +41,13 @@
                                         <span>Make Default</span>
                                     </button>
                                 </ng-template>
-                                <button mat-menu-item (click)="openPageConfig(userPage.ID, userPage.userID, userPage.page)">
+                                <button mat-menu-item
+                                    (click)="openPageConfig(userPage.ID, userPage.userID, userPage.page)">
                                     <mat-icon>settings</mat-icon>
                                     <span>Edit Layers</span>
                                 </button>
-                                <button mat-menu-item (click)="openPageConfig(userPage.ID, userPage.userID, userPage.page)">
+                                <button mat-menu-item
+                                    (click)="openPageConfig(userPage.ID, userPage.userID, userPage.page)">
                                     <mat-icon>share</mat-icon>
                                     <span>Share Page</span>
                                 </button>
@@ -56,7 +58,8 @@
                             </mat-menu>
                         </span>
                         <span style="text-align: left">
-                            <button mat-button style="text-align:left" (click)="setPage(userPage)">{{userPage.page}}</button>
+                            <button mat-button style="text-align:left"
+                                (click)="setPage(userPage)">{{userPage.page}}</button>
                             <!--(click)="setUserPageLayers(activePage)", {{activePage.page}}-->
                         </span>
                     </tr>
@@ -64,12 +67,13 @@
                 <br>
                 <mat-action-row>
                     <div style="text-align:right">
-                        <button mat-icon-button (click)="mapConfig.measureShow = !mapConfig.measureShow">
-                            <mat-icon [ngClass]="mapConfig.measureShow ? 'selected-icon' : 'none'" matTooltip="Measure Toolbar">trending_flat</mat-icon>
-                        </button>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false" matTooltip="Isolate"
-                            (click)="isolate(mapConfig.currentLayer)">
+                        <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false"
+                            matTooltip="Isolate" (click)="isolate(mapConfig.currentLayer)">
                             <mat-icon>filter_tilt_shift</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="mapConfig.measureShow = !mapConfig.measureShow">
+                            <mat-icon [ngClass]="mapConfig.measureShow ? 'selected-icon' : 'none'"
+                                matTooltip="Measure Toolbar">trending_flat</mat-icon>
                         </button>
                         <button mat-icon-button (click)="mapService.zoomExtents()">
                             <mat-icon matTooltip="Return Home">zoom_out_map</mat-icon>
@@ -78,11 +82,15 @@
                             <mat-icon matTooltip="Satellite Images">map</mat-icon>
                         </button>
                         <mat-divider *ngIf="mapConfig.editmode"></mat-divider>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'" (click)="mapConfig.filterShow = !mapConfig.filterShow">
-                            <mat-icon [ngClass]="mapConfig.filterShow ? 'selected-icon' : 'none'" matTooltip="Filter">filter_list</mat-icon>
+                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'"
+                            (click)="mapConfig.filterShow = !mapConfig.filterShow">
+                            <mat-icon [ngClass]="mapConfig.filterShow ? 'selected-icon' : 'none'" matTooltip="Filter">
+                                filter_list</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'" (click)="mapConfig.styleShow = !mapConfig.styleShow">
-                            <mat-icon [ngClass]="mapConfig.styleShow ? 'selected-icon' : 'none'" matTooltip="Style">style</mat-icon>
+                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'"
+                            (click)="mapConfig.styleShow = !mapConfig.styleShow">
+                            <mat-icon [ngClass]="mapConfig.styleShow ? 'selected-icon' : 'none'" matTooltip="Style">
+                                style</mat-icon>
                         </button>
                         <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw('Point')">
                             <mat-icon matTooltip="Create Point">control_point</mat-icon>
@@ -93,7 +101,8 @@
                         <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw('Polygon')">
                             <mat-icon matTooltip="Create Polygon">change_history</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.editmode && mapConfig.selectedFeature" (click)="mapService.delete(mapConfig)">
+                        <button mat-icon-button *ngIf="mapConfig.editmode && mapConfig.selectedFeature"
+                            (click)="mapService.delete(mapConfig)">
                             <mat-icon matTooltip="Delete Feature">delete</mat-icon>
                         </button>
                     </div>
@@ -132,8 +141,8 @@
                                 <mat-icon>zoom_in</mat-icon>
                                 <span>Zoom To Layer</span>
                             </button>
-                            <button *ngIf="userpagelayer.defaultON; else defaultoff" (click)="mapService.toggleDefaultON(userpagelayer)"
-                                mat-menu-item>
+                            <button *ngIf="userpagelayer.defaultON; else defaultoff"
+                                (click)="mapService.toggleDefaultON(userpagelayer)" mat-menu-item>
                                 <mat-icon>done</mat-icon>
                                 <span>Default to Off</span>
                             </button>
@@ -158,12 +167,14 @@
                                 <mat-icon>remove</mat-icon>
                                 <span>Remove From Page</span>
                             </button> -->
-                            <button mat-menu-item matTooltip="Use this in an Excel Data Connection" *ngIf="userpagelayer.layer.layerType == 'MyCube'"
+                            <button mat-menu-item matTooltip="Use this in an Excel Data Connection"
+                                *ngIf="userpagelayer.layer.layerType == 'MyCube'"
                                 (click)="copyToClipboard('sql/getsheets?table=' + userpagelayer.layer.ID)">
                                 <mat-icon>web</mat-icon>
                                 <span>Copy Excel URL</span>
                             </button>
-                            <button mat-menu-item matTooltip="Paste this into a Google Sheets Cell" *ngIf="userpagelayer.layer.layerType == 'MyCube'"
+                            <button mat-menu-item matTooltip="Paste this into a Google Sheets Cell"
+                                *ngIf="userpagelayer.layer.layerType == 'MyCube'"
                                 (click)="copyGSToClipboard('sql/getsheets?table=' + userpagelayer.layer.ID)">
                                 <mat-icon>web</mat-icon>
                                 <span>Copy Google Sheets URL</span>
@@ -183,13 +194,15 @@
                         </mat-menu>
 
                         <!-- button to disable or enable layer layer view on the map, radio button to enable user interaction with specified layer -->
-                        <mat-radio-button [disabled]="!userpagelayer.layerShown" class="example-radio-button" [value]="userpagelayer"
-                            (change)="mapService.setCurrentLayer(userpagelayer, mapConfig)">
-                            <mat-slide-toggle matTooltip="{{userpagelayer.layer.ID}}" class="example-margin" [checked]="userpagelayer.layerShown"
-                                (change)="mapService.toggleLayers(userpagelayer)">
-                                <b *ngIf="userpagelayer == mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</b>
+                        <mat-radio-button [disabled]="!userpagelayer.layerShown" class="example-radio-button"
+                            [value]="userpagelayer" (change)="mapService.setCurrentLayer(userpagelayer, mapConfig)">
+                            <mat-slide-toggle matTooltip="{{userpagelayer.layer.ID}}" class="example-margin"
+                                [checked]="userpagelayer.layerShown" (change)="mapService.toggleLayers(userpagelayer)">
+                                <b
+                                    *ngIf="userpagelayer == mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</b>
                                 <i *ngIf="userpagelayer.loadStatus=='Loading'">{{userpagelayer.layer.layerName}}</i>
-                                <span class="layer-name" *ngIf="userpagelayer.loadStatus!='Loading' &&  userpagelayer != mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</span>
+                                <span class="layer-name"
+                                    *ngIf="userpagelayer.loadStatus!='Loading' &&  userpagelayer != mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</span>
                             </mat-slide-toggle>
                             <br>
                         </mat-radio-button>
@@ -201,12 +214,13 @@
                 <!-- action row diretly beneath layers with many different options for interaction -->
                 <mat-action-row>
                     <div style="text-align:right">
-                        <button mat-icon-button (click)="mapConfig.measureShow = !mapConfig.measureShow">
-                            <mat-icon [ngClass]="mapConfig.measureShow ? 'selected-icon' : 'none'" matTooltip="Measure Toolbar">trending_flat</mat-icon>
-                        </button>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false" matTooltip="Isolate"
-                            (click)="isolate(mapConfig.currentLayer)">
+                        <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false"
+                            matTooltip="Isolate" (click)="isolate(mapConfig.currentLayer)">
                             <mat-icon>filter_tilt_shift</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="mapConfig.measureShow = !mapConfig.measureShow">
+                            <mat-icon [ngClass]="mapConfig.measureShow ? 'selected-icon' : 'none'"
+                                matTooltip="Measure Toolbar">trending_flat</mat-icon>
                         </button>
                         <button mat-icon-button (click)="mapService.zoomExtents()">
                             <mat-icon matTooltip="Return Home">zoom_out_map</mat-icon>
@@ -214,23 +228,34 @@
                         <button mat-icon-button (click)="mapService.toggleBasemap()">
                             <mat-icon matTooltip="Satellite Images">map</mat-icon>
                         </button>
-                        <mat-divider *ngIf="mapConfig.editmode || mapConfig.currentLayer.layer.layerType=='MyCube'"></mat-divider>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'" (click)="mapConfig.filterShow = !mapConfig.filterShow">
-                            <mat-icon [ngClass]="mapConfig.filterShow ? 'selected-icon' : 'none'" matTooltip="Filter">filter_list</mat-icon>
+                        <mat-divider *ngIf="mapConfig.editmode || mapConfig.currentLayer.layer.layerType=='MyCube'">
+                        </mat-divider>
+                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'"
+                            (click)="mapConfig.filterShow = !mapConfig.filterShow">
+                            <mat-icon [ngClass]="mapConfig.filterShow ? 'selected-icon' : 'none'" matTooltip="Filter">
+                                filter_list</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'" (click)="mapConfig.styleShow = !mapConfig.styleShow">
+                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'"
+                            (click)="mapConfig.styleShow = !mapConfig.styleShow">
                             <mat-icon [class.selected-icon]="mapConfig.styleShow" matTooltip="Style">style</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapConfig.drawMode='Point';mapService.draw('Point')">
-                            <mat-icon [class.selected-icon]="mapConfig.drawMode == 'Point'" matTooltip="Create Point">control_point</mat-icon>
+                        <button mat-icon-button *ngIf="mapConfig.editmode"
+                            (click)="mapConfig.drawMode='Point';mapService.draw('Point')">
+                            <mat-icon [class.selected-icon]="mapConfig.drawMode == 'Point'" matTooltip="Create Point">
+                                control_point</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapConfig.drawMode='LineString';mapService.draw('LineString')">
-                            <mat-icon [class.selected-icon]="mapConfig.drawMode == 'LineString'" matTooltip="Create Line">timeline</mat-icon>
+                        <button mat-icon-button *ngIf="mapConfig.editmode"
+                            (click)="mapConfig.drawMode='LineString';mapService.draw('LineString')">
+                            <mat-icon [class.selected-icon]="mapConfig.drawMode == 'LineString'"
+                                matTooltip="Create Line">timeline</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapConfig.drawMode='Polygon';mapService.draw('Polygon')">
-                            <mat-icon [class.selected-icon]="mapConfig.drawMode == 'Polygon'" matTooltip="Create Polygon">change_history</mat-icon>
+                        <button mat-icon-button *ngIf="mapConfig.editmode"
+                            (click)="mapConfig.drawMode='Polygon';mapService.draw('Polygon')">
+                            <mat-icon [class.selected-icon]="mapConfig.drawMode == 'Polygon'"
+                                matTooltip="Create Polygon">change_history</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.editmode && mapConfig.selectedFeature" (click)="mapService.delete(mapConfig)">
+                        <button mat-icon-button *ngIf="mapConfig.editmode && mapConfig.selectedFeature"
+                            (click)="mapService.delete(mapConfig)">
                             <mat-icon matTooltip="Delete Feature">delete</mat-icon>
                         </button>
                     </div>
@@ -249,8 +274,10 @@
 
                 <div class="featurelist" style="overflow-x: hidden; text-overflow: ellipsis; overflow-y:auto">
                     <div *ngFor="let fl of mapConfig.featureList">
-                        <a *ngIf="fl.feature != mapConfig.selectedFeature" style="cursor: pointer" (click)="mapService.zoomToFeature(fl)">{{fl.label}}</a>
-                        <a *ngIf="fl.feature == mapConfig.selectedFeature" style="cursor: pointer" (click)="mapService.zoomToFeature(fl)"><b>{{fl.label}}</b></a>
+                        <a *ngIf="fl.feature != mapConfig.selectedFeature" style="cursor: pointer"
+                            (click)="mapService.zoomToFeature(fl)">{{fl.label}}</a>
+                        <a *ngIf="fl.feature == mapConfig.selectedFeature" style="cursor: pointer"
+                            (click)="mapService.zoomToFeature(fl)"><b>{{fl.label}}</b></a>
                     </div>
                 </div>
 
@@ -258,10 +285,11 @@
                 <mat-action-row style="text-align:left">
                     <div style="text-align:right">
                         <button mat-icon-button (click)="mapConfig.measureShow = !mapConfig.measureShow">
-                            <mat-icon [ngClass]="mapConfig.measureShow ? 'selected-icon' : 'none'" matTooltip="Measure Toolbar">trending_flat</mat-icon>
+                            <mat-icon [ngClass]="mapConfig.measureShow ? 'selected-icon' : 'none'"
+                                matTooltip="Measure Toolbar">trending_flat</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false" matTooltip="Isolate"
-                            (click)="isolate(mapConfig.currentLayer)">
+                        <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false"
+                            matTooltip="Isolate" (click)="isolate(mapConfig.currentLayer)">
                             <mat-icon>filter_tilt_shift</mat-icon>
                         </button>
                         <button mat-icon-button (click)="mapService.zoomExtents()">
@@ -271,22 +299,29 @@
                             <mat-icon matTooltip="Satellite Images">map</mat-icon>
                         </button>
                         <mat-divider *ngIf="mapConfig.editmode"></mat-divider>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'" (click)="mapConfig.filterShow = !mapConfig.filterShow">
-                            <mat-icon [ngClass]="mapConfig.filterShow ? 'selected-icon' : 'none'" matTooltip="Filter">filter_list</mat-icon>
+                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'"
+                            (click)="mapConfig.filterShow = !mapConfig.filterShow">
+                            <mat-icon [ngClass]="mapConfig.filterShow ? 'selected-icon' : 'none'" matTooltip="Filter">
+                                filter_list</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'" (click)="mapConfig.styleShow = !mapConfig.styleShow">
-                            <mat-icon [ngClass]="mapConfig.styleShow? 'selected-icon' : 'none'" matTooltip="Style">style</mat-icon>
+                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'"
+                            (click)="mapConfig.styleShow = !mapConfig.styleShow">
+                            <mat-icon [ngClass]="mapConfig.styleShow? 'selected-icon' : 'none'" matTooltip="Style">style
+                            </mat-icon>
                         </button>
                         <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'Point')">
                             <mat-icon matTooltip="Create Point">control_point</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'LineString')">
+                        <button mat-icon-button *ngIf="mapConfig.editmode"
+                            (click)="mapService.draw(mapConfig,'LineString')">
                             <mat-icon matTooltip="Create Line">timeline</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw(mapConfig,'Polygon')">
+                        <button mat-icon-button *ngIf="mapConfig.editmode"
+                            (click)="mapService.draw(mapConfig,'Polygon')">
                             <mat-icon matTooltip="Create Polygon">change_history</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.editmode && mapConfig.selectedFeature" (click)="mapService.delete(mapConfig)">
+                        <button mat-icon-button *ngIf="mapConfig.editmode && mapConfig.selectedFeature"
+                            (click)="mapService.delete(mapConfig)">
                             <mat-icon matTooltip="Delete Feature">delete</mat-icon>
                         </button>
                     </div>

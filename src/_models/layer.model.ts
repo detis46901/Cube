@@ -1,6 +1,6 @@
 import { Server } from './server.model'
 import { MyCubeStyle } from './style.model'
-import { UserPageInstance } from './module.model'
+import { UserPageInstance, ModulePermission } from './module.model'
 
 export class Layer {
     ID: number;
@@ -44,7 +44,8 @@ export class UserPageLayer {
     layerID: number;
     style: MyCubeStyle;
     layer = new Layer;
-    layerPermissions = new LayerPermission;
+    layerPermissions = new LayerPermission();
+    modulePermissions = new ModulePermission;
     serverID: number;
     layerShown: boolean;
     loadOrder: number;

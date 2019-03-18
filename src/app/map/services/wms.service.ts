@@ -49,7 +49,6 @@ export class WMSService {
     getfeatureinfo(URL, mouseDown: boolean) {
         return this.http.request("GET", URL, {responseType: 'text'})
             .map((responseData) => {
-                console.log(responseData)
                 let temp: string = responseData['_body']
                 try{
                 //This "if" block captures layer features with no pre-formatted "content.ftl" file
@@ -97,8 +96,7 @@ export class WMSService {
     }
 
     public getCapabilities = (url): Observable<any> => {
-        return this.http.get(url + "?request=GetCapabilities")
-            .map((response: Response) => <any>response.text());
+        return this.http.request("GET", url + "?request=GetCapabilities", {responseType: 'text'})
     }
 
     public setLoadStatus(layer: UserPageLayer) {

@@ -3,8 +3,9 @@ import { MapConfig, mapStyles, featureList } from '../models/map.model';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { UserPageInstanceService } from '../../../_services/_userPageInstance.service'
 import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig, MyCubeComment } from '../../../_models/layer.model';
-import { UserPageInstance } from '../../../_models/module.model'
+import { UserPageInstance, ModulePermission } from '../../../_models/module.model'
 import { LayerPermissionService } from '../../../_services/_layerPermission.service';
+import { ModulePermissionService } from '../../../_services/_modulePermission.service'
 import { geoJSONService } from './../services/geoJSON.service';
 import { MyCubeService } from './../services/mycube.service';
 import { WMSService } from './wms.service';
@@ -36,6 +37,7 @@ export class MapService {
         private userPageLayerService: UserPageLayerService,
         private userPageInstanceService: UserPageInstanceService,
         private layerPermissionService: LayerPermissionService,
+        private modulePermissionService: ModulePermissionService,
         private geojsonservice: geoJSONService,
         private myCubeService: MyCubeService,
         private wmsService: WMSService,
@@ -63,6 +65,7 @@ export class MapService {
             this.getUserPageLayers(this.mapConfig)  //only sending an argument because I have to.
                 .then(() => this.getUserPageInstances(this.mapConfig))
                 .then(() => this.getLayerPerms())
+                .then(() => this.getModulePerms())
                 .then(() => this.loadLayers(this.mapConfig, true).then(() => {
                     this.mapConfig.view = new ol.View({
                         projection: 'EPSG:3857',
@@ -129,6 +132,31 @@ export class MapService {
                             userpagelayer.layerPermissions = this.mapConfig.layerpermission[j];
                             //need to make sure the maximum permissions get provided.  probably need to use foreach instead of findIndex  It uses the first one instead of the most liberal.
                         }
+                        else {
+                            //if there isn't an entry for the layer, it allows the viewing, but not anything else.  This is necessary because I'm not adding permissions to layers required by a module.
+                            //The module should define the layer permissions
+                            userpagelayer.layerPermissions = new LayerPermission
+                            userpagelayer.layerPermissions.edit = false
+                        }
+                    })
+                    resolve();
+                })
+        })
+        return promise;
+    }
+
+    public getModulePerms(): Promise<any> {
+        let promise = new Promise((resolve, reject) => {
+            this.modulePermissionService
+                .GetByUserGroups(this.mapConfig.userID)
+                .subscribe((data: ModulePermission[]) => {
+                    this.mapConfig.modulepermission = data;
+                    this.mapConfig.userpagelayers.forEach((userpagelayer) => {
+                        let j = this.mapConfig.modulepermission.findIndex((x) => x.moduleInstanceID == userpagelayer.userPageInstanceID);
+                        if (j >= 0) {
+                            userpagelayer.modulePermissions = this.mapConfig.modulepermission[j];
+                            //need to make sure the maximum permissions get provided.  probably need to use foreach instead of findIndex  It uses the first one instead of the most liberal.
+                        }
                     })
                     resolve();
                 })
@@ -177,6 +205,7 @@ export class MapService {
                                         layer: userpagelayer.layer.layerIdent,
                                         matrixSet: 'EPSG:3857'
                                     });
+                                    console.log(userpagelayer.layer.layerIdent)
                                     let wmsSource = new ol.source.WMTS(options);
                                     let wmsLayer = new ol.layer.Tile({
                                         opacity: 1,
@@ -187,6 +216,7 @@ export class MapService {
                                     userpagelayer.source = wmsSource
                                     this.wmsService.setLoadStatus(userpagelayer);
                                     if (init == false) {
+                                        console.log(wmsLayer)
                                         mapConfig.map.addLayer(wmsLayer);
                                     }
                                     j++;
@@ -258,9 +288,12 @@ export class MapService {
 
     //Reads index of layer in dropdown, layer, and if it is shown or not. Needs to remove a layer if a new one is selected
     private toggleLayers(layer: UserPageLayer): void {
-        layer.olLayer.setVisible(!layer.layerShown)
-        layer.layerShown = !layer.layerShown;
+        if (layer.olLayer) {layer.olLayer.setVisible(!layer.layerShown)}
+        layer.layerShown = !layer.layerShown;   
         if (layer.layerShown === false) {
+            if (layer.userPageInstanceID > 0) {
+                this.featuremodulesservice.unloadLayer(this.mapConfig, layer)
+            }
             if (this.mapConfig.currentLayer == layer) {
                 this.mapConfig.currentLayer = new UserPageLayer;
                 this.mapConfig.currentLayerName = "";
@@ -337,7 +370,7 @@ export class MapService {
                 if (!this.featuremodulesservice.getFeatureList(this.mapConfig, layer)) {
                     this.getFeatureList();
                 }
-                this.createMyCubeClickEvent(layer)
+                if (layer.layer.layerType == "MyCube") {this.createMyCubeClickEvent(layer)}
                 return
             }
         }       
