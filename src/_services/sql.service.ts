@@ -2,6 +2,7 @@ import 'rxjs/add/operator/map';
 import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Configuration } from '../_api/api.constants';
 import { MyCubeField, MyCubeComment } from '../_models/layer.model';
@@ -11,61 +12,63 @@ export class SQLService {
     protected headers: Headers;
     private actionUrl = this.configuration.serverWithApiUrl + 'sql/';
     protected token: string;
-    protected options: RequestOptions;
+    protected options;
 
-    constructor(protected _http: Http, protected configuration: Configuration) {
+    constructor(protected _http: HttpClient, protected configuration: Configuration) {
         this.headers = new Headers();
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
         } catch (err) {
             console.log("Could not find user in local storage. Did you reinstall your browser or delete cookies?\n" + err)
         }
-        this.headers.append('Content-Type', 'application/json');
-        this.headers.append('Accept', 'application/json');
-        this.headers.append('Authorization', 'Bearer ' + this.token);
-        this.headers.append('Access-Control-Allow-Origin', '*');
-        this.options = new RequestOptions({ headers: this.headers })
+        this.options = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + this.token,
+                //'Access-Control-Allow-Origin': '*'
+            })
+        }
     }
 
     public GetAll = (): Observable<any[]> => {
         return this._http.get(this.actionUrl + 'list', this.options)
-            .map((response: Response) => <any[]>response.json())
             .catch(this.handleError);
     }
 
-    public GetSchema = (id: number): Observable<MyCubeField[]> => {
+    public GetSchema = (id: number): Observable<any> => {
         return this._http.get(this.actionUrl + 'getschema?table=' + id, this.options)
-            .map((response: Response) => <MyCubeField[]>response.json()[0])
+            // .map((response: Response) => <MyCubeField[]>response.json()[0])
             .catch(this.handleError);
     }
 
     public GetSingle = (table: number, id: string): Observable<any> => {
         return this._http.get(this.actionUrl + 'one?table=' + table + '&id=' + id, this.options)
-            .map((response: Response) => <any>response.json())
+            // .map((response: Response) => <any>response.json())
             .catch(this.handleError);
     }
 
     public GetSingleFromEmail = (email: string): Observable<any> => {
         return this._http.get(this.actionUrl + 'one?email=' + email, this.options)
-            .map((response: Response) => <any>response.json())
+            // .map((response: Response) => <any>response.json())
             .catch(this.handleError);
     }
 
     public Create = (layerName: string): Observable<any> => {
         return this._http.get(this.actionUrl + 'create?table=' + layerName, this.options)
-            .map((response: Response) => <any>response.json())
+            // .map((response: Response) => <any>response.json())
             .catch(this.handleError);
     }
 
     public CreateCommentTable = (layerName: string): Observable<any> => {
         return this._http.get(this.actionUrl + 'createcommenttable?table=' + layerName, this.options)
-            .map((response: Response) => <any>response.json())
+            // .map((response: Response) => <any>response.json())
             .catch(this.handleError);
     }
 
     public getComments = (table: number, id: string): Observable<any> => {
         return this._http.get(this.actionUrl + 'getcomments?table=' + table + '&id=' + id, this.options)
-            .map((response: Response) => <any>response.json())
+            // .map((response: Response) => <any>response.json())
             .catch(this.handleError);
     }
 
@@ -85,13 +88,13 @@ export class SQLService {
 
     public addRecord = (table: number, geometry: JSON): Observable<any> => {
         return this._http.get(this.actionUrl + 'addRecord?table=' + table + '&geometry=' + JSON.stringify(geometry['geometry']), this.options)
-            .map((response: Response) => <any>response.json())
+            // .map((response: Response) => <any>response.json())
             .catch(this.handleError)
     }
 
     public fixGeometry = (table: number): Observable<any> => {
         return this._http.get(this.actionUrl + 'fixGeometry?table=' + table, this.options)
-            .map((response: Response) => <any>response.json())
+            // .map((response: Response) => <any>response.json())
             .catch(this.handleError)
     }
 
@@ -99,13 +102,13 @@ export class SQLService {
         console.log(JSON.stringify(MyCubeField))
         console.log(this.actionUrl + 'update', '{"table":' + table + ',"id":' + id + ',"mycubefield":' + JSON.stringify(MyCubeField) + '}')
         return this._http.put(this.actionUrl + 'update', '{"table":' + table + ',"id":' + id + ',"mycubefield":' + JSON.stringify(MyCubeField) + '}', this.options)
-            .map((response: Response) => <any>response.json())
+            // .map((response: Response) => <any>response.json())
             .catch(this.handleError);
     }
 
     public Delete = (table: number, id: any): Observable<Response> => {
         return this._http.get(this.actionUrl + 'deleteRecord?table=' + table + '&id=' + id, this.options)
-            .map((response: Response) => <any>response.json())
+            // .map((response: Response) => <any>response.json())
             .catch(this.handleError);
     }
 
@@ -123,7 +126,7 @@ export class SQLService {
         return this._http.get(this.actionUrl + 'deletecommenttable?table=' + table, this.options)
     }
 
-    public deleteComment = (table: number, id: number): Observable<Response> => {
+    public deleteComment = (table: number, id: number): Observable<any> => {
         return this._http.get(this.actionUrl + 'deletecomment?table=' + table + "&id=" + id, this.options)
     }
 

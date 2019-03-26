@@ -55,14 +55,26 @@ export class LoginComponent implements OnInit {
             return;
         }
         else {
+            console.log("Logging in")
             let that = this;
             this.loading = true;
             let username: string = this.model.username
             this.userService.login(username.toLowerCase(), this.model.password)
                 .subscribe(res => {
+                    console.log(res)
+                    if(res['token']) {
+                                 this.token = res['token'];
+                                 let userID = res['userID']
+                                 let admin = res['admin']
+                                 localStorage.setItem('currentUser', JSON.stringify({
+                                     userID: userID,
+                                     admin: admin,
+                                     token: this.token
+                                 }))
                     this.token = res
                     this.loading = false;
                     this.router.navigate(['/'])
+                                }
                 }, error => {
                     this.loading = false;
                     alert("Incorrect password or username.")

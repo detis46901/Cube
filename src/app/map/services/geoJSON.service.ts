@@ -1,6 +1,5 @@
 import 'rxjs/add/operator/map';
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Observable } from 'rxjs/Observable';
 import { Configuration } from '../../../_api/api.constants';
@@ -81,6 +80,6 @@ export class geoJSONService {
 
     protected handleError(error: Response) {
         console.error(error);
-        return Observable.throw(error.json().error || 'any error');
+        return Observable.throw(error.json() || 'any error');
     }
 }

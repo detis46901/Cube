@@ -6,7 +6,6 @@ import { geoJSONService } from 'app/map/services/geoJSON.service';
 import { Locate, locateStyles } from './locates.model'
 //http dependancies
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http'
-import { RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';

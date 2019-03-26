@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
 import { Configuration } from '../_api/api.constants';
-import { RequestOptions, Headers } from '@angular/http';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
 import { Notif } from '../_models/user.model';

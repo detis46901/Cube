@@ -5,7 +5,6 @@ import { MapConfig, mapStyles, featureList } from 'app/map/models/map.model';
 import { geoJSONService } from 'app/map/services/geoJSON.service';
 //http dependancies
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http'
-import { RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
