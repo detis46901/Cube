@@ -16,22 +16,22 @@ export class ModulePermissionService extends ParentService {
         this.actionUrl = this.configuration.serverWithApiUrl + 'modulepermission/';
     }
 
-    public GetByUser = (userid): Observable<ModulePermission[]> => {
+    public GetByUser = (userid): Observable<any> => {
         return this._http.get(this.actionUrl + 'getbyuser?userid=' + userid, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetByUserGroups = (userid): Observable<ModulePermission[]> => {
+    public GetByUserGroups = (userid): Observable<any> => {
         return this._http.get(this.actionUrl + 'getbyusergroups?userID=' + userid, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetByInstance = (instanceid): Observable<ModulePermission[]> => {
+    public GetByInstance = (instanceid): Observable<any> => {
         return this._http.get(this.actionUrl + 'getbyinstance?instanceID=' + instanceid, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetByGroup = (groupid): Observable<ModulePermission[]> => {
+    public GetByGroup = (groupid): Observable<any> => {
         console.log(this.actionUrl + 'getbygroup?groupID=' + groupid, this.options)
         return this._http.get(this.actionUrl + 'getbygroup?groupID=' + groupid, this.options)
             .pipe(catchError(this.handleError));

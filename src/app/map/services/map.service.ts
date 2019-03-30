@@ -227,6 +227,7 @@ export class MapService {
                             break;
                         }
                         default: {  //this is the WMS load
+                            console.log("loading WMS Layer")
                             let wmsSource = new ol.source.TileWMS({
                                 url: this.wmsService.formLayerRequest(userpagelayer),
                                 params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
@@ -234,6 +235,7 @@ export class MapService {
                                 serverType: 'geoserver',
                                 crossOrigin: 'anonymous'
                             });
+                            console.log(wmsSource)
                             let wmsLayer = new ol.layer.Tile({
                                 source: wmsSource
                             });

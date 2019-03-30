@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../../_services/_user.service';
 import { User } from '../../../_models/user.model';
 import { Configuration } from '../../../_api/api.constants';
@@ -17,6 +17,7 @@ import { Server } from '../../../_models/server.model';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { LayerValidatorService } from './layerValidator.service';
+import {MatPaginator, MatTableDataSource} from '@angular/material';
 import { LayerDetailsComponent } from '../details/layerDetails/layerDetails.component';
 
 @Component({
@@ -28,6 +29,7 @@ import { LayerDetailsComponent } from '../details/layerDetails/layerDetails.comp
 
 export class LayerComponent implements OnInit {
     //objCode refers to the  menu tab the user is on, so the openConfDel method knows what to interpolate based on what it's deleting
+    @ViewChild(MatPaginator) paginator: MatPaginator;
     private objCode: number = 2;
     private token: string;
     private userID: number;
@@ -36,7 +38,7 @@ export class LayerComponent implements OnInit {
     private servers: Server[];
 
     private layerColumns = ['layerID', 'name', /*'identity', 'service', 'server', 'description',*/ /*'format', */'type', /*'geometry', */'actionsColumn'];
-    private dataSource: TableDataSource<Layer>;
+    private dataSource: any
 
     constructor(private layerValidator: ValidatorService, private layerService: LayerService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -54,7 +56,7 @@ export class LayerComponent implements OnInit {
             .GetAll()
             .subscribe((layers: Layer[]) => {
                 this.layers = layers;
-                this.dataSource = new TableDataSource<Layer>(layers, Layer, this.layerValidator);
+                this.dataSource = layers
             });
     }
 

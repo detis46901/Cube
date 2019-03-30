@@ -1,13 +1,13 @@
 <div class="instance-parent-container">
     <div class="row">
         <!-- table for storing and editing all instance information in house -->
-        <mat-table id="instanceDataTable" #table [dataSource]="dataSource">
+        <table mat-table id="instanceDataTable" #table [dataSource]="dataSource">
 
             <!-- first column used to contain instance id numbers -->
             <ng-container matColumnDef="instanceID">
                 <mat-header-cell class="instance-sm-head" *matHeaderCellDef> ID </mat-header-cell>
                 <mat-cell class="instance-sm-cell" *matCellDef="let row">
-                    <b>{{row.currentData.ID}}</b>
+                    <b>{{row.ID}}</b>
                 </mat-cell>
             </ng-container>
 
@@ -15,29 +15,23 @@
             <ng-container matColumnDef="name">
                 <mat-header-cell class="instance-md-head" *matHeaderCellDef> Instance Name </mat-header-cell>
                 <mat-cell class="instance-md-cell" *matCellDef="let row">
-                    <mat-form-field #input style="width:80%" floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                        <input matInput [formControl]="row.validator.controls['name']" [readonly]="!row.editing" [(ngModel)]="row.currentData.name">
-                    </mat-form-field>
+                    {{row.name}}
+                    <!-- <mat-form-field #input style="width:80%">
+                        <input matInput [formControl]=" row.validator.controls['name']" [readonly]="!row.editing"
+                        [(ngModel)]="row.name">
+                    </mat-form-field> -->
                 </mat-cell>
             </ng-container>
-
-            <!-- third column containing the instance description -->
-            <!-- <ng-container matColumnDef="description">
-                <mat-header-cell class="instance-lg-head" *matHeaderCellDef> Description </mat-header-cell>
-                <mat-cell class="instance-lg-cell" *matCellDef="let row">
-                    <mat-form-field style="width:80%" floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                        <input matInput [formControl]="row.validator.controls['instanceDescription']" [readonly]="!row.editing" [(ngModel)]="row.currentData.instanceDescription">
-                    </mat-form-field>
-                </mat-cell>
-            </ng-container> -->
 
             <!-- fourth column containing type -->
             <ng-container matColumnDef="description">
                 <mat-header-cell class="instance-md-head" *matHeaderCellDef> Type </mat-header-cell>
                 <mat-cell class="instance-md-cell" *matCellDef="let row">
-                    <mat-form-field  floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                        <input matInput [formControl]="row.validator.controls['description']" [readonly]="!row.editing" [(ngModel)]="row.currentData.description">
-                    </mat-form-field>
+                    {{row.description}}
+                    <!-- <mat-form-field>
+                        <input matInput [formControl]="row.validator.controls['description']" [readonly]="!row.editing"
+                            [(ngModel)]="row.description">
+                    </mat-form-field> -->
                 </mat-cell>
             </ng-container>
 
@@ -48,7 +42,8 @@
                     <button style="border:1px solid white" mat-button id="createInstnaceBtn" (click)="createInstance()">
                         <a style="color:white">Create Instance</a>
                     </button>
-                    <button disabled style="border:1px solid white" mat-button id="createMyCubeBtn" (click)="createMyCube()">
+                    <button disabled style="border:1px solid white" mat-button id="createMyCubeBtn"
+                        (click)="createMyCube()">
                         <a style="color:white">Set Up Module</a>
                     </button>
                 </mat-header-cell>
@@ -57,16 +52,20 @@
                         <a>Options</a>
                     </button>
                     <mat-menu #menu2="matMenu" [overlapTrigger]="false">
-                        <button mat-menu-item id="exinstanceperm" (click)="openPermission(row.currentData.ID, row.currentData.name)">Permissions</button>
-                        <button mat-menu-item id="openstyle" (click)="openSettings(row.currentData.ID, row.currentData.name)">Settings</button>
+                        <button mat-menu-item id="exinstanceperm"
+                            (click)="openPermission(row.ID, row.name)">Permissions</button>
+                        <button mat-menu-item id="openstyle"
+                            (click)="openSettings(row.ID, row.name)">Settings</button>
                     </mat-menu>
                     <span>
-                        <button mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.name)">
+                        <button mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false"
+                            (click)="openDetails(row.ID, row.name)">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
                     </span>
                     <span>
-                        <button mat-icon-button style="color:#7e7e7e" title="Delete Instance" focusable="false" (click)="confirmDelete(row.currentData)">
+                        <button mat-icon-button style="color:#7e7e7e" title="Delete Instance" focusable="false"
+                            (click)="confirmDelete(row)">
                             <i class="fa fa-trash mat-icon"></i>
                         </button>
                     </span>
@@ -75,7 +74,7 @@
 
             <mat-header-row *matHeaderRowDef="instanceColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: instanceColumns"></mat-row>
-        </mat-table>
+        </table>
     </div>
 
 </div>

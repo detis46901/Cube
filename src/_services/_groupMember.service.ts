@@ -20,7 +20,7 @@ export class GroupMemberService extends ParentService {
             .pipe(catchError(this.handleError));
     }
 
-    public GetByGroup = (groupid): Observable<GroupMember[]> => {
+    public GetByGroup = (groupid): Observable<any> => {
         return this._http.get(this.actionUrl + 'getbygroup?groupid=' + groupid, this.options)
             .pipe(catchError(this.handleError));
     }

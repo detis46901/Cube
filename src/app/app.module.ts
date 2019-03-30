@@ -25,7 +25,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatMenuModule } from '@angular/material/menu'
 import {
     MatRadioModule, MatIconModule, MatCardModule, MatDialogModule, MatSelectModule, MatListModule,
-    MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule,
+    MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, 
     MatFormFieldModule, MatProgressSpinnerModule, MatToolbarModule, MatNativeDateModule
 } from '@angular/material';
 import {MatDividerModule} from '@angular/material/divider';

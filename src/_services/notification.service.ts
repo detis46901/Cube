@@ -37,17 +37,17 @@ export class NotifService {
         }
     }
 
-    public GetByUser = (userID): Observable<Notif[]> => {
+    public GetByUser = (userID): Observable<any> => {
         return this._http.get(this.actionUrl + 'getbyuser?userID=' + userID, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetByType = (type): Observable<Notif[]> => {
+    public GetByType = (type): Observable<any> => {
         return this._http.get(this.actionUrl + 'getbytype?objectType=' + type, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetBySource = (sourceID): Observable<Notif[]> => {
+    public GetBySource = (sourceID): Observable<any> => {
         return this._http.get(this.actionUrl + 'getbysource?sourceID=' + sourceID, this.options)
             .pipe(catchError(this.handleError));
     }
@@ -84,6 +84,6 @@ export class NotifService {
                 `body was: ${error.error}`);
         }
         // return an ErrorObservable with a user-facing error message
-        return new ErrorObservable('Something bad happened; please try again later.');
+        return new ErrorObservable();
     }
 }

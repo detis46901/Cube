@@ -7,7 +7,6 @@ import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
 import { LayerNewComponent } from '../layer/layerNew/layerNew.component';
 import { MatDialog } from '@angular/material';
-import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { ServerValidatorService } from './serverValidator.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -21,7 +20,7 @@ import * as ol from 'openlayers'
     selector: 'server',
     templateUrl: './server.component.html',
     styleUrls: ['./server.component.scss'],
-    providers: [ServerService, { provide: ValidatorService, useClass: ServerValidatorService }]
+    providers: [ServerService]
 })
 
 export class ServerComponent implements OnInit {
@@ -46,10 +45,10 @@ export class ServerComponent implements OnInit {
     private path: string = '';
 
     private serverColumns = ['serverID', 'serverName', 'serverType', 'serverURL', 'actionsColumn']
-    private dataSource: TableDataSource<Server>;
+    private dataSource: any;
     private http: Http
 
-    constructor(private serverService: ServerService, private dialog: MatDialog, private serverValidator: ValidatorService, http: Http
+    constructor(private serverService: ServerService, private dialog: MatDialog, http: Http
     ) {
     this.http = http
         this.options = {
@@ -70,7 +69,7 @@ export class ServerComponent implements OnInit {
             .GetAll()
             .subscribe((servers) => {
                 this.servers = servers;
-                this.dataSource = new TableDataSource<Server>(servers, Server, this.serverValidator);
+                this.dataSource = servers;
             });
     }
 

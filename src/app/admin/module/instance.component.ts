@@ -14,7 +14,7 @@ import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component
 import { ModuleService } from '../../../_services/_module.service';
 import { Server } from '../../../_models/server.model';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
+// import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { InstanceValidatorService } from './instanceValidator.service';
 import { InstanceDetailsComponent } from '../details/instanceDetails/instanceDetails.component';
 import { FeatureModulesAdminService } from '../../feature-modules/feature-modules-admin.service'
@@ -23,7 +23,7 @@ import { FeatureModulesAdminService } from '../../feature-modules/feature-module
 @Component({
     selector: 'instance',
     templateUrl: './instance.component.html',
-    providers: [UserService, Configuration, ModuleInstanceService, ModulePermissionService, UserPageInstanceService, ModuleService, SQLService, FeatureModulesAdminService, { provide: ValidatorService, useClass: InstanceValidatorService }],
+    providers: [UserService, Configuration, ModuleInstanceService, ModulePermissionService, UserPageInstanceService, ModuleService, SQLService, FeatureModulesAdminService],
     styleUrls: ['./instance.component.scss']
 })
 
@@ -37,9 +37,9 @@ export class InstanceComponent implements OnInit {
     private modules: Module[];
 
     private instanceColumns = ['instanceID', 'name', /*'identity', 'service', 'server', 'description',*/ /*'format', */'description', /*'geometry', */'actionsColumn'];
-    private dataSource: TableDataSource<ModuleInstance>;
+    private dataSource: any;
 
-    constructor(private instanceValidator: ValidatorService, private moduleInstanceService: ModuleInstanceService, private dialog: MatDialog, private modulePermissionService: ModulePermissionService, private userPageInstanceService: UserPageInstanceService, private moduleService: ModuleService, private sqlservice: SQLService, private featureModuleAdminService: FeatureModulesAdminService) {
+    constructor(private moduleInstanceService: ModuleInstanceService, private dialog: MatDialog, private modulePermissionService: ModulePermissionService, private userPageInstanceService: UserPageInstanceService, private moduleService: ModuleService, private sqlservice: SQLService, private featureModuleAdminService: FeatureModulesAdminService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser.token;
         this.userID = currentUser.userID;
@@ -56,7 +56,7 @@ export class InstanceComponent implements OnInit {
             .subscribe((instances: ModuleInstance[]) => {
                 console.log(instances)
                 this.instances = instances;
-                this.dataSource = new TableDataSource<ModuleInstance>(instances, ModuleInstance, this.instanceValidator);
+                this.dataSource = instances
                 console.log(this.instances)
             });
     }

@@ -16,22 +16,22 @@ export class UserPageInstanceService extends ParentService {
         this.actionUrl = this.configuration.serverWithApiUrl + 'userpageinstance/';
     }
 
-    public GetSome = (pageid): Observable<UserPageInstance[]> => {
+    public GetSome = (pageid): Observable<any> => {
         return this._http.get(this.actionUrl + 'list?ID=' + pageid, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetPageInstances = (pageid): Observable<UserPageInstance[]> => {
+    public GetPageInstances = (pageid): Observable<any> => {
         return this._http.get(this.actionUrl + 'getpageinstances?pageID=' + pageid, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetUserInstances = (userid): Observable<UserPageInstance[]> => {
+    public GetUserInstances = (userid): Observable<any> => {
         return this._http.get(this.actionUrl + 'userlist?userid=' + userid, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetByInstance = (instanceid): Observable<UserPageInstance[]> => {
+    public GetByInstance = (instanceid): Observable<any> => {
         return this._http.get(this.actionUrl + 'getbyinstance?instanceID=' + instanceid, this.options)
             .pipe(catchError(this.handleError));
     }

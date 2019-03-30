@@ -31,7 +31,7 @@ export class ImageService {
         }
     }
 
-    public GetAll = (): Observable<any[]> => {
+    public GetAll = (): Observable<any> => {
         return this._http.get<any[]>(this.actionUrl + 'list', this.options)
             .pipe(catchError(this.handleError));
     }
@@ -53,6 +53,6 @@ export class ImageService {
                 `body was: ${error.error}`);
         }
         // return an ErrorObservable with a user-facing error message
-        return new ErrorObservable('Something bad happened; please try again later.');
+        return new ErrorObservable();
     }
 }

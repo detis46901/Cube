@@ -15,7 +15,6 @@ import { NewUserComponent } from './newUser/newUser.component';
 import { MatDialog } from '@angular/material';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
-import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { UserValidatorService } from './userValidator.service';
 import { UserDetailsComponent } from '../details/userDetails/userDetails.component';
 //import { UserDataSource } from './userTable/userData';
@@ -26,7 +25,7 @@ import { UserDetailsComponent } from '../details/userDetails/userDetails.compone
 @Component({
     selector: 'user',
     templateUrl: './user.component.html',
-    providers: [UserService, UserPageLayerService, UserPageService, Configuration, PagePipe, NumFilterPipe, { provide: ValidatorService, useClass: UserValidatorService }],
+    providers: [UserService, UserPageLayerService, UserPageService, Configuration, PagePipe, NumFilterPipe],
     styleUrls: ['./user.component.scss'],
 })
 
@@ -45,7 +44,7 @@ export class UserComponent implements OnInit {
     //private userList: User[];
 
     private userColumns = ['userID', 'firstName', 'lastName', 'email', 'active', 'administrator', 'actionsColumn']
-    private dataSource: TableDataSource<User>;
+    private dataSource: any;
 
     constructor(private userValidator: UserValidatorService, private userService: UserService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private dialog: MatDialog) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -66,7 +65,7 @@ export class UserComponent implements OnInit {
             .GetAll()
             .subscribe((users: User[]) => {
                 this.users = users;
-                this.dataSource = new TableDataSource<User>(users, User, this.userValidator);
+                this.dataSource = users;
             });
     }
 

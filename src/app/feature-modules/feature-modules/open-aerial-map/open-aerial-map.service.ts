@@ -7,7 +7,6 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { MyCubeService } from './../../../map/services/mycube.service'
 import { Image} from './open-aerial-map.model'
-import { P } from '@angular/core/src/render3';
 import { WMSService } from '../../../map/services/wms.service'
 import { Subject } from 'rxjs/Subject';
 

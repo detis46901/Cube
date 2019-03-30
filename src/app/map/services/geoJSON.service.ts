@@ -28,12 +28,12 @@ export class geoJSONService {
         };
     }
 
-    public GetAll = (layerID: number): Observable<GeoJSON.GeoJsonObject> => {
+    public GetAll = (layerID: number): Observable<any> => {
         let ob = this._http.get(this.actionUrl + 'all?table=' + layerID, this.options)
             .catch(this.handleError);
         return ob
     }
-    public GetSome = (layerID: number, where: string): Observable<GeoJSON.GeoJsonObject> => {
+    public GetSome = (layerID: number, where: string): Observable<any> => {
         let ob = this._http.get(this.actionUrl + 'some?table=' + layerID + '&where=' + where, this.options)
             .catch(this.handleError);
         return ob
@@ -59,7 +59,7 @@ export class geoJSONService {
             .catch(this.handleError);
     }
 
-    public Delete = (id: number): Observable<Response> => {
+    public Delete = (id: number): Observable<any> => {
         return this._http.delete(this.actionUrl + 'delete?ID=' + id, this.options)
             .catch(this.handleError);
     }

@@ -16,22 +16,22 @@ export class UserPageLayerService extends ParentService {
         this.actionUrl = this.configuration.serverWithApiUrl + 'userpagelayer/';
     }
 
-    public GetSome = (pageid): Observable<UserPageLayer[]> => {
+    public GetSome = (pageid): Observable<any> => {
         return this._http.get(this.actionUrl + 'list?ID=' + pageid, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetPageLayers = (pageid): Observable<UserPageLayer[]> => {
+    public GetPageLayers = (pageid): Observable<any> => {
         return this._http.get(this.actionUrl + 'getpagelayers?pageID=' + pageid, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetUserLayers = (userid): Observable<UserPageLayer[]> => {
+    public GetUserLayers = (userid): Observable<any> => {
         return this._http.get(this.actionUrl + 'userlist?userid=' + userid, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetByLayer = (layerid): Observable<UserPageLayer[]> => {
+    public GetByLayer = (layerid): Observable<any> => {
         return this._http.get(this.actionUrl + 'getbylayer?layerID=' + layerid, this.options)
             .pipe(catchError(this.handleError));
     }

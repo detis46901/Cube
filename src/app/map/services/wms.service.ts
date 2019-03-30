@@ -121,8 +121,9 @@ export class WMSService {
     public formLayerRequest(layer: UserPageLayer): string {
         switch (layer.layer.layerType) {
             case ('MapServer'): {
+                console.log("Found MapServer Layer")
                 let norest: string = layer.layer.server.serverURL.split('/rest/')[0] + '/' + layer.layer.server.serverURL.split('/rest/')[1];
-                let url: string = norest + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                let url: string = 'https://cors-anywhere.herokuapp.com/' + norest + '/' + layer.layer.layerService + '/MapServer/WMSServer';
                 return url;
             }
             case ('Geoserver'): {

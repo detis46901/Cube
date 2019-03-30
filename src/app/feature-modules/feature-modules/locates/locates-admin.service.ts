@@ -19,7 +19,7 @@ import { LayerPermissionService } from '../../../../_services/_layerPermission.s
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
 import { UserPageInstanceService } from '../../../../_services/_userPageInstance.service'
 import * as ol from 'openlayers';
-import { P } from '@angular/core/src/render3';
+//import { P } from '@angular/core/src/render3';
 
 
 

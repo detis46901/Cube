@@ -31,7 +31,7 @@ export class SQLService {
         }
     }
 
-    public GetAll = (): Observable<any[]> => {
+    public GetAll = (): Observable<any> => {
         return this._http.get(this.actionUrl + 'list', this.options)
             .catch(this.handleError);
     }
@@ -106,7 +106,7 @@ export class SQLService {
             .catch(this.handleError);
     }
 
-    public Delete = (table: number, id: any): Observable<Response> => {
+    public Delete = (table: number, id: any): Observable<any> => {
         return this._http.get(this.actionUrl + 'deleteRecord?table=' + table + '&id=' + id, this.options)
             // .map((response: Response) => <any>response.json())
             .catch(this.handleError);

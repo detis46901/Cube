@@ -35,7 +35,7 @@ export class ServerLayersComponent implements OnInit {
     constructor(private dialog: MatDialog, private serverService: ServerService, http: Http) { 
         this.http = http
         this.options = {
-            headers: new HttpHeaders({
+            headers: new Headers({
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Accept': 'text/plain' //use token auth
             })
@@ -57,25 +57,29 @@ export class ServerLayersComponent implements OnInit {
     }
 
     public getCapabilities = (url): Observable<any> => {
-        return this.http.get(url)
-            .map((response: Response) => <any>response.text());
+        console.log('https://cors-anywhere.herokuapp.com/' + url)
+         return this.http.get('https://cors-anywhere.herokuapp.com/' + url)
+             .map((response: Response) => <any>response.text());
     }
 
     public getArcGIS = (url): Observable<any> => {
-        return this.http.get(url)
+        return this.http.get('https://cors-anywhere.herokuapp.com/' + url)
             .map((response: Response) => <any>response.json());
     }
 
     private getLayers(serv: Server): void {
         switch(serv.serverType) {
-            case "Geoserver": {
+            case "Geoserver WMS": {
                 this.getGeoserverLayers()
+                break
             }
-            case "ArcGIS": {
+            case "ArcGIS WMS": {
                 this.getFolders()
+                break
             }
-            case "WMTS": {
+            case "Geoserver WMTS": {
                 this.getWMTSLayers()
+                break
             }
         }
     }
@@ -105,6 +109,8 @@ export class ServerLayersComponent implements OnInit {
         .subscribe((data) => {
             console.log(data['folders'])
             this.folders = data['folders']
+            this.services = data['services']
+            this.selected.setValue(0)
         })
     }
     private getServices(folder: string): void {
@@ -124,6 +130,17 @@ export class ServerLayersComponent implements OnInit {
         console.log(norest + '/' + service['name'] + '/' + service['type'] + '/WMSServer?request=GetCapabilities&service=WMS')
         this.getCapabilities(norest + '/' + service['name'] + '/' + service['type'] + '/WMSServer?request=GetCapabilities&service=WMS')
         .subscribe((data) => {
+            let parser = new ol.format.WMSCapabilities()
+            let result = parser.read(data);
+            this.layers = result['Capability']['Layer']['Layer']
+            console.log(this.layers)
+            this.selected.setValue(2);  
+        })
+    }
+    private getArcGISLayersFromGetCapabilities(url: string) {
+        this.getCapabilities(url + 'request=GetCapabilities&service=WMS')
+        .subscribe((data) => {
+            console.log(data)
             let parser = new ol.format.WMSCapabilities()
             let result = parser.read(data);
             this.layers = result['Capability']['Layer']['Layer']

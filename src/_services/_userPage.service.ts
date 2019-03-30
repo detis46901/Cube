@@ -16,22 +16,22 @@ export class UserPageService extends ParentService {
         this.actionUrl = this.configuration.serverWithApiUrl + 'userpage/';
     }
 
-    public GetSome = (userid): Observable<UserPage[]> => {
+    public GetSome = (userid): Observable<any> => {
         return this._http.get(this.actionUrl + 'list?userID=' + userid, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetActiveByUserID = (userid): Observable<UserPage[]> => {
+    public GetActiveByUserID = (userid): Observable<any> => {
         return this._http.get(this.actionUrl + 'getactivebyuserid?userID=' + userid, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetDefault = (userid): Observable<UserPage[]> => {
+    public GetDefault = (userid): Observable<any> => {
         return this._http.get(this.actionUrl + 'default?userID=' + userid, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public UpdateMultiple = (items: UserPage[]): Observable<UserPage[]> => {
+    public UpdateMultiple = (items: UserPage[]): Observable<any> => {
         return this._http.put(this.actionUrl + 'updatemulti', JSON.stringify(items), this.options)
             .pipe(catchError(this.handleError));
     }

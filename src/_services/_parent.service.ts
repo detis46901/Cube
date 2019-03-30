@@ -33,7 +33,7 @@ export class ParentService {
         }
     }
 
-    public GetAll = (): Observable<any[]> => {
+    public GetAll = (): Observable<any> => {
         return this._http.get<any[]>(this.actionUrl + 'list', this.options)
             .pipe(catchError(this.handleError));
     }
@@ -76,6 +76,6 @@ export class ParentService {
                 `body was: ${error.error}`);
         }
         // return an ErrorObservable with a user-facing error message
-        return new ErrorObservable('Something bad happened; please try again later.');
+        return new ErrorObservable();
     }
 }

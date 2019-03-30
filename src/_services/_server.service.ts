@@ -17,7 +17,7 @@ export class ServerService extends ParentService {
         this.actionUrl = this.configuration.serverWithApiUrl + 'server/';
     }
 
-    public getCapabilities(serv: Server): Observable<string> {
+    public getCapabilities(serv: Server): Observable<any> {
         let actionUrl: string
         switch (serv.serverType) {
             case "GeoserverWMS":
@@ -35,7 +35,7 @@ export class ServerService extends ParentService {
             .pipe(catchError(this.handleError));
     }
 
-    public getFolders(serv: Server, path: string, type: string, options: any): Observable<string> {
+    public getFolders(serv: Server, path: string, type: string, options: any): Observable<any> {
         let actionUrl: string
         switch (serv.serverType) {
             case "Geoserver":

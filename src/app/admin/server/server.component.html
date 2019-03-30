@@ -5,7 +5,7 @@
 <div class="server-parent-container">
     <div class="row">
         <!-- creates the table to contain all of the server information -->
-        <mat-table id="serverDataTable" #table [dataSource]="dataSource">
+        <table mat-table id="serverDataTable" #table [dataSource]="dataSource">
 
             <!-- first column containing server ID number -->
             <ng-container matColumnDef="serverID">
@@ -14,7 +14,7 @@
                     <Strong> ID </Strong>
                 </mat-header-cell>
                 <mat-cell class="server-sm-cell" *matCellDef="let row">
-                    <b>{{row.currentData.ID}}</b>
+                    <b>{{row.ID}}</b>
                 </mat-cell>
             </ng-container>
 
@@ -25,9 +25,10 @@
                     <Strong> Instance Name </Strong>
                 </mat-header-cell>
                 <mat-cell class="server-md-cell" *matCellDef="let row">
-                    <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                        <input matInput [formControl]="row.validator.controls['serverName']" [readonly]="!row.editing" [(ngModel)]="row.currentData.serverName">
-                    </mat-form-field>
+                    {{row.serverName}}
+                    <!-- <mat-form-field>
+                        <input matInput [formControl]="row.validator.controls['serverName']" [readonly]="!row.editing" [(ngModel)]="row.serverName">
+                    </mat-form-field> -->
                 </mat-cell>
             </ng-container>
 
@@ -38,9 +39,10 @@
                     <Strong> Server Type </Strong>
                 </mat-header-cell>
                 <mat-cell class="server-sm-cell" *matCellDef="let row">
-                    <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                        <input matInput [formControl]="row.validator.controls['serverType']" [readonly]="!row.editing" [(ngModel)]="row.currentData.serverType">
-                    </mat-form-field>
+                    {{row.serverType}}
+                    <!-- <mat-form-field>
+                        <input matInput [formControl]="row.validator.controls['serverType']" [readonly]="!row.editing" [(ngModel)]="row.serverType">
+                    </mat-form-field> -->
                 </mat-cell>
             </ng-container>
 
@@ -51,9 +53,10 @@
                     <Strong> URL </Strong>
                 </mat-header-cell>
                 <mat-cell class="server-lg-cell" *matCellDef="let row">
-                    <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                        <input matInput [formControl]="row.validator.controls['serverURL']" [readonly]="!row.editing" [(ngModel)]="row.currentData.serverURL">
-                    </mat-form-field>
+                    {{row.serverURL}}
+                    <!-- <mat-form-field>
+                        <input matInput [formControl]="row.validator.controls['serverURL']" [readonly]="!row.editing" [(ngModel)]="row.serverURL">
+                    </mat-form-field> -->
                 </mat-cell>
             </ng-container>
 
@@ -65,20 +68,20 @@
                     </button>
                 </mat-header-cell>
                 <mat-cell class="server-md-cell" *matCellDef="let row">
-                    <button mat-button (click)="openLayers(row.currentData.ID)">
+                    <button mat-button (click)="openLayers(row.ID)">
                         Layers
                     </button>
-                    <button *ngIf="!row.editing" mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.serverName)">
+                    <button *ngIf="!row.editing" mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.ID, row.serverName)">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
-                    <button mat-icon-button style="color:#7e7e7e" title="Delete Server" focusable="false" (click)="openConfDel(row.currentData)">
+                    <button mat-icon-button style="color:#7e7e7e" title="Delete Server" focusable="false" (click)="openConfDel(row)">
                         <i class="fa fa-trash mat-icon"></i>
                     </button>
                 </mat-cell>
             </ng-container>
             <mat-header-row *matHeaderRowDef="serverColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: serverColumns"></mat-row>
-        </mat-table>
+        </table>
     </div>
 </div>
 

@@ -29,13 +29,13 @@
         <!-- server type can be changed by admin user -->
         <mat-form-field class="row">
             <mat-select name="newServType" [(ngModel)]="server.serverType" required type="text" placeholder="Server Type">
-                <mat-option value="GeoserverWMS">Geoserver WMS</mat-option>
-                <mat-option value="GetoserverWMTS">Geoserver WMTS</mat-option>
-                <mat-option value="ArcGISWMS">ArcGIS WMS</mat-option>
-                <mat-option value="ArcGISWMTS">ArcGIS WMTS</mat-option>
-                <mat-option value="WMS">Generic WMS</mat-option>
+                <mat-option value="Geoserver WMS">Geoserver WMS</mat-option>
+                <mat-option value="Geoserver WMTS">Geoserver WMTS</mat-option>
+                <mat-option value="ArcGIS WMS">ArcGIS WMS</mat-option>
+                <mat-option value="ArcGIS WMTS">ArcGIS WMTS</mat-option>
+                <!-- <mat-option value="WMS">Generic WMS</mat-option>
                 <mat-option value="WMTS">Generic WMTS</mat-option>
-                <mat-option value="PostGIS">PostGIS</mat-option>
+                <mat-option value="PostGIS">PostGIS</mat-option> -->
             </mat-select>
         </mat-form-field>
         <br>
@@ -44,6 +44,18 @@
         <mat-form-field class="row">
             <input matInput name="serverURL" [(ngModel)]="server.serverURL" placeholder="Server URL" value="{{server.serverURL}}">
         </mat-form-field>
+        <div *ngIf="server.serverType == 'Geoserver WMS'">
+            URL should end with 'wms'
+        </div>
+        <div *ngIf="server.serverType == 'Geoserver WMTS'">
+            URL should end with 'wmts' (I think.  Work may need to be done on this)
+        </div>
+        <div *ngIf="server.serverType == 'ArcGIS WMS'">
+            URL should end with 'service'
+        </div>
+        <div *ngIf="server.serverType == 'ArcGIS WMTS'">
+            URL should end with 'service'
+        </div>
     </form>
 </mat-dialog-content>
 

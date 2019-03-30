@@ -26,7 +26,7 @@
         {{service.name}}
     </mat-list-option>
 </mat-selection-list> -->
-<mat-tab-group *ngIf="server.serverType == 'ArcGIS'" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
+<mat-tab-group *ngIf="server.serverType == 'ArcGIS WMS'" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
     <mat-tab label="Home">
         <mat-list class="matlist">
             <h3 matSubheader>Folders</h3>
@@ -56,18 +56,7 @@
         </mat-list>
     </mat-tab>
 </mat-tab-group>
-<mat-tab-group *ngIf="server.serverType == 'Geoserver'" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
-    <mat-tab label="Layers">
-        <mat-list class="matlist">
-            <h3 matSubheader>Layers</h3>
-            <mat-list-item *ngFor="let layer of layers" (click)="openCreateLayer(layer)">
-                <mat-icon matListIcon>Layers</mat-icon>
-                <h4 matLine mat-dialog-close>{{layer.Title}}</h4>
-            </mat-list-item>
-        </mat-list>
-    </mat-tab>
-</mat-tab-group>
-<mat-tab-group *ngIf="server.serverType == 'WMTS'" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
+<mat-tab-group *ngIf="server.serverType == 'Geoserver WMS' || server.serverType == 'Geoserver WMTS'" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
     <mat-tab label="Layers">
         <mat-list class="matlist">
             <h3 matSubheader>Layers</h3>

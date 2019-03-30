@@ -1,13 +1,13 @@
 <div class="layer-parent-container">
     <div class="row">
         <!-- table for storing and editing all layer information in house -->
-        <mat-table id="layerDataTable" #table [dataSource]="dataSource">
+        <table mat-table id="layerDataTable" #table [dataSource]="dataSource">
 
             <!-- first column used to contain layer id numbers -->
             <ng-container matColumnDef="layerID">
                 <mat-header-cell class="layer-sm-head" *matHeaderCellDef> ID </mat-header-cell>
                 <mat-cell class="layer-sm-cell" *matCellDef="let row">
-                    <b>{{row.currentData.ID}}</b>
+                    <b>{{row.ID}}</b>
                 </mat-cell>
             </ng-container>
 
@@ -15,9 +15,10 @@
             <ng-container matColumnDef="name">
                 <mat-header-cell class="layer-md-head" *matHeaderCellDef> Name </mat-header-cell>
                 <mat-cell class="layer-md-cell" *matCellDef="let row">
-                    <mat-form-field #input style="width:80%" floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                        <input matInput [formControl]="row.validator.controls['layerName']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerName">
-                    </mat-form-field>
+                    {{row.layerName}}
+                    <!-- <mat-form-field #input style="width:80%">
+                        <input matInput [formControl]="row.layerName" [readonly]="!row.editing" [(ngModel)]="row.layerName">
+                    </mat-form-field> -->
                 </mat-cell>
             </ng-container>
 
@@ -26,7 +27,7 @@
                 <mat-header-cell class="layer-lg-head" *matHeaderCellDef> Description </mat-header-cell>
                 <mat-cell class="layer-lg-cell" *matCellDef="let row">
                     <mat-form-field style="width:80%" floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                        <input matInput [formControl]="row.validator.controls['layerDescription']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerDescription">
+                        <input matInput [formControl]="row.validator.controls['layerDescription']" [readonly]="!row.editing" [(ngModel)]="row.layerDescription">
                     </mat-form-field>
                 </mat-cell>
             </ng-container> -->
@@ -35,9 +36,10 @@
             <ng-container matColumnDef="type">
                 <mat-header-cell class="layer-md-head" *matHeaderCellDef> Type </mat-header-cell>
                 <mat-cell class="layer-md-cell" *matCellDef="let row">
-                    <mat-form-field  floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                        <input matInput [formControl]="row.validator.controls['layerType']" [readonly]="!row.editing" [(ngModel)]="row.currentData.layerType">
-                    </mat-form-field>
+                    {{row.layerType}}
+                    <!-- <mat-form-field >
+                        <input matInput [formControl]="row.layerType" [readonly]="!row.editing" [(ngModel)]="row.layerType">
+                    </mat-form-field> -->
                 </mat-cell>
             </ng-container>
 
@@ -57,16 +59,16 @@
                         <a>Options</a>
                     </button>
                     <mat-menu #menu2="matMenu" [overlapTrigger]="false">
-                        <button mat-menu-item id="exlayerperm" (click)="openPermission(row.currentData.ID, row.currentData.layerName)">Permissions</button>
-                        <button mat-menu-item id="openstyle" (click)="openStyle(row.currentData.ID, row.currentData.layerName)">Style</button>
+                        <button mat-menu-item id="exlayerperm" (click)="openPermission(row.ID, row.layerName)">Permissions</button>
+                        <button mat-menu-item id="openstyle" (click)="openStyle(row.ID, row.layerName)">Style</button>
                     </mat-menu>
                     <span>
-                        <button mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.layerName)">
+                        <button mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.ID, row.layerName)">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
                     </span>
                     <span>
-                        <button mat-icon-button *ngIf="row.currentData.layerType != 'Module'" style="color:#7e7e7e" title="Delete Layer" focusable="false" (click)="confirmDelete(row.currentData)">    
+                        <button mat-icon-button *ngIf="row.layerType != 'Module'" style="color:#7e7e7e" title="Delete Layer" focusable="false" (click)="confirmDelete(row)">    
                             <i class="fa fa-trash mat-icon"></i>
                         </button>
                     </span>
@@ -75,7 +77,8 @@
 
             <mat-header-row *matHeaderRowDef="layerColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: layerColumns"></mat-row>
-        </mat-table>
+        </table>
+        <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
     </div>
 
     <!-- <span ngbDropdown>   
