@@ -55,7 +55,7 @@
     "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^4.29.6",
     "webpack-dev-server": "^3.2.1",
-    "zone.js": "^0.8.29"
+    "zone.js": "^0.9.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.7",
@@ -74,9 +74,9 @@
     "karma-jasmine": "^2.0.1",
     "karma-remap-istanbul": "^0.6.0",
     "protractor": "5.4.2",
-    "ts-node": "8.0.2",
-    "tslint": "5.13.1",
+    "ts-node": "8.0.3",
+    "tslint": "5.14.0",
     "typescript-eslint-parser": "^22.0.0",
-    "webdriver-manager": "12.1.1"
+    "webdriver-manager": "13.0.0"
   }
 }
