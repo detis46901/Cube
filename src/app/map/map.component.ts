@@ -190,14 +190,14 @@ export class MapComponent {
     }
 
     private copyToClipboard(url: string) {
-        Clipboard.copy(this.configuration.outsideServerWithApiUrl + url + '&apikey=' + this.token);
+        Clipboard.copy(this.configuration.serverWithApiUrl + url + '&apikey=' + this.token);
         this.snackBar.open("Copied to the clipboard", "", {
             duration: 2000,
         });
     }
 
     private copyGSToClipboard(url: string) {
-        Clipboard.copy('=IMPORTHTML("' + this.configuration.outsideServerWithApiUrl + url + '&apikey=' + this.token + '", "table", 1)');
+        Clipboard.copy('=IMPORTHTML("' + this.configuration.serverWithApiUrl + url + '&apikey=' + this.token + '", "table", 1)');
         this.snackBar.open("Copied to the clipboard", "", {
             duration: 2000,
         });
@@ -221,8 +221,7 @@ export class MapComponent {
         console.log('setting default page layer')
         this.mapConfig.userpagelayers.forEach((userpagelayer) => {
             if (this.mapConfig.currentpage.defaultLayer == userpagelayer.ID) {
-                console.log('default layer fount')
-                console.log(userpagelayer)
+                console.log('default layer found')
                 this.mapService.setCurrentLayer(userpagelayer)
             }
         })
@@ -235,7 +234,6 @@ export class MapComponent {
 
     }
     private isolate(layer: UserPageLayer) {
-        console.log(layer)
         this.mapService.isolate(layer)
     }
 }

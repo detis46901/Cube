@@ -205,7 +205,6 @@ export class MapService {
                                         layer: userpagelayer.layer.layerIdent,
                                         matrixSet: 'EPSG:3857'
                                     });
-                                    console.log(userpagelayer.layer.layerIdent)
                                     let wmsSource = new ol.source.WMTS(options);
                                     let wmsLayer = new ol.layer.Tile({
                                         opacity: 1,
@@ -216,7 +215,6 @@ export class MapService {
                                     userpagelayer.source = wmsSource
                                     this.wmsService.setLoadStatus(userpagelayer);
                                     if (init == false) {
-                                        console.log(wmsLayer)
                                         mapConfig.map.addLayer(wmsLayer);
                                     }
                                     j++;
@@ -235,7 +233,6 @@ export class MapService {
                                 serverType: 'geoserver',
                                 crossOrigin: 'anonymous'
                             });
-                            console.log(wmsSource)
                             let wmsLayer = new ol.layer.Tile({
                                 source: wmsSource
                             });

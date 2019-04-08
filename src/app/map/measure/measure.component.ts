@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { MatButtonToggleChange } from '@angular/material';
 import { MapConfig } from '../models/map.model'
 import { NULL_INJECTOR } from '@angular/core/src/render3/component';
+import * as ol from 'openlayers';
+
 
 //import { MangolMap } from './../../core/_index';
 
-declare var ol: any;
+//declare var ol: any;
 //import { MangolConfigMeasureItem } from '../../interfaces/mangol-config-toolbar.interface';
 
 @Component({
@@ -51,8 +53,7 @@ export class MeasureComponent implements OnInit, OnDestroy {
         this.mapConfig.map.removeLayer(this.layer);
     }
 
-    private measure(mtype: string) {
-        //this.measureOn = true
+    private measure(mtype: any) {
         if (mtype == "Polygon") { this.unit = "acres"; this.convert = 1 / 43560; this.measureLabel = "Area" }
         if (mtype == "LineString") { this.unit = "feet"; this.convert = 1; this.measureLabel = "Length" }
         this.measureType = mtype

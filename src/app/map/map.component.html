@@ -11,7 +11,6 @@
 
     <div style="width:300px">
         <mat-accordion class="example-headers-align">
-
             <!-- panel for managing user pages -->
             <mat-expansion-panel [expanded]="toolbar === 'Pages'" (opened)="setToolbar('Pages')">
                 <mat-expansion-panel-header>
@@ -46,7 +45,7 @@
                                     <mat-icon>settings</mat-icon>
                                     <span>Edit Layers</span>
                                 </button>
-                                <button mat-menu-item
+                                <button mat-menu-item disabled="true"
                                     (click)="openPageConfig(userPage.ID, userPage.userID, userPage.page)">
                                     <mat-icon>share</mat-icon>
                                     <span>Share Page</span>
@@ -198,11 +197,9 @@
                             [value]="userpagelayer" (change)="mapService.setCurrentLayer(userpagelayer, mapConfig)">
                             <mat-slide-toggle matTooltip="{{userpagelayer.layer.ID}}" class="example-margin"
                                 [checked]="userpagelayer.layerShown" (change)="mapService.toggleLayers(userpagelayer)">
-                                <b
-                                    *ngIf="userpagelayer == mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</b>
+                                <b *ngIf="userpagelayer == mapConfig.mouseoverLayer"><i>{{userpagelayer.layer.layerName}}</i></b>
                                 <i *ngIf="userpagelayer.loadStatus=='Loading'">{{userpagelayer.layer.layerName}}</i>
-                                <span class="layer-name"
-                                    *ngIf="userpagelayer.loadStatus!='Loading' &&  userpagelayer != mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</span>
+                                <span *ngIf="userpagelayer.loadStatus != 'Loading' &&  userpagelayer != mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</span>
                             </mat-slide-toggle>
                             <br>
                         </mat-radio-button>
@@ -272,7 +269,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <div class="featurelist" style="overflow-x: hidden; text-overflow: ellipsis; overflow-y:auto">
+                <div class="featurelist">
                     <div *ngFor="let fl of mapConfig.featureList">
                         <a *ngIf="fl.feature != mapConfig.selectedFeature" style="cursor: pointer"
                             (click)="mapService.zoomToFeature(fl)">{{fl.label}}</a>

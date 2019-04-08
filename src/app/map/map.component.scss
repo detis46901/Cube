@@ -33,9 +33,16 @@
 
 .featurelist {
     position: relative;
+    min-width: 0; /* see link to see why this is needed */
     max-width: 300px;
     overflow-y: auto;
     max-height: 550px;
+}
+
+.featurelist > div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .example-headers-align .mat-expansion-panel-header-description {
@@ -107,15 +114,18 @@ p {
     word-wrap: break-word;
     overflow: auto;
 }
-
-span.layer-name {
-    white-space: nowrap; 
-    overflow: auto;
-    text-overflow: ellipsis; 
-}
   
 .example-radio-button {
     margin: 5px;
+    flex: 1 1 auto; /* make this grow and shrink */
+    min-width: 0; /* see link to see why this is needed */
+    margin-right: 16px;
+}
+
+.example-radio-button > div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .example-selected-value {
