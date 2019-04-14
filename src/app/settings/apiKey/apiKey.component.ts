@@ -11,10 +11,10 @@ import { User } from '../../../_models/user.model';
 
 export class ApiKeyComponent implements OnInit {
 
-    private apiKeyToken: string;
-    private user: User;
-    private token: string;
-    private userID: number;
+    public apiKeyToken: string;
+    public user: User;
+    public token: string;
+    public userID: number;
 
     constructor(private userService: UserService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));

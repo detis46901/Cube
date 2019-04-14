@@ -12,9 +12,9 @@ import { User } from '../../../_models/user.model';
 })
 
 export class ProfileComponent implements OnInit {
-    private token: string;
-    private userID: number;
-    private user: User;
+    public token: string;
+    public userID: number;
+    public user: User;
 
     constructor(private dialog: MatDialog, private userService: UserService) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -26,7 +26,7 @@ export class ProfileComponent implements OnInit {
         this.getUser(this.userID)
     }
 
-    private getUser(id) {
+    public getUser(id) {
         this.userService
             .GetSingle(id)
             .subscribe((res) => {
@@ -34,7 +34,7 @@ export class ProfileComponent implements OnInit {
             })
     }
 
-    private changePicture() {
+    public changePicture() {
         const dialogRef = this.dialog.open(ChangePictureComponent);
         dialogRef.componentInstance.userID = this.userID;
 
@@ -42,7 +42,7 @@ export class ProfileComponent implements OnInit {
             .subscribe(() => console.log("closed"));
     }
 
-    private submit(user: User) {
+    public submit(user: User) {
         this.userService
             .Update(user)
             .subscribe()

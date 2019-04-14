@@ -19,7 +19,7 @@ import { LayerService } from '../../../_services/_layer.service';
 export class StyleComponent implements OnInit {
     @Input() mapConfig: MapConfig;
     //style stuff
-    private layer: ol.layer.Vector = null;
+    public layer: ol.layer.Vector = null;
     public value: number
     public styleType: string
     public styleLabel: string
@@ -49,7 +49,7 @@ export class StyleComponent implements OnInit {
     ];
 
 
-    constructor(private mapService: MapService, private styleService: StyleService,
+    constructor(public mapService: MapService, private styleService: StyleService,
         private sqlSerivce: SQLService, private userPageLayerService: UserPageLayerService,
         private layerService: LayerService) { }
 
@@ -77,7 +77,7 @@ export class StyleComponent implements OnInit {
             })
     }
 
-    private disableCheck(): boolean {
+    public disableCheck(): boolean {
         if ((this.styleColumn.field == "" || this.styleColumn.field == null) && (this.styleOperator == "" || this.styleOperator == null) && (this.styleColumn.value == "" || this.styleColumn.value == null)) {
             return true;
         }
@@ -90,12 +90,12 @@ export class StyleComponent implements OnInit {
     }
 
     // closes the style menu
-    private close() {
+    public close() {
         this.mapConfig.styleShow = false
     }
 
     // applies the style to the map and only shows the appllicable items //not fully working
-    private applyStyle() {
+    public applyStyle() {
         // if (this.styleColumn['field'] == "" || this.styleColumn['field'] == null) {}
         // else {}
         this.mapConfig.currentLayer.style.load.color = this.selectedColor
@@ -105,7 +105,7 @@ export class StyleComponent implements OnInit {
     }
 
     // Saves the current styles to the current user page
-    private saveToPage(): void {
+    public saveToPage(): void {
         if (!this.mapConfig.currentLayer.style) {
             this.mapConfig.currentLayer.style = this.mapConfig.currentLayer.layer.defaultStyle
         }
@@ -122,7 +122,7 @@ export class StyleComponent implements OnInit {
     }
 
     // saves the current style to the layer for everyone to view and edit (if they don't already have a style)
-    private saveToLayer(): void {
+    public saveToLayer(): void {
         this.mapConfig.currentLayer.layer.defaultStyle = this.mapConfig.currentLayer.style;
         this.layerService
             .Update(this.mapConfig.currentLayer.layer)

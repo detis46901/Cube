@@ -3,7 +3,7 @@ import { UserService } from '../../../../_services/_user.service';
 import { User, UserPage } from '../../../../_models/user.model';
 import { UserPageService } from '../../../../_services/_userPage.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ConfirmDeleteComponent } from '../../confirmDelete/confirmDelete.component';
+import { ConfirmDeleteComponent } from '../../confirmdelete/confirmdelete.component';
 
 @Component({
     selector: 'page',
@@ -17,17 +17,17 @@ export class PageComponent implements OnInit {
     @Input() firstName;
     @Input() lastName;
 
-    private objCode = 7;
-    private token: string;
+    public objCode = 7;
+    public token: string;
 
-    private user = new User;
-    private userPage = new UserPage;
+    public user = new User;
+    public userPage = new UserPage;
 
-    private userPages = new Array<UserPage>();
-    private newUserPage: string;
-    private selectedPage: number;
+    public userPages = new Array<UserPage>();
+    public newUserPage: string;
+    public selectedPage: number;
 
-    constructor(private userPageService: UserPageService, private dialog: MatDialog) {
+    constructor(public userPageService: UserPageService, public dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
     }
@@ -36,7 +36,7 @@ export class PageComponent implements OnInit {
         this.getUserPageItems();
     }
 
-    private getUserPageItems(): void {
+    public getUserPageItems(): void {
         this.userPageService
             .GetSome(this.userID)
             .subscribe((data: UserPage[]) => {
@@ -44,7 +44,7 @@ export class PageComponent implements OnInit {
             });
     }
 
-    private setupPages(userPages: Array<UserPage>): void {
+    public setupPages(userPages: Array<UserPage>): void {
         this.userPages = []
         for (let userPage of userPages) {
             this.userPages[userPage.pageOrder] = userPage
@@ -60,7 +60,7 @@ export class PageComponent implements OnInit {
         }
     }
 
-    private updateDefaultPage(userPage: UserPage): void {
+    public updateDefaultPage(userPage: UserPage): void {
         for (let tempage of this.userPages) {
             if (tempage.default == true) {
                 tempage.default = false;
@@ -76,7 +76,7 @@ export class PageComponent implements OnInit {
         }
     }
 
-    private addUserPage(newUserPage: string): void {
+    public addUserPage(newUserPage: string): void {
         this.userPage.page = newUserPage;
         this.userPage.userID = this.userID;
         this.userPage.active = true;
@@ -89,7 +89,7 @@ export class PageComponent implements OnInit {
             });
     }
 
-    private updateUserPage(userPage: UserPage): void {
+    public updateUserPage(userPage: UserPage): void {
         this.userPageService
             .Update(userPage)
             .subscribe(() => {
@@ -97,7 +97,7 @@ export class PageComponent implements OnInit {
             });
     }
 
-    private openConfDel(userPage: UserPage): void {
+    public openConfDel(userPage: UserPage): void {
         const dialogRef = this.dialog.open(ConfirmDeleteComponent);
         dialogRef.componentInstance.objCode = this.objCode;
         dialogRef.componentInstance.objID = userPage.ID;
@@ -117,7 +117,7 @@ export class PageComponent implements OnInit {
     }
 
 
-    private deleteUserPage(userpageID: number): void {
+    public deleteUserPage(userpageID: number): void {
         this.userPageService
             .Delete(userpageID)
             .subscribe(() => {
@@ -125,7 +125,7 @@ export class PageComponent implements OnInit {
             });
     }
 
-    private decrementPageOrders(order: number) {
+    public decrementPageOrders(order: number) {
         for (let page of this.userPages) {
             if (page.pageOrder > order) {
                 page.pageOrder = page.pageOrder - 1;
@@ -134,7 +134,7 @@ export class PageComponent implements OnInit {
         }
     }
 
-    private onClose(): void {
+    public onClose(): void {
         let count = 0;
         for (let x of this.userPages) {
             x.pageOrder = count;
@@ -143,7 +143,7 @@ export class PageComponent implements OnInit {
         }
     }
 
-    private radio(userPage: UserPage): void {
+    public radio(userPage: UserPage): void {
         for (let x of this.userPages) {
             x.default = false;
             if (x == userPage) {
@@ -153,7 +153,7 @@ export class PageComponent implements OnInit {
         }
     }
 
-    private moveUp(userPage: UserPage): void {
+    public moveUp(userPage: UserPage): void {
         if (userPage.pageOrder != 0) {
             let swap = this.userPages[userPage.pageOrder - 1]
             swap.pageOrder += 1
@@ -163,7 +163,7 @@ export class PageComponent implements OnInit {
         }
     }
 
-    private moveDown(userPage: UserPage): void {
+    public moveDown(userPage: UserPage): void {
         if (userPage.pageOrder != this.userPages.length - 1) {
             let swap = this.userPages[userPage.pageOrder + 1]
             swap.pageOrder -= 1

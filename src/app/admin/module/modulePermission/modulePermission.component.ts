@@ -18,19 +18,19 @@ import { ModulePermission } from '../../../../_models/module.model';
 export class ModulePermissionComponent implements OnInit {
     @Input() instanceID: number;
     @Input() instanceName: string;
-    private closeResult: string;
+    public closeResult: string;
     public permlessUsers = new Array<User>();
     public permlessGroups = new Array<Group>();
-    private newModulePermission = new ModulePermission;
-    private modulePermissions = new Array<ModulePermission>();
-    private token: string;
-    private userID: number;
-    private permNames = new Array<string>();
-    private instanceOwner: number;
-    private isGroup: boolean = false;
+    public newModulePermission = new ModulePermission;
+    public modulePermissions = new Array<ModulePermission>();
+    public token: string;
+    public userID: number;
+    public permNames = new Array<string>();
+    public instanceOwner: number;
+    public isGroup: boolean = false;
 
-    private currDeletedPermObj: any; //Group or User Object
-    private currDeletedPermIsUser: boolean; //True if it is a User object from the permission.
+    public currDeletedPermObj: any; //Group or User Object
+    public currDeletedPermIsUser: boolean; //True if it is a User object from the permission.
 
     constructor(private modulePermissionService: ModulePermissionService, private userService: UserService, private groupService: GroupService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -49,7 +49,7 @@ export class ModulePermissionComponent implements OnInit {
         //this.isUser = true;
     }
 
-    private getPermissionItems(calledByDelete: boolean): void {
+    public getPermissionItems(calledByDelete: boolean): void {
         this.modulePermissionService
             .GetByInstance(this.instanceID)
             .subscribe((data: ModulePermission[]) => {
@@ -84,7 +84,7 @@ export class ModulePermissionComponent implements OnInit {
     }
 
     //2/9/18 this is the last part that needs fixed to get the list to return correctly
-    private getUserItems(calledByDelete: boolean): void {
+    public getUserItems(calledByDelete: boolean): void {
         this.permlessUsers = [];
 
         if (this.currDeletedPermIsUser == true && calledByDelete) {
@@ -106,7 +106,7 @@ export class ModulePermissionComponent implements OnInit {
     }
 
     //2/9/18 this is the last part that needs fixed to get the list to return correctly
-    private getGroupItems(calledByDelete: boolean): void {
+    public getGroupItems(calledByDelete: boolean): void {
         this.permlessGroups = [];
 
         if (this.currDeletedPermIsUser == false && calledByDelete) {
@@ -126,7 +126,7 @@ export class ModulePermissionComponent implements OnInit {
             });
     }
 
-    private initNewPermission(): void {
+    public initNewPermission(): void {
         this.newModulePermission.edit = false;
         this.newModulePermission.delete = false;
         this.newModulePermission.owner = false;
@@ -138,7 +138,7 @@ export class ModulePermissionComponent implements OnInit {
         this.newModulePermission.groupID = null;
     }
 
-    private addModulePermission(newModulePermission: ModulePermission): void {
+    public addModulePermission(newModulePermission: ModulePermission): void {
         this.newModulePermission = newModulePermission;
         this.newModulePermission.moduleInstanceID = this.instanceID;
         this.newModulePermission.grantedBy = this.userID;
@@ -151,7 +151,7 @@ export class ModulePermissionComponent implements OnInit {
             });
     }
 
-    private updateModulePermission(permission: ModulePermission): void {
+    public updateModulePermission(permission: ModulePermission): void {
         this.modulePermissionService
             .Update(permission)
             .subscribe(() => {
@@ -160,7 +160,7 @@ export class ModulePermissionComponent implements OnInit {
             });
     }
 
-    private updateModulePermissions(): void {
+    public updateModulePermissions(): void {
         for (let p of this.modulePermissions) {
             this.updateModulePermission(p)
         }
@@ -168,7 +168,7 @@ export class ModulePermissionComponent implements OnInit {
 
     // 2/8/18: permless users/groups are not being updated correctly once an object is deleted. Object deletion should add the object that was 
     // deleted to the correct permless list
-    private deleteModulePermission(perm: ModulePermission): void {
+    public deleteModulePermission(perm: ModulePermission): void {
         this.currDeletedPermObj = perm
         //perm.groupID ? this.currDeletedPermIsUser=false : this.currDeletedPermIsUser=true;
 
@@ -186,7 +186,7 @@ export class ModulePermissionComponent implements OnInit {
             });
     }
 
-    private switchPermType() {
+    public switchPermType() {
         this.isGroup = !this.isGroup;
     }
 }

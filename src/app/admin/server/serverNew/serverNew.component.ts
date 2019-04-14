@@ -11,8 +11,8 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 })
 
 export class ServerNewComponent implements OnInit {
-    private server = new Server;
-    private newserver = new Server;
+    public server = new Server;
+    public newserver = new Server;
 
     constructor(private dialog: MatDialog, private serverService: ServerService) { }
 
@@ -22,7 +22,7 @@ export class ServerNewComponent implements OnInit {
         this.newserver.serverURL = '';
     }
 
-    private addServer(): void {
+    public addServer(): void {
         this.serverService
             .Add(this.newserver)
             .subscribe(result => {

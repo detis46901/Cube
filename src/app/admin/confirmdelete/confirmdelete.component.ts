@@ -4,8 +4,8 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 
 @Component({
     selector: 'confirm-delete',
-    templateUrl: './confirmDelete.component.html',
-    styleUrls: ['./confirmDelete.component.scss']
+    templateUrl: './confirmdelete.component.html',
+    styleUrls: ['./confirmdelete.component.scss']
 })
 
 //Confirms delete selection, is called by any component that has a delete request from the user, and verifies choice.
@@ -14,10 +14,10 @@ export class ConfirmDeleteComponent implements OnInit {
     @Input() objID: number;
     @Input() objName: string;
 
-    private objectType: string;
-    private dependentWarning: boolean = false;
-    private token: string;
-    private userID: number;
+    public objectType: string;
+    public dependentWarning: boolean = false;
+    public token: string;
+    public userID: number;
 
     constructor() {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -29,7 +29,7 @@ export class ConfirmDeleteComponent implements OnInit {
         this.assignType();
     }
 
-    private assignType(): void {
+    public assignType(): void {
         switch (this.objCode) {
             case 1:
                 this.objectType = "User";

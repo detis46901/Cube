@@ -13,12 +13,12 @@ import { MatDialog } from '@angular/material';
 })
 
 export class NewUserComponent implements OnInit {
-    private token: string;
-    private userID: number;
+    public token: string;
+    public userID: number;
 
-    private user = new User;
-    private newUser = new User;
-    private users: Array<User>;
+    public user = new User;
+    public newUser = new User;
+    public users: Array<User>;
 
     constructor(private dialog: MatDialog, private userService: UserService, private groupMemberService: GroupMemberService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -30,7 +30,7 @@ export class NewUserComponent implements OnInit {
         this.getUserItems();
     }
 
-    private getUserItems(): void {
+    public getUserItems(): void {
         this.userService
             .GetAll()
             .subscribe((data: User[]) => {
@@ -38,12 +38,12 @@ export class NewUserComponent implements OnInit {
             });
     }
 
-    private clearInputs(): void {
+    public clearInputs(): void {
         this.newUser.email = '';
         this.newUser.password = '';
     }
 
-    private addUser(newUser: User): void {
+    public addUser(newUser: User): void {
         this.newUser = newUser;
         let errorFlag = false;
 

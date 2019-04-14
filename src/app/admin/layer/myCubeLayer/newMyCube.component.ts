@@ -24,17 +24,17 @@ export class newMyCubeComponent implements OnInit {
     @Input() layerFormat: string;
     @Input() layerType: string;
     @Input() layerName: string;
-    private token: string;
-    private userID: number;
+    public token: string;
+    public userID: number;
 
     //Set to true in ngOnInit() if inputs are read from the server screen, thus determines if the server screen is calling this dialog
 
 
     //if error in submission, set this to a new object (= new Layer)
-    private newLayer = new Layer;
-    private newLayerServer = new Server;
-    private servers: Array<Server>;
-    private layer = new Layer;
+    public newLayer = new Layer;
+    public newLayerServer = new Server;
+    public servers: Array<Server>;
+    public layer = new Layer;
     public newLayerField1 = new MyCubeField
     public newLayerFields: Array<MyCubeField> = [];
 
@@ -53,7 +53,7 @@ export class newMyCubeComponent implements OnInit {
         this.layer.serverID = 0
     }
 
-    private getServers(): void {
+    public getServers(): void {
         this.serverService
             .GetAll()
             .subscribe((data) => {
@@ -61,15 +61,15 @@ export class newMyCubeComponent implements OnInit {
             });
     }
 
-    private addField() {
+    public addField() {
         this.newLayerFields.push({ field: this.newLayerField1.field, type: this.newLayerField1.type, label: this.newLayerField1.label })
     }
 
-    private deleteField(index) {
+    public deleteField(index) {
         this.newLayerFields.splice(index, 1)
     }
 
-    private addLayer(newlayer: Layer): void {
+    public addLayer(newlayer: Layer): void {
         this.layer.layerName = newlayer.layerName
         this.layer.layerDescription = newlayer.layerDescription
         this.layer.defaultStyle = JSON.parse('{"load":{"color":"#000000","width":2},"current":{"color":"#000000","width":4},"listLabel": "Name","filter": {}}')
@@ -83,7 +83,7 @@ export class newMyCubeComponent implements OnInit {
 
     // method to update label field when one of the radio buttons is clicked
 
-    private updateLabelField(labelField: MyCubeField): void {
+    public updateLabelField(labelField: MyCubeField): void {
         for (let tempage of this.newLayerFields) {
             if (tempage.label == true) {
                 tempage.label = false;;
@@ -96,7 +96,7 @@ export class newMyCubeComponent implements OnInit {
         }
     }
 
-    private createTable(id): void {
+    public createTable(id): void {
         this.sqlservice
             .Create(id)
             .subscribe((result: JSON) => {
@@ -114,7 +114,7 @@ export class newMyCubeComponent implements OnInit {
         console.log("Comment Table Created")
     }
 
-    private addColumn(id, element): void {
+    public addColumn(id, element): void {
         this.sqlservice
             .addColumn(id, element)
             .subscribe((result: string) => {

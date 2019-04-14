@@ -12,7 +12,7 @@ import { User } from '../../_models/user.model';
 
 export class SettingsComponent {
     //Screen code (see home.component.ts)
-    private screen = 3;
+    public screen = 3;
 
     public user = new User;
     public myItems: any;

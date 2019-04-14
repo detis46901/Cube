@@ -17,7 +17,7 @@ import { Group, GroupMember } from '../../_models/group.model';
 import { UserPageLayerService } from '../../_services/_userPageLayer.service';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { PageConfigComponent } from '../admin/user/pageConfig/pageConfig.component';
+import { PageConfigComponent } from '../admin/user/pageconfig/pageconfig.component';
 import { MatDialog } from '@angular/material';
 import { Clipboard } from 'ts-clipboard';
 import { Configuration } from '../../_api/api.constants';
@@ -37,28 +37,28 @@ export class MapComponent {
     // This is necessary to access the html element to set the map target (after view init)!
     @ViewChild("mapElement") mapElement: ElementRef;
     @ViewChild("layers") layers: ElementRef;
-    private mapConfig = new MapConfig;
-    private token: string;
-    private userID: number;
-    private headers: Headers;
-    private measureShow: boolean = false;
-    private userPageLayers: Array<UserPageLayer> = [];
-    private userPages: UserPage[];
-    private activePages = new Array<UserPage>();
-    private defaultPage: UserPage;
-    private currPage: any = ''; //Could be "none"
-    private noLayers: boolean;
-    private interval: any;
-    private toolbar: any;
-    private message: any;
-    private myCubeData: MyCubeField;
-    private myCubeComments: MyCubeComment[]
+    public mapConfig = new MapConfig;
+    public token: string;
+    public userID: number;
+    public headers: Headers;
+    public measureShow: boolean = false;
+    public userPageLayers: Array<UserPageLayer> = [];
+    public userPages: UserPage[];
+    public activePages = new Array<UserPage>();
+    public defaultPage: UserPage;
+    public currPage: any = ''; //Could be "none"
+    public noLayers: boolean;
+    public interval: any;
+    public toolbar: any;
+    public message: any;
+    public myCubeData: MyCubeField;
+    public myCubeComments: MyCubeComment[]
 
 
 
     constructor(
         public snackBar: MatSnackBar, private configuration: Configuration,
-        private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WMSService,
+        private geojsonservice: geoJSONService, public mapService: MapService, private wfsService: WMSService,
         private layerPermissionService: LayerPermissionService, private layerService: LayerService,
         private userPageService: UserPageService, private userPageLayerService: UserPageLayerService,
         private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog,
@@ -151,11 +151,11 @@ export class MapComponent {
         this.toolbar = "Layers"
     }
 
-    private setToolbar(bar: string) {
+    public setToolbar(bar: string) {
         this.toolbar = bar
     }
 
-    private openPageConfig(pageID: number, userID: number, name: string): void {
+    public openPageConfig(pageID: number, userID: number, name: string): void {
         let dialogRef = this.dialog.open(PageConfigComponent);
         dialogRef.componentInstance.pageID = pageID;
         dialogRef.componentInstance.userID = userID;
@@ -189,21 +189,21 @@ export class MapComponent {
 
     }
 
-    private copyToClipboard(url: string) {
+    public copyToClipboard(url: string) {
         Clipboard.copy(this.configuration.serverWithApiUrl + url + '&apikey=' + this.token);
         this.snackBar.open("Copied to the clipboard", "", {
             duration: 2000,
         });
     }
 
-    private copyGSToClipboard(url: string) {
+    public copyGSToClipboard(url: string) {
         Clipboard.copy('=IMPORTHTML("' + this.configuration.serverWithApiUrl + url + '&apikey=' + this.token + '", "table", 1)');
         this.snackBar.open("Copied to the clipboard", "", {
             duration: 2000,
         });
     }
 
-    private setDefaultPage(userpage: UserPage) {
+    public setDefaultPage(userpage: UserPage) {
         this.mapConfig.defaultpage.default = false;
         this.userPageService
             .Update(this.mapConfig.defaultpage)
@@ -217,23 +217,21 @@ export class MapComponent {
             })
     }
 
-    private setDefaultPageLayer() {
-        console.log('setting default page layer')
+    public setDefaultPageLayer() {
         this.mapConfig.userpagelayers.forEach((userpagelayer) => {
             if (this.mapConfig.currentpage.defaultLayer == userpagelayer.ID) {
-                console.log('default layer found')
                 this.mapService.setCurrentLayer(userpagelayer)
             }
         })
     }
-    private canEditPerm(layerID: number) {
+    public canEditPerm(layerID: number) {
 
     }
 
-    private canDeleteLayer(layerID: number) {
+    public canDeleteLayer(layerID: number) {
 
     }
-    private isolate(layer: UserPageLayer) {
+    public isolate(layer: UserPageLayer) {
         this.mapService.isolate(layer)
     }
 }

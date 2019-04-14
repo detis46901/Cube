@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
         //emit this.token to application for use with API calls
     }
 
-    private login(): void {
+    public login(): void {
         if (!this.model.username) {
             alert("Please enter a value for username.");
             this.clearInputs();

@@ -44,7 +44,6 @@ export class MyCubeService extends SQLService {
     prebuildMyCube(layer) {
         this.GetSchema(layer.layer.ID)
             .subscribe((data) => {
-                console.log(data)
                 this.cubeData = data[0]
                 this.cubeData[0].type = "id"
                 this.cubeData[1].type = "geom"
@@ -59,10 +58,8 @@ export class MyCubeService extends SQLService {
                 id = feature.getId()
             }
             else {
-                console.log(feature.getProperties()['features'][0]['c'])
                 id = feature.getProperties()['features'][0]['c']
             }
-            console.log(id)
             this.GetSchema(table)
                 .subscribe((data) => {
                     this.cubeData = data[0]
@@ -96,7 +93,6 @@ export class MyCubeService extends SQLService {
     loadComments(table, id): any {
         this.getComments(table, id)
             .subscribe((cdata: any) => {
-                console.log(cdata)
                 this.mycubesubject.next(this.cubeData);
                 this.mycubecomment.next(cdata[0])
             })
@@ -155,7 +151,6 @@ export class MyCubeService extends SQLService {
             else {
                 this.addCommentWithoutGeom(comment)
                     .subscribe((data) => {
-                        console.log(data)
                         resolve()
                     })
             }

@@ -35,6 +35,8 @@ import { MatTooltipModule } from '@angular/material/tooltip'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
+//pipes
+import {LayerFilterPipe} from '../_pipes/rowfilter2.pipe'
 import 'hammerjs';
 
 //Services
@@ -68,7 +70,7 @@ import { FeatureModulesService } from '../app/feature-modules/feature-modules.se
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
-import { AdminNavComponent } from './admin/adminNav/adminNav.component';
+import { AdminNavComponent } from './admin/adminnav/adminnav.component';
 import { LayerComponent } from './admin/layer/layer.component';
 import { InstanceComponent } from './admin/module/instance.component';
 import { InstanceNewComponent } from './admin/module/instanceNew/instanceNew.component'
@@ -76,17 +78,17 @@ import { LayerPermissionComponent } from './admin/layer/layerPermission/layerPer
 import { ModulePermissionComponent } from './admin/module/modulePermission/modulePermission.component';
 import { LayerStyleComponent } from './admin/layer/layerStyle/layerStyle.component'
 import { PageComponent } from './admin/user/page/page.component';
-import { PageConfigComponent } from './admin/user/pageConfig/pageConfig.component';
+import { PageConfigComponent } from './admin/user/pageconfig/pageconfig.component';
 import { LayerNewComponent } from './admin/layer/layerNew/layerNew.component';
 import { newMyCubeComponent } from './admin/layer/myCubeLayer/newMyCube.component';
 import { UserComponent } from './admin/user/user.component';
 import { DefaultsComponent } from './admin/default/default.component';
 import { ServerComponent } from './admin/server/server.component';
-import { ConfirmDeleteComponent } from './admin/confirmDelete/confirmDelete.component';
+import { ConfirmDeleteComponent } from './admin/confirmdelete/confirmdelete.component';
 import { SettingsComponent } from './settings/settings.component';
 import { PasswordComponent } from './settings/password/password.component';
 import { ServerNewComponent } from './admin/server/serverNew/serverNew.component';
-import { ChangePasswordComponent } from './admin/user/changePassword/changePassword.component';
+import { ChangePasswordComponent } from './admin/user/changepassword/changepassword.component';
 import { HeaderComponent } from './header/header.component';
 import { SideNavComponent } from './featuredata/sidenav.component';
 import { FeatureDataComponent } from './featuredata/featuredata.component'
@@ -165,7 +167,8 @@ import { ModuleSettingsComponent } from './admin/module/moduleSettings/moduleSet
         ServerLayersComponent,
         StyleComponent,
         ModuleSettingsComponent,
-        InstanceNewComponent
+        InstanceNewComponent,
+        LayerFilterPipe,
     ],
 
     entryComponents: [

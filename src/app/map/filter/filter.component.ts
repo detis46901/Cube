@@ -45,12 +45,12 @@ export class FilterComponent implements OnInit {
         }
         this.sqlSerivce.GetSchema(this.mapConfig.currentLayer.layerID)
             .subscribe((data) => {
-                this.columns = data.slice(2, data.length)
+                this.columns = data[0].slice(2, data[0].length)
                 this.updateColumn()
             })
     }
 
-    private disableCheck(): boolean {
+    public disableCheck(): boolean {
         if ((this.filterColumn.field == "" || this.filterColumn.field == null) && (this.filterOperator == "" || this.filterOperator == null) && (this.filterColumn.value == "" || this.filterColumn.value == null)) {
             return true;
         }
@@ -62,7 +62,7 @@ export class FilterComponent implements OnInit {
         }
     }
 
-    private updateColumn() {
+    public updateColumn() {
         this.filterValue = ""
         if (this.filterColumn.field) {
             this.columns.forEach(x => {
@@ -75,12 +75,12 @@ export class FilterComponent implements OnInit {
     }
 
     // closes the filter menu
-    private close() {
+    public close() {
         this.mapConfig.filterShow = false
     }
 
     // applies the filter to the map and only shows the appllicable items //not fully working
-    private applyFilter() {
+    public applyFilter() {
         if (this.filterColumn.field == "" || this.filterColumn.field == null) {
             this.mapConfig.filterOn = false;
         }
@@ -106,7 +106,7 @@ export class FilterComponent implements OnInit {
     }
 
     // Saves the current styles to the current user page
-    private saveToPage(): void {
+    public saveToPage(): void {
         if (!this.mapConfig.currentLayer.style) {
             this.mapConfig.currentLayer.style = this.mapConfig.currentLayer.layer.defaultStyle
         }
@@ -125,7 +125,7 @@ export class FilterComponent implements OnInit {
     }
 
     // saves the current filter to the layer for everyone to view and edit
-    private saveToLayer(): void {
+    public saveToLayer(): void {
         this.mapConfig.currentLayer.layer.defaultStyle = this.mapConfig.currentLayer.style;
         this.mapConfig.currentLayer.layer.defaultStyle.filter.column = this.filterColumn.field;
         this.mapConfig.currentLayer.layer.defaultStyle.filter.operator = this.filterOperator;
@@ -139,7 +139,7 @@ export class FilterComponent implements OnInit {
     }
 
     // clears the entry fields and sets them to bank strings
-    private clear(): void {
+    public clear(): void {
         this.filterColumn.field = "";
         this.filterOperator = "";
         this.filterColumn.value = "";

@@ -43,20 +43,20 @@ export class PageConfigComponent implements OnInit {
     @Input() userID;
     @Input() pageName;
 
-    private newUserPage: string;
-    private newUserPageLayer = new UserPageLayer;
-    private newUserPageInstance = new UserPageInstance;
-    private layerPermissions = new Array<LayerPermission>();
-    private modulePermissions = new Array<ModulePermission>();
-    private userPageLayers = new Array<UserPageLayer>(); //insert instantiation if error **REMOVE**
-    private userPageInstances = new Array<UserPageInstance>();
-    private selectedUserPage: UserPage;
-    private userGroups = new Array<Group>();
-    private availableLPs = new Array<LayerPermission>();
-    private selectedLP = new LayerPermission
+    public newUserPage: string;
+    public newUserPageLayer = new UserPageLayer;
+    public newUserPageInstance = new UserPageInstance;
+    public layerPermissions = new Array<LayerPermission>();
+    public modulePermissions = new Array<ModulePermission>();
+    public userPageLayers = new Array<UserPageLayer>(); //insert instantiation if error **REMOVE**
+    public userPageInstances = new Array<UserPageInstance>();
+    public selectedUserPage: UserPage;
+    public userGroups = new Array<Group>();
+    public availableLPs = new Array<LayerPermission>();
+    public selectedLP = new LayerPermission
 
-    private token: string;
-    private foo;
+    public token: string;
+    public foo;
 
 
     constructor(public userPageLayerService: UserPageLayerService, private userPageService: UserPageService,
@@ -78,7 +78,7 @@ export class PageConfigComponent implements OnInit {
             .GetByUser(this.userID)
     }
 
-    private getAllByUser() {
+    public getAllByUser() {
         this.layerPermissionService.GetByUserGroups(this.userID)
         .subscribe((x: LayerPermission[]) => {
             console.log(x)
@@ -95,7 +95,7 @@ export class PageConfigComponent implements OnInit {
     }
 
 
-    private getUserPageLayers(): void {
+    public getUserPageLayers(): void {
         this.userPageLayerService
             .GetPageLayers(this.pageID)
             .subscribe((data: UserPageLayer[]) => {
@@ -104,7 +104,7 @@ export class PageConfigComponent implements OnInit {
             });
     }
 
-    private getUserPageInstances(): void {
+    public getUserPageInstances(): void {
         this.userPageInstanceService
             .GetPageInstances(this.pageID)
             .subscribe((data: UserPageInstance[]) => {
@@ -113,7 +113,7 @@ export class PageConfigComponent implements OnInit {
             });
     }
 
-    private addUserPageLayer(newUserPageLayer: UserPageLayer): void {
+    public addUserPageLayer(newUserPageLayer: UserPageLayer): void {
         var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
         console.log(this.selectedLP)
         this.newUserPageLayer.userPageID = this.pageID;
@@ -130,7 +130,7 @@ export class PageConfigComponent implements OnInit {
             });
     }
 
-    private addUserPageInstance(newUserPageInstance: UserPageInstance): void {
+    public addUserPageInstance(newUserPageInstance: UserPageInstance): void {
         console.log(newUserPageInstance)
         var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
         console.log(this.selectedLP)
@@ -151,7 +151,7 @@ export class PageConfigComponent implements OnInit {
             });
     }
 
-    private updateUserPageLayer(userPageLayer: UserPageLayer): void {
+    public updateUserPageLayer(userPageLayer: UserPageLayer): void {
         let uplSave = new UserPageLayer
         uplSave.ID = userPageLayer.ID
         uplSave.defaultON = userPageLayer.defaultON
@@ -210,12 +210,12 @@ export class PageConfigComponent implements OnInit {
         element.disabled = false;
     }
 
-    private addButton(newUserPageLayer: UserPageLayer): void {
+    public addButton(newUserPageLayer: UserPageLayer): void {
         this.addUserPageLayer(newUserPageLayer);
         var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
         element.disabled = true;
     }
-    private addInstance(newUserPageInstance: UserPageInstance): void {
+    public addInstance(newUserPageInstance: UserPageInstance): void {
         this.addUserPageInstance(newUserPageInstance);
         var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
         element.disabled = true;

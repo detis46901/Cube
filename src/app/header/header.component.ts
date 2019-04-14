@@ -21,17 +21,17 @@ import { NotifService } from '../../_services/notification.service';
 export class HeaderComponent implements OnInit {
     @Input() user: User;
     @Input() screenCode: number = 0;
-    private isOpen: boolean;
-    private isNotifOpen: boolean = false;
-    private userHasUnread: boolean;
-    private shaker;
+    public isOpen: boolean;
+    public isNotifOpen: boolean = false;
+    public userHasUnread: boolean;
+    public shaker;
 
-    private token: string;
-    private userID: number;
+    public token: string;
+    public userID: number;
 
-    private currUser = new User;
-    private userPages: UserPage[];
-    private notifications: Notif[];
+    public currUser = new User;
+    public userPages: UserPage[];
+    public notifications: Notif[];
 
     constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService, private notificationService: NotifService) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -72,7 +72,7 @@ export class HeaderComponent implements OnInit {
             });
     }
 
-    private openPages(userID: number, firstName: string, lastName: string): void {
+    public openPages(userID: number, firstName: string, lastName: string): void {
         const dialogRef = this.dialog.open(PageComponent);
         dialogRef.componentInstance.userID = this.userID;
         dialogRef.componentInstance.firstName = this.currUser.firstName;
@@ -84,7 +84,7 @@ export class HeaderComponent implements OnInit {
             });
     }
 
-    private menuToggle(sCode: number): void {
+    public menuToggle(sCode: number): void {
         if (this.sideNavService.getHidden() == null) {
             this.isOpen = true;
         } else {
@@ -114,7 +114,7 @@ export class HeaderComponent implements OnInit {
     }
 
     //Code 1
-    private homeToggle(): void {
+    public homeToggle(): void {
 
         // 2/2/18 What I was trying to do below is to get some typical menu functions (file, edit, view, etc.) available on the header navigation bar.
         //document.getElementById("headerCreateUserBtn").style.visibility = "hidden"; //Figure this out to appear only on admin/user. create buttons could go in header.
@@ -171,7 +171,7 @@ export class HeaderComponent implements OnInit {
         }
     }
 
-    private openNotifications(id): void {
+    public openNotifications(id): void {
         //update notifs on click
         //
         // this.notificationService
@@ -196,7 +196,7 @@ export class HeaderComponent implements OnInit {
         // })
     }
 
-    private shakeNotifications(): void {
+    public shakeNotifications(): void {
         this.shaker = setInterval(function () {
             document.getElementById('headerNotifications').classList.add('shake');
             setTimeout(function () {

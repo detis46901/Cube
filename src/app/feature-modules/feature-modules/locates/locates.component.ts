@@ -24,19 +24,19 @@ export class LocatesComponent implements OnInit {
 
   public moduleShow: boolean
   public locateInput: string;
-  private ticktSubscription: Subscription;
-  private idSubscription: Subscription;
+  public ticktSubscription: Subscription;
+  public idSubscription: Subscription;
   public ticket: Locate = null
   public id: string = null
   public expanded: boolean = false
   public expandedSubscription: Subscription;
-  private userID: number;
-  private userName: string;
-  private completedNote: string;
-  private filterOpen: boolean = true
-  private fromDate: Date
-  private toDate: Date
-  private tminus30: Date
+  public userID: number;
+  public userName: string;
+  public completedNote: string;
+  public filterOpen: boolean = true
+  public fromDate: Date
+  public toDate: Date
+  public tminus30: Date
 
 
 

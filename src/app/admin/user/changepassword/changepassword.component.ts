@@ -5,17 +5,17 @@ import { User } from '../../../../_models/user.model';
 
 @Component({
     selector: 'change-password',
-    templateUrl: './changePassword.component.html',
-    styleUrls: ['./changePassword.component.scss'],
+    templateUrl: './changepassword.component.html',
+    styleUrls: ['./changepassword.component.scss'],
     providers: [UserService]
 })
 
 export class ChangePasswordComponent implements OnInit {
-    private userID: number;
-    private user: User;
-    private oldPw: string = "";
-    private newPw: string = "";
-    private confPw: string = "";
+    public userID: number;
+    public user: User;
+    public oldPw: string = "";
+    public newPw: string = "";
+    public confPw: string = "";
 
     constructor(private dialog: MatDialog, private userService: UserService, @Inject(MAT_DIALOG_DATA) private data: any) {
         this.userID = data.userID;
@@ -25,7 +25,7 @@ export class ChangePasswordComponent implements OnInit {
         this.getUserItems(this.userID);
     }
 
-    private getUserItems(userID: number): void {
+    public getUserItems(userID: number): void {
         this.userService
             .GetSingle(userID)
             .subscribe((data: User) => {
@@ -34,7 +34,7 @@ export class ChangePasswordComponent implements OnInit {
     }
 
     // 2/2/18: Fix to update controls to recognize password has changed (perhaps using a callback/observer)
-    private changePW(): void {
+    public changePW(): void {
         //1/11/18
         // bcrypt.compare(this.oldPw, this.user.password, (err, result) => {
         //     if(err) { //bcrypt hashing error

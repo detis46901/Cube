@@ -197,9 +197,9 @@
                             [value]="userpagelayer" (change)="mapService.setCurrentLayer(userpagelayer, mapConfig)">
                             <mat-slide-toggle matTooltip="{{userpagelayer.layer.ID}}" class="example-margin"
                                 [checked]="userpagelayer.layerShown" (change)="mapService.toggleLayers(userpagelayer)">
-                                <b *ngIf="userpagelayer == mapConfig.mouseoverLayer"><i>{{userpagelayer.layer.layerName}}</i></b>
+                                <b *ngIf="userpagelayer == mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</b>
                                 <i *ngIf="userpagelayer.loadStatus=='Loading'">{{userpagelayer.layer.layerName}}</i>
-                                <span *ngIf="userpagelayer.loadStatus != 'Loading' &&  userpagelayer != mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</span>
+                                <span class="font-weight-normal" *ngIf="userpagelayer.loadStatus != 'Loading' &&  userpagelayer != mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</span>
                             </mat-slide-toggle>
                             <br>
                         </mat-radio-button>

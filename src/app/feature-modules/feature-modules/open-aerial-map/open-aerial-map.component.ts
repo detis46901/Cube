@@ -12,7 +12,6 @@ import { filter } from 'rxjs/operators';
 import { WMSService } from '../../../map/services/wms.service'
 import { Image, coord, poly } from './open-aerial-map.model'
 import { MatDialog, MatSliderChange } from '@angular/material';
-import { OpenAerialMapConfigComponent } from './open-aerial-map-config.component'
 import { OpenAerialMapService } from './open-aerial-map.service'
 
 

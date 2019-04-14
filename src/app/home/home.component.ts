@@ -19,21 +19,21 @@ export class HomeComponent {
     //@Output() user;
 
     //This is the variable that tells the header's toggle menu button which screen the user is on
-    private screen = 1;
+    public screen = 1;
 
-    private user = new User;
-    private token: string;
-    private userID: number;
-    private popupText: string;
-    private message: any;
-    private myCubeData: MyCubeField;
-    private myCubeComments: MyCubeComment[]
-    private subscription: Subscription;
-    private myCubeSubscription: Subscription;
-    private myCubeCommentSubscription: Subscription;
-    private editSubscription: Subscription;
-    private myCubeConfig: MyCubeConfig;
-    private messageSubscription: Subscription;
+    public user = new User;
+    public token: string;
+    public userID: number;
+    public popupText: string;
+    public message: any;
+    public myCubeData: MyCubeField;
+    public myCubeComments: MyCubeComment[]
+    public subscription: Subscription;
+    public myCubeSubscription: Subscription;
+    public myCubeCommentSubscription: Subscription;
+    public editSubscription: Subscription;
+    public myCubeConfig: MyCubeConfig;
+    public messageSubscription: Subscription;
 
     constructor(private dataService: UserService, private sideNavService: SideNavService, private myCubeService: MyCubeService, private wmsService: WMSService, private messageService: MessageService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));

@@ -286,7 +286,7 @@ export class MapService {
     }
 
     //Reads index of layer in dropdown, layer, and if it is shown or not. Needs to remove a layer if a new one is selected
-    private toggleLayers(layer: UserPageLayer): void {
+    public toggleLayers(layer: UserPageLayer): void {
         if (layer.olLayer) {layer.olLayer.setVisible(!layer.layerShown)}
         layer.layerShown = !layer.layerShown;   
         if (layer.layerShown === false) {
@@ -564,7 +564,7 @@ export class MapService {
         this.myCubeService.clearMyCubeData();
     }
 
-    private draw(featuretype: any) {
+    public draw(featuretype: any) {
         let featureID: number
         this.clearFeature()
         if (this.drawMode == true) {
@@ -590,7 +590,8 @@ export class MapService {
                 let featurejson = new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(e.feature);
                 this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
                     .subscribe((data) => {
-                        try { featureID = data[0].id }
+                        try { console.log(data) 
+                            featureID = data[0][0].id }
                         catch (e) {
                             this.sqlService.fixGeometry(this.mapConfig.currentLayer.layer.ID)
                                 .subscribe(() => {
@@ -612,7 +613,7 @@ export class MapService {
         }
     }
 
-    private delete(mapconfig: MapConfig) {
+    public delete(mapconfig: MapConfig) {
         this.mapConfig.selectedFeatures.forEach((feat) => {
             mapconfig.currentLayer.source.removeFeature(feat)
             this.sqlService.Delete(mapconfig.currentLayer.layer.ID, feat.getId())
@@ -668,7 +669,7 @@ export class MapService {
         }
     }
 
-    private zoomToFeature(featurelist: featureList): void {
+    public zoomToFeature(featurelist: featureList): void {
         this.clearFeature();
         this.mapConfig.view.fit(featurelist.feature.getGeometry().getExtent(), {
             duration: 1000,
@@ -679,12 +680,12 @@ export class MapService {
     }
 
     //required (called from html)
-    private zoomExtents(): void {
+    public zoomExtents(): void {
         this.mapConfig.view.animate({ zoom: 12.5, center: ol.proj.transform([-86.1336, 40.4864], 'EPSG:4326', 'EPSG:3857') })
 
     }
 
-    private zoomToLayer() {
+    public zoomToLayer() {
         //this needs to be fed the layer and work with it instead of the featurelist.
         let collection = new ol.geom.GeometryCollection
         let feats = new Array<ol.geom.Geometry>()
@@ -700,7 +701,7 @@ export class MapService {
     }
 
     //required (called from html)
-    private toggleBasemap() {
+    public toggleBasemap() {
         let aerial = new ol.source.BingMaps({
             key: 'AqG6nmU6MBeqJnfsjQ-285hA5Iw5wgEp3krxwvP9ZpE3-nwYqO050K5SJ8D7CkAw',
             imagerySet: 'AerialWithLabels',

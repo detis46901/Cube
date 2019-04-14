@@ -20,7 +20,7 @@ import * as ol from 'openlayers';
 export class MeasureComponent implements OnInit, OnDestroy {
     @Input() mapConfig: MapConfig;
     //measure stuff
-    private layer: ol.layer.Vector = null;
+    public layer: ol.layer.Vector = null;
     public draw: ol.interaction.Draw
     public value: number
     public measureType: string
@@ -53,7 +53,7 @@ export class MeasureComponent implements OnInit, OnDestroy {
         this.mapConfig.map.removeLayer(this.layer);
     }
 
-    private measure(mtype: any) {
+    public measure(mtype: any) {
         if (mtype == "Polygon") { this.unit = "acres"; this.convert = 1 / 43560; this.measureLabel = "Area" }
         if (mtype == "LineString") { this.unit = "feet"; this.convert = 1; this.measureLabel = "Length" }
         this.measureType = mtype
@@ -93,10 +93,10 @@ export class MeasureComponent implements OnInit, OnDestroy {
         }
     }
 
-    private _setCursor(cursorType: string) {
+    public _setCursor(cursorType: string) {
     }
 
-    private _getLengthOrArea(feature: ol.Feature): string {
+    public _getLengthOrArea(feature: ol.Feature): string {
         let value = '';
         const geom: any = feature.getGeometry();
         switch (this.measureType) {
@@ -123,14 +123,14 @@ export class MeasureComponent implements OnInit, OnDestroy {
 
     }
 
-    private changeUnit(unit: string, convert: number) {
+    public changeUnit(unit: string, convert: number) {
         this.unit = unit
         this.convert = convert
         this._getLengthOrArea(this.layer.getSource().getFeatures()[0])
         this.layer.getSource().getFeatures()[0].changed()
 
     }
-    private _getStyle(feature: ol.Feature): ol.style.Style[] {
+    public _getStyle(feature: ol.Feature): ol.style.Style[] {
         return [new ol.style.Style({
             fill: new ol.style.Fill({
                 color: 'black'

@@ -12,14 +12,14 @@ import { User } from '../../../_models/user.model';
 })
 
 export class PasswordComponent implements OnInit {
-    private oldPw: string = "";
-    private newPw: string = "";
-    private confPw: string = "";
+    public oldPw: string = "";
+    public newPw: string = "";
+    public confPw: string = "";
 
-    private token: string;
-    private userID: string;
-    private user = new User;
-    private error;
+    public token: string;
+    public userID: string;
+    public user = new User;
+    public error;
 
     constructor(private userService: UserService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -31,7 +31,7 @@ export class PasswordComponent implements OnInit {
         this.getUserItems(this.userID);
     }
 
-    private changePW(): void {
+    public changePW(): void {
         if (!this.oldPw) {
             if (!this.newPw) {
                 alert("Please enter a value for old password and new password.");
@@ -80,7 +80,7 @@ export class PasswordComponent implements OnInit {
         this.clearInputs();
     }
 
-    private clearInputs(): void {
+    public clearInputs(): void {
         this.oldPw = "";
         this.newPw = "";
         this.confPw = "";

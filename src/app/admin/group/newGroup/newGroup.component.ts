@@ -11,11 +11,11 @@ import { MatDialog } from '@angular/material';
 })
 
 export class NewGroupComponent implements OnInit {
-    private token: string;
-    private userID: number;
+    public token: string;
+    public userID: number;
 
-    private groups: Group[];
-    private newGroup = new Group;
+    public groups: Group[];
+    public newGroup = new Group;
 
     constructor(private dialog: MatDialog, private groupService: GroupService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -31,7 +31,7 @@ export class NewGroupComponent implements OnInit {
             })
     }
 
-    private addGroup(newGrp: Group): void {
+    public addGroup(newGrp: Group): void {
         var flag = false;
         for (let grp of this.groups) {
             if (newGrp.name == grp.name) {

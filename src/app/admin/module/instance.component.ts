@@ -10,7 +10,7 @@ import { Module, ModuleInstance, ModulePermission, UserPageInstance } from '../.
 import { ModulePermissionComponent } from './modulePermission/modulePermission.component';
 import { ModuleSettingsComponent } from './moduleSettings/moduleSettings.component';
 import { InstanceNewComponent } from './instanceNew/instanceNew.component';
-import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
+import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component';
 import { ModuleService } from '../../../_services/_module.service';
 import { Server } from '../../../_models/server.model';
 import { MatDialog, MatDialogConfig } from '@angular/material';
@@ -29,15 +29,15 @@ import { FeatureModulesAdminService } from '../../feature-modules/feature-module
 
 export class InstanceComponent implements OnInit {
     //objCode refers to the  menu tab the user is on, so the openConfDel method knows what to interpolate based on what it's deleting
-    private objCode: number = 2;
-    private token: string;
-    private userID: number;
+    public objCode: number = 2;
+    public token: string;
+    public userID: number;
 
-    private instances: ModuleInstance[];
-    private modules: Module[];
+    public instances: ModuleInstance[];
+    public modules: Module[];
 
-    private instanceColumns = ['instanceID', 'name', /*'identity', 'service', 'server', 'description',*/ /*'format', */'description', /*'geometry', */'actionsColumn'];
-    private dataSource: any;
+    public instanceColumns = ['instanceID', 'name', /*'identity', 'service', 'server', 'description',*/ /*'format', */'description', /*'geometry', */'actionsColumn'];
+    public dataSource: any;
 
     constructor(private moduleInstanceService: ModuleInstanceService, private dialog: MatDialog, private modulePermissionService: ModulePermissionService, private userPageInstanceService: UserPageInstanceService, private moduleService: ModuleService, private sqlservice: SQLService, private featureModuleAdminService: FeatureModulesAdminService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -61,7 +61,7 @@ export class InstanceComponent implements OnInit {
             });
     }
 
-    private getModules(): void {
+    public getModules(): void {
         this.moduleService
             .GetAll()
             .subscribe((data: Module[]) => {
@@ -69,33 +69,33 @@ export class InstanceComponent implements OnInit {
             });
     }
 
-    // private createInstance(): void {
+    // public createInstance(): void {
     //     const dialogRef = this.dialog.open(InstanceNewComponent, { height: '450px', width: '450px' });
     //     dialogRef.afterClosed().subscribe(() => {
     //         this.getInstanceItems();
     //     });
     // }
 
-    private openPermission(instanceid: number, instancename: string): void {
+    public openPermission(instanceid: number, instancename: string): void {
         const dialogRef = this.dialog.open(ModulePermissionComponent);
         dialogRef.componentInstance.instanceID = instanceid;
         dialogRef.componentInstance.instanceName = instancename;
     }
 
-    private openSettings(instanceid: number, instancename: string): void {
+    public openSettings(instanceid: number, instancename: string): void {
         const dialogRef = this.dialog.open(ModuleSettingsComponent, { height: '450px', width: '450px' });
         dialogRef.componentInstance.instanceID = instanceid;
         dialogRef.componentInstance.instanceName = instancename;
     }
 
-    private createInstance(): void {
+    public createInstance(): void {
         const dialogRef = this.dialog.open(ModuleSettingsComponent, { height: '450px', width: '450px' });
         dialogRef.afterClosed().subscribe(() => {
             this.getInstanceItems();
         })
     }
 
-    private openDetails(id: number, name: string): void {
+    public openDetails(id: number, name: string): void {
         const dialogRef = this.dialog.open(InstanceDetailsComponent, { width: '450px' });
         dialogRef.componentInstance.ID = id;
         dialogRef.componentInstance.name = name;
@@ -104,7 +104,7 @@ export class InstanceComponent implements OnInit {
         })
     }
 
-    private confirmDelete(instance: ModuleInstance): void {
+    public confirmDelete(instance: ModuleInstance): void {
         console.log(instance)
         const dialogRef = this.dialog.open(ConfirmDeleteComponent);
         dialogRef.componentInstance.objCode = this.objCode;
@@ -132,7 +132,7 @@ export class InstanceComponent implements OnInit {
         });
     }
 
-    private updateInstance(instance: ModuleInstance): void {
+    public updateInstance(instance: ModuleInstance): void {
         this.moduleInstanceService
             .Update(instance)
             .subscribe(() => {
@@ -140,7 +140,7 @@ export class InstanceComponent implements OnInit {
             });
     }
 
-    private deletePermission(instanceID: number) {
+    public deletePermission(instanceID: number) {
         this.modulePermissionService
             .GetByInstance(instanceID)
             .subscribe(result => {
@@ -152,7 +152,7 @@ export class InstanceComponent implements OnInit {
             });
     }
 
-    private deleteUPI(instanceID: number): void {
+    public deleteUPI(instanceID: number): void {
         this.userPageInstanceService
             .GetByInstance(instanceID)
             .subscribe((res: UserPageInstance[]) => {
@@ -165,7 +165,7 @@ export class InstanceComponent implements OnInit {
 
     }
 
-    private deleteInstance(instanceID: number): void {
+    public deleteInstance(instanceID: number): void {
         this.moduleInstanceService
             .GetSingle(instanceID)
             .subscribe((result: ModuleInstance) => {
@@ -179,7 +179,7 @@ export class InstanceComponent implements OnInit {
     }
 
     // 2/2/18: Keep this here to remind you: DON'T do it this way, when you get to it, implement using the pagination/sorting features of mat-table
-    private sortInstances(code: string): void {
+    public sortInstances(code: string): void {
         let indexList: Array<number> = [];
         let list = this.instances;
         let temp: Array<any> = [];
@@ -206,7 +206,7 @@ export class InstanceComponent implements OnInit {
         }
     }
 
-    private orderAZ(): void {
+    public orderAZ(): void {
         let indexList: Array<number> = [];
         let list, temp = this.instances;
         for (let i = 0; i < list.length; i++) {

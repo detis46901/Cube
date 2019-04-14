@@ -9,7 +9,7 @@
   <mat-form-field>
     <input matInput [(ngModel)]="locateInput" id='locateInput' placeholder="Paste Locate Email Here" autocomplete="off">
   </mat-form-field>
-  <button mat-button (click)='importLocate()' [disabled]='locateInput == Null || locateInput == ""'>Import Locate</button>
+  <button mat-button (click)='importLocate()' [disabled]='locateInput == null || locateInput == ""'>Import Locate</button>
   <mat-divider></mat-divider>
   <mat-slide-toggle matTooltip="" class="" [checked]="filterOpen" (change)="filterOpen = !filterOpen">
     <span>Only Open Tickets</span>

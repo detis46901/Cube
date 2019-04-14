@@ -21,7 +21,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LocatesService } from '../locates/locates.service';
 import { OpenAerialMapComponent } from './open-aerial-map.component'
-import { OpenAerialMapConfigComponent } from './open-aerial-map-config.component'
 import { OpenAerialMapService } from './open-aerial-map.service'
 import { OpenAerialMapAdminService } from './open-aerial-map-admin.service'
 
@@ -61,9 +60,8 @@ import { OpenAerialMapAdminService } from './open-aerial-map-admin.service'
     ReactiveFormsModule
 
   ],
-  declarations: [OpenAerialMapComponent, OpenAerialMapConfigComponent],
+  declarations: [OpenAerialMapComponent],
   entryComponents: [
-    OpenAerialMapConfigComponent
 ],
   providers: [OpenAerialMapService, OpenAerialMapAdminService],
   exports:[OpenAerialMapComponent]

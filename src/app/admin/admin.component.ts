@@ -12,11 +12,11 @@ import { Configuration } from '../../_api/api.constants';
 
 export class AdminComponent {
     //screen code identifier (see home.component.html)
-    private screen = 2;
+    public screen = 2;
 
-    private user = new User;
-    private token: string;
-    private userID: number;
+    public user = new User;
+    public token: string;
+    public userID: number;
 
     constructor(private dataService: UserService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));

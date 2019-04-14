@@ -23,15 +23,15 @@ export class InstanceDetailsComponent implements OnInit {
     @Input() ID;
     @Input() name;
 
-    private layer = new Layer;
-    private layerProps = new Array<any>();
-    private changedLayerProps = new Array<any>();
-    private originalLayerProps = new Array<any>();
-    private style: string;
-    private token;
-    private userID;
-    private user: User;
-    private servers: Array<Server>;
+    public layer = new Layer;
+    public layerProps = new Array<any>();
+    public changedLayerProps = new Array<any>();
+    public originalLayerProps = new Array<any>();
+    public style: string;
+    public token;
+    public userID;
+    public user: User;
+    public servers: Array<Server>;
 
     constructor(private dialog: MatDialog, private layerService: LayerService, private layerPermissionService: LayerPermissionService,
         private serverService: ServerService, private userService: UserService, private groupService: GroupService,
@@ -47,7 +47,7 @@ export class InstanceDetailsComponent implements OnInit {
         this.getServers();
     }
 
-    private getServers(): void {
+    public getServers(): void {
         this.serverService
             .GetAll()
             .subscribe((data) => {
@@ -55,7 +55,7 @@ export class InstanceDetailsComponent implements OnInit {
             });
     }
 
-    private getLayer(id) {
+    public getLayer(id) {
         this.layerService
             .GetSingle(id)
             .subscribe((res: Layer) => {
@@ -71,7 +71,7 @@ export class InstanceDetailsComponent implements OnInit {
             })
     }
 
-    private getUser(id) {
+    public getUser(id) {
         this.userService
             .GetSingle(id)
             .subscribe((res) => {
@@ -79,7 +79,7 @@ export class InstanceDetailsComponent implements OnInit {
             })
     }
 
-    private submit(layer) {
+    public submit(layer) {
         this.whichFieldsChanged(layer)
         var notif: Notif = this.createLayerNotif(layer)
         this.layer.defaultStyle = JSON.parse(this.style);
@@ -102,7 +102,7 @@ export class InstanceDetailsComponent implements OnInit {
             })
     }
 
-    private whichFieldsChanged(changed: Layer) {
+    public whichFieldsChanged(changed: Layer) {
         let ix = 0;
 
         for (let property in changed) {
@@ -116,7 +116,7 @@ export class InstanceDetailsComponent implements OnInit {
         }
     }
 
-    private createLayerNotif(L: Layer): any {
+    public createLayerNotif(L: Layer): any {
         var N = new Notif;
         N.name = L.layerName + ' changed by ' + this.user.firstName + " " + this.user.lastName;
         N.description = this.parseDescription(this.originalLayerProps, this.changedLayerProps);
@@ -128,7 +128,7 @@ export class InstanceDetailsComponent implements OnInit {
         return N;
     }
 
-    private parseDescription(oArr, cArr): string {
+    public parseDescription(oArr, cArr): string {
         var description = "";
         let flag = false;
         let ix = 0;
@@ -138,7 +138,7 @@ export class InstanceDetailsComponent implements OnInit {
         return description;
     }
 
-    private checkLength() {
+    public checkLength() {
         if (this.layer.layerName.length > 20) {
             console.log("Might be too long")
         }

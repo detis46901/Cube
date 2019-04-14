@@ -18,19 +18,19 @@ import { LayerPermission } from '../../../../_models/layer.model';
 export class LayerPermissionComponent implements OnInit {
     @Input() layerID: number;
     @Input() layerName: string;
-    private closeResult: string;
+    public closeResult: string;
     public permlessUsers = new Array<User>();
     public permlessGroups = new Array<Group>();
-    private newLayerPermission = new LayerPermission;
-    private layerPermissions = new Array<LayerPermission>();
-    private token: string;
-    private userID: number;
-    private permNames = new Array<string>();
-    private layerOwner: number;
-    private isGroup: boolean = false;
+    public newLayerPermission = new LayerPermission;
+    public layerPermissions = new Array<LayerPermission>();
+    public token: string;
+    public userID: number;
+    public permNames = new Array<string>();
+    public layerOwner: number;
+    public isGroup: boolean = false;
 
-    private currDeletedPermObj: any; //Group or User Object
-    private currDeletedPermIsUser: boolean; //True if it is a User object from the permission.
+    public currDeletedPermObj: any; //Group or User Object
+    public currDeletedPermIsUser: boolean; //True if it is a User object from the permission.
 
     constructor(private layerPermissionService: LayerPermissionService, private userService: UserService, private groupService: GroupService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -49,7 +49,7 @@ export class LayerPermissionComponent implements OnInit {
         //this.isUser = true;
     }
 
-    private getPermissionItems(calledByDelete: boolean): void {
+    public getPermissionItems(calledByDelete: boolean): void {
         this.layerPermissionService
             .GetByLayer(this.layerID)
             .subscribe((data: LayerPermission[]) => {
@@ -83,7 +83,7 @@ export class LayerPermissionComponent implements OnInit {
     }
 
     //2/9/18 this is the last part that needs fixed to get the list to return correctly
-    private getUserItems(calledByDelete: boolean): void {
+    public getUserItems(calledByDelete: boolean): void {
         this.permlessUsers = [];
 
         if (this.currDeletedPermIsUser == true && calledByDelete) {
@@ -105,7 +105,7 @@ export class LayerPermissionComponent implements OnInit {
     }
 
     //2/9/18 this is the last part that needs fixed to get the list to return correctly
-    private getGroupItems(calledByDelete: boolean): void {
+    public getGroupItems(calledByDelete: boolean): void {
         this.permlessGroups = [];
 
         if (this.currDeletedPermIsUser == false && calledByDelete) {
@@ -125,7 +125,7 @@ export class LayerPermissionComponent implements OnInit {
             });
     }
 
-    private initNewPermission(): void {
+    public initNewPermission(): void {
         this.newLayerPermission.edit = false;
         this.newLayerPermission.delete = false;
         this.newLayerPermission.owner = false;
@@ -137,7 +137,7 @@ export class LayerPermissionComponent implements OnInit {
         this.newLayerPermission.groupID = null;
     }
 
-    private addLayerPermission(newLayerPermission: LayerPermission): void {
+    public addLayerPermission(newLayerPermission: LayerPermission): void {
         this.newLayerPermission = newLayerPermission;
         this.newLayerPermission.layerID = this.layerID;
         this.newLayerPermission.grantedBy = this.userID;
@@ -150,7 +150,7 @@ export class LayerPermissionComponent implements OnInit {
             });
     }
 
-    private updateLayerPermission(permission: LayerPermission): void {
+    public updateLayerPermission(permission: LayerPermission): void {
         this.layerPermissionService
             .Update(permission)
             .subscribe(() => {
@@ -159,7 +159,7 @@ export class LayerPermissionComponent implements OnInit {
             });
     }
 
-    private updateLayerPermissions(): void {
+    public updateLayerPermissions(): void {
         for (let p of this.layerPermissions) {
             this.updateLayerPermission(p)
         }
@@ -167,7 +167,7 @@ export class LayerPermissionComponent implements OnInit {
 
     // 2/8/18: permless users/groups are not being updated correctly once an object is deleted. Object deletion should add the object that was 
     // deleted to the correct permless list
-    private deleteLayerPermission(perm: LayerPermission): void {
+    public deleteLayerPermission(perm: LayerPermission): void {
         this.currDeletedPermObj = perm
         //perm.groupID ? this.currDeletedPermIsUser=false : this.currDeletedPermIsUser=true;
 
@@ -185,7 +185,7 @@ export class LayerPermissionComponent implements OnInit {
             });
     }
 
-    private switchPermType() {
+    public switchPermType() {
         this.isGroup = !this.isGroup;
     }
 }

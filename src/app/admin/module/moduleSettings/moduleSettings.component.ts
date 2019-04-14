@@ -23,24 +23,24 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 export class ModuleSettingsComponent implements OnInit {
     @Input() instanceID: number;
     @Input() instanceName: string;
-    private newInstance: boolean = false
-    private closeResult: string;
-    private moduleInstance = new ModuleInstance
-    private settings: string;
-    private settingsArray = new Array<JSON>();
-    private permlessUsers = new Array<User>();
-    private permlessGroups = new Array<Group>();
-    private modules = new Array<Module>()
-    private selectedModule = new Module
-    private token: string;
-    private userID: number;
-    private permNames = new Array<string>();
-    private layerOwner: number;
-    private isGroup: boolean = false;
-    private moduleSelected: boolean = false
+    public newInstance: boolean = false
+    public closeResult: string;
+    public moduleInstance = new ModuleInstance
+    public settings: string;
+    public settingsArray = new Array<JSON>();
+    public permlessUsers = new Array<User>();
+    public permlessGroups = new Array<Group>();
+    public modules = new Array<Module>()
+    public selectedModule = new Module
+    public token: string;
+    public userID: number;
+    public permNames = new Array<string>();
+    public layerOwner: number;
+    public isGroup: boolean = false;
+    public moduleSelected: boolean = false
 
-    private currDeletedPermObj: any; //Group or User Object
-    private currDeletedPermIsUser: boolean; //True if it is a User object from the permission.
+    public currDeletedPermObj: any; //Group or User Object
+    public currDeletedPermIsUser: boolean; //True if it is a User object from the permission.
 
     constructor(private moduleInstanceService: ModuleInstanceService,
         private moduleService: ModuleService,
@@ -64,7 +64,7 @@ export class ModuleSettingsComponent implements OnInit {
         }
     }
 
-    private getModules():void {
+    public getModules():void {
         this.moduleService.GetAll()
         .subscribe((data:Module[]) => {
             console.log(data)
@@ -72,7 +72,7 @@ export class ModuleSettingsComponent implements OnInit {
         })
     }
 
-    private getModuleSettings():void {  //run when a module is selected
+    public getModuleSettings():void {  //run when a module is selected
         console.log("getModuleSettings")
         this.settingsArray = []
         this.settings = JSON.stringify(this.selectedModule.defaultInstanceSettings)
@@ -82,7 +82,7 @@ export class ModuleSettingsComponent implements OnInit {
         this.moduleSelected = true
     }
 
-    private getInstanceSettings(): void {
+    public getInstanceSettings(): void {
         this.moduleInstanceService
             .GetSingle(this.instanceID)
             .subscribe((data: ModuleInstance) => {
@@ -96,7 +96,7 @@ export class ModuleSettingsComponent implements OnInit {
     }
 
     //2/9/18 this is the last part that needs fixed to get the list to return correctly
-    private getUserItems(calledByDelete: boolean): void {
+    public getUserItems(calledByDelete: boolean): void {
         this.permlessUsers = [];
 
         if (this.currDeletedPermIsUser == true && calledByDelete) {
@@ -118,7 +118,7 @@ export class ModuleSettingsComponent implements OnInit {
     }
 
     //2/9/18 this is the last part that needs fixed to get the list to return correctly
-    private getGroupItems(calledByDelete: boolean): void {
+    public getGroupItems(calledByDelete: boolean): void {
         this.permlessGroups = [];
 
         if (this.currDeletedPermIsUser == false && calledByDelete) {
@@ -139,7 +139,7 @@ export class ModuleSettingsComponent implements OnInit {
             });
     }
 
-    private updateSettings(): void {
+    public updateSettings(): void {
         let tempJSON:JSON = JSON.parse('{"settings":[{}]}')
         let i:number = 0
 
@@ -157,7 +157,7 @@ export class ModuleSettingsComponent implements OnInit {
             });
     }
 
-    private createInstance(): void {
+    public createInstance(): void {
         this.moduleInstance.moduleID = this.selectedModule.ID
         let tempJSON:JSON = JSON.parse('{"settings":[{}]}')
         let i:number = 0

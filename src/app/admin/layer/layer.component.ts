@@ -10,7 +10,7 @@ import { Layer, LayerPermission, UserPageLayer } from '../../../_models/layer.mo
 import { LayerPermissionComponent } from './layerPermission/layerPermission.component';
 import { LayerStyleComponent } from './layerStyle/layerStyle.component';
 import { LayerNewComponent } from './layerNew/layerNew.component';
-import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
+import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component';
 import { newMyCubeComponent } from './myCubeLayer/newMyCube.component';
 import { ServerService } from '../../../_services/_server.service';
 import { Server } from '../../../_models/server.model';
@@ -30,15 +30,15 @@ import { LayerDetailsComponent } from '../details/layerDetails/layerDetails.comp
 export class LayerComponent implements OnInit {
     //objCode refers to the  menu tab the user is on, so the openConfDel method knows what to interpolate based on what it's deleting
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    private objCode: number = 2;
-    private token: string;
-    private userID: number;
+    public objCode: number = 2;
+    public token: string;
+    public userID: number;
 
-    private layers: Layer[];
-    private servers: Server[];
+    public layers: Layer[];
+    public servers: Server[];
 
-    private layerColumns = ['layerID', 'name', /*'identity', 'service', 'server', 'description',*/ /*'format', */'type', /*'geometry', */'actionsColumn'];
-    private dataSource: any
+    public layerColumns = ['layerID', 'name', /*'identity', 'service', 'server', 'description',*/ /*'format', */'type', /*'geometry', */'actionsColumn'];
+    public dataSource: any
 
     constructor(private layerValidator: ValidatorService, private layerService: LayerService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -68,33 +68,33 @@ export class LayerComponent implements OnInit {
             });
     }
 
-    private createLayer(): void {
+    public createLayer(): void {
         const dialogRef = this.dialog.open(LayerNewComponent, { height: '450px', width: '450px' });
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });
     }
 
-    private createMyCube(): void {
+    public createMyCube(): void {
         const dialogRef = this.dialog.open(newMyCubeComponent, { height: '520px', width: '480px' });
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });
     }
 
-    private openPermission(layerid: number, layername: string): void {
+    public openPermission(layerid: number, layername: string): void {
         const dialogRef = this.dialog.open(LayerPermissionComponent);
         dialogRef.componentInstance.layerID = layerid;
         dialogRef.componentInstance.layerName = layername;
     }
 
-    private openStyle(layerid: number, layername: string): void {
+    public openStyle(layerid: number, layername: string): void {
         const dialogRef = this.dialog.open(LayerStyleComponent);
         dialogRef.componentInstance.layerID = layerid;
         dialogRef.componentInstance.layerName = layername;
     }
 
-    private openDetails(id: number, name: string): void {
+    public openDetails(id: number, name: string): void {
         const dialogRef = this.dialog.open(LayerDetailsComponent, { width: '450px' });
         dialogRef.componentInstance.ID = id;
         dialogRef.componentInstance.name = name;
@@ -103,7 +103,7 @@ export class LayerComponent implements OnInit {
         })
     }
 
-    private confirmDelete(layer: Layer): void {
+    public confirmDelete(layer: Layer): void {
         const dialogRef = this.dialog.open(ConfirmDeleteComponent);
         dialogRef.componentInstance.objCode = this.objCode;
         dialogRef.componentInstance.objID = layer.ID;
@@ -117,7 +117,7 @@ export class LayerComponent implements OnInit {
         });
     }
 
-    private updateLayer(layer: Layer): void {
+    public updateLayer(layer: Layer): void {
         this.layerService
             .Update(layer)
             .subscribe(() => {
@@ -125,7 +125,7 @@ export class LayerComponent implements OnInit {
             });
     }
 
-    private deletePermission(layerID: number) {
+    public deletePermission(layerID: number) {
         this.layerPermissionService
             .GetByLayer(layerID)
             .subscribe(result => {
@@ -137,7 +137,7 @@ export class LayerComponent implements OnInit {
             });
     }
 
-    private deleteUPL(layerID: number): void {
+    public deleteUPL(layerID: number): void {
         this.userPageLayerService
             .GetByLayer(layerID)
             .subscribe((res: UserPageLayer[]) => {
@@ -150,7 +150,7 @@ export class LayerComponent implements OnInit {
 
     }
 
-    private deleteLayer(layerID: number): void {
+    public deleteLayer(layerID: number): void {
         this.layerService
             .GetSingle(layerID)
             .subscribe((result: Layer) => {
@@ -180,7 +180,7 @@ export class LayerComponent implements OnInit {
     }
 
     // 2/2/18: Keep this here to remind you: DON'T do it this way, when you get to it, implement using the pagination/sorting features of mat-table
-    private sortLayers(code: string): void {
+    public sortLayers(code: string): void {
         let indexList: Array<number> = [];
         let list = this.layers;
         let temp: Array<any> = [];
@@ -207,7 +207,7 @@ export class LayerComponent implements OnInit {
         }
     }
 
-    private orderAZ(): void {
+    public orderAZ(): void {
         let indexList: Array<number> = [];
         let list, temp = this.layers;
         for (let i = 0; i < list.length; i++) {

@@ -29,12 +29,12 @@ export class LayerNewComponent implements OnInit {
     @Input() layerServer: Server;
     @Input() layerName: string;
 
-    private permlessUsers = new Array<User>()
-    private permlessGroups = new Array<Group>();
-    private token: string;
-    private userID: number;
-    private step = 0;
-    private isGroup: boolean = false;
+    public permlessUsers = new Array<User>()
+    public permlessGroups = new Array<Group>();
+    public token: string;
+    public userID: number;
+    public step = 0;
+    public isGroup: boolean = false;
     setStep(index: number) {
         this.step = index;
     }
@@ -50,15 +50,15 @@ export class LayerNewComponent implements OnInit {
     //Set to true in ngOnInit() if inputs are read from the server screen, thus determines if the server screen is calling this dialog
 
     //if error in submission, set this to a new object (= new Layer)
-    private newLayer = new Layer;
-    private newLayerServer = new Server;
-    private servers: Array<Server>;
-    private layer = new Layer;
-    private newLayerPermission = new LayerPermission;
+    public newLayer = new Layer;
+    public newLayerServer = new Server;
+    public servers: Array<Server>;
+    public layer = new Layer;
+    public newLayerPermission = new LayerPermission;
 
-    private currDeletedPermObj: any; //Group or User Object
-    private currDeletedPermIsUser: boolean; //True if it is a User object from the permission.
-    private permNames = new Array<string>();
+    public currDeletedPermObj: any; //Group or User Object
+    public currDeletedPermIsUser: boolean; //True if it is a User object from the permission.
+    public permNames = new Array<string>();
 
 
     //steps that should occur in this component
@@ -82,7 +82,7 @@ export class LayerNewComponent implements OnInit {
         this.getServers();
     }
 
-    private getServers(): void {
+    public getServers(): void {
         this.serverService
             .GetAll()
             .subscribe((data) => {
@@ -90,7 +90,7 @@ export class LayerNewComponent implements OnInit {
             });
     }
 
-    private addLayer(newlayer: Layer): void {
+    public addLayer(newlayer: Layer): void {
         this.layer = newlayer;
         let layerPerm = new LayerPermission;
         layerPerm.userID = this.userID;
@@ -110,11 +110,11 @@ export class LayerNewComponent implements OnInit {
             this.dialog.closeAll()});
     }
 
-    private switchPermType() {
+    public switchPermType() {
         this.isGroup = !this.isGroup;
     }
 
-    private checkLength() {
+    public checkLength() {
         if (this.newLayer.layerName.length > 20) {
             console.log("this might be too long")
         }
