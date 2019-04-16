@@ -66,6 +66,7 @@ export class FeatureDataComponent {
     }
 
     private updateMyCube(mycube: MyCubeField): void {
+        let FID: number = this.myCubeData[0].value //required in the case the blur occurs when the object is unselected. 
         if (mycube.changed) {
             if (mycube.type == "date") {
                 mycube.value = mycube.value.toJSON()
@@ -77,10 +78,12 @@ export class FeatureDataComponent {
             this.sqlservice
                 .Update(this.myCubeConfig.table, this.myCubeData[0].value, mycube)
                 .subscribe((data) => {
-                    this.myCubeService.createAutoMyCubeComment(true, mycube.field + " changed to " + mycube.value, this.myCubeData[0].value, this.myCubeConfig.table, this.userID)
+                    this.myCubeService.createAutoMyCubeComment(true, mycube.field + " changed to " + mycube.value, FID, this.myCubeConfig.table, this.userID)
                     .then(() => {
                         this.commentText = ""
-                        this.myCubeService.loadComments(this.myCubeConfig.table, this.myCubeData[0].value)
+                        //try is used to not error when the change coinsides with unselecting the object.
+                        try {this.myCubeService.loadComments(this.myCubeConfig.table, this.myCubeData[0].value)}
+                        catch { }
                     })
                         })
                     if (mycube.type == "text") {

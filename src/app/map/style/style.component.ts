@@ -11,6 +11,7 @@ import { UserPageLayerService } from '../../../_services/_userPageLayer.service'
 import { StyleService } from '../services/style.service';
 import { LayerService } from '../../../_services/_layer.service';
 
+
 @Component({
     selector: 'styletoolbar',
     templateUrl: './style.component.html',
@@ -30,6 +31,7 @@ export class StyleComponent implements OnInit {
     public selectedListTitle: string = "No Title"
     public selectedColor: string = '#000000'
     public operators: { value: string; viewValue: string; }[]
+    public admin: boolean = false
     colors = [
         { value: '#FF2D2D', viewValue: 'Red' },
         { value: '#FF7800', viewValue: 'Orange' },
@@ -51,7 +53,10 @@ export class StyleComponent implements OnInit {
 
     constructor(public mapService: MapService, private styleService: StyleService,
         private sqlSerivce: SQLService, private userPageLayerService: UserPageLayerService,
-        private layerService: LayerService) { }
+        private layerService: LayerService) {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.admin = currentUser && currentUser.admin;
+         }
 
     ngOnInit() {
         try {

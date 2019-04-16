@@ -24,9 +24,12 @@ export class FilterComponent implements OnInit {
     public columns: MyCubeField[]
     public operators: { value: string; viewValue: string; }[]
     public modelOperator = new filterOperators
+    public admin: boolean = false
 
     constructor(private mapService: MapService, private sqlSerivce: SQLService, private userPageLayerService: UserPageLayerService,
         private layerService: LayerService) {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.admin = currentUser && currentUser.admin;
     }
 
     ngOnInit() {

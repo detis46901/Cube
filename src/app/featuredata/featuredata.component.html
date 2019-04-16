@@ -121,7 +121,7 @@
                                 <div *ngIf="myCube.type=='text' || myCube.type == 'character varying'"
                                         matTooltip="" matTooltipPosition="above" matTooltipShowDelay="1000">
                                         <mat-form-field style="width:90%">
-                                            <input matInput rows="3" [disabled]="!myCubeConfig.edit" id="textinput" ngModel required
+                                            <input matInput autocomplete='off' rows="3" [disabled]="!myCubeConfig.edit" id="textinput" ngModel required
                                                 placeholder="{{myCube.field}}" [(ngModel)]="myCube.value" (change)="myCube.changed = true"
                                                 (blur)="updateMyCube(myCube)">
                                         </mat-form-field><br>

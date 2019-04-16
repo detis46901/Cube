@@ -81,8 +81,8 @@
     <!-- buttons to apply, clear, save to page or layer, and close -->
     <mat-action-row>
         <button mat-button (click)="applyStyle()">Apply</button>
-        <button mat-button (click)="saveToPage()">Save to Page</button>
-        <button mat-button (click)="saveToLayer()">Save to Layer</button>
-        <button mat-button (click)="close()">Close</button>
+        <button mat-button (click)="saveToPage()">Save Page</button>
+        <button *ngIf="admin" mat-button (click)="saveToLayer()">Save Layer</button>
+        <button mat-button (click)="close()">X</button>
     </mat-action-row>
 </mat-expansion-panel>

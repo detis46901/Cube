@@ -99,8 +99,8 @@ export class SQLService {
     }
 
     public Update = (table: number, id: string, MyCubeField: MyCubeField): Observable<any> => {
-        console.log(JSON.stringify(MyCubeField))
-        console.log(this.actionUrl + 'update', '{"table":' + table + ',"id":' + id + ',"mycubefield":' + JSON.stringify(MyCubeField) + '}')
+        // console.log(JSON.stringify(MyCubeField))
+        // console.log(this.actionUrl + 'update', '{"table":' + table + ',"id":' + id + ',"mycubefield":' + JSON.stringify(MyCubeField) + '}')
         return this._http.put(this.actionUrl + 'update', '{"table":' + table + ',"id":' + id + ',"mycubefield":' + JSON.stringify(MyCubeField) + '}', this.options)
             // .map((response: Response) => <any>response.json())
             .catch(this.handleError);
@@ -113,7 +113,7 @@ export class SQLService {
     }
 
     public addColumn = (table: number, field: MyCubeField): Observable<any> => {
-        console.log(field)
+        // console.log(field)
         return this._http.get(this.actionUrl + 'addColumn?table=' + table + '&field=' + field.field + '&type=' + field.type + '&label=' + field.label, this.options)
             .catch(this.handleError)
     }

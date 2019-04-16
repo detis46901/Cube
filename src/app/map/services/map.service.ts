@@ -15,6 +15,7 @@ import 'rxjs/add/operator/map';
 import { StyleService } from '../services/style.service'
 import { FeatureModulesService } from "app/feature-modules/feature-modules.service";
 import * as ol from 'openlayers';
+import { environment } from 'environments/environment'
 
 @Injectable()
 export class MapService {
@@ -69,8 +70,8 @@ export class MapService {
                 .then(() => this.loadLayers(this.mapConfig, true).then(() => {
                     this.mapConfig.view = new ol.View({
                         projection: 'EPSG:3857',
-                        center: ol.proj.transform([-86.1336, 40.4864], 'EPSG:4326', 'EPSG:3857'),
-                        zoom: 13,
+                        center: ol.proj.transform([environment.centerLong, environment.centerLat], 'EPSG:4326', 'EPSG:3857'),
+                        zoom: environment.centerZoom,
                         enableRotation: false
                     })
                     this.mapConfig.map = new ol.Map({
@@ -196,7 +197,6 @@ export class MapService {
                             break;
                         }
                         case "WMTS": {
-                            console.log("At WMTS")
                             this.wmsService.getCapabilities(userpagelayer.layer.server.serverURL)
                                 .subscribe((data) => {
                                     let parser = new ol.format.WMTSCapabilities();
@@ -225,7 +225,6 @@ export class MapService {
                             break;
                         }
                         default: {  //this is the WMS load
-                            console.log("loading WMS Layer")
                             let wmsSource = new ol.source.TileWMS({
                                 url: this.wmsService.formLayerRequest(userpagelayer),
                                 params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
@@ -590,8 +589,7 @@ export class MapService {
                 let featurejson = new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(e.feature);
                 this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
                     .subscribe((data) => {
-                        try { console.log(data) 
-                            featureID = data[0][0].id }
+                        try { featureID = data[0][0].id }
                         catch (e) {
                             this.sqlService.fixGeometry(this.mapConfig.currentLayer.layer.ID)
                                 .subscribe(() => {
@@ -681,7 +679,7 @@ export class MapService {
 
     //required (called from html)
     public zoomExtents(): void {
-        this.mapConfig.view.animate({ zoom: 12.5, center: ol.proj.transform([-86.1336, 40.4864], 'EPSG:4326', 'EPSG:3857') })
+        this.mapConfig.view.animate({ zoom: environment.centerZoom, center: ol.proj.transform([environment.centerLong, environment.centerLat], 'EPSG:4326', 'EPSG:3857') })
 
     }
 
@@ -703,7 +701,7 @@ export class MapService {
     //required (called from html)
     public toggleBasemap() {
         let aerial = new ol.source.BingMaps({
-            key: 'AqG6nmU6MBeqJnfsjQ-285hA5Iw5wgEp3krxwvP9ZpE3-nwYqO050K5SJ8D7CkAw',
+            key: environment.BingMapsKey,
             imagerySet: 'AerialWithLabels',
             maxZoom: 19
         })
