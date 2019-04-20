@@ -78,7 +78,9 @@ export class StyleComponent implements OnInit {
         }
         this.sqlSerivce.GetSchema(this.mapConfig.currentLayer.layerID)
             .subscribe((data) => {
-                this.columns = data.slice(2, data.length)
+                console.log(data[0])
+                this.columns = data[0].slice(2, data[0].length)
+                console.log(this.columns)
             })
     }
 

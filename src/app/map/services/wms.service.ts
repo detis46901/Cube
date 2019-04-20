@@ -130,6 +130,12 @@ export class WMSService {
                 let url: string = layer.layer.server.serverURL;
                 return url;
             }
+            case ('ArcGISRest'): {
+                console.log("Found ArcGISRest Layer")
+                let norest: string = layer.layer.server.serverURL.split('/rest/')[0] + '/' + layer.layer.server.serverURL.split('/rest/')[1];
+                let url: string = 'https://cors-anywhere.herokuapp.com/' + norest + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                return url;
+            }
         }
     }
 }

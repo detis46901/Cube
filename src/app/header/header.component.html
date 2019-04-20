@@ -55,7 +55,7 @@
     </mat-menu>
 
     <!-- logout and administrator settings -->
-    <span id="headerRight" class="col-6">
+    <span id="headerRight" class="col-6 float-right">
         <button mat-button id="logoutButton" routerLink="/logout">Logout</button>
         <button mat-button *ngIf="currUser.administrator" id="adminSettingsButton" [routerLink]="['/admin', {outlets: {admin: ['layer']}}]">Admin Settings</button>
         <!-- <a id="headerLogout" routerLink="/logout"><h5>Logout</h5></a> -->

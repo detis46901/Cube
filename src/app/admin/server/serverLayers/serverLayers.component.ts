@@ -110,6 +110,7 @@ export class ServerLayersComponent implements OnInit {
             console.log(data['folders'])
             this.folders = data['folders']
             this.services = data['services']
+            console.log(this.services)
             this.selected.setValue(0)
         })
     }
