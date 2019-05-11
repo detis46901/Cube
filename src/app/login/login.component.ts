@@ -39,6 +39,7 @@ export class LoginComponent implements OnInit {
     }
 
     public login(): void {
+        console.log(this.model)
         if (!this.model.username) {
             alert("Please enter a value for username.");
             this.clearInputs();

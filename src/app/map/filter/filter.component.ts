@@ -6,13 +6,16 @@ import { MyCubeField, UserPageLayer } from '_models/layer.model';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { StyleService } from '../services/style.service';
 import { LayerService } from '../../../_services/_layer.service';
-import { filterOperators, MyCubeFilterFields } from '../../../_models/style.model'
+import { filterOperators, MyCubeFilterFields } from '../../../_models/style.model';
+
 
 @Component({
     selector: 'filtertoolbar',
     templateUrl: './filter.component.html',
-    styleUrls: ['./filter.component.scss']
+    styleUrls: ['./filter.component.scss'],
 })
+
+
 export class FilterComponent implements OnInit {
     @Input() mapConfig: MapConfig;
     public value: number
@@ -25,11 +28,14 @@ export class FilterComponent implements OnInit {
     public operators: { value: string; viewValue: string; }[]
     public modelOperator = new filterOperators
     public admin: boolean = false
+    public options: string[] = ['One', 'Two', 'Three'];
+
 
     constructor(private mapService: MapService, private sqlSerivce: SQLService, private userPageLayerService: UserPageLayerService,
         private layerService: LayerService) {
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.admin = currentUser && currentUser.admin;
+        
     }
 
     ngOnInit() {

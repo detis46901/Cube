@@ -732,14 +732,14 @@ export class MapService {
 
     }
 
-    public zoomToLayer() {
+    public zoomToLayer(layer: UserPageLayer) {
         //this needs to be fed the layer and work with it instead of the featurelist.
         let collection = new ol.geom.GeometryCollection
         let feats = new Array<ol.geom.Geometry>()
-        for (let i of this.mapConfig.featureList) {
-            feats.push(i.feature.getGeometry())
-
-        }
+        layer.source.forEachFeature((i) => {
+            feats.push(i.getGeometry())
+            //may want to filter this down to only visible features.
+        })
         collection.setGeometries(feats)
         this.mapConfig.view.fit(collection.getExtent(), {
             duration: 1000,

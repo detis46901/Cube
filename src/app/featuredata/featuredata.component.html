@@ -11,7 +11,7 @@
                     Feature Data
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <div [innerHTML]="message" style="height: 260px; overflow: auto">
+            <div [innerHTML]="message" style="max-height: 260px; overflow: auto">
             </div>
         </mat-expansion-panel>
     </mat-accordion>
@@ -121,7 +121,7 @@
                                 <div *ngIf="myCube.type=='text' || myCube.type == 'character varying'"
                                         matTooltip="" matTooltipPosition="above" matTooltipShowDelay="1000">
                                         <mat-form-field style="width:90%">
-                                            <input matInput autocomplete='off' rows="3" [disabled]="!myCubeConfig.edit" id="textinput" ngModel required
+                                            <input type="text" matInput autocomplete='off' rows="3" [disabled]="!myCubeConfig.edit" id="textinput" ngModel required
                                                 placeholder="{{myCube.field}}" [(ngModel)]="myCube.value" (change)="myCube.changed = true"
                                                 (blur)="updateMyCube(myCube)">
                                         </mat-form-field><br>

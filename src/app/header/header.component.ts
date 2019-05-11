@@ -10,6 +10,8 @@ import { UserPage } from '../../_models/user.model';
 import { UserService } from '../../_services/_user.service';
 import { UserPageService } from '../../_services/_userPage.service';
 import { NotifService } from '../../_services/notification.service';
+import { GeocodingService } from '../map/services/geocoding.service'
+import { geoJSONService } from 'app/map/services/geoJSON.service';
 
 @Component({
     selector: 'header',
@@ -33,7 +35,8 @@ export class HeaderComponent implements OnInit {
     public userPages: UserPage[];
     public notifications: Notif[];
 
-    constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService, private notificationService: NotifService) {
+    constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService, private notificationService: NotifService,
+        public geocodingService: GeocodingService) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -42,6 +45,7 @@ export class HeaderComponent implements OnInit {
     ngOnInit() {
         this.getUserItems()
         this.getUserPageItems()
+        console.log(this.geocodingService.isTracking)
     }
 
 
@@ -204,5 +208,10 @@ export class HeaderComponent implements OnInit {
                 console.log("second timeout")
             }, 1000)
         }, 3000)
+    }
+
+    public startGeoTracking(): void {
+        this.geocodingService.isTracking = true
+        this.geocodingService.centerMap()
     }
 }

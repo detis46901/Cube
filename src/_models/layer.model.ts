@@ -60,8 +60,9 @@ export class MyCubeField {
     field: string;
     type: string;
     value?: any;
-    label?: boolean
-    changed?: boolean
+    options?: string[]
+    label?: boolean;
+    changed?: boolean;
     links? = new Array<string>()
 }
 

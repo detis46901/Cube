@@ -3,13 +3,18 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
 import { Location } from "../core/location.class";
 import { Injectable } from "@angular/core";
-//import * as L from "leaflet";
+import { MapConfig } from '../models/map.model'
+import * as ol from 'openlayers';
+
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mergeMap";
 
 @Injectable()
 export class GeocodingService {
     http: HttpClient;
+    isTracking: boolean = true
+    mapConfig: MapConfig;
+    position: any;
 
     constructor(http: HttpClient) {
         this.http = http;
@@ -70,5 +75,29 @@ export class GeocodingService {
         }
         // return an ErrorObservable with a user-facing error message
         return new ErrorObservable();
+    }
+
+    trackMe(mapConfig: MapConfig) {
+        this.mapConfig = mapConfig
+        if (navigator.geolocation) {
+         
+          navigator.geolocation.watchPosition((position) => {
+            //this.showTrackingPosition(position);
+            console.log(position)
+            this.position = position
+            if (this.isTracking == true) {
+            this.centerMap()
+            }
+          });
+        } else {
+          alert("Geolocation is not supported by this browser.");
+        }
+      }
+
+    public centerMap() {
+        this.mapConfig.view.animate({
+            center: ol.proj.transform([this.position['coords']['longitude'], this.position['coords']['latitude']], 'EPSG:4326', 'EPSG:3857')   ,
+            
+        })
     }
 }

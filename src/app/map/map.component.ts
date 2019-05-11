@@ -23,6 +23,8 @@ import { Clipboard } from 'ts-clipboard';
 import { Configuration } from '../../_api/api.constants';
 import { MatSnackBar } from '@angular/material';
 import * as ol from 'openlayers';
+import { GeocodingService} from './services/geocoding.service'
+
 //import { Feature } from 'geojson';
 
 @Component({
@@ -63,7 +65,8 @@ export class MapComponent {
         private userPageService: UserPageService, private userPageLayerService: UserPageLayerService,
         private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog,
         private groupMemberService: GroupMemberService,
-        private groupService: GroupService
+        private groupService: GroupService,
+        private geocodingService: GeocodingService
     ) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
@@ -105,9 +108,13 @@ export class MapComponent {
                             mapConfig.map.getTargetElement().style.cursor = '';
                         }
                     }, { hitTolerance: 20 })
+                    let mkey = this.mapConfig.map.on('pointerdrag', (evt:any) => {
+                        this.geocodingService.isTracking = false
+                    })
                     mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
                     this.toolbar = "Layers"
                     this.mapConfig.modulesShow = true
+                    this.geocodingService.trackMe(mapConfig)
                     //this.setDefaultPageLayer()  At some point, the default layer needs to be set current
                 })
             )

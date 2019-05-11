@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://a.cityofkokomo.org:5000',
+  apiUrl: 'https://cube-kokomo.com:5000',
   centerLong: -86.1336,
   centerLat: 40.4864,
   centerZoom: 13,

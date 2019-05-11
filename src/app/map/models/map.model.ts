@@ -18,6 +18,7 @@ export class MapConfig {
     userID?: number;
     map?: ol.Map;
     view?: ol.View;
+    tracking: boolean = true;
     sources?= new Array;  // holds only the base layer
     layers? = new Array;  // holds only the base layer
     evkey: any; //current click event

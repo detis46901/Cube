@@ -16,8 +16,10 @@
                 <i class="fa fa-cube"></i>
             </a>
             <button mat-icon-button *ngIf="screenCode == 1" id="headerNotifications" title="Notifications" (click)="openNotifications(userID)">
-                <i id="headerNotifIcon" class="fa fa-envelope fa-2x"></i>
+                <mat-icon id="headerNotifIcon">email</mat-icon>
             </button>
+            <button mat-icon-button *ngIf="geocodingService.isTracking == true"><mat-icon id="settingsButton">near_me</mat-icon></button>
+            <button mat-icon-button *ngIf="geocodingService.isTracking == false" (click)="startGeoTracking()"><mat-icon id="settingsButton">my_location</mat-icon></button>
         </h3>
     </span>
 

@@ -4,3 +4,28 @@
     right: 0px;
     width:500px;
   }
+
+  .example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+  }
+  .example-full-width {
+    width: 100%;
+  }
+  .add-button{
+    width:100%;
+    background-color:#e6e6e6;
+  }
+  #create{
+    padding:0px 5px 3px 0px;
+  }
+  
+  .add-button{
+    position: sticky;
+      top: 0;
+      z-index: 2;
+  }
+  ::ng-deep .cdk-overlay-pane {
+      height: 100px!important;
+      padding: 0px}

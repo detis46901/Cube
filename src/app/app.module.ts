@@ -34,6 +34,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 //pipes
 import {LayerFilterPipe} from '../_pipes/rowfilter2.pipe'
@@ -236,6 +237,7 @@ import { ModuleSettingsComponent } from './admin/module/moduleSettings/moduleSet
         MatTooltipModule,
         MatSnackBarModule,
         MatDividerModule,
+        MatAutocompleteModule,
         LinkyModule,
         FeatureModulesModule
     ],
@@ -271,7 +273,9 @@ import { ModuleSettingsComponent } from './admin/module/moduleSettings/moduleSet
         NotifService,
         FeatureModulesService,
         UserPageInstanceService,
-        ModuleService
+        ModuleService,
+        
+
     ],
 
     bootstrap: [AppComponent]
