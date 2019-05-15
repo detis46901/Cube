@@ -1,0 +1,43 @@
+// Jack Reyburn
+// Styling of layer details
+
+// positioning headers
+#detailsHeader {
+    width: 100%;
+    position: relative;
+    left: 15px;
+    bottom: 15px;
+    height: 0px;
+}
+
+// positioning closing 'x'
+#closingX {
+    position: absolute;
+    right: 0px;
+}
+
+#layerNameEntry, #layerTypeEntry, #layerIdentityEntry, #layerGeometryEntry {
+    position: relative; 
+    left: 4%;
+    margin-bottom: 5px;
+}
+
+#layerDescriptionEntry, #layerServiceEntry, #layerFormatEntry, #layerServerEntry {
+    position: relative; 
+    left: 12%;
+    margin-bottom: 5px;
+}
+
+#layerStyleEntry {
+    position: relative;
+    width: 90%;
+    left: 4%;
+    margin-bottom: 5px;
+}
+
+// colors the submit changes button
+#submitChangesButton {
+    color: white;
+    background-color: #646464;
+    height: 40px;
+}

@@ -1,0 +1,42 @@
+<mat-expansion-panel [expanded]="expanded == true">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Locates
+    </mat-panel-title>
+    <mat-panel-description>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <mat-form-field>
+    <input matInput [(ngModel)]="locateInput" id='locateInput' placeholder="Paste Locate Email Here" autocomplete="off">
+  </mat-form-field>
+  <button mat-button (click)='importLocate()' [disabled]='locateInput == null || locateInput == ""'>Import Locate</button>
+  <mat-divider></mat-divider>
+  <mat-slide-toggle matTooltip="" class="" [checked]="filterOpen" (change)="filterOpen = !filterOpen">
+    <span>Only Open Tickets</span>
+  </mat-slide-toggle><br>
+  <mat-form-field style="width:45%">
+      <input matInput [matDatepicker]="picker" placeholder="From Date (30 Days Ago)"
+          [(ngModel)]="fromDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field style="width:45%">
+      <input matInput [matDatepicker]="picker2" placeholder="To Date (Current Date)"
+          [(ngModel)]="toDate">
+      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+      <mat-datepicker #picker2></mat-datepicker>
+  </mat-form-field><br>
+  <button mat-button (click)='filter()'>Filter</button>
+  <button mat-button (click)='clearFilter()'>Clear Filter</button>
+  <div *ngIf='ticket !== null'>
+      <div class="example-container">
+        <mat-form-field>
+          <textarea [(ngModel)]="completedNote" matInput placeholder="Note" style="width:100%"></textarea>
+        </mat-form-field>
+        <br>
+      </div>
+      Selected Ticket: {{ticket.ticket}} <button mat-button (click)='completeTicket()' [disabled]='ticket.closed != Null'>Complete Ticket</button>
+      <mat-divider></mat-divider>
+    </div>
+  
+</mat-expansion-panel>

@@ -8,14 +8,40 @@
 
 .tool-container {
     position: absolute;
-    top:0px;
-    right: 400px;
+    bottom:0px;
+    right: 0px;
+    width: 380px;
+    z-index: 1;
+}
+
+.module-container {
+    position: absolute;
+    left: 0px;
+    width: 460px;
+    z-index: 1;
+}
+
+.selected-icon {
+    color:white;
+    background: #000000
+}
+.selected {
+    color:white;
+    background: #000000
 }
 
 .featurelist {
-    height:150px;
+    position: relative;
+    min-width: 0; /* see link to see why this is needed */
     max-width: 300px;
-    overflow: auto;
+    overflow-y: auto;
+    max-height: 550px;
+}
+
+.featurelist > div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .example-headers-align .mat-expansion-panel-header-description {
@@ -23,6 +49,9 @@
     align-items: center;
 }
 
+.example-margin {
+    font-weight: normal;
+}
 #dropdownMenu1, #dropdownMenu2 {
     border: 2px solid rgb(26, 117, 255);
     margin: 25px 15px 0 0;
@@ -56,6 +85,7 @@ p {
 
 .pull-right {
     padding:0;
+    z-index: 0;
 }
 
 #layerExpansion {
@@ -83,10 +113,21 @@ p {
     display: inline-flex;
     flex-direction: column;
     text-align: left;
+    word-wrap: break-word;
+    overflow: auto;
 }
   
 .example-radio-button {
     margin: 5px;
+    flex: 1 1 auto; /* make this grow and shrink */
+    min-width: 0; /* see link to see why this is needed */
+    margin-right: 16px;
+}
+
+.example-radio-button > div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .example-selected-value {

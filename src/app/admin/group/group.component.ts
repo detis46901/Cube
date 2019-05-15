@@ -7,7 +7,7 @@ import { GroupService } from '../../../_services/_group.service';
 import { GroupMemberService } from '../../../_services/_groupMember.service';
 import { NewGroupComponent } from './newGroup/newGroup.component';
 import { EditGroupComponent } from './editGroup/editGroup.component'
-import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
+import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component';
 import { MatDialog, MatDialogRef, MatSelectionList } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';
@@ -24,31 +24,31 @@ export class GroupComponent implements OnInit {
     @ViewChild('groupUsers') groupSelectionList: any;
     @ViewChild('groupGroups') userSelectionList: any;
 
-    private token: string;
-    private userID: number;
-    private objCode = 3;
-    private type = "Group"
-    private bool = false;
+    public token: string;
+    public userID: number;
+    public objCode = 3;
+    public type = "Group"
+    public bool = false;
 
-    private group = new Group;
-    private groups: Array<Group>;
-    private users: Array<User>;
+    public group = new Group;
+    public groups: Array<Group>;
+    public users: Array<User>;
 
-    private selectedUser: User;
-    private selectedAvailableUser;
-    private selectedMemberUser;
-    private selectedGroup: Group;
-    private selectedAvailableGroup;
-    private selectedMemberGroup;
-    private userGroupMembers;
+    public selectedUser: User;
+    public selectedAvailableUser;
+    public selectedMemberUser;
+    public selectedGroup: Group;
+    public selectedAvailableGroup;
+    public selectedMemberGroup;
+    public userGroupMembers;
 
-    private availableGroups;
-    private availableUsers;
-    private memberGroups;
-    private memberUsers;
-    private showGroup: boolean;
+    public availableGroups;
+    public availableUsers;
+    public memberGroups;
+    public memberUsers;
+    public showGroup: boolean;
 
-    constructor(private userService: UserService, private groupService: GroupService, 
+    constructor(private userService: UserService, private groupService: GroupService,
         private groupMemberService: GroupMemberService, private dialog: MatDialog) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
@@ -73,25 +73,25 @@ export class GroupComponent implements OnInit {
     private getUserItems(): void {
         this.userService
             .GetAll()
-            .subscribe((data:User[]) => {
+            .subscribe((data: User[]) => {
                 this.users = data;
             }, error => {
                 console.error(error);
             });
     }
 
-    private addGroup(newGroup: string): void {
+    public addGroup(newGroup: string): void {
         this.group.name = newGroup;
         this.groupService
             // .Add(this.group, this.token)
-            .Add(this.group)            
+            .Add(this.group)
             .subscribe(() => {
                 this.getGroupItems();
                 this.getUserItems();
             });
     }
 
-    private updateGroup(group: Group): void {
+    public updateGroup(group: Group): void {
         this.groupService
             .Update(group)
             .subscribe(() => {
@@ -100,7 +100,7 @@ export class GroupComponent implements OnInit {
             });
     }
 
-    private openConfDel(group: Group): void {
+    public openConfDel(group: Group): void {
         const dialogRef = this.dialog.open(ConfirmDeleteComponent);
         dialogRef.componentInstance.objID = group.ID;
         dialogRef.componentInstance.objName = group.name;
@@ -114,7 +114,7 @@ export class GroupComponent implements OnInit {
         });
     }
 
-    private confDelGroup(group: Group) {
+    public confDelGroup(group: Group) {
         const dialogRef = this.dialog.open(ConfirmDeleteComponent);
         dialogRef.componentInstance.objCode = this.objCode;
         dialogRef.componentInstance.objID = group.ID;
@@ -129,8 +129,8 @@ export class GroupComponent implements OnInit {
             });
     }
 
-    private editDetails(group: Group) {
-        const dialogRef = this.dialog.open(EditGroupComponent, {width:'325px'});
+    public editDetails(group: Group) {
+        const dialogRef = this.dialog.open(EditGroupComponent, { width: '325px' });
         dialogRef.componentInstance.group = group;
         dialogRef.afterClosed()
             .subscribe(() => {
@@ -139,7 +139,7 @@ export class GroupComponent implements OnInit {
             });
     }
 
-    private deleteGroup(groupID): void {
+    public deleteGroup(groupID): void {
         this.groupService
             .Delete(groupID)
             .subscribe(() => {
@@ -148,8 +148,8 @@ export class GroupComponent implements OnInit {
             });
     }
 
-    private openNewGroup() {
-        const dialogRef = this.dialog.open(NewGroupComponent, {width:'325px'});
+    public openNewGroup() {
+        const dialogRef = this.dialog.open(NewGroupComponent, { width: '325px' });
         dialogRef.afterClosed()
             .subscribe(() => {
                 this.getGroupItems();
@@ -157,12 +157,12 @@ export class GroupComponent implements OnInit {
             });
     }
 
-    private remove(arr, el) {
+    public remove(arr, el) {
         const index = arr.indexOf(el);
         arr.splice(index, 1);
     }
 
-    private selectUser(user: User): void {
+    public selectUser(user: User): void {
         //this.groupSelectionList.deselectAll();
         this.selectedUser = user;
         this.groupMemberService
@@ -172,16 +172,16 @@ export class GroupComponent implements OnInit {
                 var tempA = new Array<Group>();
                 var tempB = new Array<Group>();
 
-                for(let group of data) {
+                for (let group of data) {
                     tempA.push(group.group);
-                }             
+                }
 
                 this.memberGroups = tempA;
 
                 // loop to compare member groups to all groups and form an array for available groups to display
                 for (let group of this.groups) {
                     var counter = 0;
-                    for (var i=0; i<tempA.length; i++) {
+                    for (var i = 0; i < tempA.length; i++) {
                         if (group.name != tempA[i].name) {
                             counter++;
                         }
@@ -196,10 +196,10 @@ export class GroupComponent implements OnInit {
                 else {
                     this.availableGroups = tempB;
                 }
-            })  
+            })
     }
 
-    private selectGroup(group: Group): void {
+    public selectGroup(group: Group): void {
         //this.userSelectionList.deselectAll();
         this.selectedGroup = group;
         this.groupMemberService
@@ -210,18 +210,18 @@ export class GroupComponent implements OnInit {
                 var tempB = new Array<User>();
                 var tempC = new Array<User>();
 
-                for(let user of data) {
+                for (let user of data) {
                     tempA.push(user);
-                }    
+                }
 
                 for (let user of this.users) {
                     var counter = 0;
                     for (var i = 0; i < tempA.length; i++) {
                         if (user.ID != tempA[i].userID) {
-                            counter ++;
+                            counter++;
                         }
                     }
-                    
+
                     if (counter == tempA.length) {
                         tempB.push(user);
                     }
@@ -243,30 +243,30 @@ export class GroupComponent implements OnInit {
                 }
 
                 this.memberUsers = tempC;
-            })   
+            })
     }
 
-    private selectUserAdd(user: User) {
+    public selectUserAdd(user: User) {
         this.selectedAvailableUser = user;
     }
 
-    private selectUserRemove(user: User) {
+    public selectUserRemove(user: User) {
         this.selectedMemberUser = user;
     }
 
-    private selectGroupAdd(group: Group) {
+    public selectGroupAdd(group: Group) {
         this.selectedAvailableGroup = group;
         //this.selectedMemberGroup = null;
     }
 
-    private selectGroupRemove(group: Group) {
+    public selectGroupRemove(group: Group) {
         this.selectedMemberGroup = group;
         //this.selectedAvailableGroup = null;
     }
 
-    private removeMemberGroup(group: Group) {
-        for(let assoc of this.userGroupMembers) {
-            if(assoc.groupID == group.ID) {
+    public removeMemberGroup(group: Group) {
+        for (let assoc of this.userGroupMembers) {
+            if (assoc.groupID == group.ID) {
                 this.groupMemberService
                     .Delete(assoc.ID)
                     .subscribe(() => {
@@ -278,9 +278,9 @@ export class GroupComponent implements OnInit {
         }
     }
 
-    private removeMemberUser(user: User) {
-        for(let assoc of this.userGroupMembers) {
-            if(assoc.userID == user.ID) {
+    public removeMemberUser(user: User) {
+        for (let assoc of this.userGroupMembers) {
+            if (assoc.userID == user.ID) {
                 this.groupMemberService
                     .Delete(assoc.ID)
                     .subscribe(() => {
@@ -292,51 +292,51 @@ export class GroupComponent implements OnInit {
         }
     }
 
-    private addAvailableGroup(group: Group) {
+    public addAvailableGroup(group: Group) {
         var flag = false;
-        for(let g of this.memberGroups) {
-            if(group.ID === g.ID) {
+        for (let g of this.memberGroups) {
+            if (group.ID === g.ID) {
                 return;
             }
         }
 
-        let groupMember = new GroupMember;        
+        let groupMember = new GroupMember;
         groupMember.groupID = group.ID;
-        groupMember.userID = this.selectedUser.ID;   
+        groupMember.userID = this.selectedUser.ID;
         this.groupMemberService
             .Add(groupMember)
             .subscribe(() => {
                 this.getGroupItems();
                 this.getUserItems();
                 this.selectUser(this.selectedUser);
-            });        
+            });
     }
 
-    private addAvailableUser(user: User) {
+    public addAvailableUser(user: User) {
         var flag = false;
-        for(let u of this.memberUsers) {
-            if(user.ID === u.ID) {
+        for (let u of this.memberUsers) {
+            if (user.ID === u.ID) {
                 return;
             }
         }
 
-        let groupMember = new GroupMember;        
+        let groupMember = new GroupMember;
         groupMember.userID = user.ID;
-        groupMember.groupID = this.selectedGroup.ID;   
+        groupMember.groupID = this.selectedGroup.ID;
         this.groupMemberService
             .Add(groupMember)
             .subscribe(() => {
                 this.getGroupItems();
                 this.getUserItems();
                 this.selectGroup(this.selectedGroup);
-            });        
+            });
     }
 
-    private showme(b) {
-        if(b) {
+    public showme(b) {
+        if (b) {
             console.log("go to users");
             this.type = "Group";
-        } 
+        }
         else {
             console.log("go to groups");
             this.type = "User";

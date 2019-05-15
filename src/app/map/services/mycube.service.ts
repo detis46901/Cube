@@ -3,124 +3,106 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 import { SQLService } from '../../../_services/sql.service'
 import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../../_models/layer.model'
+import { interaction } from "openlayers";
 
-//Must be declared here in order to mitigate a bug where toggling sidenav via view dropdown doesn't work unless clicked twice.
-let isOpen: boolean = true;
-let geoData: Array<string>;
-let markerData: string;
 
+//need to get wmsSubject to wmsService, but for some reason, it doesn't work over there.
 
 @Injectable()
 
-export class MyCubeService extends SQLService{
-   private messageSubject = new Subject<any>();
-   private mycubesubject = new Subject<MyCubeField[]>();
-   private mycubeconfig = new Subject<MyCubeConfig>();
-   private mycubecomment = new Subject<MyCubeComment[]>();
-   private cubeData: MyCubeField[]
-   private tempCubeData: MyCubeField[]
-   
+export class MyCubeService extends SQLService {
+    private WMSSubject = new Subject<any>();
+    private mycubesubject = new Subject<MyCubeField[]>();
+    private mycubeconfig = new Subject<MyCubeConfig>();
+    private mycubecomment = new Subject<MyCubeComment[]>();
+    private cubeData: MyCubeField[]
 
-    public toggleHidden(): void {
-        isOpen = !isOpen;
+    //needs to move to wmsService but for some reason it doesn't work there.
+    sendWMS(message: string) {
+        this.WMSSubject.next(message);
     }
 
-    public setGeoData(data: Array<string>): void {
-        geoData = data;
+    clearWMS() {
+        this.WMSSubject.next();
     }
 
-    public setMarkerData(data: string): void {
-        markerData = data;
+    getWMS(): Observable<any> {
+        return this.WMSSubject.asObservable();
     }
 
-    public getHidden(): boolean {
-        return isOpen;
+    public parseAndSendWMS(WMS: string): void { //this really need to be in the WMS service, but I think there's a 
+        WMS = WMS.split("<body>")[1];
+        WMS = WMS.split("</body>")[0];
+        if (WMS.length < 10) {
+            this.clearWMS();
+        }
+        else {
+            this.sendWMS(WMS); //This allows the service to render the actual HTML unsanitized
+        }
     }
 
-    public getGeoData(): Array<string> {
-        return geoData;
-    }
-
-    public getMarkerData(): string {
-        return markerData;
-    }
-
-    sendMessage(message: string) {
-        this.messageSubject.next({text:message});
-    }
-
-    clearMessage() {
-        this.messageSubject.next();
-    }
-
-    getMessage(): Observable<any> {
-        return this.messageSubject.asObservable();
-    }
-
-    //This needs a lot of work.  This should create an array of arrays for all of the features in the layer.
     prebuildMyCube(layer) {
         this.GetSchema(layer.layer.ID)
-        .subscribe((data) => {
-          this.cubeData = data
-          this.cubeData[0].type = "id"
-          this.cubeData[1].type = "geom"
-        })
-    }
-    
-    sendMyCubeData(table: number, featureid: string | number) {
-        let id = featureid
-        
-        this.GetSchema(table)
-            .subscribe((data: MyCubeField[]) => {
-                this.cubeData = data
-                this.cubeData[0].value = id
+            .subscribe((data) => {
+                this.cubeData = data[0]
                 this.cubeData[0].type = "id"
                 this.cubeData[1].type = "geom"
-                this.getsingle(table, id)
-
-                //the value of the geometry field will be undefined because it isn't sent in the geoJSON.
-                //  for(let i=0; i<this.cubeData.length; i++) {
-                //      propList.push(properties[i].substring(1, properties[i].indexOf(":")-1));
-                   
-                //      this.cubeData[i+1].value = message[propList[i]]
-                //      console.log(message[propList[i]])
-                //  }
-                // console.log(this.cubeData)                  
             })
-        //this.subject.next({text:this.cubeData[0].field})    
     }
 
-    getsingle(table, id) {
-        this.GetSingle(table, id)
-        .subscribe((sdata: JSON) => {
-            // for(let i=0; i<properties.length; i++) {
-            //     console.log(JSON.stringify(sdata))
-            //     propList.push(properties[i].substring(1, properties[i].indexOf(":")-1));
-               
-            //     this.cubeData[i+1].value = data[0][0][propList[i]]
-            //     console.log(data[propList[i]])
-            //}
+    public getAndSendMyCubeData(table: number, feature: ol.Feature): Promise<any> {
+        //this.getMyCubeDataFromFeature(feature)
+        let promise = new Promise(resolve => {
+            let id: number | string
+            if (feature.getId() != undefined) {
+                id = feature.getId()
+            }
+            else {
+                id = feature.getProperties()['features'][0]['c']
+            }
+            this.GetSchema(table)
+                .subscribe((data) => {
+                    this.cubeData = data[0]
+                    this.cubeData[0].value = id
+                    this.cubeData[0].type = "id"
+                    this.cubeData[1].type = "geom"
+                    this.getsingle(table, id).then(() => { resolve(this.cubeData) })
+                })
+        });
+        return promise
+    }
 
-            let z=0
-            for (var key in sdata[0][0]) {
-                if (sdata[0][0].hasOwnProperty(key)) {
-                  //console.log(key + ": " + sdata[0][0][key]);
-                  if (z!=0) {this.cubeData[z].value = sdata[0][0][key]}
-                  //console.log(z, this.cubeData[z].value)
-                  z++
-                }
-              }
+    getsingle(table, id): Promise<any> {
+        let promise = new Promise(resolve => {
+            this.GetSingle(table, id)
+                .subscribe((sdata: JSON) => {
+                    let z = 0
+                    for (var key in sdata[0][0]) {
+                        if (sdata[0][0].hasOwnProperty(key)) {
+                            if (z != 0) { this.cubeData[z].value = sdata[0][0][key] }
+                            z++
+                        }
+                    }
+                    resolve()
+                })
+        })
+        this.loadComments(table, id)
+        return promise
+    }
 
-            // for (let z = 2; z==sdata[0].length; z++) {
-            //     console.log(sdata[0][z])
-            //     this.cubeData[z].value = sdata[0][z]
-            // }
+    loadComments(table, id): any {
         this.getComments(table, id)
             .subscribe((cdata: any) => {
-                console.log(cdata[0]);this.mycubesubject.next(this.cubeData);
+                this.mycubesubject.next(this.cubeData);
                 this.mycubecomment.next(cdata[0])
             })
+    }
+
+    getMyCubeDataFromFeature(feature: ol.Feature) {
+        this.cubeData.forEach((item) => {
+            item.value = feature.get(item.field)
         })
+        this.mycubesubject.next(this.cubeData)
     }
 
     clearMyCubeData() {
@@ -140,14 +122,39 @@ export class MyCubeService extends SQLService{
     }
 
     public setMyCubeConfig(table: number, edit: boolean) {
-        let mycubeconfig= new MyCubeConfig
+        let mycubeconfig = new MyCubeConfig
         mycubeconfig.table = table
         mycubeconfig.edit = edit
         this.mycubeconfig.next(mycubeconfig)
+        return mycubeconfig
     }
-        
 
     public getMyCubeConfig(): Observable<MyCubeConfig> {
         return this.mycubeconfig.asObservable();
+    }
+
+    public createAutoMyCubeComment(auto: boolean, commentText: string, featureID: string | number, layerID: number, userID: number, geom?: any): Promise<any> {
+        let comment = new MyCubeComment()
+        let promise = new Promise((resolve) => {
+            comment.auto = auto
+            comment.comment = commentText
+            comment.featureID = featureID
+            comment.table = layerID
+            comment.userID = userID
+            comment.geom = geom
+            if (geom != undefined) {
+                this.addCommentWithGeom(comment)
+                    .subscribe((data) => {
+                        resolve()
+                    })
+            }
+            else {
+                this.addCommentWithoutGeom(comment)
+                    .subscribe((data) => {
+                        resolve()
+                    })
+            }
+        })
+        return promise
     }
 }   

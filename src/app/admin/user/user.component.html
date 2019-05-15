@@ -1,70 +1,89 @@
 <!-- Jack Reyburn -->
 <!-- User page in admin settings -->
 
-<div class="row">    
+<div class="row">
     <!-- table to contain all of the user information -->
-    <mat-table id="userDataTable" #table [dataSource]="dataSource">
+    <table mat-table id="userDataTable" #table [dataSource]="dataSource">
 
         <!-- first column containing user ID -->
         <ng-container matColumnDef="userID">
-            <mat-header-cell class="user-sm-head" *matHeaderCellDef><Strong> ID </Strong></mat-header-cell>
+            <mat-header-cell class="user-sm-head" *matHeaderCellDef>
+                <Strong> ID </Strong>
+            </mat-header-cell>
             <mat-cell class="user-sm-cell" *matCellDef="let row">
-                {{row.currentData.ID}}
+                {{row.ID}}
             </mat-cell>
         </ng-container>
-        
+
         <!-- second column containing the user's first name -->
         <ng-container matColumnDef="firstName">
-            <mat-header-cell class="user-md-head" *matHeaderCellDef><Strong> First Name </Strong></mat-header-cell>
+            <mat-header-cell class="user-md-head" *matHeaderCellDef>
+                <Strong> First Name </Strong>
+            </mat-header-cell>
             <mat-cell class="user-md-cell" *matCellDef="let row">
-                <mat-form-field #input floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                    <input matInput [formControl]="row.validator.controls['firstName']" [readonly]="!row.editing" [(ngModel)]="row.currentData.firstName">
-                </mat-form-field>
+                {{row.firstName}}
+                <!-- <mat-form-field #input>
+                    <input matInput [formControl]="row.validator.controls['firstName']" [readonly]="!row.editing" [(ngModel)]="row.firstName">
+                </mat-form-field> -->
             </mat-cell>
         </ng-container>
-        
+
         <!-- third column containing the user's last name -->
         <ng-container matColumnDef="lastName">
-            <mat-header-cell class="user-md-head" *matHeaderCellDef><Strong> Last Name </Strong></mat-header-cell>
+            <mat-header-cell class="user-md-head" *matHeaderCellDef>
+                <Strong> Last Name </Strong>
+            </mat-header-cell>
             <mat-cell class="user-md-cell" *matCellDef="let row">
-                <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                    <input matInput [formControl]="row.validator.controls['lastName']" [readonly]="!row.editing" [(ngModel)]="row.currentData.lastName">
-                </mat-form-field>
+                {{row.lastName}}
+                <!-- <mat-form-field>
+                    <input matInput [formControl]="row.validator.controls['lastName']" [readonly]="!row.editing" [(ngModel)]="row.lastName">
+                </mat-form-field> -->
             </mat-cell>
         </ng-container>
 
         <!-- fourth column containing the user's email -->
         <ng-container matColumnDef="email">
-            <mat-header-cell class="user-lg-head" *matHeaderCellDef><Strong> Email </Strong></mat-header-cell>
+            <mat-header-cell class="user-lg-head" *matHeaderCellDef>
+                <Strong></Strong>
+            </mat-header-cell>
             <mat-cell class="user-lg-cell" *matCellDef="let row">
-                <mat-form-field style="width:80%" floatPlaceholder="{{ row.editing ? 'float' : 'never' }}">
-                    <input matInput [formControl]="row.validator.controls['email']" [readonly]="!row.editing" [(ngModel)]="row.currentData.email">
-                </mat-form-field>
+                
+                <!-- <mat-form-field style="width:80%">
+                    <input matInput [formControl]="row.validator.controls['email']" [readonly]="!row.editing" [(ngModel)]="row.email">
+                </mat-form-field> -->
             </mat-cell>
         </ng-container>
 
         <!-- fifth column stating whether the user is active or not with either check marks or a '-' -->
         <ng-container matColumnDef="active">
-            <mat-header-cell class="user-sm-head" style="position:relative; right:1%;" *matHeaderCellDef><Strong> Active </Strong></mat-header-cell>
+            <mat-header-cell class="user-sm-head" style="position:relative; right:1%;" *matHeaderCellDef>
+                <Strong> Active </Strong>
+            </mat-header-cell>
             <mat-cell class="user-sm-cell" *matCellDef="let row">
-                <i *ngIf="row.currentData.active" class="fas fa-check" style="color:green"></i>
-                <i *ngIf="!row.currentData.active" style="color:#673ab7">&ndash;</i>
+                <i *ngIf="row.active" class="fas fa-check" style="color:green"></i>
+                <i *ngIf="!row.active" style="color:#673ab7">&ndash;</i>
             </mat-cell>
         </ng-container>
-        
+
         <!-- sicth column stating whether the user is an admin or not with either check marks or a '-' -->
         <ng-container matColumnDef="administrator">
-            <mat-header-cell class="user-sm-head" style="position:relative; right:1.2%;" *matHeaderCellDef><Strong> Admin </Strong></mat-header-cell>
+            <mat-header-cell class="user-sm-head" style="position:relative; right:1.2%;" *matHeaderCellDef>
+                <Strong> Admin </Strong>
+            </mat-header-cell>
             <mat-cell class="user-sm-cell" *matCellDef="let row">
-                <i *ngIf="row.currentData.administrator" class="fas fa-check" style="color:green"></i>
-                <i *ngIf="!row.currentData.administrator" style="color:#673ab7">&ndash;</i>
+                <i *ngIf="row.administrator" class="fas fa-check" style="color:green"></i>
+                <i *ngIf="!row.administrator" style="color:#673ab7">&ndash;</i>
             </mat-cell>
         </ng-container>
 
         <!-- seventh column containing button to create new user, user options, edit user layers, or delete -->
         <ng-container matColumnDef="actionsColumn">
             <!-- create new user button -->
-            <mat-header-cell class="user-xlg-head" *matHeaderCellDef><button style="border:1px solid white; color:white" mat-button id="userCreateNew" (click)="openNewUser()"><strong> Create New User </strong></button></mat-header-cell>
+            <mat-header-cell class="user-xlg-head" *matHeaderCellDef>
+                <button style="border:1px solid white; color:white" mat-button id="userCreateNew" (click)="openNewUser()">
+                    <strong> Create New User </strong>
+                </button>
+            </mat-header-cell>
             <mat-cell class="user-xlg-cell" *matCellDef="let row">
                 <button mat-button [matMenuTriggerFor]="menu">
                     Options
@@ -72,26 +91,26 @@
 
                 <!-- options drop down for pages and changepassword buttons -->
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="changePassword(row.currentData.ID)">
+                    <button mat-menu-item (click)="changePassword(row.ID)">
                         <h5>Change Password</h5>
                     </button>
-                    <button mat-menu-item (click)="openPages(row.currentData.ID, row.currentData.firstName, row.currentData.lastName)">
+                    <button mat-menu-item (click)="openPages(row.ID, row.firstName, row.lastName)">
                         <h5>Pages</h5>
                     </button>
                 </mat-menu>
 
                 <!-- edit layers button -->
                 <button mat-button [matMenuTriggerFor]="menu2">
-                    Edit Layers
+                    Edit Page
                 </button>
                 <mat-menu #menu2="matMenu" [overlapTrigger]="false">
-                    <button mat-menu-item id="openConfig" *ngFor="let userpage of (userPages | pagefilter: (row.currentData.ID))" (click)="getUserPageItem(userpage.ID, row.currentData.ID)">                          
+                    <button mat-menu-item id="openConfig" *ngFor="let userpage of (userPages | pagefilter: (row.ID))" (click)="getUserPageItem(userpage.ID, row.ID)">
                         <h5>{{userpage.page}}</h5>
                     </button>
                 </mat-menu>
 
                 <!-- edit user button -->
-                <button mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.currentData.ID, row.currentData.firstName, row.currentData.lastName)">
+                <button mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.ID, row.firstName, row.lastName)">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
                 <!-- delete user button -->
@@ -102,5 +121,5 @@
         </ng-container>
         <mat-header-row *matHeaderRowDef="userColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: userColumns"></mat-row>
-    </mat-table>
+    </table>
 </div>

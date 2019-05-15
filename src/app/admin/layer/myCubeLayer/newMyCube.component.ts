@@ -24,20 +24,20 @@ export class newMyCubeComponent implements OnInit {
     @Input() layerFormat: string;
     @Input() layerType: string;
     @Input() layerName: string;
-    private token: string;
-    private userID: number;
+    public token: string;
+    public userID: number;
 
     //Set to true in ngOnInit() if inputs are read from the server screen, thus determines if the server screen is calling this dialog
-    
+
 
     //if error in submission, set this to a new object (= new Layer)
-    private newLayer = new Layer;
-    private newLayerServer = new Server;
-    private servers: Array<Server>;
-    private layer = new Layer;
+    public newLayer = new Layer;
+    public newLayerServer = new Server;
+    public servers: Array<Server>;
+    public layer = new Layer;
     public newLayerField1 = new MyCubeField
     public newLayerFields: Array<MyCubeField> = [];
-    
+
     constructor(private layerservice: LayerService, private dialog: MatDialog, private serverService: ServerService, private sqlservice: SQLService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
@@ -53,7 +53,7 @@ export class newMyCubeComponent implements OnInit {
         this.layer.serverID = 0
     }
 
-    private getServers(): void {
+    public getServers(): void {
         this.serverService
             .GetAll()
             .subscribe((data) => {
@@ -61,18 +61,20 @@ export class newMyCubeComponent implements OnInit {
             });
     }
 
-    private addField() {
-        this.newLayerFields.push({field: this.newLayerField1.field, type: this.newLayerField1.type, label: this.newLayerField1.label})
+    public addField() {
+        this.newLayerFields.push({ field: this.newLayerField1.field, type: this.newLayerField1.type, label: this.newLayerField1.label })
     }
 
-    private deleteField(index) {
-        this.newLayerFields.splice(index,1)
+    public deleteField(index) {
+        this.newLayerFields.splice(index, 1)
     }
 
-    private addLayer(newlayer: Layer): void {
+    public addLayer(newlayer: Layer): void {
         this.layer.layerName = newlayer.layerName
         this.layer.layerDescription = newlayer.layerDescription
+        this.layer.defaultStyle = JSON.parse('{"load":{"color":"#000000","width":2},"current":{"color":"#000000","width":4},"listLabel": "Name","filter": {}}')
         this.layerservice
+    
             .Add(this.layer)
             .subscribe((result: Layer) => {
                 this.createTable(result.ID);
@@ -80,8 +82,8 @@ export class newMyCubeComponent implements OnInit {
     }
 
     // method to update label field when one of the radio buttons is clicked
-    
-    private updateLabelField(labelField: MyCubeField): void {
+
+    public updateLabelField(labelField: MyCubeField): void {
         for (let tempage of this.newLayerFields) {
             if (tempage.label == true) {
                 tempage.label = false;;
@@ -91,20 +93,20 @@ export class newMyCubeComponent implements OnInit {
             if (tempage.field == labelField.field) {
                 tempage.label = true;
             }
-        } 
+        }
     }
 
-    private createTable(id): void {
+    public createTable(id): void {
         this.sqlservice
             .Create(id)
-            .subscribe((result:JSON) => {
+            .subscribe((result: JSON) => {
                 console.log('Number of Columns to Add:' + this.newLayerFields.length)
                 this.newLayerFields.forEach(element => {
                     this.addColumn(id, element)
                 });
                 this.sqlservice
                     .setSRID(id)
-                    .subscribe(() => this.dialog.closeAll()); 
+                    .subscribe(() => this.dialog.closeAll());
             })
         this.sqlservice
             .CreateCommentTable(id)
@@ -112,13 +114,11 @@ export class newMyCubeComponent implements OnInit {
         console.log("Comment Table Created")
     }
 
-    private addColumn(id, element): void {
+    public addColumn(id, element): void {
         this.sqlservice
             .addColumn(id, element)
-            .subscribe((result:string) => {
+            .subscribe((result: string) => {
                 console.log(result)
             });
     }
-
-    
 }

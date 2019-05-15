@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Configuration } from '../_api/api.constants';
 import { ParentService } from './_parent.service';
 import { GroupMember } from '../_models/group.model';
- 
+
 @Injectable()
 export class GroupMemberService extends ParentService {
     protected actionUrl: string;
@@ -20,7 +20,7 @@ export class GroupMemberService extends ParentService {
             .pipe(catchError(this.handleError));
     }
 
-    public GetByGroup = (groupid): Observable<GroupMember[]> => {
+    public GetByGroup = (groupid): Observable<any> => {
         return this._http.get(this.actionUrl + 'getbygroup?groupid=' + groupid, this.options)
             .pipe(catchError(this.handleError));
     }

@@ -15,6 +15,7 @@ export class UserPage {
     pageOrder: number;
     default: boolean;
     active?: boolean;
+    defaultLayer?: number;
 }
 
 export class Notif {

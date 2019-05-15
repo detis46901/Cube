@@ -16,19 +16,19 @@ export class ServerDetailsComponent implements OnInit {
     @Input() ID;
     @Input() name;
 
-    private user = new User;
-    private server = new Server;
-    private serverProps = new Array<any>();
-    private changedServerProps = new Array<any>();
-    private originalServerProps = new Array<any>();
-    private style: string;
-    private token;
-    private userID;
+    public user = new User;
+    public server = new Server;
+    public serverProps = new Array<any>();
+    public changedServerProps = new Array<any>();
+    public originalServerProps = new Array<any>();
+    public style: string;
+    public token;
+    public userID;
 
     constructor(private dialog: MatDialog, private serverService: ServerService, private userService: UserService, private notificationService: NotifService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		this.token = currentUser && currentUser.token;
-		this.userID = currentUser && currentUser.userID;
+        this.token = currentUser && currentUser.token;
+        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {
@@ -36,7 +36,7 @@ export class ServerDetailsComponent implements OnInit {
         this.getServer(this.ID)
     }
 
-    private getUser(id) {
+    public getUser(id) {
         this.userService
             .GetSingle(id)
             .subscribe((res: User) => {
@@ -44,7 +44,7 @@ export class ServerDetailsComponent implements OnInit {
             })
     }
 
-    private getServer(id) {
+    public getServer(id) {
         this.serverService
             .GetSingle(id)
             .subscribe((res: Server) => {
@@ -52,13 +52,13 @@ export class ServerDetailsComponent implements OnInit {
             })
     }
 
-    private submit(server) {
+    public submit(server) {
         this.serverService
             .Update(server)
             .subscribe(() => this.dialog.closeAll())
     }
 
-    // private submit(layer) {
+    // public submit(layer) {
     //     this.whichFieldsChanged(layer)
     //     var notif: Notif = this.createLayerNotif(layer)
     //     this.serverService
@@ -68,7 +68,6 @@ export class ServerDetailsComponent implements OnInit {
     //                 for(let perm of perms) {
     //                     if(perm.userID != this.userID) {
     //                         notif.userID = perm.userID;
-
     //                         this.notificationService
     //                             .Add(notif)
     //                             .subscribe((res) => {
@@ -81,12 +80,12 @@ export class ServerDetailsComponent implements OnInit {
     //         })
     // }
 
-    private whichFieldsChanged(changed: Server) {
+    public whichFieldsChanged(changed: Server) {
         let ix = 0;
 
-        for(let property in changed) {
-            if(changed.hasOwnProperty(property)) {
-                if(changed[property] != this.serverProps[ix]) {
+        for (let property in changed) {
+            if (changed.hasOwnProperty(property)) {
+                if (changed[property] != this.serverProps[ix]) {
                     this.originalServerProps.push(this.serverProps[ix])
                     this.changedServerProps.push(changed[property])
                 }
@@ -95,7 +94,7 @@ export class ServerDetailsComponent implements OnInit {
         }
     }
 
-    private createLayerNotif(S: Server): any {
+    public createLayerNotif(S: Server): any {
         var N = new Notif;
         N.name = S.serverName + ' changed by ' + this.user.firstName + " " + this.user.lastName;
         N.description = this.parseDescription(this.originalServerProps, this.changedServerProps);
@@ -107,11 +106,11 @@ export class ServerDetailsComponent implements OnInit {
         return N;
     }
 
-    private parseDescription(oArr, cArr): string {
+    public parseDescription(oArr, cArr): string {
         var description = "";
         let flag = false;
         let ix = 0;
-        for(let prop of oArr) {
+        for (let prop of oArr) {
             description += "\"" + prop + "\" was changed to \"" + cArr[ix] + "\"\n"
         }
         return description;

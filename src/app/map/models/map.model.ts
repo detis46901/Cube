@@ -1,7 +1,9 @@
-import { LayerClass, LayerPermission, UserPageLayer } from '../../../_models/layer.model';
+import { LayerClass, LayerPermission, UserPageLayer, MyCubeField, MyCubeComment, MyCubeConfig } from '../../../_models/layer.model';
 import { Server } from '../../../_models/server.model';
 import { User, UserPage } from '../../../_models/user.model';
 import { Feature } from 'openlayers';
+import { UserPageInstance, ModulePermission } from '_models/module.model';
+import * as ol from 'openlayers';
 
 export interface MapConfigView {
     projection: string;
@@ -16,21 +18,35 @@ export class MapConfig {
     userID?: number;
     map?: ol.Map;
     view?: ol.View;
-    sources?= new Array;
-    layers? = new Array;
+    tracking: boolean = true;
+    sources?= new Array;  // holds only the base layer
+    layers? = new Array;  // holds only the base layer
+    evkey: any; //current click event
     selectedFeature?: ol.Feature;
     selectedFeatures?: ol.Collection<ol.Feature> = new ol.Collection<ol.Feature>()
     userpages?: UserPage[];
-    defaultpage?: UserPage;
+    defaultpage?: UserPage;  //This looks like a duplicate that is also in userpages[]
     currentpage?: UserPage;
     userpagelayers?: UserPageLayer[];
+    userpageinstances?: UserPageInstance[];
+    userpageinstancelist?: string;
     currentLayer? = new UserPageLayer;
-    currentLayerName?: string;
+    currentLayerName?: string = "";
+    featureList? =  new Array<featureList>();
     editmode?: boolean;
     layerpermission?: LayerPermission[];
+    modulepermission?: ModulePermission[];
     mouseoverLayer?: UserPageLayer;
+    drawMode?: string;
     filterOn?: boolean;
     filterShow?: boolean;
+    styleShow?: boolean;
+    measureShow?: boolean;
+    featureDataShow: boolean;
+    modulesShow?: boolean;
+    myCubeConfig: MyCubeConfig;
+    myCubeData: MyCubeField[]
+    myCubeComment: MyCubeComment[]
 }
 
 export class featureList {
@@ -184,5 +200,4 @@ export class mapStyles {
             })
         })
     };
-
 }

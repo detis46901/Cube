@@ -4,10 +4,9 @@ import { Server } from '../../../_models/server.model';
 import { Layer, WMSLayer } from '../../../_models/layer.model'
 import { ServerNewComponent } from './serverNew/serverNew.component';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
+import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component';
 import { LayerNewComponent } from '../layer/layerNew/layerNew.component';
 import { MatDialog } from '@angular/material';
-import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { ServerValidatorService } from './serverValidator.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -15,41 +14,43 @@ import 'rxjs/add/operator/map';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { ServerDetailsComponent } from '../details/serverDetails/serverDetails.component';
 import { ServerLayersComponent } from './serverLayers/serverLayers.component';
+import * as ol from 'openlayers'
 
 @Component({
     selector: 'server',
     templateUrl: './server.component.html',
     styleUrls: ['./server.component.scss'],
-    providers: [ServerService, {provide: ValidatorService, useClass: ServerValidatorService}]
+    providers: [ServerService]
 })
 
 export class ServerComponent implements OnInit {
-    private objCode = 6;
-    private token: string;
-    private options: any;
-    
-    private toCreate: boolean = false;
+    public objCode = 6;
+    public token: string;
+    public options: any;
 
-    private servers: Array<Server>;
-    private currServer: Server;
+    public toCreate: boolean = false;
 
-    private layerArray: Array<string> = [];
-    private folderArray: Array<string> = [];
-    private serviceArray: Array<string> = [];
-    private formatArray: Array<string> = [];
-    private WMSLayers: Array<WMSLayer> = [];
-    private newLayer = new Layer
+    public servers: Array<Server>;
+    public currServer: Server;
 
-    private displayGeoserverLayers: boolean;
-    private displayFolders: boolean;
-    private path: string = '';
+    public layerArray: Array<string> = [];
+    public folderArray: Array<string> = [];
+    public serviceArray: Array<string> = [];
+    public formatArray: Array<string> = [];
+    public WMSLayers: Array<WMSLayer> = [];
+    public newLayer = new Layer
 
-    private serverColumns = ['serverID', 'serverName', 'serverType', 'serverURL', 'actionsColumn']
-    private dataSource: TableDataSource<Server>;
-    private http:Http
+    public displayGeoserverLayers: boolean;
+    public displayFolders: boolean;
+    public path: string = '';
 
-    constructor(private serverService: ServerService, private dialog: MatDialog, private serverValidator: ValidatorService, http: Http
-         ) {this.http = http 
+    public serverColumns = ['serverID', 'serverName', 'serverType', 'serverURL', 'actionsColumn']
+    public dataSource: any;
+    public http: Http
+
+    constructor(private serverService: ServerService, private dialog: MatDialog, http: Http
+    ) {
+    this.http = http
         this.options = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -63,28 +64,28 @@ export class ServerComponent implements OnInit {
         this.displayGeoserverLayers = false;
     }
 
-    private getServers(): void {
+    public getServers(): void {
         this.serverService
             .GetAll()
             .subscribe((servers) => {
                 this.servers = servers;
-                this.dataSource = new TableDataSource<Server>(servers, Server, this.serverValidator);
+                this.dataSource = servers;
             });
     }
 
-    public getCapabilities = (url): Observable<any> => {        
+    public getCapabilities = (url): Observable<any> => {
         return this.http.get(url)
             .map((response: Response) => <any>response.text())
     }
 
-    private clearArrays(): void {
+    public clearArrays(): void {
         this.layerArray = [];
         this.folderArray = [];
         this.formatArray = [];
         this.displayGeoserverLayers = false;
     }
 
-    // private getRequest(serv: Server): void {
+    // public getRequest(serv: Server): void {
     //     let url: string
     //     switch (serv.serverType) {
     //         case "Geoserver": {
@@ -100,16 +101,16 @@ export class ServerComponent implements OnInit {
     //             break;
     //     }
     // }
-        
-    private getGeoserver(serv: Server): void {
+
+    public getGeoserver(serv: Server): void {
         let url = serv.serverURL //+ '?request=getCapabilities&service=WMS';
         this.getCapabilities(url)
-        .subscribe((data) => {
-            let parser = new ol.format.WMSCapabilities();
-            let result = parser.read(data)
-            this.WMSLayers = result['Capability']['Layer']['Layer']
-            this.currServer = serv
-        })
+            .subscribe((data) => {
+                let parser = new ol.format.WMSCapabilities();
+                let result = parser.read(data)
+                this.WMSLayers = result['Capability']['Layer']['Layer']
+                this.currServer = serv
+            })
         // this.currServer = serv;
         // this.clearArrays();
         // this.displayGeoserverLayers = true;
@@ -120,7 +121,7 @@ export class ServerComponent implements OnInit {
         //     });
     }
 
-    // private parseGeoserver(response: string): void {
+    // public parseGeoserver(response: string): void {
     //     //list is returned with two elements at indeces 0 and 1 that do not represent valid objects, and must be trimmed off via shift()
     //     let list = response.split('<Layer');
     //     list.shift();
@@ -134,7 +135,7 @@ export class ServerComponent implements OnInit {
     //     }
     // }
 
-    // private getLayers(serv: Server): void {
+    // public getLayers(serv: Server): void {
     //     let path: string = '';
     //     this.currServer = serv;
     //     this.clearArrays();
@@ -145,7 +146,7 @@ export class ServerComponent implements OnInit {
     //         });
     // }
 
-    // private parseLayers(response: string): void {
+    // public parseLayers(response: string): void {
     //     console.log(response['folders'])
     //     let list = JSON.parse(response);
     //     if (list.folders) {
@@ -165,7 +166,7 @@ export class ServerComponent implements OnInit {
     //     }
     // }
 
-    // private WMSRequest(server: Server, type: string): void {
+    // public WMSRequest(server: Server, type: string): void {
     //     console.log("WMSRequest " + server.serverURL)
     //     this.path = '/' + server.serverURL;
     //     this.clearArrays();
@@ -176,7 +177,7 @@ export class ServerComponent implements OnInit {
     //         });
     // }
 
-    private openConfDel(server: Server): void {
+    public openConfDel(server: Server): void {
         const dialogRef = this.dialog.open(ConfirmDeleteComponent);
         dialogRef.componentInstance.objCode = this.objCode;
         dialogRef.componentInstance.objID = server.ID;
@@ -190,7 +191,7 @@ export class ServerComponent implements OnInit {
         });
     }
 
-    private deleteServer(serverID: number): void {
+    public deleteServer(serverID: number): void {
         this.serverService
             .Delete(serverID)
             .subscribe(result => {
@@ -198,7 +199,7 @@ export class ServerComponent implements OnInit {
             });
     }
 
-    private updateServer(server: Server): void {
+    public updateServer(server: Server): void {
         this.serverService
             .Update(server)
             .subscribe(result => {
@@ -206,7 +207,7 @@ export class ServerComponent implements OnInit {
             });
     }
 
-    // private createLayer(index: number, name: string): void {
+    // public createLayer(index: number, name: string): void {
     //     const dialogRef = this.dialog.open(LayerNewComponent, {height:'700px', width:'700px'});
     //     dialogRef.componentInstance.layerName = name;
     //     dialogRef.componentInstance.layerIdent = (String)(index);
@@ -215,7 +216,7 @@ export class ServerComponent implements OnInit {
     //     //dialogRef.componentInstance.layerServer = this.currServer;
     // }
 
-    // private createGeoserverLayer(WMSLayer: WMSLayer): void {
+    // public createGeoserverLayer(WMSLayer: WMSLayer): void {
     //     const dialogRef = this.dialog.open(LayerNewComponent, {height:'700px', width:'700px'});
     //     this.newLayer.layerName = WMSLayer.Title
     //     this.newLayer.layerIdent = WMSLayer.Name
@@ -225,23 +226,23 @@ export class ServerComponent implements OnInit {
     //     //dialogRef.componentInstance.layerServer = this.currServer;
     //     dialogRef.componentInstance.serverLayer = this.newLayer
     // }
-    
 
-    private openServerNew(): void {
-        const dialogRef = this.dialog.open(ServerNewComponent, {height:'300px', width:'360px'});
+
+    public openServerNew(): void {
+        const dialogRef = this.dialog.open(ServerNewComponent, { height: '300px', width: '360px' });
         dialogRef.afterClosed()
-        .subscribe(result => {
-            this.getServers();
-        });
+            .subscribe(result => {
+                this.getServers();
+            });
     }
 
-    private openLayers(name: string) {
-        const dialogRef = this.dialog.open(ServerLayersComponent, {width:'360px'});
-        dialogRef.componentInstance.name = name;
+    public openLayers(ID: number) {
+        const dialogRef = this.dialog.open(ServerLayersComponent, { width: '760px' });
+        dialogRef.componentInstance.ID = ID;
     }
-    
-    private openDetails(id: number, name: string): void {
-        const dialogRef = this.dialog.open(ServerDetailsComponent, {width:'320px'});
+
+    public openDetails(id: number, name: string): void {
+        const dialogRef = this.dialog.open(ServerDetailsComponent, { width: '320px' });
         dialogRef.componentInstance.ID = id;
         dialogRef.componentInstance.name = name;
         dialogRef.afterClosed().subscribe(() => {

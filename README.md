@@ -6,7 +6,7 @@ Cube is a web-based, open source, flexible GIS for communities and agencies to s
 The system is also designed to use feature modules that will provide custom functions that can be modified and shared as needed. Potential modules are provided at the end of this document. An important strength of this system is its ability to share almost anything seamlessly. Modules, layers, images, etc. can be shared from one user to another user or group depending on authorization, which will create a collaborative ecosystem for users to work with.
 
 ### Technologies
-The front-end client application is built with Angular 5. The back-end is written in Node server-side javascript, transpiled from Typescript using Gulp. PostgreSQL with the PostGIS add-on is used for data storage and some geographical functions. The client connects to the back-end via client HTTP requests that hit API endpoints. The API connects to PostgreSQL via the Sequelize library. Openlayers is the mapping library.
+The front-end client application is built with Angular 7. The back-end is written in Node server-side javascript, transpiled from Typescript using Gulp. PostgreSQL with the PostGIS add-on is used for data storage and some geographical functions. The client connects to the back-end via client HTTP requests that hit API endpoints. The API connects to PostgreSQL via the Sequelize library. Openlayers is the mapping library.
 
 ### Back-end API Configuration
 Main dependencies and technologies: Nodejs, Express, Gulp, Sequelize, Typescript, and PostgreSQL
@@ -17,13 +17,14 @@ A PostgreSQL database is used to store all data (unless it’s referenced from a
     <li>Groups</li>
     <li>Permissions</li>
     <li>Layers</li>
+    <li>Modules</li>
     <li>Pages</li>
 </ul>
 
-This data is all stored in the “public” schema. There is also a “layers” schema, which holds individual layer data. The front-end accesses the back-end via a secure API. This allows the two systems to be located on different servers if needed. It also allows the back-end to be backed up quickly if needed. This allows other systems to use the datastore directly via the API if needed (i.e. sharing a .kml file in Google Earth, etc.)
+This data is all stored in the “public” schema. There is also a “mycube” schema, which holds individual MyCube layer data. The front-end accesses the back-end via a secure API. This allows the two systems to be located on different servers if needed. It also allows the back-end to be backed up quickly if needed. This allows other systems to use the datastore directly via the API if needed (i.e. sharing a .kml file in Google Earth, etc.)
 
 ### Users
-Every user belongs to one or more groups, which are represented by job titles. This is a simple RBAC setup, modeled with Unix permissions and Windows Group Policy/Active Directory in mind. Users can additionally belong to the "Administrators" group, which provides them with (nearly) full control of data via an administrator interface. They may have to visit the database directly to alter unique identifiers and the like.
+Every user belongs to one or more groups. This is a simple RBAC setup, modeled with Unix permissions and Windows Group Policy/Active Directory in mind. Users can additionally designated as an administrator, which provides them with (nearly) full control of data via an administrator interface. They may have to visit the database directly to alter unique identifiers and the like.
 
 ### Layers
 Layers are graphical data representations that are placed on the base map according to their location. They might represent sewer pipes, building benchmarks, easements, etc. Layers are part of the core module in order to ensure tight integration with the map. Here is an example of the same area of land before and after activating a layer:
@@ -42,16 +43,15 @@ Layers are graphical data representations that are placed on the base map accord
 <br>Layers can be created from any of the following sources:
 <ul>
     <li>WMS</li>
-    <li>WFS</li>
-    <li>PostGIS table (reference)</li>
-    <li>PostGIS table from scratch</li>
-    <li>Shapefile (upload)</li>
-    <li>Shapefile (reference)</li>
-    <li>KML (upload)</li>
-    <li>KML (reference)</li>
+    <li>WMTS</li>
+    <li>PostGIS table (coming soon)</li> 
+    <li>PostGIS table from scratch (called a MyCube layer)</li>
+    <li>KML Upload (coming soon)</li>
+    <li>KML Reference (coming soon)</li>
 </ul>
 
-Users can create layers (making them the owner) and share them with other users. They may then provide either view or view/edit permissions to other users/groups as needed. Shapefiles and KML files uploaded are essentially converted to PostGIS tables. Users can also edit any file that is uploaded if their permissions allow.
+<!-- Users can create layers (making them the owner) and share them with other users. They may then provide either view or view/edit permissions to other users/groups as needed. -->
+
 
 ### Pages
 A page is a logical object that categorizes a collection of layers and modules for a specific purpose. For example, a “Sewer” page could include sewer inventory layers and maintenance modules, whereas a “Traffic” page could include a street closure module.
@@ -63,7 +63,7 @@ The Inbox is a link always available to the user that displays the user’s noti
 
 
 ### Geolocation
-Geolocation of the user is provided in the core module. The location of each user is then accessible by any module. It also allows the core module to zoom to the user’s location if the user clicks on the geolocation button. Geolocation requires the system uses HTTPS.
+Geolocation of the user is provided in the core module. The location of each user is then accessible by any module. It also allows the core module to zoom to the user’s location if the user clicks on the geolocation button. Geolocation requires the system uses HTTPS.  (This feature is not yet implemented.)
 
 ### Potential Feature Modules
 <ul>

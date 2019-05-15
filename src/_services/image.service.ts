@@ -1,8 +1,7 @@
 import 'rxjs/add/operator/map';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
-import { RequestOptions, Headers } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
 import { Configuration } from '../_api/api.constants';
@@ -12,12 +11,12 @@ export class ImageService {
     protected actionUrl: string;
     protected options: any;
     protected token: string;
- 
+
     constructor(protected _http: HttpClient, protected configuration: Configuration) {
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
-        } catch(err) {
-            console.log("Could not find user in local storage. Did you reinstall your browser or delete cookies?\n"+err)
+        } catch (err) {
+            console.log("Could not find user in local storage. Did you reinstall your browser or delete cookies?\n" + err)
         }
 
         this.actionUrl = this.configuration.serverWithApiUrl + 'images/'
@@ -32,12 +31,12 @@ export class ImageService {
         }
     }
 
-    public GetAll = (): Observable<any[]> => {           
+    public GetAll = (): Observable<any> => {
         return this._http.get<any[]>(this.actionUrl + 'list', this.options)
             .pipe(catchError(this.handleError));
     }
 
-public Upload = (image/*: FormData*/): Observable<any> => {
+    public Upload = (image/*: FormData*/): Observable<any> => {
         return this._http.post(this.actionUrl + 'create', image, this.options)
             .pipe(catchError(this.handleError));
     }
@@ -50,10 +49,10 @@ public Upload = (image/*: FormData*/): Observable<any> => {
             // The backend returned an unsuccessful response code.
             // The response body may contain clues as to what went wrong,
             console.error(
-              `Backend returned code ${error.status}, ` +
-              `body was: ${error.error}`);
+                `Backend returned code ${error.status}, ` +
+                `body was: ${error.error}`);
         }
         // return an ErrorObservable with a user-facing error message
-        return new ErrorObservable('Something bad happened; please try again later.');
+        return new ErrorObservable();
     }
 }

@@ -1,10 +1,16 @@
 // formatting the size of the box
 #pageConfigParent {
-    width: 270px;
+    width: 650px;
 }
 
 // format the header and close button
 #pageConfigHeader {
+    width: 100%;
+    position: relative;
+    top:-10px;
+    left:15px;
+}
+#pageConfigBody {
     width: 100%;
     position: relative;
     top:-10px;
@@ -42,7 +48,7 @@
 #pageConfigLayersColumn {
     position: relative;
     left: 5%;
-    width: 65%;
+    width: 100%;
 }
 
 #pageConfigDefaultColumn {

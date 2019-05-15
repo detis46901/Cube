@@ -1,11 +1,9 @@
 import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { MapService } from './services/map.service';
 import { MapConfig } from './models/map.model';
-import { WFSService } from './services/wfs.service';
+import { WMSService } from './services/wms.service';
 import { Location } from './core/location.class';
 import { geoJSONService } from './services/geoJSON.service'
-import { NavigatorComponent } from './navigator/navigator.component';
-import { PMMarkerComponent } from './marker/PMmarker.component';
 import { LayerPermissionService } from '../../_services/_layerPermission.service';
 import { LayerService } from '../../_services/_layer.service';
 import { UserPageService } from '../../_services/_userPage.service';
@@ -13,19 +11,21 @@ import { MyCubeService } from './services/mycube.service'
 import { ServerService } from '../../_services/_server.service';
 import { GroupMemberService } from '../../_services/_groupMember.service';
 import { GroupService } from '../../_services/_group.service';
-import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig } from '../../_models/layer.model';
+import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig, MyCubeComment } from '../../_models/layer.model';
 import { UserPage, User } from '../../_models/user.model';
 import { Group, GroupMember } from '../../_models/group.model';
 import { UserPageLayerService } from '../../_services/_userPageLayer.service';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { MessageService } from '../../_services/message.service';
-import { PageConfigComponent } from '../admin/user/pageConfig/pageConfig.component';
+import { PageConfigComponent } from '../admin/user/pageconfig/pageconfig.component';
 import { MatDialog } from '@angular/material';
 import { Clipboard } from 'ts-clipboard';
 import { Configuration } from '../../_api/api.constants';
 import { MatSnackBar } from '@angular/material';
-import { Feature } from 'geojson';
+import * as ol from 'openlayers';
+import { GeocodingService} from './services/geocoding.service'
+
+//import { Feature } from 'geojson';
 
 @Component({
     moduleId: module.id,
@@ -39,27 +39,34 @@ export class MapComponent {
     // This is necessary to access the html element to set the map target (after view init)!
     @ViewChild("mapElement") mapElement: ElementRef;
     @ViewChild("layers") layers: ElementRef;
-    private mapConfig = new MapConfig;
-    private token: string;
-    private userID: number;
-    private headers: Headers;
-    private userPageLayers: Array<UserPageLayer> = [];
-    private userPages: UserPage[];
-    private activePages = new Array<UserPage>();
-    private defaultPage: UserPage;
-    private currPage: any = ''; //Could be "none"
-    private noLayers: boolean;
-    private interval: any;
+    public mapConfig = new MapConfig;
+    public token: string;
+    public userID: number;
+    public headers: Headers;
+    public measureShow: boolean = false;
+    public userPageLayers: Array<UserPageLayer> = [];
+    public userPages: UserPage[];
+    public activePages = new Array<UserPage>();
+    public defaultPage: UserPage;
+    public currPage: any = ''; //Could be "none"
+    public noLayers: boolean;
+    public interval: any;
+    public toolbar: any;
+    public message: any;
+    public myCubeData: MyCubeField;
+    public myCubeComments: MyCubeComment[]
+
 
 
     constructor(
         public snackBar: MatSnackBar, private configuration: Configuration,
-        private geojsonservice: geoJSONService, private mapService: MapService, private wfsService: WFSService,
+        private geojsonservice: geoJSONService, public mapService: MapService, private wfsService: WMSService,
         private layerPermissionService: LayerPermissionService, private layerService: LayerService,
         private userPageService: UserPageService, private userPageLayerService: UserPageLayerService,
         private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog,
-        private messageService: MessageService, private groupMemberService: GroupMemberService,
-        private groupService: GroupService
+        private groupMemberService: GroupMemberService,
+        private groupService: GroupService,
+        private geocodingService: GeocodingService
     ) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
@@ -70,6 +77,12 @@ export class MapComponent {
     ngAfterViewInit() {
         //mapConfig.map.setTarget(this.mapElement.nativeElement.id)
         //this.refreshLayers()
+
+    }
+
+    ngOnDestroy() {
+        this.mapService.stopInterval()
+        //need to run stop interval on all the userpagelayers
     }
 
     //Angular component initialization
@@ -78,30 +91,31 @@ export class MapComponent {
         this.getDefaultPage()
             .then(() => this.mapService.initMap(this.mapConfig)
                 .then((mapConfig) => {
-                    this.mapConfig = mapConfig  //Not sure if this is necessary.  Just in case.
-                    let ptkey = this.mapConfig.map.on('pointermove', (evt) => {
-                        mapConfig.map.getTargetElement().style.cursor = mapConfig.map.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
+                    let ptkey = this.mapConfig.map.on('pointermove', (evt:any) => {
                         if (mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
-                            this.mapConfig.map.forEachLayerAtPixel((evt.pixel), layers => {
-                                let index = this.mapConfig.layers.findIndex(x => x == layers);
-                                if (index > 0) {
-                                    let index2 = this.mapConfig.userpagelayers.findIndex(z => z.loadOrder - 1 == index);
-                                    // let features = this.mapConfig.map.getFeaturesAtPixel(evt.pixel)
-                                    // let popup = new ol.Overlay({
-                                    //     element: document.getElementById('popup'),
-                                    //     position: evt.coordinate,
-                                    //   });
-                                    //   //popup.setPosition(evt.coordinate);
-                                    //   this.mapConfig.map.addOverlay(popup);
-                                    this.mapConfig.mouseoverLayer = this.mapConfig.userpagelayers[index2]
-                                    mapConfig.map.getFeaturesAtPixel(evt.pixel).forEach(element => {
-                                    })
+                            this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+                                let index = this.mapConfig.userpagelayers.findIndex(z => z.olLayer == layer);
+                                if (index > -1) {
+                                    this.mapConfig.mouseoverLayer = this.mapConfig.userpagelayers[index]
+                                    if (this.mapConfig.mouseoverLayer.olLayer == this.mapConfig.currentLayer.olLayer) {
+                                        mapConfig.map.getTargetElement().style.cursor = mapConfig.map.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
+                                    }
                                 }
                             })
                         }
-                        else { this.mapConfig.mouseoverLayer = null }
-                    }, { hitTolerance: 5 })
+                        else {
+                            this.mapConfig.mouseoverLayer = null;
+                            mapConfig.map.getTargetElement().style.cursor = '';
+                        }
+                    }, { hitTolerance: 20 })
+                    let mkey = this.mapConfig.map.on('pointerdrag', (evt:any) => {
+                        this.geocodingService.isTracking = false
+                    })
                     mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
+                    this.toolbar = "Layers"
+                    this.mapConfig.modulesShow = true
+                    this.geocodingService.trackMe(mapConfig)
+                    //this.setDefaultPageLayer()  At some point, the default layer needs to be set current
                 })
             )
     }
@@ -129,16 +143,26 @@ export class MapComponent {
         this.mapConfig.currentpage = page;
         this.mapConfig.currentLayer = new UserPageLayer;
         this.currPage = page.page;
+        this.cleanPage()
         this.mapService.getUserPageLayers(this.mapConfig)
+            .then(() => this.mapService.getUserPageInstances(this.mapConfig))
             .then(() => this.mapService.getLayerPerms())
             .then(() => {
-                this.cleanPage();
+                this.mapService.loadLayers(this.mapConfig, false).then(() => {
+                    this.mapConfig.currentLayerName = "";
+                    this.mapConfig.editmode = false;
+                    this.noLayers = true;
+                })
             })
-        //this.mapService.getUserPageLayers(page);
         this.noLayers = true;
+        this.toolbar = "Layers"
     }
 
-    private openPageConfig(pageID: number, userID: number, name: string): void {
+    public setToolbar(bar: string) {
+        this.toolbar = bar
+    }
+
+    public openPageConfig(pageID: number, userID: number, name: string): void {
         let dialogRef = this.dialog.open(PageConfigComponent);
         dialogRef.componentInstance.pageID = pageID;
         dialogRef.componentInstance.userID = userID;
@@ -155,37 +179,38 @@ export class MapComponent {
     }
 
     private cleanPage(): void {
-        for (let k = 1; k < this.mapConfig.layers.length; k) {
-            this.mapConfig.map.removeLayer(this.mapConfig.layers[k]);
-            this.mapConfig.layers.splice(k, 1);
-            this.mapConfig.currentLayerName = null;
-            this.mapService.featurelist = [];
-        }
-        this.mapConfig.sources = [];
-        this.mapConfig.filterOn = false;
-        this.mapConfig.sources.push(new ol.source.OSM());
-        this.mapService.loadLayers(this.mapConfig, false).then(() => {
-            this.mapConfig.currentLayerName = null;
-            this.mapConfig.editmode = false;
-            this.noLayers = true;
+        this.mapConfig.userpagelayers.forEach((x) => {
+            this.mapService.stopInterval()
+            this.mapConfig.map.removeLayer(x.olLayer)
+            this.mapConfig.currentLayerName = "";
+            this.mapConfig.featureList = []
         })
+        //this.mapConfig.sources = [];
+        this.mapConfig.editmode = false
+        this.mapConfig.filterOn = false;
+        this.mapConfig.filterShow = false;
+        this.mapConfig.styleShow = false
+        this.myCubeService.clearMyCubeData();
+        this.myCubeService.clearWMS();
+        //this.mapConfig.sources.push(new ol.source.OSM());
+
     }
 
-    private copyToClipboard(url: string) {
-        Clipboard.copy(this.configuration.outsideServerWithApiUrl + url + '&apikey=' + this.token);
+    public copyToClipboard(url: string) {
+        Clipboard.copy(this.configuration.serverWithApiUrl + url + '&apikey=' + this.token);
         this.snackBar.open("Copied to the clipboard", "", {
             duration: 2000,
         });
     }
 
-    private copyGSToClipboard(url: string) {
-        Clipboard.copy('=IMPORTHTML("' + this.configuration.outsideServerWithApiUrl + url + '&apikey=' + this.token + '", "table", 1)');
+    public copyGSToClipboard(url: string) {
+        Clipboard.copy('=IMPORTHTML("' + this.configuration.serverWithApiUrl + url + '&apikey=' + this.token + '", "table", 1)');
         this.snackBar.open("Copied to the clipboard", "", {
             duration: 2000,
         });
     }
 
-    private setDefaultPage(userpage: UserPage) {
+    public setDefaultPage(userpage: UserPage) {
         this.mapConfig.defaultpage.default = false;
         this.userPageService
             .Update(this.mapConfig.defaultpage)
@@ -199,64 +224,21 @@ export class MapComponent {
             })
     }
 
-    //For use with layer permissions in the accordion menu
-    //
-    //USE LAYERPERMISSIONS.GETUSERGROUPS INSTEAD!!!
-    //
-    // private getGroupMembers(userID: number): Promise<any> {
-    //     var prom = new Promise((resolve, reject) => {
-    //         this.groupMemberService
-    //             .GetByUser(userID)
-    //             .subscribe((res: GroupMember[]) => {
-    //                 resolve(res)
-    //             })
-    //     })
-    //     return prom;
-    // }
-
-    // private getUserGroups(groups: Group[]): Promise<any> {
-    //     var groups = new Array<Group>();
-    //     var prom = new Promise((resolve, reject) => {
-    //         for(let g of groups) {
-    //             this.groupService
-    //                 .GetSingle(g.ID)
-    //                 .subscribe((res: Group) => {
-    //                     groups.push(res)
-    //                 })
-    //         }
-    //         resolve(groups)
-    //     })
-    //     return prom;
-    // }
-
-
-    // private canEditLayer(layerID: number): boolean {
-    //     this.getGroupMembers(this.userID).then((gms) => {
-    //         this.getUserGroups(gms).then((groups) => {
-    //         this.layerPermissionService
-    //             .GetByLayer(layerID)
-    //             .subscribe((res: LayerPermission[]) => {
-    //                 for(let lp of res) {
-    //                     if(lp.userID == this.userID) {
-
-    //                     } else if(lp.groupID) {
-    //                         for(let g of groups) {
-
-    //                         }
-    //                     } else {
-    //                         alert("Something went wrong.")
-    //                     }
-    //                 }
-    //             })
-    //         })
-    //     })
-    // }
-
-    private canEditPerm(layerID: number) {
+    public setDefaultPageLayer() {
+        this.mapConfig.userpagelayers.forEach((userpagelayer) => {
+            if (this.mapConfig.currentpage.defaultLayer == userpagelayer.ID) {
+                this.mapService.setCurrentLayer(userpagelayer)
+            }
+        })
+    }
+    public canEditPerm(layerID: number) {
 
     }
 
-    private canDeleteLayer(layerID: number) {
+    public canDeleteLayer(layerID: number) {
 
+    }
+    public isolate(layer: UserPageLayer) {
+        this.mapService.isolate(layer)
     }
 }

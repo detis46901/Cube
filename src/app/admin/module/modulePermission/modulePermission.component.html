@@ -1,0 +1,95 @@
+<!-- Jack Reyburn -->
+<!-- This modal function is editing instance permissions -->
+
+<!-- creates a row to contain both the titel and the closing 'x' -->
+<div class="row" style="position:relative">
+    <!-- header -->
+    <h4 mat-dialog-title id="instancePermissionTitle">{{instanceName}} Permissions</h4>
+
+    <!-- closing 'x' -->
+    <button mat-dialog-close class="close" id="closingX" (click)="updateModulePermissions()">&times;</button>
+</div>
+
+<!-- box to contain the current permissions -->
+<mat-dialog-content>
+    <!-- title -->
+    <h5>
+        <b>Current Permissions</b>
+    </h5>
+
+    <!-- list of items, in this case current instance permissions -->
+    <mat-list *ngFor="let perm of modulePermissions">
+        <mat-list-item>
+            <span class="row">
+                <!-- delete button -->
+                <button mat-icon-button (click)="deleteModulePermission(perm)">
+                    <i style="vertical-align:baseline" class="fa fa-trash mat-icon"></i>
+                </button>
+
+                <!-- user first and last names or group name depending on who is affiliated with permission -->
+                <p *ngIf="!perm.groupID" style="width:210px">{{perm.user.firstName}}&nbsp;{{perm.user.lastName}}</p>
+                <p *ngIf="!perm.userID" style="width:210px">{{perm.group.name}}</p>
+
+                <!-- three check boxes one for edit, delete, and grant permissions -->
+                <mat-checkbox name="instancePermissionEdit" [(ngModel)]="perm.edit">Edit</mat-checkbox>
+                <mat-checkbox name="instancePermissionDelete" [(ngModel)]="perm.delete">Delete</mat-checkbox>
+                <mat-checkbox name="instancePermissionGrant" [(ngModel)]="perm.canGrant">Grant</mat-checkbox>
+            </span>
+        </mat-list-item>
+
+        <mat-list-item id="instancePermExComment" *ngIf="perm.comments">
+            <strong>Comments:&nbsp;</strong> {{perm.comments}}
+        </mat-list-item>
+    </mat-list>
+</mat-dialog-content>
+<hr>
+
+<!-- box to contain the new permissions interface -->
+<div>
+    <span>
+        <!-- header including a toggle to switch between user and group selections -->
+        <b>New Permission</b>
+        User
+        <mat-slide-toggle class="user-group-toggle" name="permission-user-group-toggle" [checked]="isGroup" (change)="switchPermType()"></mat-slide-toggle>
+        Group
+    </span>
+
+    <!-- form holding the entry boces for user/group, permissions, and comments -->
+    <form class="form" #f="ngForm">
+        <div>
+            <mat-form-field *ngIf="!isGroup" style="width:200px; margin-right:20px">
+                <!-- drop down menu -->
+                <mat-select id="instancePermNewUser" name="instance-perm-user" [(ngModel)]="newModulePermission.userID" required placeholder="User">
+                    <!-- user options in drop down, if user is selected in the toggle above -->
+                    <mat-option [value]="user.ID" *ngFor="let user of permlessUsers">
+                        {{user.firstName}} {{user.lastName}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="isGroup" style="width:200px; margin-right:20px">
+                <mat-select id="instancePermNewGroup" name="instance-perm-group" [(ngModel)]="newModulePermission.groupID" required placeholder="Group">
+                    <!-- group options in drop down, if group is selected in the toggle above -->
+                    <mat-option [value]="group.ID" *ngFor="let group of permlessGroups">
+                        {{group.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <!-- three checkboxes for new permissions -->
+            <mat-checkbox name="newModulePermissionEdit" [(ngModel)]="newModulePermission.edit">Edit</mat-checkbox>
+            <mat-checkbox name="newModulePermissionDelete" [(ngModel)]="newModulePermission.delete">Delete</mat-checkbox>
+            <mat-checkbox name="newModulePermissionGrant" [(ngModel)]="newModulePermission.canGrant">Grant</mat-checkbox>
+        </div>
+
+        <!-- entry box for permission comments -->
+        <mat-form-field style="width:100%">
+            <textarea name="newModulePermissionComments" [(ngModel)]="newModulePermission.comments" matInput placeholder="Comments:"></textarea>
+        </mat-form-field>
+    </form>
+</div>
+
+<!-- button to add new permission to instance -->
+<mat-dialog-actions style="justify-content:center">
+    <button mat-button id="addPermissionButton" (click)="addModulePermission(newModulePermission)" [disabled]="!f.valid">Add Permission</button>
+</mat-dialog-actions>

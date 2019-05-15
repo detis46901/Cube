@@ -11,29 +11,29 @@ import { User } from '../../../_models/user.model';
     styleUrls: ['./password.component.scss'],
 })
 
-export class PasswordComponent implements OnInit{
-    private oldPw: string = "";
-    private newPw: string = "";
-    private confPw: string = "";
+export class PasswordComponent implements OnInit {
+    public oldPw: string = "";
+    public newPw: string = "";
+    public confPw: string = "";
 
-    private token: string;
-    private userID: string;
-    private user = new User;
-    private error;
+    public token: string;
+    public userID: string;
+    public user = new User;
+    public error;
 
     constructor(private userService: UserService) {
-       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-          this.token = currentUser && currentUser.token;
-          this.userID = currentUser && currentUser.userID; 
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.token = currentUser && currentUser.token;
+        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {
-       this.getUserItems(this.userID);
+        this.getUserItems(this.userID);
     }
 
-    private changePW(): void {
-        if(!this.oldPw) {
-            if(!this.newPw) {
+    public changePW(): void {
+        if (!this.oldPw) {
+            if (!this.newPw) {
                 alert("Please enter a value for old password and new password.");
                 this.clearInputs();
                 return;
@@ -42,28 +42,28 @@ export class PasswordComponent implements OnInit{
                 this.clearInputs();
                 return;
             }
-        } 
-        if(this.oldPw && !this.newPw) {
+        }
+        if (this.oldPw && !this.newPw) {
             alert("Please enter a value for new password.");
             this.clearInputs();
             return;
         }
-        if(this.oldPw && this.newPw && !this.confPw) {
+        if (this.oldPw && this.newPw && !this.confPw) {
             alert("Please enter a value for confirm password.");
             this.clearInputs();
             return;
         }
-        if(this.newPw.length < 8) {
+        if (this.newPw.length < 8) {
             alert("Please enter a password that is at least 8 characters long.")
             this.clearInputs();
             return;
         }
-        if(this.newPw == this.oldPw) {
+        if (this.newPw == this.oldPw) {
             alert("New password matches old password.")
             this.clearInputs();
             return;
-        } 
-        if(this.newPw != this.confPw) {
+        }
+        if (this.newPw != this.confPw) {
             alert("Confirm password entry did not match new password entry.")
             this.clearInputs();
             return;
@@ -80,7 +80,7 @@ export class PasswordComponent implements OnInit{
         this.clearInputs();
     }
 
-    private clearInputs(): void {
+    public clearInputs(): void {
         this.oldPw = "";
         this.newPw = "";
         this.confPw = "";
@@ -90,11 +90,10 @@ export class PasswordComponent implements OnInit{
     //It would be wise to implement sending an email for password reset, or allowing a user to choose security questions
     getUserItems(userID): void {
         this.userService
-        .GetSingle(userID)
-        .subscribe((data:User) => 
-            this.user = data,
-            error => console.error(error)
-        );
-            
+            .GetSingle(userID)
+            .subscribe((data: User) =>
+                this.user = data,
+                error => console.error(error)
+            );
     }
 }

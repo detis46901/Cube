@@ -3,12 +3,11 @@ import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
 import { Configuration } from '../_api/api.constants';
-import { RequestOptions, Headers } from '@angular/http';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
 import { Notif } from '../_models/user.model';
 
- 
+
 @Injectable()
 export class NotifService {
     private actionUrl: string;
@@ -21,8 +20,8 @@ export class NotifService {
         this.headers = new HttpHeaders();
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
-        } catch(err) {
-            console.log("Could not find user in local storage. Did you reinstall your browser or delete cookies?\n"+err)
+        } catch (err) {
+            console.log("Could not find user in local storage. Did you reinstall your browser or delete cookies?\n" + err)
         }
 
         // this.headers.append('Authorization', 'Bearer ' + this.token);
@@ -38,17 +37,17 @@ export class NotifService {
         }
     }
 
-    public GetByUser = (userID): Observable<Notif[]> => {
+    public GetByUser = (userID): Observable<any> => {
         return this._http.get(this.actionUrl + 'getbyuser?userID=' + userID, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetByType = (type): Observable<Notif[]> => {
+    public GetByType = (type): Observable<any> => {
         return this._http.get(this.actionUrl + 'getbytype?objectType=' + type, this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public GetBySource = (sourceID): Observable<Notif[]> => {
+    public GetBySource = (sourceID): Observable<any> => {
         return this._http.get(this.actionUrl + 'getbysource?sourceID=' + sourceID, this.options)
             .pipe(catchError(this.handleError));
     }
@@ -81,10 +80,10 @@ export class NotifService {
             // The backend returned an unsuccessful response code.
             // The response body may contain clues as to what went wrong,
             console.error(
-              `Backend returned code ${error.status}, ` +
-              `body was: ${error.error}`);
+                `Backend returned code ${error.status}, ` +
+                `body was: ${error.error}`);
         }
         // return an ErrorObservable with a user-facing error message
-        return new ErrorObservable('Something bad happened; please try again later.');
+        return new ErrorObservable();
     }
 }

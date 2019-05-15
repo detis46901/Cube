@@ -1,0 +1,12 @@
+<mat-expansion-panel [disabled]="disabled == true" [expanded]="expanded" (opened)="expanded = true">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Drone Aerial Photos
+    </mat-panel-title>
+    <mat-panel-description>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  
+ 
+  <mat-slider style="width:100%" [max]="100" [step]="1" [value]="100" [thumbLabel]="true" (change)="setOpacity($event)"></mat-slider><br>Opacity<br>
+</mat-expansion-panel>

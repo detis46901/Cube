@@ -18,17 +18,17 @@
         <mat-form-field class="row">
             <input matInput name="newServName" [(ngModel)]="newserver.serverName" required type="text" placeholder="Server Name">
         </mat-form-field>
-        
+
         <!-- server type select field, drop down -->
         <mat-form-field class="row">
             <mat-select name="newServType" [(ngModel)]="newserver.serverType" required type="text" placeholder="Server Type">
-                <mat-option value="GeoserverWMS">Geoserver WMS</mat-option>
-                <mat-option value="GetoserverWMTS">Geoserver WMTS</mat-option>
-                <mat-option value="ArcGISWMS">ArcGIS WMS</mat-option>
-                <mat-option value="ArcGISWMTS">ArcGIS WMTS</mat-option>
-                <mat-option value="WMS">Generic WMS</mat-option>
+                <mat-option value="Geoserver WMS">Geoserver WMS</mat-option>
+                <mat-option value="Getoserver WMTS">Geoserver WMTS</mat-option>
+                <mat-option value="ArcGIS WMS">ArcGIS WMS</mat-option>
+                <mat-option value="ArcGIS WMTS">ArcGIS WMTS</mat-option>
+                <!-- <mat-option value="WMS">Generic WMS</mat-option>
                 <mat-option value="WMTS">Generic WMTS</mat-option>
-                <mat-option value="PostGIS">PostGIS</mat-option>
+                <mat-option value="PostGIS">PostGIS</mat-option> -->
             </mat-select>
         </mat-form-field>
 
@@ -41,5 +41,5 @@
 
 <!-- add new server button only usable after all three boxes have been filled -->
 <mat-dialog-actions style="justify-content:center">
-    <button mat-button id="serverAddButton" (click)="addServer(newserver)" [disabled]="!f.valid">Add Server</button>
+    <button mat-button id="serverAddButton" (click)="addServer()" [disabled]="!f.valid">Add Server</button>
 </mat-dialog-actions>

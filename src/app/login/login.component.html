@@ -10,13 +10,20 @@
             <div class="login-body">
                 <!-- username and password entry fields  -->
                 <mat-form-field>
-                    <input matInput type="text" autofocus="autofocus" name="username" [(ngModel)]="model.username" #username="ngModel" required email placeholder="Username"/>
+                    <input matInput type="text" autofocus="autofocus" name="username" [(ngModel)]="model.username" #username="ngModel" required
+                        email placeholder="Username" />
                 </mat-form-field>
                 <mat-form-field>
-                    <input matInput id="loginPassword" type="password" name="password" [(ngModel)]="model.password" #password="ngModel" required placeholder="Password" />
+                    <input matInput id="loginPassword" type="password" name="password" [(ngModel)]="model.password" #password="ngModel" required
+                        placeholder="Password" />
                 </mat-form-field>
                 <!-- login button -->
-                <button style="color:white; background-color:#623c65" mat-button id="loginSubmit" (click)="login()" [disabled]="!f.valid" class="btn btn-primary">Login</button>
+                <button style="color:white; background-color:#623c65" mat-button id="loginSubmit" (click)="login()" [disabled]="!f.valid"
+                    class="btn btn-primary">Login</button>
+                    <br><br>
+                <div>For Demo, use:<br>
+                Username: <b>administrator@gmail.com</b><br>
+                Password: <b>admin</b></div>
             </div>
         </form>
     </mat-card>

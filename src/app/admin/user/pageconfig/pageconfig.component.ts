@@ -5,11 +5,15 @@ import { Group, GroupMember } from '../../../../_models/group.model';
 import { GroupService } from '../../../../_services/_group.service';
 import { GroupMemberService } from '../../../../_services/_groupMember.service';
 import { UserPageLayer, LayerPermission } from '../../../../_models/layer.model';
+import { UserPageInstance, ModulePermission } from '../../../../_models/module.model'
 import { UserPageService } from '../../../../_services/_userPage.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
+import { ModulePermissionService } from '../../../../_services/_modulePermission.service'
 import { UserPageLayerService } from '../../../../_services/_userPageLayer.service';
+import { UserPageInstanceService } from '../../../../_services/_userPageInstance.service'
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { MapConfig } from '../../../map/models/map.model';
+import { FeatureModulesAdminService } from '../../../feature-modules/feature-modules-admin.service'
 
 /************************************************************************************************************************************************************
 * 2/9/18: All changes that need to happen  (Mark off as you complete)                                                                                       *
@@ -30,7 +34,7 @@ import { MapConfig } from '../../../map/models/map.model';
 @Component({
     selector: 'page-config',
     templateUrl: './pageConfig.component.html',
-    providers: [UserService, GroupService, GroupMemberService, UserPageLayerService, UserPageService],
+    providers: [UserService, GroupService, GroupMemberService, UserPageLayerService, UserPageService, ModulePermissionService, UserPageInstanceService, FeatureModulesAdminService],
     styleUrls: ['./pageConfig.component.scss']
 })
 
@@ -39,187 +43,185 @@ export class PageConfigComponent implements OnInit {
     @Input() userID;
     @Input() pageName;
 
-    private newUserPage: string;
-    private newUserPageLayer = new UserPageLayer;
-    private layerPermissions = new Array<LayerPermission>();
-    private userPageLayers = new Array<UserPageLayer>(); //insert instantiation if error **REMOVE**
-    
-    private selectedUserPage: UserPage;
-    private userGroups = new Array<Group>();
-    private availableLPs = new Array<LayerPermission>();
+    public newUserPage: string;
+    public newUserPageLayer = new UserPageLayer;
+    public newUserPageInstance = new UserPageInstance;
+    public layerPermissions = new Array<LayerPermission>();
+    public modulePermissions = new Array<ModulePermission>();
+    public userPageLayers = new Array<UserPageLayer>(); //insert instantiation if error **REMOVE**
+    public userPageInstances = new Array<UserPageInstance>();
+    public selectedUserPage: UserPage;
+    public userGroups = new Array<Group>();
+    public availableLPs = new Array<LayerPermission>();
+    public selectedLP = new LayerPermission
 
-    private token: string;
-    private foo;
+    public token: string;
+    public foo;
 
-    
-    constructor(private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, 
-        private groupService: GroupService, private groupMemberService: GroupMemberService, 
-        private layerPermissionService: LayerPermissionService) {
+
+    constructor(public userPageLayerService: UserPageLayerService, private userPageService: UserPageService,
+        private groupService: GroupService, private groupMemberService: GroupMemberService,
+        private layerPermissionService: LayerPermissionService, private modulePermissionService: ModulePermissionService, private dialog: MatDialog, public userPageInstanceService: UserPageInstanceService, public featureModuleAdminService: FeatureModulesAdminService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
     }
 
     ngOnInit() {
-        this.getGroups();
+        this.layerPermissions = [];
+        this.modulePermissions = [];
+        //this.getGroups();
+        this.getAllByUser();
         //this.getUserPageLayers();
         //this.getLayerPermissions().then((allPerms)=>this.layerPermissions=allPerms);
-          //  .then((/*ARRAY OF ALL PERMISSIONS GATHERED BY USER AND GROUPS*/) => this.layerPermissions = /*ARRAY*/); //********************* */
+        //  .then((/*ARRAY OF ALL PERMISSIONS GATHERED BY USER AND GROUPS*/) => this.layerPermissions = /*ARRAY*/); //********************* */
         this.foo = this.groupMemberService
-        .GetByUser(this.userID)
-    }
-
-    private getGroups(): void {
-        let groupIDS = new Array<GroupMember>();
-
-        this.groupMemberService
             .GetByUser(this.userID)
-            .subscribe((data: GroupMember[]) => {
-                groupIDS = data;
-                for(let gm of data) {
-                    this.groupService
-                        .GetSingle(gm.groupID)
-                        .subscribe((group: Group) => {
-                            this.userGroups.push(group);
-                        })
-                }
-                // this.userGroups = groups;
-                this.getUserPageLayers();
-            })
-
     }
 
-    private getUserPageLayers(): void {
+    public getAllByUser() {
+        this.layerPermissionService.GetByUserGroups(this.userID)
+        .subscribe((x: LayerPermission[]) => {
+            console.log(x)
+            this.layerPermissions = x.filter(LP => LP.layer.layerType != 'Module')
+
+        })
+        this.modulePermissionService.GetByUserGroups(this.userID)
+        .subscribe((y: ModulePermission[]) => {
+            console.log(y)
+            this.modulePermissions = y
+        })
+        this.getUserPageLayers();
+        this.getUserPageInstances();
+    }
+
+
+    public getUserPageLayers(): void {
         this.userPageLayerService
             .GetPageLayers(this.pageID)
             .subscribe((data: UserPageLayer[]) => {
                 this.userPageLayers = data;
-                this.getLayerPermissions();
+                // this.getLayerPermissions();
             });
     }
 
-    private getLayerPermissions() {
-        // var prom = new Promise ((resolve, reject) => {
-        //     var allPerms = new Array<LayerPermission>();
-        //     this.getByUser()
-        //         .then((userPerms) => {
-        //             allPerms.push.apply(allPerms, userPerms)
-        //                 this.getByGroup()
-        //                     .then((groupPerms) => {
-        //                         allPerms.push.apply(allPerms, groupPerms)
-        //                     })
-        //         });
-        //     resolve(allPerms)
-        // })
-        // return prom;
-        var layerMatch = false;
-        this.getByUser().then(() => {
-            this.getByGroup().then(() => {
-                console.log("in getbygroup");
-                this.availableLPs = [];
-                for(let LP of this.layerPermissions) {
-                    for(let UPL of this.userPageLayers) {         
-                        if(LP.layerID == UPL.layerID) {
-                            layerMatch = true;
-                            break;                            
-                        }
-                    }
-                    if(!layerMatch) {
-                        this.availableLPs.push(LP);
-                    }
-                    layerMatch = false;
-                }
-            })
-        })
-        //Array.prototype.
+    public getUserPageInstances(): void {
+        this.userPageInstanceService
+            .GetPageInstances(this.pageID)
+            .subscribe((data: UserPageInstance[]) => {
+                this.userPageInstances = data;
+                console.log(data)
+            });
     }
 
-    private getByUser(): Promise<any> {
-        console.log("get by user")
-        this.layerPermissions = [];
-        var prom = new Promise((resolve, reject) => {
-            var userPerms = new Array<LayerPermission>();
-            this.layerPermissionService //run this logic as one promise
-                .GetByUser(this.userID)
-                .subscribe((data: LayerPermission[]) => {
-                    for(let LP of data) {
-                        //userPerms.push(i)
-                        this.layerPermissions.push(LP);
-                        // console.log("\nU Iterated       ID:" + LP.ID + "    Name: " + LP.layer.layerName)
-                    }
-                    resolve();
-                }); 
-        })
-        return prom;
-    }
-
-    private getByGroup(): Promise<any> {
-        console.log("get by group")
-        var prom = new Promise((resolve, reject) => {
-            for(let g of this.userGroups) { //only start this logic once the previous promise has resolved by chaining it
-                this.layerPermissionService
-                    .GetByGroup(g.ID)
-                    .subscribe((LPs: LayerPermission[]) => {
-                        for(let LP of LPs) {
-                            //groupPerms.push(i)
-                            //if(this.layerPermissions.indexOf(LP) == -1) {
-                            for(let userLP of this.layerPermissions) {
-                                // console.log("\nG Iterated:      ID: " + LP.ID + "    Name: " + LP.layer.layerName)
-                                if(LP.layerID != userLP.layerID) {
-                                    this.layerPermissions.push(LP);
-                                    break;
-                                }  
-                            }       
-                        }
-                    })
-            }
-            resolve();
-        })
-        return prom;
-    }
-
-    private addUserPageLayer(newUserPageLayer: UserPageLayer): void {
-        var element = <HTMLInputElement> document.getElementById("pageConfigSubmit");
-        
-        this.newUserPageLayer.userPageID = this.pageID ;
-        this.newUserPageLayer.userID = this.userID ;
-        this.newUserPageLayer.layerON = true;
+    public addUserPageLayer(newUserPageLayer: UserPageLayer): void {
+        var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
+        console.log(this.selectedLP)
+        this.newUserPageLayer.userPageID = this.pageID;
+        this.newUserPageLayer.userID = this.userID;
+        this.newUserPageLayer.defaultON = true;
         this.newUserPageLayer.layerID = newUserPageLayer.layerID;
+        this.newUserPageLayer.style = this.selectedLP.layer.defaultStyle
         this.userPageLayerService
-            //.Add(this.newUserPageLayer, this.token)
             .Add(this.newUserPageLayer)
             .subscribe(() => {
-                this.layerPermissions=[];
+                this.layerPermissions = [];
+                this.getAllByUser()
                 this.getUserPageLayers();
             });
     }
 
-    private updateUserPageLayer(userPage: UserPage): void {
+    public addUserPageInstance(newUserPageInstance: UserPageInstance): void {
+        console.log(newUserPageInstance)
+        var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
+        console.log(this.selectedLP)
+        this.newUserPageInstance.userPageID = this.pageID;
+        this.newUserPageInstance.userID = this.userID;
+        this.newUserPageInstance.defaultON = true;
+        this.newUserPageInstance.moduleInstanceID = newUserPageInstance.module_instance.ID;
+        this.newUserPageInstance.module_instance = newUserPageInstance.module_instance
+        this.userPageInstanceService
+            .Add(this.newUserPageInstance)
+            .subscribe((data: UserPageInstance) => {
+                console.log(data)
+                newUserPageInstance.ID = data.ID
+                this.layerPermissions = [];
+                this.featureModuleAdminService.addModuleToPage(newUserPageInstance)
+                this.getUserPageInstances();
+                this.getUserPageLayers()
+            });
+    }
+
+    public updateUserPageLayer(userPageLayer: UserPageLayer): void {
+        let uplSave = new UserPageLayer
+        uplSave.ID = userPageLayer.ID
+        uplSave.defaultON = userPageLayer.defaultON
+        console.log(uplSave)
         this.userPageLayerService
-            .Update(userPage)
-            .subscribe(() => {
-                this.layerPermissions=[];
-                this.getUserPageLayers();
+            .Update(uplSave)
+            .subscribe((data) => {
+                console.log(data)
+                //this.layerPermissions = [];
+                //this.getUserPageLayers();
             });
     }
 
     // 2/8/18: Must do the same update function that layerPermission needs as well, needs to update available list of objects to add correctly
-    public deleteUserPageLayer(userPageID: number): void {
+    public deleteUserPageLayer(userPageLayerID: number): void {
         this.userPageLayerService
-            .Delete(userPageID)
+            .Delete(userPageLayerID)
             .subscribe((res) => {
-                this.layerPermissions=[];
+                this.layerPermissions = [];
                 this.getUserPageLayers();
             });
     }
 
-    public enableSubmit(): void {
-        var element = <HTMLInputElement> document.getElementById("pageConfigSubmit");
+    public deleteUserPageInstance(userPageInstance: UserPageInstance): void {
+        //this.featureModuleAdminService.removeModuleFromPage(userPageInstance)
+        this.userPageLayers.forEach(x => {
+            if (x.userPageInstanceID == userPageInstance.ID) {
+                this.deleteUserPageLayer(x.ID)
+                this.userPageInstanceService
+                .Delete(userPageInstance.ID)
+                .subscribe((res) => {
+                    console.log(res)
+                    this.layerPermissions = [];
+                    this.getUserPageInstances();
+                    
+                });    
+            }
+            else {
+                this.userPageInstanceService
+                .Delete(userPageInstance.ID)
+                .subscribe((res) => {
+                    console.log(res)
+                    this.layerPermissions = [];
+                    this.getUserPageInstances();
+                    
+                }); 
+            }
+        })
+       
+        
+    }
+
+    public enableSubmit(LP: LayerPermission): void {
+        var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
+        this.selectedLP = LP
         element.disabled = false;
     }
 
-    private addButton(newUserPageLayer: UserPageLayer): void {
+    public addButton(newUserPageLayer: UserPageLayer): void {
         this.addUserPageLayer(newUserPageLayer);
-        var element = <HTMLInputElement> document.getElementById("pageConfigSubmit");
+        var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
         element.disabled = true;
+    }
+    public addInstance(newUserPageInstance: UserPageInstance): void {
+        this.addUserPageInstance(newUserPageInstance);
+        var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
+        element.disabled = true;
+    }
+
+    public closeDialog() {
+        this.dialog.closeAll()
     }
 }

@@ -8,17 +8,17 @@ import { User } from '../../_models/user.model';
     templateUrl: 'login.component.html',
     styleUrls: ['login.component.scss']
 })
- 
+
 export class LoginComponent implements OnInit {
     model: any = {};
     public user = new User;
     loading = false;
     error = '';
     public token;
- 
+
     constructor(private router: Router, private authenticationService: AuthenticationService, private userService: UserService) {
     }
- 
+
     ngOnInit() {
         //reset login status
         this.authenticationService.logout();
@@ -26,9 +26,9 @@ export class LoginComponent implements OnInit {
         localStorage.clear();
 
         document.getElementById("loginPassword")
-            .addEventListener("keyup", function(event) {
+            .addEventListener("keyup", function (event) {
                 event.preventDefault();
-                if(event.keyCode === 13) {
+                if (event.keyCode === 13) {
                     document.getElementById("loginSubmit").click();
                 }
             })
@@ -38,31 +38,44 @@ export class LoginComponent implements OnInit {
         //emit this.token to application for use with API calls
     }
 
-    private login(): void {
-        if(!this.model.username) {
+    public login(): void {
+        console.log(this.model)
+        if (!this.model.username) {
             alert("Please enter a value for username.");
             this.clearInputs();
             return;
-        } 
-        if(this.model.username && !this.model.password) {
+        }
+        if (this.model.username && !this.model.password) {
             alert("Please enter a value for password.");
             this.clearInputs();
             return;
         }
-        if(!this.model.username && !this.model.password) {
+        if (!this.model.username && !this.model.password) {
             alert("Please enter a value for username and password.");
             this.clearInputs();
             return;
         }
         else {
+            console.log("Logging in")
             let that = this;
             this.loading = true;
-            let username:string = this.model.username
+            let username: string = this.model.username
             this.userService.login(username.toLowerCase(), this.model.password)
                 .subscribe(res => {
+                    console.log(res)
+                    if(res['token']) {
+                                 this.token = res['token'];
+                                 let userID = res['userID']
+                                 let admin = res['admin']
+                                 localStorage.setItem('currentUser', JSON.stringify({
+                                     userID: userID,
+                                     admin: admin,
+                                     token: this.token
+                                 }))
                     this.token = res
                     this.loading = false;
                     this.router.navigate(['/'])
+                                }
                 }, error => {
                     this.loading = false;
                     alert("Incorrect password or username.")
@@ -78,12 +91,12 @@ export class LoginComponent implements OnInit {
     }
 
     getUser(userID): void {
-         this.userService
+        this.userService
             .GetSingle(userID)
-            .subscribe((data:User) => 
+            .subscribe((data: User) =>
                 this.user = data,
                 error => console.error(error)
             );
-            
+
     }
 }

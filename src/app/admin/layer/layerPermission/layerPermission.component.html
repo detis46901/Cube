@@ -13,7 +13,9 @@
 <!-- box to contain the current permissions -->
 <mat-dialog-content>
     <!-- title -->
-    <h5><b>Current Permissions</b></h5>
+    <h5>
+        <b>Current Permissions</b>
+    </h5>
 
     <!-- list of items, in this case current layer permissions -->
     <mat-list *ngFor="let perm of layerPermissions">
@@ -51,11 +53,11 @@
         <mat-slide-toggle class="user-group-toggle" name="permission-user-group-toggle" [checked]="isGroup" (change)="switchPermType()"></mat-slide-toggle>
         Group
     </span>
-    
+
     <!-- form holding the entry boces for user/group, permissions, and comments -->
     <form class="form" #f="ngForm">
         <div>
-            <mat-form-field *ngIf="!isGroup"  style="width:200px; margin-right:20px">
+            <mat-form-field *ngIf="!isGroup" style="width:200px; margin-right:20px">
                 <!-- drop down menu -->
                 <mat-select id="layerPermNewUser" name="layer-perm-user" [(ngModel)]="newLayerPermission.userID" required placeholder="User">
                     <!-- user options in drop down, if user is selected in the toggle above -->
@@ -90,4 +92,4 @@
 <!-- button to add new permission to layer -->
 <mat-dialog-actions style="justify-content:center">
     <button mat-button id="addPermissionButton" (click)="addLayerPermission(newLayerPermission)" [disabled]="!f.valid">Add Permission</button>
-</mat-dialog-actions>    
+</mat-dialog-actions>

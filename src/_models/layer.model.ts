@@ -1,4 +1,7 @@
 import { Server } from './server.model'
+import { MyCubeStyle } from './style.model'
+import { UserPageInstance, ModulePermission } from './module.model'
+
 export class Layer {
     ID: number;
     layerName: string;
@@ -10,7 +13,7 @@ export class Layer {
     layerGeom: string;
     serverID: number;
     server: Server;
-    defaultStyle: JSON;
+    defaultStyle: MyCubeStyle;
 }
 
 export class LayerPermission {
@@ -33,26 +36,34 @@ export class LayerClass extends Layer {
 
 export class UserPageLayer {
     ID: number;
-    layerON: boolean;
+    defaultON: boolean;
     createdAt: string;
     updatedAt: string;
-    userID: number;    
+    userID: number;
     userPageID: number;
     layerID: number;
-    style: JSON;
+    style: MyCubeStyle;
     layer = new Layer;
-    layerPermissions = new LayerPermission;
+    layerPermissions = new LayerPermission();
+    modulePermissions = new ModulePermission;
     serverID: number;
     layerShown: boolean;
     loadOrder: number;
     loadStatus: string;
+    source: any
+    olLayer: any;
+    updateInterval: any;
+    userPageInstanceID: number;
 }
 
 export class MyCubeField {
     field: string;
     type: string;
     value?: any;
-    label?: boolean
+    options?: string[]
+    label?: boolean;
+    changed?: boolean;
+    links? = new Array<string>()
 }
 
 export class MyCubeConfig {
@@ -61,14 +72,14 @@ export class MyCubeConfig {
 }
 
 export class MyCubeComment {
+    table: number;
     id: number;
     userID: number;
-    comment: string;
+    comment: string = "";
     geom: string;
-    featureID: number;
+    featureID: string | number;
+    auto: boolean;
     createdat: Date;
-    firstName: string;
-    lastName: string;
 }
 
 export class WMSLayer {

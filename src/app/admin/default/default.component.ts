@@ -14,7 +14,7 @@ import { LayerService } from '../../../_services/_layer.service';
 export class DefaultsComponent implements OnInit {
     private layers: Observable<Layer[]>;
 
-    constructor(private layerService: LayerService){}
+    constructor(private layerService: LayerService) { }
     ngOnInit() {
         //this.layerService.GetAll().subscribe((res) => this.layers = res)
         this.layers = this.layerService.GetAll()
@@ -22,5 +22,5 @@ export class DefaultsComponent implements OnInit {
 
     time = new Observable<string>((observer: Subscriber<string>) => {
         setInterval(() => observer.next(new Date().toString()), 1000);
-      });
+    });
 }

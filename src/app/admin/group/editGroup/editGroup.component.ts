@@ -12,10 +12,10 @@ import { MatDialog } from '@angular/material';
 export class EditGroupComponent implements OnInit {
     @Input() group: Group;
 
-    private token: string;
-    private userID: number;
+    public token: string;
+    public userID: number;
 
-    constructor(private dialog: MatDialog, private groupService: GroupService) { 
+    constructor(private dialog: MatDialog, private groupService: GroupService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -24,11 +24,9 @@ export class EditGroupComponent implements OnInit {
     ngOnInit() {
     }
 
-    private updateGroup(group): void {
+    public updateGroup(group): void {
         this.groupService
             .Add(group)
-            .subscribe(()=>this.dialog.closeAll())
+            .subscribe(() => this.dialog.closeAll())
     }
-
-
 }

@@ -10,6 +10,8 @@ import { UserPage } from '../../_models/user.model';
 import { UserService } from '../../_services/_user.service';
 import { UserPageService } from '../../_services/_userPage.service';
 import { NotifService } from '../../_services/notification.service';
+import { GeocodingService } from '../map/services/geocoding.service'
+import { geoJSONService } from 'app/map/services/geoJSON.service';
 
 @Component({
     selector: 'header',
@@ -20,20 +22,21 @@ import { NotifService } from '../../_services/notification.service';
 
 export class HeaderComponent implements OnInit {
     @Input() user: User;
-    @Input() screenCode: number = 0; 
-    private isOpen: boolean;
-    private isNotifOpen: boolean = false;
-    private userHasUnread: boolean;
-    private shaker;
+    @Input() screenCode: number = 0;
+    public isOpen: boolean;
+    public isNotifOpen: boolean = false;
+    public userHasUnread: boolean;
+    public shaker;
 
-    private token: string;
-    private userID: number;
+    public token: string;
+    public userID: number;
 
-    private currUser: User;
-    private userPages: UserPage[];
-    private notifications: Notif[];
+    public currUser = new User;
+    public userPages: UserPage[];
+    public notifications: Notif[];
 
-    constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService, private notificationService: NotifService ) {
+    constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService, private notificationService: NotifService,
+        public geocodingService: GeocodingService) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -42,6 +45,7 @@ export class HeaderComponent implements OnInit {
     ngOnInit() {
         this.getUserItems()
         this.getUserPageItems()
+        console.log(this.geocodingService.isTracking)
     }
 
 
@@ -49,13 +53,13 @@ export class HeaderComponent implements OnInit {
         this.userService
             .GetSingle(this.userID)
             .subscribe((user: User) => {
-                this.currUser = user;              
+                this.currUser = user;
                 this.notificationService
                     .GetByUser(user.ID)
                     .subscribe((notifs: Notif[]) => {
                         this.notifications = notifs;
-                        for(let n of notifs) {
-                            if(!n.read) {
+                        for (let n of notifs) {
+                            if (!n.read) {
                                 this.shakeNotifications()
                                 return;
                             }
@@ -72,26 +76,26 @@ export class HeaderComponent implements OnInit {
             });
     }
 
-    private openPages(userID: number, firstName: string, lastName: string): void {
+    public openPages(userID: number, firstName: string, lastName: string): void {
         const dialogRef = this.dialog.open(PageComponent);
         dialogRef.componentInstance.userID = this.userID;
         dialogRef.componentInstance.firstName = this.currUser.firstName;
         dialogRef.componentInstance.lastName = this.currUser.lastName;
 
         dialogRef.afterClosed()
-        .subscribe(() => {
-            this.getUserPageItems();
-        });
+            .subscribe(() => {
+                this.getUserPageItems();
+            });
     }
 
-    private menuToggle(sCode: number): void {
+    public menuToggle(sCode: number): void {
         if (this.sideNavService.getHidden() == null) {
             this.isOpen = true;
         } else {
             this.isOpen = this.sideNavService.getHidden();
         }
 
-        switch(sCode) {
+        switch (sCode) {
             case 0:
                 //throw exception here for a call without a screen code (will default to 0 as assigned above)
                 console.log("Exception")
@@ -114,12 +118,12 @@ export class HeaderComponent implements OnInit {
     }
 
     //Code 1
-    private homeToggle(): void {
+    public homeToggle(): void {
 
         // 2/2/18 What I was trying to do below is to get some typical menu functions (file, edit, view, etc.) available on the header navigation bar.
         //document.getElementById("headerCreateUserBtn").style.visibility = "hidden"; //Figure this out to appear only on admin/user. create buttons could go in header.
 
-        if(!this.isOpen) {
+        if (!this.isOpen) {
             document.getElementById("mySidenav").style.display = "block";
             document.getElementById("mySidenav").style.width = "250px";
             document.getElementById("place-input").style.position = "absolute";
@@ -146,7 +150,7 @@ export class HeaderComponent implements OnInit {
     //Code 2
     public adminToggle() {
         document.getElementById("headerCreateUserBtn").style.visibility = "visible";
-        if(!this.isOpen) {
+        if (!this.isOpen) {
             document.getElementById("admin_nav").style.display = "block";
             document.getElementById("admin_nav").style.width = "230px";
             this.sideNavService.toggleHidden();
@@ -160,7 +164,7 @@ export class HeaderComponent implements OnInit {
     //Code 3
     public userToggle() {
         document.getElementById("headerCreateUserBtn").style.visibility = "hidden";
-        if(!this.isOpen) {
+        if (!this.isOpen) {
             document.getElementById("settings_nav").style.display = "block";
             document.getElementById("settings_nav").style.width = "230px";
             this.sideNavService.toggleHidden();
@@ -171,7 +175,7 @@ export class HeaderComponent implements OnInit {
         }
     }
 
-    private openNotifications(id): void {
+    public openNotifications(id): void {
         //update notifs on click
         //
         // this.notificationService
@@ -180,12 +184,12 @@ export class HeaderComponent implements OnInit {
         //         this.notifications = notifs
         document.getElementById('headerNotifications').classList.remove('shake');
         clearInterval(this.shaker)
-        
-        if(this.isNotifOpen) {
+
+        if (this.isNotifOpen) {
             document.getElementById("notificationMenu").style.display = "none";
         } else {
             document.getElementById("notificationMenu").style.display = "block";
-            for(let n of this.notifications) {
+            for (let n of this.notifications) {
                 n.read = true;
                 this.notificationService
                     .Update(n)
@@ -196,13 +200,18 @@ export class HeaderComponent implements OnInit {
         // })
     }
 
-    private shakeNotifications(): void { 
-        this.shaker = setInterval(function() {
+    public shakeNotifications(): void {
+        this.shaker = setInterval(function () {
             document.getElementById('headerNotifications').classList.add('shake');
-            setTimeout(function() {
+            setTimeout(function () {
                 document.getElementById('headerNotifications').classList.remove('shake');
                 console.log("second timeout")
             }, 1000)
         }, 3000)
+    }
+
+    public startGeoTracking(): void {
+        this.geocodingService.isTracking = true
+        this.geocodingService.centerMap()
     }
 }

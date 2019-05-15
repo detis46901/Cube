@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../../_services/_user.service';
 import { User } from '../../../_models/user.model';
 import { Configuration } from '../../../_api/api.constants';
@@ -10,33 +10,35 @@ import { Layer, LayerPermission, UserPageLayer } from '../../../_models/layer.mo
 import { LayerPermissionComponent } from './layerPermission/layerPermission.component';
 import { LayerStyleComponent } from './layerStyle/layerStyle.component';
 import { LayerNewComponent } from './layerNew/layerNew.component';
-import { ConfirmDeleteComponent } from '../confirmDelete/confirmDelete.component';
+import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component';
 import { newMyCubeComponent } from './myCubeLayer/newMyCube.component';
 import { ServerService } from '../../../_services/_server.service';
 import { Server } from '../../../_models/server.model';
-import { MatDialog, MatDialogConfig  } from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material';
 import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { LayerValidatorService } from './layerValidator.service';
+import {MatPaginator, MatTableDataSource} from '@angular/material';
 import { LayerDetailsComponent } from '../details/layerDetails/layerDetails.component';
 
 @Component({
     selector: 'layer',
     templateUrl: './layer.component.html',
-    providers: [UserService, Configuration, LayerService, LayerPermissionService, UserPageLayerService, ServerService, SQLService, {provide: ValidatorService, useClass: LayerValidatorService}],
+    providers: [UserService, Configuration, LayerService, LayerPermissionService, UserPageLayerService, ServerService, SQLService, { provide: ValidatorService, useClass: LayerValidatorService }],
     styleUrls: ['./layer.component.scss']
 })
 
 export class LayerComponent implements OnInit {
     //objCode refers to the  menu tab the user is on, so the openConfDel method knows what to interpolate based on what it's deleting
-    private objCode: number = 2;
-    private token: string;
-    private userID: number;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    public objCode: number = 2;
+    public token: string;
+    public userID: number;
 
-    private layers: Layer[];
-    private servers: Server[];
+    public layers: Layer[];
+    public servers: Server[];
 
-    private layerColumns = ['layerID', 'name', /*'identity', 'service', 'server', */'description', /*'format', */'type', /*'geometry', */'actionsColumn'];
-    private dataSource: TableDataSource<Layer>;
+    public layerColumns = ['layerID', 'name', /*'identity', 'service', 'server', 'description',*/ /*'format', */'type', /*'geometry', */'actionsColumn'];
+    public dataSource: any
 
     constructor(private layerValidator: ValidatorService, private layerService: LayerService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -54,7 +56,7 @@ export class LayerComponent implements OnInit {
             .GetAll()
             .subscribe((layers: Layer[]) => {
                 this.layers = layers;
-                this.dataSource = new TableDataSource<Layer>(layers, Layer, this.layerValidator);
+                this.dataSource = layers
             });
     }
 
@@ -66,34 +68,34 @@ export class LayerComponent implements OnInit {
             });
     }
 
-    private createLayer(): void {
-        const dialogRef = this.dialog.open(LayerNewComponent, {height:'450px', width:'450px'});
+    public createLayer(): void {
+        const dialogRef = this.dialog.open(LayerNewComponent, { height: '450px', width: '450px' });
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });
     }
 
-    private createMyCube(): void {
-        const dialogRef = this.dialog.open(newMyCubeComponent, {height:'520px', width:'480px'});
+    public createMyCube(): void {
+        const dialogRef = this.dialog.open(newMyCubeComponent, { height: '520px', width: '480px' });
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });
     }
 
-    private openPermission(layerid: number, layername: string): void {
+    public openPermission(layerid: number, layername: string): void {
         const dialogRef = this.dialog.open(LayerPermissionComponent);
         dialogRef.componentInstance.layerID = layerid;
         dialogRef.componentInstance.layerName = layername;
     }
 
-    private openStyle(layerid: number, layername: string): void {
+    public openStyle(layerid: number, layername: string): void {
         const dialogRef = this.dialog.open(LayerStyleComponent);
         dialogRef.componentInstance.layerID = layerid;
         dialogRef.componentInstance.layerName = layername;
     }
 
-    private openDetails(id: number, name: string): void {
-        const dialogRef = this.dialog.open(LayerDetailsComponent, {width:'450px'});
+    public openDetails(id: number, name: string): void {
+        const dialogRef = this.dialog.open(LayerDetailsComponent, { width: '450px' });
         dialogRef.componentInstance.ID = id;
         dialogRef.componentInstance.name = name;
         dialogRef.afterClosed().subscribe(() => {
@@ -101,7 +103,7 @@ export class LayerComponent implements OnInit {
         })
     }
 
-    private confirmDelete(layer: Layer): void {
+    public confirmDelete(layer: Layer): void {
         const dialogRef = this.dialog.open(ConfirmDeleteComponent);
         dialogRef.componentInstance.objCode = this.objCode;
         dialogRef.componentInstance.objID = layer.ID;
@@ -115,7 +117,7 @@ export class LayerComponent implements OnInit {
         });
     }
 
-    private updateLayer(layer: Layer): void {
+    public updateLayer(layer: Layer): void {
         this.layerService
             .Update(layer)
             .subscribe(() => {
@@ -123,36 +125,36 @@ export class LayerComponent implements OnInit {
             });
     }
 
-    private deletePermission(layerID: number) {
+    public deletePermission(layerID: number) {
         this.layerPermissionService
-        .GetByLayer(layerID)
-        .subscribe(result => {
-            for (let i of result) {
-                this.layerPermissionService
-                    .Delete(i.ID)
-                    .subscribe((res) => {});
-            }
-        });
+            .GetByLayer(layerID)
+            .subscribe(result => {
+                for (let i of result) {
+                    this.layerPermissionService
+                        .Delete(i.ID)
+                        .subscribe((res) => { });
+                }
+            });
     }
 
-    private deleteUPL(layerID: number): void {
+    public deleteUPL(layerID: number): void {
         this.userPageLayerService
-        .GetByLayer(layerID)
-        .subscribe((res: UserPageLayer[]) => {
-            for(let i of res) {
-                this.userPageLayerService
-                    .Delete(i.ID)
-                    .subscribe((res) => {})
-            }
-        });
+            .GetByLayer(layerID)
+            .subscribe((res: UserPageLayer[]) => {
+                for (let i of res) {
+                    this.userPageLayerService
+                        .Delete(i.ID)
+                        .subscribe((res) => { })
+                }
+            });
 
     }
 
-    private deleteLayer(layerID: number): void {
+    public deleteLayer(layerID: number): void {
         this.layerService
             .GetSingle(layerID)
             .subscribe((result: Layer) => {
-                if (result.layerType=='MyCube') {
+                if (result.layerType == 'MyCube') {
                     this.sqlservice.deleteTable(result.ID)
                         .subscribe()
                     this.sqlservice.deleteCommentTable(result.ID)
@@ -162,43 +164,53 @@ export class LayerComponent implements OnInit {
 
         this.layerService
             .Delete(layerID)
-                .subscribe(() => {
-                    this.getLayerItems();
-                });
+            .subscribe(() => {
+                this.getLayerItems();
+            });
+        this.layerPermissionService.GetByLayer(layerID)
+        .subscribe((x) => {
+            x.forEach((y) => {
+                console.log(y)
+                this.layerPermissionService.Delete(y.ID)
+                .subscribe((z) => {
+                    console.log(z)
+                })
+            })
+        })
     }
-     
+
     // 2/2/18: Keep this here to remind you: DON'T do it this way, when you get to it, implement using the pagination/sorting features of mat-table
-    private sortLayers(code: string): void {
+    public sortLayers(code: string): void {
         let indexList: Array<number> = [];
         let list = this.layers;
         let temp: Array<any> = [];
 
         switch (code) {
-        case ('AZ'):
-            this.orderAZ();
-            break;
-        case ('ZA'):
-            break;
-        case ('TYPE'):
-            break;
-        case ('OLD_NEW'):
-            break;
-        case ('NEW_OLD'):
-            break;
-        case ('GEOM'):
-            break;
-        case ('SERVER'):
-            break;
-        default:
-            alert('"' + code + '" is not a valid code.');
-            break;
+            case ('AZ'):
+                this.orderAZ();
+                break;
+            case ('ZA'):
+                break;
+            case ('TYPE'):
+                break;
+            case ('OLD_NEW'):
+                break;
+            case ('NEW_OLD'):
+                break;
+            case ('GEOM'):
+                break;
+            case ('SERVER'):
+                break;
+            default:
+                alert('"' + code + '" is not a valid code.');
+                break;
         }
     }
 
-    private orderAZ(): void {
+    public orderAZ(): void {
         let indexList: Array<number> = [];
         let list, temp = this.layers;
-        for (let i=0; i<list.length; i++) {
+        for (let i = 0; i < list.length; i++) {
             temp[i] = list[i].layerName;
         }
     }
