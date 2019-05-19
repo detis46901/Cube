@@ -50,6 +50,7 @@ export class MapConfig {
 }
 
 export class featureList {
+    id?: number;
     label: string
     feature: ol.Feature
 }

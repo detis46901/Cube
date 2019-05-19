@@ -94,7 +94,7 @@ export class LocatesService {
   }
 
   private getFeatureList(mapConfig?, layer?): boolean {
-    console.log("locate service get featurelist")
+    //console.log("locate service get featurelist")
     let k: number = 0;
     let tempList = new Array<featureList>();
     try {
@@ -102,6 +102,7 @@ export class LocatesService {
         let i = layer.source.getFeatures().findIndex((j) => j == x);
 
         let fl = new featureList;
+        fl.id = x.get('id')
         if (x.get("address") == "")
         {fl.label = x.get("street") + " and " + x.get("crossst")}
         else {
@@ -150,7 +151,7 @@ export class LocatesService {
   public selectFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
     this.sqlService.GetSingle(this.layer.layerID, mapConfig.selectedFeature.get('id'))
     .subscribe((data:Locate) => {
-      console.log(data)
+      //console.log(data)
       this.sendTicket(data[0][0])
     })
     //this.sendTicket(mapConfig.selectedFeature.get('ticket'))
@@ -239,7 +240,11 @@ export class LocatesService {
 
     i = Loc.indexOf("Address :")
     ii = Loc.indexOf("Street  :")
-    if (i+13 > ii ) {locate.address = Loc.substring(i + 10, ii - 1)} else {locate.address = ''}
+    if (i+16 > ii ) {locate.address = Loc.substring(i + 10, ii - 1)} else {locate.address = ''}
+    console.log(i)
+    console.log(ii)
+    console.log(Loc.substring(i + 10, ii - 1))
+    console.log(locate.address)
     i = Loc.indexOf("Street  :")
     ii = Loc.indexOf("Cross ")
     if (ii < 5) { ii = Loc.indexOf("Location") }
@@ -429,10 +434,10 @@ export class LocatesService {
     return this._http.get<string>('https://maps.googleapis.com/maps/api/geocode/xml', { params: params, headers: options, responseType: 'text' as 'json' })
   }
 
-  public addRecord(table, geometry) {
+  public addRecord(table, geometry:JSON) {
     this.sqlService.addRecord(table, geometry)
       .subscribe(data => {
-        let id = data[0]['id']
+        let id = data[0][0]['id']
         this.updateRecord(table, id, 'ticket', 'text', this.locate.ticket)
         this.updateRecord(table, id, 'tdate', 'date', this.locate.tdate)
         this.updateRecord(table, id, 'ttime', 'date', this.locate.ttime)
@@ -463,10 +468,17 @@ export class LocatesService {
         this.updateRecord(table, id, 'fax', 'text', this.locate.fax)
         this.updateRecord(table, id, 'email', 'text', this.locate.email)
         this.reloadLayer(this.locateStyles.current)
+        this.zoomToFeature(id, geometry)
       })
   }
 
-  public updateRecord(table, id: string, field: string, type: string, value: string) {
+  public zoomToFeature(id:number, geometry:JSON) {
+    console.log(geometry)
+    console.log(geometry['geometry']['coordinates'])
+    this.mapConfig.view.animate({ zoom: 17, center: ol.proj.transform([geometry['geometry']['coordinates'][0], geometry['geometry']['coordinates'][1]], 'EPSG:4326', 'EPSG:3857') })
+}
+
+  public updateRecord(table:number, id: string, field: string, type: string, value: string) {
     let mcf = new MyCubeField
     mcf.field = field
     mcf.type = type

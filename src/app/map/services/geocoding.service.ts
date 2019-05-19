@@ -85,7 +85,7 @@ export class GeocodingService {
             //this.showTrackingPosition(position);
             console.log(position)
             this.position = position
-            if (this.isTracking == true) {
+            if (this.isTracking == true && position.coords.accuracy < 100) {
             this.centerMap()
             }
           });

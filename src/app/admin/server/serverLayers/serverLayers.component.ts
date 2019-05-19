@@ -10,6 +10,7 @@ import 'rxjs/add/operator/map';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import {FormControl} from '@angular/forms';
+import { environment } from 'environments/environment'
 import * as ol from 'openlayers';
 
 
@@ -20,6 +21,7 @@ import * as ol from 'openlayers';
 })
 
 export class ServerLayersComponent implements OnInit {
+    
     @Input() ID;
     public http: Http;
     public server = new Server
@@ -31,6 +33,13 @@ export class ServerLayersComponent implements OnInit {
     private selectedServiceType: any;
     selected = new FormControl(0)
 
+    private headerDict = {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+      
+      private requestOptions = {                                                                                                                                                                                 
+        headers: new Headers(this.headerDict), 
+      };
 
     constructor(private dialog: MatDialog, private serverService: ServerService, http: Http) { 
         this.http = http
@@ -39,6 +48,7 @@ export class ServerLayersComponent implements OnInit {
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Accept': 'text/plain' //use token auth
             })
+            
         }
     }
 
@@ -51,19 +61,22 @@ export class ServerLayersComponent implements OnInit {
         this.serverService.GetSingle(ID)
         .subscribe((data) => {
             this.server = data
-            console.log(this.server)
             this.getLayers(this.server)
         })
     }
 
     public getCapabilities = (url): Observable<any> => {
-        console.log('https://cors-anywhere.herokuapp.com/' + url)
-         return this.http.get('https://cors-anywhere.herokuapp.com/' + url)
-             .map((response: Response) => <any>response.text());
+        //This needs to be looked at.  This will work fine as long as Geoserver is on the same server as Cube.  It may not work otherwise if CORS isn't set up on Geoserver.
+        console.log(url)
+        return this.http.get(url)
+         .map((response: Response) => <any>response.text());
     }
 
     public getArcGIS = (url): Observable<any> => {
-        return this.http.get('https://cors-anywhere.herokuapp.com/' + url)
+        //This may also need to be addressed as well.  While unlikely, this won't work if the ArcGIS server is on the same domain as Cube.
+        let url2 = url.split('//')[1]
+        console.log(environment.proxyUrl + '/' + url2)
+        return this.http.get(environment.proxyUrl + '/' + url2)
             .map((response: Response) => <any>response.json());
     }
 

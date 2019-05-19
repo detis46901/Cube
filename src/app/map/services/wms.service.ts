@@ -4,6 +4,7 @@ import { Observable } from 'rxjs'
 import { Subject } from 'rxjs/Subject';
 import { UserPageLayer } from '../../../_models/layer.model';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { environment } from 'environments/environment'
 
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mergeMap";
@@ -123,7 +124,9 @@ export class WMSService {
             case ('MapServer'): {
                 console.log("Found MapServer Layer")
                 let norest: string = layer.layer.server.serverURL.split('/rest/')[0] + '/' + layer.layer.server.serverURL.split('/rest/')[1];
-                let url: string = 'https://cors-anywhere.herokuapp.com/' + norest + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                let norest2: string = norest.split("//")[1]
+                let url: string = environment.proxyUrl + '/' + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                console.log(url)
                 return url;
             }
             case ('Geoserver'): {
@@ -133,7 +136,9 @@ export class WMSService {
             case ('ArcGISRest'): {
                 console.log("Found ArcGISRest Layer")
                 let norest: string = layer.layer.server.serverURL.split('/rest/')[0] + '/' + layer.layer.server.serverURL.split('/rest/')[1];
-                let url: string = 'https://cors-anywhere.herokuapp.com/' + norest + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                let norest2: string = norest.split("//")[1]
+                let url: string = environment.proxyUrl + '/' + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                console.log(url)
                 return url;
             }
         }

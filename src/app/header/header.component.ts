@@ -21,7 +21,7 @@ import { geoJSONService } from 'app/map/services/geoJSON.service';
 })
 
 export class HeaderComponent implements OnInit {
-    @Input() user: User;
+    //@Input() user: User;
     @Input() screenCode: number = 0;
     public isOpen: boolean;
     public isNotifOpen: boolean = false;

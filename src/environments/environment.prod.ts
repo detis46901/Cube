@@ -1,6 +1,7 @@
 export const environment = {
   production: true,
   apiUrl: 'https://cube-kokomo.com:5000',
+  proxyUrl: 'https://cube-kokomo.com:9876',
   centerLong: -86.1336,
   centerLat: 40.4864,
   centerZoom: 13,
