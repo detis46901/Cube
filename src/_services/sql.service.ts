@@ -77,6 +77,19 @@ export class SQLService {
             .pipe(catchError(this.handleError));
     }
 
+    public addImage = (formdata:FormData): Observable<any> => {
+        const HttpUploadOptions = {
+            headers: new HttpHeaders({
+            //"Content-Type": "multipart/form-data",
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + this.token,   
+               }), reportProgress: true
+          }
+        console.log(formdata)
+        return this._http.post(this.actionUrl + 'addimage',formdata, HttpUploadOptions)
+            .pipe(catchError(this.handleError));
+    }
+
     public addCommentWithoutGeom = (comment:MyCubeComment): Observable<any> => {        
         return this._http.post(this.actionUrl + 'addcommentwithoutgeom',JSON.stringify(comment), this.options)
             .pipe(catchError(this.handleError));

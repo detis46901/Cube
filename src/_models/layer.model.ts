@@ -59,6 +59,7 @@ export class UserPageLayer {
 export class MyCubeField {
     field: string;
     type: string;
+    description?: string;
     value?: any;
     options?: string[]
     label?: boolean;
@@ -75,9 +76,13 @@ export class MyCubeComment {
     table: number;
     id: number;
     userID: number;
+    firstName: string;
+    lastName: string;
     comment: string = "";
     geom: string;
     featureID: string | number;
+    filename?: string;
+    file?: File;
     auto: boolean;
     createdat: Date;
 }

@@ -273,8 +273,7 @@ import { ModuleSettingsComponent } from './admin/module/moduleSettings/moduleSet
         NotifService,
         FeatureModulesService,
         UserPageInstanceService,
-        ModuleService,
-        
+        ModuleService
 
     ],
 

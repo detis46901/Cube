@@ -67,10 +67,13 @@ export class LoginComponent implements OnInit {
                                  this.token = res['token'];
                                  let userID = res['userID']
                                  let admin = res['admin']
+
                                  localStorage.setItem('currentUser', JSON.stringify({
                                      userID: userID,
                                      admin: admin,
-                                     token: this.token
+                                     token: this.token,
+                                     firstName: res['firstName'],
+                                     lastName: res['lastName']
                                  }))
                     this.token = res
                     this.loading = false;

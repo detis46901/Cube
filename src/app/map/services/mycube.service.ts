@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { SQLService } from '../../../_services/sql.service'
 import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../../_models/layer.model'
 import { interaction } from "openlayers";
+import { environment } from 'environments/environment'
 
 
 //need to get wmsSubject to wmsService, but for some reason, it doesn't work over there.
@@ -44,6 +45,7 @@ export class MyCubeService extends SQLService {
     prebuildMyCube(layer) {
         this.GetSchema(layer.layer.ID)
             .subscribe((data) => {
+                console.log(data)
                 this.cubeData = data[0]
                 this.cubeData[0].type = "id"
                 this.cubeData[1].type = "geom"
@@ -80,6 +82,9 @@ export class MyCubeService extends SQLService {
                     for (var key in sdata[0][0]) {
                         if (sdata[0][0].hasOwnProperty(key)) {
                             if (z != 0) { this.cubeData[z].value = sdata[0][0][key] }
+                            if (this.cubeData[z].type == 'date'){
+                                console.log(this.cubeData[z].value)
+                                this.cubeData[z].value += environment.localez} //this is required because the datepicker converts a date (with no locale) to local and it will lose a day with this. 
                             z++
                         }
                     }
@@ -93,6 +98,7 @@ export class MyCubeService extends SQLService {
     loadComments(table, id): any {
         this.getComments(table, id)
             .subscribe((cdata: any) => {
+                console.log(cdata)
                 this.mycubesubject.next(this.cubeData);
                 this.mycubecomment.next(cdata[0])
             })

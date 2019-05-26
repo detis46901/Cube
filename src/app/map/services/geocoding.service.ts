@@ -80,24 +80,25 @@ export class GeocodingService {
     trackMe(mapConfig: MapConfig) {
         this.mapConfig = mapConfig
         if (navigator.geolocation) {
-         
-          navigator.geolocation.watchPosition((position) => {
-            //this.showTrackingPosition(position);
-            console.log(position)
-            this.position = position
-            if (this.isTracking == true && position.coords.accuracy < 100) {
-            this.centerMap()
-            }
-          });
+
+            navigator.geolocation.watchPosition((position) => {
+                //this.showTrackingPosition(position);
+                //console.log(position)
+                this.position = position
+                if (this.isTracking == true && position.coords.accuracy < 100) {
+                    console.log(position.coords.accuracy)
+                    this.centerMap()
+                }
+            });
         } else {
-          alert("Geolocation is not supported by this browser.");
+            alert("Geolocation is not supported by this browser.");
         }
-      }
+    }
 
     public centerMap() {
         this.mapConfig.view.animate({
-            center: ol.proj.transform([this.position['coords']['longitude'], this.position['coords']['latitude']], 'EPSG:4326', 'EPSG:3857')   ,
-            
+            center: ol.proj.transform([this.position['coords']['longitude'], this.position['coords']['latitude']], 'EPSG:4326', 'EPSG:3857'),
+
         })
     }
 }

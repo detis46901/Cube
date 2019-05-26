@@ -296,7 +296,6 @@ export class MapService {
         }, 20000);
 
         this.getMyCubeData(layer).then((data) => {
-            console.log(data)
             if (data[0][0]['jsonb_build_object']['features']) {
                 source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
             }
@@ -494,29 +493,6 @@ export class MapService {
     }
 
     private createClick(layer: UserPageLayer) { //this is for WMS layers
-        // switch (layer.layer.layerType) {
-        //     case ('ArcGISRest'): {
-        //         this.mapConfig.evkey = this.mapConfig.map.on('click', (evt: any) => {
-        //             let wmsSource = new ol.source.ImageArcGISRest({
-        //                 url: layer.layer.server.serverURL + '/' + layer.layer.layerService + '/' + layer.layer.layerIdent,
-        //                 projection: 'EPSG:4326',
-        //                 crossOrigin: 'anonymous'
-        //             });
-        //             let feats = this.mapConfig.map.getFeaturesAtPixel(evt.pixel) 
-        //             console.log(feats)
-        //             // let viewResolution = this.mapConfig.map.getView().getResolution();
-        //             // let url = wmsSource.getGetFeatureInfoUrl(
-        //             //     evt.coordinate, viewResolution, 'EPSG:3857',
-        //             //     { 'INFO_FORMAT': 'text/html' });
-        //             // if (url) {
-        //             //     this.wmsService.getfeatureinfo(url, false)
-        //             //         .subscribe((data: any) => {
-        //             //             this.myCubeService.parseAndSendWMS(data);
-        //             //         });
-        //             // }
-        //         });
-        //     }
-        // }
         this.mapConfig.evkey = this.mapConfig.map.on('click', (evt: any) => {
             let url2 = this.wmsService.formLayerRequest(layer);
             let wmsSource = new ol.source.ImageWMS({
