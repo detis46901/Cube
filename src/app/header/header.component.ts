@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit {
     ngOnInit() {
         this.getUserItems()
         this.getUserPageItems()
-        console.log(this.geocodingService.isTracking)
+        //console.log(this.geocodingService.isTracking)
     }
 
 

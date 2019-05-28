@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { HttpModule, ConnectionBackend, Http } from '@angular/http';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import { Routes, RouterModule } from '@angular/router';
 import { LinkyModule } from 'ngx-linky';
 import { FeatureModulesModule } from './feature-modules/feature-modules.module'
@@ -239,7 +240,8 @@ import { ModuleSettingsComponent } from './admin/module/moduleSettings/moduleSet
         MatDividerModule,
         MatAutocompleteModule,
         LinkyModule,
-        FeatureModulesModule
+        FeatureModulesModule,
+        DragDropModule
     ],
 
     providers: [

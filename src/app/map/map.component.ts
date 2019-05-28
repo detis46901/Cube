@@ -23,7 +23,8 @@ import { Clipboard } from 'ts-clipboard';
 import { Configuration } from '../../_api/api.constants';
 import { MatSnackBar } from '@angular/material';
 import * as ol from 'openlayers';
-import { GeocodingService} from './services/geocoding.service'
+import { GeocodingService } from './services/geocoding.service'
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 //import { Feature } from 'geojson';
 
@@ -91,7 +92,7 @@ export class MapComponent {
         this.getDefaultPage()
             .then(() => this.mapService.initMap(this.mapConfig)
                 .then((mapConfig) => {
-                    let ptkey = this.mapConfig.map.on('pointermove', (evt:any) => {
+                    let ptkey = this.mapConfig.map.on('pointermove', (evt: any) => {
                         if (mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
                             this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
                                 let index = this.mapConfig.userpagelayers.findIndex(z => z.olLayer == layer);
@@ -108,7 +109,7 @@ export class MapComponent {
                             mapConfig.map.getTargetElement().style.cursor = '';
                         }
                     }, { hitTolerance: 20 })
-                    let mkey = this.mapConfig.map.on('pointerdrag', (evt:any) => {
+                    let mkey = this.mapConfig.map.on('pointerdrag', (evt: any) => {
                         this.geocodingService.isTracking = false
                     })
                     mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
@@ -240,5 +241,40 @@ export class MapComponent {
     }
     public isolate(layer: UserPageLayer) {
         this.mapService.isolate(layer)
+    }
+    dropLayer(event: CdkDragDrop<string[]>) {
+        moveItemInArray(this.mapService.mapConfig.userpagelayers, event.previousIndex, event.currentIndex);
+        console.log(event)
+        console.log(this.mapService.mapConfig.userpagelayers)
+        let i: number = 0
+        this.mapService.mapConfig.userpagelayers.forEach((x) => {
+            x.layerOrder = i
+
+            i++
+        })
+        this.mapService.mapConfig.userpagelayers.forEach((x) => {
+            console.log(x)
+            let UPLUpdate = new UserPageLayer
+            UPLUpdate.ID = x.ID
+            UPLUpdate.layerOrder = x.layerOrder
+            this.userPageLayerService.Update(UPLUpdate).subscribe();
+        })
+    }
+    dropPage(event: CdkDragDrop<string[]>) {
+        moveItemInArray(this.mapService.mapConfig.userpages, event.previousIndex, event.currentIndex);
+        let i: number = 0
+        this.mapService.mapConfig.userpages.forEach((x) => {
+            x.pageOrder = i
+
+            i++
+        })
+        this.mapService.mapConfig.userpages.forEach((x) => {
+            let pageUpdate = new UserPage
+            pageUpdate.ID = x.ID
+            pageUpdate.page = x.page
+            pageUpdate.pageOrder = x.pageOrder
+            this.userPageService.Update(pageUpdate).subscribe((data) => {
+            });
+        })
     }
 }

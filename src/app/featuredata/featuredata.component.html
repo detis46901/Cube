@@ -97,7 +97,7 @@
                     <div *ngIf="myCube.type=='integer' || myCube.type == 'smallint' || myCube.type == 'bigint'">
                         <!-- input field -->
                         <mat-form-field style="width:90%">
-                            <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel
+                            <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel autocomplete='off'
                                 placeholder="{{myCube.field}}" [matTooltip]="myCube.description"
                                 [(ngModel)]="myCube.value" (change)="myCube.changed = true"
                                 (blur)="updateMyCube(myCube)">
@@ -107,7 +107,7 @@
                         <!-- input field -->
                         <mat-form-field style="width:90%">
                             <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel
-                                placeholder="{{myCube.field}}" [matTooltip]="myCube.description"
+                                placeholder="{{myCube.field}}" [matTooltip]="myCube.description" autocomplete='off'
                                 [(ngModel)]="myCube.value" (change)="myCube.changed = true"
                                 (blur)="updateMyCube(myCube)">
                         </mat-form-field>

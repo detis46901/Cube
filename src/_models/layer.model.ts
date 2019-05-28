@@ -54,6 +54,7 @@ export class UserPageLayer {
     olLayer: any;
     updateInterval: any;
     userPageInstanceID: number;
+    layerOrder: number;
 }
 
 export class MyCubeField {

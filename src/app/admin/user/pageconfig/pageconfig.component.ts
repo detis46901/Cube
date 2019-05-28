@@ -81,13 +81,11 @@ export class PageConfigComponent implements OnInit {
     public getAllByUser() {
         this.layerPermissionService.GetByUserGroups(this.userID)
         .subscribe((x: LayerPermission[]) => {
-            console.log(x)
             this.layerPermissions = x.filter(LP => LP.layer.layerType != 'Module')
 
         })
         this.modulePermissionService.GetByUserGroups(this.userID)
         .subscribe((y: ModulePermission[]) => {
-            console.log(y)
             this.modulePermissions = y
         })
         this.getUserPageLayers();
