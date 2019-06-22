@@ -18,8 +18,9 @@
             <button mat-icon-button *ngIf="screenCode == 1" id="headerNotifications" title="Notifications" (click)="openNotifications(userID)">
                 <mat-icon id="headerNotifIcon">email</mat-icon>
             </button>
-            <button mat-icon-button *ngIf="geocodingService.isTracking == true"><mat-icon id="settingsButton">near_me</mat-icon></button>
-            <button mat-icon-button *ngIf="geocodingService.isTracking == false" (click)="startGeoTracking()"><mat-icon id="settingsButton">my_location</mat-icon></button>
+            <button mat-icon-button *ngIf="geocodingService.centerMapToggle == true && geocodingService.isTracking == true" (click)="geocodingService.centerMapToggle = false"><mat-icon>near_me</mat-icon></button>
+            <button mat-icon-button  *ngIf="geocodingService.centerMapToggle == false && geocodingService.isTracking == true" (click)="setTracking(false)"><mat-icon>location_on</mat-icon></button>
+            <button mat-icon-button  *ngIf="geocodingService.isTracking == false" (click)="setTracking(true)"><mat-icon>location_off</mat-icon></button>
         </h3>
     </span>
 

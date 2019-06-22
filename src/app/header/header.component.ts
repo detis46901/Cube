@@ -210,8 +210,8 @@ export class HeaderComponent implements OnInit {
         }, 3000)
     }
 
-    public startGeoTracking(): void {
-        this.geocodingService.isTracking = true
-        this.geocodingService.centerMap()
+    public setTracking(track: boolean): void {
+        this.geocodingService.setTracking(track)
+        this.geocodingService.isTracking = track
     }
 }

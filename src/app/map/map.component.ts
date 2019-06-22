@@ -25,6 +25,10 @@ import { MatSnackBar } from '@angular/material';
 import * as ol from 'openlayers';
 import { GeocodingService } from './services/geocoding.service'
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {FormControl} from '@angular/forms';
+import {map, startWith} from 'rxjs/operators';
+import { URLSearchParams } from '@angular/http';
+
 
 //import { Feature } from 'geojson';
 
@@ -40,6 +44,9 @@ export class MapComponent {
     // This is necessary to access the html element to set the map target (after view init)!
     @ViewChild("mapElement") mapElement: ElementRef;
     @ViewChild("layers") layers: ElementRef;
+    layerCtrl = new FormControl();
+    filteredPermissions: Observable<LayerPermission[]>;
+    public showNewLayer: boolean = false
     public mapConfig = new MapConfig;
     public token: string;
     public userID: number;
@@ -72,6 +79,13 @@ export class MapComponent {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
+        this.mapConfig.layerpermission = []
+        this.filteredPermissions = this.layerCtrl.valueChanges
+        .pipe(
+          startWith(''),
+          map(value => typeof value === 'string' ? value : value.layer.layerName),
+          map(layer => layer ? this._filterPermissions(layer) : this.mapConfig.layerpermission.slice())
+        );
     }
 
     // After view init the map target can be set!
@@ -88,6 +102,7 @@ export class MapComponent {
 
     //Angular component initialization
     ngOnInit() {
+        this.getMapConfig()
         this.mapConfig.userID = this.userID;
         this.getDefaultPage()
             .then(() => this.mapService.initMap(this.mapConfig)
@@ -110,7 +125,7 @@ export class MapComponent {
                         }
                     }, { hitTolerance: 20 })
                     let mkey = this.mapConfig.map.on('pointerdrag', (evt: any) => {
-                        this.geocodingService.isTracking = false
+                        this.geocodingService.centerMapToggle = false
                     })
                     mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
                     this.toolbar = "Layers"
@@ -121,6 +136,37 @@ export class MapComponent {
             )
     }
 
+    private getMapConfig() {
+        console.log("In getMapConfig")
+    }
+    private _filterPermissions(value: string): LayerPermission[] {
+        const filterValue = value.toLowerCase();
+        return this.mapConfig.layerpermission.filter(layerPermission => layerPermission.layer.layerName.toLowerCase().includes(filterValue));
+      }
+
+    public displayFn(layerPermission?: LayerPermission): string | undefined {
+        return layerPermission ? layerPermission.layer.layerName : undefined;
+      }
+
+    public addLayer(): void {
+        console.log(this.layerCtrl.value)
+        let LP = new LayerPermission
+        LP = this.mapConfig.layerpermission.find(x => x == this.layerCtrl.value)
+        console.log(LP)
+        let UPL = new UserPageLayer
+        UPL.defaultON = true
+        UPL.userID = this.userID
+        UPL.layer = LP.layer
+        UPL.layerID = LP.layer.ID
+        UPL.layerPermissions = LP
+        UPL.style = UPL.layer.defaultStyle
+        this.mapConfig.userpagelayers.push(UPL)
+        this.mapService.loadLayers(this.mapConfig, false)
+        this.showNewLayer = false
+        this.layerCtrl.setValue('')
+
+
+    }
     getDefaultPage(): Promise<any> {
         let promise = new Promise((resolve, reject) => {
             this.userPageService
@@ -176,6 +222,34 @@ export class MapComponent {
                         this.userPageLayerService.Update(i).subscribe();
                     }
                 }
+            });
+    }
+
+    public addUserPageLayer(UPL:UserPageLayer) {
+        let newUPL = new UserPageLayer
+        newUPL.userPageID = this.mapConfig.currentpage.ID
+        newUPL.userID = this.userID;
+        newUPL.defaultON = UPL.layerShown;
+        newUPL.style = UPL.layer.defaultStyle
+        newUPL.serverID = UPL.serverID
+        newUPL.userID = UPL.userID
+        newUPL.layerID = UPL.layer.ID
+        console.log(UPL)
+        console.log(newUPL)
+        this.userPageLayerService
+            .Add(newUPL)
+            .subscribe((result: UserPageLayer) => {
+                console.log(result)
+                UPL.ID = result.ID
+            });
+    }
+
+    public deleteUserPageLayer(userPageLayer: UserPageLayer): void {
+        if (userPageLayer.layerShown) {this.mapService.toggleLayers(userPageLayer)}
+        this.userPageLayerService
+            .Delete(userPageLayer.ID)
+            .subscribe((res) => {
+                this.mapConfig.userpagelayers.splice(this.mapConfig.userpagelayers.findIndex((x) => x == userPageLayer),1)
             });
     }
 

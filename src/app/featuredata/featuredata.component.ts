@@ -123,6 +123,11 @@ export class FeatureDataComponent  {
 
     private addMyCubeComment() {
         this.newComment.comment = this.commentText
+        if (this.newComment.file) {
+            if (!this.commentText) {
+                this.newComment.comment = 'Attachment'
+            }
+        }
         let ntext: RegExp = /'/g
         this.newComment.comment = this.newComment.comment.replace(ntext, "''")
         this.newComment.table = this.myCubeConfig.table

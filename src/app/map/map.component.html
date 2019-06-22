@@ -139,23 +139,27 @@
                                 <mat-icon>assignment</mat-icon>
                                 <span>Edit Permissions</span>
                             </button> -->
-                                <button mat-menu-item (click)="mapService.zoomToLayer(userpagelayer)">
-                                    <mat-icon>zoom_in</mat-icon>
-                                    <span>Zoom To Layer</span>
-                                </button>
+                            <button mat-menu-item *ngIf="!userpagelayer.ID" (click)="addUserPageLayer(userpagelayer)">
+                                <mat-icon>add</mat-icon>
+                                <span>Add to Page</span>
+                            </button>
+                            <button mat-menu-item (click)="mapService.zoomToLayer(userpagelayer)">
+                                <mat-icon>zoom_in</mat-icon>
+                                <span>Zoom To Layer</span>
+                            </button>
                                 <button *ngIf="userpagelayer.defaultON; else defaultoff"
                                     (click)="mapService.toggleDefaultON(userpagelayer)" mat-menu-item>
                                     <mat-icon>done</mat-icon>
                                     <span>Default to Off</span>
                                 </button>
                                 <ng-template #defaultoff>
-                                    <button mat-menu-item (click)="mapService.toggleDefaultON(userpagelayer)">
+                                    <button mat-menu-item *ngIf="userpagelayer.ID" (click)="mapService.toggleDefaultON(userpagelayer)">
                                         <mat-icon>star</mat-icon>
                                         <span>Default to On</span>
                                     </button></ng-template>
-                                <button mat-menu-item disabled="true">
+                                <button mat-menu-item disabled="false" (click)="deleteUserPageLayer(userpagelayer)">
                                     <mat-icon>remove_circle_outline</mat-icon>
-                                    <span>Remove Layer From Page</span>
+                                    <span>Remove From Page</span>
                                 </button>
                                 <button mat-menu-item disabled="true">
                                     <mat-icon>opacity</mat-icon>
@@ -213,6 +217,16 @@
                         </div>
                         <br>
                     </mat-radio-group>
+                    <form class="example-form" *ngIf="showNewLayer">
+                        <mat-form-field class="example-full-width">
+                          <input matInput placeholder="Layer" aria-label="Layer" [matAutocomplete]="auto" [formControl]="layerCtrl"><button mat-button (click)="addLayer()"><mat-icon>add</mat-icon></button>
+                          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                            <mat-option *ngFor="let LP of filteredPermissions | async" [value]="LP">
+                              <span>{{LP.layer.layerName}}</span> 
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                    </form>
                 </div>
 
                 <!-- action row diretly beneath layers with many different options for interaction -->
@@ -221,6 +235,10 @@
                         <button mat-icon-button *ngIf="mapConfig.currentLayerName != ''" disabled="false"
                             matTooltip="Isolate" (click)="isolate(mapConfig.currentLayer)">
                             <mat-icon>filter_tilt_shift</mat-icon>
+                        </button>
+                        <button mat-icon-button disabled="false"
+                            matTooltip="Layers" (click)="showNewLayer = !showNewLayer">
+                            <mat-icon>layers</mat-icon>
                         </button>
                         <button mat-icon-button (click)="mapConfig.measureShow = !mapConfig.measureShow">
                             <mat-icon [ngClass]="mapConfig.measureShow ? 'selected-icon' : 'none'"

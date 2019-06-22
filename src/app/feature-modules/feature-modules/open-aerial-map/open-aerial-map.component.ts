@@ -24,7 +24,7 @@ import * as ol from 'openlayers';
 })
 export class OpenAerialMapComponent implements OnInit {
 
-  constructor(private wmsService: WMSService, private dialog: MatDialog, private openAerialMapService: OpenAerialMapService) {
+  constructor(private wmsService: WMSService, private dialog: MatDialog, public openAerialMapService: OpenAerialMapService) {
     this.disabledSubscription = this.openAerialMapService.getDisabled().subscribe(disabled => {this.expanded = false; this.disabled = disabled})
   }
 

@@ -13,8 +13,14 @@ import "rxjs/add/operator/mergeMap";
 export class GeocodingService {
     http: HttpClient;
     isTracking: boolean = true
+    centerMapToggle: boolean = true
     mapConfig: MapConfig;
     position: any;
+    sr = new ol.source.Vector
+    ly = new ol.layer.Vector
+    geolocation = new ol.Geolocation()
+    accuracyFeature = new ol.Feature();
+    positionFeature = new ol.Feature();
 
     constructor(http: HttpClient) {
         this.http = http;
@@ -78,27 +84,89 @@ export class GeocodingService {
     }
 
     trackMe(mapConfig: MapConfig) {
+        //console.log("TrackMe")
         this.mapConfig = mapConfig
-        if (navigator.geolocation) {
+        //console.log(this.mapConfig.map.getView().getProjection())
+        this.geolocation = new ol.Geolocation({
+            // enableHighAccuracy must be set to true to have the heading value.
+            trackingOptions: {
+                enableHighAccuracy: true
+            },
+            projection: this.mapConfig.map.getView().getProjection()
+        });
+        this.geolocation.setProjection(this.mapConfig.map.getView().getProjection())
+        this.geolocation.setTracking(this.isTracking)
+        this.geolocation.on("change", x => {
+            //console.log(this.geolocation.getAccuracy())
+        })
 
-            navigator.geolocation.watchPosition((position) => {
-                //this.showTrackingPosition(position);
-                //console.log(position)
-                this.position = position
-                if (this.isTracking == true && position.coords.accuracy < 100) {
-                    console.log(position.coords.accuracy)
-                    this.centerMap()
-                }
-            });
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
+        
+        this.geolocation.on('change:accuracyGeometry', x => {
+            this.accuracyFeature.setGeometry(this.geolocation.getAccuracyGeometry());
+        });
+
+        
+        this.positionFeature.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 6,
+                fill: new ol.style.Fill({
+                    color: '#3399CC'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#fff',
+                    width: 2
+                })
+            })
+        }));
+        this.geolocation.on('change:position', x => {
+            //console.log("Position Change")
+            var coordinates = this.geolocation.getPosition();
+            this.positionFeature.setGeometry(coordinates ?
+                new ol.geom.Point(coordinates) : null);
+            if (this.centerMapToggle) {this.centerMap(coordinates)}
+        });
+        this.sr.addFeature(this.positionFeature)
+        this.sr.addFeature(this.accuracyFeature)
+        this.ly.setSource(this.sr)
+        this.mapConfig.map.addLayer(this.ly)
+        // if (navigator.geolocation) {
+        //     navigator.geolocation.watchPosition((position) => {
+        //         //this.showTrackingPosition(position);
+        //         //console.log(position)
+        //         this.position = position
+        //         if (this.isTracking == true && position.coords.accuracy < 1000) {
+        //             console.log(position.coords.accuracy)
+        //             this.centerMap()
+        //         }
+        //     });
+        // } else {
+        //     alert("Geolocation is not supported by this browser.");
+        // }
     }
 
-    public centerMap() {
+    public centerMap(coordinates) {
         this.mapConfig.view.animate({
-            center: ol.proj.transform([this.position['coords']['longitude'], this.position['coords']['latitude']], 'EPSG:4326', 'EPSG:3857'),
-
+            center: coordinates,
         })
+        // this.sr.clear()
+        // let thing = new ol.geom.Point(ol.proj.transform([this.position['coords']['longitude'], this.position['coords']['latitude']], 'EPSG:4326', 'EPSG:3857'))
+        // let ft = new ol.Feature({
+        //     name: "Center",
+        //     geometry: thing
+        // })
+        // this.sr.addFeature(ft)
+    }
+
+    public setTracking(track: boolean) {
+        this.geolocation.setTracking(track)
+        this.isTracking = track
+        if (!track) {
+            this.positionFeature.setGeometry([0,0] ?
+            new ol.geom.Point([0,0]) : null);
+            this.accuracyFeature.setGeometry([0,0] ?
+                new ol.geom.Point([0,0]) : null);}
+        else {
+            this.centerMapToggle = true
+        }
     }
 }

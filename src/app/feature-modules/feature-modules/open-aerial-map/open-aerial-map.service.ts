@@ -27,8 +27,10 @@ export class OpenAerialMapService {
   public layer: UserPageLayer
   public images = new Array<Image>()
   public AOMClickKey: any
+  public AOMMouseOver: any
   private disabled = new Subject<boolean>();
   public opacity: number;
+  public selectedImage = new Image()
 
 
 
@@ -38,6 +40,7 @@ export class OpenAerialMapService {
   }
 
   public loadLayer(mapConfig:MapConfig, layer: UserPageLayer):boolean {
+    this.selectedImage.title = ""
     this.getImages(mapConfig, layer)
     return false
   }
@@ -154,6 +157,19 @@ export class OpenAerialMapService {
         else {
         }
     });
+    this.AOMMouseOver = this.mapConfig.map.on('pointermove', (evt: any) => {
+      if (this.mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
+          this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+            if (layer === this.bboxLayer) {
+              this.selectedImage = this.images.find(x => x._id == feature.get('_id'))
+          }
+          })
+      }
+      else {
+          this.mapConfig.mouseoverLayer = null;
+          this.selectedImage = new Image()
+      }
+  }, { hitTolerance: 20 })
 }
 loadImage(image: Image) {
   image.on = true

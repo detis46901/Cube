@@ -21,7 +21,7 @@ import { environment } from 'environments/environment'
 export class MapService {
     public modifyingobject: boolean = false
     public shown: boolean
-    public mapConfig: MapConfig;
+    public mapConfig = new MapConfig;
     public vectorlayer = new ol.layer.Vector();
     public modkey: any;
     public modkeystart: any;
@@ -33,6 +33,7 @@ export class MapService {
     private drawMode: boolean = false;
     private drawInteraction: any;
     public userID: number
+    public LP = new LayerPermission
 
     constructor(
         private userPageLayerService: UserPageLayerService,
@@ -56,10 +57,10 @@ export class MapService {
         //sets the base layer
         this.mapConfig.layers = [];
         let osm_layer: any = new ol.layer.Tile({
-            source: new ol.source.OSM()
+            source: new ol.source.OSM({ cacheSize: environment.cacheSize })
         });
         osm_layer.setVisible(true);
-        this.mapConfig.sources.push(new ol.source.OSM());
+        this.mapConfig.sources.push(new ol.source.OSM({ cacheSize: environment.cacheSize }));
         this.mapConfig.layers.push(osm_layer);
         //continues the initialization
         let promise = new Promise((resolve) => {
@@ -178,99 +179,107 @@ export class MapService {
             this.mapConfig.userpagelayers.forEach(userpagelayer => {
                 userpagelayer.layerShown = userpagelayer.defaultON;
                 //this if is for layers that are connected to modules
-                if (userpagelayer.userPageInstanceID > 0) {
-                    if (this.featuremodulesservice.loadLayer(this.mapConfig, userpagelayer)) {
-                        j++
-                        if (j == this.mapConfig.userpagelayers.length) {
-                            resolve();
+                if (!userpagelayer.olLayer) {
+                    if (userpagelayer.userPageInstanceID > 0) {
+                        if (this.featuremodulesservice.loadLayer(this.mapConfig, userpagelayer)) {
+                            j++
+                            if (j == this.mapConfig.userpagelayers.length) {
+                                resolve();
+                            }
                         }
                     }
-                }
-                else {
-                    switch (userpagelayer.layer.layerType) {
-                        case "ArcGISRest": {
-                            let wmsSource = new ol.source.ImageArcGISRest()
-                            wmsSource.setUrl(userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/MapServer')
-                            let wmsLayer = new ol.layer.Image({
-                                source: wmsSource
-                            }) 
-                            wmsLayer.setVisible(userpagelayer.defaultON);
-                            if (init) {
-                                this.mapConfig.layers.push(wmsLayer);  //to delete
-                            }
-                            userpagelayer.olLayer = wmsLayer
-                            userpagelayer.source = wmsSource
-                            this.wmsService.setLoadStatus(userpagelayer);
-                            if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
-                                mapConfig.map.addLayer(wmsLayer);
-                            }
-                            j++;
-                            if (j == this.mapConfig.userpagelayers.length) {
-                                resolve();
-                            }
-                            break
-
-                        }
-                        case "MyCube": {
-                            this.loadMyCube(userpagelayer);
-                            j++;
-                            if (j == this.mapConfig.userpagelayers.length) {
-                                resolve();
-                            }
-                            break;
-                        }
-                        case "WMTS": {
-                            this.wmsService.getCapabilities(userpagelayer.layer.server.serverURL)
-                                .subscribe((data) => {
-                                    let parser = new ol.format.WMTSCapabilities();
-                                    let result = parser.read(data);
-                                    let options = ol.source.WMTS.optionsFromCapabilities(result, {
-                                        layer: userpagelayer.layer.layerIdent,
-                                        matrixSet: 'EPSG:3857'
-                                    });
-                                    let wmsSource = new ol.source.WMTS(options);
-                                    let wmsLayer = new ol.layer.Tile({
-                                        opacity: 1,
-                                        source: new ol.source.WMTS(options)
-                                    });
-                                    wmsLayer.setVisible(userpagelayer.defaultON);
-                                    userpagelayer.olLayer = wmsLayer
-                                    userpagelayer.source = wmsSource
-                                    this.wmsService.setLoadStatus(userpagelayer);
-                                    if (init == false) {
-                                        mapConfig.map.addLayer(wmsLayer);
-                                    }
-                                    j++;
-                                    if (j == this.mapConfig.userpagelayers.length) {
-                                        resolve();
-                                    }
+                    else {
+                        switch (userpagelayer.layer.layerType) {
+                            case "ArcGISRest": {
+                                let wmsSource = new ol.source.ImageArcGISRest()
+                                wmsSource.setUrl(userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/MapServer')
+                                let wmsLayer = new ol.layer.Image({
+                                    source: wmsSource
                                 })
-                            break;
-                        }
-                        default: {  //this is the WMS load
-                            let wmsSource = new ol.source.TileWMS({
-                                url: this.wmsService.formLayerRequest(userpagelayer),
-                                params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
-                                projection: 'EPSG:4326',
-                                serverType: 'geoserver',
-                                crossOrigin: 'anonymous'
-                            });
-                            let wmsLayer = new ol.layer.Tile({
-                                source: wmsSource
-                            });
-                            wmsLayer.setVisible(userpagelayer.defaultON);
-                            if (init) {
-                                this.mapConfig.layers.push(wmsLayer);  //to delete
+                                wmsLayer.setVisible(userpagelayer.defaultON);
+                                if (init) {
+                                    this.mapConfig.layers.push(wmsLayer);  //to delete
+                                }
+                                userpagelayer.olLayer = wmsLayer
+                                userpagelayer.source = wmsSource
+                                this.wmsService.setLoadStatus(userpagelayer);
+                                if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
+                                    mapConfig.map.addLayer(wmsLayer);
+                                }
+                                j++;
+                                if (j == this.mapConfig.userpagelayers.length) {
+                                    resolve();
+                                }
+                                break
+
                             }
-                            userpagelayer.olLayer = wmsLayer
-                            userpagelayer.source = wmsSource
-                            this.wmsService.setLoadStatus(userpagelayer);
-                            if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
-                                mapConfig.map.addLayer(wmsLayer);
+                            case "MyCube": {
+                                this.loadMyCube(userpagelayer);
+                                j++;
+                                if (j == this.mapConfig.userpagelayers.length) {
+                                    resolve();
+                                }
+                                break;
                             }
-                            j++;
-                            if (j == this.mapConfig.userpagelayers.length) {
-                                resolve();
+                            case "WMTS": {
+                                this.wmsService.getCapabilities(userpagelayer.layer.server.serverURL)
+                                    .subscribe((data) => {
+                                        let parser = new ol.format.WMTSCapabilities();
+                                        let result = parser.read(data);
+                                        let options = ol.source.WMTS.optionsFromCapabilities(result, {
+                                            layer: userpagelayer.layer.layerIdent,
+                                            matrixSet: 'EPSG:3857',
+                                            cacheSize: environment.cacheSize
+                                        });
+                                        let wmtsSource = new ol.source.WMTS(options);
+                                        let wmtsLayer = new ol.layer.Tile({
+                                            opacity: 1,
+                                            source: new ol.source.WMTS(options)
+                                        });
+                                        wmtsLayer.setVisible(userpagelayer.defaultON);
+                                        if (init) {
+                                            this.mapConfig.layers.push(wmtsLayer);  //to delete
+                                        }
+                                        userpagelayer.olLayer = wmtsLayer
+                                        userpagelayer.source = wmtsSource
+                                        this.wmsService.setLoadStatus(userpagelayer);
+                                        if (init == false) {
+                                            mapConfig.map.addLayer(wmtsLayer);
+                                            console.log('init == false')
+                                        }
+                                        j++;
+                                        if (j == this.mapConfig.userpagelayers.length) {
+                                            resolve();
+                                        }
+                                    })
+                                break;
+                            }
+                            default: {  //this is the WMS load
+                                let wmsSource = new ol.source.TileWMS({
+                                    url: this.wmsService.formLayerRequest(userpagelayer),
+                                    params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
+                                    projection: 'EPSG:4326',
+                                    serverType: 'geoserver',
+                                    crossOrigin: 'anonymous',
+                                    cacheSize: environment.cacheSize
+                                });
+                                let wmsLayer = new ol.layer.Tile({
+                                    source: wmsSource
+                                });
+                                wmsLayer.setVisible(userpagelayer.defaultON);
+                                if (init) {
+                                    this.mapConfig.layers.push(wmsLayer);  //to delete
+                                }
+                                userpagelayer.olLayer = wmsLayer
+                                userpagelayer.source = wmsSource
+                                this.wmsService.setLoadStatus(userpagelayer);
+                                if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
+                                    mapConfig.map.addLayer(wmsLayer);
+                                }
+                                j++;
+                                if (j == this.mapConfig.userpagelayers.length) {
+                                    resolve();
+                                }
                             }
                         }
                     }
@@ -309,8 +318,8 @@ export class MapService {
 
     //Reads index of layer in dropdown, layer, and if it is shown or not. Needs to remove a layer if a new one is selected
     public toggleLayers(layer: UserPageLayer): void {
-        if (layer.olLayer) {layer.olLayer.setVisible(!layer.layerShown)}
-        layer.layerShown = !layer.layerShown;   
+        if (layer.olLayer) { layer.olLayer.setVisible(!layer.layerShown) }
+        layer.layerShown = !layer.layerShown;
         if (layer.layerShown === false) {
             if (layer.userPageInstanceID > 0) {
                 this.featuremodulesservice.unloadLayer(this.mapConfig, layer)
@@ -391,10 +400,10 @@ export class MapService {
                 if (!this.featuremodulesservice.getFeatureList(this.mapConfig, layer)) {
                     this.getFeatureList();
                 }
-                if (layer.layer.layerType == "MyCube") {this.createMyCubeClickEvent(layer)}
+                if (layer.layer.layerType == "MyCube") { this.createMyCubeClickEvent(layer) }
                 return
             }
-        }       
+        }
         if (layer.layerShown === true && layer.layer.layerType == "MyCube") {
             this.setCurrentMyCube(layer)
         }
@@ -429,15 +438,15 @@ export class MapService {
     }
 
     private createMyCubeClickEvent(layer: UserPageLayer) {
-        this.mapConfig.evkey = this.mapConfig.map.on('click', (e:any) => {
+        this.mapConfig.evkey = this.mapConfig.map.on('click', (e: any) => {
             if (this.mapConfig.selectedFeature) {
-                if (layer.userPageInstanceID > 0 ) {
+                if (layer.userPageInstanceID > 0) {
                     if (!this.featuremodulesservice.unstyleSelectedFeature(this.mapConfig, layer)) {
                         this.mapConfig.selectedFeature.setStyle(null);
                     }
                 }
-                else {this.mapConfig.selectedFeature.setStyle(null);}
-               
+                else { this.mapConfig.selectedFeature.setStyle(null); }
+
             }
             var hit = false;
             this.mapConfig.map.forEachFeatureAtPixel(e.pixel, (feature: ol.Feature, selectedLayer: any) => {
@@ -493,8 +502,12 @@ export class MapService {
     }
 
     private createClick(layer: UserPageLayer) { //this is for WMS layers
+        let url2 = this.wmsService.formLayerRequest(layer);
+        if (layer.layer.layerType == 'WMTS') {
+            let layerroot = layer.layer.server.serverURL.split('/gwc')[0]
+            url2 = layerroot + '/wms?'
+        }
         this.mapConfig.evkey = this.mapConfig.map.on('click', (evt: any) => {
-            let url2 = this.wmsService.formLayerRequest(layer);
             let wmsSource = new ol.source.ImageWMS({
                 url: url2,
                 params: { 'LAYERS': layer.layer.layerIdent },
@@ -502,19 +515,19 @@ export class MapService {
                 serverType: 'geoserver',
                 crossOrigin: 'anonymous'
             });
-            console.log(wmsSource)
             let viewResolution = this.mapConfig.map.getView().getResolution();
             let url = wmsSource.getGetFeatureInfoUrl(
                 evt.coordinate, viewResolution, 'EPSG:3857',
                 { 'INFO_FORMAT': 'text/html' });
-            console.log(url)
             if (url) {
                 this.wmsService.getfeatureinfo(url, false)
                     .subscribe((data: any) => {
+                        //console.log(data)
                         this.myCubeService.parseAndSendWMS(data);
                     });
             }
         });
+
     }
 
     private selectFeature(layer: UserPageLayer, refresh: boolean = false): void {
@@ -531,7 +544,7 @@ export class MapService {
         else {
             this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected);
         }
-       
+
         if (refresh == false) {
             this.mapConfig.myCubeConfig = this.myCubeService.setMyCubeConfig(layer.layer.ID, layer.layerPermissions.edit);
             this.myCubeService.getAndSendMyCubeData(layer.layer.ID, this.mapConfig.selectedFeature).then(data => {
@@ -574,7 +587,7 @@ export class MapService {
 
     private clearFeature() {
         if (this.mapConfig.currentLayer.userPageInstanceID > 0) {
-            if (this.featuremodulesservice.clearFeature(this.mapConfig, this.mapConfig.currentLayer)) {return}
+            if (this.featuremodulesservice.clearFeature(this.mapConfig, this.mapConfig.currentLayer)) { return }
         }
         if (this.mapConfig.selectedFeature) {
             this.mapConfig.selectedFeature.setStyle(null);
@@ -728,9 +741,10 @@ export class MapService {
         let aerial = new ol.source.BingMaps({
             key: environment.BingMapsKey,
             imagerySet: 'AerialWithLabels',
-            maxZoom: 19
+            maxZoom: 19,
+            cacheSize: environment.cacheSize
         })
-        let base = new ol.source.OSM();
+        let base = new ol.source.OSM({ cacheSize: environment.cacheSize });
         if (this.base == 'base') {
             this.base = 'aerial';
             this.mapConfig.layers[0].setSource(aerial);
@@ -743,10 +757,10 @@ export class MapService {
 
     public stopInterval() {
         if (this.mapConfig) {
-        this.mapConfig.userpagelayers.forEach((UPL) => {
-            clearInterval(UPL.updateInterval)
-        })
-    }
+            this.mapConfig.userpagelayers.forEach((UPL) => {
+                clearInterval(UPL.updateInterval)
+            })
+        }
     }
 
     public isolate(layer: UserPageLayer) {
