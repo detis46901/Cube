@@ -64,6 +64,7 @@ import { ImageService } from '../_services/image.service';
 import { UserValidatorService } from './admin/user/userValidator.service';
 import { NotifService } from '../_services/notification.service';
 import { FeatureModulesService } from '../app/feature-modules/feature-modules.service'
+import { MapConfigService } from '../_services/mapConfig.service'
 //import { MapService } from './map/services/map.service';
 //import { FilterService } from './map/services/filter.service';
 //import { GeocodingService } from './map/services/geocoding.service';
@@ -275,8 +276,8 @@ import { ModuleSettingsComponent } from './admin/module/moduleSettings/moduleSet
         NotifService,
         FeatureModulesService,
         UserPageInstanceService,
-        ModuleService
-
+        ModuleService,
+        MapConfigService
     ],
 
     bootstrap: [AppComponent]

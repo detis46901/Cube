@@ -25,6 +25,7 @@
     "@angular/platform-browser-dynamic": "^7.2.11",
     "@angular/platform-server": "^7.2.11",
     "@angular/router": "^7.2.11",
+    "@angular-builders/custom-webpack": "2.4.1",
     "@mapbox/togeojson": "^0.16.0",
     "@ng-bootstrap/ng-bootstrap": "^4.1.0",
     "@types/autolinker": "^0.24.28",

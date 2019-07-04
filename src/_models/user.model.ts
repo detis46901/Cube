@@ -11,7 +11,7 @@ export class User {
 export class UserPage {
     ID: number;
     userID: number;
-    page: string;
+    page: string = "";
     pageOrder: number;
     default: boolean;
     active?: boolean;

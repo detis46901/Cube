@@ -168,6 +168,7 @@ export class MapService {
 
     //loadLayers will load during map init and load the layers that should come on by themselves with the "defaultON" property set (in userPageLayers)
     public loadLayers(mapConfig: MapConfig, init: boolean): Promise<any> {
+        this.mapConfig = mapConfig
         let j = 0;
         if (mapConfig.evkey) { //removes the previous click event if there wasn't one.
             ol.Observable.unByKey(mapConfig.evkey);
@@ -176,7 +177,7 @@ export class MapService {
             ol.Observable.unByKey(this.modkey);
         }
         let promise = new Promise((resolve, reject) => {
-            this.mapConfig.userpagelayers.forEach(userpagelayer => {
+                this.mapConfig.userpagelayers.forEach(userpagelayer => {
                 userpagelayer.layerShown = userpagelayer.defaultON;
                 //this if is for layers that are connected to modules
                 if (!userpagelayer.olLayer) {

@@ -51,7 +51,7 @@ const appRoutes: Routes = [
     // new Layer Modal Settings
     { path: 'layerNew', component: LayerPermissionComponent },
     { path: 'moduleNew', component: ModulePermissionComponent },
-    
+    { path: 'public/:id', component: HomeComponent },
     // otherwise redirect to home
     { path: '**', redirectTo: '' }
 ];

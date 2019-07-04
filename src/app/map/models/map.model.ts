@@ -16,7 +16,7 @@ export interface MapConfigView {
 export class MapConfig {
     name?: string;
     userID?: number;
-    map?: ol.Map;
+    map?: any;  // this should be of type ol.Map.  However, that causes a problem with the "getTarget()" method in map.component.ts
     view?: ol.View;
     geolocation: ol.Geolocation;
     tracking: boolean = true;

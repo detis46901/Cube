@@ -42,7 +42,7 @@ export class UserService /*extends ParentService*/ {
         //.catch(this.handleError);
     }
 
-    public GetSingle = (id: number): Observable<any> => {
+    public GetSingle = (id: any): Observable<any> => {
         return this._http.get(this.actionUrl + 'one?rowid=' + id, this.options)
         //.catch(this.handleError);
     }

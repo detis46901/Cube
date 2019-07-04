@@ -2,7 +2,6 @@ import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { MapService } from './services/map.service';
 import { MapConfig } from './models/map.model';
 import { WMSService } from './services/wms.service';
-import { Location } from './core/location.class';
 import { geoJSONService } from './services/geoJSON.service'
 import { LayerPermissionService } from '../../_services/_layerPermission.service';
 import { LayerService } from '../../_services/_layer.service';
@@ -25,19 +24,20 @@ import { MatSnackBar } from '@angular/material';
 import * as ol from 'openlayers';
 import { GeocodingService } from './services/geocoding.service'
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import {FormControl} from '@angular/forms';
-import {map, startWith} from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
+import { map, startWith } from 'rxjs/operators';
 import { URLSearchParams } from '@angular/http';
-
-
-//import { Feature } from 'geojson';
+import { MapConfigService } from './../../_services/mapConfig.service'
+import { environment } from 'environments/environment'
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
     moduleId: module.id,
     selector: 'map',
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.scss'],
-    providers: [ServerService, geoJSONService, GroupService, GroupMemberService]
+    providers: [ServerService, geoJSONService, GroupService, GroupMemberService, MapConfigService]
 })
 
 export class MapComponent {
@@ -74,18 +74,21 @@ export class MapComponent {
         private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog,
         private groupMemberService: GroupMemberService,
         private groupService: GroupService,
-        private geocodingService: GeocodingService
+        private geocodingService: GeocodingService,
+        private mapConfigService: MapConfigService,
+        private route: ActivatedRoute,
+        private router: Router
     ) {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
         this.mapConfig.layerpermission = []
         this.filteredPermissions = this.layerCtrl.valueChanges
-        .pipe(
-          startWith(''),
-          map(value => typeof value === 'string' ? value : value.layer.layerName),
-          map(layer => layer ? this._filterPermissions(layer) : this.mapConfig.layerpermission.slice())
-        );
+            .pipe(
+                startWith(''),
+                map(value => typeof value === 'string' ? value : value.layer.layerName),
+                map(layer => layer ? this._filterPermissions(layer) : this.mapConfig.layerpermission.slice())
+            );
     }
 
     // After view init the map target can be set!
@@ -103,50 +106,133 @@ export class MapComponent {
     //Angular component initialization
     ngOnInit() {
         this.getMapConfig()
+        // this.mapConfig.userID = this.userID;
+        // this.getDefaultPage()
+        //     .then(() => this.mapService.initMap(this.mapConfig)
+        //         .then((mapConfig) => {
+        //             let ptkey = this.mapConfig.map.on('pointermove', (evt: any) => {
+        //                 if (mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
+        //                     this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+        //                         let index = this.mapConfig.userpagelayers.findIndex(z => z.olLayer == layer);
+        //                         if (index > -1) {
+        //                             this.mapConfig.mouseoverLayer = this.mapConfig.userpagelayers[index]
+        //                             if (this.mapConfig.mouseoverLayer.olLayer == this.mapConfig.currentLayer.olLayer) {
+        //                                 mapConfig.map.getTargetElement().style.cursor = mapConfig.map.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
+        //                             }
+        //                         }
+        //                     })
+        //                 }
+        //                 else {
+        //                     this.mapConfig.mouseoverLayer = null;
+        //                     mapConfig.map.getTargetElement().style.cursor = '';
+        //                 }
+        //             }, { hitTolerance: 20 })
+        //             let mkey = this.mapConfig.map.on('pointerdrag', (evt: any) => {
+        //                 this.geocodingService.centerMapToggle = false
+        //             })
+        //             mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
+        //             this.toolbar = "Layers"
+        //             this.mapConfig.modulesShow = true
+        //             this.geocodingService.trackMe(mapConfig)
+        //             //this.setDefaultPageLayer()  At some point, the default layer needs to be set current
+        //         })
+        //     )
+    }
+
+    private getMapConfig() {
         this.mapConfig.userID = this.userID;
-        this.getDefaultPage()
-            .then(() => this.mapService.initMap(this.mapConfig)
-                .then((mapConfig) => {
+        this.mapConfigService.GetSingle(this.mapConfig)
+            .subscribe((x) => {
+                this.mapConfig = x
+                this.currPage = this.mapConfig.currentpage.page
+                this.mapConfig.selectedFeatures = new ol.Collection<ol.Feature>() //for some reason, this is necessary
+                this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature)
+                this.mapConfig.layers = [];
+                let osm_layer: any = new ol.layer.Tile({
+                    source: new ol.source.OSM({ cacheSize: environment.cacheSize })
+                });
+                osm_layer.setVisible(true);
+                this.mapConfig.sources.push(new ol.source.OSM({ cacheSize: environment.cacheSize }));
+                this.mapConfig.layers.push(osm_layer);
+
+                if (this.mapConfig.userpagelayers.length == 0) {
+                    this.mapConfig.currentLayer = new UserPageLayer;
+                    this.mapConfig.currentLayerName = "";
+                }
+                this.mapConfig.userpagelayers.forEach((userpagelayer) => {
+                    let j = this.mapConfig.layerpermission.findIndex((x) => x.layerID == userpagelayer.layerID);
+                    if (j >= 0) {
+                        userpagelayer.layerPermissions = this.mapConfig.layerpermission[j];
+                        //need to make sure the maximum permissions get provided.  probably need to use foreach instead of findIndex  It uses the first one instead of the most liberal.
+                    }
+                    else {
+                        //if there isn't an entry for the layer, it allows the viewing, but not anything else.  This is necessary because I'm not adding permissions to layers required by a module.
+                        //The module should define the layer permissions
+                        userpagelayer.layerPermissions = new LayerPermission
+                        userpagelayer.layerPermissions.edit = false
+                    }
+                })
+                this.mapConfig.userpagelayers.forEach((userpagelayer) => {
+                    let j = this.mapConfig.modulepermission.findIndex((x) => x.moduleInstanceID == userpagelayer.userPageInstanceID);
+                    if (j >= 0) {
+                        userpagelayer.modulePermissions = this.mapConfig.modulepermission[j];
+                        //need to make sure the maximum permissions get provided.  probably need to use foreach instead of findIndex  It uses the first one instead of the most liberal.
+                    }
+                })
+                this.mapService.loadLayers(this.mapConfig, true).then(() => {
+                    this.mapConfig.view = new ol.View({
+                        projection: 'EPSG:3857',
+                        center: ol.proj.transform([environment.centerLong, environment.centerLat], 'EPSG:4326', 'EPSG:3857'),
+                        zoom: environment.centerZoom,
+                        enableRotation: false
+                    })
+                    this.mapConfig.map = new ol.Map({
+                        layers: this.mapConfig.layers,
+                        view: this.mapConfig.view,
+                        controls: ol.control.defaults({
+                            attribution: false,
+                            zoom: null
+                        })
+                    });
                     let ptkey = this.mapConfig.map.on('pointermove', (evt: any) => {
-                        if (mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
+                        if (this.mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
                             this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
                                 let index = this.mapConfig.userpagelayers.findIndex(z => z.olLayer == layer);
                                 if (index > -1) {
                                     this.mapConfig.mouseoverLayer = this.mapConfig.userpagelayers[index]
                                     if (this.mapConfig.mouseoverLayer.olLayer == this.mapConfig.currentLayer.olLayer) {
-                                        mapConfig.map.getTargetElement().style.cursor = mapConfig.map.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
+                                        this.mapConfig.map.getTargetElement().style.cursor = this.mapConfig.map.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
                                     }
                                 }
                             })
                         }
                         else {
                             this.mapConfig.mouseoverLayer = null;
-                            mapConfig.map.getTargetElement().style.cursor = '';
+                            this.mapConfig.map.getTargetElement().style.cursor = '';
                         }
                     }, { hitTolerance: 20 })
                     let mkey = this.mapConfig.map.on('pointerdrag', (evt: any) => {
                         this.geocodingService.centerMapToggle = false
                     })
-                    mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
+                    this.mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
                     this.toolbar = "Layers"
                     this.mapConfig.modulesShow = true
-                    this.geocodingService.trackMe(mapConfig)
+                    this.geocodingService.trackMe(this.mapConfig)
                     //this.setDefaultPageLayer()  At some point, the default layer needs to be set current
+                    this.mapService.mapConfig = this.mapConfig
                 })
+            }
             )
     }
 
-    private getMapConfig() {
-        console.log("In getMapConfig")
-    }
     private _filterPermissions(value: string): LayerPermission[] {
         const filterValue = value.toLowerCase();
         return this.mapConfig.layerpermission.filter(layerPermission => layerPermission.layer.layerName.toLowerCase().includes(filterValue));
-      }
+    }
 
     public displayFn(layerPermission?: LayerPermission): string | undefined {
         return layerPermission ? layerPermission.layer.layerName : undefined;
-      }
+    }
 
     public addLayer(): void {
         console.log(this.layerCtrl.value)
@@ -164,8 +250,6 @@ export class MapComponent {
         this.mapService.loadLayers(this.mapConfig, false)
         this.showNewLayer = false
         this.layerCtrl.setValue('')
-
-
     }
     getDefaultPage(): Promise<any> {
         let promise = new Promise((resolve, reject) => {
@@ -225,7 +309,7 @@ export class MapComponent {
             });
     }
 
-    public addUserPageLayer(UPL:UserPageLayer) {
+    public addUserPageLayer(UPL: UserPageLayer) {
         let newUPL = new UserPageLayer
         newUPL.userPageID = this.mapConfig.currentpage.ID
         newUPL.userID = this.userID;
@@ -245,11 +329,11 @@ export class MapComponent {
     }
 
     public deleteUserPageLayer(userPageLayer: UserPageLayer): void {
-        if (userPageLayer.layerShown) {this.mapService.toggleLayers(userPageLayer)}
+        if (userPageLayer.layerShown) { this.mapService.toggleLayers(userPageLayer) }
         this.userPageLayerService
             .Delete(userPageLayer.ID)
             .subscribe((res) => {
-                this.mapConfig.userpagelayers.splice(this.mapConfig.userpagelayers.findIndex((x) => x == userPageLayer),1)
+                this.mapConfig.userpagelayers.splice(this.mapConfig.userpagelayers.findIndex((x) => x == userPageLayer), 1)
             });
     }
 

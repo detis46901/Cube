@@ -7,6 +7,9 @@ import { MyCubeService } from '../map/services/mycube.service'
 import { WMSService } from '../map/services/wms.service';
 import { Subscription } from 'rxjs/Subscription';
 import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../_models/layer.model'
+import { Observable } from 'rxjs';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'home',
@@ -34,8 +37,17 @@ export class HomeComponent {
     public editSubscription: Subscription;
     public myCubeConfig: MyCubeConfig;
     public messageSubscription: Subscription;
+    public hero$: Observable<any>;
+    public hero:any;
+    
 
-    constructor(private dataService: UserService, private sideNavService: SideNavService, private myCubeService: MyCubeService, private wmsService: WMSService, private messageService: MessageService) {
+    constructor(private dataService: UserService, 
+        private sideNavService: SideNavService, 
+        private myCubeService: MyCubeService, 
+        private wmsService: WMSService, 
+        private messageService: MessageService,
+        private route: ActivatedRoute,
+        private router: Router,) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -45,6 +57,11 @@ export class HomeComponent {
         this.getAllItems(this.userID);
         this.message = null
         //this.socketService.initSocket() This may be used later.  This initializes a WebSocket
+        this.hero$ = this.route.paramMap.pipe(
+            switchMap((params: ParamMap) =>
+              this.dataService.GetSingle((params.getAll('id'))))
+          );
+        this.hero$.subscribe((x) => console.log(x))
     }
 
     private getAllItems(userID: number): void {
