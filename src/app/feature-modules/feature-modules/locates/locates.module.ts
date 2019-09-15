@@ -20,6 +20,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LocatesService } from '../locates/locates.service'
+import { StyleService } from '../locates/style.service'
 import { LocatesAdminService } from '../locates/locates-admin.service'
 import { locateStyles } from './locates.model'
 import { ModuleInstanceService } from './../../../../_services/_moduleInstance.service'
@@ -59,7 +60,7 @@ import { ModuleInstanceService } from './../../../../_services/_moduleInstance.s
 
   ],
   declarations: [LocatesComponent],
-  providers: [LocatesService, LocatesAdminService, locateStyles, ModuleInstanceService],
+  providers: [LocatesService, LocatesAdminService, locateStyles, ModuleInstanceService, StyleService],
   exports:[LocatesComponent]
 })
 export class LocatesModule { }

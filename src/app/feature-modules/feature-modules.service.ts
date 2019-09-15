@@ -5,6 +5,7 @@ import { UserPageLayer } from '_models/layer.model';
 //add the service name
 import {LocatesService } from '../feature-modules/feature-modules/locates/locates.service'
 import { OpenAerialMapService} from '../feature-modules/feature-modules/open-aerial-map/open-aerial-map.service'
+import { Observable } from 'openlayers';
 
 
 
@@ -12,7 +13,8 @@ import { OpenAerialMapService} from '../feature-modules/feature-modules/open-aer
 export class FeatureModulesService {
 
   //add [module identity] + 'service: ' + [module service name]
-  constructor(public locatesservice: LocatesService, public openAerialMapservice: OpenAerialMapService) { }
+  constructor(    
+    public locatesservice: LocatesService, public openAerialMapservice: OpenAerialMapService) { }
 
   public determineModule() {
 

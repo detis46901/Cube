@@ -52,44 +52,6 @@ export class MapService {
         this.userID = currentUser && currentUser.userID;
     }
 
-    public initMap(mapConfig: MapConfig): Promise<any> {
-        this.mapConfig = mapConfig;
-        //sets the base layer
-        this.mapConfig.layers = [];
-        let osm_layer: any = new ol.layer.Tile({
-            source: new ol.source.OSM({ cacheSize: environment.cacheSize })
-        });
-        osm_layer.setVisible(true);
-        this.mapConfig.sources.push(new ol.source.OSM({ cacheSize: environment.cacheSize }));
-        this.mapConfig.layers.push(osm_layer);
-        //continues the initialization
-        let promise = new Promise((resolve) => {
-            this.getUserPageLayers(this.mapConfig)  //only sending an argument because I have to.
-                .then(() => this.getUserPageInstances(this.mapConfig))
-                .then(() => this.getLayerPerms())
-                .then(() => this.getModulePerms())
-                .then(() => this.loadLayers(this.mapConfig, true).then(() => {
-                    this.mapConfig.view = new ol.View({
-                        projection: 'EPSG:3857',
-                        center: ol.proj.transform([environment.centerLong, environment.centerLat], 'EPSG:4326', 'EPSG:3857'),
-                        zoom: environment.centerZoom,
-                        enableRotation: false
-                    })
-                    this.mapConfig.map = new ol.Map({
-                        layers: this.mapConfig.layers,
-                        view: this.mapConfig.view,
-                        controls: ol.control.defaults({
-                            attribution: false,
-                            zoom: null
-                        })
-                    });
-                    resolve(this.mapConfig);
-                })
-                )
-        })
-        return promise;
-    }
-
     public getUserPageLayers(mapConfig): Promise<any> {
         this.mapConfig = mapConfig; //only necessary on changed page
         let promise = new Promise((resolve, reject) => {
@@ -177,7 +139,7 @@ export class MapService {
             ol.Observable.unByKey(this.modkey);
         }
         let promise = new Promise((resolve, reject) => {
-                this.mapConfig.userpagelayers.forEach(userpagelayer => {
+            this.mapConfig.userpagelayers.forEach(userpagelayer => {
                 userpagelayer.layerShown = userpagelayer.defaultON;
                 //this if is for layers that are connected to modules
                 if (!userpagelayer.olLayer) {
@@ -576,7 +538,10 @@ export class MapService {
                                 this.myCubeService.createAutoMyCubeComment(true, "Geometry Modified", featureID, this.mapConfig.currentLayer.layer.ID, this.userID, JSON.parse(featurejson))
                                     .then(() => {
                                         this.myCubeService.loadComments(this.mapConfig.currentLayer.layer.ID, featureID)
-                                        layer.updateInterval = this.runInterval(layer)
+                                        if (layer.userPageInstanceID == 0) {
+                                            layer.updateInterval = this.runInterval(layer)
+                                        }
+
                                     })
                             })
                         this.modifyingobject = false
@@ -628,10 +593,12 @@ export class MapService {
                 let featurejson = new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(e.feature);
                 this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
                     .subscribe((data) => {
+                        console.log(data)
                         try { featureID = data[0][0].id }
                         catch (e) {
                             this.sqlService.fixGeometry(this.mapConfig.currentLayer.layer.ID)
-                                .subscribe(() => {
+                                .subscribe((x) => {
+                                    console.log(x)
                                 })
                         }
                         e.feature.setId(featureID);
@@ -745,7 +712,13 @@ export class MapService {
             maxZoom: 19,
             cacheSize: environment.cacheSize
         })
-        let base = new ol.source.OSM({ cacheSize: environment.cacheSize });
+        let base: any
+        if (environment.MapBoxBaseMapUrl != '') {
+            base = new ol.source.XYZ({ "url": 'https://api.mapbox.com/styles/v1/careystranahan/ck0it1pm20hll1clmfheoupbq/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiY2FyZXlzdHJhbmFoYW4iLCJhIjoiY2lobDZkaDNmMDZreXUyajd4OW85MG4yZCJ9.KWMtpJfoSPadPLeydp5W8g' });
+        }
+        else {
+            base = new ol.source.OSM({ cacheSize: environment.cacheSize });
+        }
         if (this.base == 'base') {
             this.base = 'aerial';
             this.mapConfig.layers[0].setSource(aerial);

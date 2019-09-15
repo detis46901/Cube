@@ -12,7 +12,7 @@ import "rxjs/add/operator/mergeMap";
 export class GeocodingService {
     http: HttpClient;
     isTracking: boolean = true
-    centerMapToggle: boolean = true
+    centerMapToggle: boolean = false
     mapConfig: MapConfig;
     position: any;
     sr = new ol.source.Vector

@@ -1,17 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SideNavService } from "../../_services/sidenav.service";
 import { MatDialog } from '@angular/material';
-import { NewUserComponent } from '../admin/user/newUser/newUser.component';
-import { UserComponent } from '../admin/user/user.component';
-import { MatToolbar } from '@angular/material';
-import { PageComponent } from '../admin/user/page/page.component'
 import { User, Notif } from '../../_models/user.model';
 import { UserPage } from '../../_models/user.model';
 import { UserService } from '../../_services/_user.service';
 import { UserPageService } from '../../_services/_userPage.service';
 import { NotifService } from '../../_services/notification.service';
-import { GeocodingService } from '../map/services/geocoding.service'
-import { geoJSONService } from 'app/map/services/geoJSON.service';
+import { GeocodingService } from '../map/services/geocoding.service';
+import { PageComponent2 } from '../admin2/user/page/page.component'
+import { Observable } from 'rxjs';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+
 
 @Component({
     selector: 'header',
@@ -22,7 +21,8 @@ import { geoJSONService } from 'app/map/services/geoJSON.service';
 
 export class HeaderComponent implements OnInit {
     //@Input() user: User;
-    @Input() screenCode: number = 0;
+    @Input() public id: string;
+    @Input() public screenCode: number = 1;
     public isOpen: boolean;
     public isNotifOpen: boolean = false;
     public userHasUnread: boolean;
@@ -34,22 +34,34 @@ export class HeaderComponent implements OnInit {
     public currUser = new User;
     public userPages: UserPage[];
     public notifications: Notif[];
+    public currUser$: Observable<User>;
+    public public: boolean
 
     constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService, private notificationService: NotifService,
-        public geocodingService: GeocodingService) {
+        public geocodingService: GeocodingService, private route: ActivatedRoute,) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
+        this.public = currentUser && currentUser.public;
     }
 
     ngOnInit() {
+        console.log(this.userID)
         this.getUserItems()
         this.getUserPageItems()
         //console.log(this.geocodingService.isTracking)
+        if (this.public == true) {
+            this.geocodingService.isTracking == false
+        } 
     }
 
+    getObservable() {
+        return this.userService.GetSingle(this.userID)
+      }
 
     private getUserItems(): void {
+        this.currUser$ = this.userService.GetSingle(this.userID)
+        
         this.userService
             .GetSingle(this.userID)
             .subscribe((user: User) => {
@@ -77,15 +89,16 @@ export class HeaderComponent implements OnInit {
     }
 
     public openPages(userID: number, firstName: string, lastName: string): void {
-        const dialogRef = this.dialog.open(PageComponent);
-        dialogRef.componentInstance.userID = this.userID;
-        dialogRef.componentInstance.firstName = this.currUser.firstName;
-        dialogRef.componentInstance.lastName = this.currUser.lastName;
+        //fix this!!
+         const dialogRef = this.dialog.open(PageComponent2);
+         dialogRef.componentInstance.userID = this.userID;
+         dialogRef.componentInstance.firstName = this.currUser.firstName;
+         dialogRef.componentInstance.lastName = this.currUser.lastName;
 
-        dialogRef.afterClosed()
-            .subscribe(() => {
-                this.getUserPageItems();
-            });
+         dialogRef.afterClosed()
+             .subscribe(() => {
+                 this.getUserPageItems();
+             });
     }
 
     public menuToggle(sCode: number): void {

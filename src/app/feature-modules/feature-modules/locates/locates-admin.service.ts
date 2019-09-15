@@ -143,6 +143,9 @@ export class LocatesAdminService {
           tempField.field = key
           console.log(tempField)
           switch (tempField.field) {
+            //need to add a case for "ticket" to run this SQL script
+            //ALTER TABLE {mycube.table} UNIQUE (ticket)
+            
             case 'ttime': {
               tempField.type = 'date'
               break

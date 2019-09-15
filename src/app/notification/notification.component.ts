@@ -29,9 +29,9 @@ export class NotifComponent implements OnInit {
     public sourceMap = new Map<string, any>();
 
     constructor(private notificationService: NotifService, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private layerService: LayerService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser.token;
-        this.userID = currentUser.userID;
+        //let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        //this.token = currentUser.token;
+        //this.userID = currentUser.userID;
     }
 
     ngOnInit() {

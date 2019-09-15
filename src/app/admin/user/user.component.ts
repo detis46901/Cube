@@ -5,14 +5,14 @@ import { UserPageService } from '../../../_services/_userPage.service';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { User, UserPage } from '../../../_models/user.model';
 import { UserPageLayer } from '../../../_models/layer.model'
-import { PagePipe } from '../../../_pipes/rowfilter2.pipe';
+import { PagePipe } from '../_pipes/rowfilter2.pipe';
 import { NumFilterPipe } from '../../../_pipes/numfilter.pipe';
 import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component';
 import { PageComponent } from './page/page.component';
 import { PageConfigComponent } from './pageconfig/pageconfig.component';
 import { ChangePasswordComponent } from './changepassword/changepassword.component';
 import { NewUserComponent } from './newUser/newUser.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatTableDataSource } from '@angular/material';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { UserValidatorService } from './userValidator.service';
@@ -34,6 +34,7 @@ export class UserComponent implements OnInit {
     public objCode = 1
     public token: string;
     public userID: number;
+    public publicFilter: boolean = false
 
     public user = new User;
     public newUser = new User;
@@ -45,11 +46,14 @@ export class UserComponent implements OnInit {
 
     public userColumns = ['userID', 'firstName', 'lastName', 'email', 'active', 'administrator', 'actionsColumn']
     public dataSource: any;
+    public ds = new MatTableDataSource()
 
     constructor(private userValidator: UserValidatorService, private userService: UserService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private dialog: MatDialog) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
+        this.ds.filterPredicate = this.tableFilter();
+
     }
 
     ngOnInit() {
@@ -57,17 +61,43 @@ export class UserComponent implements OnInit {
         this.getUserPageItems();
     }
 
-    // ngAfterViewInit() {
-    // this.openPages(2,"Josh","Church")
-
     public getUserItems(): void {
         this.userService
             .GetAll()
             .subscribe((users: User[]) => {
                 this.users = users;
                 this.dataSource = users;
+                this.ds.data = users
+                this.applyFilter()
             });
     }
+
+    public applyFilter(): void {
+        let g:string
+       if (this.publicFilter == true) {
+        g = 'true'
+       }
+       else {
+           g = 'false'
+       }
+        this.ds.filter = g
+        console.log(this.ds.filteredData)
+    }
+
+    tableFilter(): (data: any, filter: string) => boolean {
+        let filterFunction = function(data, filter): boolean {
+          let g: string
+          if (data.public) {
+            g = 'true'
+          }
+          else {
+              g = 'false'
+          }
+          console.log(g)
+          return g.indexOf(filter) !== -1
+        }
+        return filterFunction;
+      } 
 
     public getUserPageItems(): void {
         this.userPageService

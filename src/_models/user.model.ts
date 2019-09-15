@@ -6,6 +6,7 @@ export class User {
     active: boolean;
     email: string;
     administrator: boolean;
+    public: boolean
 }
 
 export class UserPage {

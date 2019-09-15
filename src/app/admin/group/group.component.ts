@@ -29,10 +29,12 @@ export class GroupComponent implements OnInit {
     public objCode = 3;
     public type = "Group"
     public bool = false;
+    public bool2 = false;
 
     public group = new Group;
     public groups: Array<Group>;
     public users: Array<User>;
+    public showUsers: Array<User>;
 
     public selectedUser: User;
     public selectedAvailableUser;

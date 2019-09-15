@@ -10,6 +10,7 @@ import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../_models/layer.mo
 import { Observable } from 'rxjs';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
+import { AuthenticationService } from '../../_services/authentication.service'
 
 @Component({
     selector: 'home',
@@ -39,6 +40,8 @@ export class HomeComponent {
     public messageSubscription: Subscription;
     public hero$: Observable<any>;
     public hero:any;
+    public publicName: string;
+    public loaded: boolean
     
 
     constructor(private dataService: UserService, 
@@ -47,31 +50,66 @@ export class HomeComponent {
         private wmsService: WMSService, 
         private messageService: MessageService,
         private route: ActivatedRoute,
-        private router: Router,) {
+        private router: Router,
+        private authenticationService: AuthenticationService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
+        console.log('in home component')
     }
 
     ngOnInit() {
-        this.getAllItems(this.userID);
+        //this.getAllItems(this.userID);
         this.message = null
         //this.socketService.initSocket() This may be used later.  This initializes a WebSocket
-        this.hero$ = this.route.paramMap.pipe(
-            switchMap((params: ParamMap) =>
-              this.dataService.GetSingle((params.getAll('id'))))
-          );
-        this.hero$.subscribe((x) => console.log(x))
+        this.publicName = this.route.snapshot.paramMap.get('publicName')
+        if (this.publicName) {
+            //needs to check that the userID matches the record with the publicName
+            if (!this.userID) {
+                console.log('visiting a public page without authentication.  Authenticating.')
+                this.authenticationService.publicLogin(this.publicName)
+                .then(() => {this.loaded = true})
+            }
+            else {
+                console.log("at least we have some authentication")
+                this.getAllItems(this.userID).then((x:boolean) => {
+                    if (x==true) {
+                        console.log("We've got the right authentitication")
+                        this.loaded = true
+                    }
+                    else {
+                        console.log("Wrong authentication.  Reauthenitcating")
+                        this.authenticationService.publicLogin(this.publicName)
+                        .then(() => {this.loaded = true})
+                    }
+                })
+            }
+        }
+        else {
+            this.loaded = true
+        }
     }
 
-    private getAllItems(userID: number): void {
-        this.dataService
+    private getAllItems(userID: number): Promise<any> {
+        let promise = new Promise((resolve) => {
+            this.dataService
             .GetSingle(userID)
             .subscribe((data: User) => {
                 this.user = data;
+                if (this.user.firstName == this.publicName) {
+                    resolve(true)
+                }
+                else {
+                    resolve(false)
+                }
             });
+        
+        }) 
+        return promise
     }
 
     ngOnDestroy() {
     }
+
+
 }

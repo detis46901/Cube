@@ -19,13 +19,13 @@ export class MapConfig {
     map?: any;  // this should be of type ol.Map.  However, that causes a problem with the "getTarget()" method in map.component.ts
     view?: ol.View;
     geolocation: ol.Geolocation;
-    tracking: boolean = true;
+    tracking: boolean = false;
     sources?= new Array;  // holds only the base layer
     layers? = new Array;  // holds only the base layer
     evkey: any; //current click event
     selectedFeature?: ol.Feature;
     selectedFeatures?: ol.Collection<ol.Feature> = new ol.Collection<ol.Feature>()
-    userpages?: UserPage[];
+    userpages? = new Array<UserPage>();
     defaultpage?: UserPage;  //This looks like a duplicate that is also in userpages[]
     currentpage?: UserPage;
     userpagelayers?: UserPageLayer[];

@@ -6,46 +6,60 @@
     <mat-panel-description>
     </mat-panel-description>
   </mat-expansion-panel-header>
-  <mat-form-field>
-    <input matInput [(ngModel)]="locateInput" id='locateInput' placeholder="Paste Locate Email Here" autocomplete="off">
-  </mat-form-field>
-  <button mat-button (click)='importLocate()' [disabled]='locateInput == null || locateInput == ""'>Import
-    Locate</button>
-  <mat-divider></mat-divider>
-  <mat-slide-toggle matTooltip="" class="" [checked]="filterOpen" (change)="filterOpen = !filterOpen">
-    <span>Only Open Tickets</span>
-  </mat-slide-toggle><br>
-  <mat-form-field style="width:45%">
-    <input matInput [matDatepicker]="picker" placeholder="From Date (30 Days Ago)" [(ngModel)]="fromDate">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
-  <mat-form-field style="width:45%">
-    <input matInput [matDatepicker]="picker2" placeholder="To Date (Current Date)" [(ngModel)]="toDate">
-    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-    <mat-datepicker #picker2></mat-datepicker>
-  </mat-form-field><br>
-  <button mat-button (click)='filter()'>Filter</button>
-  <button mat-button (click)='clearFilter()'>Clear Filter</button>
-  <!-- <button mat-button (click)='locatesservice.zoomToFeature(19578)'>Zoom to 19578</button> -->
-  <div *ngIf='ticket !== null'>
-    <div class="example-container">
-      <mat-form-field>
-        <textarea [(ngModel)]="completedNote" matInput placeholder="Note" style="width:100%"></textarea>
-      </mat-form-field>
-      <br>
+  <button mat-button mat-raised-button color="primary" (click)="goToTab('Input')">Input</button>
+  <button mat-button mat-raised-button color="primary" (click)="goToTab('Search')">Search</button>
+  <button mat-button mat-raised-button color="primary" (click)="goToTab('Process')">Process</button>
+  <button *ngIf="locatesservice.showSortBy" mat-button mat-raised-button color="primary" (click)="locatesservice.flipSortBy()">Sort By {{locatesservice.sortBy}}</button>
+  <!-- <button mat-button mat-raised-button color="primary" (click)="openDashboard()">Dashboard</button> -->
+  <div *ngIf="tab=='Input'" label="Input"><br>
+    <mat-form-field>
+      <input matInput [(ngModel)]="locateInput" id='locateInput' placeholder="Paste Locate Email Here"
+        autocomplete="off">
+    </mat-form-field>
+    <button mat-button mat-raised-button color="primary" (click)='importLocate()' [disabled]='locateInput == null || locateInput == ""'>Import
+      Locate</button>
+  </div>
+  <div *ngIf="tab=='Search'" label=Search><br>
+    <mat-slide-toggle matTooltip="" class="" [checked]="filterOpen" (change)="filterOpen = !filterOpen">
+      <span>Only Open Tickets</span>
+    </mat-slide-toggle><br>
+    <mat-form-field style="width:45%">
+      <input matInput [matDatepicker]="picker" placeholder="From Date (30 Days Ago)" [(ngModel)]="fromDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field style="width:45%">
+      <input matInput [matDatepicker]="picker2" placeholder="To Date (Current Date)" [(ngModel)]="toDate">
+      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+      <mat-datepicker #picker2></mat-datepicker>
+    </mat-form-field><br>
+    <button mat-button mat-raised-button color="primary" (click)='filter()'>Filter</button>
+    <button mat-button mat-raised-button color="primary" (click)='clearFilter()'>Clear Filter</button>
+  </div>
+  <div *ngIf="tab=='Process'" label="Process" style="width:100%"><br>
+    <div *ngIf='ticket !== null'>
+      Selected Ticket: {{ticket.ticket}}<br>
+      Valid: {{ticket.sdate}} at {{ticket.stime}}<br>
+      Address: {{ticket.address}} {{ticket.street}}<br>
+      Cross Street: {{ticket.crossst}}<br>
+      Contractor: {{ticket.company}}<br>
+      Work Type: {{ticket.wtype}}<br>
+      <div class="example-container">
+        <mat-form-field>
+            <textarea [(ngModel)]="ticket.location" matInput disabled placeholder="Location"
+              cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2"
+              cdkAutosizeMaxRows="10"></textarea>
+          </mat-form-field>
+      </div>
+      <button mat-button mat-raised-button color="primary" (click)='completeTicket()' [disabled]='ticket.closed != Null'>Complete Ticket</button>
+        <button mat-button mat-raised-button color="primary" (click)='emailContractor(ticket)' [disabled]='ticket.closed != Null || !ticket.email'>Email Contractor</button> <br>
+      <div class="example-container">
+        <mat-form-field>
+          <textarea [(ngModel)]="completedNote" matInput placeholder="Note" style="width:100%"></textarea>
+        </mat-form-field>
+        <br>
+      </div>
     </div>
-    Selected Ticket: {{ticket.ticket}} <button mat-button (click)='completeTicket()'
-      [disabled]='ticket.closed != Null'>Complete Ticket</button><br>
-    <div class="example-container">
-      <mat-form-field>
-        <textarea [(ngModel)]="ticket.location" matInput disabled placeholder="Location" style="width:100%" cdkTextareaAutosize
-        #autosize="cdkTextareaAutosize"
-        cdkAutosizeMinRows="2"
-        cdkAutosizeMaxRows="7"></textarea>
-      </mat-form-field>
-    </div>
-    <mat-divider></mat-divider>
   </div>
 
 </mat-expansion-panel>

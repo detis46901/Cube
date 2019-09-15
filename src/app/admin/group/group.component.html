@@ -5,6 +5,11 @@
     <div class="col-md">
         <!-- creates a row of two headers and one sliding toggle -->
         <span>
+            <h4>Private</h4>
+            <mat-slide-toggle name="booBoy" [(ngModel)]="bool2" value="bool2"></mat-slide-toggle>
+            <h4>Public</h4>
+        </span>
+        <span>
             <h4>User view</h4>
             <mat-slide-toggle name="booBoy" [(ngModel)]="bool" value="bool" (click)="showme(bool)"></mat-slide-toggle>
             <h4>Group view</h4>
@@ -15,8 +20,9 @@
 
             <!-- creates a selectable list containing users or groups depending on the toggle -->
             <mat-selection-list disableRipple=true *ngIf="!bool">
-                <mat-list-option *ngFor="let user of users" (click)="selectUser(user)">
-                    {{user.firstName}}&nbsp;{{user.lastName}}
+                <mat-list-option *ngFor="let user of users | userfilter:bool2" (click)="selectUser(user)">
+                    <span *ngIf="user.public != true">{{user.firstName}}&nbsp;{{user.lastName}}</span>
+                    <span *ngIf="user.public == true">{{user.lastName}}</span>
                 </mat-list-option>
             </mat-selection-list>
 
@@ -69,8 +75,9 @@
             </mat-selection-list>
 
             <mat-selection-list disableRipple=true *ngIf="bool">
-                <mat-list-option *ngFor="let user of availableUsers" (click)="selectUserAdd(user)">
-                    {{user.firstName}}&nbsp;{{user.lastName}}
+                <mat-list-option *ngFor="let user of availableUsers | userfilter:bool2" (click)="selectUserAdd(user)">
+                    <span *ngIf="user.public != true">{{user.firstName}}&nbsp;{{user.lastName}}</span>
+                    <span *ngIf="user.public == true">{{user.lastName}}</span>
                 </mat-list-option>
             </mat-selection-list>
         </div>
@@ -106,8 +113,9 @@
             </mat-selection-list>
 
             <mat-selection-list disableRipple=true *ngIf="bool">
-                <mat-list-option name="memberUser" *ngFor="let user of memberUsers" (click)="selectUserRemove(user)">
-                    {{user.firstName}}&nbsp;{{user.lastName}}
+                <mat-list-option *ngFor="let user of memberUsers" (click)="selectUserRemove(user)">
+                    <span *ngIf="user.public != true" name="memberUser" >{{user.firstName}}&nbsp;{{user.lastName}}</span>
+                    <span *ngIf="user.public == true" name="memberUser" >{{user.lastName}}</span>
                 </mat-list-option>
             </mat-selection-list>
         </div>

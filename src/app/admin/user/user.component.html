@@ -1,14 +1,14 @@
 <!-- Jack Reyburn -->
 <!-- User page in admin settings -->
 
-<div class="row">
+<div class="row">        
     <!-- table to contain all of the user information -->
-    <table mat-table id="userDataTable" #table [dataSource]="dataSource">
-
+    <table mat-table id="userDataTable" #table [dataSource]="ds">
         <!-- first column containing user ID -->
         <ng-container matColumnDef="userID">
             <mat-header-cell class="user-sm-head" *matHeaderCellDef>
                 <Strong> ID </Strong>
+                <span>&nbsp;<mat-slide-toggle name="booBoy" [(ngModel)]="publicFilter" (change)="applyFilter()"></mat-slide-toggle><strong>Public</strong></span>
             </mat-header-cell>
             <mat-cell class="user-sm-cell" *matCellDef="let row">
                 {{row.ID}}
@@ -43,10 +43,10 @@
 
         <!-- fourth column containing the user's email -->
         <ng-container matColumnDef="email">
-            <mat-header-cell class="user-lg-head" *matHeaderCellDef>
+            <mat-header-cell class="user-sm-head" *matHeaderCellDef>
                 <Strong></Strong>
             </mat-header-cell>
-            <mat-cell class="user-lg-cell" *matCellDef="let row">
+            <mat-cell class="user-sm-cell" *matCellDef="let row">
                 
                 <!-- <mat-form-field style="width:80%">
                     <input matInput [formControl]="row.validator.controls['email']" [readonly]="!row.editing" [(ngModel)]="row.email">
@@ -105,6 +105,7 @@
                 </button>
                 <mat-menu #menu2="matMenu" [overlapTrigger]="false">
                     <button mat-menu-item id="openConfig" *ngFor="let userpage of (userPages | pagefilter: (row.ID))" (click)="getUserPageItem(userpage.ID, row.ID)">
+                            <!-- <button mat-menu-item id="openConfig" *ngFor="let userpage of (userPages)" (click)="getUserPageItem(userpage.ID, row.ID)"> -->
                         <h5>{{userpage.page}}</h5>
                     </button>
                 </mat-menu>

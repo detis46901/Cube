@@ -51,7 +51,7 @@ export class UserPageLayer {
     loadOrder: number;
     loadStatus: string;
     source: any
-    olLayer: any;
+    olLayer: any
     updateInterval: any;
     userPageInstanceID: number;
     layerOrder: number;

@@ -5,41 +5,52 @@
 <div class="row">
     <!-- Creates the header -->
     <h4 mat-dialog-title id="newUserHeader">Create New User</h4>
-
     <!-- Creates the closing 'x' -->
-    <button mat-dialog-close class="close" id="closingX">&times;</button>
+    <button mat-dialog-close class="close" id="closingX">&times;</button><br>
 </div>
 <hr>
+Private <mat-slide-toggle name="booBoy" [(ngModel)]="publicFilter" (change)="applyFilter()"></mat-slide-toggle> Public
 
 <mat-dialog-content>
     <!-- form for the entry and check boxes -->
     <form #f="ngForm">
-
         <!-- first name entry box -->
         <span>
-            <mat-form-field class="row" id="firstNameEntry">
-                <input matInput name="newUserFirstName" required [(ngModel)]="newUser.firstName" type="text" placeholder="First Name">
+            <mat-form-field *ngIf="!publicFilter" class="row" id="firstNameEntry">
+                <input matInput name="newUserFirstName" required [(ngModel)]="newUser.firstName" type="text"
+                    placeholder="First Name">
+            </mat-form-field>
+            <mat-form-field *ngIf="publicFilter" class="row" id="firstNameEntry">
+                <input matInput name="newUserURL" required [(ngModel)]="newUser.firstName" type="text"
+                    placeholder="Unique url">
             </mat-form-field>
 
             <!-- last name entry box -->
-            <mat-form-field class="row" id="lastNameEntry">
-                <input matInput name="newUserLastName" required [(ngModel)]="newUser.lastName" type="text" placeholder="Last Name">
-            </mat-form-field>
-        </span>
+            <mat-form-field *ngIf="!publicFilter" class="row" id="lastNameEntry">
+                    <input matInput name="newUserLastName" required [(ngModel)]="newUser.lastName" type="text"
+                        placeholder="Last Name">
+                </mat-form-field>
+                <mat-form-field *ngIf="publicFilter" class="row" id="lastNameEntry">
+                        <input matInput name="newUserLastName" required [(ngModel)]="newUser.lastName" type="text"
+                            placeholder="URL Title">
+                    </mat-form-field>        
+            </span>
         <!-- email entry box -->
-        <mat-form-field class="row" id="emailEntry">
-            <input matInput name="newUserEmail" required [(ngModel)]="newUser.email" type="text" placeholder="Email">
-        </mat-form-field>
+        <mat-form-field *ngIf="!publicFilter" class="row" id="emailEntry">
+                <input matInput autocomplete="off" name="newUserEmail" required [(ngModel)]="newUser.email" type="text" placeholder="Email">
+            </mat-form-field>
 
         <!-- password entry box -->
-        <mat-form-field class="row" id="passwordEntry">
-            <input matInput name="newUserPassword" [(ngModel)]="newUser.password" type="password" placeholder="Password">
+        <mat-form-field *ngIf="!publicFilter" class="row" id="passwordEntry">
+            <input matInput name="newUserPassword" [(ngModel)]="newUser.password" type="password"
+                placeholder="Password">
         </mat-form-field>
         <br>
 
         <!-- checkboxes for use active and admin -->
         <mat-checkbox id="newUserActive" name="newUserActive" [(ngModel)]="newUser.active">Active</mat-checkbox>
-        <mat-checkbox id="newUserAdmin" name="newUserAdmin" [(ngModel)]="newUser.administrator">Administrator</mat-checkbox>
+        <mat-checkbox *ngIf="!publicFilter" id="newUserAdmin" name="newUserAdmin" [(ngModel)]="newUser.administrator">Administrator
+        </mat-checkbox>
     </form>
 </mat-dialog-content>
 

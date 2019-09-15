@@ -1,0 +1,78 @@
+<!-- Creates a header including the current user's name and a x to close the window -->
+<div id="pageHeader" class="row">
+    <div class="col-sm-9">
+        <h4 mat-dialog-title>{{firstName}} {{lastName}}'s Pages</h4>
+    </div>
+    <div class="col-sm-1 col-sm-offset-2">
+        <button id="pageX" mat-dialog-close class="close" aria-label="Close">&times;</button>
+    </div>
+</div>
+<hr>
+
+<!-- creates the four header columns: pages, active, default, order -->
+<mat-dialog-content>
+    <div id="pageContentTitleBar" class="row">
+        <div class="col-sm-3">
+            <h4>Pages</h4>
+        </div>
+        <div class="col-sm-3">
+            <h4>Active</h4>
+        </div>
+        <div class="col-sm-3">
+            <h4>Default</h4>
+        </div>
+        <div class="col-sm-3">
+            <h4>Order</h4>
+        </div>
+    </div>
+
+    <!-- creates a row form with 5 different attributes -->
+    <form>
+        <mat-radio-group id="pageBodyRows" class="row" *ngFor="let userPage of userPages; let i=index" value="userPage.default" name="pageGroup"
+            [(ngModel)]="selectedPage">
+            <!-- user page name and delete page button -->
+            <span id="exPageNameCol" class="col-sm-3">
+                <a (click)="openConfDel(userPage)">
+                    <i class="fas fa-trash"></i>
+                </a>
+                {{userPage.page}}
+            </span>
+
+            <!-- active and inactive toggle -->
+            <span id="exPageActiveCol" class="col-sm-3">
+                <mat-slide-toggle *ngIf="userPage.active" name="userPage.active + A + i" (change)="updateUserPage(userPage)" [(ngModel)]="userPage.active"
+                    checked></mat-slide-toggle>
+                <mat-slide-toggle *ngIf="!userPage.active" name="userPage.active + B + i" (change)="updateUserPage(userPage)" [(ngModel)]="userPage.active"></mat-slide-toggle>
+            </span>
+
+            <!-- default page radio switch -->
+            <span id="exPageDefaultCol" class="col-sm-3">
+                <mat-radio-button id="exPageDefault" radioGroup="pageGroup" name="userPage.ID + i" (click)="updateDefaultPage(userPage)"
+                    [value]="userPage.ID"></mat-radio-button>
+            </span>
+
+            <!--Allows the user to change the order of their pages using clicks on the up or down icon-->
+            <span id="exPageOrderCol" class="col-sm-3">
+                <a (click)="moveUp(userPage)">
+                    <i id="orderUp" class="fa fa-arrow-up" style="margin-right:5px;"></i>
+                </a>
+                <a (click)="moveDown(userPage)">
+                    <i id="orderDown" class="fa fa-arrow-down"></i>
+                </a>
+            </span>
+        </mat-radio-group>
+    </form>
+
+    <!-- adds an input box to add a new page -->
+    <div class="newPageInputArea">
+        <mat-form-field>
+            <input matInput id="newUserPage" #newuserpageinput [(ngModel)]="newUserPage" type="text" placeholder="New Page" (keyup.enter)="addUserPage(newUserPage); newuserpageinput.value=''"
+                aria-describedby="userpageHelpBlock">
+        </mat-form-field>
+        &nbsp;&nbsp;&nbsp;Press Enter to create page.
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions style="justify-content:center">
+    <button mat-button id="submitChangesButton" (click)="closeDialog()">Close</button>
+</mat-dialog-actions>

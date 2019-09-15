@@ -6,21 +6,40 @@
         <!-- Name and the 3 buttons for settings, map, and messages -->
         <h3>
             <!-- username -->
-            <a id="headerSettings">{{currUser.firstName}}&nbsp;{{currUser.lastName}}</a>
+            <a *ngIf="!public" id="headerSettings">{{currUser.firstName}}&nbsp;{{currUser.lastName}}</a>
+            <a *ngIf="public" id="headerSettings">{{currUser.lastName}}</a>
+            <!-- {{ (currUser$ | async)?.firstName }}
+            <div *ngIf="currUser$ | async as user; else loading">
+                Observable Version: {{ user.firstName }}&nbsp;{{user.lastName}}
+            </div>
+            <ng-template #loading>
+                Loading stuff...
+              </ng-template> -->
             <!-- settings button -->
-            <button mat-icon-button title="User Settings" [matMenuTriggerFor]="menu">
+            <button *ngIf="!public" mat-icon-button title="User Settings" [matMenuTriggerFor]="menu">
                 <mat-icon id="settingsButton">settings</mat-icon>
             </button>
             <!-- map button -->
-            <a id="mapButton" title="Return to map" routerLink="home">
+            <a *ngIf="!public" id="mapButton" title="Return to map" routerLink="home">
                 <i class="fa fa-cube"></i>
             </a>
-            <button mat-icon-button *ngIf="screenCode == 1" id="headerNotifications" title="Notifications" (click)="openNotifications(userID)">
+            <button mat-icon-button *ngIf="screenCode == 1 && !public" id="headerNotifications" title="Notifications"
+                (click)="openNotifications(userID)">
                 <mat-icon id="headerNotifIcon">email</mat-icon>
             </button>
-            <button mat-icon-button *ngIf="geocodingService.centerMapToggle == true && geocodingService.isTracking == true" (click)="geocodingService.centerMapToggle = false"><mat-icon>near_me</mat-icon></button>
-            <button mat-icon-button  *ngIf="geocodingService.centerMapToggle == false && geocodingService.isTracking == true" (click)="setTracking(false)"><mat-icon>location_on</mat-icon></button>
-            <button mat-icon-button  *ngIf="geocodingService.isTracking == false" (click)="setTracking(true)"><mat-icon>location_off</mat-icon></button>
+            <button mat-icon-button
+                *ngIf="geocodingService.centerMapToggle == true && geocodingService.isTracking == true"
+                (click)="geocodingService.centerMapToggle = false">
+                <mat-icon>near_me</mat-icon>
+            </button>
+            <button mat-icon-button
+                *ngIf="geocodingService.centerMapToggle == false && geocodingService.isTracking == true  && public != true"
+                (click)="setTracking(false)">
+                <mat-icon>location_on</mat-icon>
+            </button>
+            <button mat-icon-button *ngIf="geocodingService.isTracking == false" (click)="setTracking(true)">
+                <mat-icon>location_off</mat-icon>
+            </button>
         </h3>
     </span>
 
@@ -51,7 +70,8 @@
         </p>
 
         <!-- edit user pages -->
-        <p mat-menu-item name="editPages" id="settings-open-pages" (click)="openPages(userID, currUser.firstName, currUser.lastName)">
+        <p mat-menu-item name="editPages" id="settings-open-pages"
+            (click)="openPages(userID, currUser.firstName, currUser.lastName)">
             <mat-icon style="vertical-align:text-bottom">restore_page</mat-icon>
             <a style="color:black">Edit Pages</a>
         </p>
@@ -59,10 +79,11 @@
 
     <!-- logout and administrator settings -->
     <span id="headerRight" class="col-6 float-right">
-        <button mat-button id="logoutButton" routerLink="/logout">Logout</button>
-        <button mat-button *ngIf="currUser.administrator" id="adminSettingsButton" [routerLink]="['/admin', {outlets: {admin: ['layer']}}]">Admin Settings</button>
+        <button *ngIf="public" mat-icon-button title="logout" routerLink="/logout"><mat-icon id="settingsButton">power_settings_new</mat-icon></button>
+        <button *ngIf="!public" mat-button id="logoutButton" routerLink="/logout">Logout</button>
+        <button mat-button *ngIf="currUser.administrator" id="adminSettingsButton" [routerLink]="['/admin']">Admin
+            Settings</button>
         <!-- <a id="headerLogout" routerLink="/logout"><h5>Logout</h5></a> -->
         <!-- <a id="headerAdmin" *ngIf="user.administrator" [routerLink]="['/admin', {outlets: {admin: ['layer']}}]"><h5>Admin Settings</h5></a> -->
     </span>
 </div>
-

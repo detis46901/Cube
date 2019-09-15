@@ -8,11 +8,11 @@ mat-header-row {
     position: absolute;
     top: 50%;
     left: 50%;
+    bottom: 0px;
     margin-top: 50px;
     margin-left: -420px;
-
     overflow: auto;
-    max-height: 80vh;
+    max-height: 200px;
 }
 @media (min-width:1200px) {
     .mat-form-field, .mat-table {
