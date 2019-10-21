@@ -129,7 +129,7 @@ export class MapService {
     }
 
     //loadLayers will load during map init and load the layers that should come on by themselves with the "defaultON" property set (in userPageLayers)
-    public loadLayers(mapConfig: MapConfig, init: boolean): Promise<any> {
+    public loadLayers(mapConfig: MapConfig, init: boolean, single?: boolean): Promise<any> {
         this.mapConfig = mapConfig
         let j = 0;
         if (mapConfig.evkey) { //removes the previous click event if there wasn't one.
@@ -140,11 +140,19 @@ export class MapService {
         }
         let promise = new Promise((resolve, reject) => {
             this.mapConfig.userpagelayers.forEach(userpagelayer => {
+                if (single) { //If you're adding a single layer, under the "addLayer() from the map.component"
+                    j++
+                    if (j < this.mapConfig.userpagelayers.length)
+                    {
+                        console.log("Adding a single layer")
+                        return
+                    }
+                }
                 userpagelayer.layerShown = userpagelayer.defaultON;
                 //this if is for layers that are connected to modules
                 if (!userpagelayer.olLayer) {
                     if (userpagelayer.userPageInstanceID > 0) {
-                        if (this.featuremodulesservice.loadLayer(this.mapConfig, userpagelayer)) {
+                        if (this.featuremodulesservice.loadLayer(this.mapConfig, userpagelayer, init)) {
                             j++
                             if (j == this.mapConfig.userpagelayers.length) {
                                 resolve();
@@ -208,7 +216,6 @@ export class MapService {
                                         this.wmsService.setLoadStatus(userpagelayer);
                                         if (init == false) {
                                             mapConfig.map.addLayer(wmtsLayer);
-                                            console.log('init == false')
                                         }
                                         j++;
                                         if (j == this.mapConfig.userpagelayers.length) {
@@ -254,6 +261,7 @@ export class MapService {
     }
 
     public loadMyCube(layer: UserPageLayer) {
+
         let stylefunction = ((feature) => {
             return (this.styleService.styleFunction(feature, layer, "load"));
         })

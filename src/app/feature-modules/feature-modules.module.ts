@@ -19,6 +19,7 @@ import { MatTooltipModule } from '@angular/material/tooltip'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { LocatesModule } from './feature-modules/locates/locates.module';
+import { SDSModule } from './feature-modules/SDS/SDS.module'
 import { openAerialMapModule } from './feature-modules/open-aerial-map/open-aerial-map.module';
 
 @NgModule({
@@ -27,6 +28,7 @@ import { openAerialMapModule } from './feature-modules/open-aerial-map/open-aeri
     MatExpansionModule,
     LocatesModule,
     openAerialMapModule,
+    SDSModule,
     FormsModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,

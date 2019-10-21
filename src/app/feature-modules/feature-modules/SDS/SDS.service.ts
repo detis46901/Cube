@@ -3,7 +3,7 @@ import { UserPageLayer, MyCubeField } from '_models/layer.model';
 import { UserPageInstance } from '_models/module.model'
 import { MapConfig, mapStyles, featureList } from 'app/map/models/map.model';
 import { geoJSONService } from 'app/map/services/geoJSON.service';
-import { Locate, locateStyles } from './locates.model'
+import { Locate, SDSStyles } from './SDS.model'
 import { StyleService } from './style.service'
 import { MatSnackBar } from '@angular/material/snack-bar';
 //http dependancies
@@ -11,9 +11,9 @@ import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams } 
 import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
-import { SQLService } from './../../../../_services/sql.service';
+import { SQLService } from '../../../../_services/sql.service';
 import { Subject } from 'rxjs/Subject';
-import { MyCubeService } from './../../../map/services/mycube.service'
+import { MyCubeService } from '../../../map/services/mycube.service'
 import * as ol from 'openlayers';
 import { Http } from '@angular/http';
 import { Router } from '@angular/router'
@@ -22,7 +22,7 @@ import { Router } from '@angular/router'
 
 
 @Injectable()
-export class LocatesService {
+export class SDSService {
   public completed: string
   public vectorlayer = new ol.layer.Vector()
   public locate: Locate
@@ -43,7 +43,7 @@ export class LocatesService {
     private styleService: StyleService,
     private sqlService: SQLService,
     private myCubeService: MyCubeService,
-    private locateStyles: locateStyles,
+    private locateStyles: SDSStyles,
     private snackBar: MatSnackBar) { }
     private locateUpdateInterval: any
 
@@ -253,7 +253,7 @@ export class LocatesService {
 
   private getMyLocateData(layer): Promise<any> {
     let promise = new Promise((resolve, reject) => {
-      this.geojsonservice.GetSome(layer.layer.ID, this.filter)
+      this.geojsonservice.GetAll(layer.layer.ID)
         .subscribe((data: GeoJSON.Feature<any>) => {
           resolve(data);
         })

@@ -97,17 +97,16 @@ export class MapComponent {
 
     ngOnDestroy() {
         this.mapService.stopInterval()
+        ol.Observable.unByKey(this.mapService.modkey)
         //need to run stop interval on all the userpagelayers
     }
 
     //Angular component initialization
     ngOnInit() {
-        console.log(this.id)
         this.getMapConfig(this.id)
     }
 
     private getMapConfig(id) {
-        console.log(id)
         if (id) {
             this.mapConfig.userID = id
             console.log(this.token)
@@ -115,7 +114,6 @@ export class MapComponent {
         else {
             this.mapConfig.userID = this.userID;
         }
-        console.log(this.mapConfig.userID)
         this.mapConfigService.GetSingle(this.mapConfig)
             .subscribe((x) => {
                 this.mapConfig = x
@@ -232,7 +230,7 @@ export class MapComponent {
         UPL.layerPermissions = LP
         UPL.style = UPL.layer.defaultStyle
         this.mapConfig.userpagelayers.push(UPL)
-        this.mapService.loadLayers(this.mapConfig, false)
+        this.mapService.loadLayers(this.mapConfig, false, true)
         this.showNewLayer = false
         this.layerCtrl.setValue('')
     }
@@ -330,10 +328,14 @@ export class MapComponent {
         tempUPL = this.mapConfig.userpagelayers
         this.mapConfig.userpagelayers = []
         tempUPL.forEach((x) => {
-            this.mapService.stopInterval()
             this.mapConfig.map.removeLayer(x.olLayer)
             this.mapConfig.currentLayerName = "";
             this.mapConfig.featureList = []
+            if (x.layer.layerType == "MyCube") {
+                clearInterval(x.updateInterval)
+                x.source.clear(true)
+            }
+
         })
         this.mapConfig.editmode = false
         this.mapConfig.filterOn = false;

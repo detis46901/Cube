@@ -1,25 +1,25 @@
 import { Component, OnInit, OnDestroy, Input, ComponentFactoryResolver } from '@angular/core';
 import { UserPageLayer } from '_models/layer.model';
 import { MapConfig } from '../../../map/models/map.model';
-import { geoJSONService } from './../../../map/services/geoJSON.service';
+import { geoJSONService } from '../../../map/services/geoJSON.service';
 import { FeatureModulesService } from '../../feature-modules.service'
 import { Subscription } from 'rxjs/Subscription';
-import { LocatesService } from './locates.service'
+import { SDSService } from './SDS.service'
 import { MyCubeField, MyCubeConfig, MyCubeComment } from "../../../../_models/layer.model"
 import { UserService } from '../../../../_services/_user.service'
 import { User } from '../../../../_models/user.model'
 import { getTypeNameForDebugging } from '@angular/common/src/directives/ng_for_of';
-import { locateStyles, Locate } from './locates.model'
+import { SDSStyles, Locate } from './SDS.model'
 import { filter } from 'rxjs/operators';
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
 
 
 @Component({
-  selector: 'app-locates',
-  templateUrl: './locates.component.html',
-  styleUrls: ['./locates.component.css']
+  selector: 'app-SDS',
+  templateUrl: './SDS.component.html',
+  styleUrls: ['./SDS.component.css']
 })
-export class LocatesComponent implements OnInit, OnDestroy {
+export class SDSComponent implements OnInit, OnDestroy {
 
   public moduleShow: boolean
   public locateInput: string;
@@ -39,13 +39,14 @@ export class LocatesComponent implements OnInit, OnDestroy {
   public tabSubscription: Subscription;
   public tab: string;
   public moduleSettings: JSON
+  public moduleInstanceName: string
 
   constructor(
     private geojsonservice: geoJSONService, 
     private featureModelService: FeatureModulesService, 
-    public locatesservice: LocatesService, 
+    public locatesservice: SDSService, 
     public userService: UserService, 
-    public locateStyles: locateStyles, 
+    public locateStyles: SDSStyles, 
     public moduleInstanceService: ModuleInstanceService
   ) {
     this.ticktSubscription = this.locatesservice.getTicket().subscribe(ticket => { this.ticket = ticket});
@@ -98,6 +99,7 @@ export class LocatesComponent implements OnInit, OnDestroy {
       this.moduleInstanceService.GetSingle(this.instanceID)
     .subscribe((x) => {
       this.moduleSettings = x.settings
+      this.moduleInstanceName = x.name
     })
   }
   filter() {

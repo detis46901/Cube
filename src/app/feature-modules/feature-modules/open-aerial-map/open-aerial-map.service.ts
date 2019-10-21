@@ -39,10 +39,10 @@ export class OpenAerialMapService {
     // .pipe(catchError(this.handleError));
   }
 
-  public loadLayer(mapConfig:MapConfig, layer: UserPageLayer):boolean {
+  public loadLayer(mapConfig:MapConfig, layer: UserPageLayer, init?: boolean):boolean {
     this.selectedImage.title = ""
-    this.getImages(mapConfig, layer)
-    return false
+    this.getImages(mapConfig, layer, init)
+    return true
   }
   public unloadLayer(mapConfig:MapConfig, layer: UserPageLayer):boolean {
     this.images.forEach(x => {
@@ -86,7 +86,8 @@ export class OpenAerialMapService {
   setDisabled(disabled: boolean) {
     this.disabled.next(disabled)
   }
-  getImages(mapConfig:MapConfig, layer: UserPageLayer) {
+  getImages(mapConfig:MapConfig, layer: UserPageLayer, init?: boolean) {
+    console.log("in get images " + init)
     this.mapConfig = mapConfig
     let src = new ol.source.Vector();
     this.bboxLayer = new ol.layer.Vector({
@@ -125,7 +126,12 @@ export class OpenAerialMapService {
           src.addFeature(feature)
         })
         layer.olLayer = this.bboxLayer
-        this.mapConfig.map.addLayer(layer.olLayer)
+        if (init) {
+          this.mapConfig.layers.push(layer.olLayer);  //to delete
+        }
+        else {
+          this.mapConfig.map.addLayer(layer.olLayer)
+        }
         //this.createImageClickEvent()
       })
   }

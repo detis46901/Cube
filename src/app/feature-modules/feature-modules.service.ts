@@ -5,6 +5,7 @@ import { UserPageLayer } from '_models/layer.model';
 //add the service name
 import {LocatesService } from '../feature-modules/feature-modules/locates/locates.service'
 import { OpenAerialMapService} from '../feature-modules/feature-modules/open-aerial-map/open-aerial-map.service'
+import {SDSService } from '../feature-modules/feature-modules/SDS/SDS.service'
 import { Observable } from 'openlayers';
 
 
@@ -14,17 +15,19 @@ export class FeatureModulesService {
 
   //add [module identity] + 'service: ' + [module service name]
   constructor(    
-    public locatesservice: LocatesService, public openAerialMapservice: OpenAerialMapService) { }
+    public locatesservice: LocatesService, public openAerialMapservice: OpenAerialMapService, public SDSservice: SDSService) { }
 
   public determineModule() {
 
   }
 
-  public loadLayer(mapConfig:MapConfig, layer:UserPageLayer):boolean {
+  public loadLayer(mapConfig:MapConfig, layer:UserPageLayer, init?:boolean):boolean {
     let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
+    console.log(tempinstancerow)
     let tempInstance = mapConfig.userpageinstances[tempinstancerow]
+    console.log(tempInstance)
     let j = 'this.' + tempInstance.module_instance.module.identity + 'service'
-    return eval(j + '.loadLayer(mapConfig, layer)')
+    return eval(j + '.loadLayer(mapConfig, layer, init)')
   }
   public unloadLayer(mapConfig:MapConfig, layer:UserPageLayer):boolean {
     let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)

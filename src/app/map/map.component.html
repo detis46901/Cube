@@ -157,7 +157,7 @@
                                         <mat-icon>star</mat-icon>
                                         <span>Default to On</span>
                                     </button></ng-template>
-                                <button mat-menu-item disabled="false" (click)="deleteUserPageLayer(userpagelayer)">
+                                <button *ngIf="!userpagelayer.userPageInstanceID" mat-menu-item disabled="false" (click)="deleteUserPageLayer(userpagelayer)">
                                     <mat-icon>remove_circle_outline</mat-icon>
                                     <span>Remove From Page</span>
                                 </button>
