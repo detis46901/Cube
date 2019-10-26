@@ -82,7 +82,7 @@ export class MyCubeService extends SQLService {
                         if (sdata[0][0].hasOwnProperty(key)) {
                             if (z != 0) { this.cubeData[z].value = sdata[0][0][key] }
                             if (this.cubeData[z].type == 'date'){
-                                console.log(this.cubeData[z].value)
+                                //console.log(this.cubeData[z].value)
                                 this.cubeData[z].value += environment.localez} //this is required because the datepicker converts a date (with no locale) to local and it will lose a day with this. 
                             z++
                         }
@@ -97,7 +97,7 @@ export class MyCubeService extends SQLService {
     loadComments(table, id): any {
         this.getComments(table, id)
             .subscribe((cdata: any) => {
-                console.log(cdata)
+                // console.log(cdata)
                 this.mycubesubject.next(this.cubeData);
                 this.mycubecomment.next(cdata[0])
             })

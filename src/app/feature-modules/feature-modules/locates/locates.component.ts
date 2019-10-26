@@ -74,6 +74,8 @@ export class LocatesComponent implements OnInit, OnDestroy {
     this.idSubscription.unsubscribe()
     this.expandedSubscription.unsubscribe()
     this.tabSubscription.unsubscribe()
+    clearInterval(this.locatesservice.layer.updateInterval)
+    console.log("Clearing Locate Interval")
   }
   goToTab(tab) {
     this.tab = tab

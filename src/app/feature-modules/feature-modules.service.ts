@@ -22,27 +22,29 @@ export class FeatureModulesService {
   }
 
   public loadLayer(mapConfig:MapConfig, layer:UserPageLayer, init?:boolean):boolean {
+    if (!(layer.userPageInstanceID > 0)) {return false}
     let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
-    console.log(tempinstancerow)
     let tempInstance = mapConfig.userpageinstances[tempinstancerow]
-    console.log(tempInstance)
     let j = 'this.' + tempInstance.module_instance.module.identity + 'service'
     return eval(j + '.loadLayer(mapConfig, layer, init)')
   }
   public unloadLayer(mapConfig:MapConfig, layer:UserPageLayer):boolean {
+    if (!(layer.userPageInstanceID > 0)) {return false}
     let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
     let tempInstance = mapConfig.userpageinstances[tempinstancerow]
     let j = 'this.' + tempInstance.module_instance.module.identity + 'service'
     return eval(j + '.unloadLayer(mapConfig, layer)')
   }
   public setCurrentLayer(mapConfig:MapConfig, layer:UserPageLayer):boolean {
+    if (!(layer.userPageInstanceID > 0)) {return false}
     let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
     let tempInstance = mapConfig.userpageinstances[tempinstancerow]
     let j = 'this.' + tempInstance.module_instance.module.identity + 'service'
     return eval(j + '.setCurrentLayer(mapConfig, layer)')
   }
 
-  public unsetCurrentLayer(mapConfig:MapConfig, layer:UserPageLayer):boolean {
+  public  unsetCurrentLayer(mapConfig:MapConfig, layer:UserPageLayer):boolean {
+    if (!(layer.userPageInstanceID > 0)) {return false}
     let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
     let tempInstance = mapConfig.userpageinstances[tempinstancerow]
     let j = 'this.' + tempInstance.module_instance.module.identity + 'service'
@@ -50,24 +52,28 @@ export class FeatureModulesService {
   }
 
   public selectFeature(mapConfig:MapConfig, layer:UserPageLayer):boolean {
+    if (!(layer.userPageInstanceID > 0)) {return false}
     let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
     let tempInstance = mapConfig.userpageinstances[tempinstancerow]
     let j = 'this.' + tempInstance.module_instance.module.identity + 'service'
     return eval(j + '.selectFeature(mapConfig, layer)')
   }
   public clearFeature(mapConfig:MapConfig, layer:UserPageLayer):boolean {
+    if (!(layer.userPageInstanceID > 0)) {return false}
     let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
     let tempInstance = mapConfig.userpageinstances[tempinstancerow]
     let j = 'this.' + tempInstance.module_instance.module.identity + 'service'
     return eval(j + '.clearFeature(mapConfig, layer)')
   }
   public styleSelectedFeature(mapConfig:MapConfig, layer:UserPageLayer):boolean {
+    if (!(layer.userPageInstanceID > 0)) {return false}
     let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
     let tempInstance = mapConfig.userpageinstances[tempinstancerow]
     let j = 'this.' + tempInstance.module_instance.module.identity + 'service'
     return eval(j + '.styleSelectedFeature(mapConfig, layer)')
   }
   public unstyleSelectedFeature(mapConfig:MapConfig, layer:UserPageLayer):boolean {
+    if (!(layer.userPageInstanceID > 0)) {return false}
     let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
     let tempInstance = mapConfig.userpageinstances[tempinstancerow]
     let j = 'this.' + tempInstance.module_instance.module.identity + 'service'

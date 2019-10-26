@@ -124,11 +124,7 @@ export class SDSService {
 
         let fl = new featureList;
         fl.id = x.get('id')
-        if (x.get("address") == "") { fl.label = x.get("street") + " and " + x.get("crossst") }
-        else {
-          fl.label = x.get("address") + " " + x.get("street")
-        }
-        //fl.label = x.get("ticket")
+          fl.label = x.get("name") //need to make this dynamic
         fl.feature = x
         if (i > -1 && fl != null) {
           tempList.push(fl)

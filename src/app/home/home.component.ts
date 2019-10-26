@@ -55,7 +55,7 @@ export class HomeComponent {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
-        console.log('in home component')
+        // console.log('in home component')
     }
 
     ngOnInit() {

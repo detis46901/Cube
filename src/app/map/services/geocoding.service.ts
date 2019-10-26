@@ -67,12 +67,13 @@ export class GeocodingService {
             //console.log(this.geolocation.getAccuracy())
         })
 
-        
         this.geolocation.on('change:accuracyGeometry', x => {
-            this.accuracyFeature.setGeometry(this.geolocation.getAccuracyGeometry());
+            if (this.geolocation.getAccuracy() < 500) {
+                //console.log("Should Show")
+                this.accuracyFeature.setGeometry(this.geolocation.getAccuracyGeometry());
+            }
         });
 
-        
         this.positionFeature.setStyle(new ol.style.Style({
             image: new ol.style.Circle({
                 radius: 6,
@@ -88,14 +89,19 @@ export class GeocodingService {
         this.geolocation.on('change:position', x => {
             //console.log("Position Change")
             var coordinates = this.geolocation.getPosition();
-            this.positionFeature.setGeometry(coordinates ?
-                new ol.geom.Point(coordinates) : null);
-            if (this.centerMapToggle) {this.centerMap(coordinates)}
+            if (this.geolocation.getAccuracy() < 500) {
+                this.positionFeature.setGeometry(coordinates ?
+                    new ol.geom.Point(coordinates) : null);
+                if (this.centerMapToggle) { this.centerMap(coordinates) }
+            }
         });
-        this.sr.addFeature(this.positionFeature)
-        this.sr.addFeature(this.accuracyFeature)
-        this.ly.setSource(this.sr)
-        this.mapConfig.map.addLayer(this.ly)
+
+        {
+            this.sr.addFeature(this.positionFeature)
+            this.sr.addFeature(this.accuracyFeature)
+            this.ly.setSource(this.sr)
+            this.mapConfig.map.addLayer(this.ly)
+        }
     }
 
     public centerMap(coordinates) {
@@ -108,10 +114,11 @@ export class GeocodingService {
         this.geolocation.setTracking(track)
         this.isTracking = track
         if (!track) {
-            this.positionFeature.setGeometry([0,0] ?
-            new ol.geom.Point([0,0]) : null);
-            this.accuracyFeature.setGeometry([0,0] ?
-                new ol.geom.Point([0,0]) : null);}
+            this.positionFeature.setGeometry([0, 0] ?
+                new ol.geom.Point([0, 0]) : null);
+            this.accuracyFeature.setGeometry([0, 0] ?
+                new ol.geom.Point([0, 0]) : null);
+        }
         else {
             this.centerMapToggle = true
         }

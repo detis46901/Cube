@@ -58,7 +58,9 @@
                             <br>
                             <span *ngIf="myCubeComment.filename; else elseBlock"><a target="_blank"
                                     [href]="URL + '?table=' + myCubeConfig.table + '&id=' + myCubeComment.id">{{myCubeComment.comment}}</a></span>
-                            <ng-template #elseBlock>{{myCubeComment.comment}}</ng-template>
+                            <ng-template #elseBlock>
+                                <textarea disabled rows="3" cols="45" name="comment">{{myCubeComment.comment}}</textarea>
+                    </ng-template>
                             <br>
                             <mat-divider></mat-divider>
                         </div>

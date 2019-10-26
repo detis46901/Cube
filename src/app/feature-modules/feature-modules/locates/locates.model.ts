@@ -85,6 +85,7 @@ export class locateStyles {
                 color: '#FF0000'
             })
         }),
+        zIndex: 100
         // text: new ol.style.Text({
         //   text: '1',
         //   fill: new ol.style.Fill({

@@ -96,7 +96,6 @@ export class MapComponent {
     }
 
     ngOnDestroy() {
-        this.mapService.stopInterval()
         ol.Observable.unByKey(this.mapService.modkey)
         //need to run stop interval on all the userpagelayers
     }

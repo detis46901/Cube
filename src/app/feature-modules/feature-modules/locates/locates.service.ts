@@ -45,7 +45,6 @@ export class LocatesService {
     private myCubeService: MyCubeService,
     private locateStyles: locateStyles,
     private snackBar: MatSnackBar) { }
-    private locateUpdateInterval: any
 
 
   //loads the locate data
@@ -56,7 +55,7 @@ export class LocatesService {
     this.clearFeature(this.mapConfig, this.layer)
     //Need to provide for clustering if the number of objects gets too high
 
-    let stylefunction = ((feature:ol.Feature) => {
+    let stylefunction = ((feature: ol.Feature) => {
       return (this.styleService.styleFunction(feature, 'load'));
     })
     let source = new ol.source.Vector({
@@ -81,14 +80,19 @@ export class LocatesService {
       layer.olLayer = this.vectorlayer
       layer.source = source
     })
-    this.locateUpdateInterval = setInterval(() => {
-      this.reloadLayer();
-  }, 20000);
     return true
   }
 
+  private createInterval() {
+    clearInterval(this.layer.updateInterval)
+    this.layer.updateInterval= setInterval(() => {
+      // console.log(this.layer.updateInterval)
+      this.reloadLayer();
+    }, 20000);
+  }
+
   public reloadLayer() {
-    this.clearFeature(this.mapConfig, this.layer)
+    //this.clearFeature(this.mapConfig, this.layer)
     let stylefunction = ((feature: ol.Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
       return (this.styleService.styleFunction(feature, this.layerState));
     })
@@ -96,21 +100,22 @@ export class LocatesService {
       this.layer.source.clear();
       if (data[0][0]['jsonb_build_object']['features']) {
         this.setData(data).then(() => {
-        this.layer.source.forEachFeature((feat: ol.Feature) => {
-          feat.setStyle(stylefunction);
+          this.layer.source.forEachFeature((feat: ol.Feature) => {
+            feat.setStyle(stylefunction);
+          })
+          if (this.layer == this.mapConfig.currentLayer) {
+            this.getFeatureList(this.mapConfig, this.layer)
+          }
         })
-        if (this.layer == this.mapConfig.currentLayer) {
-          this.getFeatureList(this.mapConfig, this.layer)
-        }
-      })
-    }
+      }
     })
   }
 
-  private setData(data):Promise<any>  {
+
+  private setData(data): Promise<any> {
     let promise = new Promise((resolve, reject) => {
-        this.layer.source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']))
-        resolve()
+      this.layer.source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']))
+      resolve()
     })
     return promise;
   }
@@ -139,7 +144,7 @@ export class LocatesService {
       this.sortByFunction()
     } catch (error) {
       console.error(error);
-      clearInterval(this.locateUpdateInterval);
+      clearInterval(this.layer.updateInterval);
     }
     return true
   }
@@ -164,7 +169,9 @@ export class LocatesService {
     return true
   }
 
-  public selectFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {   
+  public selectFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+    clearInterval(this.layer.updateInterval)
+    this.layer.updateInterval= null
     this.sqlService.GetSingle(this.layer.layerID, mapConfig.selectedFeature.get('id'))
       .subscribe((data: Locate) => {
         this.sendTicket(data[0][0])
@@ -173,14 +180,16 @@ export class LocatesService {
     //this.sendTicket(mapConfig.selectedFeature.get('ticket'))
     this.sendID(mapConfig.selectedFeature.get('id'))
     this.mapConfig.selectedFeature.setStyle(this.locateStyles.selected)
-  
+
     return false
   }
 
   public clearFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
     let stylefunction = ((feature: ol.Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
-    return (this.styleService.styleFunction(feature, 'current'));
-  })
+      return (this.styleService.styleFunction(feature, 'current'));
+    })
+    //this.reloadLayer()  //Can't do this.  It would be circular.
+    this.createInterval()
     this.sendTicket(null)
     this.sendID(null)
     this.myCubeService.clearMyCubeData()
@@ -189,19 +198,16 @@ export class LocatesService {
   }
 
   public styleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    clearInterval(this.locateUpdateInterval)
+
     return true
   }
 
   public unstyleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
     let stylefunction = ((feature: ol.Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
-    return (this.styleService.styleFunction(feature, 'current'));
-  })
+      return (this.styleService.styleFunction(feature, 'current'));
+    })
     this.mapConfig.selectedFeature.setStyle(stylefunction)
-        this.locateUpdateInterval = setInterval(() => {
-      this.reloadLayer();
-  }, 20000);
-
+    this.mapConfig.selectedFeature = null
     return true
   }
 
@@ -534,6 +540,7 @@ export class LocatesService {
                 let snackBarRef = this.snackBar.open('Ticket ' + this.locate.ticket + ' was inserted.', 'Undo', {
                   duration: 4000
                 });
+                this.myCubeService.createAutoMyCubeComment(true, "Ticket Created", id, table, 1)
                 snackBarRef.onAction().subscribe((x) => {
                   this.sqlService.Delete(table, id)
                     .subscribe((x) => {
@@ -587,7 +594,7 @@ export class LocatesService {
     })
   }
   public flipSortBy() {
-    switch(this.sortBy) {
+    switch (this.sortBy) {
       case "Priority": {
         this.sortBy = "Address"
         break
@@ -606,35 +613,35 @@ export class LocatesService {
     if (this.sortBy == "Address") { //this is really by priority
       this.mapConfig.featureList.sort((a, b): number => {
         if (a.label > b.label) {
-            return 1;
+          return 1;
         }
         if (a.label < b.label) {
-            return -1;
+          return -1;
         }
         return 0;
-    })
+      })
     }
-    if (this.sortBy == "Priority"){ //this is really by address
+    if (this.sortBy == "Priority") { //this is really by address
       this.mapConfig.featureList.sort((a, b): number => {
         if (a.feature.get('sdate') + ' ' + a.feature.get('stime') > b.feature.get('sdate') + ' ' + b.feature.get('stime')) {
-            return 1;
+          return 1;
         }
         if (a.feature.get('sdate') + ' ' + a.feature.get('stime') < b.feature.get('sdate') + ' ' + b.feature.get('stime')) {
-            return -1;
+          return -1;
         }
         return 0;
-    })
+      })
     }
     if (this.sortBy == "Contractor") {
       this.mapConfig.featureList.sort((a, b): number => {
         if (a.feature.get('company') > b.feature.get('company')) {
-            return 1;
+          return 1;
         }
         if (a.feature.get('company') < b.feature.get('company')) {
           return -1;
         }
         return 0;
-    })
+      })
     }
   }
 }
