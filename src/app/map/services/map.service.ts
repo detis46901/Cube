@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { MapConfig, mapStyles, featureList } from '../models/map.model';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { UserPageInstanceService } from '../../../_services/_userPageInstance.service'
-import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig, MyCubeComment } from '../../../_models/layer.model';
+import { LayerPermission, UserPageLayer} from '../../../_models/layer.model';
 import { UserPageInstance, ModulePermission } from '../../../_models/module.model'
 import { LayerPermissionService } from '../../../_services/_layerPermission.service';
 import { ModulePermissionService } from '../../../_services/_modulePermission.service'
@@ -30,7 +30,6 @@ export class MapService {
     public modify: ol.interaction.Modify;
     public selectedLayer: any;
     public editmode: boolean = false;
-    //public featurelist = new Array<featureList>();
     public base: string = 'base';  //base layer
     private drawMode: boolean = false;
     private drawInteraction: any;
@@ -152,23 +151,24 @@ export class MapService {
                 userpagelayer.layerShown = userpagelayer.defaultON;
                 //this if is for layers that are connected to modules
                 if (!userpagelayer.olLayer) {
-                        if (this.featuremodulesservice.loadLayer(this.mapConfig, userpagelayer, init)) {
-                            j++
-                            if (j == this.mapConfig.userpagelayers.length) {
-                                resolve();
-                            }
+                    if (this.featuremodulesservice.loadLayer(this.mapConfig, userpagelayer, init)) {
+                        j++
+                        if (j == this.mapConfig.userpagelayers.length) {
+                            resolve();
                         }
-                    
+                    }
                     else {
                         switch (userpagelayer.layer.layerType) {
-                            case "GeoserverMosaic" : {
+                            case "GeoserverMosaic": {
                                 {  //testing...
                                     let wmsSource = new ol.source.ImageWMS({
                                         url: this.wmsService.formLayerRequest(userpagelayer),
-                                        params: { 'LAYERS': userpagelayer.layer.layerIdent,
-                                        'FORMAT': 'image/png',
-                                        'VERSION': '1.1.1',
-                                        "exceptions": 'application/vnd.ogc.se_inimage' },
+                                        params: {
+                                            'LAYERS': userpagelayer.layer.layerIdent,
+                                            'FORMAT': 'image/png',
+                                            'VERSION': '1.1.1',
+                                            "exceptions": 'application/vnd.ogc.se_inimage'
+                                        },
                                         ratio: 1,
                                         projection: 'EPSG:2965',
                                         serverType: 'geoserver',
@@ -215,7 +215,6 @@ export class MapService {
                                     resolve();
                                 }
                                 break
-
                             }
                             case "MyCube": {
                                 this.loadMyCube(userpagelayer);
@@ -321,12 +320,12 @@ export class MapService {
         if (layer.olLayer) { layer.olLayer.setVisible(!layer.layerShown) }
         layer.layerShown = !layer.layerShown;
         if (layer.layerShown === false) {
-                this.featuremodulesservice.unloadLayer(this.mapConfig, layer)
+            this.featuremodulesservice.unloadLayer(this.mapConfig, layer)
             if (this.mapConfig.currentLayer == layer) {
                 this.mapConfig.currentLayer = new UserPageLayer;
                 this.mapConfig.currentLayerName = "";
                 this.clearFeature()
-                    this.featuremodulesservice.unsetCurrentLayer(this.mapConfig, layer)
+                this.featuremodulesservice.unsetCurrentLayer(this.mapConfig, layer)
             }
             //could add something here that would move to the next layerShown=true.  Not sure.
             this.mapConfig.editmode = this.mapConfig.currentLayer.layerPermissions.edit
@@ -364,7 +363,7 @@ export class MapService {
                         if (this.mapConfig.selectedFeature) {
                             this.mapConfig.selectedFeature = layer.source.getFeatureById(this.mapConfig.selectedFeature.getId());
                             if (this.mapConfig.selectedFeature) {
-                                this.selectFeature(layer, true)
+                                this.selectMyCubeFeature(layer, true)
                             } //need to make sure the feature still exists
                             //source.getFeatureById(this.mapConfig.selectedFeature.getId()).setStyle(this.mapstyles.selected)
                             //this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected)
@@ -390,14 +389,14 @@ export class MapService {
         this.clearLayerConfig();
         this.mapConfig.currentLayer = layer;
         this.mapConfig.currentLayerName = layer.layer.layerName  //Puts the current name in the component
-            if (this.featuremodulesservice.setCurrentLayer(this.mapConfig, layer)) {
-                this.mapConfig.featureList = [];
-                if (!this.featuremodulesservice.getFeatureList(this.mapConfig, layer)) {
-                    this.getFeatureList();
-                }
-                if (layer.layer.layerType == "MyCube") { this.createMyCubeClick(layer) }
-                return
+        if (this.featuremodulesservice.setCurrentLayer(this.mapConfig, layer)) {
+            this.mapConfig.featureList = [];
+            if (!this.featuremodulesservice.getFeatureList(this.mapConfig, layer)) {
+                this.getFeatureList();
             }
+            if (layer.layer.layerType == "MyCube") { this.createMyCubeClick(layer) }
+            return
+        }
         if (layer.layerShown === true && layer.layer.layerType == "MyCube") {
             this.setCurrentMyCube(layer)
         }
@@ -431,12 +430,10 @@ export class MapService {
     private createMyCubeClick(layer: UserPageLayer) {
         this.mapConfig.evkey = this.mapConfig.map.on('click', (e: any) => {
             if (this.mapConfig.selectedFeature) {
-                    if (!this.featuremodulesservice.unstyleSelectedFeature(this.mapConfig, layer)) {
-                        this.mapConfig.selectedFeature.setStyle(null);
-                    }
-                if (!(layer.userPageInstanceID >0))  {this.mapConfig.selectedFeature.setStyle(null); }
+                if (!this.featuremodulesservice.unstyleSelectedFeature(this.mapConfig, layer)) {
+                    this.mapConfig.selectedFeature.setStyle(null);
+                }
             }
-
             var hit = false;
             this.mapConfig.map.forEachFeatureAtPixel(e.pixel, (feature: ol.Feature, selectedLayer: any) => {
                 this.selectedLayer = selectedLayer;
@@ -449,7 +446,7 @@ export class MapService {
                 hitTolerance: 5
             });
             if (hit) {
-                this.selectFeature(layer);
+                this.selectMyCubeFeature(layer);
             }
             else {
                 this.clearFeature();
@@ -475,9 +472,9 @@ export class MapService {
             ol.Observable.unByKey(this.modkey); //removes the previous modify even if there was one.
         }
         this.mapConfig.userpagelayers.forEach(layer => {
-                if (this.featuremodulesservice.unsetCurrentLayer(this.mapConfig, layer)) {
-                    return
-                }
+            if (this.featuremodulesservice.unsetCurrentLayer(this.mapConfig, layer)) {
+                return
+            }
             if (layer.layer.layerType == "MyCube") {
                 let stylefunction = ((feature) => {
                     return (this.styleService.styleFunction(feature, layer, "load"));
@@ -485,7 +482,6 @@ export class MapService {
                 layer.olLayer.setStyle(stylefunction)
             }
         });
-
     }
 
     private createWMSClick(layer: UserPageLayer) { //this is for WMS layers
@@ -514,18 +510,17 @@ export class MapService {
                     });
             }
         });
-
     }
 
-    private selectFeature(layer: UserPageLayer, refresh: boolean = false): void {
-            if (this.featuremodulesservice.selectFeature(this.mapConfig, layer)) {
-                return
-            }
-            if (this.featuremodulesservice.styleSelectedFeature(this.mapConfig, layer)) {
-            }
-            else {
-                this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected);
-            }
+    private selectMyCubeFeature(layer: UserPageLayer, refresh: boolean = false): void {
+        if (this.featuremodulesservice.selectFeature(this.mapConfig, layer)) {
+            return
+        }
+        if (this.featuremodulesservice.styleSelectedFeature(this.mapConfig, layer)) {
+        }
+        else {
+            this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected);
+        }
         if (refresh == false) {
             this.mapConfig.myCubeConfig = this.myCubeService.setMyCubeConfig(layer.layer.ID, layer.layerPermissions.edit);
             this.myCubeService.getAndSendMyCubeData(layer.layer.ID, this.mapConfig.selectedFeature).then(data => {
@@ -570,7 +565,7 @@ export class MapService {
     }
 
     private clearFeature() {
-            if (this.featuremodulesservice.clearFeature(this.mapConfig, this.mapConfig.currentLayer)) { return }
+        if (this.featuremodulesservice.clearFeature(this.mapConfig, this.mapConfig.currentLayer)) { return }
         if (this.mapConfig.selectedFeature) {
             this.mapConfig.selectedFeature.setStyle(null);
             this.mapConfig.selectedFeature = null;
@@ -657,15 +652,12 @@ export class MapService {
                     this.getFeatureList();
                     this.mapConfig.selectedFeature = null
                 }
-
             })
             snackBarRef.onAction().subscribe((x) => {
                 let newSnackBarRef = this.snackBar.open("Undone", '', { duration: 4000 })
                 didUndo = true
             })
-
         })
-
     }
 
     private getFeatureList() {
@@ -713,7 +705,7 @@ export class MapService {
             maxZoom: 18
         })
         this.mapConfig.selectedFeature = featurelist.feature;
-        this.selectFeature(this.mapConfig.currentLayer);
+        this.selectMyCubeFeature(this.mapConfig.currentLayer);
     }
 
     //required (called from html)
@@ -761,14 +753,6 @@ export class MapService {
             this.mapConfig.layers[0].setSource(base);
         }
     }
-
-    // public stopInterval() {
-    //     if (this.mapConfig) {
-    //         this.mapConfig.userpagelayers.forEach((UPL) => {
-    //             clearInterval(UPL.updateInterval)
-    //         })
-    //     }
-    // }
 
     public isolate(layer: UserPageLayer) {
         this.mapConfig.userpagelayers.forEach((x) => {

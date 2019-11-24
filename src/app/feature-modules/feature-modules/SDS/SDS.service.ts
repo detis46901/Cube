@@ -115,7 +115,8 @@ export class SDSService {
     return promise;
   }
 
-  private getFeatureList(mapConfig?, layer?): boolean {
+  private getFeatureList(mapConfig?, layer?:UserPageLayer): boolean {
+    //this has issues, as the "name" needs to be dinamic.  This really needs to be able to return false so map.service can create the featurelist.
     let k: number = 0;
     let tempList = new Array<featureList>();
     try {
@@ -160,7 +161,8 @@ export class SDSService {
     return true
   }
 
-  public selectFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {   
+  public selectFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+    //This will only work for myCube layers.  Another method will need to be created for WMS layers.
     this.sqlService.GetSingle(this.layer.layerID, mapConfig.selectedFeature.get('id'))
       .subscribe((data: Locate) => {
         this.sendTicket(data[0][0])
@@ -169,7 +171,6 @@ export class SDSService {
     //this.sendTicket(mapConfig.selectedFeature.get('ticket'))
     this.sendID(mapConfig.selectedFeature.get('id'))
     this.mapConfig.selectedFeature.setStyle(this.locateStyles.selected)
-  
     return false
   }
 

@@ -60,7 +60,7 @@ export class SideNavService extends SQLService {
         let propList = new Array<string>()
         let properties = JSON.stringify(message).split(",");
         //properties.shift();
-        this.GetSchema(table)
+        this.GetSchema('mycube', 't' + table)
             .subscribe((data: MyCubeField[]) => {
                 this.cubeData = data
                 this.cubeData[0].value = message["id"]

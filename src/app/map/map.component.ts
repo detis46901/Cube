@@ -1,16 +1,13 @@
-import { Component, ViewChild, AfterViewInit, ElementRef, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, Input } from '@angular/core';
 import { MapService } from './services/map.service';
 import { MapConfig } from './models/map.model';
-import { WMSService } from './services/wms.service';
 import { geoJSONService } from './services/geoJSON.service'
-import { LayerPermissionService } from '../../_services/_layerPermission.service';
-import { LayerService } from '../../_services/_layer.service';
 import { UserPageService } from '../../_services/_userPage.service';
 import { MyCubeService } from './services/mycube.service'
 import { ServerService } from '../../_services/_server.service';
 import { GroupMemberService } from '../../_services/_groupMember.service';
 import { GroupService } from '../../_services/_group.service';
-import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig, MyCubeComment } from '../../_models/layer.model';
+import { LayerPermission, UserPageLayer, MyCubeField, MyCubeComment } from '../../_models/layer.model';
 import { UserPage } from '../../_models/user.model';
 import { UserPageLayerService } from '../../_services/_userPageLayer.service';
 import { Observable } from 'rxjs/Observable';
@@ -54,7 +51,6 @@ export class MapComponent {
     public activePages = new Array<UserPage>();
     public defaultPage: UserPage;
     public currPage: any = ''; //Could be "none"
-    //public noLayers: boolean;
     public interval: any;
     public toolbar: any;
     public message: any;
@@ -62,16 +58,14 @@ export class MapComponent {
     public myCubeComments: MyCubeComment[]
     public disableCurrent: Boolean //used to make sure that a layer can't be set as current until it's ready
 
-
-
     constructor(
-        public snackBar: MatSnackBar, private configuration: Configuration,
-        private geojsonservice: geoJSONService, public mapService: MapService, private wfsService: WMSService,
-        private layerPermissionService: LayerPermissionService, private layerService: LayerService,
-        private userPageService: UserPageService, private userPageLayerService: UserPageLayerService,
-        private myCubeService: MyCubeService, private serverService: ServerService, private dialog: MatDialog,
-        private groupMemberService: GroupMemberService,
-        private groupService: GroupService,
+        public snackBar: MatSnackBar, 
+        private configuration: Configuration,
+        public mapService: MapService,
+        private userPageService: UserPageService,
+        private userPageLayerService: UserPageLayerService,
+        private myCubeService: MyCubeService,
+        private dialog: MatDialog,
         private geocodingService: GeocodingService,
         private mapConfigService: MapConfigService,
     ) {
@@ -88,16 +82,8 @@ export class MapComponent {
             );
     }
 
-    // After view init the map target can be set!
-    ngAfterViewInit() {
-        //mapConfig.map.setTarget(this.mapElement.nativeElement.id)
-        //this.refreshLayers()
-
-    }
-
     ngOnDestroy() {
         ol.Observable.unByKey(this.mapService.modkey)
-        //need to run stop interval on all the userpagelayers
     }
 
     //Angular component initialization
@@ -105,10 +91,9 @@ export class MapComponent {
         this.getMapConfig(this.id)
     }
 
-    private getMapConfig(id) {
+    private getMapConfig(id) { //id is used for public pages.
         if (id) {
             this.mapConfig.userID = id
-            console.log(this.token)
         }
         else {
             this.mapConfig.userID = this.userID;
@@ -136,7 +121,6 @@ export class MapComponent {
                 osm_layer.setVisible(true);
                 this.mapConfig.sources.push(new ol.source.OSM({ cacheSize: environment.cacheSize }));
                 this.mapConfig.layers.push(osm_layer);
-
                 if (this.mapConfig.userpagelayers.length == 0) {
                     this.mapConfig.currentLayer = new UserPageLayer;
                     this.mapConfig.currentLayerName = "";
@@ -145,7 +129,6 @@ export class MapComponent {
                     let j = this.mapConfig.layerpermission.findIndex((x) => x.layerID == userpagelayer.layerID);
                     if (j >= 0) {
                         userpagelayer.layerPermissions = this.mapConfig.layerpermission[j];
-                        //need to make sure the maximum permissions get provided.  probably need to use foreach instead of findIndex  It uses the first one instead of the most liberal.
                     }
                     else {
                         //if there isn't an entry for the layer, it allows the viewing, but not anything else.  This is necessary because I'm not adding permissions to layers required by a module.
@@ -153,14 +136,17 @@ export class MapComponent {
                         userpagelayer.layerPermissions = new LayerPermission
                         userpagelayer.layerPermissions.edit = false
                     }
-                })
-                this.mapConfig.userpagelayers.forEach((userpagelayer) => {
-                    let j = this.mapConfig.modulepermission.findIndex((x) => x.moduleInstanceID == userpagelayer.userPageInstanceID);
-                    if (j >= 0) {
+                    let k = this.mapConfig.modulepermission.findIndex((x) => x.moduleInstanceID == userpagelayer.userPageInstanceID);
+                    if (k >= 0) {
                         userpagelayer.modulePermissions = this.mapConfig.modulepermission[j];
-                        //need to make sure the maximum permissions get provided.  probably need to use foreach instead of findIndex  It uses the first one instead of the most liberal.
                     }
                 })
+                // this.mapConfig.userpagelayers.forEach((userpagelayer) => {
+                //     let j = this.mapConfig.modulepermission.findIndex((x) => x.moduleInstanceID == userpagelayer.userPageInstanceID);
+                //     if (j >= 0) {
+                //         userpagelayer.modulePermissions = this.mapConfig.modulepermission[j];
+                //     }
+                // })
                 this.mapService.loadLayers(this.mapConfig, true).then(() => {
                     this.mapConfig.view = new ol.View({
                         projection: 'EPSG:3857',

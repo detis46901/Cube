@@ -76,7 +76,7 @@ export class StyleComponent implements OnInit {
         catch(e) {
             this.selectedListTitle = ""
         }
-        this.sqlSerivce.GetSchema(this.mapConfig.currentLayer.layerID)
+        this.sqlSerivce.GetSchema('mycube', 't' + this.mapConfig.currentLayer.layerID)
             .subscribe((data) => {
                 console.log(data[0])
                 this.columns = data[0].slice(2, data[0].length)

@@ -43,8 +43,9 @@ export class MyCubeService extends SQLService {
     }
 
     prebuildMyCube(layer) {
-        this.GetSchema(layer.layer.ID)
+        this.GetSchema('mycube', 't' + layer.layer.ID)
             .subscribe((data) => {
+                console.log(data)
                 this.cubeData = data[0]
                 this.cubeData[0].type = "id"
                 this.cubeData[1].type = "geom"
@@ -61,7 +62,7 @@ export class MyCubeService extends SQLService {
             else {
                 id = feature.getProperties()['features'][0]['c']
             }
-            this.GetSchema(table)
+            this.GetSchema('mycube', 't' + table)
                 .subscribe((data) => {
                     this.cubeData = data[0]
                     this.cubeData[0].value = id

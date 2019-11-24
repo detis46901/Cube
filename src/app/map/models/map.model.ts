@@ -114,6 +114,7 @@ export class mapStyles {
     })
 
     public selected = new ol.style.Style({
+        zIndex: 100,
         image: new ol.style.Circle({
             radius: 5,
             fill: null,

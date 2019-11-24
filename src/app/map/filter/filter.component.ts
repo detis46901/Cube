@@ -52,7 +52,7 @@ export class FilterComponent implements OnInit {
             this.mapConfig.currentLayer.style.filter.operator = ""
             this.mapConfig.currentLayer.style.filter.value = ""
         }
-        this.sqlSerivce.GetSchema(this.mapConfig.currentLayer.layerID)
+        this.sqlSerivce.GetSchema('mycube', 't' + this.mapConfig.currentLayer.layerID)
             .subscribe((data) => {
                 this.columns = data[0].slice(2, data[0].length)
                 this.updateColumn()
