@@ -16,13 +16,21 @@ import { MatDialog } from '@angular/material';
 import { Clipboard } from 'ts-clipboard';
 import { Configuration } from '../../_api/api.constants';
 import { MatSnackBar } from '@angular/material';
-import * as ol from 'openlayers';
+import TileLayer from 'ol/layer/Tile';
+import View from 'ol/View';
+import XYZ from 'ol/source/XYZ';
+import OSM from 'ol/source/OSM';
+import { transform } from 'ol/proj';
+import { defaults as defaultControls } from 'ol/control';
+import Collection from 'ol/Collection';
+import Feature from 'ol/Feature';
 import { GeocodingService } from './services/geocoding.service'
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FormControl } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { MapConfigService } from './../../_services/mapConfig.service'
 import { environment } from 'environments/environment'
+import Map from 'ol/Map';
 
 @Component({
     moduleId: module.id,
@@ -36,7 +44,7 @@ export class MapComponent {
     // This is necessary to access the html element to set the map target (after view init)!
     @ViewChild("mapElement") mapElement: ElementRef;
     @ViewChild("layers") layers: ElementRef;
-    @Input() id:string
+    @Input() id: string
     layerCtrl = new FormControl();
     filteredPermissions: Observable<LayerPermission[]>;
     public showNewLayer: boolean = false
@@ -59,7 +67,7 @@ export class MapComponent {
     public disableCurrent: Boolean //used to make sure that a layer can't be set as current until it's ready
 
     constructor(
-        public snackBar: MatSnackBar, 
+        public snackBar: MatSnackBar,
         private configuration: Configuration,
         public mapService: MapService,
         private userPageService: UserPageService,
@@ -83,7 +91,6 @@ export class MapComponent {
     }
 
     ngOnDestroy() {
-        ol.Observable.unByKey(this.mapService.modkey)
     }
 
     //Angular component initialization
@@ -102,24 +109,25 @@ export class MapComponent {
             .subscribe((x) => {
                 this.mapConfig = x
                 this.currPage = this.mapConfig.currentpage.page
-                this.mapConfig.selectedFeatures = new ol.Collection<ol.Feature>() //for some reason, this is necessary
+                //let col: ol.Collection = []
+                this.mapConfig.selectedFeatures = new Collection<Feature>() //for some reason, this is necessary
                 this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature)
                 this.mapConfig.layers = [];
                 let osm_layer: any
                 if (environment.MapBoxBaseMapUrl != '') {
-                    osm_layer = new ol.layer.Tile({
-                        source: new ol.source.XYZ({
+                    osm_layer = new TileLayer({
+                        source: new XYZ({
                             url: environment.MapBoxBaseMapUrl
                         })
                     });
                 }
                 else {
-                    osm_layer = new ol.layer.Tile({
-                    source: new ol.source.OSM({ cacheSize: environment.cacheSize })
-                });
+                    osm_layer = new TileLayer({
+                        source: new OSM({ cacheSize: environment.cacheSize })
+                    });
                 }
                 osm_layer.setVisible(true);
-                this.mapConfig.sources.push(new ol.source.OSM({ cacheSize: environment.cacheSize }));
+                this.mapConfig.sources.push(new OSM({ cacheSize: environment.cacheSize }));
                 this.mapConfig.layers.push(osm_layer);
                 if (this.mapConfig.userpagelayers.length == 0) {
                     this.mapConfig.currentLayer = new UserPageLayer;
@@ -141,23 +149,17 @@ export class MapComponent {
                         userpagelayer.modulePermissions = this.mapConfig.modulepermission[j];
                     }
                 })
-                // this.mapConfig.userpagelayers.forEach((userpagelayer) => {
-                //     let j = this.mapConfig.modulepermission.findIndex((x) => x.moduleInstanceID == userpagelayer.userPageInstanceID);
-                //     if (j >= 0) {
-                //         userpagelayer.modulePermissions = this.mapConfig.modulepermission[j];
-                //     }
-                // })
                 this.mapService.loadLayers(this.mapConfig, true).then(() => {
-                    this.mapConfig.view = new ol.View({
+                    this.mapConfig.view = new View({
                         projection: 'EPSG:3857',
-                        center: ol.proj.transform([environment.centerLong, environment.centerLat], 'EPSG:4326', 'EPSG:3857'),
+                        center: transform([environment.centerLong, environment.centerLat], 'EPSG:4326', 'EPSG:3857'),
                         zoom: environment.centerZoom,
                         enableRotation: false
                     })
-                    this.mapConfig.map = new ol.Map({
+                    this.mapConfig.map = new Map({
                         layers: this.mapConfig.layers,
                         view: this.mapConfig.view,
-                        controls: ol.control.defaults({
+                        controls: defaultControls({
                             attribution: false,
                             zoom: null
                         })
@@ -181,6 +183,9 @@ export class MapComponent {
                     }, { hitTolerance: 20 })
                     let mkey = this.mapConfig.map.on('pointerdrag', (evt: any) => {
                         this.geocodingService.centerMapToggle = false
+                    })
+                    this.mapConfig.evkey = this.mapConfig.map.on('click', (e: any) => {
+                        this.mapService.mapClickEvent(e)
                     })
                     this.mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
                     this.toolbar = "Layers"
@@ -309,7 +314,7 @@ export class MapComponent {
     private cleanPage(): void {
         // The tempUPL is set up so that the expansion panel can immediately get cleared while the page is cleaning.
         this.disableCurrent = true
-        let tempUPL:UserPageLayer[]
+        let tempUPL: UserPageLayer[]
         tempUPL = this.mapConfig.userpagelayers
         this.mapConfig.userpagelayers = []
         tempUPL.forEach((x) => {
@@ -320,7 +325,6 @@ export class MapComponent {
                 clearInterval(x.updateInterval)
                 x.source.clear(true)
             }
-
         })
         this.mapConfig.editmode = false
         this.mapConfig.filterOn = false;
@@ -350,7 +354,6 @@ export class MapComponent {
         this.userPageService
             .Update(this.mapConfig.defaultpage)
             .subscribe();
-
         userpage.default = true;
         this.userPageService
             .Update(userpage)
@@ -366,17 +369,12 @@ export class MapComponent {
             }
         })
     }
-    public canEditPerm(layerID: number) {
 
-    }
-
-    public canDeleteLayer(layerID: number) {
-
-    }
     public isolate(layer: UserPageLayer) {
         this.mapService.isolate(layer)
     }
-    dropLayer(event: CdkDragDrop<string[]>) {
+
+    public dropLayer(event: CdkDragDrop<string[]>) {
         moveItemInArray(this.mapService.mapConfig.userpagelayers, event.previousIndex, event.currentIndex);
         console.log(event)
         console.log(this.mapService.mapConfig.userpagelayers)
@@ -394,7 +392,8 @@ export class MapComponent {
             this.userPageLayerService.Update(UPLUpdate).subscribe();
         })
     }
-    dropPage(event: CdkDragDrop<string[]>) {
+
+    public dropPage(event: CdkDragDrop<string[]>) {
         moveItemInArray(this.mapService.mapConfig.userpages, event.previousIndex, event.currentIndex);
         let i: number = 0
         this.mapService.mapConfig.userpages.forEach((x) => {

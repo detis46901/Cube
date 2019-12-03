@@ -3,7 +3,14 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
 import { Injectable } from "@angular/core";
 import { MapConfig } from '../models/map.model'
-import * as ol from 'openlayers';
+import Feature from 'ol/Feature';
+import GeoJSON from 'ol/format/GeoJSON';
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from 'ol/source/Vector';
+import {addProjection, addCoordinateTransforms, transform} from 'ol/proj';
+import Geolocation from 'ol/Geolocation';
+import {Fill, Stroke, Circle, Style} from 'ol/style';
+import Point from 'ol/geom/Point';
 
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mergeMap";
@@ -15,11 +22,11 @@ export class GeocodingService {
     centerMapToggle: boolean = false
     mapConfig: MapConfig;
     position: any;
-    sr = new ol.source.Vector
-    ly = new ol.layer.Vector
-    geolocation = new ol.Geolocation()
-    accuracyFeature = new ol.Feature();
-    positionFeature = new ol.Feature();
+    sr = new VectorSource
+    ly = new VectorLayer
+    geolocation = new Geolocation()
+    accuracyFeature = new Feature();
+    positionFeature = new Feature();
 
     constructor(http: HttpClient) {
         this.http = http;
@@ -54,7 +61,7 @@ export class GeocodingService {
         //console.log("TrackMe")
         this.mapConfig = mapConfig
         //console.log(this.mapConfig.map.getView().getProjection())
-        this.geolocation = new ol.Geolocation({
+        this.geolocation = new Geolocation({
             // enableHighAccuracy must be set to true to have the heading value.
             trackingOptions: {
                 enableHighAccuracy: true
@@ -74,13 +81,13 @@ export class GeocodingService {
             }
         });
 
-        this.positionFeature.setStyle(new ol.style.Style({
-            image: new ol.style.Circle({
+        this.positionFeature.setStyle(new Style({
+            image: new Circle({
                 radius: 6,
-                fill: new ol.style.Fill({
+                fill: new Fill({
                     color: '#3399CC'
                 }),
-                stroke: new ol.style.Stroke({
+                stroke: new Stroke({
                     color: '#fff',
                     width: 2
                 })
@@ -91,7 +98,7 @@ export class GeocodingService {
             var coordinates = this.geolocation.getPosition();
             if (this.geolocation.getAccuracy() < 500) {
                 this.positionFeature.setGeometry(coordinates ?
-                    new ol.geom.Point(coordinates) : null);
+                    new Point(coordinates) : null);
                 if (this.centerMapToggle) { this.centerMap(coordinates) }
             }
         });
@@ -115,9 +122,9 @@ export class GeocodingService {
         this.isTracking = track
         if (!track) {
             this.positionFeature.setGeometry([0, 0] ?
-                new ol.geom.Point([0, 0]) : null);
+                new Point([0, 0]) : null);
             this.accuracyFeature.setGeometry([0, 0] ?
-                new ol.geom.Point([0, 0]) : null);
+                new Point([0, 0]) : null);
         }
         else {
             this.centerMapToggle = true

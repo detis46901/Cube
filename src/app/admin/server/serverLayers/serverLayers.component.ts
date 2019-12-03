@@ -11,8 +11,8 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import {FormControl} from '@angular/forms';
 import { environment } from 'environments/environment'
-import * as ol from 'openlayers';
-
+import WMSCapabilities from 'ol/format/WMSCapabilities';
+import WMTSCapabilities from 'ol/format/WMTSCapabilities';
 
 @Component({
     selector: 'app-serverLayers',
@@ -102,7 +102,7 @@ export class ServerLayersComponent implements OnInit {
         this.selectedServiceType = "Geoserver"
         this.getCapabilities(this.server.serverURL + '?service=wms&version=1.1.1&request=GetCapabilities')
         .subscribe((data) => {  
-        let parser = new ol.format.WMSCapabilities()
+        let parser = new WMSCapabilities()
         let result = parser.read(data);
         this.layers = result['Capability']['Layer']['Layer']
         console.log(this.layers)
@@ -111,7 +111,7 @@ export class ServerLayersComponent implements OnInit {
     private getWMTSLayers(): void {
         this.getCapabilities(this.server.serverURL+ "?request=GetCapabilities")
         .subscribe((data) => {
-            let parser = new ol.format.WMTSCapabilities()
+            let parser = new WMTSCapabilities()
             let result = parser.read(data)
             console.log(result)
             this.layers = result['Contents']['Layer']
@@ -141,21 +141,32 @@ export class ServerLayersComponent implements OnInit {
         let norest: string
         norest = this.server.serverURL.split('/rest')[0]
         norest = norest + '/services'
+        //something needs to go here
         console.log(norest + '/' + service['name'] + '/' + service['type'] + '/WMSServer?request=GetCapabilities&service=WMS')
+        
         this.getCapabilities(norest + '/' + service['name'] + '/' + service['type'] + '/WMSServer?request=GetCapabilities&service=WMS')
         .subscribe((data) => {
-            let parser = new ol.format.WMSCapabilities()
+            console.log(data)
+            let parser = new WMSCapabilities()
             let result = parser.read(data);
             this.layers = result['Capability']['Layer']['Layer']
             console.log(this.layers)
-            this.selected.setValue(2);  
+            this.selected.setValue(2);       
+        },
+        error => {
+            console.log(this.server.serverURL + '/' + service['name'] + service['type'] + '?f=pjson')
+            this.getCapabilities(this.server.serverURL + '/' + service['name'] + service['type'] + '?f=pjson')
+            .subscribe((data) => {
+                console.log(data)
+            })
         })
-    }
+    
+}
     private getArcGISLayersFromGetCapabilities(url: string) {
         this.getCapabilities(url + 'request=GetCapabilities&service=WMS')
         .subscribe((data) => {
             console.log(data)
-            let parser = new ol.format.WMSCapabilities()
+            let parser = new WMSCapabilities()
             let result = parser.read(data);
             this.layers = result['Capability']['Layer']['Layer']
             console.log(this.layers)

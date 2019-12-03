@@ -14,9 +14,6 @@ import { Image, coord, poly } from './open-aerial-map.model'
 import { MatDialog, MatSliderChange } from '@angular/material';
 import { OpenAerialMapService } from './open-aerial-map.service'
 
-
-import * as ol from 'openlayers';
-
 @Component({
   selector: 'app-open-aerial-map',
   templateUrl: './open-aerial-map.component.html',

@@ -14,7 +14,7 @@ import 'rxjs/add/operator/map';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { ServerDetailsComponent } from '../details/serverDetails/serverDetails.component';
 import { ServerLayersComponent } from './serverLayers/serverLayers.component';
-import * as ol from 'openlayers'
+import WMSCapabilities from 'ol/format/WMSCapabilities';
 
 @Component({
     selector: 'server',
@@ -106,7 +106,7 @@ export class ServerComponent implements OnInit {
         let url = serv.serverURL //+ '?request=getCapabilities&service=WMS';
         this.getCapabilities(url)
             .subscribe((data) => {
-                let parser = new ol.format.WMSCapabilities();
+                let parser = new WMSCapabilities();
                 let result = parser.read(data)
                 this.WMSLayers = result['Capability']['Layer']['Layer']
                 this.currServer = serv

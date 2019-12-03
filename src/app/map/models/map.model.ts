@@ -1,9 +1,12 @@
 import { LayerClass, LayerPermission, UserPageLayer, MyCubeField, MyCubeComment, MyCubeConfig } from '../../../_models/layer.model';
 import { Server } from '../../../_models/server.model';
 import { User, UserPage } from '../../../_models/user.model';
-import { Feature } from 'openlayers';
+import Feature from 'ol/Feature';
 import { UserPageInstance, ModulePermission } from '_models/module.model';
-import * as ol from 'openlayers';
+import View from 'ol/View'
+import {Fill, Stroke, Circle, Style} from 'ol/style';
+import Text from 'ol/style/Text';
+import Collection from 'ol/Collection';
 
 export interface MapConfigView {
     projection: string;
@@ -17,14 +20,14 @@ export class MapConfig {
     name?: string;
     userID?: number;
     map?: any;  // this should be of type ol.Map.  However, that causes a problem with the "getTarget()" method in map.component.ts
-    view?: ol.View;
+    view?: View;
     geolocation: ol.Geolocation;
     tracking: boolean = false;
     sources?= new Array;  // holds only the base layer
     layers? = new Array;  // holds only the base layer
     evkey: any; //current click event
-    selectedFeature?: ol.Feature;
-    selectedFeatures?: ol.Collection<ol.Feature> = new ol.Collection<ol.Feature>()
+    selectedFeature?: Feature;
+    selectedFeatures?: Collection<Feature> = new Collection<Feature>()
     userpages? = new Array<UserPage>();
     defaultpage?: UserPage;  //This looks like a duplicate that is also in userpages[]
     currentpage?: UserPage;
@@ -53,86 +56,86 @@ export class MapConfig {
 export class featureList {
     id?: number;
     label: string
-    feature: ol.Feature
+    feature: Feature
 }
 
 export class mapStyles {
-    public image = new ol.style.Circle({
+    public image = new Circle({
         radius: 5,
         fill: null,
-        stroke: new ol.style.Stroke({ color: 'red', width: 1 })
+        stroke: new Stroke({ color: 'red', width: 1 })
     });
 
-    public load = new ol.style.Style({
-        image: new ol.style.Circle({
+    public load = new Style({
+        image: new Circle({
             radius: 5,
             fill: null,
-            stroke: new ol.style.Stroke({color: '#319FD3', width: 2})
+            stroke: new Stroke({color: '#319FD3', width: 2})
         }),
-        fill: new ol.style.Fill({
+        fill: new Fill({
             color: 'rgba(255, 255, 255, 0.2)'
         }),
-        stroke: new ol.style.Stroke({
+        stroke: new Stroke({
             color: '#319FD3',
             width: 2
         }),
-        text: new ol.style.Text({
+        text: new Text({
             font: '12px Calibri,sans-serif',
-            fill: new ol.style.Fill({
+            fill: new Fill({
                 color: '#000'
             }),
-            stroke: new ol.style.Stroke({
+            stroke: new Stroke({
                 color: '#fff',
                 width: 1
             }),
         })
     });
 
-    public current = new ol.style.Style({
-        image: new ol.style.Circle({
+    public current = new Style({
+        image: new Circle({
             radius: 5,
             fill: null,
-            stroke: new ol.style.Stroke({color: '#319FD3', width: 4})
+            stroke: new Stroke({color: '#319FD3', width: 4})
         }),
-        fill: new ol.style.Fill({
+        fill: new Fill({
             color: 'rgba(255, 255, 255, 0.6)'
         }),
-        stroke: new ol.style.Stroke({
+        stroke: new Stroke({
             color: '#319FD3',
             width: 4
         }),
-        text: new ol.style.Text({
+        text: new Text({
             font: '12px Calibri,sans-serif',
-            fill: new ol.style.Fill({
+            fill: new Fill({
                 color: '#000'
             }),
-            stroke: new ol.style.Stroke({
+            stroke: new Stroke({
                 color: '#fff',
                 width: 5
             })
         })
     })
 
-    public selected = new ol.style.Style({
+    public selected = new Style({
         zIndex: 100,
-        image: new ol.style.Circle({
+        image: new Circle({
             radius: 5,
             fill: null,
-            stroke: new ol.style.Stroke({color: '#ff0000', width: 4})
+            stroke: new Stroke({color: '#ff0000', width: 4})
         }),
-        fill: new ol.style.Fill({
+        fill: new Fill({
             color: 'rgba(255, 255, 255, 0.6)'
         }),
-        stroke: new ol.style.Stroke({
+        stroke: new Stroke({
             color: '#ff0000',
             width: 4
         }),
-        text: new ol.style.Text({
+        text: new Text({
             font: '12px Calibri,sans-serif',
-            fill: new ol.style.Fill({
+            fill: new Fill({
                 color: '#000'
             }),
-            stroke: new ol.style.Stroke({
+            stroke: new Stroke({
                 color: '#fff',
                 width: 10
             })
@@ -140,65 +143,65 @@ export class mapStyles {
     })
 
     public loadmulti = {
-        'Point': new ol.style.Style({
+        'Point': new Style({
             image: this.image
         }),
-        'LineString': new ol.style.Style({
-            stroke: new ol.style.Stroke({
+        'LineString': new Style({
+            stroke: new Stroke({
                 color: 'green',
                 width: 1
             })
         }),
-        'MultiLineString': new ol.style.Style({
-            stroke: new ol.style.Stroke({
+        'MultiLineString': new Style({
+            stroke: new Stroke({
                 color: 'green',
                 width: 1
             })
         }),
-        'MultiPoint': new ol.style.Style({
+        'MultiPoint': new Style({
             image: this.image
         }),
-        'MultiPolygon': new ol.style.Style({
-            stroke: new ol.style.Stroke({
+        'MultiPolygon': new Style({
+            stroke: new Stroke({
                 color: 'yellow',
                 width: 1
             }),
-            fill: new ol.style.Fill({
+            fill: new Fill({
                 color: 'rgba(255, 255, 0, 0.1)'
             })
         }),
-        'Polygon': new ol.style.Style({
-            stroke: new ol.style.Stroke({
+        'Polygon': new Style({
+            stroke: new Stroke({
                 color: 'blue',
                 lineDash: [4],
                 width: 3
             }),
-            fill: new ol.style.Fill({
+            fill: new Fill({
                 color: 'rgba(0, 0, 255, 0.1)'
             })
         }),
-        'GeometryCollection': new ol.style.Style({
-            stroke: new ol.style.Stroke({
+        'GeometryCollection': new Style({
+            stroke: new Stroke({
                 color: 'magenta',
                 width: 2
             }),
-            fill: new ol.style.Fill({
+            fill: new Fill({
                 color: 'magenta'
             }),
-            image: new ol.style.Circle({
+            image: new Circle({
                 radius: 10,
                 fill: null,
-                stroke: new ol.style.Stroke({
+                stroke: new Stroke({
                     color: 'magenta'
                 })
             })
         }),
-        'Circle': new ol.style.Style({
-            stroke: new ol.style.Stroke({
+        'Circle': new Style({
+            stroke: new Stroke({
                 color: 'red',
                 width: 2
             }),
-            fill: new ol.style.Fill({
+            fill: new Fill({
                 color: 'rgba(255,0,0,0.2)'
             })
         })

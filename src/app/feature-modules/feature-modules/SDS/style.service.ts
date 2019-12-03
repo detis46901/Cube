@@ -13,9 +13,10 @@ import { catchError } from 'rxjs/operators';
 import { SQLService } from '../../../../_services/sql.service';
 import { Subject } from 'rxjs/Subject';
 import { MyCubeService } from '../../../map/services/mycube.service'
-import * as ol from 'openlayers';
 import { Http } from '@angular/http';
 import { Router } from '@angular/router'
+import Feature from 'ol/Feature';
+import {Fill, Stroke, Circle, Style} from 'ol/style';
 
 
 
@@ -23,14 +24,14 @@ import { Router } from '@angular/router'
 @Injectable()
 export class StyleService {
     private locateStyles = new SDSStyles
-    public styleFunction(feature: ol.Feature, version: string): ol.style.Style {
-        let style = new ol.style.Style({
-            image: new ol.style.Circle({
+    public styleFunction(feature: Feature, version: string): Style {
+        let style = new Style({
+            image: new Circle({
                 radius: this.getDepthRadius(feature),
-                stroke: new ol.style.Stroke({
+                stroke: new Stroke({
                     color: '#fff'
                 }),
-                fill: new ol.style.Fill({
+                fill: new Fill({
                     color: this.getFillColor(feature, version)
                 })
             }),
@@ -38,7 +39,7 @@ export class StyleService {
         return style
     }
 
-    getDepthRadius(feature: ol.Feature): number {
+    getDepthRadius(feature: Feature): number {
         let depthRadius: number
         let depth: string = feature.get("depth")
         let depthNum: number
@@ -62,7 +63,7 @@ export class StyleService {
         return depthRadius
     }
 
-    getFillColor(feature: ol.Feature, version: string): string {
+    getFillColor(feature: Feature, version: string): string {
         let getFillColor: string
         let d: string = feature.get('sdate')
         let t: string = (feature.get('stime'))

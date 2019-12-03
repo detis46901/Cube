@@ -3,8 +3,8 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 import { SQLService } from '../../../_services/sql.service'
 import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../../_models/layer.model'
-import { interaction } from "openlayers";
 import { environment } from 'environments/environment'
+import Feature from 'ol/Feature';
 
 
 //need to get wmsSubject to wmsService, but for some reason, it doesn't work over there.
@@ -52,7 +52,7 @@ export class MyCubeService extends SQLService {
             })
     }
 
-    public getAndSendMyCubeData(table: number, feature: ol.Feature): Promise<any> {
+    public getAndSendMyCubeData(table: number, feature: Feature): Promise<any> {
         //this.getMyCubeDataFromFeature(feature)
         let promise = new Promise(resolve => {
             let id: number | string

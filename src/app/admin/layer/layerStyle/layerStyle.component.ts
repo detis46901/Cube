@@ -7,7 +7,6 @@ import { Configuration } from '../../../../_api/api.constants';
 import { LayerService } from '../../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { Layer } from '../../../../_models/layer.model';
-import { layer } from 'openlayers';
 
 @Component({
     selector: 'layer-permission',

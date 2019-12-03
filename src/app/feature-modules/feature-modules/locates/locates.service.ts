@@ -14,17 +14,18 @@ import { catchError } from 'rxjs/operators';
 import { SQLService } from './../../../../_services/sql.service';
 import { Subject } from 'rxjs/Subject';
 import { MyCubeService } from './../../../map/services/mycube.service'
-import * as ol from 'openlayers';
 import { Http } from '@angular/http';
 import { Router } from '@angular/router'
-
-
-
+import Feature from 'ol/Feature';
+import GeoJSON from 'ol/format/GeoJSON';
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from 'ol/source/Vector';
+import {addProjection, addCoordinateTransforms, transform} from 'ol/proj';
 
 @Injectable()
 export class LocatesService {
   public completed: string
-  public vectorlayer = new ol.layer.Vector()
+  public vectorlayer = new VectorLayer()
   public locate: Locate
   public mapConfig: MapConfig
   public layer: UserPageLayer
@@ -55,23 +56,23 @@ export class LocatesService {
     this.clearFeature(this.mapConfig, this.layer)
     //Need to provide for clustering if the number of objects gets too high
 
-    let stylefunction = ((feature: ol.Feature) => {
+    let stylefunction = ((feature: Feature) => {
       return (this.styleService.styleFunction(feature, 'load'));
     })
-    let source = new ol.source.Vector({
-      format: new ol.format.GeoJSON()
+    let source = new VectorSource({
+      format: new GeoJSON()
     })
 
     //this.setDefaultStyleandFilter(layer)
     this.getMyLocateData(layer).then((data) => {
       if (data[0][0]['jsonb_build_object']['features']) {
-        source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
+        source.addFeatures(new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
       }
       // var clusterSource = new ol.source.Cluster({
       //   distance: 90,
       //   source: source
       // });
-      this.vectorlayer = new ol.layer.Vector({
+      this.vectorlayer = new VectorLayer({
         source: source,
         style: stylefunction
       });
@@ -93,14 +94,14 @@ export class LocatesService {
 
   public reloadLayer() {
     //this.clearFeature(this.mapConfig, this.layer)
-    let stylefunction = ((feature: ol.Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
+    let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
       return (this.styleService.styleFunction(feature, this.layerState));
     })
     this.getMyLocateData(this.layer).then((data) => {
       this.layer.source.clear();
       if (data[0][0]['jsonb_build_object']['features']) {
         this.setData(data).then(() => {
-          this.layer.source.forEachFeature((feat: ol.Feature) => {
+          this.layer.source.forEachFeature((feat: Feature) => {
             feat.setStyle(stylefunction);
           })
           if (this.layer == this.mapConfig.currentLayer) {
@@ -114,7 +115,7 @@ export class LocatesService {
 
   private setData(data): Promise<any> {
     let promise = new Promise((resolve, reject) => {
-      this.layer.source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']))
+      this.layer.source.addFeatures(new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']))
       resolve()
     })
     return promise;
@@ -124,7 +125,7 @@ export class LocatesService {
     let k: number = 0;
     let tempList = new Array<featureList>();
     try {
-      layer.source.forEachFeature((x: ol.Feature) => {
+      layer.source.forEachFeature((x: Feature) => {
         let i = layer.source.getFeatures().findIndex((j) => j == x);
 
         let fl = new featureList;
@@ -185,7 +186,7 @@ export class LocatesService {
   }
 
   public clearFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    let stylefunction = ((feature: ol.Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
+    let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
       return (this.styleService.styleFunction(feature, 'current'));
     })
     //this.reloadLayer()  //Can't do this.  It would be circular.
@@ -203,7 +204,7 @@ export class LocatesService {
   }
 
   public unstyleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    let stylefunction = ((feature: ol.Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
+    let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
       return (this.styleService.styleFunction(feature, 'current'));
     })
     this.mapConfig.selectedFeature.setStyle(stylefunction)
@@ -260,7 +261,7 @@ export class LocatesService {
   private getMyLocateData(layer): Promise<any> {
     let promise = new Promise((resolve, reject) => {
       this.geojsonservice.GetSome(layer.layer.ID, this.filter)
-        .subscribe((data: GeoJSON.Feature<any>) => {
+        .subscribe((data: any) => { //GeoJSON.Feature<any>
           resolve(data);
         })
     })
@@ -521,7 +522,7 @@ export class LocatesService {
   }
 
   public zoomToFeature(id: number, geometry: JSON) {
-    this.mapConfig.view.animate({ zoom: 17, center: ol.proj.transform([geometry['geometry']['coordinates'][0], geometry['geometry']['coordinates'][1]], 'EPSG:4326', 'EPSG:3857') })
+    this.mapConfig.view.animate({ zoom: 17, center: transform([geometry['geometry']['coordinates'][0], geometry['geometry']['coordinates'][1]], 'EPSG:4326', 'EPSG:3857') })
   }
 
   public updateRecord(table: number, id: string, field: string, type: string, value: string): boolean {

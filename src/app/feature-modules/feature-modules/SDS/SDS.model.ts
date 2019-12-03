@@ -1,4 +1,5 @@
-import * as ol from 'openlayers';
+import {Fill, Stroke, Circle, Style} from 'ol/style';
+import Text from 'ol/style/Text';
 
 export class Locate {
     ticket: string = "";
@@ -39,13 +40,13 @@ export class Locate {
 }
 
 export class SDSStyles {
-    public load = new ol.style.Style({
-        image: new ol.style.Circle({
+    public load = new Style({
+        image: new Circle({
             radius: 10,
-            stroke: new ol.style.Stroke({
+            stroke: new Stroke({
                 color: '#fff'
             }),
-            fill: new ol.style.Fill({
+            fill: new Fill({
                 color: '#3399CC'
             })
         }),
@@ -57,13 +58,13 @@ export class SDSStyles {
         // })
     });
 
-    public current = new ol.style.Style({
-        image: new ol.style.Circle({
+    public current = new Style({
+        image: new Circle({
             radius: 10,
-            stroke: new ol.style.Stroke({
+            stroke: new Stroke({
                 color: '#fff'
             }),
-            fill: new ol.style.Fill({
+            fill: new Fill({
                 color: '#0000FF'
             })
         }),
@@ -75,13 +76,13 @@ export class SDSStyles {
         // })
     });
 
-    public selected = new ol.style.Style({
-        image: new ol.style.Circle({
+    public selected = new Style({
+        image: new Circle({
             radius: 10,
-            stroke: new ol.style.Stroke({
+            stroke: new Stroke({
                 color: '#fff'
             }),
-            fill: new ol.style.Fill({
+            fill: new Fill({
                 color: '#FF0000'
             })
         }),

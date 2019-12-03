@@ -12,5 +12,5 @@ export const environment = {
    //user Carto version if using a MapBox Basemap.  If not, make the line below '' and the default OSM will be used.
  MapBoxBaseMapUrl: 'https://api.mapbox.com/styles/v1/careystranahan/ck0it1pm20hll1clmfheoupbq/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiY2FyZXlzdHJhbmFoYW4iLCJhIjoiY2lobDZkaDNmMDZreXUyajd4OW85MG4yZCJ9.KWMtpJfoSPadPLeydp5W8g',
   localez: 'T04:00:00.000Z',
-  cacheSize: 64
+  cacheSize: 256
 };

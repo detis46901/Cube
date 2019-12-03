@@ -18,8 +18,7 @@ import { LayerService } from '../../../../_services/_layer.service'
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
 import { UserPageInstanceService } from '../../../../_services/_userPageInstance.service'
-import * as ol from 'openlayers';
-//import { P } from '@angular/core/src/render3';
+import VectorLayer from 'ol/layer/Vector';
 
 
 
@@ -27,7 +26,7 @@ import * as ol from 'openlayers';
 @Injectable()
 export class LocatesAdminService {
   public completed: string
-  public vectorlayer = new ol.layer.Vector()
+  public vectorlayer = new VectorLayer()
   public locate = new Locate()
   public mapConfig: MapConfig
   public UPL: UserPageLayer

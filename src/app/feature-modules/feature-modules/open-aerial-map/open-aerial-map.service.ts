@@ -9,10 +9,15 @@ import { MyCubeService } from './../../../map/services/mycube.service'
 import { Image} from './open-aerial-map.model'
 import { WMSService } from '../../../map/services/wms.service'
 import { Subject } from 'rxjs/Subject';
-
-
-
-import * as ol from 'openlayers';
+//import Observable from 'ol/Observable';  Need to figure out how to get this in there.
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import Feature from 'ol/Feature';
+import Polygon from 'ol/geom/Polygon';
+import WMTSCapabilities from 'ol/format/WMTSCapabilities';
+import WMTS from 'ol/source/WMTS';
+import {optionsFromCapabilities} from 'ol/source/WMTS';
+import TileLayer from 'ol/layer/Tile';
 
 @Injectable()
 export class OpenAerialMapService {
@@ -22,7 +27,7 @@ export class OpenAerialMapService {
     private wmsService: WMSService, 
   ) { }
 
-  public bboxLayer: ol.layer.Vector
+  public bboxLayer: VectorLayer
   public mapConfig: MapConfig
   public layer: UserPageLayer
   public images = new Array<Image>()
@@ -59,7 +64,7 @@ export class OpenAerialMapService {
     return false
   }
   public unsetCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    ol.Observable.unByKey(this.AOMClickKey);
+    //ol.Observable.unByKey(this.AOMClickKey);
     this.setDisabled(true)
     return true
   }
@@ -89,8 +94,8 @@ export class OpenAerialMapService {
   getImages(mapConfig:MapConfig, layer: UserPageLayer, init?: boolean) {
     console.log("in get images " + init)
     this.mapConfig = mapConfig
-    let src = new ol.source.Vector();
-    this.bboxLayer = new ol.layer.Vector({
+    let src = new VectorSource();
+    this.bboxLayer = new VectorLayer({
       source: src,
       // style: this.mapstyles.selected
     });
@@ -115,8 +120,8 @@ export class OpenAerialMapService {
           p1.push(coordinate3)
           p1.push(coordinate4)
           p.push(p1)
-          let feature = new ol.Feature({
-            geometry: new ol.geom.Polygon(p),
+          let feature = new Feature({
+            geometry: new Polygon(p),
             name: x.title,
             _id: x._id
           });
@@ -181,16 +186,16 @@ loadImage(image: Image) {
   image.on = true
   this.wmsService.getCapabilities(image.properties.wmts)
     .subscribe((data) => {
-      let parser = new ol.format.WMTSCapabilities();
+      let parser = new WMTSCapabilities();
       let result = parser.read(data);
-      let options = ol.source.WMTS.optionsFromCapabilities(result, {
+      let options = optionsFromCapabilities(result, {
         layer: 'None',
         matrixSet: 'EPSG:3857'
       });
-      let wmsSource = new ol.source.WMTS(options);
-      let wmsLayer = new ol.layer.Tile({
+      let wmsSource = new WMTS(options);
+      let wmsLayer = new TileLayer({
         opacity: this.opacity,
-        source: new ol.source.WMTS(options)
+        source: new WMTS(options)
       });
       wmsLayer.setVisible(true);
       // userpagelayer.olLayer = wmsLayer

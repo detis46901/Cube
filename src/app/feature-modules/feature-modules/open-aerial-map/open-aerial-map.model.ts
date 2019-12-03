@@ -1,4 +1,5 @@
-import * as ol from 'openlayers';
+import TileLayer from 'ol/layer/Tile';
+
 export class Image {
     _id: string;
     title: string;
@@ -9,7 +10,7 @@ export class Image {
     polys: [Number, Number][][]
     feature: ol.Feature
     on: Boolean = false;
-    layer: ol.layer.Tile
+    layer: TileLayer
 }
 
 export class Properties {

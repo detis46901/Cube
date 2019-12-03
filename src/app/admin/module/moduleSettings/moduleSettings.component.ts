@@ -8,7 +8,6 @@ import { ModuleInstanceService } from '../../../../_services/_moduleInstance.ser
 import { ModuleService } from '../../../../_services/_module.service'
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { ModuleInstance, Module } from '../../../../_models/module.model';
-import { layer, Object } from 'openlayers';
 import { jsonpCallbackContext } from '@angular/common/http/src/module';
 import { FeatureModulesAdminService } from '../../../feature-modules/feature-modules-admin.service'
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';

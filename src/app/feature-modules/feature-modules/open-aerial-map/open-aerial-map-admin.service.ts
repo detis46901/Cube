@@ -12,15 +12,12 @@ import { SQLService } from '../../../../_services/sql.service';
 import { Subject } from 'rxjs/Subject';
 import { MyCubeService } from '../../../map/services/mycube.service'
 import { UserPageLayerService } from '../../../../_services/_userPageLayer.service'
-import * as ol from 'openlayers';
-
-
-
+import VectorLayer from 'ol/layer/Vector';
 
 @Injectable()
 export class OpenAerialMapAdminService {
   public completed: string
-  public vectorlayer = new ol.layer.Vector()
+  public vectorlayer = new VectorLayer()
   public mapConfig: MapConfig
   public layer: UserPageLayer
   public filter: string = 'closed IS Null'
