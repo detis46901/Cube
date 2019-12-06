@@ -19,6 +19,7 @@ export class MyCubeStyle {
     load: MyCubeFeatureStyle;
     current: MyCubeFeatureStyle;
     listLabel: string;
+    showLabel: boolean;
     filter: MyCubeFilterFields;
     filterOperator: MyCubeFilterOperator; //not used yet
 }

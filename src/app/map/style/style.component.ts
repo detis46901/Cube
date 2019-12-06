@@ -24,6 +24,7 @@ export class StyleComponent implements OnInit {
     public value: number
     public styleType: string
     public styleLabel: string
+    public showLabel: boolean
     public styleColumn = new MyCubeField
     public styleOperator: string
     public styleValue: string | boolean
@@ -76,6 +77,17 @@ export class StyleComponent implements OnInit {
         catch(e) {
             this.selectedListTitle = ""
         }
+
+        try {
+            if (this.mapConfig.currentLayer.style.showLabel) {
+                this.showLabel = this.mapConfig.currentLayer.style.showLabel
+            }
+        }
+        catch (e) {
+            this.showLabel = false
+        }
+
+        console.log(this.showLabel)
         this.sqlSerivce.GetSchema('mycube', 't' + this.mapConfig.currentLayer.layerID)
             .subscribe((data) => {
                 console.log(data[0])
@@ -108,6 +120,7 @@ export class StyleComponent implements OnInit {
         this.mapConfig.currentLayer.style.load.color = this.selectedColor
         this.mapConfig.currentLayer.style.current.color = this.selectedColor
         this.mapConfig.currentLayer.style.listLabel = this.selectedListTitle;
+        this.mapConfig.currentLayer.style.showLabel = this.showLabel
         this.mapService.runInterval(this.mapConfig.currentLayer)
     }
 

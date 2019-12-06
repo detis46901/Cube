@@ -35,7 +35,7 @@ export class StyleService {
         labelName = layer.style.listLabel;
         if (layer.style) {
             color = layer.style[mode].color; width = layer.style[mode].width
-            if (layer.style[mode].showLabel) {text = feature.get(labelName)}
+            if (layer.style.showLabel) {text = feature.get(labelName)}
         }
         else {
             color = layer.layer.defaultStyle[mode].color; width = layer.layer.defaultStyle[mode].width
