@@ -330,7 +330,7 @@ export class MapService {
     public toggleLayers(layer: UserPageLayer): void {
         if (layer.olLayer) { layer.olLayer.setVisible(!layer.layerShown) }
         layer.layerShown = !layer.layerShown;
-        if (layer.layerShown === false) {
+        if (layer.layerShown === false) { //turning a layer off
             this.featuremodulesservice.unloadLayer(this.mapConfig, layer)
             if (this.mapConfig.currentLayer == layer) {
                 this.mapConfig.currentLayer = new UserPageLayer;
@@ -339,7 +339,7 @@ export class MapService {
                 this.featuremodulesservice.unsetCurrentLayer(this.mapConfig, layer)
             }
             //could add something here that would move to the next layerShown=true.  Not sure.
-            this.mapConfig.editmode = this.mapConfig.currentLayer.layerPermissions.edit
+            this.mapConfig.editmode = this.mapConfig.currentLayer.layerPermissions.edit  //not sure why I need this
         }
         else {
             this.setCurrentLayer(layer);
@@ -382,8 +382,11 @@ export class MapService {
                 return (this.styleService.styleFunction(feature, layer, "load"));
             }
         })
-        layer.olLayer.setStyle(stylefunction)
+        if(layer.layer.layerType == 'MyCube') {
+            //console.log(layer.layer.layerName)
+            layer.olLayer.setStyle(stylefunction)}
     }
+
     private getMyCubeData(layer): Promise<any> {
         let promise = new Promise((resolve, reject) => {
             this.geojsonservice.GetAll(layer.layer.ID)
@@ -395,10 +398,10 @@ export class MapService {
     }
 
     public setCurrentLayer(layer: UserPageLayer): void {
-        this.clearLayerConfig();
+        this.clearLayerConfig();  //
         this.mapConfig.currentLayer = layer;
         this.mapConfig.currentLayerName = layer.layer.layerName  //Puts the current name in the component
-        this.setStyle(layer)  //This gets the styling right.
+        
         if (this.featuremodulesservice.setCurrentLayer(this.mapConfig, layer)) {
             this.mapConfig.featureList = [];
             if (!this.featuremodulesservice.getFeatureList(this.mapConfig, layer)) {
@@ -407,6 +410,7 @@ export class MapService {
             return
         }
         else {
+            this.setStyle(layer)  //This gets the styling right.
             this.getFeatureList()
         }
         if (layer.layerShown === true && layer.layer.layerType == "MyCube") {
@@ -423,19 +427,20 @@ export class MapService {
         this.modify = null;
         this.clearFeature();
         if (this.mapConfig.selectedFeature) {
-            this.mapConfig.selectedFeature.setStyle(null);
+            //this.mapConfig.selectedFeature.setStyle(null); console.log('setting selected feature style to null')
         }
         this.mapConfig.userpagelayers.forEach(layer => {
             if (this.featuremodulesservice.unsetCurrentLayer(this.mapConfig, layer)) {
                 return
             }
             if (layer.layer.layerType == "MyCube") {
-                this.setStyle(layer)
+               this.setStyle(layer, 'load')
             }
         });
     }
 
     public mapClickEvent(evt) {
+        if (this.mapConfig.measureShow) {return}  //disables select/deselect when the measure tool is open.
         let layer = this.mapConfig.currentLayer
         switch (this.mapConfig.currentLayer.layer.layerType) {
             case ("Geoserver"): {
@@ -462,8 +467,32 @@ export class MapService {
                 }
                 break
             }
+            case ("MapServer"): {
+                let url2 = this.wmsService.formLayerRequest(layer);
+                if (layer.layer.layerType == 'WMTS') {
+                    let layerroot = layer.layer.server.serverURL.split('/gwc')[0]
+                    url2 = layerroot + '/wms?'
+                }
+                let wmsSource = new ImageWMS({
+                    url: url2,
+                    params: { 'FORMAT': 'image/png', 'VERSION': '1.1.1', 'LAYERS': layer.layer.layerIdent, 'exceptions': 'application/vnd.ogc.se_inimage', tilesOrigin: 179999.975178479 + "," + 1875815.463803232 },
+                    projection: 'EPSG:4326',
+                    serverType: 'geoserver',
+                    crossOrigin: 'anonymous'
+                });
+                let viewResolution = this.mapConfig.map.getView().getResolution();
+                wmsSource.get;
+                let url = wmsSource.getFeatureInfoUrl(evt.coordinate, viewResolution, 'EPSG:3857', { 'INFO_FORMAT': 'text/html' });
+                if (url) {
+                    this.wmsService.getfeatureinfo(url, false)
+                        .subscribe((data: any) => {
+                            this.myCubeService.parseAndSendWMS(data);
+                        });
+                }
+                break
+            }
             case ("MyCube"): {
-                console.log("MyCubeClick")
+//                console.log("MyCubeClick")
                 if (this.mapConfig.selectedFeature) {
                     if (!this.featuremodulesservice.unstyleSelectedFeature(this.mapConfig, layer)) {
                         this.clearFeature()
@@ -471,7 +500,7 @@ export class MapService {
                 }
                 var hit = false;
                 this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature: Feature, selectedLayer: any) => {
-                    this.selectedLayer = selectedLayer;
+                    //this.selectedLayer = selectedLayer;
                     if (selectedLayer === layer.olLayer) {
                         hit = true;
                         this.mapConfig.selectedFeature = feature;
@@ -484,7 +513,7 @@ export class MapService {
                     this.selectMyCubeFeature(layer);
                 }
                 else {
-                    this.clearFeature();
+                    //this.clearFeature();
                 }
             }
         }
@@ -544,14 +573,16 @@ export class MapService {
     }
 
     private clearFeature() {
+        //console.log(this.mapConfig.currentLayer.layer.layerName)
         let stylefunction = ((feature) => {
             return (this.styleService.styleFunction(feature, this.mapConfig.currentLayer, "current"));
         })
         if (this.featuremodulesservice.clearFeature(this.mapConfig, this.mapConfig.currentLayer)) { return }
         if (this.mapConfig.selectedFeature) {
             this.mapConfig.selectedFeature.setStyle(stylefunction);
-            this.mapConfig.selectedFeature = null;
+            this.mapConfig.selectedFeature = null;  //console.log('setting selected feature to null')
         }
+        else {}
         this.mapConfig.map.removeInteraction(this.modify);
         this.modify = null;
         if (this.modkey) {
@@ -591,12 +622,12 @@ export class MapService {
                 let featurejson = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(e.feature);
                 this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
                     .subscribe((data) => {
-                        console.log(data)
+                        //console.log(data)
                         try { featureID = data[0][0].id }
                         catch (e) {
                             this.sqlService.fixGeometry(this.mapConfig.currentLayer.layer.ID)
                                 .subscribe((x) => {
-                                    console.log(x)
+                                    //console.log(x)
                                 })
                         }
                         e.feature.setId(featureID);
@@ -620,13 +651,13 @@ export class MapService {
     public delete(mapconfig: MapConfig) {
         let didUndo: boolean = false
         this.mapConfig.selectedFeatures.forEach((feat) => {
-            console.log(feat)
+            //console.log(feat)
             let snackBarRef = this.snackBar.open('Feature deleted.', 'Undo', {
                 duration: 4000
             });
             snackBarRef.afterDismissed().subscribe((x) => {
-                console.log("Dismissed")
-                console.log(didUndo)
+                // console.log("Dismissed")
+                // console.log(didUndo)
                 if (!didUndo) {
                     mapconfig.currentLayer.source.removeFeature(feat)
                     this.sqlService.Delete(mapconfig.currentLayer.layer.ID, feat.getId())

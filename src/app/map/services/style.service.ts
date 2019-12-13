@@ -28,6 +28,11 @@ export class StyleService {
         }
     }
     public styleFunction(feature: Feature, layer: UserPageLayer, mode: string): any {
+        if (feature.get('id') == 66) {
+            console.log('the feature was found')
+            console.log(mode)
+            console.log(layer.layer.layerName)
+        } 
         let color: string
         let width: number
         let text: string

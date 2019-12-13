@@ -199,7 +199,6 @@ export class LocatesService {
   }
 
   public styleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-
     return true
   }
 
@@ -213,13 +212,6 @@ export class LocatesService {
   }
 
   public styleFunction(styleToUse: ol.style.Style): ol.style.Style {
-    // let depth: string = feature.get('depth')
-    // let depthnumber: number = +depth.split(' ')[0]
-    // let depthunit: string = depth.split(' ')[1]
-
-    //var size = feature.get('features').length;
-    //var style = styleCache[size];
-    //if (!style) {
     let style = styleToUse
     return style;
 
@@ -270,6 +262,7 @@ export class LocatesService {
 
   public parseLocateInput(Loc: string, MapConfig: MapConfig, instanceID: number): void {
     this.mapConfig = MapConfig
+    this.myCubeService.clearMyCubeData()
     let locate = new Locate
     let i: number
     let ii: number
@@ -518,6 +511,9 @@ export class LocatesService {
         this.updateRecord(table, id, 'email', 'text', this.locate.email)
         this.reloadLayer()
         this.zoomToFeature(id, geometry)
+        // this.mapConfig.selectedFeature = this.layer.source.getFeatureById(id)
+        // console.log(this.mapConfig.selectedFeature)
+        // this.selectFeature(this.mapConfig, this.layer)
       })
   }
 
