@@ -5,6 +5,7 @@ import { SQLService } from '../../../_services/sql.service'
 import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../../_models/layer.model'
 import { environment } from 'environments/environment'
 import Feature from 'ol/Feature';
+import { MapConfig } from '../models/map.model';
 
 
 //need to get wmsSubject to wmsService, but for some reason, it doesn't work over there.
@@ -17,6 +18,7 @@ export class MyCubeService extends SQLService {
     private mycubeconfig = new Subject<MyCubeConfig>();
     private mycubecomment = new Subject<MyCubeComment[]>();
     private cubeData: MyCubeField[]
+    private mapConfig: MapConfig
 
     //needs to move to wmsService but for some reason it doesn't work there.
     sendWMS(message: string) {
@@ -52,7 +54,8 @@ export class MyCubeService extends SQLService {
             })
     }
 
-    public getAndSendMyCubeData(table: number, feature: Feature): Promise<any> {
+    public getAndSendMyCubeData(table: number, feature: Feature, mapConfig: MapConfig): Promise<any> {
+        this.mapConfig = mapConfig
         //this.getMyCubeDataFromFeature(feature)
         let promise = new Promise(resolve => {
             let id: number | string
@@ -98,9 +101,10 @@ export class MyCubeService extends SQLService {
     loadComments(table, id): any {
         this.getComments(table, id)
             .subscribe((cdata: any) => {
-                // console.log(cdata)
+                if (this.mapConfig.selectedFeature) { //This is a necessary check to make sure the feature is still selected before it's shown.
                 this.mycubesubject.next(this.cubeData);
                 this.mycubecomment.next(cdata[0])
+                }
             })
     }
 

@@ -244,13 +244,14 @@ export class MapComponent {
 
     //Gets userPageLayers by page.ID, changes pages
     private setPage(page: UserPage): void {
+        console.log('setting page')
         this.mapConfig.currentpage = page;
         this.mapConfig.currentLayer = new UserPageLayer;
         this.currPage = page.page;
         this.cleanPage()
         this.mapService.getUserPageLayers(this.mapConfig)
             .then(() => this.mapService.getUserPageInstances(this.mapConfig))
-            .then(() => this.mapService.getLayerPerms())
+            .then(() => {console.log('finished getuserpageinstances'); this.mapService.getLayerPerms()})
             .then(() => {
                 this.mapService.loadLayers(this.mapConfig, false).then(() => {
                     this.mapConfig.currentLayerName = "";

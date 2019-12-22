@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter  } from '@angular/core';
 import { UserPageLayer } from '../../../_models/layer.model'
 import { CommonModule } from '@angular/common';
 import { MatButtonToggleChange } from '@angular/material';
@@ -10,6 +10,7 @@ import { MyCubeField } from '_models/layer.model';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { StyleService } from '../services/style.service';
 import { LayerService } from '../../../_services/_layer.service';
+import { MatDialog, MatSliderChange } from '@angular/material';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class StyleComponent implements OnInit {
     public selectedColor: string = '#000000'
     public operators: { value: string; viewValue: string; }[]
     public admin: boolean = false
+    public opacity: number = 100
     colors = [
         { value: '#FF2D2D', viewValue: 'Red' },
         { value: '#FF7800', viewValue: 'Orange' },
@@ -86,7 +88,17 @@ export class StyleComponent implements OnInit {
         catch (e) {
             this.showLabel = false
         }
-
+        try {
+            if (this.mapConfig.currentLayer.style['opacity']) {
+                console.log('opacity was saved previously')
+                this.mapConfig.currentLayer.olLayer.setOpacity(+this.mapConfig.currentLayer.style['opacity'] / 100)
+                this.opacity = this.mapConfig.currentLayer.style['opacity']
+                console.log(this.opacity)
+            }  
+        }
+        catch (e) {
+            //nothing needs to happen here, I don't think.
+        }
         console.log(this.showLabel)
         this.sqlSerivce.GetSchema('mycube', 't' + this.mapConfig.currentLayer.layerID)
             .subscribe((data) => {
@@ -113,15 +125,33 @@ export class StyleComponent implements OnInit {
         this.mapConfig.styleShow = false
     }
 
+    public setOpacity(e:EventEmitter<MatSliderChange>) {
+        // this.openAerialMapService.images.forEach((x) => {
+        //   if (x.layer){
+        //     x.layer.setOpacity(e['value']/100)
+        //   }
+        // })
+        // console.log(e)
+        // this.openAerialMapService.setOpacity(e['value']/100)
+        this.mapConfig.currentLayer.olLayer.setOpacity(e['value']/100)
+      }
+    
     // applies the style to the map and only shows the appllicable items //not fully working
     public applyStyle() {
         // if (this.styleColumn['field'] == "" || this.styleColumn['field'] == null) {}
         // else {}
-        this.mapConfig.currentLayer.style.load.color = this.selectedColor
-        this.mapConfig.currentLayer.style.current.color = this.selectedColor
-        this.mapConfig.currentLayer.style.listLabel = this.selectedListTitle;
-        this.mapConfig.currentLayer.style.showLabel = this.showLabel
-        this.mapService.runInterval(this.mapConfig.currentLayer)
+        switch (this.mapConfig.currentLayer.layer.layerType) {
+            case ("MyCube"):
+                this.mapConfig.currentLayer.style.load.color = this.selectedColor
+                this.mapConfig.currentLayer.style.current.color = this.selectedColor
+                this.mapConfig.currentLayer.style.listLabel = this.selectedListTitle;
+                this.mapConfig.currentLayer.style.showLabel = this.showLabel
+                this.mapService.runInterval(this.mapConfig.currentLayer)
+                break
+            default:
+                this.mapConfig.currentLayer.style['opacity'] = this.mapConfig.currentLayer.olLayer.getOpacity() * 100
+        }
+
     }
 
     // Saves the current styles to the current user page

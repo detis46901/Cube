@@ -49,6 +49,7 @@ export class WMSService {
     getfeatureinfo(URL, mouseDown: boolean) {
         return this.http.request("GET", URL, {responseType: 'text'})
             .map((responseData) => {
+                //console.log(responseData)
                 let temp: string = responseData['_body']
                 try{
                 //This "if" block captures layer features with no pre-formatted "content.ftl" file

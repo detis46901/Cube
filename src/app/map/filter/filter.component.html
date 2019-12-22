@@ -45,7 +45,7 @@
     </mat-select>
 
     <!-- shows either a calender or a entry box depending on the selected operator -->
-    <mat-form-field *ngIf="filterColumn.type == 'text' || filterColumn.type == 'double precision'">
+    <mat-form-field *ngIf="filterColumn.type == 'text' || filterColumn.type == 'double precision' || filterColumn.type == 'integer'">
         <input matInput [(ngModel)]="filterColumn.value" placeholder="Value">
         
     </mat-form-field>

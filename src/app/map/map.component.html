@@ -175,13 +175,13 @@
                             </button> -->
                                 <button mat-menu-item matTooltip="Use this in an Excel Data Connection"
                                     *ngIf="userpagelayer.layer.layerType == 'MyCube'"
-                                    (click)="copyToClipboard('sql/getsheets?table=' + userpagelayer.layer.ID)">
+                                    (click)="copyToClipboard('sql/getsheets?table=t' + userpagelayer.layer.ID)">
                                     <mat-icon>web</mat-icon>
                                     <span>Copy Excel URL</span>
                                 </button>
                                 <button mat-menu-item matTooltip="Paste this into a Google Sheets Cell"
                                     *ngIf="userpagelayer.layer.layerType == 'MyCube'"
-                                    (click)="copyGSToClipboard('sql/getsheets?table=' + userpagelayer.layer.ID)">
+                                    (click)="copyGSToClipboard('sql/getsheets?table=t' + userpagelayer.layer.ID)">
                                     <mat-icon>web</mat-icon>
                                     <span>Copy Google Sheets URL</span>
                                 </button>
@@ -201,7 +201,7 @@
 
                             <!-- button to disable or enable layer layer view on the map, radio button to enable user interaction with specified layer -->
                             <mat-radio-button [disabled]="!userpagelayer.layerShown" class="example-radio-button"
-                                [value]="userpagelayer" (change)="mapService.setCurrentLayer(userpagelayer, mapConfig)">
+                                [value]="userpagelayer" (change)="mapService.setCurrentLayer(userpagelayer)">
                                 <mat-slide-toggle color="primary" matTooltip="{{userpagelayer.layer.ID}}" class="example-margin"
                                     [checked]="userpagelayer.layerShown"
                                     (change)="mapService.toggleLayers(userpagelayer)">
@@ -257,7 +257,7 @@
                             <mat-icon [ngClass]="mapConfig.filterShow ? 'selected-icon' : 'none'" matTooltip="Filter">
                                 filter_list</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'"
+                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType"
                             (click)="mapConfig.styleShow = !mapConfig.styleShow">
                             <mat-icon [class.selected-icon]="mapConfig.styleShow" matTooltip="Style">style</mat-icon>
                         </button>

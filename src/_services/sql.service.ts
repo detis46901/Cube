@@ -37,8 +37,7 @@ export class SQLService {
     }
 
     public GetSchema = (schema: string, id: string): Observable<any> => {
-        console.log(id)
-        return this._http.get(this.actionUrl + "getschema?schema='" + schema + "'&table=" + id, this.options)
+        return this._http.get(this.actionUrl + "getschema?schema=" + schema + "&table=" + id, this.options)
             // .map((response: Response) => <MyCubeField[]>response.json()[0])
             .catch(this.handleError);
     }

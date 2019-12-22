@@ -9,7 +9,7 @@ import { MyCubeService } from './../../../map/services/mycube.service'
 import { Image} from './open-aerial-map.model'
 import { WMSService } from '../../../map/services/wms.service'
 import { Subject } from 'rxjs/Subject';
-//import Observable from 'ol/Observable';  Need to figure out how to get this in there.
+import * as olobservable from 'ol/Observable';  //Need to figure out how to get this in there.
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
@@ -64,7 +64,7 @@ export class OpenAerialMapService {
     return false
   }
   public unsetCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    //ol.Observable.unByKey(this.AOMClickKey);
+    olobservable.unByKey(this.AOMClickKey);
     this.setDisabled(true)
     return true
   }
@@ -132,10 +132,11 @@ export class OpenAerialMapService {
         })
         layer.olLayer = this.bboxLayer
         if (init) {
-          this.mapConfig.layers.push(layer.olLayer);  //to delete
+          this.mapConfig.layers.push(layer.olLayer);  //I think this might be able to be deleted.
         }
         else {
           this.mapConfig.map.addLayer(layer.olLayer)
+          layer.olLayer.setVisible(layer.defaultON)
         }
         //this.createImageClickEvent()
       })
@@ -143,6 +144,9 @@ export class OpenAerialMapService {
   private createImageClickEvent() {
     let selectedFeature:ol.Feature
     this.AOMClickKey = this.mapConfig.map.on('click', (e:any) => {
+        if (this.mapConfig.measureShow) { //makes sure the click event doesn't cause a trigger on the image if the measure is being used.
+          return
+        }
         var hit = false;
         this.mapConfig.map.forEachFeatureAtPixel(e.pixel, (feature: ol.Feature, selectedLayer: any) => {
             if (selectedLayer === this.bboxLayer) {

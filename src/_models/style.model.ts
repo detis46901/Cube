@@ -22,6 +22,7 @@ export class MyCubeStyle {
     showLabel: boolean;
     filter: MyCubeFilterFields;
     filterOperator: MyCubeFilterOperator; //not used yet
+    opacity: number;
 }
 
 //filter classes
@@ -46,4 +47,5 @@ export class filterOperators {
     textOperators = this.isEqual.concat(this.contains)
     dateOperators = this.isEqual.concat(this.beforeAfter)    
     doublePrecisionOperators = this.isEqual.concat(this.inequality)
+    integerOperators = this.isEqual.concat(this.inequality)
 }

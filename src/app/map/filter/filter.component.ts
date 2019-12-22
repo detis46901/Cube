@@ -170,6 +170,9 @@ export class FilterComponent implements OnInit {
             case "double precision": {
                 return (this.modelOperator.doublePrecisionOperators)
             }
+            case "integer": {
+                return (this.modelOperator.integerOperators)
+            }
         }
     }
 }

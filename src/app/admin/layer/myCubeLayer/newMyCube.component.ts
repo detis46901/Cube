@@ -72,7 +72,7 @@ export class newMyCubeComponent implements OnInit {
     public addLayer(newlayer: Layer): void {
         this.layer.layerName = newlayer.layerName
         this.layer.layerDescription = newlayer.layerDescription
-        this.layer.defaultStyle = JSON.parse('{"load":{"color":"#000000","width":2},"current":{"color":"#000000","width":4},"listLabel": "Name","filter": {}}')
+        this.layer.defaultStyle = JSON.parse('{"load":{"color":"#000000","width":2},"current":{"color":"#000000","width":4},"listLabel": "Name","filter": {}, "opacity": "100"}')
         this.layerservice
     
             .Add(this.layer)

@@ -95,6 +95,7 @@ export class MapService {
             this.userPageInstanceService
                 .GetPageInstances(this.mapConfig.currentpage.ID)
                 .subscribe((data: UserPageInstance[]) => {
+                    console.log(data)
                     this.mapConfig.userpageinstances = data;
                     if (data.length == 0) {
                     }
@@ -190,6 +191,7 @@ export class MapService {
                                         source: wmsSource
                                     });
                                     wmsLayer.setVisible(userpagelayer.defaultON);
+                                    if (userpagelayer.style['opacity']) {wmsLayer.setOpacity(userpagelayer.style['opacity'])}
                                     if (init) {
                                         this.mapConfig.layers.push(wmsLayer);  //to delete
                                     }
@@ -213,6 +215,7 @@ export class MapService {
                                     source: wmsSource
                                 })
                                 wmsLayer.setVisible(userpagelayer.defaultON);
+                                if (userpagelayer.style['opacity']) {wmsLayer.setOpacity(userpagelayer.style['opacity'])}
                                 if (init) {
                                     this.mapConfig.layers.push(wmsLayer);  //to delete
                                 }
@@ -262,6 +265,7 @@ export class MapService {
                                             mapConfig.map.addLayer(wmtsLayer);
                                         }
                                         j++;
+                                        if (userpagelayer.style['opacity']) {userpagelayer.olLayer.setOpacity(+userpagelayer.style['opacity'] / 100)}
                                         if (j == this.mapConfig.userpagelayers.length) {
                                             resolve();
                                         }
@@ -269,6 +273,7 @@ export class MapService {
                                 break;
                             }
                             default: {  //this is the WMS load
+                                console.log("I think this is geoserver layers")
                                 let wmsSource = new TileWMS({
                                     url: this.wmsService.formLayerRequest(userpagelayer),
                                     params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
@@ -281,6 +286,8 @@ export class MapService {
                                     source: wmsSource
                                 });
                                 wmsLayer.setVisible(userpagelayer.defaultON);
+                                console.log(userpagelayer)
+                                
                                 if (init) {
                                     this.mapConfig.layers.push(wmsLayer);  //to delete
                                 }
@@ -291,6 +298,7 @@ export class MapService {
                                     mapConfig.map.addLayer(wmsLayer);
                                 }
                                 j++;
+                                if (userpagelayer.style['opacity']) {userpagelayer.olLayer.setOpacity(+userpagelayer.style['opacity'] / 100)}
                                 if (j == this.mapConfig.userpagelayers.length) {
                                     resolve();
                                 }
@@ -320,7 +328,13 @@ export class MapService {
             }
             this.vectorlayer = new VectorLayer({ source: source, style: stylefunction });
             this.vectorlayer.setVisible(layer.defaultON);
-            this.mapConfig.map.addLayer(this.vectorlayer);
+            try {
+                this.mapConfig.map.addLayer(this.vectorlayer);}
+            catch(e) {
+                console.log('Theres an error, for some reason')
+                console.log(this.vectorlayer)
+                console.log(e)
+            }
             layer.olLayer = this.vectorlayer
             layer.source = source
         })
@@ -360,6 +374,7 @@ export class MapService {
                     if (this.mapConfig.currentLayer == layer) {
                         this.getFeatureList();
                         if (this.mapConfig.selectedFeature) {
+                            console.log("runInterval+selectedFeature is true")
                             this.mapConfig.selectedFeature = layer.source.getFeatureById(this.mapConfig.selectedFeature.getId());
                             if (this.mapConfig.selectedFeature) {
                                 this.selectMyCubeFeature(layer, true)
@@ -383,7 +398,6 @@ export class MapService {
             }
         })
         if(layer.layer.layerType == 'MyCube') {
-            //console.log(layer.layer.layerName)
             layer.olLayer.setStyle(stylefunction)}
     }
 
@@ -418,7 +432,7 @@ export class MapService {
         }
     }
 
-    private clearLayerConfig(): void {
+    private clearLayerConfig(): void { //The only time this is called is during 'setCurrentLayer'
         this.mapConfig.filterOn = false;
         this.mapConfig.filterShow = false;
         this.mapConfig.styleShow = false;
@@ -426,20 +440,20 @@ export class MapService {
         this.mapConfig.map.removeInteraction(this.modify);
         this.modify = null;
         this.clearFeature();
-        if (this.mapConfig.selectedFeature) {
-            //this.mapConfig.selectedFeature.setStyle(null); console.log('setting selected feature style to null')
-        }
         this.mapConfig.userpagelayers.forEach(layer => {
             if (this.featuremodulesservice.unsetCurrentLayer(this.mapConfig, layer)) {
+                console.log('there is an unsetcurrentlayer function in the feature module')
                 return
             }
             if (layer.layer.layerType == "MyCube") {
+                //console.log(layer.layer.layerName)
                this.setStyle(layer, 'load')
             }
         });
     }
 
     public mapClickEvent(evt) {
+        console.log(this.mapConfig.currentLayer.layer.layerType)
         if (this.mapConfig.measureShow) {return}  //disables select/deselect when the measure tool is open.
         let layer = this.mapConfig.currentLayer
         switch (this.mapConfig.currentLayer.layer.layerType) {
@@ -486,6 +500,31 @@ export class MapService {
                 if (url) {
                     this.wmsService.getfeatureinfo(url, false)
                         .subscribe((data: any) => {
+                            console.log(data)
+                            this.myCubeService.parseAndSendWMS(data);
+                        });
+                }
+                break
+            }
+            case ("WMTS"): {
+                let url2 = this.wmsService.formLayerRequest(layer);
+                if (layer.layer.layerType == 'WMTS') {
+                    let layerroot = layer.layer.server.serverURL.split('/gwc')[0]
+                    url2 = layerroot + '/wms?'
+                }
+                let wmsSource = new ImageWMS({
+                    url: url2,
+                    params: { 'FORMAT': 'image/png', 'VERSION': '1.1.1', 'LAYERS': layer.layer.layerIdent, 'exceptions': 'application/vnd.ogc.se_inimage', tilesOrigin: 179999.975178479 + "," + 1875815.463803232 },
+                    projection: 'EPSG:4326',
+                    serverType: 'geoserver',
+                    crossOrigin: 'anonymous'
+                });
+                let viewResolution = this.mapConfig.map.getView().getResolution();
+                wmsSource.get;
+                let url = wmsSource.getFeatureInfoUrl(evt.coordinate, viewResolution, 'EPSG:3857', { 'INFO_FORMAT': 'text/html' });
+                if (url) {
+                    this.wmsService.getfeatureinfo(url, false)
+                        .subscribe((data: any) => {
                             this.myCubeService.parseAndSendWMS(data);
                         });
                 }
@@ -513,11 +552,14 @@ export class MapService {
                     this.selectMyCubeFeature(layer);
                 }
                 else {
-                    //this.clearFeature();
+                    this.clearFeature(); //needed to clear a feature if it's a mycube layer from a module.
                 }
+                break
+            }
+            case ("Module"): {
+                console.log("this is a module layer.  It gets its click event from the feature module")
             }
         }
-
     }
 
     private selectMyCubeFeature(layer: UserPageLayer, refresh: boolean = false): void {
@@ -531,12 +573,12 @@ export class MapService {
         }
         if (refresh == false) {
             this.mapConfig.myCubeConfig = this.myCubeService.setMyCubeConfig(layer.layer.ID, layer.layerPermissions.edit);
-            this.myCubeService.getAndSendMyCubeData(layer.layer.ID, this.mapConfig.selectedFeature).then(data => {
+            this.myCubeService.getAndSendMyCubeData(layer.layer.ID, this.mapConfig.selectedFeature, this.mapConfig).then(data => {
                 this.mapConfig.myCubeData = data
                 this.mapConfig.featureDataShow = true;
             })
         }
-        this.mapConfig.selectedFeatures.clear();
+        if (this.mapConfig.selectedFeatures) {this.mapConfig.selectedFeatures.clear();}
         this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature);
         if (layer.layerPermissions.edit == true) {
             if (!this.modify) {
@@ -573,14 +615,11 @@ export class MapService {
     }
 
     private clearFeature() {
-        //console.log(this.mapConfig.currentLayer.layer.layerName)
-        let stylefunction = ((feature) => {
-            return (this.styleService.styleFunction(feature, this.mapConfig.currentLayer, "current"));
-        })
+        this.mapConfig.selectedFeatures.clear()
         if (this.featuremodulesservice.clearFeature(this.mapConfig, this.mapConfig.currentLayer)) { return }
         if (this.mapConfig.selectedFeature) {
-            this.mapConfig.selectedFeature.setStyle(stylefunction);
-            this.mapConfig.selectedFeature = null;  //console.log('setting selected feature to null')
+            this.mapConfig.selectedFeature.setStyle(null);
+            this.mapConfig.selectedFeature = null;
         }
         else {}
         this.mapConfig.map.removeInteraction(this.modify);
@@ -687,9 +726,11 @@ export class MapService {
         let tempList = new Array<featureList>();
         try {
             let labelName: string = this.mapConfig.currentLayer.layer.defaultStyle.listLabel;
+            if (this.mapConfig.currentLayer.style != null) {
             if (this.mapConfig.currentLayer.style.listLabel != null) {
                 labelName = this.mapConfig.currentLayer.style.listLabel;
             }
+        }
             if (labelName != null && labelName.length != 0) {
                 this.mapConfig.currentLayer.source.forEachFeature((x: Feature) => {
                     let i = this.mapConfig.currentLayer.source.getFeatures().findIndex((j) => j == x);

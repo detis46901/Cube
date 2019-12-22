@@ -31,6 +31,7 @@ import {
     MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, 
     MatFormFieldModule, MatProgressSpinnerModule, MatToolbarModule, MatNativeDateModule
 } from '@angular/material';
+import {MatSliderModule, MatSlider} from '@angular/material/slider'
 import {MatDividerModule} from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -177,7 +178,8 @@ import { StyleComponent } from './map/style/style.component';
         MatAutocompleteModule,
         LinkyModule,
         FeatureModulesModule,
-        DragDropModule
+        DragDropModule,
+        MatSliderModule
     ],
 
     providers: [
