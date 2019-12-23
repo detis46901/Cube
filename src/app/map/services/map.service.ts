@@ -36,6 +36,7 @@ import { transform } from 'ol/proj';
 import XYZ from 'ol/source/XYZ';
 import OSM from 'ol/source/OSM';
 import BingMaps from 'ol/source/BingMaps';
+import Point from "ol/geom/Point";
 
 @Injectable()
 export class MapService {
@@ -73,7 +74,7 @@ export class MapService {
     }
 
     public getUserPageLayers(mapConfig): Promise<any> {
-        this.mapConfig = mapConfig; //only necessary on changed page
+        //this.mapConfig = mapConfig; //only necessary on changed page
         let promise = new Promise((resolve, reject) => {
             this.userPageLayerService
                 .GetPageLayers(this.mapConfig.currentpage.ID)
@@ -95,7 +96,6 @@ export class MapService {
             this.userPageInstanceService
                 .GetPageInstances(this.mapConfig.currentpage.ID)
                 .subscribe((data: UserPageInstance[]) => {
-                    console.log(data)
                     this.mapConfig.userpageinstances = data;
                     if (data.length == 0) {
                     }
@@ -193,7 +193,7 @@ export class MapService {
                                     wmsLayer.setVisible(userpagelayer.defaultON);
                                     if (userpagelayer.style['opacity']) {wmsLayer.setOpacity(userpagelayer.style['opacity'])}
                                     if (init) {
-                                        this.mapConfig.layers.push(wmsLayer);  //to delete
+                                        //this.mapConfig.layers.push(wmsLayer);  //to delete
                                     }
                                     userpagelayer.olLayer = wmsLayer
                                     userpagelayer.source = wmsSource
@@ -217,7 +217,7 @@ export class MapService {
                                 wmsLayer.setVisible(userpagelayer.defaultON);
                                 if (userpagelayer.style['opacity']) {wmsLayer.setOpacity(userpagelayer.style['opacity'])}
                                 if (init) {
-                                    this.mapConfig.layers.push(wmsLayer);  //to delete
+                                    //this.mapConfig.layers.push(wmsLayer);  //to delete
                                 }
                                 userpagelayer.olLayer = wmsLayer
                                 userpagelayer.source = wmsSource
@@ -240,15 +240,26 @@ export class MapService {
                                 break;
                             }
                             case "WMTS": {
-                                this.wmsService.getCapabilities(userpagelayer.layer.server.serverURL)
+                                let url: string
+                                if (userpagelayer.layer.server.serverType == "ArcGIS WMTS") {
+                                    url = userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
+                                    //url = 'https://gis.in.gov/arcgis/rest/services/DNR/FloodHazard_BestAvailable_IDNR_IN/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
+                                    console.log(url)
+                                }
+                                else {
+                                    url = userpagelayer.layer.server.serverURL
+                                }
+                                this.wmsService.getCapabilities(url)
                                     .subscribe((data) => {
                                         let parser = new WMTSCapabilities();
                                         let result = parser.read(data);
+                                        console.log(result)
                                         let options = optionsFromCapabilities(result, {
                                             layer: userpagelayer.layer.layerIdent,
                                             matrixSet: 'EPSG:3857',
                                             cacheSize: environment.cacheSize
                                         });
+                                        console.log(options)
                                         let wmtsSource = new WMTS(options);
                                         let wmtsLayer = new TileLayer({
                                             opacity: 1,
@@ -256,7 +267,7 @@ export class MapService {
                                         });
                                         wmtsLayer.setVisible(userpagelayer.defaultON);
                                         if (init) {
-                                            this.mapConfig.layers.push(wmtsLayer);  //to delete
+                                            //this.mapConfig.layers.push(wmtsLayer);  //to delete
                                         }
                                         userpagelayer.olLayer = wmtsLayer
                                         userpagelayer.source = wmtsSource
@@ -273,7 +284,6 @@ export class MapService {
                                 break;
                             }
                             default: {  //this is the WMS load
-                                console.log("I think this is geoserver layers")
                                 let wmsSource = new TileWMS({
                                     url: this.wmsService.formLayerRequest(userpagelayer),
                                     params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
@@ -286,10 +296,8 @@ export class MapService {
                                     source: wmsSource
                                 });
                                 wmsLayer.setVisible(userpagelayer.defaultON);
-                                console.log(userpagelayer)
-                                
                                 if (init) {
-                                    this.mapConfig.layers.push(wmsLayer);  //to delete
+                                    this.mapConfig.baseLayers.push(wmsLayer);  //to delete
                                 }
                                 userpagelayer.olLayer = wmsLayer
                                 userpagelayer.source = wmsSource
@@ -332,8 +340,10 @@ export class MapService {
                 this.mapConfig.map.addLayer(this.vectorlayer);}
             catch(e) {
                 console.log('Theres an error, for some reason')
-                console.log(this.vectorlayer)
-                console.log(e)
+                // console.log(this.vectorlayer)
+                // console.log(e)
+                console.log('reloading the layer')
+                this.loadMyCube(layer)
             }
             layer.olLayer = this.vectorlayer
             layer.source = source
@@ -367,9 +377,6 @@ export class MapService {
                     layer.source.clear();
                     layer.source.addFeatures(new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
                     let index = this.mapConfig.userpagelayers.findIndex(x => x == layer);
-                    // layer.source.forEachFeature(feat => {
-                    //     feat.setStyle(stylefunction);
-                    // })
                     this.setStyle(layer)
                     if (this.mapConfig.currentLayer == layer) {
                         this.getFeatureList();
@@ -404,7 +411,7 @@ export class MapService {
     private getMyCubeData(layer): Promise<any> {
         let promise = new Promise((resolve, reject) => {
             this.geojsonservice.GetAll(layer.layer.ID)
-                .subscribe((data: any) => { //GeoJSON.Feature<any>
+                .subscribe((data: any) => { //This response contains geoJSON data
                     resolve(data);
                 })
         })
@@ -453,7 +460,6 @@ export class MapService {
     }
 
     public mapClickEvent(evt) {
-        console.log(this.mapConfig.currentLayer.layer.layerType)
         if (this.mapConfig.measureShow) {return}  //disables select/deselect when the measure tool is open.
         let layer = this.mapConfig.currentLayer
         switch (this.mapConfig.currentLayer.layer.layerType) {
@@ -531,7 +537,6 @@ export class MapService {
                 break
             }
             case ("MyCube"): {
-//                console.log("MyCubeClick")
                 if (this.mapConfig.selectedFeature) {
                     if (!this.featuremodulesservice.unstyleSelectedFeature(this.mapConfig, layer)) {
                         this.clearFeature()
@@ -539,7 +544,6 @@ export class MapService {
                 }
                 var hit = false;
                 this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature: Feature, selectedLayer: any) => {
-                    //this.selectedLayer = selectedLayer;
                     if (selectedLayer === layer.olLayer) {
                         hit = true;
                         this.mapConfig.selectedFeature = feature;
@@ -661,12 +665,10 @@ export class MapService {
                 let featurejson = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(e.feature);
                 this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
                     .subscribe((data) => {
-                        //console.log(data)
                         try { featureID = data[0][0].id }
                         catch (e) {
                             this.sqlService.fixGeometry(this.mapConfig.currentLayer.layer.ID)
                                 .subscribe((x) => {
-                                    //console.log(x)
                                 })
                         }
                         e.feature.setId(featureID);
@@ -690,13 +692,10 @@ export class MapService {
     public delete(mapconfig: MapConfig) {
         let didUndo: boolean = false
         this.mapConfig.selectedFeatures.forEach((feat) => {
-            //console.log(feat)
             let snackBarRef = this.snackBar.open('Feature deleted.', 'Undo', {
                 duration: 4000
             });
             snackBarRef.afterDismissed().subscribe((x) => {
-                // console.log("Dismissed")
-                // console.log(didUndo)
                 if (!didUndo) {
                     mapconfig.currentLayer.source.removeFeature(feat)
                     this.sqlService.Delete(mapconfig.currentLayer.layer.ID, feat.getId())
@@ -801,18 +800,18 @@ export class MapService {
         })
         let base: any
         if (environment.MapBoxBaseMapUrl != '') {
-            base = new XYZ({ "url": 'https://api.mapbox.com/styles/v1/careystranahan/ck0it1pm20hll1clmfheoupbq/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiY2FyZXlzdHJhbmFoYW4iLCJhIjoiY2lobDZkaDNmMDZreXUyajd4OW85MG4yZCJ9.KWMtpJfoSPadPLeydp5W8g' });
+            base = new XYZ({ "url": environment.MapBoxBaseMapUrl});
         }
         else {
             base = new OSM({ cacheSize: environment.cacheSize });
         }
         if (this.base == 'base') {
             this.base = 'aerial';
-            this.mapConfig.layers[0].setSource(aerial);
+            this.mapConfig.baseLayers[0].setSource(aerial);
         }
         else {
             this.base = 'base';
-            this.mapConfig.layers[0].setSource(base);
+            this.mapConfig.baseLayers[0].setSource(base);
         }
     }
 

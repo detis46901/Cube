@@ -26,6 +26,7 @@
     "@angular/platform-browser-dynamic": "^7.2.11",
     "@angular/platform-server": "^7.2.11",
     "@angular/router": "^7.2.11",
+    "@esri/arcgis-rest-request": "^2.6.1",
     "@mapbox/togeojson": "^0.16.0",
     "@ng-bootstrap/ng-bootstrap": "^4.1.0",
     "@types/autolinker": "^0.24.28",

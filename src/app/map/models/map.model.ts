@@ -23,8 +23,7 @@ export class MapConfig {
     view?: View;
     geolocation: ol.Geolocation;
     tracking: boolean = false;
-    sources?= new Array;  // holds only the base layer
-    layers? = new Array;  // holds only the base layer
+    baseLayers = new Array  //THere is only one base layer, but ol requires it to be an array
     evkey: any; //current click event
     selectedFeature?: Feature;
     selectedFeatures?: Collection<Feature> = new Collection<Feature>()

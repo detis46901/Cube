@@ -109,26 +109,24 @@ export class MapComponent {
             .subscribe((x) => {
                 this.mapConfig = x
                 this.currPage = this.mapConfig.currentpage.page
-                //let col: ol.Collection = []
                 this.mapConfig.selectedFeatures = new Collection<Feature>() //for some reason, this is necessary
                 this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature)
-                this.mapConfig.layers = [];
-                let osm_layer: any
+                this.mapConfig.baseLayers = [];
+                let baseLayer: any
                 if (environment.MapBoxBaseMapUrl != '') {
-                    osm_layer = new TileLayer({
+                    baseLayer = new TileLayer({
                         source: new XYZ({
                             url: environment.MapBoxBaseMapUrl
                         })
                     });
                 }
                 else {
-                    osm_layer = new TileLayer({
+                    baseLayer = new TileLayer({
                         source: new OSM({ cacheSize: environment.cacheSize })
                     });
                 }
-                osm_layer.setVisible(true);
-                this.mapConfig.sources.push(new OSM({ cacheSize: environment.cacheSize }));
-                this.mapConfig.layers.push(osm_layer);
+                baseLayer.setVisible(true);
+                this.mapConfig.baseLayers.push(baseLayer);
                 if (this.mapConfig.userpagelayers.length == 0) {
                     this.mapConfig.currentLayer = new UserPageLayer;
                     this.mapConfig.currentLayerName = "";
@@ -157,7 +155,7 @@ export class MapComponent {
                         enableRotation: false
                     })
                     this.mapConfig.map = new Map({
-                        layers: this.mapConfig.layers,
+                        layers: this.mapConfig.baseLayers,
                         view: this.mapConfig.view,
                         controls: defaultControls({
                             attribution: false,
@@ -244,7 +242,6 @@ export class MapComponent {
 
     //Gets userPageLayers by page.ID, changes pages
     private setPage(page: UserPage): void {
-        console.log('setting page')
         this.mapConfig.currentpage = page;
         this.mapConfig.currentLayer = new UserPageLayer;
         this.currPage = page.page;
@@ -256,11 +253,9 @@ export class MapComponent {
                 this.mapService.loadLayers(this.mapConfig, false).then(() => {
                     this.mapConfig.currentLayerName = "";
                     this.mapConfig.editmode = false;
-                    //this.noLayers = true;
                     this.disableCurrent = false
                 })
             })
-        //this.noLayers = true;
         this.toolbar = "Layers"
     }
 

@@ -56,7 +56,6 @@ export class MyCubeService extends SQLService {
 
     public getAndSendMyCubeData(table: number, feature: Feature, mapConfig: MapConfig): Promise<any> {
         this.mapConfig = mapConfig
-        //this.getMyCubeDataFromFeature(feature)
         let promise = new Promise(resolve => {
             let id: number | string
             if (feature.getId() != undefined) {
@@ -71,13 +70,13 @@ export class MyCubeService extends SQLService {
                     this.cubeData[0].value = id
                     this.cubeData[0].type = "id"
                     this.cubeData[1].type = "geom"
-                    this.getsingle(table, id).then(() => { resolve(this.cubeData) })
+                    this.getsingles(table, id).then(() => { resolve(this.cubeData) })
                 })
         });
         return promise
     }
 
-    getsingle(table, id): Promise<any> {
+    getsingles(table, id): Promise<any> {
         let promise = new Promise(resolve => {
             this.GetSingle(table, id)
                 .subscribe((sdata: JSON) => {
@@ -86,7 +85,6 @@ export class MyCubeService extends SQLService {
                         if (sdata[0][0].hasOwnProperty(key)) {
                             if (z != 0) { this.cubeData[z].value = sdata[0][0][key] }
                             if (this.cubeData[z].type == 'date'){
-                                //console.log(this.cubeData[z].value)
                                 this.cubeData[z].value += environment.localez} //this is required because the datepicker converts a date (with no locale) to local and it will lose a day with this. 
                             z++
                         }

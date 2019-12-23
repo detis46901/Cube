@@ -267,6 +267,8 @@ export class LocatesService {
     let i: number
     let ii: number
     try {
+      let tp = Loc.split("CNCL")
+      if (tp.length > 1) {locate.cancel = true}
       let t = Loc.split("Ticket : ")
       locate.ticket = t[1].substr(0, 10)
       t = Loc.split("Date: ")
@@ -460,7 +462,6 @@ export class LocatesService {
         i = this.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == instanceID)
         let obj = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'myCube Layer Identity (integer)')
         let table: number = obj['setting']['value']
-        this.addRecord(table, geometry)
       })
   }
 
@@ -469,7 +470,6 @@ export class LocatesService {
       headers: new HttpHeaders({
         'Content-Type': 'text/xml',
         'Accept': 'text/xml',
-        //'Access-Control-Allow-Origin': '*'
       })
     }
     return this._http.get<string>('https://maps.googleapis.com/maps/api/geocode/xml', { params: params, headers: options, responseType: 'text' as 'json' })
@@ -511,9 +511,6 @@ export class LocatesService {
         this.updateRecord(table, id, 'email', 'text', this.locate.email)
         this.reloadLayer()
         this.zoomToFeature(id, geometry)
-        // this.mapConfig.selectedFeature = this.layer.source.getFeatureById(id)
-        // console.log(this.mapConfig.selectedFeature)
-        // this.selectFeature(this.mapConfig, this.layer)
       })
   }
 
@@ -590,6 +587,7 @@ export class LocatesService {
       }
     })
   }
+
   public flipSortBy() {
     switch (this.sortBy) {
       case "Priority": {

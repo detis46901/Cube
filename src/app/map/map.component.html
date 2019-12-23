@@ -175,7 +175,7 @@
                             </button> -->
                                 <button mat-menu-item matTooltip="Use this in an Excel Data Connection"
                                     *ngIf="userpagelayer.layer.layerType == 'MyCube'"
-                                    (click)="copyToClipboard('sql/getsheets?table=t' + userpagelayer.layer.ID)">
+                                    (click)="copyToClipboard('sql/getsheets?schema=mycube&table=t' + userpagelayer.layer.ID)">
                                     <mat-icon>web</mat-icon>
                                     <span>Copy Excel URL</span>
                                 </button>

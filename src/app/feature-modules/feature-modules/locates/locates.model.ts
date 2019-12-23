@@ -3,6 +3,7 @@ import {Fill, Stroke, Circle, Style} from 'ol/style';
 
 export class Locate {
     ticket: string = "";
+    cancel: boolean = false;
     id: number = 0;
     geom: string = "";
     tdate: string = "";

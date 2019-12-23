@@ -132,7 +132,7 @@ export class OpenAerialMapService {
         })
         layer.olLayer = this.bboxLayer
         if (init) {
-          this.mapConfig.layers.push(layer.olLayer);  //I think this might be able to be deleted.
+          this.mapConfig.baseLayers.push(layer.olLayer);  //I think this might be able to be deleted.
         }
         else {
           this.mapConfig.map.addLayer(layer.olLayer)

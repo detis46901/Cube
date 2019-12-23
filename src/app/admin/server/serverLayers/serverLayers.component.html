@@ -26,7 +26,7 @@
         {{service.name}}
     </mat-list-option>
 </mat-selection-list> -->
-<mat-tab-group *ngIf="server.serverType == 'ArcGIS WMS'" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
+<mat-tab-group *ngIf="server.serverType == 'ArcGIS WMS' || 'ArcGIS WMTS'" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
     <mat-tab label="Home">
         <mat-list class="matlist">
             <h3 matSubheader>Folders</h3>
