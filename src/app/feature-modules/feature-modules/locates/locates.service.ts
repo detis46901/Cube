@@ -444,6 +444,7 @@ export class LocatesService {
   }
 
   private geolocate(addName: string, instanceID: number) {
+    console.log('geolocate')
     let geometry: JSON
     let httpP = new HttpParams()
     httpP = httpP.append("address", addName)
@@ -462,10 +463,12 @@ export class LocatesService {
         i = this.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == instanceID)
         let obj = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'myCube Layer Identity (integer)')
         let table: number = obj['setting']['value']
+        this.addRecord(table, geometry)
       })
   }
 
   public GetGeoLocation = (params: HttpParams): Observable<string> => {
+    console.log('getGeolocation')
     let options: any = {
       headers: new HttpHeaders({
         'Content-Type': 'text/xml',

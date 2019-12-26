@@ -82,6 +82,7 @@ export class LocatesComponent implements OnInit, OnDestroy {
   }
 
   importLocate() {
+    console.log('importLocate')
     this.locatesservice.parseLocateInput(this.locateInput, this.mapConfig, this.instanceID)
     this.locateInput = ""
   }
