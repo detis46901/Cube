@@ -14,18 +14,11 @@ import { environment } from 'environments/environment'
 })
 
 export class NewUserComponent implements OnInit {
-    public token: string;
-    public userID: number;
     public publicFilter: boolean;
-    public user = new User;
     public newUser = new User;
     public users: Array<User>;
 
-    constructor(private dialog: MatDialog, private userService: UserService, private groupMemberService: GroupMemberService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-    }
+    constructor(private dialog: MatDialog, private userService: UserService, private groupMemberService: GroupMemberService) {}
 
     ngOnInit() {
         this.getUserItems();

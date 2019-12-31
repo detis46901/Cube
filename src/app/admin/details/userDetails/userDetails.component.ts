@@ -20,16 +20,13 @@ export class UserDetailsComponent implements OnInit {
 
     public user = new User;
     public style: string;
-    public token;
     public userID;
 
-    constructor(private dialog: MatDialog, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private notificationService: NotifService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-    }
+    constructor(private dialog: MatDialog, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private notificationService: NotifService) {}
 
     ngOnInit() {
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.userID = currentUser && currentUser.userID;
         this.getUser(this.ID)
     }
 

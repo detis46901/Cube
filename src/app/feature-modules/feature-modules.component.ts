@@ -11,9 +11,8 @@ import { FeatureModulesService } from './feature-modules.service'
 })
 
 export class FeatureModulesComponent implements OnInit {
-  constructor(
-    public featureModelService: FeatureModulesService,
-  ) { 
+
+  constructor(public featureModelService: FeatureModulesService) { 
   }
 
   @Input() mapConfig: MapConfig;

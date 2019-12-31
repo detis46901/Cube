@@ -23,32 +23,18 @@ export class LayerStyleComponent implements OnInit {
     public defaultStyle: string;
     public permlessUsers = new Array<User>();
     public permlessGroups = new Array<Group>();
-    public token: string;
-    public userID: number;
     public permNames = new Array<string>();
     public layerOwner: number;
     public isGroup: boolean = false;
-
     public currDeletedPermObj: any; //Group or User Object
     public currDeletedPermIsUser: boolean; //True if it is a User object from the permission.
 
-    constructor(private layerService: LayerService, private userService: UserService, private groupService: GroupService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-    }
+    constructor(private layerService: LayerService, private userService: UserService, private groupService: GroupService) {}
 
     ngOnInit() {
         this.getLayerItem(false);
         this.layer = new Layer
         this.defaultStyle = ""
-        // this.newLayerPermission.edit = false;
-        // this.newLayerPermission.delete = false;
-        // this.newLayerPermission.owner = false;
-        // this.newLayerPermission.canGrant = false;
-
-        //Initialize mat-slide-toggle state to user
-        //this.isUser = true;
     }
 
     public getLayerItem(calledByDelete: boolean): void {

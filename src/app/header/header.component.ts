@@ -27,10 +27,7 @@ export class HeaderComponent implements OnInit {
     public isNotifOpen: boolean = false;
     public userHasUnread: boolean;
     public shaker;
-
-    public token: string;
     public userID: number;
-
     public currUser = new User;
     public userPages: UserPage[];
     public notifications: Notif[];
@@ -38,18 +35,14 @@ export class HeaderComponent implements OnInit {
     public public: boolean
 
     constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService, private notificationService: NotifService,
-        public geocodingService: GeocodingService, private route: ActivatedRoute,) {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-        this.public = currentUser && currentUser.public;
-    }
+        public geocodingService: GeocodingService, private route: ActivatedRoute,) { }
 
     ngOnInit() {
-        // console.log(this.userID)
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.userID = currentUser && currentUser.userID;
+        this.public = currentUser && currentUser.public;
         this.getUserItems()
         this.getUserPageItems()
-        //console.log(this.geocodingService.isTracking)
         if (this.public == true) {
             this.geocodingService.isTracking == false
         } 
@@ -61,7 +54,6 @@ export class HeaderComponent implements OnInit {
 
     private getUserItems(): void {
         this.currUser$ = this.userService.GetSingle(this.userID)
-        
         this.userService
             .GetSingle(this.userID)
             .subscribe((user: User) => {
@@ -107,7 +99,6 @@ export class HeaderComponent implements OnInit {
         } else {
             this.isOpen = this.sideNavService.getHidden();
         }
-
         switch (sCode) {
             case 0:
                 //throw exception here for a call without a screen code (will default to 0 as assigned above)

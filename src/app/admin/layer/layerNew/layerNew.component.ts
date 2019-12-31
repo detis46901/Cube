@@ -31,7 +31,6 @@ export class LayerNewComponent implements OnInit {
 
     public permlessUsers = new Array<User>()
     public permlessGroups = new Array<Group>();
-    public token: string;
     public userID: number;
     public step = 0;
     public isGroup: boolean = false;
@@ -66,14 +65,11 @@ export class LayerNewComponent implements OnInit {
     //provide permissions
     //place on userpages?
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private layerservice: LayerService, private layerPermissionService: LayerPermissionService, private dialog: MatDialog, private serverService: ServerService, private groupService: GroupService, private userService: UserService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-    }
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private layerservice: LayerService, private layerPermissionService: LayerPermissionService, private dialog: MatDialog, private serverService: ServerService, private groupService: GroupService, private userService: UserService) {}
 
     ngOnInit() {
-
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.userID = currentUser && currentUser.userID;
         if (this.data) {
             console.log("Coming from server dialog")
             console.log(this.data['serverLayer'])

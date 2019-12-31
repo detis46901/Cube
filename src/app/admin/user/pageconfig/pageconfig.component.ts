@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UserService } from '../../../../_services/_user.service';
 import { UserPage } from '../../../../_models/user.model';
-import { Group, GroupMember } from '../../../../_models/group.model';
+import { Group } from '../../../../_models/group.model';
 import { GroupService } from '../../../../_services/_group.service';
 import { GroupMemberService } from '../../../../_services/_groupMember.service';
 import { UserPageLayer, LayerPermission } from '../../../../_models/layer.model';
@@ -11,8 +11,7 @@ import { LayerPermissionService } from '../../../../_services/_layerPermission.s
 import { ModulePermissionService } from '../../../../_services/_modulePermission.service'
 import { UserPageLayerService } from '../../../../_services/_userPageLayer.service';
 import { UserPageInstanceService } from '../../../../_services/_userPageInstance.service'
-import { MatDialog, MatDialogRef } from '@angular/material';
-import { MapConfig } from '../../../map/models/map.model';
+import { MatDialog } from '@angular/material';
 import { FeatureModulesAdminService } from '../../../feature-modules/feature-modules-admin.service'
 
 /************************************************************************************************************************************************************
@@ -55,27 +54,17 @@ export class PageConfigComponent implements OnInit {
     public availableLPs = new Array<LayerPermission>();
     public selectedLP = new LayerPermission
 
-    public token: string;
-    public foo;
-
-
-    constructor(public userPageLayerService: UserPageLayerService, private userPageService: UserPageService,
-        private groupService: GroupService, private groupMemberService: GroupMemberService,
-        private layerPermissionService: LayerPermissionService, private modulePermissionService: ModulePermissionService, private dialog: MatDialog, public userPageInstanceService: UserPageInstanceService, public featureModuleAdminService: FeatureModulesAdminService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-    }
+    constructor(public userPageLayerService: UserPageLayerService,
+        private layerPermissionService: LayerPermissionService,
+        private modulePermissionService: ModulePermissionService,
+        private dialog: MatDialog,
+        public userPageInstanceService: UserPageInstanceService,
+        public featureModuleAdminService: FeatureModulesAdminService) {}
 
     ngOnInit() {
         this.layerPermissions = [];
         this.modulePermissions = [];
-        //this.getGroups();
         this.getAllByUser();
-        //this.getUserPageLayers();
-        //this.getLayerPermissions().then((allPerms)=>this.layerPermissions=allPerms);
-        //  .then((/*ARRAY OF ALL PERMISSIONS GATHERED BY USER AND GROUPS*/) => this.layerPermissions = /*ARRAY*/); //********************* */
-        this.foo = this.groupMemberService
-            .GetByUser(this.userID)
     }
 
     public getAllByUser() {

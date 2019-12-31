@@ -18,19 +18,12 @@ export class PageComponent implements OnInit {
     @Input() lastName;
 
     public objCode = 7;
-    public token: string;
-
-    public user = new User;
     public userPage = new UserPage;
-
     public userPages = new Array<UserPage>();
     public newUserPage: string;
     public selectedPage: number;
 
-    constructor(public userPageService: UserPageService, public dialog: MatDialog) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-    }
+    constructor(public userPageService: UserPageService, public dialog: MatDialog) {}
 
     ngOnInit() {
         this.getUserPageItems();

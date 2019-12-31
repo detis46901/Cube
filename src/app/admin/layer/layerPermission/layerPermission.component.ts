@@ -23,7 +23,6 @@ export class LayerPermissionComponent implements OnInit {
     public permlessGroups = new Array<Group>();
     public newLayerPermission = new LayerPermission;
     public layerPermissions = new Array<LayerPermission>();
-    public token: string;
     public userID: number;
     public permNames = new Array<string>();
     public layerOwner: number;
@@ -32,13 +31,11 @@ export class LayerPermissionComponent implements OnInit {
     public currDeletedPermObj: any; //Group or User Object
     public currDeletedPermIsUser: boolean; //True if it is a User object from the permission.
 
-    constructor(private layerPermissionService: LayerPermissionService, private userService: UserService, private groupService: GroupService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-    }
+    constructor(private layerPermissionService: LayerPermissionService, private userService: UserService, private groupService: GroupService) {}
 
     ngOnInit() {
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.userID = currentUser && currentUser.userID;
         this.getPermissionItems(false);
         this.newLayerPermission.edit = false;
         this.newLayerPermission.delete = false;

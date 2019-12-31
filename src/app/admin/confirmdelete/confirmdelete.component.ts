@@ -16,14 +16,8 @@ export class ConfirmDeleteComponent implements OnInit {
 
     public objectType: string;
     public dependentWarning: boolean = false;
-    public token: string;
-    public userID: number;
 
-    constructor() {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-    }
+    constructor() {}
 
     ngOnInit() {
         this.assignType();

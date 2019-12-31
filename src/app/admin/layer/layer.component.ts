@@ -31,20 +31,12 @@ export class LayerComponent implements OnInit {
     //objCode refers to the  menu tab the user is on, so the openConfDel method knows what to interpolate based on what it's deleting
     @ViewChild(MatPaginator) paginator: MatPaginator;
     public objCode: number = 2;
-    public token: string;
-    public userID: number;
-
     public layers: Layer[];
     public servers: Server[];
-
     public layerColumns = ['layerID', 'name', /*'identity', 'service', 'server', 'description',*/ /*'format', */'type', /*'geometry', */'actionsColumn'];
     public dataSource: any
 
-    constructor(private layerValidator: ValidatorService, private layerService: LayerService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser.token;
-        this.userID = currentUser.userID;
-    }
+    constructor(private layerValidator: ValidatorService, private layerService: LayerService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {}
 
     ngOnInit() {
         this.getLayerItems();

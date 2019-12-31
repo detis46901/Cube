@@ -47,16 +47,15 @@ export class ServerLayersComponent implements OnInit {
 
     constructor(private dialog: MatDialog, private serverService: ServerService, http: Http, private snackBar: MatSnackBar) {
         this.http = http
+    }
+
+    ngOnInit() {
         this.options = {
             headers: new Headers({
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Accept': 'text/plain' //use token auth
             })
-
         }
-    }
-
-    ngOnInit() {
         this.getServer(this.ID)
     }
 

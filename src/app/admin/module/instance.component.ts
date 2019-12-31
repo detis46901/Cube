@@ -30,20 +30,13 @@ import { FeatureModulesAdminService } from '../../feature-modules/feature-module
 export class InstanceComponent implements OnInit {
     //objCode refers to the  menu tab the user is on, so the openConfDel method knows what to interpolate based on what it's deleting
     public objCode: number = 2;
-    public token: string;
-    public userID: number;
-
     public instances: ModuleInstance[];
     public modules: Module[];
 
     public instanceColumns = ['instanceID', 'name', /*'identity', 'service', 'server', 'description',*/ /*'format', */'description', /*'geometry', */'actionsColumn'];
     public dataSource: any;
 
-    constructor(private moduleInstanceService: ModuleInstanceService, private dialog: MatDialog, private modulePermissionService: ModulePermissionService, private userPageInstanceService: UserPageInstanceService, private moduleService: ModuleService, private sqlservice: SQLService, private featureModuleAdminService: FeatureModulesAdminService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser.token;
-        this.userID = currentUser.userID;
-    }
+    constructor(private moduleInstanceService: ModuleInstanceService, private dialog: MatDialog, private modulePermissionService: ModulePermissionService, private userPageInstanceService: UserPageInstanceService, private moduleService: ModuleService, private sqlservice: SQLService, private featureModuleAdminService: FeatureModulesAdminService) {}
 
     ngOnInit() {
         this.getInstanceItems();

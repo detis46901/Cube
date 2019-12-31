@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MyCubeField, MyCubeConfig, MyCubeComment } from "../../_models/layer.model"
 import { SQLService } from "../../_services/sql.service"
 import { MyCubeService } from "../map/services/mycube.service"
@@ -18,7 +18,7 @@ import { DateAdapter, NativeDateAdapter } from '@angular/material';
     templateUrl: './featuredata.component.html',
     styleUrls: ['featuredata.component.scss'],
 })
-export class FeatureDataComponent  {
+export class FeatureDataComponent implements OnInit  {
     //public serializedDate = new FormControl((new Date()).toISOString());
     public newComment = new MyCubeComment()
     public userID: number;
@@ -44,22 +44,21 @@ export class FeatureDataComponent  {
 
     constructor(private sqlservice: SQLService, private myCubeService: MyCubeService, private wmsService: WMSService, dateAdapter: DateAdapter<NativeDateAdapter>) {
         // subscribe to map component messages
-        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.userID = currentUser && currentUser.userID;
-        this.userFirstName = currentUser && currentUser.firstName
-        this.userLastName = currentUser && currentUser.lastName
-        dateAdapter.setLocale('en-RU');
-        this.subscription = this.myCubeService.getWMS().subscribe(message => { this.message = message; this.myCubeData = null });
-        this.myCubeSubscription = this.myCubeService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; this.message = null});
-        this.myCubeCommentSubscription = this.myCubeService.getMyCubeComments().subscribe(myCubeComments => { this.myCubeComments = myCubeComments; this.commentText = ""; this.newComment.file = null })
-        this.editSubscription = this.myCubeService.getMyCubeConfig().subscribe(data => { this.myCubeConfig = data });
-        
+        dateAdapter.setLocale('en-RU');        
     }
 
     @Input() canEdit: boolean;
     @Input() mapConfig: MapConfig
 
     ngOnInit() {
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.userID = currentUser && currentUser.userID;
+        this.userFirstName = currentUser && currentUser.firstName
+        this.userLastName = currentUser && currentUser.lastName
+        this.subscription = this.myCubeService.getWMS().subscribe(message => { this.message = message; this.myCubeData = null });
+        this.myCubeSubscription = this.myCubeService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; this.message = null});
+        this.myCubeCommentSubscription = this.myCubeService.getMyCubeComments().subscribe(myCubeComments => { this.myCubeComments = myCubeComments; this.commentText = ""; this.newComment.file = null })
+        this.editSubscription = this.myCubeService.getMyCubeConfig().subscribe(data => { this.myCubeConfig = data });
         this.open = true
         this.myCubeData = this.mapConfig.myCubeData
         this.myCubeConfig = this.mapConfig.myCubeConfig
@@ -77,6 +76,7 @@ export class FeatureDataComponent  {
             } 
         })
     }
+
     private clearMyCubeData(): void {
         this.myCubeData = null
     }
@@ -138,7 +138,6 @@ export class FeatureDataComponent  {
         this.newComment.auto = false
         //Need to add the time in here so it looks right when it is added immediately
         this.myCubeComments.push(this.newComment)
-        
         this.sqlservice
             .addCommentWithoutGeom(this.newComment)
             .subscribe((data) => {

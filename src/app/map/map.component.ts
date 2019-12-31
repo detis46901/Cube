@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, Input, OnInit } from '@angular/core';
 import { MapService } from './services/map.service';
 import { MapConfig } from './models/map.model';
 import { geoJSONService } from './services/geoJSON.service'
@@ -40,7 +40,7 @@ import Map from 'ol/Map';
     providers: [ServerService, geoJSONService, GroupService, GroupMemberService, MapConfigService]
 })
 
-export class MapComponent {
+export class MapComponent implements OnInit{
     // This is necessary to access the html element to set the map target (after view init)!
     @ViewChild("mapElement") mapElement: ElementRef;
     @ViewChild("layers") layers: ElementRef;
@@ -76,7 +76,10 @@ export class MapComponent {
         private dialog: MatDialog,
         private geocodingService: GeocodingService,
         private mapConfigService: MapConfigService,
-    ) {
+    ) {}
+
+    //Angular component initialization
+    ngOnInit() {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
@@ -88,13 +91,6 @@ export class MapComponent {
                 map(value => typeof value === 'string' ? value : value.layer.layerName),
                 map(layer => layer ? this._filterPermissions(layer) : this.mapConfig.layerpermission.slice())
             );
-    }
-
-    ngOnDestroy() {
-    }
-
-    //Angular component initialization
-    ngOnInit() {
         this.getMapConfig(this.id)
     }
 

@@ -24,8 +24,6 @@ export class GroupComponent implements OnInit {
     @ViewChild('groupUsers') groupSelectionList: any;
     @ViewChild('groupGroups') userSelectionList: any;
 
-    public token: string;
-    public userID: number;
     public objCode = 3;
     public type = "Group"
     public bool = false;
@@ -52,9 +50,6 @@ export class GroupComponent implements OnInit {
 
     constructor(private userService: UserService, private groupService: GroupService,
         private groupMemberService: GroupMemberService, private dialog: MatDialog) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {

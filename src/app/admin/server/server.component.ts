@@ -39,27 +39,24 @@ export class ServerComponent implements OnInit {
     public formatArray: Array<string> = [];
     public WMSLayers: Array<WMSLayer> = [];
     public newLayer = new Layer
-
     public displayGeoserverLayers: boolean;
     public displayFolders: boolean;
     public path: string = '';
-
     public serverColumns = ['serverID', 'serverName', 'serverType', 'serverURL', 'actionsColumn']
     public dataSource: any;
     public http: Http
 
-    constructor(private serverService: ServerService, private dialog: MatDialog, http: Http
-    ) {
+    constructor(private serverService: ServerService, private dialog: MatDialog, http: Http) {
     this.http = http
+    }
+
+    ngOnInit() {
         this.options = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Accept': 'text/plain' //use token auth
             })
         }
-    }
-
-    ngOnInit() {
         this.getServers();
         this.displayGeoserverLayers = false;
     }

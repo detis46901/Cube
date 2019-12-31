@@ -12,13 +12,10 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 })
 
 export class AppComponent {
-    private user = new User;
     private myItems: User[];
-
     constructor(private dataService: UserService) { }
 
     ngOnInit() {
-        //this.getAllItems();
     }
 
     private getAllItems(): void {

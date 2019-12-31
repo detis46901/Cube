@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MapConfig } from '../map/models/map.model';
-import { UserPageLayer } from '_models/layer.model';
 import { UserPageInstance, ModuleInstance } from '_models/module.model';
 import { LocatesAdminService } from './feature-modules/locates/locates-admin.service'
 import { OpenAerialMapAdminService} from './feature-modules/open-aerial-map/open-aerial-map-admin.service'

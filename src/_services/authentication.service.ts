@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http'
 import { Configuration } from '../_api/api.constants';
 import { UserService } from './_user.service';
+import { environment } from '../environments/environment'
 
 @Injectable()
 export class AuthenticationService {
@@ -22,7 +23,7 @@ export class AuthenticationService {
     }
     public publicLogin(publicName: string): Promise<any> {
         let promise = new Promise((resolve) => {
-            this.userService.login(publicName.toLocaleLowerCase() + '@cityofkokomo.org', 'Monday01')
+            this.userService.login(publicName.toLocaleLowerCase() + '@' + environment.domain, environment.publicPassword)
                 .subscribe(res => {
 
                     console.log(res)

@@ -21,9 +21,7 @@ import { OpenAerialMapService } from './open-aerial-map.service'
 })
 export class OpenAerialMapComponent implements OnInit {
 
-  constructor(private wmsService: WMSService, private dialog: MatDialog, public openAerialMapService: OpenAerialMapService) {
-    this.disabledSubscription = this.openAerialMapService.getDisabled().subscribe(disabled => {this.expanded = false; this.disabled = disabled})
-  }
+  constructor(private wmsService: WMSService, private dialog: MatDialog, public openAerialMapService: OpenAerialMapService) {}
 
   @Input() mapConfig: MapConfig;
   @Input() instanceID: number;
@@ -33,11 +31,10 @@ export class OpenAerialMapComponent implements OnInit {
   public expanded: boolean = false
   public disabledSubscription: Subscription;
 
-
-
   ngOnInit() {
+    this.disabledSubscription = this.openAerialMapService.getDisabled().subscribe(disabled => {this.expanded = false; this.disabled = disabled})
   }
-
+  
   public setOpacity(e:EventEmitter<MatSliderChange>) {
     this.openAerialMapService.images.forEach((x) => {
       if (x.layer){

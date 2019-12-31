@@ -32,31 +32,21 @@ import { UserDetailsComponent } from '../details/userDetails/userDetails.compone
 
 export class UserComponent implements OnInit {
     public objCode = 1
-    public token: string;
-    public userID: number;
     public publicFilter: boolean = false
-
     public user = new User;
     public newUser = new User;
-
     public userPage: UserPage;
     public userPages: Array<UserPage>;
     public users: Array<User>;
-    //public userList: User[];
 
     public userColumns = ['userID', 'firstName', 'lastName', 'email', 'active', 'administrator', 'actionsColumn']
     public dataSource: any;
     public ds = new MatTableDataSource()
 
-    constructor(private userValidator: UserValidatorService, private userService: UserService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private dialog: MatDialog) {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-        this.ds.filterPredicate = this.tableFilter();
-
-    }
+    constructor(private userValidator: UserValidatorService, private userService: UserService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private dialog: MatDialog) {}
 
     ngOnInit() {
+        this.ds.filterPredicate = this.tableFilter();
         this.getUserItems();
         this.getUserPageItems();
     }

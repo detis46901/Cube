@@ -2,8 +2,6 @@ import { Component, Output, OnDestroy } from '@angular/core';
 import { UserService } from '../../_services/_user.service';
 import { User } from '../../_models/user.model';
 import { SideNavService } from '../../_services/sidenav.service';
-import { MessageService } from '../../_services/message.service'
-import { MyCubeService } from '../map/services/mycube.service'
 import { WMSService } from '../map/services/wms.service';
 import { Subscription } from 'rxjs/Subscription';
 import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../_models/layer.model'
@@ -24,9 +22,7 @@ export class HomeComponent {
 
     //This is the variable that tells the header's toggle menu button which screen the user is on
     public screen = 1;
-
     public user = new User;
-    public token: string;
     public userID: number;
     public popupText: string;
     public message: any;
@@ -42,24 +38,15 @@ export class HomeComponent {
     public hero:any;
     public publicName: string;
     public loaded: boolean
-    
 
     constructor(private dataService: UserService, 
-        private sideNavService: SideNavService, 
-        private myCubeService: MyCubeService, 
-        private wmsService: WMSService, 
-        private messageService: MessageService,
         private route: ActivatedRoute,
-        private router: Router,
         private authenticationService: AuthenticationService) {
-        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-        // console.log('in home component')
     }
 
     ngOnInit() {
-        //this.getAllItems(this.userID);
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.userID = currentUser && currentUser.userID;
         this.message = null
         //this.socketService.initSocket() This may be used later.  This initializes a WebSocket
         this.publicName = this.route.snapshot.paramMap.get('publicName')

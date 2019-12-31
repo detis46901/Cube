@@ -22,16 +22,13 @@ export class ServerDetailsComponent implements OnInit {
     public changedServerProps = new Array<any>();
     public originalServerProps = new Array<any>();
     public style: string;
-    public token;
     public userID;
 
-    constructor(private dialog: MatDialog, private serverService: ServerService, private userService: UserService, private notificationService: NotifService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-    }
+    constructor(private dialog: MatDialog, private serverService: ServerService, private userService: UserService, private notificationService: NotifService) {}
 
     ngOnInit() {
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.userID = currentUser && currentUser.userID;
         this.getUser(this.userID)
         this.getServer(this.ID)
     }

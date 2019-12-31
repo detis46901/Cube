@@ -24,9 +24,6 @@ export class newMyCubeComponent implements OnInit {
     @Input() layerFormat: string;
     @Input() layerType: string;
     @Input() layerName: string;
-    public token: string;
-    public userID: number;
-
     //Set to true in ngOnInit() if inputs are read from the server screen, thus determines if the server screen is calling this dialog
 
 
@@ -38,11 +35,7 @@ export class newMyCubeComponent implements OnInit {
     public newLayerField1 = new MyCubeField
     public newLayerFields: Array<MyCubeField> = [];
 
-    constructor(private layerservice: LayerService, private dialog: MatDialog, private serverService: ServerService, private sqlservice: SQLService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-    }
+    constructor(private layerservice: LayerService, private dialog: MatDialog, private serverService: ServerService, private sqlservice: SQLService) {}
 
     ngOnInit() {
         this.layer.layerFormat = "None"
