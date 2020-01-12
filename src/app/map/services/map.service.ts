@@ -241,6 +241,17 @@ export class MapService {
                             }
                             case "WMTS": {
                                 let url: string
+                                let diffWMS: ImageWMS
+                                diffWMS = new ImageWMS({
+                                    url: this.wmsService.formLayerRequest(userpagelayer, true),
+                                    params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
+                                    projection: 'EPSG:4326',
+                                    serverType: 'geoserver',
+                                    crossOrigin: 'anonymous'
+                                })
+
+                                    console.log(diffWMS.getLegendUrl(23))
+                                    userpagelayer.layer.legendURL = diffWMS.getLegendUrl(23)
                                 if (userpagelayer.layer.server.serverType == "ArcGIS WMTS") {
                                     url = userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
                                     //url = 'https://gis.in.gov/arcgis/rest/services/DNR/FloodHazard_BestAvailable_IDNR_IN/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
@@ -310,6 +321,17 @@ export class MapService {
                                 if (j == this.mapConfig.userpagelayers.length) {
                                     resolve();
                                 }
+                                let diffWMS: ImageWMS
+                                diffWMS = new ImageWMS({
+                                    url: this.wmsService.formLayerRequest(userpagelayer, true),
+                                    params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
+                                    projection: 'EPSG:4326',
+                                    serverType: 'geoserver',
+                                    crossOrigin: 'anonymous'
+                                })
+
+                                    console.log(diffWMS.getLegendUrl(2).split('&SCALE')[0])
+                                    userpagelayer.layer.legendURL = diffWMS.getLegendUrl(2).split('&SCALE')[0]
                             }
                         }
                     }

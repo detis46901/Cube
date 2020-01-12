@@ -1,42 +1,21 @@
 import {Fill, Stroke, Circle, Style} from 'ol/style';
 import Text from 'ol/style/Text';
+import { Subject } from 'rxjs/Subject';
+import { UserPageLayer, MyCubeField } from '_models/layer.model';
 
-export class Locate {
-    ticket: string = "";
-    id: number = 0;
-    geom: string = "";
-    tdate: string = "";
-    ttime: string = "";
-    subdivision: string = "";
-    address: string = "";
-    street: string = "";
-    crossst: string = "";
-    location: string = "";
-    wtype: string = "";
-    dfor: string = "";
-    sdate: string = "";
-    stime: string = "";
-    priority: string = "";
-    blasting: string = "";
-    boring: string = "";
-    railroad: string = "";
-    emergency: string = "";
-    duration: string = "";
-    depth: string = "";
-    company: string = "";
-    ctype: string = "";
-    coaddr: string = "";
-    cocity: string = "";
-    cozip: string = "";
-    caller: string = "";
-    callphone: string = "";
-    contact: string = "";
-    mobile: string = "";
-    fax: string = "";
-    email: string = "";
-    closed: string = "";
-    note: string = "";
-    completedby: string = "";
+
+export class SDSConfig {
+    moduleInstanceID: number
+    moduleName: string
+    moduleSettings: JSON
+    filter: string;
+    label: string;
+    list = new Array<string>()
+    tab: string
+    sortBy: string = "Address"
+    itemData = new Array<MyCubeField>()
+    selectedItem: number
+    linkedField: string
 }
 
 export class SDSStyles {

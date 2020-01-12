@@ -158,16 +158,19 @@ export class ModuleSettingsComponent implements OnInit {
 
     public createInstance(): void {
         this.moduleInstance.moduleID = this.selectedModule.ID
-        let tempJSON:JSON = JSON.parse('{"settings":[{}]}')
-        let i:number = 0
+        this.moduleInstance.settings = this.selectedModule.defaultInstanceSettings
+        this.moduleInstance.name = 'blank'
+        this.moduleInstance.description = 'blank'
+        // let tempJSON:JSON = JSON.parse('{"settings":[{}]}')
+        // let i:number = 0
 
-        this.settingsArray.forEach((each) => {
-            let temp2JSON:JSON = JSON.parse('{"setting":"temp"}')
-            temp2JSON["setting"] = each
-            tempJSON["settings"][i] = temp2JSON
-            i=i+1
-        })
-        this.moduleInstance.settings = tempJSON
+        // this.settingsArray.forEach((each) => {
+        //     let temp2JSON:JSON = JSON.parse('{"setting":"temp"}')
+        //     temp2JSON["setting"] = each
+        //     tempJSON["settings"][i] = temp2JSON
+        //     i=i+1
+        // })
+        // this.moduleInstance.settings = tempJSON
         this.moduleInstanceService
             .Add(this.moduleInstance)
             .subscribe((result: ModuleInstance) => {

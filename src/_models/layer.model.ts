@@ -14,6 +14,7 @@ export class Layer {
     serverID: number;
     server: Server;
     defaultStyle: MyCubeStyle;
+    legendURL: string;
 }
 
 export class LayerPermission {
@@ -57,6 +58,10 @@ export class UserPageLayer {
     layerOrder: number;
 }
 
+export class MyCubeConstraint {
+    name: string | number;
+    option: string;
+}
 export class MyCubeField {
     field: string;
     type: string;
@@ -66,6 +71,7 @@ export class MyCubeField {
     label?: boolean;
     changed?: boolean;
     links? = new Array<string>()
+    constraints? = new Array<MyCubeConstraint>()
 }
 
 export class MyCubeConfig {

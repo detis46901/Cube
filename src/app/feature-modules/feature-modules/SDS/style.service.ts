@@ -3,7 +3,7 @@ import { UserPageLayer, MyCubeField } from '_models/layer.model';
 import { UserPageInstance } from '_models/module.model'
 import { MapConfig, mapStyles, featureList } from 'app/map/models/map.model';
 import { geoJSONService } from 'app/map/services/geoJSON.service';
-import { Locate, SDSStyles } from './SDS.model'
+import { SDSStyles } from './SDS.model'
 import { MatSnackBar } from '@angular/material/snack-bar';
 //http dependancies
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http'

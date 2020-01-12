@@ -120,13 +120,16 @@ export class WMSService {
         })
     }
 
-    public formLayerRequest(layer: UserPageLayer): string {
+    public formLayerRequest(layer: UserPageLayer, noProxy?:boolean): string {
         switch (layer.layer.layerType) {
             case ('MapServer'): {
                 console.log("Found MapServer Layer")
                 let norest: string = layer.layer.server.serverURL.split('/rest/')[0] + '/' + layer.layer.server.serverURL.split('/rest/')[1];
                 let norest2: string = norest.split("//")[1]
                 let url: string = environment.proxyUrl + '/' + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                if (noProxy) {
+                    url = "http://" + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                }
                 console.log(url)
                 return url;
             }
@@ -139,6 +142,20 @@ export class WMSService {
                 let norest: string = layer.layer.server.serverURL.split('/rest/')[0] + '/' + layer.layer.server.serverURL.split('/rest/')[1];
                 let norest2: string = norest.split("//")[1]
                 let url: string = environment.proxyUrl + '/' + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                if (noProxy) {
+                    url = "http://" + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                }
+                console.log(url)
+                return url;
+            }
+            case ('WMTS'): {
+                console.log("Found MapServer Layer")
+                let norest: string = layer.layer.server.serverURL.split('/rest/')[0] + '/' + layer.layer.server.serverURL.split('/rest/')[1];
+                let norest2: string = norest.split("//")[1]
+                let url: string = environment.proxyUrl + '/' + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                if (noProxy) {
+                    url = "http://" + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                }
                 console.log(url)
                 return url;
             }

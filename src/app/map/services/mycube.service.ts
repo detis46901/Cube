@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 import { SQLService } from '../../../_services/sql.service'
-import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../../_models/layer.model'
+import { MyCubeField, MyCubeConfig, MyCubeComment, MyCubeConstraint } from '../../../_models/layer.model'
 import { environment } from 'environments/environment'
 import Feature from 'ol/Feature';
 import { MapConfig } from '../models/map.model';
@@ -70,6 +70,43 @@ export class MyCubeService extends SQLService {
                     this.cubeData[0].value = id
                     this.cubeData[0].type = "id"
                     this.cubeData[1].type = "geom"
+                    this.getConstraints('mycube', 't' + table)
+                    .subscribe((constraints) => {
+                        console.log(constraints[0])
+                        this.cubeData.forEach((item) => {
+                            constraints[0].forEach(element => {
+                                if (item.field + '_types' == element['conname']) {
+                                    item.constraints = new Array<MyCubeConstraint>()
+                                    console.log('constraint found')
+                                    let constraints: string = element ['consrc']
+                                    let arrayConstraints: Array<string> = constraints.split(' OR ')
+                                    console.log(arrayConstraints)
+                                    if (item.type == 'text' || item.type == 'character varying') {
+                                        arrayConstraints.forEach((x) => {
+                                            let ar1 = x.split("'")[1]
+                                            let ar2 = ar1.split("'")[0]
+                                            console.log(ar2)
+                                            let constr = new MyCubeConstraint()
+                                            constr.name = ar2
+                                            constr.option = "option"
+                                            item.constraints.push(constr)
+                                        })
+                                    }
+                                if (item.type == 'integer' || item.type == 'smallint' || item.type == 'bigint') {
+                                    arrayConstraints.forEach((x) => {
+                                        let ar1 = x.split("= ")[1]
+                                        let ar2 = ar1.split(")")[0]
+                                        console.log(ar2)
+                                        let constr = new MyCubeConstraint()
+                                        constr.name = +ar2
+                                        constr.option = "option"                        
+                                        item.constraints.push(constr)
+                                      })
+                                }
+                                }
+                            })
+                        })
+                    })
                     this.getsingles(table, id).then(() => { resolve(this.cubeData) })
                 })
         });
@@ -78,7 +115,7 @@ export class MyCubeService extends SQLService {
 
     getsingles(table, id): Promise<any> {
         let promise = new Promise(resolve => {
-            this.GetSingle(table, id)
+            this.GetSingle('mycube.t' + table, id)
                 .subscribe((sdata: JSON) => {
                     let z = 0
                     for (var key in sdata[0][0]) {

@@ -4,7 +4,7 @@ import { UserPageInstance, ModuleInstance } from '_models/module.model'
 import { Layer } from '_models/layer.model'
 import { MapConfig, mapStyles, featureList } from 'app/map/models/map.model';
 import { geoJSONService } from 'app/map/services/geoJSON.service';
-import { Locate, SDSStyles } from './SDS.model'
+import { SDSConfig, SDSStyles } from './SDS.model'
 //http dependancies
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Observable } from 'rxjs/Observable';
@@ -27,15 +27,14 @@ import VectorLayer from 'ol/layer/Vector';
 export class SDSAdminService {
   public completed: string
   public vectorlayer = new VectorLayer()
-  public locate = new Locate()
   public mapConfig: MapConfig
   public UPL: UserPageLayer
   public filter: string = 'closed IS Null'
-  private ticket = new Subject<Locate>();
   private ID = new Subject<string>()
   private expanded = new Subject<boolean>();
   private layer = new Layer
   public newLayerFields: Array<MyCubeField> = [];
+  public SDSConfig = new SDSConfig
 
 
 
@@ -136,8 +135,7 @@ export class SDSAdminService {
     this.sqlService
       .Create(id)
       .subscribe((result: JSON) => {
-        console.log(this.locate)
-        Object.keys(this.locate).forEach((key) => {
+        Object.keys(this.SDSConfig).forEach((key) => {
           let tempField = new MyCubeField
           tempField.field = key
           console.log(tempField)

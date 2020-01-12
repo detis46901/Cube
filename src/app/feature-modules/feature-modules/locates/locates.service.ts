@@ -173,7 +173,7 @@ export class LocatesService {
   public selectFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
     clearInterval(this.layer.updateInterval)
     this.layer.updateInterval= null
-    this.sqlService.GetSingle(this.layer.layerID, mapConfig.selectedFeature.get('id'))
+    this.sqlService.GetSingle('mycube.t' + this.layer.layerID, mapConfig.selectedFeature.get('id'))
       .subscribe((data: Locate) => {
         this.sendTicket(data[0][0])
         this.sendTab('Process')
@@ -530,7 +530,7 @@ export class LocatesService {
       .subscribe(data => {
         //This is to check for duplicates.  There's got to be a better way to do this.
         if (field == 'ticket') {
-          this.sqlService.GetSingle(table, id)
+          this.sqlService.GetSingle('mycube.t' + table, id)
             .subscribe((x) => {
               let y: Locate = x[0][0]
               if (y.ticket != null) {

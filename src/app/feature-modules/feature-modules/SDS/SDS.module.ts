@@ -24,6 +24,8 @@ import { StyleService } from '../SDS/style.service'
 import { SDSAdminService } from '../SDS/SDS-admin.service'
 import { SDSStyles } from './SDS.model'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
+import { LinkyModule } from 'ngx-linky';
+
 
 
 @NgModule({
@@ -56,7 +58,8 @@ import { ModuleInstanceService } from '../../../../_services/_moduleInstance.ser
     MatSnackBarModule,
     MatDividerModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    LinkyModule
 
   ],
   declarations: [SDSComponent],

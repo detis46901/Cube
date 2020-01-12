@@ -110,7 +110,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     ServerDetailsComponent,
     ServerLayersComponent,
     ModuleSettingsComponent,
-    InstanceNewComponent
+    InstanceNewComponent,
+    InstanceDetailsComponent
   ],
 
   imports: [

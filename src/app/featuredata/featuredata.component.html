@@ -59,8 +59,9 @@
                             <span *ngIf="myCubeComment.filename; else elseBlock"><a target="_blank"
                                     [href]="URL + '?table=' + myCubeConfig.table + '&id=' + myCubeComment.id">{{myCubeComment.comment}}</a></span>
                             <ng-template #elseBlock>
-                                <textarea disabled rows="3" cols="45" name="comment">{{myCubeComment.comment}}</textarea>
-                    </ng-template>
+                                <textarea disabled rows="3" cols="45"
+                                    name="comment">{{myCubeComment.comment}}</textarea>
+                            </ng-template>
                             <br>
                             <mat-divider></mat-divider>
                         </div>
@@ -79,10 +80,11 @@
             <button mat-button (click)="fileInput.click()">
                 <mat-icon>attach_file</mat-icon><span *ngIf="newComment.file">Attached</span>
             </button>
-            <span *ngIf="newComment.file"><button mat-button (click)='addMyCubeComment()'><mat-icon>add</mat-icon></button></span>
+            <span *ngIf="newComment.file"><button mat-button (click)='addMyCubeComment()'>
+                    <mat-icon>add</mat-icon>
+                </button></span>
         </mat-expansion-panel>
     </mat-accordion>
-
     <!-- second accordian menu handling features -->
     <mat-accordion class="feature-data"
         style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; left: 0px">
@@ -97,23 +99,24 @@
                 <div *ngFor="let myCube of myCubeData">
                     <div *ngIf="myCube.type=='id'"></div>
                     <div *ngIf="myCube.type=='geom'"></div>
-                    <div *ngIf="myCube.type=='integer' || myCube.type == 'smallint' || myCube.type == 'bigint'">
-                        <!-- input field -->
-                        <mat-form-field style="width:90%">
-                            <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel autocomplete='off'
-                                placeholder="{{myCube.field}}" [matTooltip]="myCube.description"
-                                [(ngModel)]="myCube.value" (change)="myCube.changed = true"
-                                (blur)="updateMyCube(myCube)">
-                        </mat-form-field>
-                    </div>
-                    <div *ngIf="myCube.type=='double precision'">
-                        <!-- input field -->
-                        <mat-form-field style="width:90%">
-                            <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel
-                                placeholder="{{myCube.field}}" [matTooltip]="myCube.description" autocomplete='off'
-                                [(ngModel)]="myCube.value" (change)="myCube.changed = true"
-                                (blur)="updateMyCube(myCube)">
-                        </mat-form-field>
+                    <div
+                        *ngIf="myCube.type=='integer' || myCube.type == 'smallint' || myCube.type == 'bigint' || myCube.type == 'double precision'">
+                        <div *ngIf="!myCube.constraints">
+                            <mat-form-field style="width:90%">
+                                <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel
+                                    autocomplete='off' placeholder="{{myCube.field}}" [matTooltip]="myCube.description"
+                                    [(ngModel)]="myCube.value" (change)="myCube.changed = true"
+                                    (blur)="updateMyCube(myCube)">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="myCube.constraints">
+                            <mat-form-field>
+                              <mat-label>{{myCube.field}}</mat-label>
+                              <mat-select [(value)]="myCube.value" (selectionChange)="myCube.changed = true; updateMyCube(myCube)">
+                                <mat-option *ngFor="let constraint of myCube.constraints" [(value)]="constraint.name">{{constraint.name}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>                  
                     </div>
                     <div *ngIf="myCube.type=='boolean'">
                         <!-- checkbox for contracting -->
@@ -124,19 +127,29 @@
                     <div>
                         <div *ngIf="myCube.type=='text' || myCube.type == 'character varying'"
                             [matTooltip]="myCube.description" matTooltipPosition="above" matTooltipShowDelay="1000">
-                            <mat-form-field style="width:90%">
-                                <input type="text" matInput autocomplete='off' rows="3" [disabled]="!myCubeConfig.edit"
-                                    id="textinput" ngModel placeholder="{{myCube.field}}" [(ngModel)]="myCube.value"
-                                    (change)="myCube.changed = true" (blur)="updateMyCube(myCube)">
-                            </mat-form-field><br>
-                            <!-- <span [innerHTML]="myCube.value | linky"></span> -->
-                            <div *ngIf="myCube.value != null">
-                                <div *ngFor="let url of Autolinker.parse(myCube.value)">
-                                    <div [innerHTML]="url.url | linky: {truncate: 32}"></div>
-                                    <div [innerHTML]="url.email | linky: {truncate: 32}"></div>
-                                    <!-- <span [innerHTML]="'<a href'"></span> -->
-                                </div>
+                            <div *ngIf="!myCube.constraints">
+                                <mat-form-field style="width:90%">
+                                    <input type="text" matInput autocomplete='off' rows="3" [disabled]="!myCubeConfig.edit"
+                                        id="textinput" ngModel placeholder="{{myCube.field}}" [(ngModel)]="myCube.value"
+                                        (change)="myCube.changed = true" (blur)="updateMyCube(myCube)">
+                                </mat-form-field><br>
+                                <!-- <span [innerHTML]="myCube.value | linky"></span> -->
+                                <div *ngIf="myCube.value != null">
+                                    <div *ngFor="let url of Autolinker.parse(myCube.value)">
+                                        <div [innerHTML]="url.url | linky: {truncate: 32}"></div>
+                                        <div [innerHTML]="url.email | linky: {truncate: 32}"></div>
+                                        <!-- <span [innerHTML]="'<a href'"></span> -->
+                                    </div>
+                                </div>    
                             </div>
+                            <div *ngIf="myCube.constraints">
+                                <mat-form-field>
+                                  <mat-label>{{myCube.field}}</mat-label>
+                                  <mat-select [(value)]="myCube.value" (selectionChange)="myCube.changed = true; updateMyCube(myCube)">
+                                    <mat-option *ngFor="let constraint of myCube.constraints" [(value)]="constraint.name">{{constraint.name}}</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </div>
                         </div>
                     </div>
                     <div *ngIf="myCube.type=='date' || myCube.type=='timestamp with time zone'">

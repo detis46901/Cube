@@ -197,6 +197,7 @@
                                 <mat-icon>delete</mat-icon>
                                 <span>Delete Layer</span>
                             </button> -->
+                            <div *ngIf="userpagelayer.layer.legendURL" id="info"><br><img id="legend" [src]="userpagelayer.layer.legendURL"></div>
                             </mat-menu>
 
                             <!-- button to disable or enable layer layer view on the map, radio button to enable user interaction with specified layer -->
@@ -351,5 +352,4 @@
             </mat-expansion-panel>
         </mat-accordion>
     </div>
-    <div id="info"></div>
 </div>
