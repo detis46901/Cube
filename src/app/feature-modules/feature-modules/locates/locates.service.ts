@@ -7,7 +7,7 @@ import { Locate, locateStyles } from './locates.model'
 import { StyleService } from './style.service'
 import { MatSnackBar } from '@angular/material/snack-bar';
 //http dependancies
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams, HttpRequest } from '@angular/common/http'
 import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
@@ -21,6 +21,9 @@ import GeoJSON from 'ol/format/GeoJSON';
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from 'ol/source/Vector';
 import {addProjection, addCoordinateTransforms, transform} from 'ol/proj';
+import { environment } from '../../../../environments/environment'
+import { NgxSoapService, Client, ISoapMethodResponse } from 'ngx-soap';
+
 
 @Injectable()
 export class LocatesService {
@@ -37,6 +40,8 @@ export class LocatesService {
   public sortBy: string = "Address"
   public showSortBy: Boolean
   public layerState: string
+  public client: Client
+  public message: string
 
 
   constructor(private geojsonservice: geoJSONService,
@@ -45,7 +50,7 @@ export class LocatesService {
     private sqlService: SQLService,
     private myCubeService: MyCubeService,
     private locateStyles: locateStyles,
-    private snackBar: MatSnackBar) { }
+    private snackBar: MatSnackBar) {}
 
 
   //loads the locate data
@@ -177,11 +182,12 @@ export class LocatesService {
       .subscribe((data: Locate) => {
         this.sendTicket(data[0][0])
         this.sendTab('Process')
+        this.locate = data[0][0]
+        console.log(this.locate)
       })
     //this.sendTicket(mapConfig.selectedFeature.get('ticket'))
     this.sendID(mapConfig.selectedFeature.get('id'))
     this.mapConfig.selectedFeature.setStyle(this.locateStyles.selected)
-
     return false
   }
 
@@ -193,6 +199,7 @@ export class LocatesService {
     this.createInterval()
     this.sendTicket(null)
     this.sendID(null)
+    this.locate = null
     this.myCubeService.clearMyCubeData()
     if (mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction) }
     return true
@@ -567,7 +574,6 @@ export class LocatesService {
     let table: number = obj['setting']['value']
     let strDate = new Date()
     i = mapConfig.userpagelayers.findIndex(x => x.layerID == table)
-
     let snackBarRef = this.snackBar.open('Ticket completed.', 'Undo', {
       duration: 4000
     });
@@ -587,10 +593,58 @@ export class LocatesService {
         this.updateRecord(table, id, 'completedby', 'text', completedBy)
         this.clearFeature(mapConfig, mapConfig.userpagelayers[i])
         undo = false
+        this.sendUpdateToIRTH()
       }
     })
   }
 
+  public testCompleteTicket (mapConfig: MapConfig, instanceID: number, id: string, userName: string, completedNote: string, completedBy: string) {
+    this.sendUpdateToIRTH()
+    //this.completeTicket(mapConfig, instanceID, id, userName, completedNote, completedBy)
+  }
+
+  soapCall() {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open('POST', environment.proxyUrl + '/irth.indiana811.org/IrthOneCallWebServices/PositiveResponseV2.asmx', true);
+   
+    //the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+    var sr =
+    `<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+      <Respond xmlns="http://Irth.com/OneCall/PositiveResponse">
+        <occCode>IUPPS</occCode>
+        <userID>ID5509</userID>
+        <password>148429</password>
+        <serviceAreaCode>1</serviceAreaCode>
+        <occTicketID>2001170969</occTicketID>
+        <responseCode>2</responseCode>
+        <responseCategory></responseCategory>
+        <comment>Test Comment</comment>
+      </Respond>
+    </soap:Body>
+  </soap:Envelope>`
+
+    xmlhttp.onreadystatechange =  () => {
+      console.log(xmlhttp.responseText)
+        if (xmlhttp.readyState == 4) {
+            if (xmlhttp.status == 200) {
+                var xml = xmlhttp.responseXML;
+                var req = xmlhttp.responseURL
+                console.log(req)
+                console.log(xml); //I'm printing my result square number
+            }
+        }
+    }
+    // Send the POST request
+    xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+    //xmlhttp.setRequestHeader('charset','utf-8')
+    //xmlhttp.responseType = "document";
+    xmlhttp.send(sr)
+}
+
+  public sendUpdateToIRTH() {
+this.soapCall()
+  }
   public flipSortBy() {
     switch (this.sortBy) {
       case "Priority": {

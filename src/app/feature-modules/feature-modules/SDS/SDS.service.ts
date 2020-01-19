@@ -298,43 +298,7 @@ export class SDSService {
           this.SDSConfig.itemData = data[0]
           this.sqlService.getConstraints('modules', 'm' + table + 'data')
             .subscribe((constraints) => {
-              console.log(constraints[0])
-              this.SDSConfig.itemData.forEach((item) => {
-                constraints[0].forEach(element => {
-                  if(item.field + '_types' == element['conname']) {
-                    item.constraints = new Array<MyCubeConstraint>()
-                    console.log('constraint found')
-                    console.log(element['conname'])
-                    console.log(item)
-                    let constraints: string = element['consrc']
-                    let arrayConstraints: Array<string> = constraints.split(' OR ')
-                    console.log(arrayConstraints)
-                    if (item.type == 'text' || item.type == 'character varying') {
-                      arrayConstraints.forEach((x) => {
-                        let ar1 = x.split("'")[1]
-                        let ar2 = ar1.split("'")[0]
-                        console.log(ar2)
-                        let constr = new MyCubeConstraint()
-                        constr.name = ar2
-                        constr.option = "option"                        
-                        item.constraints.push(constr)
-                      })
-                    }
-                    if (item.type == 'integer' || item.type == 'smallint' || item.type == 'bigint') {
-                      arrayConstraints.forEach((x) => {
-                        let ar1 = x.split("= ")[1]
-                        let ar2 = ar1.split(")")[0]
-                        console.log(ar2)
-                        let constr = new MyCubeConstraint()
-                        constr.name = +ar2
-                        constr.option = "option"                        
-                        item.constraints.push(constr)
-                      })
-                    } 
-                    console.log(item)
-                  }
-                });
-              })
+              this.SDSConfig.itemData = this.myCubeService.setConstraints(this.SDSConfig.itemData, constraints)
               resolve(this.SDSConfig.itemData)
             })
         })

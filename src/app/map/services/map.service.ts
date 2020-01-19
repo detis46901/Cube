@@ -254,7 +254,6 @@ export class MapService {
                                     userpagelayer.layer.legendURL = diffWMS.getLegendUrl(23)
                                 if (userpagelayer.layer.server.serverType == "ArcGIS WMTS") {
                                     url = userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
-                                    //url = 'https://gis.in.gov/arcgis/rest/services/DNR/FloodHazard_BestAvailable_IDNR_IN/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
                                     console.log(url)
                                 }
                                 else {
@@ -458,6 +457,9 @@ export class MapService {
         }
         if (layer.layerShown === true && layer.layer.layerType == "MyCube") {
             this.mapConfig.editmode = layer.layerPermissions.edit;
+        }
+        if (layer.style.filter.column) {
+            this.mapConfig.filterOn = true
         }
     }
 

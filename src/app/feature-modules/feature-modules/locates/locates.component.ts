@@ -80,7 +80,7 @@ export class LocatesComponent implements OnInit, OnDestroy {
   }
 
   completeTicket() {
-    this.locatesservice.completeTicket(this.mapConfig, this.instanceID, this.id, this.userName, this.completedNote, this.userName)
+    this.locatesservice.testCompleteTicket(this.mapConfig, this.instanceID, this.id, this.userName, this.completedNote, this.userName)
     this.completedNote = null
     this.ticket = null
   }

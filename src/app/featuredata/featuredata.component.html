@@ -103,7 +103,7 @@
                         *ngIf="myCube.type=='integer' || myCube.type == 'smallint' || myCube.type == 'bigint' || myCube.type == 'double precision'">
                         <div *ngIf="!myCube.constraints">
                             <mat-form-field style="width:90%">
-                                <input matInput [disabled]="!myCubeConfig.edit" id="textinput" ngModel
+                                <input matInput [disabled]="!myCubeConfig.edit" [id]="myCube.field" ngModel
                                     autocomplete='off' placeholder="{{myCube.field}}" [matTooltip]="myCube.description"
                                     [(ngModel)]="myCube.value" (change)="myCube.changed = true"
                                     (blur)="updateMyCube(myCube)">
@@ -130,7 +130,7 @@
                             <div *ngIf="!myCube.constraints">
                                 <mat-form-field style="width:90%">
                                     <input type="text" matInput autocomplete='off' rows="3" [disabled]="!myCubeConfig.edit"
-                                        id="textinput" ngModel placeholder="{{myCube.field}}" [(ngModel)]="myCube.value"
+                                        [id]="myCube.field" ngModel placeholder="{{myCube.field}}" [(ngModel)]="myCube.value"
                                         (change)="myCube.changed = true" (blur)="updateMyCube(myCube)">
                                 </mat-form-field><br>
                                 <!-- <span [innerHTML]="myCube.value | linky"></span> -->

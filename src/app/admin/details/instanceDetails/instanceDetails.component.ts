@@ -33,7 +33,7 @@ export class InstanceDetailsComponent implements OnInit {
     public userID;
     public user: User;
     public servers: Array<Server>;
-    public instanceDetails: ModuleInstanceService
+    public instanceDetails: ModuleInstance
 
     constructor(private dialog: MatDialog, private layerService: LayerService, private layerPermissionService: LayerPermissionService,
         private serverService: ServerService, private userService: UserService, private groupService: GroupService,
