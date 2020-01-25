@@ -15,25 +15,4 @@ export class LayerPermissionService extends ParentService {
         super(_http, configuration);
         this.actionUrl = this.configuration.serverWithApiUrl + 'layerpermission/';
     }
-
-    public GetByUser = (userid): Observable<any> => {
-        return this._http.get(this.actionUrl + 'getbyuser?userid=' + userid, this.options)
-            .pipe(catchError(this.handleError));
-    }
-
-    public GetByUserGroups = (userid): Observable<any> => {
-        return this._http.get(this.actionUrl + 'getbyusergroups?userID=' + userid, this.options)
-            .pipe(catchError(this.handleError));
-    }
-
-    public GetByLayer = (layerid): Observable<any> => {
-        return this._http.get(this.actionUrl + 'getbylayer?layerID=' + layerid, this.options)
-            .pipe(catchError(this.handleError));
-    }
-
-    public GetByGroup = (groupid): Observable<any> => {
-        console.log(this.actionUrl + 'getbygroup?groupID=' + groupid, this.options)
-        return this._http.get(this.actionUrl + 'getbygroup?groupID=' + groupid, this.options)
-            .pipe(catchError(this.handleError));
-    }
 }

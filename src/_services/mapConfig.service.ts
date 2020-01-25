@@ -34,7 +34,7 @@ export class MapConfigService {
         }
     }
     public GetSingle = (mapConfig: MapConfig): Observable<any> => {
-        return this._http.get<any[]>(this.actionUrl + 'one?mapconfig=' + JSON.stringify(mapConfig), this.options)
+        return this._http.get<any[]>(this.actionUrl + 'single?mapconfig=' + JSON.stringify(mapConfig), this.options)
             .pipe(catchError(this.handleError));
     }
     

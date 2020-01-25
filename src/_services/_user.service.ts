@@ -33,7 +33,7 @@ export class UserService /*extends ParentService*/ {
     }
 
     public GetByRole = (roleID): Observable<any> => {
-        return this._http.get(this.actionUrl + 'getbyrole?roleID=' + roleID, this.options)
+        return this._http.get(this.actionUrl + 'byrole?roleID=' + roleID, this.options)
         //.catch(this.handleError);
     }
 
@@ -43,12 +43,12 @@ export class UserService /*extends ParentService*/ {
     }
 
     public GetSingle = (id: any): Observable<any> => {
-        return this._http.get(this.actionUrl + 'one?rowid=' + id, this.options)
+        return this._http.get(this.actionUrl + 'single?rowid=' + id, this.options)
         //.catch(this.handleError);
     }
 
     public GetSingleFromEmail = (email: string): Observable<any> => {
-        return this._http.get(this.actionUrl + 'one?email=' + email /*+API key 12/27/17*/, this.options)
+        return this._http.get(this.actionUrl + 'single?email=' + email /*+API key 12/27/17*/, this.options)
         //.catch(this.handleError);
     }
 

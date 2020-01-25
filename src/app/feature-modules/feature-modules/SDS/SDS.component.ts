@@ -5,12 +5,12 @@ import { SDSService } from './SDS.service'
 import { MyCubeField } from "../../../../_models/layer.model"
 import { UserService } from '../../../../_services/_user.service'
 import { User } from '../../../../_models/user.model'
-import { SDSStyles } from './SDS.model'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
 import { ModuleInstance } from '../../../../_models/module.model'
 import { Clipboard } from 'ts-clipboard';
 import { Configuration } from '../../../../_api/api.constants';
 import { MatSnackBar } from '@angular/material';
+import { SDSConfig, SDSStyles } from './SDS.model'
 var Autolinker = require( 'autolinker' );
 
 
@@ -24,6 +24,7 @@ export class SDSComponent implements OnInit, OnDestroy {
 
   public expanded: boolean = false
   public expandedSubscription: Subscription;
+  public SDSConfigSubscription: Subscription;
   public userID: number;
   public token: string;
   public userName: string;
@@ -37,6 +38,8 @@ export class SDSComponent implements OnInit, OnDestroy {
   public label: string
   public Autolinker = new Autolinker()
   public editRecord: boolean = true //if the fields for editing the records are disabled.
+  public SDSConfig = new SDSConfig
+  public SDSConfigID: number
 
 
   constructor(
@@ -52,7 +55,9 @@ export class SDSComponent implements OnInit, OnDestroy {
   @Input() instance: ModuleInstance;
 
   ngOnInit() {
+    this.SDSConfigID = this.SDSservice.SDSConfig.push()
     this.expandedSubscription = this.SDSservice.getExpanded().subscribe(expanded => { this.expanded = expanded })
+    this.SDSConfigSubscription = this.SDSservice.getSDSConfig().subscribe(SDSConfig => {this.SDSConfig = SDSConfig[this.SDSConfigID]})
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.token = currentUser && currentUser.token;
         
@@ -64,16 +69,19 @@ export class SDSComponent implements OnInit, OnDestroy {
     this.tminus30.setDate(this.tminus30.getDate() - 30)
     this.fromDate = this.tminus30
     console.log(this.instance.settings['settings'][1]['setting']['value'])
-    this.SDSservice.SDSConfig.label = this.instance.settings['settings'][1]['setting']['value']
-    this.SDSservice.SDSConfig.moduleInstanceID = this.instance.ID
+    this.SDSConfig.label = this.instance.settings['settings'][1]['setting']['value']
+    this.SDSConfig.moduleInstanceID = this.instance.ID
 
-    this.SDSservice.getSchema('modules', this.instance.ID)
+    this.SDSservice.getSchema('modules', this.instance.ID, this.SDSConfig)
       .then((x) => {
-        this.SDSservice.SDSConfig.itemData[0].type = "id"   //Sets the "id" of the SDS to type = 'id' so it won't be visible.
-        this.SDSservice.SDSConfig.itemData.forEach((x) => {  //probably not the best way to do this.  This finds the linked field and sets it to 'id' so it won't be visible.
-          if (x.field == this.SDSservice.SDSConfig.moduleSettings['settings'][2]['setting']['value']) {
-            this.SDSservice.SDSConfig.itemData[this.SDSservice.SDSConfig.itemData.indexOf(x)].type = 'id'
-            this.SDSservice.SDSConfig.linkedField = x.field
+        console.log(x)
+        this.SDSConfig.itemData[0].type = "id"   //Sets the "id" of the SDS to type = 'id' so it won't be visible.
+        this.SDSConfig.itemData.forEach((x) => {  //probably not the best way to do this.  This finds the linked field and sets it to 'id' so it won't be visible.
+          if (x.field == this.SDSConfig.moduleSettings['settings'][2]['setting']['value']) {
+            this.SDSConfig.itemData[this.SDSConfig.itemData.indexOf(x)].type = 'id'
+            this.SDSConfig.linkedField = x.field
+            this.SDSservice.SDSConfig[this.SDSConfigID] = this.SDSConfig
+            console.log(this.SDSservice.SDSConfig)
           }
         })
       })
@@ -85,13 +93,13 @@ export class SDSComponent implements OnInit, OnDestroy {
   }
 
   goToTab(tab) {
-    this.SDSservice.SDSConfig.tab = tab
-    if (this.SDSservice.SDSConfig.tab == 'Input') {
-      this.SDSservice.SDSConfig.selectedItem = null
-      this.SDSservice.SDSConfig.itemData.forEach((x) => {
+    this.SDSConfig.tab = tab
+    if (this.SDSConfig.tab == 'Input') {
+      this.SDSConfig.selectedItem = null
+      this.SDSConfig.itemData.forEach((x) => {
         x.value = null
-        if (x.field == this.SDSservice.SDSConfig.moduleSettings['settings'][2]['setting']['value']) {
-          this.SDSservice.SDSConfig.itemData[this.SDSservice.SDSConfig.itemData.indexOf(x)].value = this.mapConfig.selectedFeature.get('id')  //this will need something more when I add wms features
+        if (x.field == this.SDSConfig.moduleSettings['settings'][2]['setting']['value']) {
+          this.SDSConfig.itemData[this.SDSConfig.itemData.indexOf(x)].value = this.mapConfig.selectedFeature.get('id')  //this will need something more when I add wms features
         }
       })
       // this.SDSservice.getSchema("module", this.instance.ID).then((x) => {
@@ -109,8 +117,8 @@ export class SDSComponent implements OnInit, OnDestroy {
       .subscribe((data: User) => {
         this.userName = data.firstName + " " + data.lastName
       })
-    this.SDSservice.SDSConfig.moduleName = this.instance.name
-    this.SDSservice.SDSConfig.moduleSettings = this.instance.settings
+    this.SDSConfig.moduleName = this.instance.name
+    this.SDSConfig.moduleSettings = this.instance.settings
   }
 
   filter() {
@@ -158,12 +166,12 @@ export class SDSComponent implements OnInit, OnDestroy {
   }
 
   public selectItem(itemID) {
-    this.SDSservice.getData(this.instance.ID, itemID).then((x) => {
+    this.SDSservice.getData(this.instance.ID, itemID, this.SDSConfigID).then((x) => {
       console.log(x)
-      this.SDSservice.SDSConfig.itemData = x
+      this.SDSConfig.itemData = x
       this.editRecord = true //sets the disabled to true
-      this.SDSservice.SDSConfig.itemData[0].value = itemID
-      this.SDSservice.SDSConfig.selectedItem = itemID
+      this.SDSConfig.itemData[0].value = itemID
+      this.SDSConfig.selectedItem = itemID
     })
   }
 

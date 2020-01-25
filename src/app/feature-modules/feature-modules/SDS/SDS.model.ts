@@ -14,7 +14,7 @@ export class SDSConfig {
     tab: string
     sortBy: string = "Address"
     itemData = new Array<MyCubeField>()
-    selectedItem: number
+    selectedItem: number = 0
     linkedField: string
 }
 

@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { LocatesService } from './locates.service'
 import { UserService } from '../../../../_services/_user.service'
 import { User } from '../../../../_models/user.model'
-import { locateStyles, Locate } from './locates.model'
+import { locateStyles, Locate, disItem, disposition } from './locates.model'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
 
 
@@ -18,14 +18,13 @@ export class LocatesComponent implements OnInit, OnDestroy {
   public moduleShow: boolean
   public locateInput: string;
   public ticktSubscription: Subscription;
-  public idSubscription: Subscription;
   public ticket: Locate = null
-  public id: string = null
   public expanded: boolean = false
   public expandedSubscription: Subscription;
   public userID: number;
   public userName: string;
   public completedNote: string;
+  public completedDisposition = new disItem;
   public filterOpen: boolean = true
   public fromDate: Date
   public toDate: Date
@@ -33,6 +32,7 @@ export class LocatesComponent implements OnInit, OnDestroy {
   public tabSubscription: Subscription;
   public tab: string;
   public moduleSettings: JSON
+  public disposition = new disposition
 
   constructor(
     public locatesservice: LocatesService, 
@@ -46,8 +46,7 @@ export class LocatesComponent implements OnInit, OnDestroy {
   @Input() user: string;
 
   ngOnInit() {
-    this.ticktSubscription = this.locatesservice.getTicket().subscribe(ticket => { this.ticket = ticket});
-    this.idSubscription = this.locatesservice.getID().subscribe(id => { this.id = id })
+    this.ticktSubscription = this.locatesservice.getTicket().subscribe(ticket => { this.completedDisposition = new disItem; this.ticket = ticket});
     this.expandedSubscription = this.locatesservice.getExpanded().subscribe(expanded => { this.expanded = expanded })
     this.tabSubscription = this.locatesservice.getTab().subscribe(tab => { this.tab = tab })
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -62,7 +61,6 @@ export class LocatesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.ticktSubscription.unsubscribe()
-    this.idSubscription.unsubscribe()
     this.expandedSubscription.unsubscribe()
     this.tabSubscription.unsubscribe()
     clearInterval(this.locatesservice.layer.updateInterval)
@@ -80,8 +78,10 @@ export class LocatesComponent implements OnInit, OnDestroy {
   }
 
   completeTicket() {
-    this.locatesservice.testCompleteTicket(this.mapConfig, this.instanceID, this.id, this.userName, this.completedNote, this.userName)
+    this.ticket.disposition = this.completedDisposition.value
+    this.locatesservice.completeTicket(this.mapConfig, this.instanceID, this.ticket, this.completedNote, this.userName)
     this.completedNote = null
+    this.completedDisposition = new disItem
     this.ticket = null
   }
 
@@ -139,9 +139,9 @@ export class LocatesComponent implements OnInit, OnDestroy {
   public emailContractor(ticket: Locate) {
     console.log(ticket)
     this.getEmailConfiguration()
-    let win = window.open("mailto:" + ticket.email + "?subject=Ticket: " + ticket.ticket + " " + ticket.address + " " + ticket.street + "&body=" + this.moduleSettings['settings'][1]['setting']['value'], "_blank");
+    let win = window.open("mailto:" + ticket.email + "?subject=Ticket: " + ticket.ticket + " " + ticket.address + " " + ticket.street + "&body=" + this.completedDisposition.emailBody, "_blank"); //this.moduleSettings['settings'][1]['setting']['value']
     setTimeout(function() { win.close() }, 500);
-    this.completedNote = "Emailed the contractor.  Cleared"
+    this.completedNote = "Emailed the contractor."
   }
 
   public getEmailConfiguration() {

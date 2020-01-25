@@ -39,18 +39,17 @@ export class ParentService {
     }
 
     public GetSingle = (id: number): Observable<any> => {
-        return this._http.get<any>(this.actionUrl + 'one?rowid=' + id, this.options)
+        return this._http.get<any>(this.actionUrl + 'single?rowid=' + id, this.options)
             .pipe(catchError(this.handleError));
     }
 
     public GetSingleFromEmail = (email: string): Observable<any> => {
-        return this._http.get<any>(this.actionUrl + 'one?email=' + email /*+API key 12/27/17*/, this.options)
+        return this._http.get<any>(this.actionUrl + 'single?email=' + email, this.options)
             .pipe(catchError(this.handleError));
     }
 
     public Add = (toAdd: any): Observable<any> => {
-        console.log("adding: " + this.actionUrl)
-        return this._http.post(this.actionUrl + 'create', JSON.stringify(toAdd), this.options)
+        return this._http.post(this.actionUrl + 'single', JSON.stringify(toAdd), this.options)
             .pipe(catchError(this.handleError));
     }
 
@@ -61,6 +60,26 @@ export class ParentService {
 
     public Delete = (id: number): Observable<any> => {
         return this._http.delete(this.actionUrl + 'delete?ID=' + id, this.options)
+            .pipe(catchError(this.handleError));
+    }
+
+    public GetByUser = (userid): Observable<any> => {
+        return this._http.get(this.actionUrl + 'byuser?userid=' + userid, this.options)
+            .pipe(catchError(this.handleError));
+    }
+
+    public GetByUserGroups = (userid): Observable<any> => {
+        return this._http.get(this.actionUrl + 'byusergroups?userID=' + userid, this.options)
+            .pipe(catchError(this.handleError));
+    }
+
+    public GetByLayer = (layerid): Observable<any> => {
+        return this._http.get(this.actionUrl + 'bylayer?layerID=' + layerid, this.options)
+            .pipe(catchError(this.handleError));
+    }
+
+    public GetByGroup = (groupid): Observable<any> => {
+        return this._http.get(this.actionUrl + 'bygroup?groupID=' + groupid, this.options)
             .pipe(catchError(this.handleError));
     }
 

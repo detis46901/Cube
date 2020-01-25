@@ -55,28 +55,6 @@ export class ServerDetailsComponent implements OnInit {
             .subscribe(() => this.dialog.closeAll())
     }
 
-    // public submit(layer) {
-    //     this.whichFieldsChanged(layer)
-    //     var notif: Notif = this.createLayerNotif(layer)
-    //     this.serverService
-    //         .Update(layer)
-    //         .subscribe(() => {
-    //             this.layerPermissionService.GetByLayer(layer.ID).subscribe((perms) => {
-    //                 for(let perm of perms) {
-    //                     if(perm.userID != this.userID) {
-    //                         notif.userID = perm.userID;
-    //                         this.notificationService
-    //                             .Add(notif)
-    //                             .subscribe((res) => {
-    //                                 console.log(res)
-    //                                 this.dialog.closeAll()
-    //                             })
-    //                     }
-    //                 }
-    //             })
-    //         })
-    // }
-
     public whichFieldsChanged(changed: Server) {
         let ix = 0;
 

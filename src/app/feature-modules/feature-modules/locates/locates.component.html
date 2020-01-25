@@ -51,14 +51,23 @@
               cdkAutosizeMaxRows="10"></textarea>
           </mat-form-field>
       </div>
-      <button mat-button mat-raised-button color="primary" (click)='completeTicket()' [disabled]='ticket.closed != Null'>Complete Ticket</button>
-        <button mat-button mat-raised-button color="primary" (click)='emailContractor(ticket)' [disabled]='ticket.closed != Null || !ticket.email'>Email Contractor</button> <br>
+      <mat-form-field><br>
+        <mat-label>Disposition</mat-label>
+        <mat-select [(value)]="completedDisposition">
+          <mat-option *ngFor="let item of disposition.disposition" [value]="item">
+            {{item.shortDescription}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field><br>
       <div class="example-container">
         <mat-form-field>
-          <textarea [(ngModel)]="completedNote" matInput placeholder="Note" style="width:100%"></textarea>
+          <textarea [(ngModel)]="completedNote" [value]="completedNote" matInput placeholder="Note" style="width:100%"></textarea>
         </mat-form-field>
         <br>
       </div>
+      <button mat-button mat-raised-button *ngIf="completedDisposition.completesTicket == true" color="primary" (click)='completeTicket()' [disabled]='ticket.closed != Null'>Complete Ticket</button>
+      <button mat-button mat-raised-button *ngIf="completedDisposition.completesTicket == false" color="primary" (click)='completeTicket()' [disabled]='ticket.closed != Null'>Update Status</button>
+      <button mat-button mat-raised-button *ngIf="completedDisposition.completesTicket == true" color="primary" (click)='emailContractor(ticket)' [disabled]='ticket.closed != Null || !ticket.email'>Email Contractor</button> <br>
     </div>
   </div>
 

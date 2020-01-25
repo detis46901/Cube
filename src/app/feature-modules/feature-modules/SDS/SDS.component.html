@@ -12,13 +12,14 @@
     (click)="goToTab('Search')">Search</button>
   <button mat-button mat-raised-button color="primary" *ngIf="mapConfig.selectedFeature"
     (click)="goToTab('List')">List</button>
-  <button mat-button mat-raised-button color="primary" *ngIf="SDSservice.SDSConfig.selectedItem"
+  <button mat-button mat-raised-button color="primary" *ngIf="SDSConfig.selectedItem"
     (click)="goToTab('Item')">Item</button>
+    {{SDSConfig.moduleInstanceID}}
   <button mat-button mat-raised-button color="primary" matTooltip="Use this in an Excel Data Connection"
-    (click)="copyToClipboard('sql/getsheets?schema=modules&table=m' + SDSservice.SDSConfig.moduleInstanceID + 'data')">Export</button>
+    (click)="copyToClipboard('sql/getsheets?schema=modules&table=m' + SDSConfig.moduleInstanceID + 'data')">Export</button>
   <!-- <button mat-button mat-raised-button color="primary" (click)="openDashboard()">Dashboard</button> -->
-  <div *ngIf="SDSservice.SDSConfig.tab=='Input' && mapConfig.selectedFeature != null" label="Input"><br>
-    <div *ngFor="let item of SDSservice.SDSConfig.itemData">
+  <div *ngIf="SDSConfig.tab=='Input' && mapConfig.selectedFeature != null" label="Input"><br>
+    <div *ngFor="let item of SDSConfig.itemData">
       <div *ngIf="item.type=='id'"></div>
       <div *ngIf="item.type=='geom'"></div>
       <div *ngIf="item.type=='integer' || item.type == 'smallint' || item.type == 'bigint' || item.type == 'double precision'">
@@ -71,16 +72,16 @@
       </div>
       <div *ngIf="item.type=='date' || item.type=='timestamp with time zone'">
         <mat-form-field style="width:90%">
-          <input matInput [disabled]="false" autocomplete='off' [matDatepicker]="picker" placeholder="{{item.field}}"
+          <input matInput [disabled]="false" autocomplete='off' [matDatepicker]="picker" placeholder="{{item.field}}" [matTooltip]="item.description"
             [(ngModel)]="item.value">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
       </div>
     </div>
-    <button mat-button mat-raised-button color="primary" (click)="SDSservice.saveSDS()">Save</button>
+    <button mat-button mat-raised-button color="primary" (click)="SDSservice.saveSDS(SDSConfigID)">Save</button>
   </div>
-  <div *ngIf="SDSservice.SDSConfig.tab=='Search'" label=Search><br>
+  <div *ngIf="SDSConfig.tab=='Search'" label=Search><br>
     <mat-slide-toggle matTooltip="" class="" [checked]="filterOpen" (change)="filterOpen = !filterOpen">
       <span>Only Open Tickets</span>
     </mat-slide-toggle><br>
@@ -97,17 +98,17 @@
     <button mat-button mat-raised-button color="primary" (click)='filter()'>Filter</button>
     <button mat-button mat-raised-button color="primary" (click)='clearFilter()'>Clear Filter</button>
   </div>
-  <div *ngIf="SDSservice.SDSConfig.tab=='List' && mapConfig.selectedFeature" label="List" style="width:100%"><br>
-    {{SDSservice.SDSConfig.label}}
-    <div *ngFor="let item of this.SDSservice.SDSConfig.list">
-      <span *ngIf="item['id'] != SDSservice.SDSConfig.selectedItem"
-        (click)="selectItem(item['id'])">{{item[SDSservice.SDSConfig.label]}}</span>
-      <span *ngIf="item['id'] == SDSservice.SDSConfig.selectedItem"
-        (click)="selectItem(item['id'])"><b>{{item[SDSservice.SDSConfig.label]}}</b></span>
+  <div *ngIf="SDSConfig.tab=='List' && mapConfig.selectedFeature" label="List" style="width:100%"><br>
+    {{SDSConfig.label}}
+    <div *ngFor="let item of SDSConfig.list">
+      <span *ngIf="item['id'] != SDSConfig.selectedItem"
+        (click)="selectItem(item['id'])">{{item[SDSConfig.label]}}</span>
+      <span *ngIf="item['id'] == SDSConfig.selectedItem"
+        (click)="selectItem(item['id'])"><b>{{item[SDSConfig.label]}}</b></span>
     </div>
   </div>
-  <div *ngIf="SDSservice.SDSConfig.tab == 'Item'"><br>
-    <div *ngFor="let item of SDSservice.SDSConfig.itemData">
+  <div *ngIf="SDSConfig.tab == 'Item'"><br>
+    <div *ngFor="let item of SDSConfig.itemData">
       <div *ngIf="item.type=='id'"></div>
       <div *ngIf="item.type=='geom'"></div>
       <div *ngIf="item.type=='integer' || item.type == 'smallint' || item.type == 'bigint' || item.type == 'double precision'">
@@ -170,7 +171,7 @@
     <button *ngIf='editRecord == true' mat-button mat-raised-button color="primary"
       (click)="editRecord = false">Edit</button>
     <button *ngIf='editRecord == false' mat-button mat-raised-button color="primary"
-      (click)="SDSservice.updateSDS()">Save</button>
+      (click)="SDSservice.updateSDS(SDSConfigID)">Save</button>
     <button mat-button mat-raised-button color="primary" (click)="SDSservice.deleteSDS()">Delete</button>
   </div>
 

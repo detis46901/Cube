@@ -1,3 +1,16 @@
+export class Domain {
+    ID: number;
+    title: string;
+    url: string;
+    centerlong: number;
+    centerlat: number;
+    centerzoom: number;
+    bingmapskey: string;
+    mapboxbasemapurl: string;
+    localz: string;
+    cacheSize: number;
+}
+
 export class User {
     ID: number;
     firstName: string;
@@ -6,7 +19,8 @@ export class User {
     active: boolean;
     email: string;
     administrator: boolean;
-    public: boolean
+    public: boolean;
+    domain: Domain;
 }
 
 export class UserPage {

@@ -14,14 +14,4 @@ export class GroupMemberService extends ParentService {
         super(_http, configuration);
         this.actionUrl = this.configuration.serverWithApiUrl + 'groupmember/';
     }
-
-    public GetByUser = (userid): Observable<any> => {
-        return this._http.get(this.actionUrl + 'getbyuser?userid=' + userid, this.options)
-            .pipe(catchError(this.handleError));
-    }
-
-    public GetByGroup = (groupid): Observable<any> => {
-        return this._http.get(this.actionUrl + 'getbygroup?groupid=' + groupid, this.options)
-            .pipe(catchError(this.handleError));
-    }
 }

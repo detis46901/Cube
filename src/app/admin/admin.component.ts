@@ -29,6 +29,7 @@ export class AdminComponent {
         this.dataService
             .GetSingle(userid)
             .subscribe((data: User) => {
+                console.log(data)
                 this.user = data
             });
     }

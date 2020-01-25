@@ -38,17 +38,17 @@ export class NotifService {
     }
 
     public GetByUser = (userID): Observable<any> => {
-        return this._http.get(this.actionUrl + 'getbyuser?userID=' + userID, this.options)
+        return this._http.get(this.actionUrl + 'byuser?userID=' + userID, this.options)
             .pipe(catchError(this.handleError));
     }
 
     public GetByType = (type): Observable<any> => {
-        return this._http.get(this.actionUrl + 'getbytype?objectType=' + type, this.options)
+        return this._http.get(this.actionUrl + 'bytype?objectType=' + type, this.options)
             .pipe(catchError(this.handleError));
     }
 
     public GetBySource = (sourceID): Observable<any> => {
-        return this._http.get(this.actionUrl + 'getbysource?sourceID=' + sourceID, this.options)
+        return this._http.get(this.actionUrl + 'bysource?sourceID=' + sourceID, this.options)
             .pipe(catchError(this.handleError));
     }
 

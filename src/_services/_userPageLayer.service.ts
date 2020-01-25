@@ -32,7 +32,7 @@ export class UserPageLayerService extends ParentService {
     }
 
     public GetByLayer = (layerid): Observable<any> => {
-        return this._http.get(this.actionUrl + 'getbylayer?layerID=' + layerid, this.options)
+        return this._http.get(this.actionUrl + 'bylayer?layerID=' + layerid, this.options)
             .pipe(catchError(this.handleError));
     }
 

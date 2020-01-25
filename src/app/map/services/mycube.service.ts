@@ -47,7 +47,6 @@ export class MyCubeService extends SQLService {
     prebuildMyCube(layer) {
         this.GetSchema('mycube', 't' + layer.layer.ID)
             .subscribe((data) => {
-                console.log(data)
                 this.cubeData = data[0]
                 this.cubeData[0].type = "id"
                 this.cubeData[1].type = "geom"
@@ -101,7 +100,6 @@ export class MyCubeService extends SQLService {
                         arrayConstraints.forEach((x) => {
                             let ar1 = x.split("= ")[1]
                             let ar2 = ar1.split(")")[0]
-                            console.log(ar2)
                             let constr = new MyCubeConstraint()
                             constr.name = +ar2
                             constr.option = "option"                        

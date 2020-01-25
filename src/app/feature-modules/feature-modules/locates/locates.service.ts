@@ -3,7 +3,7 @@ import { UserPageLayer, MyCubeField } from '_models/layer.model';
 import { UserPageInstance } from '_models/module.model'
 import { MapConfig, mapStyles, featureList } from 'app/map/models/map.model';
 import { geoJSONService } from 'app/map/services/geoJSON.service';
-import { Locate, locateStyles } from './locates.model'
+import { Locate, locateStyles, disItem } from './locates.model'
 import { StyleService } from './style.service'
 import { MatSnackBar } from '@angular/material/snack-bar';
 //http dependancies
@@ -22,7 +22,6 @@ import VectorLayer from "ol/layer/Vector";
 import VectorSource from 'ol/source/Vector';
 import {addProjection, addCoordinateTransforms, transform} from 'ol/proj';
 import { environment } from '../../../../environments/environment'
-import { NgxSoapService, Client, ISoapMethodResponse } from 'ngx-soap';
 
 
 @Injectable()
@@ -33,14 +32,13 @@ export class LocatesService {
   public mapConfig: MapConfig
   public layer: UserPageLayer
   public filter: string = 'closed IS Null'
-  private ticket = new Subject<Locate>();
-  private ID = new Subject<string>()
+  private ticket$ = new Subject<Locate>();
   private expanded = new Subject<boolean>();
   private tab = new Subject<string>();
   public sortBy: string = "Address"
   public showSortBy: Boolean
   public layerState: string
-  public client: Client
+
   public message: string
 
 
@@ -185,8 +183,7 @@ export class LocatesService {
         this.locate = data[0][0]
         console.log(this.locate)
       })
-    //this.sendTicket(mapConfig.selectedFeature.get('ticket'))
-    this.sendID(mapConfig.selectedFeature.get('id'))
+    this.sendTicket(mapConfig.selectedFeature.get('ticket'))
     this.mapConfig.selectedFeature.setStyle(this.locateStyles.selected)
     return false
   }
@@ -198,7 +195,6 @@ export class LocatesService {
     //this.reloadLayer()  //Can't do this.  It would be circular.
     this.createInterval()
     this.sendTicket(null)
-    this.sendID(null)
     this.locate = null
     this.myCubeService.clearMyCubeData()
     if (mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction) }
@@ -225,11 +221,11 @@ export class LocatesService {
   }
 
   getTicket(): Observable<any> {
-    return this.ticket.asObservable();
+    return this.ticket$.asObservable();
   }
 
   sendTicket(ticket: Locate) {
-    this.ticket.next(ticket)
+    this.ticket$.next(ticket)
   }
 
   getTab(): Observable<any> {
@@ -241,13 +237,6 @@ export class LocatesService {
   }
 
 
-  getID(): Observable<any> {
-    return this.ID.asObservable();
-  }
-
-  sendID(ID: string) {
-    this.ID.next(ID)
-  }
 
   getExpanded(): Observable<any> {
     return this.expanded.asObservable();
@@ -566,7 +555,8 @@ export class LocatesService {
     return true
   }
 
-  public completeTicket(mapConfig: MapConfig, instanceID: number, id: string, userName: string, completedNote: string, completedBy: string) {
+  public completeTicket(mapConfig: MapConfig, instanceID: number, ticket: Locate, completedNote: string, completedBy: string) {
+    let ticketID = ticket.id.toString()
     this.mapConfig = mapConfig
     let undo: boolean
     let i = mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == instanceID)
@@ -585,41 +575,45 @@ export class LocatesService {
     })
     snackBarRef.afterDismissed().subscribe((x) => {
       if (!undo) {
-        this.updateRecord(table, id, 'closed', 'text', strDate.toLocaleString())
-        this.updateRecord(table, id, 'completedby', 'text', userName)
+        this.updateRecord(table, ticketID, 'closed', 'text', strDate.toLocaleString())
         let ntext: RegExp = /'/g
         if (completedNote) { completedNote = completedNote.replace(ntext, "''") }
-        this.updateRecord(table, id, 'note', 'text', completedNote)
-        this.updateRecord(table, id, 'completedby', 'text', completedBy)
+        this.updateRecord(table, ticketID, 'note', 'text', completedNote)
+        this.updateRecord(table, ticketID, 'completedby', 'text', completedBy)
+        this.updateRecord(table, ticketID, 'disposition', 'text', ticket.disposition)
         this.clearFeature(mapConfig, mapConfig.userpagelayers[i])
         undo = false
-        this.sendUpdateToIRTH()
+        this.sendUpdateToIRTH(instanceID, ticket)
       }
     })
   }
 
-  public testCompleteTicket (mapConfig: MapConfig, instanceID: number, id: string, userName: string, completedNote: string, completedBy: string) {
-    this.sendUpdateToIRTH()
-    //this.completeTicket(mapConfig, instanceID, id, userName, completedNote, completedBy)
-  }
+  sendUpdateToIRTH(instanceID: number, ticket: Locate) {
+    let i = this.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == instanceID)
+    let stateCode = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'State Code')
+    let userID = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'UserID')
+    let password = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'Password')
+    let serviceAreaCode = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'Service Area Code')
+    stateCode = stateCode['setting']['value']
+    userID = userID['setting']['value']
+    password = password['setting']['value']
+    serviceAreaCode = serviceAreaCode['setting']['value']
 
-  soapCall() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open('POST', environment.proxyUrl + '/irth.indiana811.org/IrthOneCallWebServices/PositiveResponseV2.asmx', true);
    
-    //the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
     var sr =
     `<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
     <soap:Body>
       <Respond xmlns="http://Irth.com/OneCall/PositiveResponse">
-        <occCode>IUPPS</occCode>
-        <userID>ID5509</userID>
-        <password>148429</password>
-        <serviceAreaCode>1</serviceAreaCode>
-        <occTicketID>2001170969</occTicketID>
-        <responseCode>2</responseCode>
+        <occCode>` + stateCode + `</occCode>
+        <userID>` + userID + `</userID>
+        <password>` + password + `</password>
+        <serviceAreaCode>` + serviceAreaCode + `</serviceAreaCode>
+        <occTicketID>` + ticket.ticket + `</occTicketID>
+        <responseCode>` + ticket.disposition + `</responseCode>
         <responseCategory></responseCategory>
-        <comment>Test Comment</comment>
+        <comment>Auto Response by the City of Kokomo</comment>
       </Respond>
     </soap:Body>
   </soap:Envelope>`
@@ -637,14 +631,9 @@ export class LocatesService {
     }
     // Send the POST request
     xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-    //xmlhttp.setRequestHeader('charset','utf-8')
-    //xmlhttp.responseType = "document";
     xmlhttp.send(sr)
 }
 
-  public sendUpdateToIRTH() {
-this.soapCall()
-  }
   public flipSortBy() {
     switch (this.sortBy) {
       case "Priority": {

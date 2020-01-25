@@ -42,7 +42,7 @@ export class SQLService {
     }
 
     public GetSingle = (table: string, id: string): Observable<any> => {
-        return this._http.get(this.actionUrl + 'one?table=' + table + '&id=' + id, this.options)
+        return this._http.get(this.actionUrl + 'single?table=' + table + '&id=' + id, this.options)
             // .map((response: Response) => <any>response.json())
             .catch(this.handleError);
     }
@@ -66,7 +66,7 @@ export class SQLService {
     }
 
     public getConstraints = (schema: string, table: string): Observable<any> => {
-        return this._http.get(this.actionUrl + 'getconstraints?schema=' + schema + '&table=' + table, this.options)
+        return this._http.get(this.actionUrl + 'constraints?schema=' + schema + '&table=' + table, this.options)
     }
     
     public CreateCommentTable = (layerName: string): Observable<any> => {

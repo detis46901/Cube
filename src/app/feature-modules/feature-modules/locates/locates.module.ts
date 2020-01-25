@@ -24,7 +24,6 @@ import { StyleService } from '../locates/style.service'
 import { LocatesAdminService } from '../locates/locates-admin.service'
 import { locateStyles } from './locates.model'
 import { ModuleInstanceService } from './../../../../_services/_moduleInstance.service'
-import { NgxSoapModule } from 'ngx-soap'
 
 
 @NgModule({
@@ -57,9 +56,7 @@ import { NgxSoapModule } from 'ngx-soap'
     MatSnackBarModule,
     MatDividerModule,
     FormsModule,
-    ReactiveFormsModule,
-    NgxSoapModule
-
+    ReactiveFormsModule
   ],
   declarations: [LocatesComponent],
   providers: [LocatesService, LocatesAdminService, locateStyles, ModuleInstanceService, StyleService],

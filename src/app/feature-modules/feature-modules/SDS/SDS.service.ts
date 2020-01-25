@@ -24,10 +24,11 @@ export class SDSService {
   public layer: UserPageLayer
   public filter: string = 'closed IS Null'
   private expanded = new Subject<boolean>();
+  private SDSConfigSubject = new Subject<SDSConfig[]>();
   public sortBy: string = "Address"
   public showSortBy: Boolean
   public layerState: string
-  public SDSConfig = new SDSConfig
+  public SDSConfig = new Array<SDSConfig>()
 
   constructor(private geojsonservice: geoJSONService,
     protected _http: HttpClient,
@@ -44,39 +45,50 @@ export class SDSService {
     this.layer = layer
     this.layerState = 'load'
     this.mapConfig = mapConfig
-    this.clearFeature(this.mapConfig, this.layer)
-    //Need to provide for clustering if the number of objects gets too high
-
-    let stylefunction = ((feature: Feature) => {
-      return (this.styleService.styleFunction(feature, 'load'));
-    })
-    let source = new VectorSource({
-      format: new GeoJSON()
-    })
-
-    this.getMyFeatureData(layer).then((data) => {
-      if (data[0][0]['jsonb_build_object']['features']) {
-        source.addFeatures(new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
+    console.log(layer.layer.layerType)
+    switch (layer.layer.layerType) {
+      case "MyCube": {
+        this.clearFeature(this.mapConfig, this.layer)
+        //Need to provide for clustering if the number of objects gets too high
+    
+        let stylefunction = ((feature: Feature) => {
+          return (this.styleService.styleFunction(feature, 'load'));
+        })
+        let source = new VectorSource({
+          format: new GeoJSON()
+        })
+    
+        this.getMyFeatureData(layer).then((data) => {
+          if (data[0][0]['jsonb_build_object']['features']) {
+            source.addFeatures(new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
+          }
+          // var clusterSource = new ol.source.Cluster({
+          //   distance: 90,
+          //   source: source
+          // });
+          this.vectorlayer = new VectorLayer({
+            source: source,
+            style: stylefunction
+          });
+          this.vectorlayer.setVisible(layer.defaultON);
+          mapConfig.map.addLayer(this.vectorlayer);
+          layer.olLayer = this.vectorlayer
+          layer.source = source
+        })
+        if (this.SDSUpdateInterval == null) {
+          this.SDSUpdateInterval = setInterval(() => {
+            console.log('loadLayer')
+            this.reloadLayer();
+          }, 20000);
+        }
+        break
       }
-      // var clusterSource = new ol.source.Cluster({
-      //   distance: 90,
-      //   source: source
-      // });
-      this.vectorlayer = new VectorLayer({
-        source: source,
-        style: stylefunction
-      });
-      this.vectorlayer.setVisible(layer.defaultON);
-      mapConfig.map.addLayer(this.vectorlayer);
-      layer.olLayer = this.vectorlayer
-      layer.source = source
-    })
-    if (this.SDSUpdateInterval == null) {
-      this.SDSUpdateInterval = setInterval(() => {
-        console.log('loadLayer')
-        this.reloadLayer();
-      }, 20000);
+      case "Geoserver": {
+        console.log('Geoserver load')
+        return false  
+      }
     }
+
     return true
   }
 
@@ -108,17 +120,14 @@ export class SDSService {
     return promise;
   }
 
-  public saveSDS(): any {
-    console.log('Saving Record')
-    this.sqlService.addAnyRecord('modules', 'm' + this.SDSConfig.moduleInstanceID + 'data', this.SDSConfig.linkedField, this.mapConfig.selectedFeature.get('id'))
+  public saveSDS(SDSConfigID: number): any {
+    this.sqlService.addAnyRecord('modules', 'm' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'data', this.SDSConfig[SDSConfigID].linkedField, this.mapConfig.selectedFeature.get('id'))
       .subscribe((x) => {
-        console.log(x[0][0])
         let id = x[0][0]['id']
-        this.SDSConfig.itemData.forEach((x) => {
-          if (x.type != 'id') {
-            this.sqlService.UpdateAnyRecord('modules', 'm' + this.SDSConfig.moduleInstanceID + 'data', id, x)
+        this.SDSConfig[SDSConfigID].itemData.forEach((x) => {
+          if (x.type != 'id' && x.value != null) {
+            this.sqlService.UpdateAnyRecord('modules', 'm' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'data', id, x)
               .subscribe((z) => {
-                console.log(z)
                 this.selectFeature(this.mapConfig, this.layer)
                 let snackBarRef = this.snackBar.open('Record saved', '', {
                   duration: 4000
@@ -129,11 +138,11 @@ export class SDSService {
       })
   }
 
-  public updateSDS(): any {
-    console.log(this.SDSConfig.itemData)
-    this.SDSConfig.itemData.forEach((x) => {
+  public updateSDS(SDSConfigID:number): any {
+    console.log(this.SDSConfig[SDSConfigID].itemData)
+    this.SDSConfig[SDSConfigID].itemData.forEach((x) => {
       if (x.type != 'id') {
-        this.sqlService.UpdateAnyRecord('modules', 'm' + this.SDSConfig.moduleInstanceID + 'data', this.SDSConfig.itemData[0].value, x)
+        this.sqlService.UpdateAnyRecord('modules', 'm' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'data', this.SDSConfig[SDSConfigID].itemData[0].value, x)
           .subscribe((z) => {
             console.log(z)
             this.selectFeature(this.mapConfig, this.layer)
@@ -145,8 +154,8 @@ export class SDSService {
     })
   }
 
-  public deleteSDS(): any {
-    this.sqlService.deleteAnyRecord('modules', 'm' + this.SDSConfig.moduleInstanceID + 'data', this.SDSConfig.itemData[0].value)
+  public deleteSDS(SDSConfigID: number): any {
+    this.sqlService.deleteAnyRecord('modules', 'm' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'data', this.SDSConfig[SDSConfigID].itemData[0].value)
       .subscribe((x) => {
         console.log(x)
         this.selectFeature(this.mapConfig, this.layer)
@@ -158,7 +167,9 @@ export class SDSService {
 
   private getFeatureList(mapConfig?, layer?: UserPageLayer): boolean {
     //this has issues, as the "name" needs to be dinamic.  This really needs to be able to return false so map.service can create the featurelist.
-    let k: number = 0;
+    switch (layer.layer.layerType) {
+      case "MyCube": {
+        let k: number = 0;
     let tempList = new Array<featureList>();
     try {
       layer.source.forEachFeature((x: Feature) => {
@@ -179,23 +190,35 @@ export class SDSService {
       console.error(error);
       clearInterval(this.SDSUpdateInterval);
     }
+    break
+  }
+}
     return true
   }
 
   public setCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
     this.showSortBy = true
     this.layerState = 'current'
-    this.reloadLayer()
+    switch (layer.layer.layerType) {
+      case "MyCube": {
+        this.reloadLayer()
+        this.mapConfig.editmode = true //probably need to set this as a permission and not always true
+        break    
+      }
+    }
     this.sendexpanded(true)
-    this.mapConfig.editmode = true
     return true
   }
 
   public unsetCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
     this.layerState = 'load'
-    this.reloadLayer()
+    switch(layer.layer.layerType) {
+      case "MyCube": {
+        this.reloadLayer()
+        this.showSortBy = false
+      }
+    }
     this.sendexpanded(false)
-    this.showSortBy = false
     return true
   }
 
@@ -205,27 +228,41 @@ export class SDSService {
   }
 
   public selectFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    //This will only work for myCube layers.  Another method will need to be created for WMS layers.
-    this.mapConfig.userpageinstances.forEach((x) => {
-      if (x.module_instance.module.identity = "SDS") {
-        console.log(mapConfig.selectedFeature.get('id'))
-        console.log(this.SDSConfig.moduleSettings['settings'][2]['setting']['value'])
-        this.sqlService.GetAnySingle('modules.m' + x.moduleInstanceID + 'data', this.SDSConfig.moduleSettings['settings'][2]['setting']['value'], mapConfig.selectedFeature.get('id'))
-          .subscribe((data: any) => {
-            console.log(data)
-            this.SDSConfig.list = data[0]
-            this.SDSConfig.list.forEach((x) => {
-              console.log(x[this.SDSConfig.label])
-              if (x[this.SDSConfig.label] == null) {
-                x[this.SDSConfig.label] = "(blank)"
-              }
+    console.log(layer)
+    let instanceID: number
+        this.mapConfig.userpageinstances.forEach((x) => {
+          if (layer.userPageInstanceID == x.ID) {
+            instanceID = x.moduleInstanceID
+          }
+        })
+          if (mapConfig.selectedFeature) {
+            console.log(this.SDSConfig)
+            let SDSConfigID:number
+            let i: number = 0
+            this.SDSConfig.forEach((x) => {
+              console.log(x.moduleInstanceID)
+              console.log(instanceID)
+              if (x.moduleInstanceID == instanceID) {SDSConfigID = i}
+              i = i++
             })
-            this.SDSConfig.list.sort()  //this needs to be fixed.
-            this.SDSConfig.tab = 'List'
-          })
-      }
-    })
-    this.mapConfig.selectedFeature.setStyle(this.locateStyles.selected)
+            console.log(SDSConfigID)
+            console.log(this.SDSConfig[SDSConfigID].moduleSettings)
+            console.log(this.SDSConfig[SDSConfigID].moduleSettings['settings'][2]['setting']['value'])
+            this.sqlService.GetAnySingle('modules.m' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'data', this.SDSConfig[SDSConfigID].moduleSettings['settings'][2]['setting']['value'], mapConfig.selectedFeature.get('id'))
+              .subscribe((data: any) => {
+                console.log(data)
+                this.SDSConfig[SDSConfigID].list = data[0]
+                this.SDSConfig[SDSConfigID].list.forEach((x) => {
+                  console.log(x[this.SDSConfig[SDSConfigID].label])
+                  if (x[this.SDSConfig[SDSConfigID].label] == null) {
+                    x[this.SDSConfig[SDSConfigID].label] = "(blank)"
+                  }
+                })
+                this.SDSConfig[SDSConfigID].list.sort()  //this needs to be fixed.
+                this.SDSConfig[SDSConfigID].tab = 'List'
+              })
+          }
+        if(layer.layer.layerType == "MyCube") {this.mapConfig.selectedFeature.setStyle(this.locateStyles.selected)}
     return false
   }
 
@@ -233,10 +270,11 @@ export class SDSService {
     let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
       return (this.styleService.styleFunction(feature, 'current'));
     })
-    this.SDSConfig.list = null
+    //fix this stuff below..
+    this.SDSConfig[0].list = null
     this.myCubeService.clearMyCubeData()
-    this.SDSConfig.tab = 'List'
-    if (mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction); mapConfig.selectedFeature = null; this.SDSConfig.selectedItem = null }
+    this.SDSConfig[0].tab = 'List'
+    if (mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction); mapConfig.selectedFeature = null; this.SDSConfig[0].selectedItem = null }
     return true
   }
 
@@ -270,36 +308,39 @@ export class SDSService {
     return this.expanded.asObservable();
   }
 
+  getSDSConfig(): Observable<any> {
+    return this.SDSConfigSubject.asObservable();
+  }
+
+  sendSDSConfig() {
+    this.SDSConfigSubject.next(this.SDSConfig)
+  }
   sendexpanded(expanded: boolean) {
     this.expanded.next(expanded)
   }
 
-  public getData(table, id): Promise<any> {
-    this.SDSConfig.tab = 'Item'
+  public getData(table, id, SDSConfigID:number): Promise<any> {
+    this.SDSConfig[SDSConfigID].tab = 'Item'
     let promise = new Promise(resolve => {
-      console.log("Getting Schema")
-      this.getsingle('modules.m' + table + 'data', id).then(() => { resolve(this.SDSConfig.itemData) })
+      this.getsingle('modules.m' + table + 'data', id, SDSConfigID).then(() => { resolve(this.SDSConfig[SDSConfigID].itemData) })
 
     })
     return promise
   }
 
-  public findLinkedID(element: MyCubeField, index, array) {
-    console.log(this.SDSConfig)
-    return (element.value == this.SDSConfig.moduleSettings['settings'][2]['setting']['value'])
-  }
+  // public findLinkedID(element: MyCubeField, index, array) {
+  //   return (element.value == this.SDSConfig.moduleSettings['settings'][2]['setting']['value'])
+  // }
 
-  getSchema(schema, table): Promise<MyCubeField[]> {
+  getSchema(schema, table, SDSConfig: SDSConfig): Promise<MyCubeField[]> {
     let promise = new Promise<MyCubeField[]>(resolve => {
-      console.log(table)
       this.sqlService.GetSchema('modules', 'm' + table + 'data')
         .subscribe((data) => {
-          console.log(data)
-          this.SDSConfig.itemData = data[0]
+          SDSConfig.itemData = data[0]
           this.sqlService.getConstraints('modules', 'm' + table + 'data')
             .subscribe((constraints) => {
-              this.SDSConfig.itemData = this.myCubeService.setConstraints(this.SDSConfig.itemData, constraints)
-              resolve(this.SDSConfig.itemData)
+              SDSConfig.itemData = this.myCubeService.setConstraints(SDSConfig.itemData, constraints)
+              resolve(SDSConfig.itemData)
             })
         })
 
@@ -307,18 +348,17 @@ export class SDSService {
     return promise
   }
 
-  getsingle(table, id): Promise<any> {
+  getsingle(table, id, SDSConfigID: number): Promise<any> {
     let promise = new Promise(resolve => {
       this.sqlService.GetSingle(table, id)
         .subscribe((sdata: JSON) => {
-          console.log(sdata)
           let z = 0
           for (var key in sdata[0][0]) {
             if (sdata[0][0].hasOwnProperty(key)) {
-              if (z != 0) { this.SDSConfig.itemData[z].value = sdata[0][0][key] }
-              if (this.SDSConfig.itemData[z].type == 'date') {
+              if (z != 0) { this.SDSConfig[SDSConfigID].itemData[z].value = sdata[0][0][key] }
+              if (this.SDSConfig[SDSConfigID].itemData[z].type == 'date') {
                 console.log('fixing date')
-                this.SDSConfig.itemData[z].value += environment.localez
+                this.SDSConfig[SDSConfigID].itemData[z].value += environment.localez
               } //this is required because the datepicker converts a date (with no locale) to local and it will lose a day with this. 
               z++
             }

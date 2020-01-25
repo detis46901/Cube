@@ -96,6 +96,10 @@ export class WMSService {
             })
     }
 
+    getGeoJSONInfo(URL):Observable<string> {
+        return this.http.request("GET", URL, {responseType: 'text'})
+    }
+
     public getCapabilities = (url): Observable<any> => {
         return this.http.request("GET", url + "?request=GetCapabilities", {responseType: 'text'})
     }

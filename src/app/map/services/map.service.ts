@@ -503,12 +503,27 @@ export class MapService {
                 let viewResolution = this.mapConfig.map.getView().getResolution();
                 wmsSource.get;
                 let url = wmsSource.getFeatureInfoUrl(evt.coordinate, viewResolution, 'EPSG:3857', { 'INFO_FORMAT': 'text/html' });
-                if (url) {
-                    this.wmsService.getfeatureinfo(url, false)
-                        .subscribe((data: any) => {
-                            this.myCubeService.parseAndSendWMS(data);
-                        });
+                let url3 = wmsSource.getFeatureInfoUrl(evt.coordinate, viewResolution, 'EPSG:3857', { 'INFO_FORMAT': 'application/json'})
+                if (url3) {
+                    this.wmsService.getGeoJSONInfo(url3)
+                    .subscribe((data: string) => {
+                        let data1 = data.split('numberReturned":') //probably a better way to do this.
+                        if (data1[1][0] == '0') {
+                            if (this.featuremodulesservice.clearFeature(this.mapConfig, this.mapConfig.currentLayer)) { return }
+                        }
+                        this.mapConfig.selectedFeature = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data)[0];
+                        if (url) {
+                            this.wmsService.getfeatureinfo(url, false)
+                                .subscribe((data: any) => {
+                                    this.myCubeService.parseAndSendWMS(data);
+                                });
+                                if (this.featuremodulesservice.selectFeature(this.mapConfig, layer)) {
+                                    return
+                                }
+                        }
+                    })
                 }
+               
                 break
             }
             case ("MapServer"): {

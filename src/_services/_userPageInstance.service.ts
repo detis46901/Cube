@@ -32,7 +32,7 @@ export class UserPageInstanceService extends ParentService {
     }
 
     public GetByInstance = (instanceid): Observable<any> => {
-        return this._http.get(this.actionUrl + 'getbyinstance?instanceID=' + instanceid, this.options)
+        return this._http.get(this.actionUrl + 'byinstance?instanceID=' + instanceid, this.options)
             .pipe(catchError(this.handleError));
     }
 
