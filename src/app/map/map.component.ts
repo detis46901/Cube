@@ -8,7 +8,7 @@ import { ServerService } from '../../_services/_server.service';
 import { GroupMemberService } from '../../_services/_groupMember.service';
 import { GroupService } from '../../_services/_group.service';
 import { LayerPermission, UserPageLayer, MyCubeField, MyCubeComment } from '../../_models/layer.model';
-import { UserPage } from '../../_models/user.model';
+import { UserPage, User } from '../../_models/user.model';
 import { UserPageLayerService } from '../../_services/_userPageLayer.service';
 import { Observable } from 'rxjs/Observable';
 import { PageConfigComponent2 } from '../admin2/user/pageconfig/pageconfig.component';
@@ -31,6 +31,9 @@ import { map, startWith } from 'rxjs/operators';
 import { MapConfigService } from './../../_services/mapConfig.service'
 import { environment } from 'environments/environment'
 import Map from 'ol/Map';
+import VectorSource from 'ol/source/Vector';
+import GeoJSON from 'ol/format/GeoJSON';
+import VectorLayer from 'ol/layer/Vector';
 
 @Component({
     moduleId: module.id,
@@ -44,13 +47,12 @@ export class MapComponent implements OnInit{
     // This is necessary to access the html element to set the map target (after view init)!
     @ViewChild("mapElement") mapElement: ElementRef;
     @ViewChild("layers") layers: ElementRef;
-    @Input() id: string
+    @Input() user: User;
     layerCtrl = new FormControl();
     filteredPermissions: Observable<LayerPermission[]>;
     public showNewLayer: boolean = false
     public mapConfig = new MapConfig;
     public token: string;
-    public userID: number;
     public public: boolean = false;
     public headers: Headers;
     public measureShow: boolean = false;
@@ -82,7 +84,7 @@ export class MapComponent implements OnInit{
     ngOnInit() {
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
+        // this.userID = currentUser && currentUser.userID;
         this.public = currentUser && currentUser.public;
         this.mapConfig.layerpermission = []
         this.filteredPermissions = this.layerCtrl.valueChanges
@@ -91,16 +93,11 @@ export class MapComponent implements OnInit{
                 map(value => typeof value === 'string' ? value : value.layer.layerName),
                 map(layer => layer ? this._filterPermissions(layer) : this.mapConfig.layerpermission.slice())
             );
-        this.getMapConfig(this.id)
+        this.getMapConfig()
     }
 
-    private getMapConfig(id) { //id is used for public pages.
-        if (id) {
-            this.mapConfig.userID = id
-        }
-        else {
-            this.mapConfig.userID = this.userID;
-        }
+    private getMapConfig() { //id is used for public pages.
+        this.mapConfig.user = this.user
         this.mapConfigService.GetSingle(this.mapConfig)
             .subscribe((x) => {
                 this.mapConfig = x
@@ -123,6 +120,13 @@ export class MapComponent implements OnInit{
                 }
                 baseLayer.setVisible(true);
                 this.mapConfig.baseLayers.push(baseLayer);
+                
+                //sets up so WMS layers can show selected features
+                this.mapConfig.selectedFeatureSource = new VectorSource ({  format: new GeoJSON()})
+                this.mapConfig.selectedFeatureLayer = new VectorLayer({ source: this.mapConfig.selectedFeatureSource})
+                this.mapConfig.selectedFeatureLayer.setZIndex(1000)
+                this.mapConfig.baseLayers.push(this.mapConfig.selectedFeatureLayer)
+
                 if (this.mapConfig.userpagelayers.length == 0) {
                     this.mapConfig.currentLayer = new UserPageLayer;
                     this.mapConfig.currentLayerName = "";
@@ -208,7 +212,7 @@ export class MapComponent implements OnInit{
         console.log(LP)
         let UPL = new UserPageLayer
         UPL.defaultON = true
-        UPL.userID = this.userID
+        UPL.userID = this.user.ID
         UPL.layer = LP.layer
         UPL.layerID = LP.layer.ID
         UPL.layerPermissions = LP
@@ -221,7 +225,7 @@ export class MapComponent implements OnInit{
     getDefaultPage(): Promise<any> {
         let promise = new Promise((resolve, reject) => {
             this.userPageService
-                .GetActiveByUserID(this.userID)
+                .GetActiveByUserID(this.user.ID)
                 .subscribe((data: UserPage[]) => {
                     this.mapConfig.name = "Current";
                     this.mapConfig.userpages = data;
@@ -244,7 +248,7 @@ export class MapComponent implements OnInit{
         this.cleanPage()
         this.mapService.getUserPageLayers(this.mapConfig)
             .then(() => this.mapService.getUserPageInstances(this.mapConfig))
-            .then(() => {console.log('finished getuserpageinstances'); this.mapService.getLayerPerms()})
+            .then(() => this.mapService.getLayerPerms())
             .then(() => {
                 this.mapService.loadLayers(this.mapConfig, false).then(() => {
                     this.mapConfig.currentLayerName = "";
@@ -278,7 +282,7 @@ export class MapComponent implements OnInit{
     public addUserPageLayer(UPL: UserPageLayer) {
         let newUPL = new UserPageLayer
         newUPL.userPageID = this.mapConfig.currentpage.ID
-        newUPL.userID = this.userID;
+        newUPL.userID = this.user.ID;
         newUPL.defaultON = UPL.layerShown;
         newUPL.style = UPL.layer.defaultStyle
         newUPL.serverID = UPL.serverID
@@ -324,6 +328,7 @@ export class MapComponent implements OnInit{
         this.mapConfig.styleShow = false
         this.myCubeService.clearMyCubeData();
         this.myCubeService.clearWMS();
+        this.mapConfig.selectedFeatureSource.clear()
 
     }
 

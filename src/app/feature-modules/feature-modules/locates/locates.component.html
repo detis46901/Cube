@@ -50,18 +50,16 @@
               cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2"
               cdkAutosizeMaxRows="10"></textarea>
           </mat-form-field>
-      </div>
-      <mat-form-field><br>
+      <mat-form-field>
         <mat-label>Disposition</mat-label>
-        <mat-select [(value)]="completedDisposition">
+        <mat-select [disabled]='ticket.closed != Null' [(value)]="completedDisposition">
           <mat-option *ngFor="let item of disposition.disposition" [value]="item">
             {{item.shortDescription}}
           </mat-option>
         </mat-select>
-      </mat-form-field><br>
-      <div class="example-container">
+      </mat-form-field>
         <mat-form-field>
-          <textarea [(ngModel)]="completedNote" [value]="completedNote" matInput placeholder="Note" style="width:100%"></textarea>
+          <textarea [disabled]='ticket.closed != Null' [(ngModel)]="completedNote" [value]="completedNote" matInput placeholder="Note" style="width:100%"></textarea>
         </mat-form-field>
         <br>
       </div>

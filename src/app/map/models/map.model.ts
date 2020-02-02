@@ -7,6 +7,9 @@ import View from 'ol/View'
 import {Fill, Stroke, Circle, Style} from 'ol/style';
 import Text from 'ol/style/Text';
 import Collection from 'ol/Collection';
+import VectorSource from 'ol/source/Vector';
+import VectorLayer from 'ol/layer/Vector';
+import GeoJSON from 'ol/format/GeoJSON';
 
 export interface MapConfigView {
     projection: string;
@@ -18,6 +21,7 @@ export interface MapConfigView {
 
 export class MapConfig {
     name?: string;
+    user: User;
     userID?: number;
     map?: any;  // this should be of type ol.Map.  However, that causes a problem with the "getTarget()" method in map.component.ts
     view?: View;
@@ -27,6 +31,8 @@ export class MapConfig {
     evkey: any; //current click event
     selectedFeature?: Feature;
     selectedFeatures?: Collection<Feature> = new Collection<Feature>()
+    selectedFeatureSource: VectorSource
+    selectedFeatureLayer: VectorLayer
     userpages? = new Array<UserPage>();
     defaultpage?: UserPage;  //This looks like a duplicate that is also in userpages[]
     currentpage?: UserPage;

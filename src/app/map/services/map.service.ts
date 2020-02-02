@@ -108,7 +108,7 @@ export class MapService {
     public getLayerPerms(): Promise<any> {
         let promise = new Promise((resolve, reject) => {
             this.layerPermissionService
-                .GetByUserGroups(this.mapConfig.userID)
+                .GetByUserGroups(this.mapConfig.user.ID)
                 .subscribe((data: LayerPermission[]) => {
                     this.mapConfig.layerpermission = data;
                     this.mapConfig.userpagelayers.forEach((userpagelayer) => {
@@ -328,8 +328,6 @@ export class MapService {
                                     serverType: 'geoserver',
                                     crossOrigin: 'anonymous'
                                 })
-
-                                    console.log(diffWMS.getLegendUrl(2).split('&SCALE')[0])
                                     userpagelayer.layer.legendURL = diffWMS.getLegendUrl(2).split('&SCALE')[0]
                             }
                         }
@@ -458,7 +456,7 @@ export class MapService {
         if (layer.layerShown === true && layer.layer.layerType == "MyCube") {
             this.mapConfig.editmode = layer.layerPermissions.edit;
         }
-        if (layer.style.filter.column) {
+        if (layer.layer.layerType == "MyCube" && layer.style.filter.column) {
             this.mapConfig.filterOn = true
         }
     }
@@ -484,6 +482,7 @@ export class MapService {
     }
 
     public mapClickEvent(evt) {
+        this.mapConfig.selectedFeatureSource.clear()
         if (this.mapConfig.measureShow) {return}  //disables select/deselect when the measure tool is open.
         let layer = this.mapConfig.currentLayer
         switch (this.mapConfig.currentLayer.layer.layerType) {
@@ -511,7 +510,11 @@ export class MapService {
                         if (data1[1][0] == '0') {
                             if (this.featuremodulesservice.clearFeature(this.mapConfig, this.mapConfig.currentLayer)) { return }
                         }
-                        this.mapConfig.selectedFeature = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data)[0];
+                        else {
+                            this.mapConfig.selectedFeature = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data)[0];
+                            this.mapConfig.selectedFeatureSource.addFeature(this.mapConfig.selectedFeature)
+                            this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected);                                
+                        }
                         if (url) {
                             this.wmsService.getfeatureinfo(url, false)
                                 .subscribe((data: any) => {
@@ -658,7 +661,7 @@ export class MapService {
     }
 
     private clearFeature() {
-        this.mapConfig.selectedFeatures.clear()
+        if (this.mapConfig.selectedFeature) {this.mapConfig.selectedFeatureSource.clear()}        
         if (this.featuremodulesservice.clearFeature(this.mapConfig, this.mapConfig.currentLayer)) { return }
         if (this.mapConfig.selectedFeature) {
             this.mapConfig.selectedFeature.setStyle(null);

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Input, ComponentFactoryResolver } from '@
 import { MapConfig } from '../../../map/models/map.model';
 import { Subscription } from 'rxjs/Subscription';
 import { SDSService } from './SDS.service'
-import { MyCubeField } from "../../../../_models/layer.model"
+import { MyCubeField, MyCubeComment } from "../../../../_models/layer.model"
 import { UserService } from '../../../../_services/_user.service'
 import { User } from '../../../../_models/user.model'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
@@ -11,6 +11,7 @@ import { Clipboard } from 'ts-clipboard';
 import { Configuration } from '../../../../_api/api.constants';
 import { MatSnackBar } from '@angular/material';
 import { SDSConfig, SDSStyles } from './SDS.model'
+import { environment } from '../../../../environments/environment'
 var Autolinker = require( 'autolinker' );
 
 
@@ -37,10 +38,9 @@ export class SDSComponent implements OnInit, OnDestroy {
   public moduleInstanceName: string
   public label: string
   public Autolinker = new Autolinker()
-  public editRecord: boolean = true //if the fields for editing the records are disabled.
+  // public editRecord: boolean = true //if the fields for editing the records are disabled.
   public SDSConfig = new SDSConfig
   public SDSConfigID: number
-
 
   constructor(
     public snackBar: MatSnackBar,
@@ -55,8 +55,8 @@ export class SDSComponent implements OnInit, OnDestroy {
   @Input() instance: ModuleInstance;
 
   ngOnInit() {
-    this.SDSConfigID = this.SDSservice.SDSConfig.push()
-    this.expandedSubscription = this.SDSservice.getExpanded().subscribe(expanded => { this.expanded = expanded })
+ 
+    this.expandedSubscription = this.SDSservice.getExpanded().subscribe(expanded => { this.SDSConfig.expanded = expanded })
     this.SDSConfigSubscription = this.SDSservice.getSDSConfig().subscribe(SDSConfig => {this.SDSConfig = SDSConfig[this.SDSConfigID]})
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.token = currentUser && currentUser.token;
@@ -68,20 +68,17 @@ export class SDSComponent implements OnInit, OnDestroy {
     this.tminus30 = new Date()
     this.tminus30.setDate(this.tminus30.getDate() - 30)
     this.fromDate = this.tminus30
-    console.log(this.instance.settings['settings'][1]['setting']['value'])
     this.SDSConfig.label = this.instance.settings['settings'][1]['setting']['value']
     this.SDSConfig.moduleInstanceID = this.instance.ID
 
     this.SDSservice.getSchema('modules', this.instance.ID, this.SDSConfig)
       .then((x) => {
-        console.log(x)
         this.SDSConfig.itemData[0].type = "id"   //Sets the "id" of the SDS to type = 'id' so it won't be visible.
         this.SDSConfig.itemData.forEach((x) => {  //probably not the best way to do this.  This finds the linked field and sets it to 'id' so it won't be visible.
           if (x.field == this.SDSConfig.moduleSettings['settings'][2]['setting']['value']) {
             this.SDSConfig.itemData[this.SDSConfig.itemData.indexOf(x)].type = 'id'
             this.SDSConfig.linkedField = x.field
-            this.SDSservice.SDSConfig[this.SDSConfigID] = this.SDSConfig
-            console.log(this.SDSservice.SDSConfig)
+            this.SDSConfigID = this.SDSservice.SDSConfig.push(this.SDSConfig) - 1
           }
         })
       })
@@ -102,14 +99,7 @@ export class SDSComponent implements OnInit, OnDestroy {
           this.SDSConfig.itemData[this.SDSConfig.itemData.indexOf(x)].value = this.mapConfig.selectedFeature.get('id')  //this will need something more when I add wms features
         }
       })
-      // this.SDSservice.getSchema("module", this.instance.ID).then((x) => {
-      //   this.SDSservice.SDSConfig.itemData = x
-      //   //this.SDSservice.SDSConfig.itemData[0].value = id
-      //   this.SDSservice.SDSConfig.itemData[0].type = "id"
-
-      // })
     }
-
   }
 
   getModuleName() {
@@ -148,11 +138,9 @@ export class SDSComponent implements OnInit, OnDestroy {
     let i = this.SDSservice.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == this.instance.ID);
     let obj = this.SDSservice.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'myCube Layer Identity (integer)');
     if (this.SDSservice.mapConfig.currentLayer.layer.ID === +obj['setting']['value']) {
-      //this.locatesservice.layerState = 'current'
       this.SDSservice.reloadLayer();
     }
     else {
-      //this.locatesservice.layerState = 'load'
       this.SDSservice.reloadLayer();
     }
   }
@@ -165,14 +153,32 @@ export class SDSComponent implements OnInit, OnDestroy {
     this.runFilter()
   }
 
-  public selectItem(itemID) {
-    this.SDSservice.getData(this.instance.ID, itemID, this.SDSConfigID).then((x) => {
-      console.log(x)
-      this.SDSConfig.itemData = x
-      this.editRecord = true //sets the disabled to true
-      this.SDSConfig.itemData[0].value = itemID
-      this.SDSConfig.selectedItem = itemID
+  public selectItem(itemID, SDSConfigID) {
+    // let SDSConfigID: number
+    let i: number = 0
+    // this.SDSservice.SDSConfig.forEach((x) => {
+    //   if (x.moduleInstanceID == this.instance.ID) {
+    //     SDSConfigID = i
+    //   }
+    //   i++
+    // })
+    let selected = this.SDSConfig.list.find((x) => x['id'] == itemID)
+    // i = 0
+    this.SDSConfig.itemData.forEach((x)=> {
+      x.value = selected[x.field]
+      i++
     })
+    this.SDSConfig.selectedItem = itemID
+    this.SDSConfig.tab = 'Item'
+    // I'm using the existing data it gets when you first select and item to feed the item data.  If it needs to be more dynamic, the code below will help to do that.
+    // this.SDSservice.getData(this.instance, itemID).then((x) => {
+    //   console.log(x)
+    //   this.SDSConfig.itemData = x
+    //   this.editRecord = true //sets the disabled to true
+    //   this.SDSConfig.itemData[0].value = itemID
+    //   this.SDSConfig.selectedItem = itemID
+    // })
+  this.SDSservice.getSDSLog(SDSConfigID, 'modules.m' + this.SDSConfig.moduleInstanceID + 'log', itemID)
   }
 
   public copyToClipboard(url: string) {

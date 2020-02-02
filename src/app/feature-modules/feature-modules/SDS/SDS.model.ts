@@ -1,21 +1,25 @@
 import {Fill, Stroke, Circle, Style} from 'ol/style';
 import Text from 'ol/style/Text';
 import { Subject } from 'rxjs/Subject';
-import { UserPageLayer, MyCubeField } from '_models/layer.model';
+import { UserPageLayer, MyCubeField, MyCubeComment } from '_models/layer.model';
 
 
 export class SDSConfig {
     moduleInstanceID: number
+    expanded: boolean
     moduleName: string
     moduleSettings: JSON
     filter: string;
     label: string;
-    list = new Array<string>()
+    list = new Array<any>()
     tab: string
     sortBy: string = "Address"
     itemData = new Array<MyCubeField>()
     selectedItem: number = 0
+    selectedItemLog: MyCubeComment[]
     linkedField: string
+    editRecordDisabled: boolean = true
+    showLog: boolean = false
 }
 
 export class SDSStyles {

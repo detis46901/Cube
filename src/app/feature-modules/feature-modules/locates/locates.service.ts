@@ -181,7 +181,6 @@ export class LocatesService {
         this.sendTicket(data[0][0])
         this.sendTab('Process')
         this.locate = data[0][0]
-        console.log(this.locate)
       })
     this.sendTicket(mapConfig.selectedFeature.get('ticket'))
     this.mapConfig.selectedFeature.setStyle(this.locateStyles.selected)

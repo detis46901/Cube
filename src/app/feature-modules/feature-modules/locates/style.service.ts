@@ -74,7 +74,6 @@ export class StyleService {
         let now = new Date()
 
         if (feature.get("closed")) {
-            console.log(feature.get("closed"))
             return '#000000'
         }
         if (feature.get("emergency") == true) {

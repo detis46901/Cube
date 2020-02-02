@@ -104,6 +104,11 @@ export class SQLService {
             .pipe(catchError(this.handleError));
     }
 
+    public addAnyCommentWithoutGeom = (comment:MyCubeComment): Observable<any> => {        
+        return this._http.post(this.actionUrl + 'addanycommentwithoutgeom',JSON.stringify(comment), this.options)
+            .pipe(catchError(this.handleError));
+    }
+
     public setSRID = (table: number): Observable<any> => {
         return this._http.get(this.actionUrl + 'setSRID?table=' + table, this.options)
     }
@@ -134,10 +139,9 @@ export class SQLService {
 
     public UpdateAnyRecord = (schema: string, table: string, id: string, MyCubeField: MyCubeField): Observable<any> => {
         // console.log(JSON.stringify(MyCubeField))
-        console.log(this.actionUrl + 'updateAnyRecord', '{"schema":"' + schema + '","table":"' + table + '","id":' + id + ',"mycubefield":' + JSON.stringify(MyCubeField) + '}')
         return this._http.put(this.actionUrl + 'updateAnyRecord', '{"schema":"' + schema + '","table":"' + table + '","id":' + id + ',"mycubefield":' + JSON.stringify(MyCubeField) + '}', this.options)
             // .map((response: Response) => <any>response.json())
-            .catch(this.handleError);
+            //.catch(this.handleError);
     }
 
     public Delete = (table: number, id: any): Observable<any> => {

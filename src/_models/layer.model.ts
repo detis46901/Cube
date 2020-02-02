@@ -80,7 +80,7 @@ export class MyCubeConfig {
 }
 
 export class MyCubeComment {
-    table: number;
+    table: number | string;
     id: number;
     userID: number;
     firstName: string;

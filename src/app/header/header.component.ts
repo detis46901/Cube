@@ -21,7 +21,6 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 export class HeaderComponent implements OnInit {
     //@Input() user: User;
-    @Input() public id: string;
     @Input() public screenCode: number = 1;
     public isOpen: boolean;
     public isNotifOpen: boolean = false;
