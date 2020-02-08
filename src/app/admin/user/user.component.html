@@ -60,7 +60,7 @@
                 <Strong> Active </Strong>
             </mat-header-cell>
             <mat-cell class="user-sm-cell" *matCellDef="let row">
-                <i *ngIf="row.active" class="fas fa-check" style="color:green"></i>
+                <mat-icon  *ngIf="row.active">check</mat-icon>
                 <i *ngIf="!row.active" style="color:#673ab7">&ndash;</i>
             </mat-cell>
         </ng-container>
@@ -71,7 +71,7 @@
                 <Strong> Admin </Strong>
             </mat-header-cell>
             <mat-cell class="user-sm-cell" *matCellDef="let row">
-                <i *ngIf="row.administrator" class="fas fa-check" style="color:green"></i>
+                <mat-icon  *ngIf="row.administrator">check</mat-icon>
                 <i *ngIf="!row.administrator" style="color:#673ab7">&ndash;</i>
             </mat-cell>
         </ng-container>
@@ -81,7 +81,7 @@
             <!-- create new user button -->
             <mat-header-cell class="user-xlg-head" *matHeaderCellDef>
                 <button style="border:1px solid white; color:white" mat-button id="userCreateNew" (click)="openNewUser()">
-                    <strong> Create New User </strong>
+                    <strong> New User </strong>
                 </button>
             </mat-header-cell>
             <mat-cell class="user-xlg-cell" *matCellDef="let row">
@@ -112,11 +112,11 @@
 
                 <!-- edit user button -->
                 <button mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.ID, row.firstName, row.lastName)">
-                    <i class="fas fa-pencil-alt"></i>
+                    <mat-icon>edit</mat-icon>
                 </button>
                 <!-- delete user button -->
                 <button mat-icon-button style="color:#7e7e7e" title="Delete User" focusable="false" (click)="openConfDel(row.currentData)">
-                    <i class="fa fa-trash mat-icon"></i>
+                    <mat-icon>delete</mat-icon>
                 </button>
             </mat-cell>
         </ng-container>

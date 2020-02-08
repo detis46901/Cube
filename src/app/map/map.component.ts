@@ -114,9 +114,10 @@ export class MapComponent implements OnInit{
                     });
                 }
                 else {
-                    baseLayer = new TileLayer({
+                    let baseLayer:TileLayer = new TileLayer({
                         source: new OSM({ cacheSize: environment.cacheSize })
                     });
+                    baseLayer.setZIndex(-1)
                 }
                 baseLayer.setVisible(true);
                 this.mapConfig.baseLayers.push(baseLayer);
@@ -206,10 +207,8 @@ export class MapComponent implements OnInit{
     }
 
     public addLayer(): void {
-        console.log(this.layerCtrl.value)
         let LP = new LayerPermission
         LP = this.mapConfig.layerpermission.find(x => x == this.layerCtrl.value)
-        console.log(LP)
         let UPL = new UserPageLayer
         UPL.defaultON = true
         UPL.userID = this.user.ID
@@ -288,12 +287,9 @@ export class MapComponent implements OnInit{
         newUPL.serverID = UPL.serverID
         newUPL.userID = UPL.userID
         newUPL.layerID = UPL.layer.ID
-        console.log(UPL)
-        console.log(newUPL)
         this.userPageLayerService
             .Add(newUPL)
             .subscribe((result: UserPageLayer) => {
-                console.log(result)
                 UPL.ID = result.ID
             });
     }
@@ -373,8 +369,6 @@ export class MapComponent implements OnInit{
 
     public dropLayer(event: CdkDragDrop<string[]>) {
         moveItemInArray(this.mapService.mapConfig.userpagelayers, event.previousIndex, event.currentIndex);
-        console.log(event)
-        console.log(this.mapService.mapConfig.userpagelayers)
         let i: number = 0
         this.mapService.mapConfig.userpagelayers.forEach((x) => {
             x.layerOrder = i
@@ -382,7 +376,6 @@ export class MapComponent implements OnInit{
             i++
         })
         this.mapService.mapConfig.userpagelayers.forEach((x) => {
-            console.log(x)
             let UPLUpdate = new UserPageLayer
             UPLUpdate.ID = x.ID
             UPLUpdate.layerOrder = x.layerOrder

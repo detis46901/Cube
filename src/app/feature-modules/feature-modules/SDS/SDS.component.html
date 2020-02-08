@@ -179,7 +179,7 @@
     <button *ngIf='SDSConfig.editRecordDisabled == false' mat-button mat-raised-button color="primary"
       (click)="SDSservice.updateSDS(SDSConfigID)">Save</button>
     <button mat-button mat-raised-button color="primary" (click)="SDSservice.deleteSDS(SDSConfigID)">Delete</button>
-    <button mat-button mat-raised-button color="primary" (click)="SDSConfig.showLog = !SDSConfig.showLog">(isMember ? '$2.00' : '$10.00'</button><br>
+    <button mat-button mat-raised-button color="primary" (click)="SDSConfig.showLog = !SDSConfig.showLog">{{SDSConfig.showLog ? 'Hide Log' : 'Show Log'}}</button><br>
     <div *ngIf="SDSConfig.showLog">
       <div *ngFor="let myCubeComment of SDSConfig.selectedItemLog" style="position:relative">
         <span><br>
@@ -191,7 +191,6 @@
                   date:'shortTime'}}</i>
             <br>
             {{myCubeComment.comment}}
-            <br>
           </div>
         </span>
       </div>

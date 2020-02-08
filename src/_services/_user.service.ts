@@ -54,7 +54,7 @@ export class UserService /*extends ParentService*/ {
 
     public Add = (toAdd: any): Observable<any> => {
         console.log(JSON.stringify(toAdd))
-        return this._http.post(this.actionUrl + 'create', JSON.stringify(toAdd), this.options)
+        return this._http.post(this.actionUrl + 'single', JSON.stringify(toAdd), this.options)
         //.catch(this.handleError);
     }
 

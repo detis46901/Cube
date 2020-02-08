@@ -2,26 +2,15 @@ import { Injectable } from '@angular/core';
 import { UserPageLayer, MyCubeField } from '_models/layer.model';
 import { UserPageInstance, ModuleInstance } from '_models/module.model'
 import { Layer } from '_models/layer.model'
-import { MapConfig, mapStyles, featureList } from 'app/map/models/map.model';
-import { geoJSONService } from 'app/map/services/geoJSON.service';
-import { SDSConfig, SDSStyles } from './SDS.model'
+import { MapConfig } from 'app/map/models/map.model';
+import { SDSConfig } from './SDS.model'
 //http dependancies
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http'
-import { Observable } from 'rxjs/Observable';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
-import { catchError } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http'
 import { SQLService } from '../../../../_services/sql.service';
-import { Subject } from 'rxjs/Subject';
-import { MyCubeService } from '../../../map/services/mycube.service'
 import { UserPageLayerService } from '../../../../_services/_userPageLayer.service'
 import { LayerService } from '../../../../_services/_layer.service'
-import { LayerPermissionService } from '../../../../_services/_layerPermission.service'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
-import { UserPageInstanceService } from '../../../../_services/_userPageInstance.service'
-//import { P } from '@angular/core/src/render3';
 import VectorLayer from 'ol/layer/Vector';
-
-
 
 @Injectable()
 export class SDSAdminService {
@@ -30,52 +19,42 @@ export class SDSAdminService {
   public mapConfig: MapConfig
   public UPL: UserPageLayer
   public filter: string = 'closed IS Null'
-  private ID = new Subject<string>()
-  private expanded = new Subject<boolean>();
   private layer = new Layer
   public newLayerFields: Array<MyCubeField> = [];
   public SDSConfig = new SDSConfig
 
-
-
-  constructor(private geojsonservice: geoJSONService,
+  constructor(
     protected _http: HttpClient,
     private sqlService: SQLService,
-    private myCubeService: MyCubeService,
-    private locateStyles: SDSStyles,
     private userPageLayerService: UserPageLayerService,
     private layerService: LayerService,
-    private moduleInstanceService: ModuleInstanceService,
-    private layerPermissionService: LayerPermissionService,
-    private userPageInstanceService: UserPageInstanceService) {
+    private moduleInstanceService: ModuleInstanceService) {
   }
 
-
   public addModuleToPage(userPageInstance: UserPageInstance) {
-    console.log("addModuleToPage")
-    console.log(userPageInstance)
     let UPL = new UserPageLayer
     UPL.defaultON = true
     UPL.layerID = userPageInstance.module_instance.settings['settings'][0]['setting']['value']
     UPL.userPageInstanceID = userPageInstance.ID
     UPL.userPageID = userPageInstance.userPageID
     UPL.userID = userPageInstance.userID
-    this.userPageLayerService.Add(UPL)
-      .subscribe(data => {
-        console.log(data)
+    this.layerService.GetSingle(UPL.layerID)
+      .subscribe((x: Layer) => {
+        UPL.style = x.defaultStyle
+        this.userPageLayerService.Add(UPL)
+          .subscribe(data => {
+            console.log(data)
+          })
       })
-
   }
 
   public removeModuleFromPage(userPageInstance: UserPageInstance) {
-    console.log("removeModuleFromPage")
     this.userPageLayerService.GetUserLayers(userPageInstance.userID)
       .subscribe((data: UserPageLayer[]) => {
         data.forEach(x => {
           if (x.userPageInstanceID == userPageInstance.ID) {
             this.userPageLayerService.Delete(x.ID)
               .subscribe((data) => {
-                console.log(data)
               })
           }
         })
@@ -97,20 +76,20 @@ export class SDSAdminService {
 
   public deleteModuleInstance(moduleInstance: ModuleInstance) {
     this.layerService.Delete(moduleInstance.settings['settings'][0]['setting']['value'])
-    .subscribe()
+      .subscribe()
     this.sqlService.deleteTable(moduleInstance.settings['settings'][0]['setting']['value'])
-    .subscribe()
+      .subscribe()
     this.sqlService.deleteCommentTable(moduleInstance.settings['settings'][0]['setting']['value'])
-    .subscribe()
+      .subscribe()
     this.userPageLayerService.GetByLayer(moduleInstance.settings['settings'][0]['setting']['value'])
-    .subscribe((x:UserPageLayer[]) => {
-      x.forEach((y:UserPageLayer) => {
-        y.userPageInstanceID = null
-        //need to fix this delete.  It deleted all userpagelayers once!
-        // this.userPageLayerService.Delete(y.ID)
-        // .subscribe()
+      .subscribe((x: UserPageLayer[]) => {
+        x.forEach((y: UserPageLayer) => {
+          y.userPageInstanceID = null
+          //need to fix this delete.  It deleted all userpagelayers once!
+          // this.userPageLayerService.Delete(y.ID)
+          // .subscribe()
+        })
       })
-    })
   }
 
   private addLayer(moduleInstance: ModuleInstance): void {
@@ -122,15 +101,14 @@ export class SDSAdminService {
       });
   }
 
-  updateSettings(ID, moduleInstance:ModuleInstance) {
+  updateSettings(ID, moduleInstance: ModuleInstance) {
     moduleInstance.settings['settings'][0]['setting']['value'] = ID
     this.moduleInstanceService
-    .Update(moduleInstance)
-    .subscribe((result) => {
-        console.log("Settings Updated")
-    });
+      .Update(moduleInstance)
+      .subscribe((result) => {
+      });
   }
-  
+
   private createTable(id): void {
     this.sqlService
       .Create(id)
@@ -142,12 +120,12 @@ export class SDSAdminService {
           switch (tempField.field) {
             //need to add a case for "ticket" to run this SQL script
             //ALTER TABLE {mycube.table} UNIQUE (ticket)
-            
+
             case 'ttime': {
               tempField.type = 'date'
               break
             }
-            case 'tdate':{
+            case 'tdate': {
               tempField.type = 'date'
               break
             }
@@ -160,19 +138,18 @@ export class SDSAdminService {
               tempField.type = "text"
             }
           }
-          if (tempField.field != 'geom' || 'id') {this.addColumn(id, tempField)} 
+          if (tempField.field != 'geom' || 'id') { this.addColumn(id, tempField) }
         });
 
         this.sqlService
           .setSRID(id)
           .subscribe(() => { })
       })
-
     this.sqlService
       .CreateCommentTable(id)
       .subscribe();
-    console.log("Comment Table Created")
   }
+
   private addColumn(id, element): void {
     this.sqlService
       .addColumn(id, element)
@@ -180,5 +157,4 @@ export class SDSAdminService {
         console.log(result)
       });
   }
-
 }

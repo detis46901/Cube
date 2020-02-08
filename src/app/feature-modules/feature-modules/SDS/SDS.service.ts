@@ -154,7 +154,6 @@ export class SDSService {
   }
 
   public updateSDS(SDSConfigID: number): any {
-    console.log(this.SDSConfig[SDSConfigID].itemData)
     this.SDSConfig[SDSConfigID].itemData.forEach((x) => {
       if (x.type != 'id') {
         this.sqlService.UpdateAnyRecord('modules', 'm' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'data', this.SDSConfig[SDSConfigID].itemData[0].value, x)
@@ -474,7 +473,6 @@ export class SDSService {
     let SDSLog: MyCubeComment[]
     this.sqlService.GetAnySingle(table, 'featureid', id)
     .subscribe((x) => {
-      console.log(x[0])
       this.SDSConfig[SDSConfigID].selectedItemLog = x[0]
     })
   }

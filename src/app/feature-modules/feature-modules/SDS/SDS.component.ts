@@ -1,8 +1,7 @@
-import { Component, OnInit, OnDestroy, Input, ComponentFactoryResolver } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { MapConfig } from '../../../map/models/map.model';
 import { Subscription } from 'rxjs/Subscription';
 import { SDSService } from './SDS.service'
-import { MyCubeField, MyCubeComment } from "../../../../_models/layer.model"
 import { UserService } from '../../../../_services/_user.service'
 import { User } from '../../../../_models/user.model'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
@@ -11,8 +10,7 @@ import { Clipboard } from 'ts-clipboard';
 import { Configuration } from '../../../../_api/api.constants';
 import { MatSnackBar } from '@angular/material';
 import { SDSConfig, SDSStyles } from './SDS.model'
-import { environment } from '../../../../environments/environment'
-var Autolinker = require( 'autolinker' );
+var Autolinker = require('autolinker');
 
 
 
@@ -38,7 +36,6 @@ export class SDSComponent implements OnInit, OnDestroy {
   public moduleInstanceName: string
   public label: string
   public Autolinker = new Autolinker()
-  // public editRecord: boolean = true //if the fields for editing the records are disabled.
   public SDSConfig = new SDSConfig
   public SDSConfigID: number
 
@@ -55,12 +52,11 @@ export class SDSComponent implements OnInit, OnDestroy {
   @Input() instance: ModuleInstance;
 
   ngOnInit() {
- 
+
     this.expandedSubscription = this.SDSservice.getExpanded().subscribe(expanded => { this.SDSConfig.expanded = expanded })
-    this.SDSConfigSubscription = this.SDSservice.getSDSConfig().subscribe(SDSConfig => {this.SDSConfig = SDSConfig[this.SDSConfigID]})
+    this.SDSConfigSubscription = this.SDSservice.getSDSConfig().subscribe(SDSConfig => { this.SDSConfig = SDSConfig[this.SDSConfigID] })
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.token = currentUser && currentUser.token;
-        
     this.userID = currentUser && currentUser.userID;
     this.getModuleName()
     let today: Date = new Date()
@@ -70,7 +66,6 @@ export class SDSComponent implements OnInit, OnDestroy {
     this.fromDate = this.tminus30
     this.SDSConfig.label = this.instance.settings['settings'][1]['setting']['value']
     this.SDSConfig.moduleInstanceID = this.instance.ID
-
     this.SDSservice.getSchema('modules', this.instance.ID, this.SDSConfig)
       .then((x) => {
         this.SDSConfig.itemData[0].type = "id"   //Sets the "id" of the SDS to type = 'id' so it won't be visible.
@@ -111,7 +106,7 @@ export class SDSComponent implements OnInit, OnDestroy {
     this.SDSConfig.moduleSettings = this.instance.settings
   }
 
-  filter() {
+  filter() { //Not sure this is necessary.  It's not being used.
     let filterString: string = ''
     let options = { year: 'numeric', month: 'numeric', day: 'numeric' }
     if (this.filterOpen == true) { filterString = 'closed is Null' }
@@ -128,7 +123,6 @@ export class SDSComponent implements OnInit, OnDestroy {
     else {
       filterString += "CURRENT_DATE"
     }
-    // filterString += " and tdate BETWEEN '2019-01-01' AND '2019-02-15'"
     console.log(filterString)
     this.SDSservice.filter = filterString
     this.runFilter();
@@ -154,19 +148,14 @@ export class SDSComponent implements OnInit, OnDestroy {
   }
 
   public selectItem(itemID, SDSConfigID) {
-    // let SDSConfigID: number
     let i: number = 0
-    // this.SDSservice.SDSConfig.forEach((x) => {
-    //   if (x.moduleInstanceID == this.instance.ID) {
-    //     SDSConfigID = i
-    //   }
-    //   i++
-    // })
     let selected = this.SDSConfig.list.find((x) => x['id'] == itemID)
-    // i = 0
-    this.SDSConfig.itemData.forEach((x)=> {
+    this.SDSConfig.itemData.forEach((x) => {
       x.value = selected[x.field]
       i++
+      if (x.type == "date") {
+        //need to do something about this because the date picker uses the day before the actual date.  There's a time zone issue.
+      }
     })
     this.SDSConfig.selectedItem = itemID
     this.SDSConfig.tab = 'Item'
@@ -178,14 +167,13 @@ export class SDSComponent implements OnInit, OnDestroy {
     //   this.SDSConfig.itemData[0].value = itemID
     //   this.SDSConfig.selectedItem = itemID
     // })
-  this.SDSservice.getSDSLog(SDSConfigID, 'modules.m' + this.SDSConfig.moduleInstanceID + 'log', itemID)
+    this.SDSservice.getSDSLog(SDSConfigID, 'modules.m' + this.SDSConfig.moduleInstanceID + 'log', itemID)
   }
 
   public copyToClipboard(url: string) {
     Clipboard.copy(this.configuration.serverWithApiUrl + url + '&apikey=' + this.token);
     this.snackBar.open("Copied to the clipboard", "", {
-        duration: 2000,
+      duration: 2000,
     });
-}
-
+  }
 }

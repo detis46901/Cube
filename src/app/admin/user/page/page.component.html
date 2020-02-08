@@ -33,7 +33,7 @@
             <!-- user page name and delete page button -->
             <span id="exPageNameCol" class="col-sm-3">
                 <a (click)="openConfDel(userPage)">
-                    <i class="fas fa-trash"></i>
+                    <mat-icon>delete</mat-icon>
                 </a>
                 {{userPage.page}}
             </span>
@@ -54,10 +54,10 @@
             <!--Allows the user to change the order of their pages using clicks on the up or down icon-->
             <span id="exPageOrderCol" class="col-sm-3">
                 <a (click)="moveUp(userPage)">
-                    <i id="orderUp" class="fa fa-arrow-up" style="margin-right:5px;"></i>
+                    <mat-icon style="margin-right:5px;">arrow_upward</mat-icon>
                 </a>
                 <a (click)="moveDown(userPage)">
-                    <i id="orderDown" class="fa fa-arrow-down"></i>
+                    <mat-icon>arrow_downward</mat-icon>
                 </a>
             </span>
         </mat-radio-group>

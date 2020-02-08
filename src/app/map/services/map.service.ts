@@ -187,9 +187,10 @@ export class MapService {
                                         serverType: 'geoserver',
                                         crossOrigin: 'anonymous',
                                     });
-                                    let wmsLayer = new ImageLayer({
+                                    let wmsLayer:ImageLayer = new ImageLayer({
                                         source: wmsSource
                                     });
+                                    wmsLayer.setZIndex(j)
                                     wmsLayer.setVisible(userpagelayer.defaultON);
                                     if (userpagelayer.style['opacity']) {wmsLayer.setOpacity(userpagelayer.style['opacity'])}
                                     if (init) {
@@ -211,9 +212,10 @@ export class MapService {
                             case "ArcGISRest": {
                                 let wmsSource = new ImageArcGISRest()
                                 wmsSource.setUrl(userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/MapServer')
-                                let wmsLayer = new ImageLayer({
+                                let wmsLayer:ImageLayer = new ImageLayer({
                                     source: wmsSource
                                 })
+                                wmsLayer.setZIndex(j)
                                 wmsLayer.setVisible(userpagelayer.defaultON);
                                 if (userpagelayer.style['opacity']) {wmsLayer.setOpacity(userpagelayer.style['opacity'])}
                                 if (init) {
@@ -302,9 +304,10 @@ export class MapService {
                                     crossOrigin: 'anonymous',
                                     cacheSize: environment.cacheSize
                                 });
-                                let wmsLayer = new TileLayer({
+                                let wmsLayer:TileLayer = new TileLayer({
                                     source: wmsSource
                                 });
+                                wmsLayer.setZIndex(j)
                                 wmsLayer.setVisible(userpagelayer.defaultON);
                                 if (init) {
                                     this.mapConfig.baseLayers.push(wmsLayer);  //to delete
