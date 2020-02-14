@@ -183,6 +183,7 @@ export class MapComponent implements OnInit{
                     let mkey = this.mapConfig.map.on('pointerdrag', (evt: any) => {
                         this.geocodingService.centerMapToggle = false
                     })
+                    console.log('setting click event')
                     this.mapConfig.evkey = this.mapConfig.map.on('click', (e: any) => {
                         this.mapService.mapClickEvent(e)
                     })

@@ -3,6 +3,7 @@ import { UserPageInstance, ModuleInstance } from '_models/module.model';
 import { LocatesAdminService } from './feature-modules/locates/locates-admin.service'
 import { OpenAerialMapAdminService} from './feature-modules/open-aerial-map/open-aerial-map-admin.service'
 import { SDSAdminService } from './feature-modules/SDS/SDS-admin.service'
+import { WOAdminService } from './feature-modules/WO/WO-admin.service'
 
 //add the service name
 
@@ -11,7 +12,7 @@ import { SDSAdminService } from './feature-modules/SDS/SDS-admin.service'
 export class FeatureModulesAdminService {
 
   //add [module identity] + 'service: ' + [module service name]
-  constructor(public locatesadminservice: LocatesAdminService, public openAerialMapadminservice: OpenAerialMapAdminService, public SDSadminservice: SDSAdminService) { }
+  constructor(public locatesadminservice: LocatesAdminService, public openAerialMapadminservice: OpenAerialMapAdminService, public SDSadminservice: SDSAdminService, public WOadminservice: WOAdminService) { }
 
   public determineModule() {
 

@@ -6,6 +6,7 @@ import { UserPageLayer } from '_models/layer.model';
 import {LocatesService } from '../feature-modules/feature-modules/locates/locates.service'
 import { OpenAerialMapService} from '../feature-modules/feature-modules/open-aerial-map/open-aerial-map.service'
 import {SDSService } from '../feature-modules/feature-modules/SDS/SDS.service'
+import { WOService } from './feature-modules/WO/WO.service'
 
 
 
@@ -14,7 +15,7 @@ export class FeatureModulesService {
 
   //add [module identity] + 'service: ' + [module service name]
   constructor(    
-    public locatesservice: LocatesService, public openAerialMapservice: OpenAerialMapService, public SDSservice: SDSService) { }
+    public locatesservice: LocatesService, public openAerialMapservice: OpenAerialMapService, public SDSservice: SDSService, public WOservice: WOService) { }
 
   public determineModule() {
 
@@ -86,5 +87,13 @@ export class FeatureModulesService {
     let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
     let tempInstance = mapConfig.userpageinstances[tempinstancerow]
     return 'this.' + tempInstance.module_instance.module.identity + 'service'
+  }
+  public draw(mapConfig: MapConfig, layer:UserPageLayer, featuretype): boolean {
+    if (!(layer.userPageInstanceID > 0)) {return false}
+    let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
+    let tempInstance = mapConfig.userpageinstances[tempinstancerow]
+    let j = 'this.' + tempInstance.module_instance.module.identity + 'service'
+    console.log(j)
+    return eval(j + '.draw(mapConfig, layer, featuretype)')
   }
 }

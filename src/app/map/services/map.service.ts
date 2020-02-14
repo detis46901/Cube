@@ -456,6 +456,7 @@ export class MapService {
             this.setStyle(layer)  //This gets the styling right.
             this.getFeatureList()
         }
+        console.log(layer.layer.layerType)
         if (layer.layerShown === true && layer.layer.layerType == "MyCube") {
             this.mapConfig.editmode = layer.layerPermissions.edit;
         }
@@ -493,7 +494,6 @@ export class MapService {
                 let url2 = this.wmsService.formLayerRequest(layer);
                 if (layer.layer.layerType == 'WMTS') {
                     let layerroot = layer.layer.server.serverURL.split('/gwc')[0]
-                    url2 = layerroot + '/wms?'
                 }
                 let wmsSource = new ImageWMS({
                     url: url2,
@@ -694,43 +694,49 @@ export class MapService {
             this.mapConfig.map.removeInteraction(this.drawInteraction);
         }
         else {
-            this.drawMode = true
-            let src = new VectorSource();
-            let vector = new VectorLayer({
-                source: src,
-                style: this.mapstyles.current
-            });
-            this.drawInteraction = new Draw({
-                type: featuretype,
-                source: src,
-            })
-            this.mapConfig.map.addLayer(vector);
-            this.modkey = this.mapConfig.map.addInteraction(this.drawInteraction);
-            this.drawInteraction.once('drawend', (e) => {
-                let featurejson = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(e.feature);
-                this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
-                    .subscribe((data) => {
-                        try { featureID = data[0][0].id }
-                        catch (e) {
-                            this.sqlService.fixGeometry(this.mapConfig.currentLayer.layer.ID)
-                                .subscribe((x) => {
-                                })
-                        }
-                        e.feature.setId(featureID);
-                        e.feature.setProperties(data[0]);
-                        this.mapConfig.currentLayer.source.addFeature(e.feature)
-                        e.feature.setStyle(stylefunction)
-                        this.getFeatureList();
-                        this.myCubeService.createAutoMyCubeComment(true, "Object Created", featureID, this.mapConfig.currentLayer.layer.ID, this.userID, featurejson['geometry'])
-                    })
-                this.mapConfig.map.removeLayer(vector);
-                this.mapConfig.map.changed();
-                let test = new Observable
-                test.un("change", this.modkey);
-                this.mapConfig.map.removeInteraction(this.drawInteraction);
-                this.mapConfig.drawMode = ""
-                this.drawMode = false
-            })
+            if (this.featuremodulesservice.draw(this.mapConfig, this.mapConfig.currentLayer, featuretype)) {
+                return
+            }
+            else{
+                this.drawMode = true
+                let src = new VectorSource();
+                let vector = new VectorLayer({
+                    source: src,
+                    style: this.mapstyles.current
+                });
+                this.drawInteraction = new Draw({
+                    type: featuretype,
+                    source: src,
+                })
+                this.mapConfig.map.addLayer(vector);
+                this.modkey = this.mapConfig.map.addInteraction(this.drawInteraction);
+                this.drawInteraction.once('drawend', (e) => {
+                    let featurejson = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(e.feature);
+                    this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
+                        .subscribe((data) => {
+                            try { featureID = data[0][0].id }
+                            catch (e) {
+                                this.sqlService.fixGeometry(this.mapConfig.currentLayer.layer.ID)
+                                    .subscribe((x) => {
+                                    })
+                            }
+                            e.feature.setId(featureID);
+                            e.feature.setProperties(data[0]);
+                            this.mapConfig.currentLayer.source.addFeature(e.feature)
+                            e.feature.setStyle(stylefunction)
+                            this.getFeatureList();
+                            this.myCubeService.createAutoMyCubeComment(true, "Object Created", featureID, this.mapConfig.currentLayer.layer.ID, this.userID, featurejson['geometry'])
+                            
+                        })
+                    this.mapConfig.map.removeLayer(vector);
+                    this.mapConfig.map.changed();
+                    let test = new Observable
+                    test.un("change", this.modkey);
+                    this.mapConfig.map.removeInteraction(this.drawInteraction);
+                    this.mapConfig.drawMode = ""
+                    this.drawMode = false
+                })    
+            }
         }
     }
 

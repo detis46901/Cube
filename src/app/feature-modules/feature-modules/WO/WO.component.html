@@ -1,7 +1,7 @@
 <mat-expansion-panel [disabled]="expanded == false" [expanded]="expanded == true">
   <mat-expansion-panel-header>
     <mat-panel-title>
-      Locates
+      Work Orders
     </mat-panel-title>
     <mat-panel-description>
     </mat-panel-description>
@@ -9,11 +9,11 @@
   <button mat-button mat-raised-button color="primary" (click)="goToTab('Input')">Input</button>
   <button mat-button mat-raised-button color="primary" (click)="goToTab('Search')">Search</button>
   <button mat-button mat-raised-button color="primary" (click)="goToTab('Process')">Process</button>
-  <button *ngIf="locatesservice.showSortBy" mat-button mat-raised-button color="primary" (click)="locatesservice.flipSortBy()">Sorting By {{locatesservice.sortBy}}</button>
+  <button *ngIf="WOservice.showSortBy" mat-button mat-raised-button color="primary" (click)="WOservice.flipSortBy()">Sorting By {{WOservice.sortBy}}</button>
   <!-- <button mat-button mat-raised-button color="primary" (click)="openDashboard()">Dashboard</button> -->
-  <div *ngIf="tab=='Input'" label="Input"><br>
+  <div *ngIf="WOservice.WOConfig.tab=='Input'" label="Input"><br>
     <mat-form-field>
-      <input matInput [(ngModel)]="locateInput" id='locateInput' placeholder="Paste Locate Email Here"
+      <input matInput [(ngModel)]="WOservice.WOConfig.selectedWO.Address" id='AddressInput' placeholder="Address"
         autocomplete="off">
     </mat-form-field>
     <button mat-button mat-raised-button color="primary" (click)='importLocate()' [disabled]='locateInput == null || locateInput == ""'>Import
