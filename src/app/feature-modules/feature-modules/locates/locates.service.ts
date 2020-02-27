@@ -563,11 +563,17 @@ export class LocatesService {
     let table: number = obj['setting']['value']
     let strDate = new Date()
     i = mapConfig.userpagelayers.findIndex(x => x.layerID == table)
+    let feat: Feature = this.mapConfig.selectedFeature
+    this.mapConfig.currentLayer.source.removeFeature(this.mapConfig.selectedFeature)
+    this.clearFeature(mapConfig, mapConfig.userpagelayers[i])
     let snackBarRef = this.snackBar.open('Ticket completed.', 'Undo', {
       duration: 4000
     });
     snackBarRef.onAction().subscribe((x) => {
       undo = true
+      this.mapConfig.selectedFeature = feat
+      this.mapConfig.currentLayer.source.addFeature(this.mapConfig.selectedFeature)
+      this.selectFeature(this.mapConfig, this.mapConfig.currentLayer)
       let snackBarRef = this.snackBar.open('Undone.', '', {
         duration: 4000
       });
@@ -580,7 +586,6 @@ export class LocatesService {
         this.updateRecord(table, ticketID, 'note', 'text', completedNote)
         this.updateRecord(table, ticketID, 'completedby', 'text', completedBy)
         this.updateRecord(table, ticketID, 'disposition', 'text', ticket.disposition)
-        this.clearFeature(mapConfig, mapConfig.userpagelayers[i])
         undo = false
         this.sendUpdateToIRTH(instanceID, ticket)
       }
@@ -600,7 +605,7 @@ export class LocatesService {
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open('POST', environment.proxyUrl + '/irth.indiana811.org/IrthOneCallWebServices/PositiveResponseV2.asmx', true);
-   
+
     var sr =
     `<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
     <soap:Body>

@@ -28,7 +28,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatMenuModule } from '@angular/material/menu'
 import {
     MatRadioModule, MatIconModule, MatCardModule, MatDialogModule, MatSelectModule, MatListModule,
-    MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, 
+    MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule,
     MatFormFieldModule, MatProgressSpinnerModule, MatToolbarModule, MatNativeDateModule
 } from '@angular/material';
 import {MatSliderModule, MatSlider} from '@angular/material/slider'
@@ -128,7 +128,8 @@ import { StyleComponent } from './map/style/style.component';
     entryComponents: [
         ChangePictureComponent,
         PageComponent2,
-        PageConfigComponent2
+        PageConfigComponent2,
+        ConfirmDeleteComponent
     ],
 
     imports: [

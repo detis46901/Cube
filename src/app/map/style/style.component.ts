@@ -89,12 +89,12 @@ export class StyleComponent implements OnInit {
             this.showLabel = false
         }
         try {
-            if (this.mapConfig.currentLayer.style['opacity']) {
+            if (this.mapConfig.currentLayer.style.opacity) {
                 console.log('opacity was saved previously')
-                this.mapConfig.currentLayer.olLayer.setOpacity(+this.mapConfig.currentLayer.style['opacity'] / 100)
-                this.opacity = this.mapConfig.currentLayer.style['opacity']
+                this.mapConfig.currentLayer.olLayer.setOpacity(+this.mapConfig.currentLayer.style.opacity / 100)
+                this.opacity = this.mapConfig.currentLayer.style.opacity
                 console.log(this.opacity)
-            }  
+            }
         }
         catch (e) {
             //nothing needs to happen here, I don't think.
@@ -133,10 +133,11 @@ export class StyleComponent implements OnInit {
         // })
         // console.log(e)
         // this.openAerialMapService.setOpacity(e['value']/100)
+        console.log(this.mapConfig.currentLayer.style)
         this.mapConfig.currentLayer.olLayer.setOpacity(e['value']/100)
         this.mapConfig.currentLayer.style.opacity = (e['value'])
       }
-    
+
     // applies the style to the map and only shows the appllicable items //not fully working
     public applyStyle() {
         // if (this.styleColumn['field'] == "" || this.styleColumn['field'] == null) {}

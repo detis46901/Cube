@@ -43,10 +43,13 @@ export class MapConfig {
     currentLayerName?: string = "";
     featureList? =  new Array<featureList>();
     editmode?: boolean;
+    showDeleteButton: boolean;
+    showFilterButton: boolean;
+    showStyleButton: boolean;
     layerpermission?: LayerPermission[];
     modulepermission?: ModulePermission[];
     mouseoverLayer?: UserPageLayer;
-    drawMode?: string;
+    drawMode?: string = ""
     filterOn?: boolean;
     filterShow?: boolean;
     styleShow?: boolean;

@@ -100,6 +100,7 @@ export class MapComponent implements OnInit{
         this.mapConfig.user = this.user
         this.mapConfigService.GetSingle(this.mapConfig)
             .subscribe((x) => {
+              console.log(x)
                 this.mapConfig = x
                 this.currPage = this.mapConfig.currentpage.page
                 this.mapConfig.selectedFeatures = new Collection<Feature>() //for some reason, this is necessary
@@ -114,14 +115,14 @@ export class MapComponent implements OnInit{
                     });
                 }
                 else {
-                    let baseLayer:TileLayer = new TileLayer({
+                    baseLayer = new TileLayer({
                         source: new OSM({ cacheSize: environment.cacheSize })
                     });
                     baseLayer.setZIndex(-1)
                 }
                 baseLayer.setVisible(true);
                 this.mapConfig.baseLayers.push(baseLayer);
-                
+
                 //sets up so WMS layers can show selected features
                 this.mapConfig.selectedFeatureSource = new VectorSource ({  format: new GeoJSON()})
                 this.mapConfig.selectedFeatureLayer = new VectorLayer({ source: this.mapConfig.selectedFeatureSource})
@@ -230,6 +231,7 @@ export class MapComponent implements OnInit{
                     this.mapConfig.name = "Current";
                     this.mapConfig.userpages = data;
                     let index = this.mapConfig.userpages.findIndex(x => x.default == true);
+                    console.log(index)
                     this.mapConfig.defaultpage = this.mapConfig.userpages[index];
                     this.mapConfig.currentpage = this.mapConfig.userpages[index];
                     this.currPage = this.mapConfig.userpages[index].page;
@@ -241,7 +243,7 @@ export class MapComponent implements OnInit{
     }
 
     //Gets userPageLayers by page.ID, changes pages
-    private setPage(page: UserPage): void {
+    public setPage(page: UserPage): void {
         this.mapConfig.currentpage = page;
         this.mapConfig.currentLayer = new UserPageLayer;
         this.currPage = page.page;
@@ -323,6 +325,9 @@ export class MapComponent implements OnInit{
         this.mapConfig.filterOn = false;
         this.mapConfig.filterShow = false;
         this.mapConfig.styleShow = false
+        this.mapConfig.showDeleteButton = false
+        this.mapConfig.showFilterButton = false
+        this.mapConfig.showStyleButton = false
         this.myCubeService.clearMyCubeData();
         this.myCubeService.clearWMS();
         this.mapConfig.selectedFeatureSource.clear()

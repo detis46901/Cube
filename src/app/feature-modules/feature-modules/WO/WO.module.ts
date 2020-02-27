@@ -22,7 +22,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WOService } from './WO.service'
 import { StyleService } from './style.service'
 import { WOAdminService } from './WO-admin.service'
-import { locateStyles } from './WO.model'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
 
 
@@ -59,7 +58,7 @@ import { ModuleInstanceService } from '../../../../_services/_moduleInstance.ser
     ReactiveFormsModule
   ],
   declarations: [WOComponent],
-  providers: [WOService, WOAdminService, locateStyles, ModuleInstanceService, StyleService],
+  providers: [WOService, WOAdminService, ModuleInstanceService, StyleService],
   exports:[WOComponent]
 })
 export class WOModule { }

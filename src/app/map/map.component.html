@@ -219,7 +219,7 @@
                           <input matInput placeholder="Layer" aria-label="Layer" [matAutocomplete]="auto" [formControl]="layerCtrl"><button [disabled]="!layerCtrl.value" mat-button (click)="addLayer()"><mat-icon>add</mat-icon></button>
                           <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                             <mat-option *ngFor="let LP of filteredPermissions | async" [value]="LP" [matTooltip]="LP.layer.layerDescription">
-                              <span>{{LP.layer.layerName}}</span> 
+                              <span>{{LP.layer.layerName}}</span>
                             </mat-option>
                           </mat-autocomplete>
                         </mat-form-field>
@@ -247,33 +247,34 @@
                         <button mat-icon-button (click)="mapService.toggleBasemap()">
                             <mat-icon matTooltip="Satellite Images">map</mat-icon>
                         </button>
-                        <mat-divider *ngIf="mapConfig.editmode || mapConfig.currentLayer.layer.layerType=='MyCube'">
+                        <mat-divider *ngIf="mapConfig.editmode">
+                          <!-- mapConfig.editmode || mapConfig.currentLayer.layer.layerType=='MyCube' -->
                         </mat-divider>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'"
+                        <button mat-icon-button *ngIf="mapConfig.showFilterButton"
                             (click)="mapConfig.filterShow = !mapConfig.filterShow">
                             <mat-icon [ngClass]="mapConfig.filterShow ? 'selected-icon' : 'none'" matTooltip="Filter">
                                 filter_list</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType"
+                        <button mat-icon-button *ngIf="mapConfig.showStyleButton"
                             (click)="mapConfig.styleShow = !mapConfig.styleShow">
                             <mat-icon [class.selected-icon]="mapConfig.styleShow" matTooltip="Style">style</mat-icon>
                         </button>
                         <button mat-icon-button *ngIf="mapConfig.editmode"
-                            (click)="mapConfig.drawMode='Point';mapService.draw('Point')">
+                            (click)="mapService.draw('Point')">
                             <mat-icon [class.selected-icon]="mapConfig.drawMode == 'Point'" matTooltip="Create Point">
                                 control_point</mat-icon>
                         </button>
                         <button mat-icon-button *ngIf="mapConfig.editmode"
-                            (click)="mapConfig.drawMode='LineString';mapService.draw('LineString')">
+                            (click)="mapService.draw('LineString')">
                             <mat-icon [class.selected-icon]="mapConfig.drawMode == 'LineString'"
                                 matTooltip="Create Line">timeline</mat-icon>
                         </button>
                         <button mat-icon-button *ngIf="mapConfig.editmode"
-                            (click)="mapConfig.drawMode='Polygon';mapService.draw('Polygon')">
+                            (click)=" mapService.draw('Polygon')">
                             <mat-icon [class.selected-icon]="mapConfig.drawMode == 'Polygon'"
                                 matTooltip="Create Polygon">change_history</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.editmode && mapConfig.selectedFeature"
+                        <button mat-icon-button *ngIf="mapConfig.showDeleteButton && mapConfig.selectedFeature"
                             (click)="mapService.delete(mapConfig)">
                             <mat-icon matTooltip="Delete Feature">delete</mat-icon>
                         </button>
@@ -281,7 +282,7 @@
                 </mat-action-row>
             </mat-expansion-panel>
 
-            <!-- feature list that shows the current features within a my cube layer, should only show visible features but 
+            <!-- feature list that shows the current features within a my cube layer, should only show visible features but
             currently shows all features regardless of filter -->
             <mat-expansion-panel *ngIf="mapConfig.currentLayer.layer.layerType == 'MyCube'">
                 <mat-expansion-panel-header>

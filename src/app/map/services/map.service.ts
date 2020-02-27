@@ -50,7 +50,7 @@ export class MapService {
     public selectedLayer: any;
     public editmode: boolean = false;
     public base: string = 'base';  //base layer
-    private drawMode: boolean = false;
+    // private drawMode: boolean = false;
     private drawInteraction: any;
     public userID: number
     public LP = new LayerPermission
@@ -234,7 +234,7 @@ export class MapService {
                                 break
                             }
                             case "MyCube": {
-                                this.loadMyCube(userpagelayer);
+                                this.loadMyCube(userpagelayer, j);
                                 j++;
                                 if (j == this.mapConfig.userpagelayers.length) {
                                     resolve();
@@ -342,7 +342,7 @@ export class MapService {
         return promise;
     }
 
-    public loadMyCube(layer: UserPageLayer) {
+    public loadMyCube(layer: UserPageLayer, order?: number) {
         let stylefunction = ((feature) => {
             return (this.styleService.styleFunction(feature, layer, "load"));
         })
@@ -358,6 +358,7 @@ export class MapService {
             }
             this.vectorlayer = new VectorLayer({ source: source, style: stylefunction });
             this.vectorlayer.setVisible(layer.defaultON);
+            if(order) {this.vectorlayer.setZIndex(order)}
             try {
                 this.mapConfig.map.addLayer(this.vectorlayer);}
             catch(e) {
@@ -383,6 +384,8 @@ export class MapService {
                 this.mapConfig.currentLayerName = "";
                 this.clearFeature()
                 this.featuremodulesservice.unsetCurrentLayer(this.mapConfig, layer)
+                this.mapConfig.showStyleButton = false
+                this.mapConfig.showFilterButton = false
             }
             //could add something here that would move to the next layerShown=true.  Not sure.
             this.mapConfig.editmode = this.mapConfig.currentLayer.layerPermissions.edit  //not sure why I need this
@@ -444,7 +447,7 @@ export class MapService {
         this.clearLayerConfig();  //
         this.mapConfig.currentLayer = layer;
         this.mapConfig.currentLayerName = layer.layer.layerName  //Puts the current name in the component
-        
+
         if (this.featuremodulesservice.setCurrentLayer(this.mapConfig, layer)) {
             this.mapConfig.featureList = [];
             if (!this.featuremodulesservice.getFeatureList(this.mapConfig, layer)) {
@@ -455,14 +458,19 @@ export class MapService {
         else {
             this.setStyle(layer)  //This gets the styling right.
             this.getFeatureList()
+            if (layer.layerShown === true && layer.layer.layerType == "MyCube") {
+              this.mapConfig.editmode = layer.layerPermissions.edit;
+              this.mapConfig.showFilterButton = true
+              this.mapConfig.showStyleButton = true
+              this.mapConfig.showDeleteButton = true
+          }
+          if (layer.layer.layerType == "MyCube" && layer.style.filter.column) {
+              this.mapConfig.filterOn = true
+          }
+          this.mapConfig.showStyleButton = true
         }
         console.log(layer.layer.layerType)
-        if (layer.layerShown === true && layer.layer.layerType == "MyCube") {
-            this.mapConfig.editmode = layer.layerPermissions.edit;
-        }
-        if (layer.layer.layerType == "MyCube" && layer.style.filter.column) {
-            this.mapConfig.filterOn = true
-        }
+
     }
 
     private clearLayerConfig(): void { //The only time this is called is during 'setCurrentLayer'
@@ -470,6 +478,9 @@ export class MapService {
         this.mapConfig.filterShow = false;
         this.mapConfig.styleShow = false;
         this.mapConfig.editmode = false;
+        this.mapConfig.showDeleteButton = false
+        this.mapConfig.showStyleButton = false
+        this.mapConfig.showFilterButton = false
         this.mapConfig.map.removeInteraction(this.modify);
         this.modify = null;
         this.clearFeature();
@@ -516,7 +527,7 @@ export class MapService {
                         else {
                             this.mapConfig.selectedFeature = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data)[0];
                             this.mapConfig.selectedFeatureSource.addFeature(this.mapConfig.selectedFeature)
-                            this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected);                                
+                            this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected);
                         }
                         if (url) {
                             this.wmsService.getfeatureinfo(url, false)
@@ -529,7 +540,6 @@ export class MapService {
                         }
                     })
                 }
-               
                 break
             }
             case ("MapServer"): {
@@ -582,6 +592,7 @@ export class MapService {
                 break
             }
             case ("MyCube"): {
+                if (this.mapConfig.drawMode != '') {break}
                 if (this.mapConfig.selectedFeature) {
                     if (!this.featuremodulesservice.unstyleSelectedFeature(this.mapConfig, layer)) {
                         this.clearFeature()
@@ -613,6 +624,10 @@ export class MapService {
 
     private selectMyCubeFeature(layer: UserPageLayer, refresh: boolean = false): void {
         if (this.featuremodulesservice.selectFeature(this.mapConfig, layer)) {
+          // this.mapConfig.myCubeConfig = this.myCubeService.setMyCubeConfig(layer.layer.ID, layer.layerPermissions.edit);
+          // this.myCubeService.getAndSendMyCubeData(layer.layer.ID, this.mapConfig.selectedFeature, this.mapConfig).then(data => {
+          //     this.mapConfig.myCubeData = data
+          // })
             return
         }
         if (this.featuremodulesservice.styleSelectedFeature(this.mapConfig, layer)) {
@@ -664,7 +679,7 @@ export class MapService {
     }
 
     private clearFeature() {
-        if (this.mapConfig.selectedFeature) {this.mapConfig.selectedFeatureSource.clear()}        
+        if (this.mapConfig.selectedFeature) {this.mapConfig.selectedFeatureSource.clear()}
         if (this.featuremodulesservice.clearFeature(this.mapConfig, this.mapConfig.currentLayer)) { return }
         if (this.mapConfig.selectedFeature) {
             this.mapConfig.selectedFeature.setStyle(null);
@@ -681,14 +696,15 @@ export class MapService {
     }
 
     public draw(featuretype: any) {
+      console.log(this.mapConfig.drawMode)
         let stylefunction = ((feature) => {
             return (this.styleService.styleFunction(feature, this.mapConfig.currentLayer, "current"));
         })
         let featureID: number
         this.clearFeature()
-        if (this.drawMode == true) {
+        if (this.mapConfig.drawMode != "") {
             let test = new Observable
-            this.drawMode = false
+            // this.drawMode = false
             this.mapConfig.drawMode = ""
             test.un("change", this.modkey);
             this.mapConfig.map.removeInteraction(this.drawInteraction);
@@ -698,7 +714,7 @@ export class MapService {
                 return
             }
             else{
-                this.drawMode = true
+                this.mapConfig.drawMode = featuretype
                 let src = new VectorSource();
                 let vector = new VectorLayer({
                     source: src,
@@ -726,7 +742,7 @@ export class MapService {
                             e.feature.setStyle(stylefunction)
                             this.getFeatureList();
                             this.myCubeService.createAutoMyCubeComment(true, "Object Created", featureID, this.mapConfig.currentLayer.layer.ID, this.userID, featurejson['geometry'])
-                            
+
                         })
                     this.mapConfig.map.removeLayer(vector);
                     this.mapConfig.map.changed();
@@ -734,21 +750,24 @@ export class MapService {
                     test.un("change", this.modkey);
                     this.mapConfig.map.removeInteraction(this.drawInteraction);
                     this.mapConfig.drawMode = ""
-                    this.drawMode = false
-                })    
+                    // this.drawMode = false
+                })
             }
         }
     }
 
     public delete(mapconfig: MapConfig) {
         let didUndo: boolean = false
-        this.mapConfig.selectedFeatures.forEach((feat) => {
+        let feat: Feature = this.mapConfig.selectedFeature
+        this.mapConfig.currentLayer.source.removeFeature(this.mapConfig.selectedFeature)
+        this.mapConfig.selectedFeature = null
+        this.myCubeService.clearMyCubeData();
+        this.getFeatureList();
             let snackBarRef = this.snackBar.open('Feature deleted.', 'Undo', {
                 duration: 4000
             });
             snackBarRef.afterDismissed().subscribe((x) => {
                 if (!didUndo) {
-                    mapconfig.currentLayer.source.removeFeature(feat)
                     this.sqlService.Delete(mapconfig.currentLayer.layer.ID, feat.getId())
                         .subscribe((data) => {
                             if (this.modkey) {
@@ -759,16 +778,16 @@ export class MapService {
                             this.modify = null;
                             this.myCubeService.createAutoMyCubeComment(true, "Object Deleted", feat.getId(), mapconfig.currentLayer.layer.ID, this.userID)
                         })
-                    this.myCubeService.clearMyCubeData();
-                    this.getFeatureList();
-                    this.mapConfig.selectedFeature = null
+
                 }
             })
             snackBarRef.onAction().subscribe((x) => {
                 let newSnackBarRef = this.snackBar.open("Undone", '', { duration: 4000 })
                 didUndo = true
+                this.mapConfig.selectedFeature = feat
+                this.mapConfig.currentLayer.source.addFeature(this.mapConfig.selectedFeature)
+                this.selectMyCubeFeature(this.mapConfig.currentLayer, false)
             })
-        })
     }
 
     private getFeatureList() {

@@ -4,7 +4,7 @@ import { UserPageInstance, ModuleInstance } from '_models/module.model'
 import { Layer } from '_models/layer.model'
 import { MapConfig, mapStyles, featureList } from 'app/map/models/map.model';
 import { geoJSONService } from 'app/map/services/geoJSON.service';
-import { Locate, locateStyles } from './WO.model'
+// import { WOStyles } from './WO.model'
 //http dependancies
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Observable } from 'rxjs/Observable';
@@ -12,23 +12,21 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
 import { SQLService } from '../../../../_services/sql.service';
 import { Subject } from 'rxjs/Subject';
-import { MyCubeService } from '../../../map/services/mycube.service'
+// import { MyCubeService } from '../../../map/services/mycube.service'
 import { UserPageLayerService } from '../../../../_services/_userPageLayer.service'
 import { LayerService } from '../../../../_services/_layer.service'
-import { LayerPermissionService } from '../../../../_services/_layerPermission.service'
+// import { LayerPermissionService } from '../../../../_services/_layerPermission.service'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
-import { UserPageInstanceService } from '../../../../_services/_userPageInstance.service'
+// import { UserPageInstanceService } from '../../../../_services/_userPageInstance.service'
 import VectorLayer from 'ol/layer/Vector';
 
 @Injectable()
 export class WOAdminService {
   public completed: string
   public vectorlayer = new VectorLayer()
-  public locate = new Locate()
   public mapConfig: MapConfig
   public UPL: UserPageLayer
   public filter: string = 'closed IS Null'
-  private ticket = new Subject<Locate>();
   private ID = new Subject<string>()
   private expanded = new Subject<boolean>();
   private layer = new Layer
@@ -37,13 +35,14 @@ export class WOAdminService {
   constructor(private geojsonservice: geoJSONService,
     protected _http: HttpClient,
     private sqlService: SQLService,
-    private myCubeService: MyCubeService,
-    private locateStyles: locateStyles,
+    // private myCubeService: MyCubeService,
+    // private WOStyles: WOStyles,
     private userPageLayerService: UserPageLayerService,
     private layerService: LayerService,
     private moduleInstanceService: ModuleInstanceService,
-    private layerPermissionService: LayerPermissionService,
-    private userPageInstanceService: UserPageInstanceService) {
+    // private layerPermissionService: LayerPermissionService,
+    // private userPageInstanceService: UserPageInstanceService
+    ) {
   }
 
 
@@ -126,39 +125,39 @@ export class WOAdminService {
         console.log("Settings Updated")
     });
   }
-  
+
   private createTable(id): void {
     this.sqlService
       .Create(id)
       .subscribe((result: JSON) => {
-        console.log(this.locate)
-        Object.keys(this.locate).forEach((key) => {
-          let tempField = new MyCubeField
-          tempField.field = key
-          console.log(tempField)
-          switch (tempField.field) {
-            //need to add a case for "ticket" to run this SQL script
-            //ALTER TABLE {mycube.table} UNIQUE (ticket)
-            
-            case 'ttime': {
-              tempField.type = 'date'
-              break
-            }
-            case 'tdate':{
-              tempField.type = 'date'
-              break
-            }
-            case 'sdate': {
-              tempField.type = 'date'
-              break
-            }
+        //this code needs fixed
+        // Object.keys(this.locate).forEach((key) => {
+          // let tempField = new MyCubeField
+          // tempField.field = key
+          // console.log(tempField)
+          // switch (tempField.field) {
+          //   //need to add a case for "ticket" to run this SQL script
+          //   //ALTER TABLE {mycube.table} UNIQUE (ticket)
 
-            default: {
-              tempField.type = "text"
-            }
-          }
-          if (tempField.field != 'geom' || 'id') {this.addColumn(id, tempField)} 
-        });
+          //   case 'ttime': {
+          //     tempField.type = 'date'
+          //     break
+          //   }
+          //   case 'tdate':{
+          //     tempField.type = 'date'
+          //     break
+          //   }
+          //   case 'sdate': {
+          //     tempField.type = 'date'
+          //     break
+          //   }
+
+          //   default: {
+          //     tempField.type = "text"
+          //   }
+          // }
+          // if (tempField.field != 'geom' || 'id') {this.addColumn(id, tempField)}
+        // });
 
         this.sqlService
           .setSRID(id)
