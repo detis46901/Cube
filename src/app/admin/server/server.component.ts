@@ -9,7 +9,6 @@ import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component';
 import { LayerNewComponent } from '../layer/layerNew/layerNew.component';
 import { MatDialog } from '@angular/material';
-import { ServerValidatorService } from './serverValidator.service';
 import { Observable } from 'rxjs';
 
 

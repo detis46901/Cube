@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { Configuration } from '../_api/api.constants';
 import { ParentService } from './_parent.service';
 import { User } from '../_models/user.model';
-import { tokenKey } from '@angular/core/src/view';
 
 @Injectable()
 export class UserService /*extends ParentService*/ {

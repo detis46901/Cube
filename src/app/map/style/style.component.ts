@@ -3,7 +3,6 @@ import { UserPageLayer } from '../../../_models/layer.model'
 import { CommonModule } from '@angular/common';
 import { MatButtonToggleChange } from '@angular/material';
 import { MapConfig } from '../models/map.model';
-import { NULL_INJECTOR } from '@angular/core/src/render3/component';
 import { MapService } from '../services/map.service';
 import { SQLService } from '../../../_services/sql.service';
 import { MyCubeField } from '_models/layer.model';

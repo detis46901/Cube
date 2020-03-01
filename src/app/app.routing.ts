@@ -38,7 +38,7 @@ const appRoutes: Routes = [
 
     // Admin Settings
     {
-        path: 'admin', canActivate: [AdminGuard], loadChildren: './admin/admin.module#AdminModule'
+        path: 'admin', canActivate: [AdminGuard], loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
       },
 
     // {

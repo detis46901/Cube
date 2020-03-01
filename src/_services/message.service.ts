@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable ,  Subject } from 'rxjs';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
-import { SafeHtml } from '@angular/platform-browser/src/security/dom_sanitization_service';
 
 
 @Injectable()

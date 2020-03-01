@@ -3,7 +3,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Routing } from './app.routing';
 import { CommonModule } from '@angular/common';
-import { UserValidatorService } from './user/userValidator.service';
 import { AdminComponent } from './admin.component';
 import { AdminNavComponent } from './adminnav/adminnav.component';
 import { LayerComponent } from './layer/layer.component';
@@ -155,7 +154,6 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatAutocompleteModule,
   ],
   providers: [
-    UserValidatorService
   ],
   exports: [
     RouterModule

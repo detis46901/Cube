@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ValidatorService, DefaultValidatorService } from 'angular4-material-table';
+//import { ValidatorService, DefaultValidatorService } from 'angular4-material-table';
 
+//this is going to need some work
 @Injectable()
-export class LayerValidatorService implements ValidatorService {
+export class LayerValidatorService {
     getRowValidator(): FormGroup {
         return new FormGroup({
             'ID': new FormControl(null, Validators.required),

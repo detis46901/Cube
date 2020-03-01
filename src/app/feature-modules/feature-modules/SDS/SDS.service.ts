@@ -17,7 +17,6 @@ import { transform } from 'ol/proj';
 import { environment } from '../../../../environments/environment'
 import { ModuleInstance } from '_models/module.model';
 import { ScrollDispatchModule } from '@angular/cdk/scrolling';
-import { standardizeConfig } from '@angular/router/src/config';
 
 @Injectable()
 export class SDSService {
@@ -328,7 +327,7 @@ export class SDSService {
     this.myCubeService.clearMyCubeData()
     this.SDSConfig[SDSConfigID].tab = 'List'
     this.clearForm(SDSConfigID)
-    
+
     if (mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction); mapConfig.selectedFeature = null; this.SDSConfig[0].selectedItem = null }
     return true
   }

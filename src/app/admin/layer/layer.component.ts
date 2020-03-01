@@ -29,7 +29,7 @@ import { LayerDetailsComponent } from '../details/layerDetails/layerDetails.comp
 
 export class LayerComponent implements OnInit {
     //objCode refers to the  menu tab the user is on, so the openConfDel method knows what to interpolate based on what it's deleting
-    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
     public objCode: number = 2;
     public layers: Layer[];
     public servers: Server[];

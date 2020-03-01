@@ -7,7 +7,6 @@ import { Subscription } from 'rxjs';
 import { MyCubeField, MyCubeConfig, MyCubeComment } from "../../../../_models/layer.model"
 import { UserService } from '../../../../_services/_user.service'
 import { User } from '../../../../_models/user.model'
-import { getTypeNameForDebugging } from '@angular/common/src/directives/ng_for_of';
 import { filter } from 'rxjs/operators';
 import { WMSService } from '../../../map/services/wms.service'
 import { Image, coord, poly } from './open-aerial-map.model'
@@ -34,7 +33,7 @@ export class OpenAerialMapComponent implements OnInit {
   ngOnInit() {
     this.disabledSubscription = this.openAerialMapService.getDisabled().subscribe(disabled => {this.expanded = false; this.disabled = disabled})
   }
-  
+
   public setOpacity(e:EventEmitter<MatSliderChange>) {
     this.openAerialMapService.images.forEach((x) => {
       if (x.layer){

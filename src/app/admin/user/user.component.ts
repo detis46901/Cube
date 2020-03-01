@@ -15,7 +15,6 @@ import { NewUserComponent } from './newUser/newUser.component';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs';
-import { UserValidatorService } from './userValidator.service';
 import { UserDetailsComponent } from '../details/userDetails/userDetails.component';
 //import { UserDataSource } from './userTable/userData';
 
@@ -43,7 +42,7 @@ export class UserComponent implements OnInit {
     public dataSource: any;
     public ds = new MatTableDataSource()
 
-    constructor(private userValidator: UserValidatorService, private userService: UserService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private dialog: MatDialog) {}
+    constructor(private userService: UserService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private dialog: MatDialog) {}
 
     ngOnInit() {
         this.ds.filterPredicate = this.tableFilter();
@@ -87,7 +86,7 @@ export class UserComponent implements OnInit {
           return g.indexOf(filter) !== -1
         }
         return filterFunction;
-      } 
+      }
 
     public getUserPageItems(): void {
         this.userPageService

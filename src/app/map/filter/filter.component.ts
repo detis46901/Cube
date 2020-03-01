@@ -8,8 +8,6 @@ import { UserPageLayerService } from '../../../_services/_userPageLayer.service'
 import { StyleService } from '../services/style.service';
 import { LayerService } from '../../../_services/_layer.service';
 import { filterOperators, MyCubeFilterFields } from '../../../_models/style.model';
-import { element } from '@angular/core/src/render3';
-
 
 @Component({
     selector: 'filtertoolbar',

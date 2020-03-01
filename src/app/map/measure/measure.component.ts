@@ -2,7 +2,6 @@ import { Component, OnInit, Input, HostBinding, NgModule, ModuleWithProviders, O
 import { CommonModule } from '@angular/common';
 import { MatButtonToggleChange } from '@angular/material';
 import { MapConfig } from '../models/map.model'
-import { NULL_INJECTOR } from '@angular/core/src/render3/component';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';

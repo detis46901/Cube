@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { UserPage, User } from '../../../_models/user.model';
-import { pipe } from '@angular/core/src/render3';
 
 @Pipe({ name: 'pagefilter' })
 
@@ -31,7 +30,7 @@ export class UserPipe implements PipeTransform {
             catch {
                 console.log("Not Loaded Yet")
             }
-           
+
         }
         else {
         try {
