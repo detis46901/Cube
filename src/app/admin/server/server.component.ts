@@ -1,3 +1,5 @@
+
+import {map} from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ServerService } from '../../../_services/_server.service';
 import { Server } from '../../../_models/server.model';
@@ -8,9 +10,9 @@ import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component
 import { LayerNewComponent } from '../layer/layerNew/layerNew.component';
 import { MatDialog } from '@angular/material';
 import { ServerValidatorService } from './serverValidator.service';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs';
+
+
 import { ServerDetailsComponent } from '../details/serverDetails/serverDetails.component';
 import { ServerLayersComponent } from './serverLayers/serverLayers.component';
 import WMSCapabilities from 'ol/format/WMSCapabilities';
@@ -70,8 +72,8 @@ export class ServerComponent implements OnInit {
     }
 
     public getCapabilities = (url): Observable<any> => {
-        return this.http.get(url)
-            .map((response: Response) => <any>response.text())
+        return this.http.get(url).pipe(
+            map((response: Response) => <any>response.text()))
     }
 
     public clearArrays(): void {

@@ -5,11 +5,9 @@ import { MapConfig, mapStyles, featureList } from 'app/map/models/map.model';
 import { geoJSONService } from 'app/map/services/geoJSON.service';
 //http dependancies
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http'
-import { Observable } from 'rxjs/Observable';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+import { Observable ,  Subject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { SQLService } from '../../../../_services/sql.service';
-import { Subject } from 'rxjs/Subject';
 import { MyCubeService } from '../../../map/services/mycube.service'
 import { UserPageLayerService } from '../../../../_services/_userPageLayer.service'
 import VectorLayer from 'ol/layer/Vector';
@@ -25,9 +23,9 @@ export class OpenAerialMapAdminService {
   private expanded = new Subject<boolean>();
 
 
-  constructor(private geojsonservice: geoJSONService, 
-    protected _http: HttpClient, 
-    private sqlService: SQLService, 
+  constructor(private geojsonservice: geoJSONService,
+    protected _http: HttpClient,
+    private sqlService: SQLService,
     private myCubeService: MyCubeService,
     private userPageLayerService: UserPageLayerService) { }
 

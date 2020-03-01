@@ -1,8 +1,7 @@
-import 'rxjs/add/operator/map';
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
 import { Observable } from 'rxjs';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
 import { Configuration } from '../_api/api.constants';
 import { MapConfig } from 'app/map/models/map.model';
@@ -49,6 +48,6 @@ export class MapConfigService {
                 `body was: ${error.error}`);
         }
         // return an ErrorObservable with a user-facing error message
-        return new ErrorObservable();
+        return 'There is an error';
     }
 }

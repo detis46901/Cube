@@ -1,8 +1,9 @@
-import 'rxjs/add/operator/map';
+
+import {throwError as observableThrowError,  Observable } from 'rxjs';
+
 import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Configuration } from '../_api/api.constants';
 import { MyCubeField, MyCubeComment } from '../_models/layer.model';
 
@@ -31,37 +32,37 @@ export class SQLService {
     }
 
     public GetAll = (): Observable<any> => {
-        return this._http.get(this.actionUrl + 'list', this.options)
-            .catch(this.handleError);
+        return this._http.get(this.actionUrl + 'list', this.options).pipe(
+            catchError(this.handleError));
     }
 
     public GetSchema = (schema: string, id: string): Observable<any> => {
-        return this._http.get(this.actionUrl + "getschema?schema=" + schema + "&table=" + id, this.options)
-            .catch(this.handleError);
+        return this._http.get(this.actionUrl + "getschema?schema=" + schema + "&table=" + id, this.options).pipe(
+            catchError(this.handleError));
     }
 
     public GetSingle = (table: string, id: string): Observable<any> => {
-        return this._http.get(this.actionUrl + 'single?table=' + table + '&id=' + id, this.options)
+        return this._http.get(this.actionUrl + 'single?table=' + table + '&id=' + id, this.options).pipe(
             // .map((response: Response) => <any>response.json())
-            .catch(this.handleError);
+            catchError(this.handleError));
     }
 
     public GetAnySingle = (table: string, field: string, value: string): Observable<any> => {
-        return this._http.get(this.actionUrl + 'anyone?table=' + table + '&field=' + field + '&value=' + value, this.options)
+        return this._http.get(this.actionUrl + 'anyone?table=' + table + '&field=' + field + '&value=' + value, this.options).pipe(
             // .map((response: Response) => <any>response.json())
-            .catch(this.handleError);
+            catchError(this.handleError));
     }
 
     public GetSingleFromEmail = (email: string): Observable<any> => {
-        return this._http.get(this.actionUrl + 'one?email=' + email, this.options)
+        return this._http.get(this.actionUrl + 'one?email=' + email, this.options).pipe(
             // .map((response: Response) => <any>response.json())
-            .catch(this.handleError);
+            catchError(this.handleError));
     }
 
     public Create = (layerName: string): Observable<any> => {
-        return this._http.get(this.actionUrl + 'create?table=' + layerName, this.options)
+        return this._http.get(this.actionUrl + 'create?table=' + layerName, this.options).pipe(
             // .map((response: Response) => <any>response.json())
-            .catch(this.handleError);
+            catchError(this.handleError));
     }
 
     public getConstraints = (schema: string, table: string): Observable<any> => {
@@ -69,15 +70,15 @@ export class SQLService {
     }
 
     public CreateCommentTable = (layerName: string): Observable<any> => {
-        return this._http.get(this.actionUrl + 'createcommenttable?table=' + layerName, this.options)
+        return this._http.get(this.actionUrl + 'createcommenttable?table=' + layerName, this.options).pipe(
             // .map((response: Response) => <any>response.json())
-            .catch(this.handleError);
+            catchError(this.handleError));
     }
 
     public getComments = (table: number, id: string): Observable<any> => {
-        return this._http.get(this.actionUrl + 'getcomments?table=' + table + '&id=' + id, this.options)
+        return this._http.get(this.actionUrl + 'getcomments?table=' + table + '&id=' + id, this.options).pipe(
             // .map((response: Response) => <any>response.json())
-            .catch(this.handleError);
+            catchError(this.handleError));
     }
 
     public addCommentWithGeom = (comment:MyCubeComment): Observable<any> => {
@@ -113,9 +114,9 @@ export class SQLService {
     }
 
     public addRecord = (table: number, geometry: JSON): Observable<any> => {
-        return this._http.get(this.actionUrl + 'addRecord?table=' + table + '&geometry=' + JSON.stringify(geometry['geometry']), this.options)
+        return this._http.get(this.actionUrl + 'addRecord?table=' + table + '&geometry=' + JSON.stringify(geometry['geometry']), this.options).pipe(
             // .map((response: Response) => <any>response.json())
-            .catch(this.handleError)
+            catchError(this.handleError))
     }
 
     public addAnyRecord = (schema: string, table: string, field: string, value: string): Observable<any> => {
@@ -123,17 +124,17 @@ export class SQLService {
     }
 
     public fixGeometry = (table: number): Observable<any> => {
-        return this._http.get(this.actionUrl + 'fixGeometry?table=' + table, this.options)
+        return this._http.get(this.actionUrl + 'fixGeometry?table=' + table, this.options).pipe(
             // .map((response: Response) => <any>response.json())
-            .catch(this.handleError)
+            catchError(this.handleError))
     }
 
     public Update = (table: number, id: string, MyCubeField: MyCubeField): Observable<any> => {
         // console.log(JSON.stringify(MyCubeField))
         // console.log(this.actionUrl + 'update', '{"table":' + table + ',"id":' + id + ',"mycubefield":' + JSON.stringify(MyCubeField) + '}')
-        return this._http.put(this.actionUrl + 'update', '{"table":' + table + ',"id":' + id + ',"mycubefield":' + JSON.stringify(MyCubeField) + '}', this.options)
+        return this._http.put(this.actionUrl + 'update', '{"table":' + table + ',"id":' + id + ',"mycubefield":' + JSON.stringify(MyCubeField) + '}', this.options).pipe(
             // .map((response: Response) => <any>response.json())
-            .catch(this.handleError);
+            catchError(this.handleError));
     }
 
     public UpdateAnyRecord = (schema: string, table: string, id: string, MyCubeField: MyCubeField): Observable<any> => {
@@ -144,21 +145,21 @@ export class SQLService {
     }
 
     public Delete = (table: number, id: any): Observable<any> => {
-        return this._http.get(this.actionUrl + 'deleteRecord?table=' + table + '&id=' + id, this.options)
+        return this._http.get(this.actionUrl + 'deleteRecord?table=' + table + '&id=' + id, this.options).pipe(
             // .map((response: Response) => <any>response.json())
-            .catch(this.handleError);
+            catchError(this.handleError));
     }
 
     public deleteAnyRecord = (schema: string, table: string, id: any): Observable<any> => {
-        return this._http.get(this.actionUrl + 'deleteAnyRecord?schema=' + schema + '&table=' + table + '&id=' + id, this.options)
+        return this._http.get(this.actionUrl + 'deleteAnyRecord?schema=' + schema + '&table=' + table + '&id=' + id, this.options).pipe(
             // .map((response: Response) => <any>response.json())
-            .catch(this.handleError);
+            catchError(this.handleError));
     }
 
     public addColumn = (table: number, field: MyCubeField): Observable<any> => {
         // console.log(field)
-        return this._http.get(this.actionUrl + 'addColumn?table=' + table + '&field=' + field.field + '&type=' + field.type + '&label=' + field.label, this.options)
-            .catch(this.handleError)
+        return this._http.get(this.actionUrl + 'addColumn?table=' + table + '&field=' + field.field + '&type=' + field.type + '&label=' + field.label, this.options).pipe(
+            catchError(this.handleError))
     }
 
     public deleteTable = (table: number): Observable<any> => {
@@ -188,7 +189,7 @@ export class SQLService {
 
     protected handleError(error: Response) {
         console.error('this is an error: ' + error.text);
-        return Observable.throw(error || 'any error');
+        return observableThrowError(error || 'any error');
     }
 
 }

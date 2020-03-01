@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs';
+import { Subject ,  Observable } from 'rxjs';
 import { SQLService } from '../../../_services/sql.service'
 import { MyCubeField, MyCubeConfig, MyCubeComment, MyCubeConstraint } from '../../../_models/layer.model'
 import { environment } from 'environments/environment'

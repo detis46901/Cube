@@ -14,7 +14,7 @@ import { ChangePasswordComponent } from './changepassword/changepassword.compone
 import { NewUserComponent } from './newUser/newUser.component';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { DataSource } from '@angular/cdk/collections';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { UserValidatorService } from './userValidator.service';
 import { UserDetailsComponent } from '../details/userDetails/userDetails.component';
 //import { UserDataSource } from './userTable/userData';

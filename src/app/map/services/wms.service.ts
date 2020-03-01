@@ -1,13 +1,13 @@
+
+import {map} from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from "@angular/core";
-import { Observable } from 'rxjs'
-import { Subject } from 'rxjs/Subject';
+import { Observable ,  Subject } from 'rxjs'
 import { UserPageLayer } from '../../../_models/layer.model';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from 'environments/environment'
+import { filter, catchError, mergeMap } from 'rxjs/operators';
 
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/mergeMap";
 @Injectable()
 
 export class WMSService {
@@ -47,8 +47,8 @@ export class WMSService {
     // }
 
     getfeatureinfo(URL, mouseDown: boolean) {
-        return this.http.request("GET", URL, {responseType: 'text'})
-            .map((responseData) => {
+        return this.http.request("GET", URL, {responseType: 'text'}).pipe(
+            map((responseData) => {
                 //console.log(responseData)
                 let temp: string = responseData['_body']
                 try{
@@ -93,7 +93,7 @@ export class WMSService {
                 catch{return responseData}
 
                 return temp;
-            })
+            }))
     }
 
     getGeoJSONInfo(URL):Observable<string> {

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { MapConfig } from '../map/models/map.model';
-import { map } from 'rxjs/operator/map';
+
 import { FeatureModulesService } from './feature-modules.service'
 
 @Component({

@@ -3,9 +3,8 @@ import { UserService } from '../../_services/_user.service';
 import { User } from '../../_models/user.model';
 import { SideNavService } from '../../_services/sidenav.service';
 import { WMSService } from '../map/services/wms.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription ,  Observable } from 'rxjs';
 import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../_models/layer.model'
-import { Observable } from 'rxjs';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { AuthenticationService } from '../../_services/authentication.service'

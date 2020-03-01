@@ -7,11 +7,9 @@ import { geoJSONService } from 'app/map/services/geoJSON.service';
 // import { WOStyles } from './WO.model'
 //http dependancies
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http'
-import { Observable } from 'rxjs/Observable';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+import { Observable ,  Subject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { SQLService } from '../../../../_services/sql.service';
-import { Subject } from 'rxjs/Subject';
 // import { MyCubeService } from '../../../map/services/mycube.service'
 import { UserPageLayerService } from '../../../../_services/_userPageLayer.service'
 import { LayerService } from '../../../../_services/_layer.service'

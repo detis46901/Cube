@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Subject } from 'rxjs/Subject';
+import { Observable ,  Subject } from 'rxjs';
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
 import { Configuration } from '../_api/api.constants';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
 import { Notif } from '../_models/user.model';
 
@@ -84,6 +82,6 @@ export class NotifService {
                 `body was: ${error.error}`);
         }
         // return an ErrorObservable with a user-facing error message
-        return new ErrorObservable();
+        return 'There is an error';
     }
 }

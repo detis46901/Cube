@@ -1,7 +1,10 @@
-import 'rxjs/add/operator/map';
+
+import {throwError as observableThrowError,  Observable } from 'rxjs';
+
+import {catchError} from 'rxjs/operators';
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { Observable } from 'rxjs/Observable';
 import { Configuration } from '../../../_api/api.constants';
 import { MyCubeField } from '../../../_models/layer.model'
 
@@ -29,44 +32,44 @@ export class geoJSONService {
     }
 
     public GetAll = (layerID: number): Observable<any> => {
-        let ob = this._http.get(this.actionUrl + 'all?table=' + layerID, this.options)
-            .catch(this.handleError);
+        let ob = this._http.get(this.actionUrl + 'all?table=' + layerID, this.options).pipe(
+            catchError(this.handleError));
         return ob
     }
     public GetSome = (layerID: number, where: string): Observable<any> => {
-        let ob = this._http.get(this.actionUrl + 'some?table=' + layerID + '&where=' + where, this.options)
-            .catch(this.handleError);
+        let ob = this._http.get(this.actionUrl + 'some?table=' + layerID + '&where=' + where, this.options).pipe(
+            catchError(this.handleError));
         return ob
     }
 
     public GetSingle = (id: number): Observable<any> => {
-        return this._http.get(this.actionUrl + 'one?rowid=' + id, this.options)
-            .catch(this.handleError);
+        return this._http.get(this.actionUrl + 'one?rowid=' + id, this.options).pipe(
+            catchError(this.handleError));
     }
 
     public GetSingleFromEmail = (email: string): Observable<any> => {
-        return this._http.get(this.actionUrl + 'one?email=' + email)
-            .catch(this.handleError);
+        return this._http.get(this.actionUrl + 'one?email=' + email).pipe(
+            catchError(this.handleError));
     }
 
     public Create = (layerName: string, fields: any): Observable<any> => {
-        return this._http.get(this.actionUrl + 'create?table=' + layerName, this.options)
-            .catch(this.handleError);
+        return this._http.get(this.actionUrl + 'create?table=' + layerName, this.options).pipe(
+            catchError(this.handleError));
     }
 
     public Update = (itemToUpdate: any): Observable<any> => {
-        return this._http.put(this.actionUrl + 'update', JSON.stringify(itemToUpdate), this.options)
-            .catch(this.handleError);
+        return this._http.put(this.actionUrl + 'update', JSON.stringify(itemToUpdate), this.options).pipe(
+            catchError(this.handleError));
     }
 
     public Delete = (id: number): Observable<any> => {
-        return this._http.delete(this.actionUrl + 'delete?ID=' + id, this.options)
-            .catch(this.handleError);
+        return this._http.delete(this.actionUrl + 'delete?ID=' + id, this.options).pipe(
+            catchError(this.handleError));
     }
 
     public addColumn = (table: string, field: MyCubeField): Observable<any> => {
-        return this._http.get(this.actionUrl + 'addColumn?table=' + table + '&field=' + field.field + '&type=' + field.type, this.options)
-            .catch(this.handleError)
+        return this._http.get(this.actionUrl + 'addColumn?table=' + table + '&field=' + field.field + '&type=' + field.type, this.options).pipe(
+            catchError(this.handleError))
     }
 
     public deleteTable = (table: number): Observable<any> => {
@@ -80,6 +83,6 @@ export class geoJSONService {
 
     protected handleError(error: Response) {
         console.error(error);
-        return Observable.throw(error.json() || 'any error');
+        return observableThrowError(error.json() || 'any error');
     }
 }

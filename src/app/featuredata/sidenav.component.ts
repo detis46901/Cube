@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable ,  Subscription } from 'rxjs';
 import { SideNavService } from "../../_services/sidenav.service"
 import { LayerPermissionService } from "../../_services/_layerPermission.service"
 

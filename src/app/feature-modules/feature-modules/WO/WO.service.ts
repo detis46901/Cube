@@ -9,9 +9,8 @@ import { StyleService } from './style.service'
 import { MatSnackBar } from '@angular/material/snack-bar';
 //http dependancies
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams, HttpRequest } from '@angular/common/http'
-import { Observable as Ob } from 'rxjs/Observable';
+import { Observable as Ob ,  Subject } from 'rxjs';
 import { SQLService } from '../../../../_services/sql.service';
-import { Subject } from 'rxjs/Subject';
 import { MyCubeService } from '../../../map/services/mycube.service'
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';

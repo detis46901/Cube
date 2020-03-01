@@ -9,7 +9,7 @@ import { GroupMemberService } from '../../_services/_groupMember.service';
 import { LayerService } from '../../_services/_layer.service';
 import { UserPageLayerService } from '../../_services/_userPageLayer.service';
 import { UserPageService } from '../../_services/_userPage.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-notification',

@@ -6,9 +6,8 @@ import { SDSConfig, SDSStyles } from './SDS.model'
 import { StyleService } from './style.service'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http'
-import { Observable } from 'rxjs/Observable';
+import { Observable ,  Subject ,  interval } from 'rxjs';
 import { SQLService } from '../../../../_services/sql.service';
-import { Subject } from 'rxjs/Subject';
 import { MyCubeService } from '../../../map/services/mycube.service'
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
@@ -19,7 +18,6 @@ import { environment } from '../../../../environments/environment'
 import { ModuleInstance } from '_models/module.model';
 import { ScrollDispatchModule } from '@angular/cdk/scrolling';
 import { standardizeConfig } from '@angular/router/src/config';
-import { interval } from 'rxjs';
 
 @Injectable()
 export class SDSService {

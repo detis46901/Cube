@@ -10,8 +10,8 @@ import { geoJSONService } from './../services/geoJSON.service';
 import { MyCubeService } from './../services/mycube.service';
 import { WMSService } from './wms.service';
 import { SQLService } from './../../../_services/sql.service';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
+
+
 import { StyleService } from '../services/style.service'
 import { FeatureModulesService } from "app/feature-modules/feature-modules.service";
 import { defaults as defaultInteractions, Modify, Draw } from 'ol/interaction';

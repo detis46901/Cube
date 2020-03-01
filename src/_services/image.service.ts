@@ -1,8 +1,7 @@
-import 'rxjs/add/operator/map';
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
-import { Observable } from 'rxjs';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+import { Observable ,  ErrorObserver } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Configuration } from '../_api/api.constants';
 
@@ -53,6 +52,6 @@ export class ImageService {
                 `body was: ${error.error}`);
         }
         // return an ErrorObservable with a user-facing error message
-        return new ErrorObservable();
+        return 'new ErrorObservable()';
     }
 }

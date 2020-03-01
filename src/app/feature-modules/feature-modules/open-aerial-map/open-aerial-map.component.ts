@@ -3,7 +3,7 @@ import { UserPageLayer } from '_models/layer.model';
 import { MapConfig } from '../../../map/models/map.model';
 import { geoJSONService } from './../../../map/services/geoJSON.service';
 import { FeatureModulesService } from '../../feature-modules.service'
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { MyCubeField, MyCubeConfig, MyCubeComment } from "../../../../_models/layer.model"
 import { UserService } from '../../../../_services/_user.service'
 import { User } from '../../../../_models/user.model'

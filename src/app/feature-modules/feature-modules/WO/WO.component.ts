@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { MapConfig } from '../../../map/models/map.model';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { WOService } from './WO.service'
 import { UserService } from '../../../../_services/_user.service'
 import { WOType, workOrder} from './WO.model'

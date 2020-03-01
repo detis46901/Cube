@@ -1,6 +1,6 @@
 import {Fill, Stroke, Circle, Style} from 'ol/style';
 import Text from 'ol/style/Text';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { UserPageLayer, MyCubeField, MyCubeComment } from '_models/layer.model';
 
 

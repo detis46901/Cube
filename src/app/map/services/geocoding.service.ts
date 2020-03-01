@@ -1,6 +1,4 @@
 import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
-import { catchError } from 'rxjs/operators';
 import { Injectable } from "@angular/core";
 import { MapConfig } from '../models/map.model'
 import Feature from 'ol/Feature';
@@ -11,9 +9,7 @@ import {addProjection, addCoordinateTransforms, transform} from 'ol/proj';
 import Geolocation from 'ol/Geolocation';
 import {Fill, Stroke, Circle, Style} from 'ol/style';
 import Point from 'ol/geom/Point';
-
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/mergeMap";
+import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 
 @Injectable()
 export class GeocodingService {
@@ -54,7 +50,7 @@ export class GeocodingService {
                 `body was: ${error.error}`);
         }
         // return an ErrorObservable with a user-facing error message
-        return new ErrorObservable();
+        return '';
     }
 
     trackMe(mapConfig: MapConfig) {

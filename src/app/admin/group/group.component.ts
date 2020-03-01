@@ -9,9 +9,7 @@ import { NewGroupComponent } from './newGroup/newGroup.component';
 import { EditGroupComponent } from './editGroup/editGroup.component'
 import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component';
 import { MatDialog, MatDialogRef, MatSelectionList } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
-import { Subscriber } from 'rxjs/Subscriber';
-import { from } from 'rxjs/observable/from';
+import { Observable ,  Subscriber ,  from } from 'rxjs';
 
 @Component({
     selector: 'group',

@@ -1,13 +1,14 @@
+
+import {map,  retry, catchError } from 'rxjs/operators';
 import { Component, OnInit, Input } from '@angular/core';
 import { ServerService } from '../../../../_services/_server.service';
 import { Server } from '../../../../_models/server.model';
 import { Layer, WMSLayer } from '../../../../_models/layer.model';
 import { MatDialog } from '@angular/material';
 import { LayerNewComponent } from '../../layer/layerNew/layerNew.component';
-import { Observable } from 'rxjs/Observable';
-import { retry, catchError } from 'rxjs/operators';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs';
+
+
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
 import { environment } from 'environments/environment'
@@ -69,23 +70,23 @@ export class ServerLayersComponent implements OnInit {
     public getCapabilities = (url): Observable<any> => {
         //This needs to be looked at.  This will work fine as long as Geoserver is on the same server as Cube.  It may not work otherwise if CORS isn't set up on Geoserver.
         console.log(url)
-        return this.http.get(url)
-            .map((response: Response) => <any>response.text());
+        return this.http.get(url).pipe(
+            map((response: Response) => <any>response.text()));
     }
 
     public getArcGIS = (url): Observable<any> => {
         console.log("getArcGIS (with proxy server")
         //This may also need to be addressed as well.  While unlikely, this won't work if the ArcGIS server is on the same domain as Cube.
         let url2 = url.split('//')[1]
-        return this.http.get(environment.proxyUrl + '/' + url2)
-            .map((response: Response) => {return response.json()});
+        return this.http.get(environment.proxyUrl + '/' + url2).pipe(
+            map((response: Response) => {return response.json()}));
     }
     public getCapabilitiesWithProxy = (url): Observable<any> => {
         console.log("getArcGIS (with proxy server")
         //This may also need to be addressed as well.  While unlikely, this won't work if the ArcGIS server is on the same domain as Cube.
         let url2 = url.split('//')[1]
-        return this.http.get(environment.proxyUrl + '/' + url2)
-            .map((response: Response) => {return response.text()});
+        return this.http.get(environment.proxyUrl + '/' + url2).pipe(
+            map((response: Response) => {return response.text()}));
     }
 
     private getLayers(serv: Server): void {

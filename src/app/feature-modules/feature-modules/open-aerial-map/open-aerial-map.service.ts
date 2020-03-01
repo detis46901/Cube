@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import { UserPageLayer } from '_models/layer.model';
 import { MapConfig } from 'app/map/models/map.model';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable ,  Subject } from 'rxjs';
 import { MyCubeService } from './../../../map/services/mycube.service'
 import { Image } from './open-aerial-map.model'
 import { WMSService } from '../../../map/services/wms.service'
-import { Subject } from 'rxjs/Subject';
 import * as olobservable from 'ol/Observable';  //Need to figure out how to get this in there.
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';

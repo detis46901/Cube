@@ -1,4 +1,4 @@
-import 'rxjs/add/operator/map';
+
 import { Injectable } from '@angular/core';
 import { UserPageLayer } from '../../../_models/layer.model';
 import Feature from 'ol/Feature';

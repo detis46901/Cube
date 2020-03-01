@@ -10,7 +10,7 @@ import { GroupService } from '../../_services/_group.service';
 import { LayerPermission, UserPageLayer, MyCubeField, MyCubeComment } from '../../_models/layer.model';
 import { UserPage, User } from '../../_models/user.model';
 import { UserPageLayerService } from '../../_services/_userPageLayer.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { PageConfigComponent2 } from '../admin2/user/pageconfig/pageconfig.component';
 import { MatDialog } from '@angular/material';
 import { Clipboard } from 'ts-clipboard';

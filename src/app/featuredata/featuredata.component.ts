@@ -6,7 +6,7 @@ import { WMSService } from '../map/services/wms.service'
 import { FormControl } from '@angular/forms';
 import {  } from '@angular/forms';
 import { MapConfig } from 'app/map/models/map.model';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import {environment} from 'environments/environment'
 import Autolinker from 'autolinker';
 import { DateAdapter, NativeDateAdapter } from '@angular/material';
