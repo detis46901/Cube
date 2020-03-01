@@ -8,7 +8,6 @@ import { Observable } from 'rxjs/Observable';
 import { retry, catchError } from 'rxjs/operators';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
 import { environment } from 'environments/environment'
@@ -27,7 +26,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class ServerLayersComponent implements OnInit {
 
     @Input() ID;
-    public http: Http;
+    public http: HttpClient;
     public server = new Server
     private options: any;
     private layers: any;
@@ -45,7 +44,7 @@ export class ServerLayersComponent implements OnInit {
         headers: new Headers(this.headerDict),
     };
 
-    constructor(private dialog: MatDialog, private serverService: ServerService, http: Http, private snackBar: MatSnackBar) {
+    constructor(private dialog: MatDialog, private serverService: ServerService, http: HttpClient, private snackBar: MatSnackBar) {
         this.http = http
     }
 

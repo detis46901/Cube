@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { RequestOptions, Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { ImageService } from '../../../../_services/image.service';

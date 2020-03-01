@@ -11,7 +11,6 @@ import { ServerValidatorService } from './serverValidator.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { ServerDetailsComponent } from '../details/serverDetails/serverDetails.component';
 import { ServerLayersComponent } from './serverLayers/serverLayers.component';
 import WMSCapabilities from 'ol/format/WMSCapabilities';
@@ -44,9 +43,9 @@ export class ServerComponent implements OnInit {
     public path: string = '';
     public serverColumns = ['serverID', 'serverName', 'serverType', 'serverURL', 'actionsColumn']
     public dataSource: any;
-    public http: Http
+    public http: HttpClient
 
-    constructor(private serverService: ServerService, private dialog: MatDialog, http: Http) {
+    constructor(private serverService: ServerService, private dialog: MatDialog, http: HttpClient) {
     this.http = http
     }
 

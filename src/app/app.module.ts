@@ -5,12 +5,10 @@ import { NgModule } from '@angular/core';
 //import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
-import { HttpModule, ConnectionBackend, Http } from '@angular/http';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { Routes, RouterModule } from '@angular/router';
 import { LinkyModule } from 'ngx-linky';
 import { FeatureModulesModule } from './feature-modules/feature-modules.module'
-import { BaseRequestOptions } from '@angular/http';
 import { AuthGuard } from '../_guards/auth.guard';
 import { AdminGuard } from '../_guards/admin.guard';
 import { Configuration } from '../_api/api.constants';
@@ -138,7 +136,6 @@ import { StyleComponent } from './map/style/style.component';
         //CommonModule,
         HttpClientModule,
         HttpClientJsonpModule,
-        HttpModule,
         Routing,
         RouterModule.forRoot([
             {
@@ -200,7 +197,6 @@ import { StyleComponent } from './map/style/style.component';
         UserPageLayerService,
         UserPageService,
         Configuration,
-        BaseRequestOptions,
         ServerService,
         geoJSONService,
         MyCubeService,

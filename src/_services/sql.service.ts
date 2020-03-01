@@ -1,7 +1,6 @@
 import 'rxjs/add/operator/map';
 import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Configuration } from '../_api/api.constants';
@@ -68,7 +67,7 @@ export class SQLService {
     public getConstraints = (schema: string, table: string): Observable<any> => {
         return this._http.get(this.actionUrl + 'constraints?schema=' + schema + '&table=' + table, this.options)
     }
-    
+
     public CreateCommentTable = (layerName: string): Observable<any> => {
         return this._http.get(this.actionUrl + 'createcommenttable?table=' + layerName, this.options)
             // .map((response: Response) => <any>response.json())
@@ -91,7 +90,7 @@ export class SQLService {
             headers: new HttpHeaders({
             //"Content-Type": "multipart/form-data",
             'Accept': 'application/json',
-            'Authorization': 'Bearer ' + this.token,   
+            'Authorization': 'Bearer ' + this.token,
                }), reportProgress: true
           }
         console.log(formdata)
@@ -99,12 +98,12 @@ export class SQLService {
             .pipe(catchError(this.handleError));
     }
 
-    public addCommentWithoutGeom = (comment:MyCubeComment): Observable<any> => {        
+    public addCommentWithoutGeom = (comment:MyCubeComment): Observable<any> => {
         return this._http.post(this.actionUrl + 'addcommentwithoutgeom',JSON.stringify(comment), this.options)
             .pipe(catchError(this.handleError));
     }
 
-    public addAnyCommentWithoutGeom = (comment:MyCubeComment): Observable<any> => {        
+    public addAnyCommentWithoutGeom = (comment:MyCubeComment): Observable<any> => {
         return this._http.post(this.actionUrl + 'addanycommentwithoutgeom',JSON.stringify(comment), this.options)
             .pipe(catchError(this.handleError));
     }
@@ -189,7 +188,7 @@ export class SQLService {
 
     protected handleError(error: Response) {
         console.error('this is an error: ' + error.text);
-        return Observable.throw(error.json().error || 'any error');
+        return Observable.throw(error || 'any error');
     }
 
 }
