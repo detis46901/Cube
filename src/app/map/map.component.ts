@@ -45,8 +45,8 @@ import VectorLayer from 'ol/layer/Vector';
 
 export class MapComponent implements OnDestroy, OnInit{
     // This is necessary to access the html element to set the map target (after view init)!
-    @ViewChild("mapElement", {static: false}) mapElement: ElementRef;
-    @ViewChild("layers", {static: false}) layers: ElementRef;
+    @ViewChild("mapElement") mapElement: ElementRef;
+    @ViewChild("layers") layers: ElementRef;
     @Input() user: User;
     layerCtrl = new FormControl();
     filteredPermissions: Observable<LayerPermission[]>;

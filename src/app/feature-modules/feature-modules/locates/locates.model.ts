@@ -1,4 +1,5 @@
 import {Fill, Stroke, Circle, Style} from 'ol/style';
+import { Injectable } from "@angular/core";
 
 
 export class Locate {
@@ -65,6 +66,7 @@ export class disposition {
     ]
 }
 
+@Injectable()
 export class locateStyles {
     public load = new Style({
         image: new Circle({

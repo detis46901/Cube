@@ -10,6 +10,7 @@ import Collection from 'ol/Collection';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
+import { Injectable } from "@angular/core";
 
 export interface MapConfigView {
     projection: string;
@@ -67,6 +68,7 @@ export class featureList {
     feature: Feature
 }
 
+@Injectable()
 export class mapStyles {
     public image = new Circle({
         radius: 5,

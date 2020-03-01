@@ -14,7 +14,6 @@ import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component
 import { ModuleService } from '../../../_services/_module.service';
 import { Server } from '../../../_models/server.model';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-// import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
 import { InstanceDetailsComponent } from '../details/instanceDetails/instanceDetails.component';
 import { FeatureModulesAdminService } from '../../feature-modules/feature-modules-admin.service'
 

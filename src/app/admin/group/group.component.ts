@@ -19,8 +19,8 @@ import { Observable ,  Subscriber ,  from } from 'rxjs';
 })
 
 export class GroupComponent implements OnInit {
-    @ViewChild('groupUsers', {static: false})  groupSelectionList: any;
-    @ViewChild('groupGroups', {static: false}) userSelectionList: any;
+    @ViewChild('groupUsers')  groupSelectionList: any;
+    @ViewChild('groupGroups') userSelectionList: any;
 
     public objCode = 3;
     public type = "Group"

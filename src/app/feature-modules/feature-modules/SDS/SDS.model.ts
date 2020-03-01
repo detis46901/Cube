@@ -2,6 +2,7 @@ import {Fill, Stroke, Circle, Style} from 'ol/style';
 import Text from 'ol/style/Text';
 import { Subject } from 'rxjs';
 import { UserPageLayer, MyCubeField, MyCubeComment } from '_models/layer.model';
+import { Injectable } from "@angular/core";
 
 
 export class SDSConfig {
@@ -22,6 +23,7 @@ export class SDSConfig {
     showLog: boolean = false
 }
 
+@Injectable()
 export class SDSStyles {
     public load = new Style({
         image: new Circle({
