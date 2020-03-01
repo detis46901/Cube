@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, Input, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
 import { MapService } from './services/map.service';
 import { MapConfig } from './models/map.model';
 import { geoJSONService } from './services/geoJSON.service'
@@ -43,7 +43,7 @@ import VectorLayer from 'ol/layer/Vector';
     providers: [ServerService, geoJSONService, GroupService, GroupMemberService, MapConfigService]
 })
 
-export class MapComponent implements OnInit{
+export class MapComponent implements OnDestroy, OnInit{
     // This is necessary to access the html element to set the map target (after view init)!
     @ViewChild("mapElement") mapElement: ElementRef;
     @ViewChild("layers") layers: ElementRef;
@@ -94,6 +94,9 @@ export class MapComponent implements OnInit{
                 map(layer => layer ? this._filterPermissions(layer) : this.mapConfig.layerpermission.slice())
             );
         this.getMapConfig()
+    }
+
+    ngOnDestroy() {
     }
 
     private getMapConfig() { //id is used for public pages.

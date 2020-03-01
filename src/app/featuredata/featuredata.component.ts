@@ -8,7 +8,7 @@ import {  } from '@angular/forms';
 import { MapConfig } from 'app/map/models/map.model';
 import { Subscription } from 'rxjs/Subscription';
 import {environment} from 'environments/environment'
-var Autolinker = require( 'autolinker' );
+import Autolinker from 'autolinker';
 import { DateAdapter, NativeDateAdapter } from '@angular/material';
 
 
