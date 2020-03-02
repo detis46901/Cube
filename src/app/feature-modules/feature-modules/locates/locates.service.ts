@@ -1,23 +1,19 @@
 import { Injectable } from '@angular/core';
 import { UserPageLayer, MyCubeField } from '_models/layer.model';
-import { UserPageInstance } from '_models/module.model'
-import { MapConfig, mapStyles, featureList } from 'app/map/models/map.model';
+import { MapConfig, featureList } from 'app/map/models/map.model';
 import { geoJSONService } from 'app/map/services/geoJSON.service';
-import { Locate, locateStyles, disItem } from './locates.model'
+import { Locate, locateStyles } from './locates.model'
 import { StyleService } from './style.service'
 import { MatSnackBar } from '@angular/material/snack-bar';
-//http dependancies
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams, HttpRequest } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Observable ,  Subject } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 import { SQLService } from './../../../../_services/sql.service';
 import { MyCubeService } from './../../../map/services/mycube.service'
-import { Router } from '@angular/router'
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from 'ol/source/Vector';
-import {addProjection, addCoordinateTransforms, transform} from 'ol/proj';
+import {transform} from 'ol/proj';
 import { environment } from '../../../../environments/environment'
 
 

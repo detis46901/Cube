@@ -1,15 +1,8 @@
-import { Component, OnInit, Input, ComponentFactoryResolver, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter } from '@angular/core';
 import { UserPageLayer } from '_models/layer.model';
 import { MapConfig } from '../../../map/models/map.model';
-import { geoJSONService } from './../../../map/services/geoJSON.service';
-import { FeatureModulesService } from '../../feature-modules.service'
 import { Subscription } from 'rxjs';
-import { MyCubeField, MyCubeConfig, MyCubeComment } from "../../../../_models/layer.model"
-import { UserService } from '../../../../_services/_user.service'
-import { User } from '../../../../_models/user.model'
-import { filter } from 'rxjs/operators';
 import { WMSService } from '../../../map/services/wms.service'
-import { Image, coord, poly } from './open-aerial-map.model'
 import { MatDialog } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
 import { OpenAerialMapService } from './open-aerial-map.service'

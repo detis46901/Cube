@@ -1,24 +1,7 @@
 import { Injectable } from '@angular/core';
-import { UserPageLayer, MyCubeField } from '_models/layer.model';
-import { UserPageInstance } from '_models/module.model'
-import { MapConfig, mapStyles, featureList } from 'app/map/models/map.model';
-import { geoJSONService } from 'app/map/services/geoJSON.service';
-import { Locate, locateStyles } from './locates.model'
-import { MatSnackBar } from '@angular/material/snack-bar';
-//http dependancies
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http'
-import { Observable ,  Subject } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { SQLService } from './../../../../_services/sql.service';
-import { MyCubeService } from './../../../map/services/mycube.service'
-import { Router } from '@angular/router'
+import { locateStyles } from './locates.model'
 import Feature from 'ol/Feature';
 import {Fill, Stroke, Circle, Style} from 'ol/style';
-
-
-
-
-
 
 @Injectable()
 export class StyleService {

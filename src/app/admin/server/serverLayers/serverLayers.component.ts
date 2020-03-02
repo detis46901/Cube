@@ -15,7 +15,6 @@ import { environment } from 'environments/environment'
 import WMSCapabilities from 'ol/format/WMSCapabilities';
 import WMTSCapabilities from 'ol/format/WMTSCapabilities';
 import { parse } from 'path';
-import { request } from '@esri/arcgis-rest-request';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

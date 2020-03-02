@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { UserPageLayer, MyCubeField } from '_models/layer.model';
 import { UserPageInstance, ModuleInstance } from '_models/module.model'
 import { Layer } from '_models/layer.model'
-import { MapConfig, mapStyles, featureList } from 'app/map/models/map.model';
+import { MapConfig } from 'app/map/models/map.model';
 import { geoJSONService } from 'app/map/services/geoJSON.service';
 import { Locate, locateStyles } from './locates.model'
 //http dependancies
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http'
-import { Observable ,  Subject } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http'
+import { Subject } from 'rxjs';
 import { SQLService } from '../../../../_services/sql.service';
 import { MyCubeService } from '../../../map/services/mycube.service'
 import { UserPageLayerService } from '../../../../_services/_userPageLayer.service'

@@ -1,4 +1,4 @@
-import { Component, Output, OnDestroy } from '@angular/core';
+import { Component, Output, OnDestroy, enableProdMode } from '@angular/core';
 import { UserService } from '../../_services/_user.service';
 import { User } from '../../_models/user.model';
 import { SideNavService } from '../../_services/sidenav.service';
@@ -38,7 +38,7 @@ export class HomeComponent {
     public publicName: string;
     public loaded: boolean
 
-    constructor(private dataService: UserService, 
+    constructor(private dataService: UserService,
         private route: ActivatedRoute,
         private authenticationService: AuthenticationService) {
     }
@@ -76,8 +76,8 @@ export class HomeComponent {
                 this.loaded = true
             }
         })
-        
-        
+
+
     }
 
     private getAllItems(userID: number): Promise<any> {
@@ -93,8 +93,8 @@ export class HomeComponent {
                     resolve(false)
                 }
             });
-        
-        }) 
+
+        })
         return promise
     }
 
