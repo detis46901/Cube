@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter  } from '@angular/core';
 import { UserPageLayer } from '../../../_models/layer.model'
 import { CommonModule } from '@angular/common';
-import { MatButtonToggleChange } from '@angular/material';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MapConfig } from '../models/map.model';
 import { MapService } from '../services/map.service';
 import { SQLService } from '../../../_services/sql.service';
@@ -9,7 +9,8 @@ import { MyCubeField } from '_models/layer.model';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { StyleService } from '../services/style.service';
 import { LayerService } from '../../../_services/_layer.service';
-import { MatDialog, MatSliderChange } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSliderChange } from '@angular/material/slider';
 
 
 @Component({

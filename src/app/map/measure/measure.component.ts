@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, HostBinding, NgModule, ModuleWithProviders, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatButtonToggleChange } from '@angular/material';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MapConfig } from '../models/map.model'
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';

@@ -10,7 +10,8 @@ import { User } from '../../../../_models/user.model'
 import { filter } from 'rxjs/operators';
 import { WMSService } from '../../../map/services/wms.service'
 import { Image, coord, poly } from './open-aerial-map.model'
-import { MatDialog, MatSliderChange } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSliderChange } from '@angular/material/slider';
 import { OpenAerialMapService } from './open-aerial-map.service'
 
 @Component({

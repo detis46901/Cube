@@ -8,7 +8,8 @@ import { GroupMemberService } from '../../../_services/_groupMember.service';
 import { NewGroupComponent } from './newGroup/newGroup.component';
 import { EditGroupComponent } from './editGroup/editGroup.component'
 import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component';
-import { MatDialog, MatDialogRef, MatSelectionList } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSelectionList } from '@angular/material/list';
 import { Observable ,  Subscriber ,  from } from 'rxjs';
 
 @Component({

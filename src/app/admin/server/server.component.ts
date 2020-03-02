@@ -8,7 +8,7 @@ import { ServerNewComponent } from './serverNew/serverNew.component';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component';
 import { LayerNewComponent } from '../layer/layerNew/layerNew.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 
 

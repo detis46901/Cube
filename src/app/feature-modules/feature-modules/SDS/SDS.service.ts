@@ -16,7 +16,6 @@ import VectorSource from 'ol/source/Vector';
 import { transform } from 'ol/proj';
 import { environment } from '../../../../environments/environment'
 import { ModuleInstance } from '_models/module.model';
-import { ScrollDispatchModule } from '@angular/cdk/scrolling';
 
 @Injectable()
 export class SDSService {

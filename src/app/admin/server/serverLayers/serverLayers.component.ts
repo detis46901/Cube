@@ -4,7 +4,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ServerService } from '../../../../_services/_server.service';
 import { Server } from '../../../../_models/server.model';
 import { Layer, WMSLayer } from '../../../../_models/layer.model';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { LayerNewComponent } from '../../layer/layerNew/layerNew.component';
 import { Observable } from 'rxjs';
 

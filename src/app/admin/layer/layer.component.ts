@@ -14,8 +14,9 @@ import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component
 import { newMyCubeComponent } from './myCubeLayer/newMyCube.component';
 import { ServerService } from '../../../_services/_server.service';
 import { Server } from '../../../_models/server.model';
-import { MatDialog, MatDialogConfig } from '@angular/material';
-import {MatPaginator, MatTableDataSource} from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { LayerDetailsComponent } from '../details/layerDetails/layerDetails.component';
 
 @Component({

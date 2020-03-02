@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgModel } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Layer } from '../../../../_models/layer.model';
 import { User, Notif } from '../../../../_models/user.model';
 import { ServerService } from '../../../../_services/_server.service';

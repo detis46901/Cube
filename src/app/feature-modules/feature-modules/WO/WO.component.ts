@@ -31,9 +31,6 @@ export class WOComponent implements OnInit, OnDestroy {
   public myCubeConfig: MyCubeConfig;
   public myCubeData: MyCubeField[]
 
-
-
-
   constructor(
     public WOservice: WOService,
     public userService: UserService,

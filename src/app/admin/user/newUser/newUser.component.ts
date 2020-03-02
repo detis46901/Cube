@@ -3,7 +3,7 @@ import { User, UserPage } from '../../../../_models/user.model';
 import { UserService } from '../../../../_services/_user.service';
 import { GroupMember } from '../../../../_models/group.model';
 import { GroupMemberService } from '../../../../_services/_groupMember.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'environments/environment'
 
 @Component({

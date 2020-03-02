@@ -8,7 +8,7 @@ import { ModuleInstanceService } from '../../../../_services/_moduleInstance.ser
 import { ModuleInstance } from '../../../../_models/module.model'
 import { Clipboard } from 'ts-clipboard';
 import { Configuration } from '../../../../_api/api.constants';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { SDSConfig, SDSStyles } from './SDS.model'
 var Autolinker = require('autolinker');
 

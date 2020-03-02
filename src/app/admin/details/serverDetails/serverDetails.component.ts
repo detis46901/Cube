@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Server } from '../../../../_models/server.model';
 import { User, Notif } from '../../../../_models/user.model';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { NotifService } from '../../../../_services/notification.service';
 import { ServerService } from '../../../../_services/_server.service';
 import { UserService } from '../../../../_services/_user.service';

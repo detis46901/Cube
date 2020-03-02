@@ -11,7 +11,7 @@ import { LayerPermissionService } from '../../../../_services/_layerPermission.s
 import { ModulePermissionService } from '../../../../_services/_modulePermission.service'
 import { UserPageLayerService } from '../../../../_services/_userPageLayer.service';
 import { UserPageInstanceService } from '../../../../_services/_userPageInstance.service'
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { FeatureModulesAdminService } from '../../../feature-modules/feature-modules-admin.service'
 
 /************************************************************************************************************************************************************

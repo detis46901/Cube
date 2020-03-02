@@ -7,12 +7,12 @@ import { ServerService } from '../../../../_services/_server.service';
 import { Layer, WMSLayer } from '../../../../_models/layer.model';
 import { Server } from '../../../../_models/server.model';
 import { LayerPermission } from '../../../../_models/layer.model';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ModulePermissionComponent } from '../modulePermission/modulePermission.component';
 import { User } from '../../../../_models/user.model';
 import { GroupService } from '../../../../_services/_group.service';
 import { Group } from '../../../../_models/group.model';
-import {MAT_DIALOG_DATA} from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
     selector: 'instance-new',

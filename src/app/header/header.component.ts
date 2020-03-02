@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SideNavService } from "../../_services/sidenav.service";
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { User, Notif } from '../../_models/user.model';
 import { UserPage } from '../../_models/user.model';
 import { UserService } from '../../_services/_user.service';

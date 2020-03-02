@@ -8,7 +8,7 @@ import { SQLService } from '../../../../_services/sql.service';
 import { Layer, MyCubeField } from '../../../../_models/layer.model';
 import { Server } from '../../../../_models/server.model';
 import { LayerPermissionComponent } from '../layerPermission/layerPermission.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'layer-new',

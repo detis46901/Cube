@@ -13,7 +13,7 @@
 
 <mat-dialog-content>
     <!-- form with input boxes for server changes -->
-    <form #f="ngForm">
+    <form #f="ng-form">
         <!-- server ID is set by CUBE -->
         <mat-form-field class="row">
             <input matInput name="serverDetailID" [(ngModel)]="server.ID" placeholder="ID" value="{{server.ID}}" [disabled]="true">

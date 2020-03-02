@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgModel } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { User, Notif } from '../../../../_models/user.model';
 import { UserService } from '../../../../_services/_user.service';
 import { GroupService } from '../../../../_services/_group.service';

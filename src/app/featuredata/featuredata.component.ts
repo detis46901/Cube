@@ -9,7 +9,7 @@ import { MapConfig } from 'app/map/models/map.model';
 import { Subscription } from 'rxjs';
 import {environment} from 'environments/environment'
 import Autolinker from 'autolinker';
-import { DateAdapter, NativeDateAdapter } from '@angular/material';
+import { DateAdapter, NativeDateAdapter } from '@angular/material/core';
 
 
 @Component({

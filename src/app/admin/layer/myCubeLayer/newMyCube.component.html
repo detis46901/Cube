@@ -9,7 +9,7 @@
 <hr>
 
 <mat-dialog-content>
-    <form #f="ngForm">
+    <form #f="ng-form">
         <!-- name entry box -->
         <mat-form-field class="row" id="nameEntry">
             <input matInput id="myCube_newlayername" name="myCube_newlayername" value="{{layerName}}" required
@@ -23,7 +23,7 @@
         </mat-form-field>
         <br>
 
-        <form #g="ngForm">
+        <form #g="ng-form">
             <!-- field entry box -->
             <mat-form-field class="row" id="field1Entry" name="field1Entry">
                 <input matInput id="name" name="name" [(ngModel)]="newLayerField1.field" autocomplete="off" required

@@ -13,7 +13,7 @@
 
 <mat-dialog-content>
     <!-- contains the input boxes and checkboxes to edit user informations -->
-    <form #f="ngForm">
+    <form #f="ng-form">
         <!-- first name entry box -->
         <mat-form-field class="row" id="firstNameEntry">
             <input matInput name="userFirstName" [(ngModel)]="user.firstName" placeholder="First Name" value="{{user.firstName}}">

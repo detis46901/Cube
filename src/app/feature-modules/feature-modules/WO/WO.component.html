@@ -35,7 +35,7 @@
     <mat-form-field>
       <mat-label>Priority</mat-label>
       <mat-select [(value)]="WOservice.WOConfig.selectedWO.priority" [disabled]="WOservice.WOConfig.Mode == 'None'">
-        <mat-option *ngFor="let priority of WOservice.priority" [(value)]="priority">{{priority}}</mat-option>
+        <mat-option *ngFor="let priority of WOservice.priority" [value]="priority">{{priority}}</mat-option>
       </mat-select>
     </mat-form-field><br>
     <button *ngIf="WOservice.WOConfig.Mode == 'Add'" mat-button mat-raised-button color="primary" (click)='WOservice.createWorkOrder()' [disabled]='WOservice.WOConfig.selectedWO.WOTypeID == null'>Enter</button>
