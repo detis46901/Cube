@@ -51,6 +51,7 @@ export class LayerPermissionComponent implements OnInit {
             .GetByLayer(this.layerID)
             .subscribe((data: LayerPermission[]) => {
                 this.layerPermissions = data;
+                console.log(data)
                 for (let p of data) {
                     //If permission applies to a user
                     if (p.userID && !p.groupID) {
@@ -162,7 +163,7 @@ export class LayerPermissionComponent implements OnInit {
         }
     }
 
-    // 2/8/18: permless users/groups are not being updated correctly once an object is deleted. Object deletion should add the object that was 
+    // 2/8/18: permless users/groups are not being updated correctly once an object is deleted. Object deletion should add the object that was
     // deleted to the correct permless list
     public deleteLayerPermission(perm: LayerPermission): void {
         this.currDeletedPermObj = perm

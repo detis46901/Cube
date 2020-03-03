@@ -14,7 +14,7 @@
 
     <!-- box to hold the entry fields -->
     <mat-dialog-content>
-        <form #f="ng-form">
+        <form #f="ngForm">
             <!-- name input box -->
             <mat-form-field id="nameBlock">
                 <input matInput id="editGroupName" name="editGroupName" [(ngModel)]="group.name" type="text" placeholder="Group Name" required>

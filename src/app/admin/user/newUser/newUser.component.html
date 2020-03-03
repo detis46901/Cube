@@ -13,7 +13,7 @@ Private <mat-slide-toggle name="booBoy" [(ngModel)]="publicFilter" (change)="app
 
 <mat-dialog-content>
     <!-- form for the entry and check boxes -->
-    <form #f="ng-form">
+    <form #f="ngForm">
         <!-- first name entry box -->
         <span>
             <mat-form-field *ngIf="!publicFilter" class="row" id="firstNameEntry">

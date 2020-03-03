@@ -21,7 +21,7 @@
                         {{currPage}}
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <div cdkDropList (cdkDropListDropped)="dropPage('test1234')">
+                <div cdkDropList (cdkDropListDropped)="dropPage('$event')">
                     <table *ngFor="let userPage of mapConfig.userpages" style="position:relative; width:100%; right:4px" data-toggle="buttons" cdkDrag>
                         <tr>
                             <span>
@@ -124,7 +124,7 @@
                 <!-- options menu for each layer -->
                 <div>
                     <mat-radio-group [disabled]="disableCurrent" class="example-radio-group" [(ngModel)]="mapConfig.currentLayer" cdkDropList
-                        (cdkDropListDropped)="dropLayer('test1234')">
+                        (cdkDropListDropped)="dropLayer('$event')">
                         <div *ngFor="let userpagelayer of mapConfig.userpagelayers" cdkDrag>
                             <!--let activeUPL of UPLs?-->
                             <button  *ngIf="!public" button mat-icon-button [matMenuTriggerFor]="menu">

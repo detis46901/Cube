@@ -10,7 +10,7 @@ import { Clipboard } from 'ts-clipboard';
 import { Configuration } from '../../../../_api/api.constants';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SDSConfig, SDSStyles } from './SDS.model'
-var Autolinker = require('autolinker');
+import Autolinker from 'autolinker';
 
 
 

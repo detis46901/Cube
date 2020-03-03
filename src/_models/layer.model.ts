@@ -1,6 +1,8 @@
 import { Server } from './server.model'
 import { MyCubeStyle } from './style.model'
 import { UserPageInstance, ModulePermission } from './module.model'
+import { User } from './user.model';
+import { Group } from './group.model';
 
 export class Layer {
     ID: number;
@@ -29,6 +31,8 @@ export class LayerPermission {
     layerID: number;
     layer: Layer;
     groupID: number;
+    user: User;
+    group: Group;
 }
 
 export class LayerClass extends Layer {

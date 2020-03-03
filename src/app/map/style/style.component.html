@@ -32,7 +32,7 @@
         <br>
     </form>
     <form *ngIf="mapConfig.currentLayer.layer.layerType != 'MyCube'">
-        <mat-slider name="styleopacity" style="width:100%" [max]="100" [step]="1" [value]="100" [thumbLabel]="true" (change)="setOpacity('test1234')" [(ngModel)]="opacity"></mat-slider><br>Opacity<br>
+        <mat-slider name="styleopacity" style="width:100%" [max]="100" [step]="1" [value]="100" [thumbLabel]="true" (change)="setOpacity('$event')" [(ngModel)]="opacity"></mat-slider><br>Opacity<br>
         {{opacity}}
     </form>
 

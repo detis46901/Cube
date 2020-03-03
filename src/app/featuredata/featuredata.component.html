@@ -76,7 +76,7 @@
             <br><button id="showAuto" mat-button (click)='showAuto = !showAuto'>{{showAuto ? 'Hide Feature Changes' :
                 'Show
                 Feature Changes'}}</button>
-            <input style="display: none" #fileInput type="file" (change)="onFileSelected('test1234')">
+            <input style="display: none" #fileInput type="file" (change)="onFileSelected('$event')">
             <button mat-button (click)="fileInput.click()">
                 <mat-icon>attach_file</mat-icon><span *ngIf="newComment.file">Attached</span>
             </button>

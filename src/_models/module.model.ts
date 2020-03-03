@@ -1,3 +1,6 @@
+import { User } from "./user.model";
+import { Group } from "./group.model";
+
 export class Module {
     ID?: number;
     identity: string;
@@ -27,6 +30,8 @@ export class ModulePermission {
     userID: number;
     moduleInstanceID: number;
     groupID: number;
+    user: User
+    group: Group
 }
 
 export class UserPageInstance {

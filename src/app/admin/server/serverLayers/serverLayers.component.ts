@@ -2,7 +2,7 @@
 import {map,  retry, catchError } from 'rxjs/operators';
 import { Component, OnInit, Input } from '@angular/core';
 import { ServerService } from '../../../../_services/_server.service';
-import { Server } from '../../../../_models/server.model';
+import { Server, ArcGISServer } from '../../../../_models/server.model';
 import { Layer, WMSLayer } from '../../../../_models/layer.model';
 import { MatDialog } from '@angular/material/dialog';
 import { LayerNewComponent } from '../../layer/layerNew/layerNew.component';
@@ -29,9 +29,9 @@ export class ServerLayersComponent implements OnInit {
     public http: HttpClient;
     public server = new Server
     private options: any;
-    private layers: any;
-    private folders: any;
-    private services: string[];
+    public layers: any;
+    public folders: any;
+    public services: ArcGISServer[];
     private selectedService: any;
     private selectedServiceType: any;
     selected = new FormControl(0)
@@ -68,27 +68,24 @@ export class ServerLayersComponent implements OnInit {
 
     public getCapabilities = (url): Observable<any> => {
         //This needs to be looked at.  This will work fine as long as Geoserver is on the same server as Cube.  It may not work otherwise if CORS isn't set up on Geoserver.
-        console.log(url)
-        return this.http.get(url).pipe(
-            map((response: Response) => <any>response.text()));
+        // console.log(url, { observe: 'body', responseType: 'text'} )
+        return this.http.get(url, { observe: 'body', responseType: 'text'} )
     }
 
     public getArcGIS = (url): Observable<any> => {
         console.log("getArcGIS (with proxy server")
         //This may also need to be addressed as well.  While unlikely, this won't work if the ArcGIS server is on the same domain as Cube.
         let url2 = url.split('//')[1]
-        return this.http.get(environment.proxyUrl + '/' + url2).pipe(
-            map((response: Response) => {return response.json()}));
+        return this.http.get(environment.proxyUrl + '/' + url2)
     }
     public getCapabilitiesWithProxy = (url): Observable<any> => {
         console.log("getArcGIS (with proxy server")
         //This may also need to be addressed as well.  While unlikely, this won't work if the ArcGIS server is on the same domain as Cube.
         let url2 = url.split('//')[1]
-        return this.http.get(environment.proxyUrl + '/' + url2).pipe(
-            map((response: Response) => {return response.text()}));
+        return this.http.get(environment.proxyUrl + '/' + url2, { observe: 'body', responseType: 'text'} )
     }
 
-    private getLayers(serv: Server): void {
+    public getLayers(serv: Server): void {
         switch (serv.serverType) {
             case "Geoserver WMS": {
                 this.getGeoserverLayers()
@@ -119,8 +116,8 @@ export class ServerLayersComponent implements OnInit {
                     let result = parser.read(data);
                     this.layers = result['Capability']['Layer']['Layer']
                     console.log(this.layers)
-                },
-                err => { console.log('error') }
+                }
+               // err => console.log('HTTP Error', err)
             )
     }
     private getWMTSLayers(): void {
@@ -137,10 +134,11 @@ export class ServerLayersComponent implements OnInit {
             .subscribe((data) => {
                 this.folders = data['folders']
                 this.services = data['services']
+                console.log(this.services)
                 this.selected.setValue(0)
             })
     }
-    private getServices(folder: string): void {
+    public getServices(folder: string): void {
         console.log('getServices')
         this.getArcGIS(this.server.serverURL + '/' + folder + '?f=pjson')
             .subscribe((data) => {
@@ -155,7 +153,7 @@ export class ServerLayersComponent implements OnInit {
         return element['type'] == "MapServer"
     }
 
-    private getArcGISLayers(service: string): void {
+    public getArcGISLayers(service: string): void {
         console.log('getArcGISLayers')
         if (this.server.serverType == 'ArcGIS WMTS') {
             this.getArcGISWMTS(service)
@@ -236,7 +234,7 @@ export class ServerLayersComponent implements OnInit {
         // needs to add implementation for services
     }
 
-    private openCreateLayer(layer) {
+    public openCreateLayer(layer) {
         console.log('in openCreateLayer')
         console.log(layer)
         console.log(this.selectedService)

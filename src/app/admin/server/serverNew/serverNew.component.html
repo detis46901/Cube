@@ -13,7 +13,7 @@
 
 <mat-dialog-content>
     <!-- form with multiple inputs for adding a new server -->
-    <form #f="ng-form">
+    <form #f="ngForm">
         <!-- server name input box -->
         <mat-form-field class="row">
             <input matInput name="newServName" [(ngModel)]="newserver.serverName" required type="text" placeholder="Server Name">

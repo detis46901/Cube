@@ -376,7 +376,7 @@ export class MapComponent implements OnDestroy, OnInit{
         this.mapService.isolate(layer)
     }
 
-    public dropLayer(event: CdkDragDrop<string[]>) {
+    public dropLayer(event) {
         moveItemInArray(this.mapService.mapConfig.userpagelayers, event.previousIndex, event.currentIndex);
         let i: number = 0
         this.mapService.mapConfig.userpagelayers.forEach((x) => {
