@@ -60,6 +60,9 @@ export class MapConfig {
     myCubeConfig: MyCubeConfig;
     myCubeData: MyCubeField[]
     myCubeComment: MyCubeComment[]
+    searchResult: Feature;
+    searchResultSource: VectorSource
+    searchResultLayer: VectorLayer
 }
 
 export class featureList {

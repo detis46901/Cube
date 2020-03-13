@@ -16,6 +16,7 @@
                 Loading stuff...
               </ng-template> -->
                 <!-- settings button -->
+
                 <button *ngIf="!public" mat-icon-button title="User Settings" [matMenuTriggerFor]="menu">
                     <mat-icon id="settingsButton">settings</mat-icon>
                 </button>
@@ -40,7 +41,10 @@
                 <button mat-icon-button *ngIf="geocodingService.isTracking == false" (click)="setTracking(true)">
                     <mat-icon>location_off</mat-icon>
                 </button>
-            </h3>
+                <button mat-icon-button (click)="showSearch = !showSearch">
+                  <mat-icon>search</mat-icon>
+              </button>
+              </h3>
         </span>
 
         <!-- Settings menu including api key, password, page edit, and profile settings -->

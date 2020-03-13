@@ -64,6 +64,7 @@ export class FeatureDataComponent implements OnInit  {
         this.myCubeConfig = this.mapConfig.myCubeConfig
         this.myCubeComments = this.mapConfig.myCubeComment
         this.URL = environment.apiUrl + '/api/sql/getimage'
+        this.userID = this.mapConfig.user.ID
     }
 
     public setCorrectDate() {
@@ -88,6 +89,7 @@ export class FeatureDataComponent implements OnInit  {
     public updateMyCube(mycube: MyCubeField): void {
         let FID: number = this.myCubeData[0].value //required in the case the blur occurs when the object is unselected.
         if (mycube.changed) {
+          mycube.links = Autolinker.parse(mycube.value, { urls: true, email: true })
             if (mycube.type == "date") {
                 if (mycube.value) {
                 console.log(mycube.value)
@@ -131,13 +133,14 @@ export class FeatureDataComponent implements OnInit  {
         let ntext: RegExp = /'/g
         this.newComment.comment = this.newComment.comment.replace(ntext, "''")
         this.newComment.table = this.myCubeConfig.table
-        this.newComment.featureID = this.myCubeData[0].value
-        this.newComment.userID = this.userID
+        this.newComment.featureid = this.myCubeData[0].value
+        this.newComment.userid = this.mapConfig.user.ID
         this.newComment.firstName = this.userFirstName
         this.newComment.lastName = this.userLastName
         this.newComment.auto = false
         //Need to add the time in here so it looks right when it is added immediately
         this.myCubeComments.push(this.newComment)
+        console.log(this.newComment)
         this.sqlservice
             .addCommentWithoutGeom(this.newComment)
             .subscribe((data) => {
@@ -153,6 +156,12 @@ export class FeatureDataComponent implements OnInit  {
         this.commentText = ""
     }
 
+    public changeTextField(mycube: MyCubeField) {
+      console.log(mycube.links)
+      mycube.changed = true
+      mycube.links = Autolinker.parse(mycube.value, { urls: true, email: true })
+    }
+
     public deleteMyCubeComment(table, comment:MyCubeComment) {
         this.myCubeComments.splice(this.myCubeComments.indexOf(comment),1)
         this.sqlservice
@@ -164,7 +173,7 @@ export class FeatureDataComponent implements OnInit  {
     }
 
     public onFileSelected(event) {
-        console.log(event.target.files[0]) //This will be used for adding an image to a comment for myCube.
+        console.log(event) //This will be used for adding an image to a comment for myCube.
         this.newComment.file = <File>event.target.files[0] //Send to the bytea data type field in comment table.
     }
 

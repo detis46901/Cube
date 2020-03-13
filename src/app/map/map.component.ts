@@ -10,7 +10,7 @@ import { GroupService } from '../../_services/_group.service';
 import { LayerPermission, UserPageLayer, MyCubeField, MyCubeComment } from '../../_models/layer.model';
 import { UserPage, User } from '../../_models/user.model';
 import { UserPageLayerService } from '../../_services/_userPageLayer.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { PageConfigComponent2 } from '../admin2/user/pageconfig/pageconfig.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Clipboard } from 'ts-clipboard';
@@ -27,13 +27,14 @@ import Feature from 'ol/Feature';
 import { GeocodingService } from './services/geocoding.service'
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FormControl } from '@angular/forms';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap, debounceTime } from 'rxjs/operators';
 import { MapConfigService } from './../../_services/mapConfig.service'
 import { environment } from 'environments/environment'
 import Map from 'ol/Map';
 import VectorSource from 'ol/source/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
 import VectorLayer from 'ol/layer/Vector';
+import Point from 'ol/geom/Point'
 
 @Component({
     moduleId: module.id,
@@ -49,7 +50,9 @@ export class MapComponent implements OnDestroy, OnInit{
     @ViewChild("layers") layers: ElementRef;
     @Input() user: User;
     layerCtrl = new FormControl();
+    searchCtrl = new FormControl();
     filteredPermissions: Observable<LayerPermission[]>;
+    searchResults$: Observable<any>;
     public showNewLayer: boolean = false
     public mapConfig = new MapConfig;
     public token: string;
@@ -67,6 +70,8 @@ export class MapComponent implements OnDestroy, OnInit{
     public myCubeData: MyCubeField;
     public myCubeComments: MyCubeComment[]
     public disableCurrent: Boolean //used to make sure that a layer can't be set as current until it's ready
+    public showSearch: boolean
+    public searchresults: any
 
     constructor(
         public snackBar: MatSnackBar,
@@ -93,7 +98,22 @@ export class MapComponent implements OnDestroy, OnInit{
                 map(value => typeof value === 'string' ? value : value.layer.layerName),
                 map(layer => layer ? this._filterPermissions(layer) : this.mapConfig.layerpermission.slice())
             );
+            this.searchResults$ = this.searchCtrl.valueChanges
+            .pipe(
+              startWith(''),
+              debounceTime(300),
+               switchMap(value => {
+                 if (value !== '') {
+                  this.geocodingService.search(value).subscribe((x) => {this.searchresults = x})
+                   return this.geocodingService.search(value) }
+                  else {
+                    return of(null)
+                  }
+
+               })
+            );
         this.getMapConfig()
+
     }
 
     ngOnDestroy() {
@@ -103,7 +123,6 @@ export class MapComponent implements OnDestroy, OnInit{
         this.mapConfig.user = this.user
         this.mapConfigService.GetSingle(this.mapConfig)
             .subscribe((x) => {
-              console.log(x)
                 this.mapConfig = x
                 this.currPage = this.mapConfig.currentpage.page
                 this.mapConfig.selectedFeatures = new Collection<Feature>() //for some reason, this is necessary
@@ -211,6 +230,12 @@ export class MapComponent implements OnDestroy, OnInit{
         return layerPermission ? layerPermission.layer.layerName : undefined;
     }
 
+
+  private _filterSearch(value: string): LayerPermission[] {
+    const filterValue = value.toLowerCase();
+    return this.mapConfig.layerpermission.filter(layerPermission => layerPermission.layer.layerName.toLowerCase().includes(filterValue));
+}
+
     public addLayer(): void {
         let LP = new LayerPermission
         LP = this.mapConfig.layerpermission.find(x => x == this.layerCtrl.value)
@@ -226,6 +251,23 @@ export class MapComponent implements OnDestroy, OnInit{
         this.showNewLayer = false
         this.layerCtrl.setValue('')
     }
+
+    public addSearch(searchResults): void {
+      console.log('addsearch')
+      console.log(searchResults)
+      console.log([+searchResults.lon, +searchResults.lat])
+      this.mapConfig.view.animate({ zoom: 18, center: transform([+searchResults.lon, +searchResults.lat], 'EPSG:4326', 'EPSG:3857') })
+      this.mapConfig.searchResult = new Feature({
+        geometry: new Point(transform([+searchResults.lon, +searchResults.lat], 'EPSG:4326', 'EPSG:3857')),
+        name: 'My Polygon'
+      })
+      this.mapConfig.selectedFeatureSource.addFeature(this.mapConfig.searchResult)
+    }
+
+    public searchDisplay(results) {
+      return results && results.display_name ? results.display_name : '';
+    }
+
     getDefaultPage(): Promise<any> {
         let promise = new Promise((resolve, reject) => {
             this.userPageService
@@ -376,7 +418,9 @@ export class MapComponent implements OnDestroy, OnInit{
         this.mapService.isolate(layer)
     }
 
-    public dropLayer(event) {
+    public dropLayer(event: CdkDragDrop<string[]>) {
+      console.log('dropLater')
+      console.log(event)
         moveItemInArray(this.mapService.mapConfig.userpagelayers, event.previousIndex, event.currentIndex);
         let i: number = 0
         this.mapService.mapConfig.userpagelayers.forEach((x) => {

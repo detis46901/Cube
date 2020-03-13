@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserPageLayer, MyCubeField } from '_models/layer.model';
 import { MapConfig, featureList } from 'app/map/models/map.model';
 import { geoJSONService } from 'app/map/services/geoJSON.service';
-import { Locate, locateStyles } from './locates.model'
+import { Locate, locateStyles, locateConfig } from './locates.model'
 import { StyleService } from './style.service'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
@@ -31,8 +31,8 @@ export class LocatesService {
   public sortBy: string = "Address"
   public showSortBy: Boolean
   public layerState: string
-
   public message: string
+  public locateConfig = new Array<locateConfig>()
 
 
   constructor(private geojsonservice: geoJSONService,
@@ -151,6 +151,12 @@ export class LocatesService {
     this.layerState = 'current'
     this.reloadLayer()
     this.sendexpanded(true)
+    this.locateConfig.forEach((x) => {
+      if (x.moduleSettings['settings'][0]['setting']['value'] == layer.layer.ID) {
+        x.expanded = true
+        x.visible = true
+      }
+    })
     return true
   }
 
@@ -159,6 +165,12 @@ export class LocatesService {
     this.reloadLayer()
     this.sendexpanded(false)
     this.showSortBy = false
+    this.locateConfig.forEach((x) => {
+      if (x.moduleSettings['settings'][0]['setting']['value'] == layer.layer.ID) {
+        x.expanded = false
+        x.visible = false
+      }
+    })
     return true
   }
 

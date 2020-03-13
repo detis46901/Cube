@@ -32,6 +32,7 @@ export class HeaderComponent implements OnInit {
     public notifications: Notif[];
     public currUser$: Observable<User>;
     public public: boolean
+    public showSearch: boolean
 
     constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService, private notificationService: NotifService,
         public geocodingService: GeocodingService, private route: ActivatedRoute,) { }
@@ -44,7 +45,7 @@ export class HeaderComponent implements OnInit {
         this.getUserPageItems()
         if (this.public == true) {
             this.geocodingService.isTracking == false
-        } 
+        }
     }
 
     getObservable() {

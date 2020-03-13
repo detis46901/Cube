@@ -51,7 +51,7 @@
                                 date:'shortTime'}}</i>
 
                             <!-- delete button -->
-                            <button id="trashButton" *ngIf="userID == myCubeComment.userID" mat-button
+                            <button id="trashButton" *ngIf="mapConfig.user.ID == myCubeComment.userid" mat-button
                                 (click)='deleteMyCubeComment(myCubeConfig.table, myCubeComment)'>
                                 <mat-icon>delete</mat-icon>
                             </button>
@@ -76,7 +76,7 @@
             <br><button id="showAuto" mat-button (click)='showAuto = !showAuto'>{{showAuto ? 'Hide Feature Changes' :
                 'Show
                 Feature Changes'}}</button>
-            <input style="display: none" #fileInput type="file" (change)="onFileSelected('$event')">
+            <input style="display: none" #fileInput type="file" (change)="onFileSelected($event)">
             <button mat-button (click)="fileInput.click()">
                 <mat-icon>attach_file</mat-icon><span *ngIf="newComment.file">Attached</span>
             </button>
@@ -131,15 +131,10 @@
                                 <mat-form-field style="width:90%">
                                     <input type="text" matInput autocomplete='off' rows="3" [disabled]="!myCubeConfig.edit"
                                         [id]="myCube.field" ngModel placeholder="{{myCube.field}}" [(ngModel)]="myCube.value"
-                                        (change)="myCube.changed = true" (blur)="updateMyCube(myCube)">
+                                        (change)="changeTextField(myCube)" (blur)="updateMyCube(myCube)">
                                 </mat-form-field><br>
-                                <!-- <span [innerHTML]="myCube.value | linky"></span> -->
-                                <div *ngIf="myCube.value != null">
-                                    <div *ngFor="let url of Autolinker.parse(myCube.value)">
-                                        <div [innerHTML]="url.url | linky: {truncate: 32}"></div>
-                                        <div [innerHTML]="url.email | linky: {truncate: 32}"></div>
-                                        <!-- <span [innerHTML]="'<a href'"></span> -->
-                                    </div>
+                                <div *ngFor="let link of myCube.links">
+                                        <div><a target="_blank" [href]="link.url">Link</a> </div>
                                 </div>
                             </div>
                             <div *ngIf="myCube.constraints">

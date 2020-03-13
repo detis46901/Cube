@@ -3,6 +3,8 @@ import { MyCubeStyle } from './style.model'
 import { UserPageInstance, ModulePermission } from './module.model'
 import { User } from './user.model';
 import { Group } from './group.model';
+import {Match} from 'autolinker';
+
 
 export class Layer {
     ID: number;
@@ -59,6 +61,7 @@ export class UserPageLayer {
     olLayer: any
     updateInterval: any;
     userPageInstanceID: number;
+    userpageinstance: UserPageInstance;
     layerOrder: number;
 }
 
@@ -74,8 +77,13 @@ export class MyCubeField {
     options?: string[]
     label?: boolean;
     changed?: boolean;
-    links? = new Array<string>()
+    links?: any[]
     constraints? = new Array<MyCubeConstraint>()
+}
+
+export class MyCubeURLs {
+  url: string;
+  anchorTag: string;
 }
 
 export class MyCubeConfig {
@@ -86,12 +94,12 @@ export class MyCubeConfig {
 export class MyCubeComment {
     table: number | string;
     id: number;
-    userID: number;
+    userid: number;
     firstName: string;
     lastName: string;
     comment: string = "";
     geom: string;
-    featureID: string | number;
+    featureid: string | number;
     filename?: string;
     file?: File;
     auto: boolean;

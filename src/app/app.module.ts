@@ -102,6 +102,7 @@ import { MapService } from './map/services/map.service';
 import { StyleService } from './map/services/style.service';
 import { GeocodingService } from './map/services/geocoding.service';
 import { StyleComponent } from './map/style/style.component';
+import { SearchComponent } from './search/search.component';
 
 
 @NgModule({
@@ -129,7 +130,8 @@ import { StyleComponent } from './map/style/style.component';
         LayerFilterPipe,
         PageComponent2,
         PageConfigComponent2,
-        ConfirmDeleteComponent
+        ConfirmDeleteComponent,
+        SearchComponent
     ],
 
     entryComponents: [

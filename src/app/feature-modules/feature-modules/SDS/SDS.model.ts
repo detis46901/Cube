@@ -7,7 +7,11 @@ import { Injectable } from "@angular/core";
 
 export class SDSConfig {
     moduleInstanceID: number
+    layer: UserPageLayer
+    visible: boolean
     expanded: boolean
+    layerState: string
+    updateInterval: any
     moduleName: string
     moduleSettings: JSON
     filter: string;

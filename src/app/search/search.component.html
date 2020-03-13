@@ -1,0 +1,10 @@
+<form class="example-form">
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Search" aria-label="Layer" [matAutocomplete]="auto" [formControl]="layerCtrl">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let LP of results | async" [value]="LP">
+        <span>{{Something}}</span>
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>

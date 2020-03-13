@@ -1,4 +1,4 @@
-<mat-expansion-panel [disabled]="disabled == true" [expanded]="expanded" (opened)="expanded = true">
+<mat-expansion-panel *ngIf="disabled == false" [disabled]="disabled == true" [expanded]="expanded" (opened)="expanded = true">
   <mat-expansion-panel-header>
     <mat-panel-title>
       Drone Aerial Photos

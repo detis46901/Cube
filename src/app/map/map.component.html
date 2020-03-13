@@ -21,7 +21,7 @@
                         {{currPage}}
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <div cdkDropList (cdkDropListDropped)="dropPage('$event')">
+                <div cdkDropList (cdkDropListDropped)="dropPage($event)">
                     <table *ngFor="let userPage of mapConfig.userpages" style="position:relative; width:100%; right:4px" data-toggle="buttons" cdkDrag>
                         <tr>
                             <span>
@@ -124,7 +124,7 @@
                 <!-- options menu for each layer -->
                 <div>
                     <mat-radio-group [disabled]="disableCurrent" class="example-radio-group" [(ngModel)]="mapConfig.currentLayer" cdkDropList
-                        (cdkDropListDropped)="dropLayer('$event')">
+                        (cdkDropListDropped)="dropLayer($event)">
                         <div *ngFor="let userpagelayer of mapConfig.userpagelayers" cdkDrag>
                             <!--let activeUPL of UPLs?-->
                             <button  *ngIf="!public" button mat-icon-button [matMenuTriggerFor]="menu">
@@ -224,6 +224,16 @@
                           </mat-autocomplete>
                         </mat-form-field>
                     </form>
+                    <form class="example-form" *ngIf="showSearch">
+                      <mat-form-field class="example-full-width">
+                        <input matInput placeholder="Search" aria-label="Number" [matAutocomplete]="auto" [formControl]="searchCtrl" (keyup.enter)="addSearch(searchCtrl.value)">
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]='searchDisplay'>
+                          <mat-option *ngFor="let result of searchResults$ | async" [value]="result">
+                            <span>{{result.display_name}}</span>
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </form>
                 </div>
 
                 <!-- action row directly beneath layers with many different options for interaction -->
@@ -237,6 +247,9 @@
                             matTooltip="Layers" (click)="showNewLayer = !showNewLayer">
                             <mat-icon>layers</mat-icon>
                         </button>
+                        <button mat-icon-button (click)="showSearch = !showSearch">
+                          <mat-icon>search</mat-icon>
+                      </button>
                         <button mat-icon-button (click)="mapConfig.measureShow = !mapConfig.measureShow">
                             <mat-icon [ngClass]="mapConfig.measureShow ? 'selected-icon' : 'none'"
                                 matTooltip="Measure Toolbar">trending_flat</mat-icon>

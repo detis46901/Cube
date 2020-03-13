@@ -4,8 +4,9 @@ import { Subscription } from 'rxjs';
 import { LocatesService } from './locates.service'
 import { UserService } from '../../../../_services/_user.service'
 import { User } from '../../../../_models/user.model'
-import { locateStyles, Locate, disItem, disposition } from './locates.model'
+import { locateConfig, locateStyles, Locate, disItem, disposition } from './locates.model'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
+import { ModuleInstance } from '_models/module.model';
 
 
 @Component({
@@ -15,7 +16,8 @@ import { ModuleInstanceService } from '../../../../_services/_moduleInstance.ser
 })
 export class LocatesComponent implements OnInit, OnDestroy {
 
-  public moduleShow: boolean
+  public locateConfig = new locateConfig
+  public locateConfigID: number
   public locateInput: string;
   public ticktSubscription: Subscription;
   public ticket: Locate = null
@@ -35,14 +37,14 @@ export class LocatesComponent implements OnInit, OnDestroy {
   public disposition = new disposition
 
   constructor(
-    public locatesservice: LocatesService, 
-    public userService: UserService, 
-    public locateStyles: locateStyles, 
+    public locatesservice: LocatesService,
+    public userService: UserService,
+    public locateStyles: locateStyles,
     public moduleInstanceService: ModuleInstanceService
   ) {}
 
   @Input() mapConfig: MapConfig;
-  @Input() instanceID: number;
+  @Input() instance: ModuleInstance;
   @Input() user: string;
 
   ngOnInit() {
@@ -57,6 +59,8 @@ export class LocatesComponent implements OnInit, OnDestroy {
     this.tminus30 = new Date()
     this.tminus30.setDate(this.tminus30.getDate()-30)
     this.fromDate = this.tminus30
+    this.locateConfig.moduleSettings = this.instance.settings
+    this.locateConfigID = this.locatesservice.locateConfig.push(this.locateConfig) - 1
   }
 
   ngOnDestroy() {
@@ -72,13 +76,13 @@ export class LocatesComponent implements OnInit, OnDestroy {
 
   importLocate() {
     console.log('importLocate')
-    this.locatesservice.parseLocateInput(this.locateInput, this.mapConfig, this.instanceID)
+    this.locatesservice.parseLocateInput(this.locateInput, this.mapConfig, this.instance.ID)
     this.locateInput = ""
   }
 
   completeTicket() {
     this.ticket.disposition = this.completedDisposition.value
-    this.locatesservice.completeTicket(this.mapConfig, this.instanceID, this.ticket, this.completedNote, this.userName)
+    this.locatesservice.completeTicket(this.mapConfig, this.instance.ID, this.ticket, this.completedNote, this.userName)
     this.completedNote = null
     this.completedDisposition = new disItem
     this.ticket = null
@@ -89,7 +93,7 @@ export class LocatesComponent implements OnInit, OnDestroy {
       .subscribe((data: User) => {
         this.userName = data.firstName + " " + data.lastName
       })
-      this.moduleInstanceService.GetSingle(this.instanceID)
+      this.moduleInstanceService.GetSingle(this.instance.ID)
     .subscribe((x) => {
       this.moduleSettings = x.settings
     })
@@ -117,7 +121,7 @@ export class LocatesComponent implements OnInit, OnDestroy {
 
   }
   private runFilter() {
-    let i = this.locatesservice.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == this.instanceID);
+    let i = this.locatesservice.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == this.instance.ID);
     let obj = this.locatesservice.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'myCube Layer Identity (integer)');
     if (this.locatesservice.mapConfig.currentLayer.layer.ID === +obj['setting']['value']) {
       this.locatesservice.reloadLayer();
@@ -144,7 +148,7 @@ export class LocatesComponent implements OnInit, OnDestroy {
   }
 
   public getEmailConfiguration() {
-    this.moduleInstanceService.GetSingle(this.instanceID)
+    this.moduleInstanceService.GetSingle(this.instance.ID)
     .subscribe((x) => {
       this.moduleSettings = x.settings
       console.log(this.moduleSettings)

@@ -1,75 +1,82 @@
 <!--This is the page that is served by angular cli, external scripts are declared here-->
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Cube</title>
-        <base href="/">
 
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <!-- <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css"> -->
-        <!-- <link href="https://fonts.googleapis.com/css?family=Lato|Nunito|Open+Sans|Raleway|Roboto|Roboto+Slab|Slabo+27px|Source+Sans+Pro" rel="stylesheet"> -->
-        <!-- <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script> -->
-        <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script> -->
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script> -->
-        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
-        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
-        <link rel="icon" type="image/x-icon" href="favicon.ico">
-    </head>
-    <body>
-        <app>
-            <style>
-                app {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100vh;
-                
-                    color: white;
-                    text-transform: uppercase;
-                    font-family: -apple-system,
-                        BlinkMacSystemFont,
-                        "Segoe UI",
-                        Roboto,
-                        Oxygen-Sans,
-                        Ubuntu,
-                        Cantarell,
-                        Helvetica,
-                        sans-serif;
-                    font-size: 2.5em;
-                    text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
-                }
-                body {
-                    background-image: url("assets/blur1.jpg");
-                    background-repeat: no-repeat;
-                    background-size: cover;
-                    /* background: linear-gradient(to bottom, #646464 0%, white 100%); */
-                    margin: 0;
-                    padding: 0;
-                }
-                
-                @keyframes dots {
-                    50% {
-                    transform: translateY(-.4rem);
-                    }
-                    100% {
-                    transform: translateY(0);
-                    }
-                }
-                
-                .d {
-                    animation: dots 1.5s ease-out infinite;
-                }
-                .d-2 {
-                    animation-delay: .5s;
-                }
-                .d-3 {
-                    animation-delay: 1s;
-                }
-            </style>
-            
-            Loading Cube<span class="d">.</span><span class="d d-2">.</span><span class="d d-3">.</span>
-        </app>
-    </body>
+<head>
+  <meta charset="utf-8">
+  <title>Cube</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css"> -->
+  <!-- <link href="https://fonts.googleapis.com/css?family=Lato|Nunito|Open+Sans|Raleway|Roboto|Roboto+Slab|Slabo+27px|Source+Sans+Pro" rel="stylesheet"> -->
+  <!-- <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script> -->
+  <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script> -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script> -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+  <app>
+    <style>
+      app {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+
+        color: white;
+        text-transform: uppercase;
+        font-family: -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          Oxygen-Sans,
+          Ubuntu,
+          Cantarell,
+          Helvetica,
+          sans-serif;
+        font-size: 2.5em;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      body {
+        background-image: url("assets/blur1.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        /* background: linear-gradient(to bottom, #646464 0%, white 100%); */
+        margin: 0;
+        padding: 0;
+      }
+
+      @keyframes dots {
+        50% {
+          transform: translateY(-.4rem);
+        }
+
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      .d {
+        animation: dots 1.5s ease-out infinite;
+      }
+
+      .d-2 {
+        animation-delay: .5s;
+      }
+
+      .d-3 {
+        animation-delay: 1s;
+      }
+    </style>
+
+    Loading Cube<span class="d">.</span><span class="d d-2">.</span><span class="d d-3">.</span>
+  </app>
+</body>
+
 </html>

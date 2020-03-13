@@ -92,7 +92,7 @@
         </form>
         <hr>
         <!-- box to contain the add new layer input box and confirm button -->
-        <form class="form" #f="ngForm">
+        <form class="form" #g="ngForm">
             <div class="row">
                 <mat-form-field id="pageConfigNewInstance">
                     <mat-select [(ngModel)]="newUserPageInstance.module_instance" required name="instance" placeholder="Add Instance">
@@ -103,7 +103,7 @@
                 </mat-form-field>
 
                 <!-- add layer button -->
-                <button style="position:relative; left:15px" mat-button id="pageConfigSubmit" (click)="addInstance(newUserPageInstance)" [disabled]="!f.valid">Add Instance</button>
+                <button style="position:relative; left:15px" mat-button id="pageConfigSubmit" (click)="addInstance(newUserPageInstance)" [disabled]="!g.valid">Add Instance</button>
             </div>
         </form>
     <!-- </td></tr></table> -->

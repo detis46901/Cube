@@ -52,7 +52,6 @@ export class SDSComponent implements OnInit, OnDestroy {
   @Input() instance: ModuleInstance;
 
   ngOnInit() {
-
     this.expandedSubscription = this.SDSservice.getExpanded().subscribe(expanded => { this.SDSConfig.expanded = expanded })
     this.SDSConfigSubscription = this.SDSservice.getSDSConfig().subscribe(SDSConfig => { this.SDSConfig = SDSConfig[this.SDSConfigID] })
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -74,6 +73,9 @@ export class SDSComponent implements OnInit, OnDestroy {
             this.SDSConfig.itemData[this.SDSConfig.itemData.indexOf(x)].type = 'id'
             this.SDSConfig.linkedField = x.field
             this.SDSConfigID = this.SDSservice.SDSConfig.push(this.SDSConfig) - 1
+            console.log('SDSConfig pushed')
+            // this.SDSservice.getLayerfromSDSConfigID(this.SDSConfig)
+            // this.SDSservice.setReload(SDSConfig)
           }
         })
       })
@@ -132,10 +134,10 @@ export class SDSComponent implements OnInit, OnDestroy {
     let i = this.SDSservice.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == this.instance.ID);
     let obj = this.SDSservice.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'myCube Layer Identity (integer)');
     if (this.SDSservice.mapConfig.currentLayer.layer.ID === +obj['setting']['value']) {
-      this.SDSservice.reloadLayer();
+      this.SDSservice.reloadLayer(this.SDSservice.mapConfig.currentLayer);
     }
     else {
-      this.SDSservice.reloadLayer();
+      this.SDSservice.reloadLayer(this.SDSservice.mapConfig.currentLayer);
     }
   }
 
@@ -156,7 +158,12 @@ export class SDSComponent implements OnInit, OnDestroy {
       if (x.type == "date") {
         //need to do something about this because the date picker uses the day before the actual date.  There's a time zone issue.
       }
+      if (x.value && (x.type == 'text' || x.type == 'character varying')) {
+        console.log(x.value)
+        x.links = Autolinker.parse(x.value, { urls: true, email: true })
+      }
     })
+
     this.SDSConfig.selectedItem = itemID
     this.SDSConfig.tab = 'Item'
     // I'm using the existing data it gets when you first select and item to feed the item data.  If it needs to be more dynamic, the code below will help to do that.

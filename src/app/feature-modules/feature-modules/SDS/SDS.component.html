@@ -1,4 +1,4 @@
-<mat-expansion-panel [expanded]="SDSConfig.expanded == true">
+<mat-expansion-panel *ngIf="SDSConfig.visible == true" [expanded]="SDSConfig.expanded == true">
   <mat-expansion-panel-header>
     <mat-panel-title>
       {{instance.name}}
@@ -54,11 +54,9 @@
             </mat-form-field><br>
             <!-- <span [innerHTML]="item.value | linky"></span> -->
             <div *ngIf="item.value != null">
-              <div *ngFor="let url of Autolinker.parse(item.value)">
-                <div [innerHTML]="url.url | linky: {truncate: 32}"></div>
-                <div [innerHTML]="url.email | linky: {truncate: 32}"></div>
-                <span [innerHTML]="'<a href'"></span>
-              </div>
+              <div *ngFor="let link of item.links">
+                <div><a target="_blank" [href]="link.url">Link</a> </div>
+        </div>
             </div>
           </div>
           <div *ngIf="item.constraints">
@@ -147,11 +145,9 @@
             </mat-form-field><br>
             <!-- <span [innerHTML]="item.value | linky"></span> -->
             <div *ngIf="item.value != null">
-              <div *ngFor="let url of Autolinker.parse(item.value)">
-                <div [innerHTML]="url.url | linky: {truncate: 32}"></div>
-                <div [innerHTML]="url.email | linky: {truncate: 32}"></div>
-                <span [innerHTML]="'<a href'"></span>
-              </div>
+              <div *ngFor="let link of item.links">
+                <div><a target="_blank" [href]="link.url">Link</a> </div>
+        </div>
             </div>
           </div>
           <div *ngIf="item.constraints">

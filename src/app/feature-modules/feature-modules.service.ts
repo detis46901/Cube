@@ -14,7 +14,7 @@ import { WOService } from './feature-modules/WO/WO.service'
 export class FeatureModulesService {
 
   //add [module identity] + 'service: ' + [module service name]
-  constructor(    
+  constructor(
     public locatesservice: LocatesService, public openAerialMapservice: OpenAerialMapService, public SDSservice: SDSService, public WOservice: WOService) { }
 
   public determineModule() {

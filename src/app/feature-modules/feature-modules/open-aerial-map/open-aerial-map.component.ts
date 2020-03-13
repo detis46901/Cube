@@ -6,6 +6,7 @@ import { WMSService } from '../../../map/services/wms.service'
 import { MatDialog } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
 import { OpenAerialMapService } from './open-aerial-map.service'
+import { ModuleInstance } from '_models/module.model';
 
 @Component({
   selector: 'app-open-aerial-map',
@@ -17,7 +18,7 @@ export class OpenAerialMapComponent implements OnInit {
   constructor(private wmsService: WMSService, private dialog: MatDialog, public openAerialMapService: OpenAerialMapService) {}
 
   @Input() mapConfig: MapConfig;
-  @Input() instanceID: number;
+  @Input() instance: ModuleInstance;
   @Input() user: string;
   public canEdit: boolean = false
   public disabled: boolean = true

@@ -1,4 +1,4 @@
-<mat-expansion-panel [disabled]="expanded == false" [expanded]="expanded == true">
+<mat-expansion-panel *ngIf="locateConfig.visible==true" [disabled]="expanded == false" [expanded]="expanded == true">
   <mat-expansion-panel-header>
     <mat-panel-title>
       Locates
