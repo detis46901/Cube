@@ -161,4 +161,21 @@
         </mat-expansion-panel>
     </mat-accordion>
 </div>
+<div *ngIf="searchResults">
+  <!-- second accordian menu handling features -->
+  <mat-accordion class="message-data"
+      style="background-color: rgba(255,255,255,.7); display: block; position: absolute; bottom: 0px; left: 0px">
+      <mat-expansion-panel [expanded]="open === true">
+          <mat-expansion-panel-header>
+              <!-- header -->
+              <mat-panel-title>
+                  Search Results
+              </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div style="max-height: 260px; overflow: auto">
+            <div *ngIf="mapConfig.currentLayer.layer.layerType == 'MyCube'"><button mat-icon-button (click)="createPoint()">Create Point</button></div>
+          </div>
+      </mat-expansion-panel>
+  </mat-accordion>
+</div>
 <br>

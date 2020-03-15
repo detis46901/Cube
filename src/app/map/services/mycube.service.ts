@@ -114,12 +114,10 @@ export class MyCubeService extends SQLService {
   }
 
   getsingles(table, id): Promise<any> {
-    let matches
     let promise = new Promise(resolve => {
       this.GetSingle('mycube.t' + table, id)
         .subscribe((sdata: JSON) => {
           let z = 0
-          console.log(sdata[0][0])
           for (let key in sdata[0][0]) {
             if (sdata[0][0].hasOwnProperty(key)) {
               if (z != 0) { this.cubeData[z].value = sdata[0][0][key] }
@@ -127,10 +125,8 @@ export class MyCubeService extends SQLService {
                 this.cubeData[z].value += environment.localez
               } //this is required because the datepicker converts a date (with no locale) to local and it will lose a day with this.
               if (this.cubeData[z].value && (this.cubeData[z].type == 'text' || this.cubeData[z].type == 'character varying')) {
-                console.log(this.cubeData[z].value)
                 this.cubeData[z].links = Autolinker.parse(this.cubeData[z].value, { urls: true, email: true })
               }
-              console.log(this.cubeData[z].links)
               z++
             }
           }

@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MyCubeField, MyCubeConfig, MyCubeComment } from "../../_models/layer.model"
 import { SQLService } from "../../_services/sql.service"
 import { MyCubeService } from "../map/services/mycube.service"
+import { GeocodingService } from "../map/services/geocoding.service"
 import { WMSService } from '../map/services/wms.service'
 import { FormControl } from '@angular/forms';
 import {  } from '@angular/forms';
@@ -10,6 +11,8 @@ import { Subscription } from 'rxjs';
 import {environment} from 'environments/environment'
 import Autolinker from 'autolinker';
 import { DateAdapter, NativeDateAdapter } from '@angular/material/core';
+import GeoJSON from 'ol/format/GeoJSON';
+import { MapService} from '../map/services/map.service'
 
 
 @Component({
@@ -35,14 +38,23 @@ export class FeatureDataComponent implements OnInit  {
     public myCubeComments: MyCubeComment[]
     public subscription: Subscription
     public message: string;
+    public searchResults: string;
     private myCubeSubscription: Subscription;
     private myCubeCommentSubscription: Subscription;
     private editSubscription: Subscription;
+    private searchResultsSubscription: Subscription;
     private newCommentFile: File;
     public URL: string
 
 
-    constructor(private sqlservice: SQLService, private myCubeService: MyCubeService, private wmsService: WMSService, dateAdapter: DateAdapter<NativeDateAdapter>) {
+
+    constructor(private sqlservice: SQLService,
+      private myCubeService: MyCubeService,
+      private geocodingService: GeocodingService,
+      private wmsService: WMSService,
+      dateAdapter: DateAdapter<NativeDateAdapter>,
+      private sqlService: SQLService,
+      private mapService: MapService) {
         // subscribe to map component messages
         dateAdapter.setLocale('en-RU');
     }
@@ -55,10 +67,11 @@ export class FeatureDataComponent implements OnInit  {
         this.userID = currentUser && currentUser.userID;
         this.userFirstName = currentUser && currentUser.firstName
         this.userLastName = currentUser && currentUser.lastName
-        this.subscription = this.myCubeService.getWMS().subscribe(message => { this.message = message; this.myCubeData = null });
-        this.myCubeSubscription = this.myCubeService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; this.message = null});
+        this.subscription = this.myCubeService.getWMS().subscribe(message => { this.message = message; this.myCubeData = null; this.searchResults = null });
+        this.myCubeSubscription = this.myCubeService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; this.message = null; this.searchResults = null});
         this.myCubeCommentSubscription = this.myCubeService.getMyCubeComments().subscribe(myCubeComments => { this.myCubeComments = myCubeComments; this.commentText = ""; this.newComment.file = null })
         this.editSubscription = this.myCubeService.getMyCubeConfig().subscribe(data => { this.myCubeConfig = data });
+        this.searchResultsSubscription = this.geocodingService.getSearchResults().subscribe(searchResults => {this.searchResults = searchResults; this.message = null; this.myCubeData = null;})
         this.open = true
         this.myCubeData = this.mapConfig.myCubeData
         this.myCubeConfig = this.mapConfig.myCubeConfig
@@ -157,7 +170,6 @@ export class FeatureDataComponent implements OnInit  {
     }
 
     public changeTextField(mycube: MyCubeField) {
-      console.log(mycube.links)
       mycube.changed = true
       mycube.links = Autolinker.parse(mycube.value, { urls: true, email: true })
     }
@@ -187,5 +199,34 @@ export class FeatureDataComponent implements OnInit  {
             .subscribe((result) => {
                 console.log(result)
             })
+    }
+    public createPoint() {
+      console.log("creating Point")
+      let featureID: number
+      console.log(this.mapConfig.currentLayer.layer)
+      if (this.mapConfig.currentLayer.layer.layerType == "MyCube") {
+        this.mapConfig.searchResultSource.forEachFeature((x) => {
+          let featurejson = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(x);
+          this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
+              .subscribe((data) => {
+                  console.log(data)
+                  try { featureID = data[0][0].id }
+                  catch (e) {
+                      this.sqlService.fixGeometry(this.mapConfig.currentLayer.layer.ID)
+                          .subscribe((x) => {
+                          })
+                  }
+                  x.setId(featureID);
+                  x.setProperties(data[0]);
+                  this.mapConfig.currentLayer.source.addFeature(x)
+                  //x.setStyle(stylefunction)
+                  this.mapService.getFeatureList();
+                  this.myCubeService.createAutoMyCubeComment(true, "Object Created", featureID, this.mapConfig.currentLayer.layer.ID, this.userID, featurejson['geometry'])
+                  this.searchResults = null
+                  this.mapConfig.searchResultSource.clear()
+              })
+        })
+
+      }
     }
 }

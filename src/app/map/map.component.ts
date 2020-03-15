@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
 import { MapService } from './services/map.service';
-import { MapConfig } from './models/map.model';
+import { MapConfig, mapStyles } from './models/map.model';
 import { geoJSONService } from './services/geoJSON.service'
 import { UserPageService } from '../../_services/_userPage.service';
 import { MyCubeService } from './services/mycube.service'
@@ -27,7 +27,7 @@ import Feature from 'ol/Feature';
 import { GeocodingService } from './services/geocoding.service'
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FormControl } from '@angular/forms';
-import { map, startWith, switchMap, debounceTime } from 'rxjs/operators';
+import { map, startWith, switchMap, debounceTime, tap, finalize } from 'rxjs/operators';
 import { MapConfigService } from './../../_services/mapConfig.service'
 import { environment } from 'environments/environment'
 import Map from 'ol/Map';
@@ -72,6 +72,7 @@ export class MapComponent implements OnDestroy, OnInit{
     public disableCurrent: Boolean //used to make sure that a layer can't be set as current until it's ready
     public showSearch: boolean
     public searchresults: any
+    public isLoading: boolean
 
     constructor(
         public snackBar: MatSnackBar,
@@ -83,6 +84,7 @@ export class MapComponent implements OnDestroy, OnInit{
         private dialog: MatDialog,
         private geocodingService: GeocodingService,
         private mapConfigService: MapConfigService,
+        private mapSetyles: mapStyles
     ) {}
 
     //Angular component initialization
@@ -102,16 +104,25 @@ export class MapComponent implements OnDestroy, OnInit{
             .pipe(
               startWith(''),
               debounceTime(300),
+              tap(() => this.isLoading = true), //This is supposed to show a spinner but I can't get it to work right now.  Oh, Well...
                switchMap(value => {
                  if (value !== '') {
-                  this.geocodingService.search(value).subscribe((x) => {this.searchresults = x})
+
+                  this.isLoading = false
+                  this.geocodingService.search(value).subscribe((x) => {
+                    console.log(x)
+                    this.searchresults = x
+                  })
                    return this.geocodingService.search(value) }
                   else {
+                    this.isLoading = false
                     return of(null)
                   }
+               }
+              )
 
-               })
             );
+
         this.getMapConfig()
 
     }
@@ -230,12 +241,6 @@ export class MapComponent implements OnDestroy, OnInit{
         return layerPermission ? layerPermission.layer.layerName : undefined;
     }
 
-
-  private _filterSearch(value: string): LayerPermission[] {
-    const filterValue = value.toLowerCase();
-    return this.mapConfig.layerpermission.filter(layerPermission => layerPermission.layer.layerName.toLowerCase().includes(filterValue));
-}
-
     public addLayer(): void {
         let LP = new LayerPermission
         LP = this.mapConfig.layerpermission.find(x => x == this.layerCtrl.value)
@@ -253,15 +258,28 @@ export class MapComponent implements OnDestroy, OnInit{
     }
 
     public addSearch(searchResults): void {
-      console.log('addsearch')
-      console.log(searchResults)
-      console.log([+searchResults.lon, +searchResults.lat])
+      if (searchResults.length) {return} //If there aren't any results, don't do anything.
+      if (this.mapConfig.searchResultSource) {this.mapConfig.searchResultSource.clear()}
       this.mapConfig.view.animate({ zoom: 18, center: transform([+searchResults.lon, +searchResults.lat], 'EPSG:4326', 'EPSG:3857') })
       this.mapConfig.searchResult = new Feature({
-        geometry: new Point(transform([+searchResults.lon, +searchResults.lat], 'EPSG:4326', 'EPSG:3857')),
-        name: 'My Polygon'
+        geometry: new Point(transform([+searchResults.lon, +searchResults.lat], 'EPSG:4326', 'EPSG:3857'))
       })
-      this.mapConfig.selectedFeatureSource.addFeature(this.mapConfig.searchResult)
+      this.mapConfig.searchResultSource = new VectorSource()
+      this.mapConfig.searchResultSource.addFeature(this.mapConfig.searchResult)
+      this.mapConfig.searchResultLayer = new VectorLayer({ source: this.mapConfig.searchResultSource})
+      this.mapConfig.searchResultLayer.setStyle(this.mapSetyles.selected)
+      this.mapConfig.selectedFeatureLayer.setZIndex(1000)
+      this.mapConfig.map.addLayer(this.mapConfig.searchResultLayer)
+      this.geocodingService.sendSearchResults(searchResults)
+    }
+
+    public setSearch() {
+      this.showSearch = !this.showSearch
+      if (!this.showSearch) {
+        if (this.mapConfig.searchResultSource){this.mapConfig.searchResultSource.clear()}
+        this.searchCtrl.setValue(null)
+        this.geocodingService.sendSearchResults(null)
+      }
     }
 
     public searchDisplay(results) {

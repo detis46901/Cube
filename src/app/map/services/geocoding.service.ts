@@ -11,7 +11,8 @@ import { Fill, Stroke, Circle, Style } from 'ol/style';
 import Point from 'ol/geom/Point';
 import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 import { NominatimJS } from 'nominatim-search';
-import { Observable, from } from 'rxjs';
+import { Subject, Observable, from } from 'rxjs';
+import { environment } from 'environments/environment';
 
 
 @Injectable()
@@ -26,9 +27,23 @@ export class GeocodingService {
   geolocation = new Geolocation()
   accuracyFeature = new Feature();
   positionFeature = new Feature();
+  private mycubesearch = new Subject<any>()
+
 
   constructor(http: HttpClient) {
     this.http = http;
+  }
+
+  sendSearchResults(searchResults: string) {
+    this.mycubesearch.next(searchResults)
+  }
+
+  clearSearchResults() {
+    this.mycubesearch.next()
+  }
+
+  getSearchResults(): Observable<any> {
+    return this.mycubesearch.asObservable()
   }
 
   geocode(address: string) {
@@ -41,22 +56,9 @@ export class GeocodingService {
       .pipe(catchError(this.handleError))
   }
 
-  getLatLng(address: string): JSON {
-    NominatimJS.search({
-      q: address
-    }).then(results => {
-      // do something with results
-      console.log(results)
-      return results
-    }).catch(error => {
-      // error ocurred
-    });
-    return
-  }
-
   public search(search): Observable<any> {
-     console.log(search)
-     return from(NominatimJS.search({ q: search, viewbox: "-86.5,40.3,-86,40.6", bounded: 1}))
+    //There might need to be other domain level options, such as using Google Maps for geocoding, go in here.
+     return from(NominatimJS.search({ q: search, viewbox: environment.viewbox, bounded: 1}))
     //return this.http.get("https://nominatim.openstreetmap.org/search?street=" + search + "&city=Kokomo&state=IN")
   }
 

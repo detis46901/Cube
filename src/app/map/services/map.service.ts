@@ -37,6 +37,7 @@ import XYZ from 'ol/source/XYZ';
 import OSM from 'ol/source/OSM';
 import BingMaps from 'ol/source/BingMaps';
 import Point from "ol/geom/Point";
+import { GeocodingService } from '../services/geocoding.service'
 
 @Injectable()
 export class MapService {
@@ -67,7 +68,8 @@ export class MapService {
         private mapstyles: mapStyles,
         private styleService: StyleService,
         private featuremodulesservice: FeatureModulesService,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private geocodingService: GeocodingService
     ) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.userID = currentUser && currentUser.userID;
@@ -406,7 +408,6 @@ export class MapService {
                     if (this.mapConfig.currentLayer == layer) {
                         this.getFeatureList();
                         if (this.mapConfig.selectedFeature) {
-                            console.log("runInterval+selectedFeature is true")
                             this.mapConfig.selectedFeature = layer.source.getFeatureById(this.mapConfig.selectedFeature.getId());
                             if (this.mapConfig.selectedFeature) {
                                 this.selectMyCubeFeature(layer, true)
@@ -678,7 +679,7 @@ export class MapService {
         }
     }
 
-    private clearFeature() {
+    public clearFeature() {
         if (this.mapConfig.selectedFeature) {this.mapConfig.selectedFeatureSource.clear()}
         if (this.featuremodulesservice.clearFeature(this.mapConfig, this.mapConfig.currentLayer)) { return }
         if (this.mapConfig.selectedFeature) {
@@ -790,7 +791,7 @@ export class MapService {
             })
     }
 
-    private getFeatureList() {
+    public getFeatureList() {
         let k: number = 0;
         let tempList = new Array<featureList>();
         try {

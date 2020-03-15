@@ -82,15 +82,19 @@
                             <mat-icon matTooltip="Satellite Images">map</mat-icon>
                         </button>
                         <mat-divider *ngIf="mapConfig.editmode"></mat-divider>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'"
+                        <button mat-icon-button *ngIf="mapConfig.showFilterButton"
                             (click)="mapConfig.filterShow = !mapConfig.filterShow">
                             <mat-icon [ngClass]="mapConfig.filterShow ? 'selected-icon' : 'none'" matTooltip="Filter">
                                 filter_list</mat-icon>
                         </button>
-                        <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'"
+                        <!-- <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'"
                             (click)="mapConfig.styleShow = !mapConfig.styleShow">
                             <mat-icon [ngClass]="mapConfig.styleShow ? 'selected-icon' : 'none'" matTooltip="Style">
                                 style</mat-icon>
+                        </button> -->
+                        <button mat-icon-button *ngIf="mapConfig.showStyleButton"
+                            (click)="mapConfig.styleShow = !mapConfig.styleShow">
+                            <mat-icon [class.selected-icon]="mapConfig.styleShow" matTooltip="Style">style</mat-icon>
                         </button>
                         <button mat-icon-button *ngIf="mapConfig.editmode" (click)="mapService.draw('Point')">
                             <mat-icon matTooltip="Create Point">control_point</mat-icon>
@@ -131,22 +135,10 @@
                                 <mat-icon>more_vert</mat-icon>
                             </button>
                             <mat-menu #menu="matMenu">
-                                <!-- <button *ngIf="canEditLayer(userpagelayer.layerID)" mat-menu-item>
-                                <i style="margin-right:15px; color:#757575;" class="fas fa-pencil-alt"></i>
-                                <span>Edit Layer</span>
-                            </button>
-                            <button *ngIf="canEditPerm(userpagelayer.layerID)" mat-menu-item>
-                                <mat-icon>assignment</mat-icon>
-                                <span>Edit Permissions</span>
-                            </button> -->
                             <button mat-menu-item *ngIf="!userpagelayer.ID" (click)="addUserPageLayer(userpagelayer)">
                                 <mat-icon>add</mat-icon>
                                 <span>Add to Page</span>
                             </button>
-                            <!-- <button mat-menu-item (click)="mapService.zoomToLayer(userpagelayer)">
-                                <mat-icon>zoom_in</mat-icon>
-                                <span>Zoom To Layer</span>
-                            </button> -->
                                 <button *ngIf="userpagelayer.defaultON; else defaultoff"
                                     (click)="mapService.toggleDefaultON(userpagelayer)" mat-menu-item>
                                     <mat-icon>done</mat-icon>
@@ -228,9 +220,12 @@
                       <mat-form-field class="example-full-width">
                         <input matInput placeholder="Search" aria-label="Number" [matAutocomplete]="auto" [formControl]="searchCtrl" (keyup.enter)="addSearch(searchCtrl.value)">
                         <mat-autocomplete #auto="matAutocomplete" [displayWith]='searchDisplay'>
+                          <mat-option *ngIf="isLoading" class="is-loading"><mat-spinner diameter="20"></mat-spinner></mat-option>
+                          <ng-container *ngIf="!isLoading">
                           <mat-option *ngFor="let result of searchResults$ | async" [value]="result">
                             <span>{{result.display_name}}</span>
                           </mat-option>
+                        </ng-container>
                         </mat-autocomplete>
                       </mat-form-field>
                     </form>
@@ -247,7 +242,7 @@
                             matTooltip="Layers" (click)="showNewLayer = !showNewLayer">
                             <mat-icon>layers</mat-icon>
                         </button>
-                        <button mat-icon-button (click)="showSearch = !showSearch">
+                        <button mat-icon-button (click)="setSearch()">
                           <mat-icon>search</mat-icon>
                       </button>
                         <button mat-icon-button (click)="mapConfig.measureShow = !mapConfig.measureShow">
