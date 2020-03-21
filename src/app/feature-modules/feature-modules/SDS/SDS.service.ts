@@ -286,6 +286,7 @@ export class SDSService {
   }
 
   public selectFeature(mapConfig: MapConfig, layer: UserPageLayer, aftersave?: boolean): boolean {
+    this.mapConfig.showDeleteButton = true
     let instanceID: number
     this.mapConfig.userpageinstances.forEach((x) => {
       if (layer.userPageInstanceID == x.ID) {
@@ -302,6 +303,7 @@ export class SDSService {
       this.clearForm(SDSConfigID)
       this.sqlService.GetAnySingle('modules.m' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'data', this.SDSConfig[SDSConfigID].moduleSettings['settings'][2]['setting']['value'], mapConfig.selectedFeature.get('id'))
         .subscribe((data: any) => {
+          console.log(data)
           this.SDSConfig[SDSConfigID].list = data[0]
           this.SDSConfig[SDSConfigID].list.forEach((x) => {
             if (x[this.SDSConfig[SDSConfigID].label] == null) {

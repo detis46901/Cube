@@ -94,6 +94,33 @@ export class FeatureModulesService {
     let tempInstance = mapConfig.userpageinstances[tempinstancerow]
     let j = 'this.' + tempInstance.module_instance.module.identity + 'service'
     console.log(j)
-    return eval(j + '.draw(mapConfig, layer, featuretype)')
+    try {
+      return eval(j + '.draw(mapConfig, layer, featuretype)')
+    }
+    catch(error) {
+      return false
+    }
+  }
+  public checkSearch(mapConfig: MapConfig, layer:UserPageLayer): string {
+    if (!(layer.userPageInstanceID > 0)) {return "Create Point"}
+    let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
+    let tempInstance = mapConfig.userpageinstances[tempinstancerow]
+    let j = 'this.' + tempInstance.module_instance.module.identity + 'service'
+    console.log(j)
+    try {
+      return eval(j + '.checkSearch(mapConfig, layer)')
+    }
+    catch(error) {
+      return "Create Point"
+    }
+  }
+
+  public createPoint(mapConfig: MapConfig, layer:UserPageLayer): boolean {
+    if (!(layer.userPageInstanceID > 0)) {return false}
+    let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
+    let tempInstance = mapConfig.userpageinstances[tempinstancerow]
+    let j = 'this.' + tempInstance.module_instance.module.identity + 'service'
+    console.log(j)
+    return eval(j + '.createPoint(mapConfig, layer)')
   }
 }

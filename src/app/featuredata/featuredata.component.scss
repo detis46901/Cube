@@ -20,11 +20,12 @@ hr {
     font: 16px black;
 }
 
-.feature-data .mat-expansion-panel-header-title, 
+.feature-data .mat-expansion-panel-header-title,
 .example-headers-align .mat-expansion-panel-header-description {
   flex-basis: 0;
   width: 254px;
   overflow-wrap: break-word;
+  overflow-y: auto;
 }
 
 .feature-data .mat-expansion-panel-header-description {
@@ -32,7 +33,7 @@ hr {
   align-items: center;
 }
 
-.comment-data .mat-expansion-panel-header-title, 
+.comment-data .mat-expansion-panel-header-title,
 .example-headers-align .mat-expansion-panel-header-description {
   flex-basis: 0;
   width: 354px;

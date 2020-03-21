@@ -21,8 +21,8 @@
                         {{currPage}}
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <div cdkDropList (cdkDropListDropped)="dropPage($event)">
-                    <table *ngFor="let userPage of mapConfig.userpages" style="position:relative; width:100%; right:4px" data-toggle="buttons" cdkDrag>
+                <div style="max-height: 50vh; overflow-y: auto" cdkDropList (cdkDropListDropped)="dropPage($event)">
+                    <table *ngFor="let userPage of mapConfig.userpages" style="position:relative; right:4px;" data-toggle="buttons" cdkDrag>
                         <tr>
                             <span>
                                 <button button mat-icon-button [matMenuTriggerFor]="menu">
@@ -87,11 +87,6 @@
                             <mat-icon [ngClass]="mapConfig.filterShow ? 'selected-icon' : 'none'" matTooltip="Filter">
                                 filter_list</mat-icon>
                         </button>
-                        <!-- <button mat-icon-button *ngIf="mapConfig.currentLayer.layer.layerType=='MyCube'"
-                            (click)="mapConfig.styleShow = !mapConfig.styleShow">
-                            <mat-icon [ngClass]="mapConfig.styleShow ? 'selected-icon' : 'none'" matTooltip="Style">
-                                style</mat-icon>
-                        </button> -->
                         <button mat-icon-button *ngIf="mapConfig.showStyleButton"
                             (click)="mapConfig.styleShow = !mapConfig.styleShow">
                             <mat-icon [class.selected-icon]="mapConfig.styleShow" matTooltip="Style">style</mat-icon>
@@ -126,7 +121,7 @@
                 </mat-expansion-panel-header>
 
                 <!-- options menu for each layer -->
-                <div>
+                <div style="max-height: 50vh; overflow-y: auto; overflow-x:hidden;" >
                     <mat-radio-group [disabled]="disableCurrent" class="example-radio-group" [(ngModel)]="mapConfig.currentLayer" cdkDropList
                         (cdkDropListDropped)="dropLayer($event)">
                         <div *ngFor="let userpagelayer of mapConfig.userpagelayers" cdkDrag>
@@ -219,7 +214,7 @@
                     <form class="example-form" *ngIf="showSearch">
                       <mat-form-field class="example-full-width">
                         <input matInput placeholder="Search" aria-label="Number" [matAutocomplete]="auto" [formControl]="searchCtrl" (keyup.enter)="addSearch(searchCtrl.value)">
-                        <mat-autocomplete #auto="matAutocomplete" [displayWith]='searchDisplay'>
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addSearch(searchCtrl.value)" [displayWith]='searchDisplay'>
                           <mat-option *ngIf="isLoading" class="is-loading"><mat-spinner diameter="20"></mat-spinner></mat-option>
                           <ng-container *ngIf="!isLoading">
                           <mat-option *ngFor="let result of searchResults$ | async" [value]="result">

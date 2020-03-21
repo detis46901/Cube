@@ -17,7 +17,7 @@
   <button mat-button mat-raised-button color="primary" matTooltip="Use this in an Excel Data Connection"
     (click)="copyToClipboard('sql/getsheets?schema=modules&table=m' + SDSConfig.moduleInstanceID + 'data')">Export</button>
   <!-- <button mat-button mat-raised-button color="primary" (click)="openDashboard()">Dashboard</button> -->
-  <div *ngIf="SDSConfig.tab=='Input' && mapConfig.selectedFeature != null" label="Input"><br>
+  <div *ngIf="SDSConfig.tab=='Input' && mapConfig.selectedFeature != null" label="Input" class="SDSComponent"><br>
     <div *ngFor="let item of SDSConfig.itemData">
       <div *ngIf="item.type=='id'"></div>
       <div *ngIf="item.type=='geom'"></div>

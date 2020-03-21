@@ -76,6 +76,31 @@ export class WOService {
     return true
   }
 
+  public checkSearch(mapConfig: MapConfig, layer:UserPageLayer): string {
+    console.log("Checking search in WO")
+    return "Create Work Order"
+  }
+
+  public createPoint(mapConfig: MapConfig, layer:UserPageLayer): boolean {
+    this.WOConfig.Mode = "Add"
+    this.mapConfig.drawMode = ''
+    this.mapConfig.searchResultSource.forEachFeature((x) => {
+      this.mapConfig.selectedFeature = x.clone()
+      this.mapConfig.selectedFeatures.clear()
+      this.mapConfig.selectedFeatures.push(x)
+      this.fillAddress()
+      x.setStyle(this.styleService.styleFunction(this.mapConfig.selectedFeature, 'selected'))
+      this.WOConfig.modify = new Modify({ features: this.mapConfig.selectedFeatures });
+      this.mapConfig.map.addInteraction(this.WOConfig.modify);
+      this.WOConfig.selectedWO = new workOrder
+      this.WOConfig.selectedWO.createdBy = this.mapConfig.user.ID
+      this.WOConfig.selectedWO.feature = x
+      this.WOConfig.tab = "Details"
+    })
+
+
+    return true
+  }
   public getConfig(instance: ModuleInstance) {
     this.WOConfig.WOTypes = instance.settings['settings'][0]['setting']['WOType']
     this.WOConfig.assignedTo = instance.settings['settings'][1]['setting']['AssignedTo']

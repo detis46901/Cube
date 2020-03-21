@@ -8,7 +8,7 @@
   </mat-expansion-panel-header>
 
 
-  <!-- <mat-slider style="width:100%" [max]="100" [step]="1" [value]="100" [thumbLabel]="true" (change)="setOpacity('$event')"></mat-slider><br>Opacity<br> -->
+  <mat-slider style="width:100%" [max]="100" [step]="1" [value]="100" [thumbLabel]="true" (change)="setOpacity($event)"></mat-slider><br>Opacity<br>
   Selected Image<br>
   {{openAerialMapService.selectedImage.title}}<br>
   {{openAerialMapService.selectedImage.acquisition_start}} - {{openAerialMapService.selectedImage.acquisition_end}}

@@ -15,6 +15,7 @@ import WMTSCapabilities from 'ol/format/WMTSCapabilities';
 import WMTS from 'ol/source/WMTS';
 import { optionsFromCapabilities } from 'ol/source/WMTS';
 import TileLayer from 'ol/layer/Tile';
+import TileSource from 'ol/source/Tile';
 
 @Injectable()
 export class OpenAerialMapService {
@@ -55,7 +56,8 @@ export class OpenAerialMapService {
   public setCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
     this.createImageClickEvent()
     this.setDisabled(false)
-    return false
+    this.mapConfig.showStyleButton = true
+    return true
   }
   public unsetCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
     olobservable.unByKey(this.AOMClickKey);
@@ -63,7 +65,7 @@ export class OpenAerialMapService {
     return true
   }
   public getFeatureList(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    return false
+    return true
   }
   public selectFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
     return true

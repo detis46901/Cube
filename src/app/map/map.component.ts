@@ -107,10 +107,8 @@ export class MapComponent implements OnDestroy, OnInit{
               tap(() => this.isLoading = true), //This is supposed to show a spinner but I can't get it to work right now.  Oh, Well...
                switchMap(value => {
                  if (value !== '') {
-
                   this.isLoading = false
                   this.geocodingService.search(value).subscribe((x) => {
-                    console.log(x)
                     this.searchresults = x
                   })
                    return this.geocodingService.search(value) }
@@ -120,9 +118,7 @@ export class MapComponent implements OnDestroy, OnInit{
                   }
                }
               )
-
             );
-
         this.getMapConfig()
 
     }

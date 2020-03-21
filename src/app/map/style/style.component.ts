@@ -11,6 +11,7 @@ import { StyleService } from '../services/style.service';
 import { LayerService } from '../../../_services/_layer.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
+import { MyCubeStyle } from '_models/style.model';
 
 
 @Component({
@@ -95,9 +96,13 @@ export class StyleComponent implements OnInit {
                 this.opacity = this.mapConfig.currentLayer.style.opacity
                 console.log(this.opacity)
             }
+
         }
         catch (e) {
+          console.log(this.mapConfig.currentLayer.style)
+          this.mapConfig.currentLayer.style = new MyCubeStyle
             //nothing needs to happen here, I don't think.
+            this.mapConfig.currentLayer.style.opacity = 100
         }
         console.log(this.showLabel)
         this.sqlSerivce.GetSchema('mycube', 't' + this.mapConfig.currentLayer.layerID)
@@ -134,6 +139,7 @@ export class StyleComponent implements OnInit {
         // console.log(e)
         // this.openAerialMapService.setOpacity(e['value']/100)
         console.log(this.mapConfig.currentLayer.style)
+        console.log(this.mapConfig.currentLayer.olLayer)
         this.mapConfig.currentLayer.olLayer.setOpacity(e['value']/100)
         this.mapConfig.currentLayer.style.opacity = (e['value'])
       }

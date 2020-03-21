@@ -267,13 +267,11 @@ export class MapService {
                                     .subscribe((data) => {
                                         let parser = new WMTSCapabilities();
                                         let result = parser.read(data);
-                                        console.log(result)
                                         let options = optionsFromCapabilities(result, {
                                             layer: userpagelayer.layer.layerIdent,
                                             matrixSet: 'EPSG:3857',
                                             cacheSize: environment.cacheSize
                                         });
-                                        console.log(options)
                                         let wmtsSource = new WMTS(options);
                                         let wmtsLayer = new TileLayer({
                                             opacity: 1,
@@ -452,6 +450,7 @@ export class MapService {
         if (this.featuremodulesservice.setCurrentLayer(this.mapConfig, layer)) {
             this.mapConfig.featureList = [];
             if (!this.featuremodulesservice.getFeatureList(this.mapConfig, layer)) {
+              console.log('featuremoduleservice getFeatureList is false?')
                 this.getFeatureList();
             }
             return
