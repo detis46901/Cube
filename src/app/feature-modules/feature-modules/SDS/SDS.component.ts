@@ -52,6 +52,7 @@ export class SDSComponent implements OnInit, OnDestroy {
   @Input() instance: ModuleInstance;
 
   ngOnInit() {
+    this.SDSservice.mapConfig = this.mapConfig
     this.expandedSubscription = this.SDSservice.getExpanded().subscribe(expanded => { this.SDSConfig.expanded = expanded })
     this.SDSConfigSubscription = this.SDSservice.getSDSConfig().subscribe(SDSConfig => { this.SDSConfig = SDSConfig[this.SDSConfigID] })
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -73,7 +74,6 @@ export class SDSComponent implements OnInit, OnDestroy {
             this.SDSConfig.itemData[this.SDSConfig.itemData.indexOf(x)].type = 'id'
             this.SDSConfig.linkedField = x.field
             this.SDSConfigID = this.SDSservice.SDSConfig.push(this.SDSConfig) - 1
-            console.log('SDSConfig pushed')
             // this.SDSservice.getLayerfromSDSConfigID(this.SDSConfig)
             // this.SDSservice.setReload(SDSConfig)
           }

@@ -42,6 +42,7 @@ export class WOComponent implements OnInit, OnDestroy {
   @Input() user: string;
 
   ngOnInit() {
+    this.WOservice.mapConfig = this.mapConfig
     this.expandedSubscription = this.WOservice.getExpanded().subscribe(expanded => { this.expanded = expanded })
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.userID = currentUser && currentUser.userID;

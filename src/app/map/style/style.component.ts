@@ -139,7 +139,7 @@ export class StyleComponent implements OnInit {
         // console.log(e)
         // this.openAerialMapService.setOpacity(e['value']/100)
         console.log(this.mapConfig.currentLayer.style)
-        console.log(this.mapConfig.currentLayer.olLayer)
+        console.log(e)
         this.mapConfig.currentLayer.olLayer.setOpacity(e['value']/100)
         this.mapConfig.currentLayer.style.opacity = (e['value'])
       }

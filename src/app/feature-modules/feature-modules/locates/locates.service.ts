@@ -19,8 +19,7 @@ import { environment } from '../../../../environments/environment'
 
 @Injectable()
 export class LocatesService {
-  public completed: string
-  public vectorlayer = new VectorLayer()
+  public layerState: string
   public locate: Locate
   public mapConfig: MapConfig
   public layer: UserPageLayer
@@ -30,10 +29,9 @@ export class LocatesService {
   private tab = new Subject<string>();
   public sortBy: string = "Address"
   public showSortBy: Boolean
-  public layerState: string
+  // public layerState: string
   public message: string
   public locateConfig = new Array<locateConfig>()
-
 
   constructor(private geojsonservice: geoJSONService,
     protected _http: HttpClient,
@@ -43,13 +41,12 @@ export class LocatesService {
     private locateStyles: locateStyles,
     private snackBar: MatSnackBar) {}
 
-
   //loads the locate data
   public loadLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+    this.mapConfig = mapConfig
     this.layer = layer
     this.layerState = 'load'
-    this.mapConfig = mapConfig
-    this.clearFeature(this.mapConfig, this.layer)
+    this.clearFeature(this.layer)
     //Need to provide for clustering if the number of objects gets too high
 
     let stylefunction = ((feature: Feature) => {
@@ -68,13 +65,13 @@ export class LocatesService {
       //   distance: 90,
       //   source: source
       // });
-      this.vectorlayer = new VectorLayer({
+      let vectorlayer = new VectorLayer({
         source: source,
         style: stylefunction
       });
-      this.vectorlayer.setVisible(layer.defaultON);
-      mapConfig.map.addLayer(this.vectorlayer);
-      layer.olLayer = this.vectorlayer
+      vectorlayer.setVisible(layer.defaultON);
+      this.mapConfig.map.addLayer(vectorlayer);
+      layer.olLayer = vectorlayer
       layer.source = source
     })
     return true
@@ -101,7 +98,7 @@ export class LocatesService {
             feat.setStyle(stylefunction);
           })
           if (this.layer == this.mapConfig.currentLayer) {
-            this.getFeatureList(this.mapConfig, this.layer)
+            this.getFeatureList(this.layer)
           }
         })
       }
@@ -117,9 +114,10 @@ export class LocatesService {
     return promise;
   }
 
-  private getFeatureList(mapConfig?, layer?): boolean {
+  private getFeatureList(layer?:UserPageLayer): boolean {
     let k: number = 0;
     let tempList = new Array<featureList>();
+    if (layer.source.length){console.log(layer.source.length)}
     try {
       layer.source.forEachFeature((x: Feature) => {
         let i = layer.source.getFeatures().findIndex((j) => j == x);
@@ -137,7 +135,7 @@ export class LocatesService {
           k += 1
         }
       })
-      mapConfig.featureList = tempList.slice(0, k)
+      this.mapConfig.featureList = tempList.slice(0, k)
       this.sortByFunction()
     } catch (error) {
       console.error(error);
@@ -146,7 +144,7 @@ export class LocatesService {
     return true
   }
 
-  public setCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public setCurrentLayer(layer: UserPageLayer): boolean {
     this.showSortBy = true
     this.layerState = 'current'
     this.reloadLayer()
@@ -160,7 +158,7 @@ export class LocatesService {
     return true
   }
 
-  public unsetCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public unsetCurrentLayer(layer: UserPageLayer): boolean {
     this.layerState = 'load'
     this.reloadLayer()
     this.sendexpanded(false)
@@ -174,25 +172,25 @@ export class LocatesService {
     return true
   }
 
-  public unloadLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public unloadLayer(layer: UserPageLayer): boolean {
     return true
   }
 
-  public selectFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public selectFeature(layer: UserPageLayer): boolean {
     clearInterval(this.layer.updateInterval)
     this.layer.updateInterval= null
-    this.sqlService.GetSingle('mycube.t' + this.layer.layerID, mapConfig.selectedFeature.get('id'))
+    this.sqlService.GetSingle('mycube.t' + this.layer.layerID, this.mapConfig.selectedFeature.get('id'))
       .subscribe((data: Locate) => {
         this.sendTicket(data[0][0])
         this.sendTab('Process')
         this.locate = data[0][0]
       })
-    this.sendTicket(mapConfig.selectedFeature.get('ticket'))
+    this.sendTicket(this.mapConfig.selectedFeature.get('ticket'))
     this.mapConfig.selectedFeature.setStyle(this.locateStyles.selected)
     return false
   }
 
-  public clearFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public clearFeature(layer: UserPageLayer): boolean {
     let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
       return (this.styleService.styleFunction(feature, 'current'));
     })
@@ -201,15 +199,15 @@ export class LocatesService {
     this.sendTicket(null)
     this.locate = null
     this.myCubeService.clearMyCubeData()
-    if (mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction) }
+    if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction) }
     return true
   }
 
-  public styleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public styleSelectedFeature(layer: UserPageLayer): boolean {
     return true
   }
 
-  public unstyleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public unstyleSelectedFeature(layer: UserPageLayer): boolean {
     let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
       return (this.styleService.styleFunction(feature, 'current'));
     })
@@ -537,7 +535,7 @@ export class LocatesService {
                 let snackBarRef = this.snackBar.open('Ticket ' + this.locate.ticket + ' was inserted.', 'Undo', {
                   duration: 4000
                 });
-                this.myCubeService.createAutoMyCubeComment(true, "Ticket Created", id, table, 1)
+                this.myCubeService.createAutoMyCubeComment(true, "Ticket Created", id, table, this.mapConfig.user.ID)
                 snackBarRef.onAction().subscribe((x) => {
                   this.sqlService.Delete(table, id)
                     .subscribe((x) => {
@@ -570,7 +568,7 @@ export class LocatesService {
     i = mapConfig.userpagelayers.findIndex(x => x.layerID == table)
     let feat: Feature = this.mapConfig.selectedFeature
     this.mapConfig.currentLayer.source.removeFeature(this.mapConfig.selectedFeature)
-    this.clearFeature(mapConfig, mapConfig.userpagelayers[i])
+    this.clearFeature(mapConfig.userpagelayers[i])
     let snackBarRef = this.snackBar.open('Ticket completed.', 'Undo', {
       duration: 4000
     });
@@ -578,7 +576,7 @@ export class LocatesService {
       undo = true
       this.mapConfig.selectedFeature = feat
       this.mapConfig.currentLayer.source.addFeature(this.mapConfig.selectedFeature)
-      this.selectFeature(this.mapConfig, this.mapConfig.currentLayer)
+      this.selectFeature(this.mapConfig.currentLayer)
       let snackBarRef = this.snackBar.open('Undone.', '', {
         duration: 4000
       });

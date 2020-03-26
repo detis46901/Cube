@@ -307,8 +307,8 @@ export class MapComponent implements OnDestroy, OnInit{
         this.mapConfig.currentLayer = new UserPageLayer;
         this.currPage = page.page;
         this.cleanPage()
-        this.mapService.getUserPageLayers(this.mapConfig)
-            .then(() => this.mapService.getUserPageInstances(this.mapConfig))
+        this.mapService.getUserPageLayers()
+            .then(() => this.mapService.getUserPageInstances())
             .then(() => this.mapService.getLayerPerms())
             .then(() => {
                 this.mapService.loadLayers(this.mapConfig, false).then(() => {
@@ -341,17 +341,20 @@ export class MapComponent implements OnDestroy, OnInit{
     }
 
     public addUserPageLayer(UPL: UserPageLayer) {
+        console.log(UPL)
         let newUPL = new UserPageLayer
         newUPL.userPageID = this.mapConfig.currentpage.ID
         newUPL.userID = this.user.ID;
         newUPL.defaultON = UPL.layerShown;
-        newUPL.style = UPL.layer.defaultStyle
+        newUPL.style = UPL.style
         newUPL.serverID = UPL.serverID
         newUPL.userID = UPL.userID
         newUPL.layerID = UPL.layer.ID
+        console.log(newUPL)
         this.userPageLayerService
             .Add(newUPL)
             .subscribe((result: UserPageLayer) => {
+                console.log(result)
                 UPL.ID = result.ID
             });
     }

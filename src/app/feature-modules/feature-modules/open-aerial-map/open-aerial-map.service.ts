@@ -40,11 +40,12 @@ export class OpenAerialMapService {
   }
 
   public loadLayer(mapConfig: MapConfig, layer: UserPageLayer, init?: boolean): boolean {
+    this.mapConfig = mapConfig
     this.selectedImage.title = ""
-    this.getImages(mapConfig, layer, init)
+    this.getImages(this.mapConfig, layer, init)
     return true
   }
-  public unloadLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public unloadLayer(layer: UserPageLayer): boolean {
     this.images.forEach(x => {
       x.on = false
       this.mapConfig.map.removeLayer(x.layer)
@@ -53,30 +54,30 @@ export class OpenAerialMapService {
     return true
   }
 
-  public setCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public setCurrentLayer(layer: UserPageLayer): boolean {
     this.createImageClickEvent()
     this.setDisabled(false)
     this.mapConfig.showStyleButton = true
     return true
   }
-  public unsetCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public unsetCurrentLayer(layer: UserPageLayer): boolean {
     olobservable.unByKey(this.AOMClickKey);
     this.setDisabled(true)
     return true
   }
-  public getFeatureList(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public getFeatureList(layer: UserPageLayer): boolean {
     return true
   }
-  public selectFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public selectFeature(layer: UserPageLayer): boolean {
     return true
   }
-  public styleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public styleSelectedFeature(layer: UserPageLayer): boolean {
     return true
   }
-  public unstyleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public unstyleSelectedFeature(layer: UserPageLayer): boolean {
     return true
   }
-  public clearFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public clearFeature(layer: UserPageLayer): boolean {
     return true
   }
 

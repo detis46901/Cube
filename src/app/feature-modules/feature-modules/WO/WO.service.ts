@@ -45,10 +45,10 @@ export class WOService {
 
   //loads the work order data
   public loadLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+    this.mapConfig = mapConfig
     this.WOConfig.layer = layer
     this.WOConfig.layerState = 'load'
-    this.mapConfig = mapConfig
-    this.clearFeature(this.mapConfig, this.WOConfig.layer)
+    this.clearFeature(this.WOConfig.layer)
     //Need to provide for clustering if the number of objects gets too high
     let stylefunction = ((feature: Feature) => {
       return (this.styleService.styleFunction(feature, 'load'));
@@ -69,19 +69,19 @@ export class WOService {
         style: stylefunction
       });
       vectorlayer.setVisible(layer.defaultON);
-      mapConfig.map.addLayer(vectorlayer);
+      this.mapConfig.map.addLayer(vectorlayer);
       layer.olLayer = vectorlayer
       layer.source = source
     })
     return true
   }
 
-  public checkSearch(mapConfig: MapConfig, layer:UserPageLayer): string {
+  public checkSearch(layer:UserPageLayer): string {
     console.log("Checking search in WO")
     return "Create Work Order"
   }
 
-  public createPoint(mapConfig: MapConfig, layer:UserPageLayer): boolean {
+  public createPoint(layer:UserPageLayer): boolean {
     this.WOConfig.Mode = "Add"
     this.mapConfig.drawMode = ''
     this.mapConfig.searchResultSource.forEachFeature((x) => {
@@ -102,8 +102,8 @@ export class WOService {
     return true
   }
   public getConfig(instance: ModuleInstance) {
-    this.WOConfig.WOTypes = instance.settings['settings'][0]['setting']['WOType']
-    this.WOConfig.assignedTo = instance.settings['settings'][1]['setting']['AssignedTo']
+    this.WOConfig.WOTypes = instance.settings['settings'][1]['setting']['WOType']
+    this.WOConfig.assignedTo = instance.settings['settings'][2]['setting']['AssignedTo']
     this.WOConfig.assignedTo.forEach((x) => {
       if (x.name.startsWith('G') == true) {
         this.groupService.GetSingle(+x.name.substr(1))
@@ -140,7 +140,7 @@ export class WOService {
             if (this.mapConfig.selectedFeature && feat.get('id') == this.mapConfig.selectedFeature.get('id')) {feat.setStyle(this.styleService.styleFunction(feat, 'selected'))}
           })
           if (this.WOConfig.layer == this.mapConfig.currentLayer) {
-            this.getFeatureList(this.mapConfig, this.WOConfig.layer)
+            this.getFeatureList(this.WOConfig.layer)
           }
         })
       }
@@ -155,7 +155,7 @@ export class WOService {
     return promise;
   }
 
-  private getFeatureList(mapConfig?, layer?): boolean {
+  private getFeatureList(layer?): boolean {
     if (!this.WOConfig.sortType.name) { this.WOConfig.sortType.name = 'address'; this.WOConfig.sortType.field = 'address' }
     let k: number = 0;
     let tempList = new Array<featureList>();
@@ -171,7 +171,7 @@ export class WOService {
           k += 1
         }
       })
-      mapConfig.featureList = tempList.slice(0, k)
+      this.mapConfig.featureList = tempList.slice(0, k)
       this.sortByFunction()
     } catch (error) {
       console.error(error);
@@ -180,7 +180,7 @@ export class WOService {
     return true
   }
 
-  public setCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public setCurrentLayer(layer: UserPageLayer): boolean {
     this.WOConfig.layerState = 'current'
     this.reloadLayer()
     this.sendexpanded(true)
@@ -189,48 +189,48 @@ export class WOService {
     return true
   }
 
-  public unsetCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public unsetCurrentLayer(layer: UserPageLayer): boolean {
     this.WOConfig.layerState = 'load'
     this.reloadLayer()
     this.sendexpanded(false)
     return true
   }
 
-  public unloadLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public unloadLayer(layer: UserPageLayer): boolean {
     return true
   }
 
-  public selectFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public selectFeature(layer: UserPageLayer): boolean {
     if (this.WOConfig.Mode == "Add") { return true }
     if (this.WOConfig.Mode == "Edit") { return true }
     clearInterval(this.WOConfig.layer.updateInterval)
     this.WOConfig.layer.updateInterval = null
-    this.sqlService.GetSingle('mycube.t' + this.WOConfig.layer.layerID, mapConfig.selectedFeature.get('id'))
+    this.sqlService.GetSingle('mycube.t' + this.WOConfig.layer.layerID, this.mapConfig.selectedFeature.get('id'))
       .subscribe((data) => {
         //stuff is going to go in here.
         this.WOConfig.selectedWO = data[0][0]
         this.WOConfig.tab = "Details"
       })
     this.mapConfig.selectedFeature.setStyle(this.styleService.styleFunction(this.mapConfig.selectedFeature, "selected"))
-    this.myCubeService.getComments(this.WOConfig.layer.layerID, mapConfig.selectedFeature.get('id'))
+    this.myCubeService.getComments(this.WOConfig.layer.layerID, this.mapConfig.selectedFeature.get('id'))
       .subscribe((data) => {
         this.WOConfig.selectedWOComments = data[0]
       })
     return true
   }
 
-  public clearFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public clearFeature(layer: UserPageLayer): boolean {
     if (this.WOConfig.Mode == "Add") { return true }
     let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
       return (this.styleService.styleFunction(feature, 'current'));
     })
     this.createInterval()
     this.myCubeService.clearMyCubeData()
-    if(mapConfig.currentLayer.olLayer) {mapConfig.currentLayer.source.forEachFeature((x: Feature) => {
+    if(this.mapConfig.currentLayer.olLayer) {this.mapConfig.currentLayer.source.forEachFeature((x: Feature) => {
       x.setStyle(stylefunction)
     })
   }
-    if (mapConfig.selectedFeature && this.WOConfig.Mode == "None") {
+    if (this.mapConfig.selectedFeature && this.WOConfig.Mode == "None") {
       this.mapConfig.selectedFeature.setStyle(stylefunction)
       this.WOConfig.selectedWO = new workOrder
       this.WOConfig.tab = "Closed"
@@ -239,12 +239,12 @@ export class WOService {
     return true
   }
 
-  public styleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public styleSelectedFeature(layer: UserPageLayer): boolean {
     this.mapConfig.selectedFeature.setStyle(this.styleService.styleFunction(this.mapConfig.selectedFeature, 'selected'))
     return true
   }
 
-  public unstyleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public unstyleSelectedFeature(layer: UserPageLayer): boolean {
     // let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
     //   return (this.styleService.styleFunction(feature, 'current'));
     // })
@@ -253,7 +253,7 @@ export class WOService {
     return false
   }
 
-  public draw(mapConfig: MapConfig, layer: UserPageLayer, featuretype: any): boolean {
+  public draw(layer: UserPageLayer, featuretype: any): boolean {
     if (this.WOConfig.Mode == "Add") { return true }
     this.WOConfig.Mode = "Add"
     let src = new VectorSource();
@@ -349,8 +349,8 @@ export class WOService {
           this.WOConfig.vectorLayer = new VectorLayer
           this.WOConfig.Mode = "None"
           this.mapConfig.selectedFeatures.clear()
-        this.clearFeature(this.mapConfig, this.mapConfig.currentLayer)
-        this.getFeatureList(this.mapConfig, this.mapConfig.currentLayer);
+        this.clearFeature(this.mapConfig.currentLayer)
+        this.getFeatureList(this.mapConfig.currentLayer);
       })
     if (!this.WOConfig.selectedWO.created) {
       mcf.field = "created"
@@ -369,7 +369,7 @@ export class WOService {
     this.WOConfig.vectorLayer = new VectorLayer
     this.WOConfig.Mode = "None"
     this.mapConfig.selectedFeatures.clear()
-    this.clearFeature(this.mapConfig, this.mapConfig.currentLayer)
+    this.clearFeature(this.mapConfig.currentLayer)
   }
 
   public editWorkOrder() {
@@ -390,7 +390,7 @@ export class WOService {
     this.mapConfig.currentLayer.source.removeFeature(this.mapConfig.selectedFeature)
     this.mapConfig.currentLayer.source.addFeature(this.WOConfig.editWO.feature)
     this.WOConfig.Mode = "None"
-    this.clearFeature(this.mapConfig, this.mapConfig.currentLayer)
+    this.clearFeature(this.mapConfig.currentLayer)
     this.reloadLayer()
   }
 
@@ -422,7 +422,7 @@ export class WOService {
     let snackBarRef = this.snackBar.open('Work order was assigned.', '', {
       duration: 4000
     });
-    this.selectFeature(this.mapConfig, this.mapConfig.currentLayer)
+    this.selectFeature(this.mapConfig.currentLayer)
   }
 
   public deleteWorkOrder() {
@@ -548,13 +548,13 @@ export class WOService {
       case "Priority": {
         this.WOConfig.sortType.name = "Address"
         this.WOConfig.sortType.field = 'address'
-        this.getFeatureList(this.mapConfig, this.mapConfig.currentLayer)
+        this.getFeatureList(this.mapConfig.currentLayer)
         break
       }
       case "Address": {
         this.WOConfig.sortType.name = "Work Order"
         this.WOConfig.sortType.field = 'WONumber'
-        this.getFeatureList(this.mapConfig, this.mapConfig.currentLayer)
+        this.getFeatureList(this.mapConfig.currentLayer)
         break
       }
       case "Work Order": {

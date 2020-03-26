@@ -184,6 +184,7 @@ export class MyCubeService extends SQLService {
   }
 
   public createAutoMyCubeComment(auto: boolean, commentText: string, featureID: string | number, layerID: number, userID: number, geom?: any): Promise<any> {
+    console.log('Creating Auto Comment')
     let comment = new MyCubeComment()
     let promise = new Promise((resolve) => {
       comment.auto = auto
@@ -195,6 +196,7 @@ export class MyCubeService extends SQLService {
       if (geom != undefined) {
         this.addCommentWithGeom(comment)
           .subscribe((data) => {
+            console.log(data)
             resolve()
           })
       }

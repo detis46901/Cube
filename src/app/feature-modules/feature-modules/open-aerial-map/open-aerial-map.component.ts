@@ -26,6 +26,7 @@ export class OpenAerialMapComponent implements OnInit {
   public disabledSubscription: Subscription;
 
   ngOnInit() {
+    this.openAerialMapService.mapConfig = this.mapConfig
     this.disabledSubscription = this.openAerialMapService.getDisabled().subscribe(disabled => {this.expanded = false; this.disabled = disabled})
   }
 
@@ -41,6 +42,6 @@ export class OpenAerialMapComponent implements OnInit {
 
   ngOnDestroy() {
     let layer: UserPageLayer
-    this.openAerialMapService.unloadLayer(this.mapConfig, layer)
+    this.openAerialMapService.unloadLayer(layer)
     }
 }

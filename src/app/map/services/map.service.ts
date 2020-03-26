@@ -10,8 +10,6 @@ import { geoJSONService } from './../services/geoJSON.service';
 import { MyCubeService } from './../services/mycube.service';
 import { WMSService } from './wms.service';
 import { SQLService } from './../../../_services/sql.service';
-
-
 import { StyleService } from '../services/style.service'
 import { FeatureModulesService } from "app/feature-modules/feature-modules.service";
 import { defaults as defaultInteractions, Modify, Draw } from 'ol/interaction';
@@ -36,25 +34,19 @@ import { transform } from 'ol/proj';
 import XYZ from 'ol/source/XYZ';
 import OSM from 'ol/source/OSM';
 import BingMaps from 'ol/source/BingMaps';
-import Point from "ol/geom/Point";
 import { GeocodingService } from '../services/geocoding.service'
 
 @Injectable()
 export class MapService {
     public modifyingobject: boolean = false
-    public shown: boolean
     public mapConfig = new MapConfig;
-    public vectorlayer = new VectorLayer();
     public modkey: any;
     public modkeystart: any;
     public modify: Modify;
     public selectedLayer: any;
-    public editmode: boolean = false;
     public base: string = 'base';  //base layer
     // private drawMode: boolean = false;
     private drawInteraction: any;
-    public userID: number
-    public LP = new LayerPermission
 
     constructor(
         private userPageLayerService: UserPageLayerService,
@@ -72,11 +64,10 @@ export class MapService {
         private geocodingService: GeocodingService
     ) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.userID = currentUser && currentUser.userID;
+        this.mapConfig.userID = currentUser && currentUser.userID;
     }
 
-    public getUserPageLayers(mapConfig): Promise<any> {
-        //this.mapConfig = mapConfig; //only necessary on changed page
+    public getUserPageLayers(): Promise<any> {
         let promise = new Promise((resolve, reject) => {
             this.userPageLayerService
                 .GetPageLayers(this.mapConfig.currentpage.ID)
@@ -92,8 +83,7 @@ export class MapService {
         return promise;
     }
 
-    public getUserPageInstances(mapConfig): Promise<any> {
-        this.mapConfig = mapConfig; //only necessary on changed page
+    public getUserPageInstances(): Promise<any> {
         let promise = new Promise((resolve, reject) => {
             this.userPageInstanceService
                 .GetPageInstances(this.mapConfig.currentpage.ID)
@@ -117,7 +107,6 @@ export class MapService {
                         let j = this.mapConfig.layerpermission.findIndex((x) => x.layerID == userpagelayer.layerID);
                         if (j >= 0) {
                             userpagelayer.layerPermissions = this.mapConfig.layerpermission[j];
-                            //need to make sure the maximum permissions get provided.  probably need to use foreach instead of findIndex  It uses the first one instead of the most liberal.
                         }
                         else {
                             //if there isn't an entry for the layer, it allows the viewing, but not anything else.  This is necessary because I'm not adding permissions to layers required by a module.
@@ -142,7 +131,6 @@ export class MapService {
                         let j = this.mapConfig.modulepermission.findIndex((x) => x.moduleInstanceID == userpagelayer.userPageInstanceID);
                         if (j >= 0) {
                             userpagelayer.modulePermissions = this.mapConfig.modulepermission[j];
-                            //need to make sure the maximum permissions get provided.  probably need to use foreach instead of findIndex  It uses the first one instead of the most liberal.
                         }
                     })
                     resolve();
@@ -236,6 +224,7 @@ export class MapService {
                                 break
                             }
                             case "MyCube": {
+                                console.log('loading MyCube', userpagelayer)
                                 this.loadMyCube(userpagelayer, j);
                                 j++;
                                 if (j == this.mapConfig.userpagelayers.length) {
@@ -331,7 +320,7 @@ export class MapService {
                                     serverType: 'geoserver',
                                     crossOrigin: 'anonymous'
                                 })
-                                    userpagelayer.layer.legendURL = diffWMS.getLegendUrl(2).split('&SCALE')[0]
+                                    if (userpagelayer.layer.legendURL) {userpagelayer.layer.legendURL = diffWMS.getLegendUrl(2).split('&SCALE')[0]}
                             }
                         }
                     }
@@ -344,7 +333,7 @@ export class MapService {
 
     public loadMyCube(layer: UserPageLayer, order?: number) {
         let stylefunction = ((feature) => {
-            return (this.styleService.styleFunction(feature, layer, "load"));
+                return (this.styleService.styleFunction(feature, layer, "load"));
         })
         let source = new VectorSource({
             format: new GeoJSON()
@@ -356,11 +345,11 @@ export class MapService {
             if (data[0][0]['jsonb_build_object']['features']) {
                 source.addFeatures(new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
             }
-            this.vectorlayer = new VectorLayer({ source: source, style: stylefunction });
-            this.vectorlayer.setVisible(layer.defaultON);
-            if(order) {this.vectorlayer.setZIndex(order)}
+            let vectorlayer = new VectorLayer({ source: source, style: stylefunction });
+            vectorlayer.setVisible(layer.defaultON);
+            if(order) {vectorlayer.setZIndex(order)}
             try {
-                this.mapConfig.map.addLayer(this.vectorlayer);}
+                this.mapConfig.map.addLayer(vectorlayer);}
             catch(e) {
                 console.log('Theres an error, for some reason')
                 // console.log(this.vectorlayer)
@@ -368,7 +357,7 @@ export class MapService {
                 console.log('reloading the layer')
                 this.loadMyCube(layer)
             }
-            layer.olLayer = this.vectorlayer
+            layer.olLayer = vectorlayer
             layer.source = source
         })
     }
@@ -429,6 +418,7 @@ export class MapService {
             }
         })
         if(layer.layer.layerType == 'MyCube') {
+            // console.log(layer)
             layer.olLayer.setStyle(stylefunction)}
     }
 
@@ -446,7 +436,6 @@ export class MapService {
         this.clearLayerConfig();  //
         this.mapConfig.currentLayer = layer;
         this.mapConfig.currentLayerName = layer.layer.layerName  //Puts the current name in the component
-
         if (this.featuremodulesservice.setCurrentLayer(this.mapConfig, layer)) {
             this.mapConfig.featureList = [];
             if (!this.featuremodulesservice.getFeatureList(this.mapConfig, layer)) {
@@ -464,6 +453,7 @@ export class MapService {
               this.mapConfig.showStyleButton = true
               this.mapConfig.showDeleteButton = true
           }
+          console.log(layer)
           if (layer.layer.layerType == "MyCube" && layer.style.filter.column) {
               this.mapConfig.filterOn = true
           }
@@ -486,7 +476,6 @@ export class MapService {
         this.clearFeature();
         this.mapConfig.userpagelayers.forEach(layer => {
             if (this.featuremodulesservice.unsetCurrentLayer(this.mapConfig, layer)) {
-                console.log('there is an unsetcurrentlayer function in the feature module')
                 return
             }
             if (layer.layer.layerType == "MyCube") {
@@ -662,7 +651,7 @@ export class MapService {
                         let featureID = fjson2['id']
                         this.geojsonservice.updateGeometry(layer.layer.ID, JSON.parse(featurejson))
                             .subscribe((data) => {
-                                this.myCubeService.createAutoMyCubeComment(true, "Geometry Modified", featureID, this.mapConfig.currentLayer.layer.ID, this.userID, JSON.parse(featurejson))
+                                this.myCubeService.createAutoMyCubeComment(true, "Geometry Modified", featureID, this.mapConfig.currentLayer.layer.ID, this.mapConfig.user.ID, JSON.parse(featurejson))
                                     .then(() => {
                                         this.myCubeService.loadComments(this.mapConfig.currentLayer.layer.ID, featureID)
                                         if (layer.userPageInstanceID == 0) {
@@ -741,7 +730,7 @@ export class MapService {
                             this.mapConfig.currentLayer.source.addFeature(e.feature)
                             e.feature.setStyle(stylefunction)
                             this.getFeatureList();
-                            this.myCubeService.createAutoMyCubeComment(true, "Object Created", featureID, this.mapConfig.currentLayer.layer.ID, this.userID, featurejson['geometry'])
+                            this.myCubeService.createAutoMyCubeComment(true, "Object Created", featureID, this.mapConfig.currentLayer.layer.ID, this.mapConfig.user.ID, featurejson['geometry'])
 
                         })
                     this.mapConfig.map.removeLayer(vector);
@@ -776,7 +765,7 @@ export class MapService {
                             }
                             this.mapConfig.map.removeInteraction(this.modify);
                             this.modify = null;
-                            this.myCubeService.createAutoMyCubeComment(true, "Object Deleted", feat.getId(), mapconfig.currentLayer.layer.ID, this.userID)
+                            this.myCubeService.createAutoMyCubeComment(true, "Object Deleted", feat.getId(), mapconfig.currentLayer.layer.ID, this.mapConfig.user.ID)
                         })
 
                 }
@@ -899,6 +888,8 @@ export class MapService {
         let templayer = new UserPageLayer
         templayer.ID = layer.ID
         templayer.defaultON = layer.defaultON
+        templayer.style = layer.style  //This is a stupid hack.
+        console.log(templayer)
         this.userPageLayerService
             .Update(templayer)
             .subscribe((data) => {

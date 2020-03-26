@@ -46,15 +46,11 @@ export class SDSService {
 
   //loads the SDS Layer
   public loadLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    console.log('loadLayer')
+    this.mapConfig = mapConfig
     this.layer = layer
     this.layerState = 'load'
-    this.mapConfig = mapConfig
     switch (layer.layer.layerType) {
       case "MyCube": {
-        //this.clearFeature(this.mapConfig, this.layer)
-        //Need to provide for clustering if the number of objects gets too high
-
         let stylefunction = ((feature: Feature) => {
           return (this.styleService.styleFunction(feature, 'load'));
         })
@@ -75,7 +71,7 @@ export class SDSService {
             style: stylefunction
           });
           this.vectorlayer.setVisible(layer.defaultON);
-          mapConfig.map.addLayer(this.vectorlayer);
+          this.mapConfig.map.addLayer(this.vectorlayer);
           layer.olLayer = this.vectorlayer
           layer.source = source
         })
@@ -85,18 +81,23 @@ export class SDSService {
         return false
       }
     }
-
     return true
   }
 
-  public setReload(SDSConfigID) {
-    if (this.SDSConfig[SDSConfigID].updateInterval == null) {
-      this.SDSConfig[SDSConfigID].updateInterval = setInterval(() => {
-        console.log('reloadLayer Interval')
-        this.reloadLayer(this.SDSConfig[SDSConfigID].layer);
-      }, 20000);
-    }
+  public styleLayer(layer: UserPageLayer, feature, mode):boolean {
+    let stylefunction = ((feature: Feature) => {
+      return (this.styleService.styleFunction(feature, mode));
+    })
+    return true
   }
+  // public setReload(SDSConfigID) {
+  //   if (this.SDSConfig[SDSConfigID].updateInterval == null) {
+  //     this.SDSConfig[SDSConfigID].updateInterval = setInterval(() => {
+  //       console.log('reloadLayer Interval')
+  //       this.reloadLayer(this.SDSConfig[SDSConfigID].layer);
+  //     }, 20000);
+  //   }
+  // }
 
   public getLayerfromSDSConfigID(SDSConfig:SDSConfig):UserPageLayer {
     console.log(SDSConfig)
@@ -112,11 +113,11 @@ export class SDSService {
   }
 
   public reloadLayer(layer: UserPageLayer) {
-    console.log('reloadLayer')
-    console.log(layer)
+    // console.log('reloadLayer')
+    // console.log(layer)
     let layerState: string = 'load'
-    if (layer == this.mapConfig.currentLayer) {layerState = 'current'}
-    console.log(layerState)
+      if (layer == this.mapConfig.currentLayer) {layerState = 'current'}
+      // console.log(layerState)  
     //this.clearFeature(this.mapConfig, this.layer)  //check to see if it's a problem not to have this
     let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
       return (this.styleService.styleFunction(feature, layerState));
@@ -129,7 +130,7 @@ export class SDSService {
             feat.setStyle(stylefunction);
           })
           if (this.layer == this.mapConfig.currentLayer) {
-            this.getFeatureList(this.mapConfig, this.layer)
+            this.getFeatureList(this.layer)
           }
         })
       }
@@ -153,7 +154,7 @@ export class SDSService {
             this.sqlService.UpdateAnyRecord('modules', 'm' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'data', id, x)
               .subscribe((z) => {
                 console.log(z)
-                this.selectFeature(this.mapConfig, this.mapConfig.currentLayer, true)
+                this.selectFeature(this.mapConfig.currentLayer, true)
                 let snackBarRef = this.snackBar.open('Record saved', '', {
                   duration: 2000
                 })
@@ -176,7 +177,7 @@ export class SDSService {
       if (x.type != 'id') {
         this.sqlService.UpdateAnyRecord('modules', 'm' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'data', this.SDSConfig[SDSConfigID].itemData[0].value, x)
           .subscribe((z) => {
-            this.selectFeature(this.mapConfig, this.mapConfig.currentLayer, true)
+            this.selectFeature(this.mapConfig.currentLayer, true)
             let snackBarRef = this.snackBar.open('Record updated', '', {
               duration: 4000
             });
@@ -196,7 +197,7 @@ export class SDSService {
     this.sqlService.deleteAnyRecord('modules', 'm' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'data', this.SDSConfig[SDSConfigID].itemData[0].value)
       .subscribe((x) => {
         console.log(x)
-        this.selectFeature(this.mapConfig, this.mapConfig.currentLayer)
+        this.selectFeature(this.mapConfig.currentLayer)
         let snackBarRef = this.snackBar.open('Record deleted', '', {
           duration: 4000
         });
@@ -211,7 +212,7 @@ export class SDSService {
     this.SDSLog(comment)
   }
 
-  private getFeatureList(mapConfig?, layer?: UserPageLayer): boolean {
+  private getFeatureList(layer?: UserPageLayer): boolean {
     //this has issues, as the "name" needs to be dinamic.  This really needs to be able to return false so map.service can create the featurelist.
     switch (layer.layer.layerType) {
       case "MyCube": {
@@ -230,7 +231,7 @@ export class SDSService {
               k += 1
             }
           })
-          mapConfig.featureList = tempList.slice(0, k)
+          this.mapConfig.featureList = tempList.slice(0, k)
           this.sortByFunction()
         } catch (error) {
           console.error(error);
@@ -242,7 +243,7 @@ export class SDSService {
     return true
   }
 
-  public setCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public setCurrentLayer(layer: UserPageLayer): boolean {
     this.showSortBy = true
     // this.layerState = 'current'
     switch (layer.layer.layerType) {
@@ -262,7 +263,7 @@ export class SDSService {
     return true
   }
 
-  public unsetCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public unsetCurrentLayer(layer: UserPageLayer): boolean {
     // this.layerState = 'load'
     // switch (layer.layer.layerType) {
     //   case "MyCube": {
@@ -271,21 +272,29 @@ export class SDSService {
     //   }
     // }
     this.SDSConfig.forEach((x) => {
+      console.log(x)
       if (x.moduleSettings['settings'][0]['setting']['value'] == layer.layer.ID) {
         x.expanded = false
         x.visible = false
+        x.layerState = "load"
+    switch (layer.layer.layerType) {
+      case "MyCube": {
+        this.reloadLayer(layer)
+        this.showSortBy = false
+      }
+    }
       }
     })
     // this.sendexpanded(false)
     return true
   }
 
-  public unloadLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public unloadLayer(layer: UserPageLayer): boolean {
     clearInterval(this.SDSUpdateInterval)
     return true
   }
 
-  public selectFeature(mapConfig: MapConfig, layer: UserPageLayer, aftersave?: boolean): boolean {
+  public selectFeature(layer: UserPageLayer, aftersave?: boolean): boolean {
     this.mapConfig.showDeleteButton = true
     let instanceID: number
     this.mapConfig.userpageinstances.forEach((x) => {
@@ -293,7 +302,7 @@ export class SDSService {
           instanceID = x.moduleInstanceID
       }
     })
-    if (mapConfig.selectedFeature) {
+    if (this.mapConfig.selectedFeature) {
       let SDSConfigID: number
       let i: number = 0
       this.SDSConfig.forEach((x) => {
@@ -301,7 +310,7 @@ export class SDSService {
         i = i + 1
       })
       this.clearForm(SDSConfigID)
-      this.sqlService.GetAnySingle('modules.m' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'data', this.SDSConfig[SDSConfigID].moduleSettings['settings'][2]['setting']['value'], mapConfig.selectedFeature.get('id'))
+      this.sqlService.GetAnySingle('modules.m' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'data', this.SDSConfig[SDSConfigID].moduleSettings['settings'][2]['setting']['value'], this.mapConfig.selectedFeature.get('id'))
         .subscribe((data: any) => {
           console.log(data)
           this.SDSConfig[SDSConfigID].list = data[0]
@@ -331,7 +340,7 @@ export class SDSService {
     })
   }
 
-  public clearFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public clearFeature(layer: UserPageLayer): boolean {
     let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
       return (this.styleService.styleFunction(feature, 'current'));
     })
@@ -353,16 +362,16 @@ export class SDSService {
     this.SDSConfig[SDSConfigID].tab = 'List'
     this.clearForm(SDSConfigID)
 
-    if (mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction); mapConfig.selectedFeature = null; this.SDSConfig[0].selectedItem = null }
+    if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction); this.mapConfig.selectedFeature = null; this.SDSConfig[0].selectedItem = null }
     return true
   }
 
-  public styleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public styleSelectedFeature(layer: UserPageLayer): boolean {
     clearInterval(this.SDSUpdateInterval)
     return true
   }
 
-  public unstyleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  public unstyleSelectedFeature(layer: UserPageLayer): boolean {
     let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
       return (this.styleService.styleFunction(feature, 'current'));
     })

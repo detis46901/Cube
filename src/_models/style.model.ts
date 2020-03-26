@@ -20,7 +20,7 @@ export class MyCubeStyle {
     current: MyCubeFeatureStyle;
     listLabel: string;
     showLabel: boolean;
-    filter: MyCubeFilterFields;
+    filter = new MyCubeFilterFields;
     filterOperator: MyCubeFilterOperator; //not used yet
     opacity: number;
 }

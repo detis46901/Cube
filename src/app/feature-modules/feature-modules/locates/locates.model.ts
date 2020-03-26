@@ -5,6 +5,7 @@ export class locateConfig {
     visible: boolean
     expanded: boolean
     moduleSettings: JSON
+    layerState: string
 }
 
 export class Locate {

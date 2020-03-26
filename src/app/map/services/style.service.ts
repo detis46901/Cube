@@ -34,6 +34,7 @@ export class StyleService {
         let labelName: string
         labelName = layer.style.listLabel;
         if (layer.style) {
+            // console.log(layer.style)
             color = layer.style[mode].color; width = layer.style[mode].width
             if (layer.style.showLabel) {text = feature.get(labelName)}
         }

@@ -49,7 +49,7 @@ export class UserPageLayer {
     userID: number;
     userPageID: number;
     layerID: number;
-    style: MyCubeStyle;
+    style = new MyCubeStyle;
     layer = new Layer;
     layerPermissions = new LayerPermission();
     modulePermissions = new ModulePermission;

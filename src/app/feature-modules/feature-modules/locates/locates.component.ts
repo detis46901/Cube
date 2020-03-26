@@ -48,6 +48,7 @@ export class LocatesComponent implements OnInit, OnDestroy {
   @Input() user: string;
 
   ngOnInit() {
+    this.locatesservice.mapConfig = this.mapConfig
     this.ticktSubscription = this.locatesservice.getTicket().subscribe(ticket => { this.completedDisposition = new disItem; this.ticket = ticket});
     this.expandedSubscription = this.locatesservice.getExpanded().subscribe(expanded => { this.expanded = expanded })
     this.tabSubscription = this.locatesservice.getTab().subscribe(tab => { this.tab = tab })
