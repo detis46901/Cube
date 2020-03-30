@@ -32,6 +32,7 @@ import { ServerDetailsComponent } from './details/serverDetails/serverDetails.co
 import { ServerLayersComponent } from './server/serverLayers/serverLayers.component';
 import { ModuleSettingsComponent } from './module/moduleSettings/moduleSettings.component'
 import { PagePipe, LayerFilterPipe, UserPipe } from '../admin/_pipes/rowfilter2.pipe'
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 
 //Angular Material
@@ -162,6 +163,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatSnackBarModule,
     MatDividerModule,
     MatAutocompleteModule,
+    DragDropModule
   ],
   providers: [
   ],

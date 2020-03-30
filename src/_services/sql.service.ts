@@ -69,6 +69,12 @@ export class SQLService {
         return this._http.get(this.actionUrl + 'constraints?schema=' + schema + '&table=' + table, this.options)
     }
 
+    public updateConstraint = (schema: string, table, mcf:MyCubeField): Observable<any> => {
+        console.log(mcf)
+        console.log(this.actionUrl + 'updateconstraint?schema=' + schema + '&table' + table + 'myCubeField=' + JSON.stringify(mcf), this.options)
+        return this._http.get(this.actionUrl + 'updateconstraint?schema=' + schema + '&table=' + table + '&myCubeField=' + JSON.stringify(mcf), this.options)
+    }
+
     public CreateCommentTable = (layerName: string): Observable<any> => {
         return this._http.get(this.actionUrl + 'createcommenttable?table=' + layerName, this.options).pipe(
             // .map((response: Response) => <any>response.json())
@@ -156,9 +162,19 @@ export class SQLService {
             catchError(this.handleError));
     }
 
-    public addColumn = (table: number, field: MyCubeField): Observable<any> => {
+    public addColumn = (table: number, myCubeField: MyCubeField): Observable<any> => {
         // console.log(field)
-        return this._http.get(this.actionUrl + 'addColumn?table=' + table + '&field=' + field.field + '&type=' + field.type + '&label=' + field.label, this.options).pipe(
+        return this._http.get(this.actionUrl + 'addColumn?table=' + table + '&myCubeField=' + JSON.stringify(myCubeField), this.options).pipe(
+            catchError(this.handleError))
+    }
+
+    public deleteColumn = (table: number, myCubeField: MyCubeField): Observable<any> => {
+        return this._http.get(this.actionUrl + 'deleteColumn?table=' + table + '&myCubeField=' + JSON.stringify(myCubeField), this.options).pipe(
+            catchError(this.handleError))
+    }
+
+    public moveColumn = (table: number, myCubeField: MyCubeField): Observable<any> => {
+        return this._http.get(this.actionUrl + 'moveColumn?table=' + table + '&myCubeField=' + JSON.stringify(myCubeField), this.options).pipe(
             catchError(this.handleError))
     }
 

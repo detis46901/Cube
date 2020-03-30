@@ -449,6 +449,7 @@ export class MapComponent implements OnDestroy, OnInit{
             let UPLUpdate = new UserPageLayer
             UPLUpdate.ID = x.ID
             UPLUpdate.layerOrder = x.layerOrder
+            UPLUpdate.style = x.style //another stupid hack
             this.userPageLayerService.Update(UPLUpdate).subscribe();
         })
     }

@@ -98,7 +98,7 @@
     <button mat-button mat-raised-button color="primary" (click)='filter()'>Filter</button>
     <button mat-button mat-raised-button color="primary" (click)='clearFilter()'>Clear Filter</button> -->
   </div>
-  <div *ngIf="SDSConfig.tab=='List' && mapConfig.selectedFeature" label="List" style="width:100%"><br>
+  <div *ngIf="SDSConfig.tab=='List' && mapConfig.selectedFeature" label="List" class="SDSComponent"><br>
     {{SDSConfig.label}}
     <div *ngFor="let item of SDSConfig.list">
       <span *ngIf="item['id'] != SDSConfig.selectedItem"
@@ -107,7 +107,7 @@
         (click)="selectItem(item['id'], SDSConfigID)"><b>{{item[SDSConfig.label]}}</b></span>
     </div>
   </div>
-  <div *ngIf="SDSConfig.tab == 'Item'"><br>
+  <div *ngIf="SDSConfig.tab == 'Item'" class="SDSComponent"><br>
     <div *ngFor="let item of SDSConfig.itemData">
       <div *ngIf="item.type=='id'"></div>
       <div *ngIf="item.type=='geom'"></div>

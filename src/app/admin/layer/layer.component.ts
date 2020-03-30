@@ -18,6 +18,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { LayerDetailsComponent } from '../details/layerDetails/layerDetails.component';
+import { layer } from 'openlayers';
 
 @Component({
     selector: 'layer',
@@ -67,7 +68,7 @@ export class LayerComponent implements OnInit {
     }
 
     public createMyCube(): void {
-        const dialogRef = this.dialog.open(newMyCubeComponent, { height: '520px', width: '480px' });
+        const dialogRef = this.dialog.open(newMyCubeComponent, { height: '820px', width: '880px' });
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });
@@ -85,13 +86,23 @@ export class LayerComponent implements OnInit {
         dialogRef.componentInstance.layerName = layername;
     }
 
-    public openDetails(id: number, name: string): void {
-        const dialogRef = this.dialog.open(LayerDetailsComponent, { width: '450px' });
-        dialogRef.componentInstance.ID = id;
-        dialogRef.componentInstance.name = name;
-        dialogRef.afterClosed().subscribe(() => {
-            this.getLayerItems();
-        })
+    public openDetails(layer:Layer): void {
+        console.log(layer)
+        if (layer.layerType == "MyCube") {
+            const dialogRef = this.dialog.open(newMyCubeComponent, { height: '820px', width: '880px' })
+            dialogRef.componentInstance.inputLayer = layer
+            dialogRef.afterClosed().subscribe(() => {
+                this.getLayerItems();
+            })
+        }
+        else {
+            const dialogRef = this.dialog.open(LayerDetailsComponent, { width: '450px' });
+            dialogRef.componentInstance.ID = layer.ID;
+            dialogRef.componentInstance.name = layer.layerName;
+            dialogRef.afterClosed().subscribe(() => {
+                this.getLayerItems();
+            })
+        }
     }
 
     public confirmDelete(layer: Layer): void {
