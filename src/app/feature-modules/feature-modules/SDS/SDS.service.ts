@@ -162,14 +162,18 @@ export class SDSService {
               })
           }
         })
-        let comment = new MyCubeComment
-        comment.auto = true
-        comment.comment = "Record added by " + this.mapConfig.user.firstName + ' ' + this.mapConfig.user.lastName
-        comment.featureid = id
-        comment.userid = this.mapConfig.user.ID
-        comment.table = 'modules.m' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'log'
-        this.SDSLog(comment)
+        this.saveSDSComment(id, SDSConfigID);
       })
+  }
+
+  private saveSDSComment(id: any, SDSConfigID: number) {
+    let comment = new MyCubeComment;
+    comment.auto = true;
+    comment.comment = "Record added by " + this.mapConfig.user.firstName + ' ' + this.mapConfig.user.lastName;
+    comment.featureid = id;
+    comment.userid = this.mapConfig.user.ID;
+    comment.table = 'modules.m' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'log';
+    this.SDSLog(SDSConfigID, comment);
   }
 
   public updateSDS(SDSConfigID: number): any {
@@ -190,7 +194,7 @@ export class SDSService {
     comment.featureid = this.SDSConfig[SDSConfigID].itemData[0].value
     comment.userid = this.mapConfig.user.ID
     comment.table = 'modules.m' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'log'
-    this.SDSLog(comment)
+    this.SDSLog(SDSConfigID, comment)
   }
 
   public deleteSDS(SDSConfigID: number): any {
@@ -209,7 +213,7 @@ export class SDSService {
     comment.featureid = this.SDSConfig[SDSConfigID].itemData[0].value
     comment.userid = this.mapConfig.user.ID
     comment.table = 'modules.m' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'log'
-    this.SDSLog(comment)
+    this.SDSLog(SDSConfigID, comment)
   }
 
   private getFeatureList(layer?: UserPageLayer): boolean {
@@ -295,6 +299,7 @@ export class SDSService {
   }
 
   public selectFeature(layer: UserPageLayer, aftersave?: boolean): boolean {
+
     this.mapConfig.showDeleteButton = true
     let instanceID: number
     this.mapConfig.userpageinstances.forEach((x) => {
@@ -310,6 +315,7 @@ export class SDSService {
         i = i + 1
       })
       this.clearForm(SDSConfigID)
+      
       this.sqlService.GetAnySingle('modules.m' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'data', this.SDSConfig[SDSConfigID].moduleSettings['settings'][2]['setting']['value'], this.mapConfig.selectedFeature.get('id'))
         .subscribe((data: any) => {
           console.log(data)
@@ -333,6 +339,7 @@ export class SDSService {
   }
 
   public clearForm(SDSConfigID: number) {
+    this.SDSConfig[SDSConfigID].newComment = new MyCubeComment
     this.SDSConfig[SDSConfigID].selectedItem = null
     this.SDSConfig[SDSConfigID].editRecordDisabled = true
     this.SDSConfig[SDSConfigID].itemData.forEach((x) => {
@@ -494,9 +501,14 @@ export class SDSService {
       })
     }
   }
-  SDSLog(comment: MyCubeComment) {
+  SDSLog(SDSConfigID:number, comment: MyCubeComment) {
     this.sqlService.addAnyCommentWithoutGeom(comment)
       .subscribe((x) => {
+        if (comment.file) {
+          console.log('file exists')
+          console.log(x[0][0].id)
+          this.uploadFile(SDSConfigID, x[0][0].id, comment)
+        }
       })
   }
 
@@ -506,5 +518,19 @@ export class SDSService {
     .subscribe((x) => {
       this.SDSConfig[SDSConfigID].selectedItemLog = x[0]
     })
+  }
+
+  public uploadFile(SDSConfigID, id: string, comment: MyCubeComment) {
+    let formdata: FormData = new FormData()
+    formdata.append('photo', comment.file)
+    formdata.append('table', comment.table.toString())
+    formdata.append('id', id)
+    formdata.append('schema', 'modules')
+    this.sqlService
+      .addAnyImage(formdata)
+      .subscribe((result) => {
+        console.log(result)
+      })
+      this.SDSConfig[SDSConfigID].newComment = new MyCubeComment
   }
 }

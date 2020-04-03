@@ -12,14 +12,18 @@ export class ImageService {
     protected token: string;
 
     constructor(protected _http: HttpClient, protected configuration: Configuration) {
+       
+        this.actionUrl = this.configuration.serverWithApiUrl + 'images/'
+
+       
+    }
+
+    public getOptions() {
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
         } catch (err) {
             console.log("Could not find user in local storage. Did you reinstall your browser or delete cookies?\n" + err)
         }
-
-        this.actionUrl = this.configuration.serverWithApiUrl + 'images/'
-
         this.options = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
@@ -28,15 +32,15 @@ export class ImageService {
                 'Access-Control-Allow-Origin': '*'
             })
         }
+        return this.options
     }
-
     public GetAll = (): Observable<any> => {
-        return this._http.get<any[]>(this.actionUrl + 'list', this.options)
+        return this._http.get<any[]>(this.actionUrl + 'list', this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public Upload = (image/*: FormData*/): Observable<any> => {
-        return this._http.post(this.actionUrl + 'create', image, this.options)
+        return this._http.post(this.actionUrl + 'create', image, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 

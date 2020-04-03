@@ -69,6 +69,12 @@ export class MyCubeConstraint {
     name: string | number;
     option: string;
 }
+
+export class DataFieldConstraint {
+    name: string | number
+    option: string
+}
+
 export class MyCubeField {
     field: string;
     type: string;
@@ -79,6 +85,16 @@ export class MyCubeField {
     changed?: boolean;
     links?: any[]
     constraints? = new Array<MyCubeConstraint>()
+}
+
+export class DataField {
+    field: string;
+    type: string;
+    description?: string;
+    value?: any;
+    changed?: boolean;
+    links?: any[]
+    constraints? = new Array<DataFieldConstraint>()
 }
 
 export class MyCubeURLs {

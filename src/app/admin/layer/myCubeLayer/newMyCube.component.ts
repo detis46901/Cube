@@ -66,16 +66,72 @@ export class newMyCubeComponent implements OnInit {
             this.layer = this.inputLayer
             this.sqlservice.GetSchema("mycube", 't' + this.layer.ID.toString())
             .subscribe((x) => {
+                console.log('Schema Reply')
                 this.newLayerFields = x[0].splice(2,x[0].length-2)
                 this.newLayerFields.forEach((y) => {
                     if (y.field == this.inputLayer.defaultStyle['listLabel']) {this.label = y.field}
                     y.oldOrder = i
-                    i = i+1
+                    i = i+1  
                 })
                 console.log(this.newLayerFields)
+                this.getConstraints(this.layer.ID)
             })
         }
     }
+
+    public getConstraints(table: number): void {
+        this.sqlservice.getConstraints('mycube', 't'+table.toString())
+        .subscribe((x) => {
+            this.setConstraints(x)
+
+        })
+    }
+
+    public setConstraints(constraints) {
+       this.newLayerFields.forEach((item) => {
+          constraints[0].forEach(element => {
+            if (item.field + '_types' == element['conname']) {
+              item.constraints = new Array<MyCubeConstraint>()
+              let constraints: string = element['consrc']
+              let arrayConstraints: Array<string> = constraints.split(' OR ')
+              if (item.type == 'text' || item.type == 'character varying') {
+                arrayConstraints.forEach((x) => {
+                  let ar1 = x.split("'")[1]
+                  let ar2 = ar1.split("'")[0]
+                  let constr = new MyCubeConstraint()
+                  constr.name = ar2
+                  constr.option = "option"
+                  item.constraints.push(constr)
+                })
+              }
+              if (item.type == 'integer' || item.type == 'smallint' || item.type == 'bigint') {
+                arrayConstraints.forEach((x) => {
+                    console.log(x)
+                  let ar1 = x.split("= ")[1]
+                  let ar2 = ar1.split(")")[0]
+                  console.log(ar2)
+                  let constr = new MyCubeConstraint()
+                  constr.name = +ar2
+                  constr.option = "option"
+                  item.constraints.push(constr)
+                })
+              }
+              if (item.type == 'double precision') {
+                arrayConstraints.forEach((x) => {
+                    console.log(x)
+                  let ar1 = x.split("= (")[1]
+                  let ar2 = ar1.split(")")[0]
+                  console.log(ar2)
+                  let constr = new MyCubeConstraint()
+                  constr.name = +ar2
+                  constr.option = "option"
+                  item.constraints.push(constr)
+                })
+            }
+            }
+          })
+        })
+      }
 
     public getServers(): void {
         this.serverService
@@ -153,7 +209,6 @@ export class newMyCubeComponent implements OnInit {
     }
 
     public moveColumn(mcf: MyCubeFieldConfig, ID): Promise<any> {
-        console.log(mcf)
         let promise = new Promise((resolve, reject) => {
                             this.sqlservice.moveColumn(ID, mcf)
                             .subscribe((x) => {

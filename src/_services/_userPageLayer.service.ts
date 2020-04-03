@@ -17,22 +17,22 @@ export class UserPageLayerService extends ParentService {
     }
 
     public GetSome = (pageid): Observable<any> => {
-        return this._http.get(this.actionUrl + 'list?ID=' + pageid, this.options)
+        return this._http.get(this.actionUrl + 'list?ID=' + pageid, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public GetPageLayers = (pageid): Observable<any> => {
-        return this._http.get(this.actionUrl + 'getpagelayers?pageID=' + pageid, this.options)
+        return this._http.get(this.actionUrl + 'getpagelayers?pageID=' + pageid, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public GetUserLayers = (userid): Observable<any> => {
-        return this._http.get(this.actionUrl + 'userlist?userid=' + userid, this.options)
+        return this._http.get(this.actionUrl + 'userlist?userid=' + userid, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public GetByLayer = (layerid): Observable<any> => {
-        return this._http.get(this.actionUrl + 'bylayer?layerID=' + layerid, this.options)
+        return this._http.get(this.actionUrl + 'bylayer?layerID=' + layerid, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 

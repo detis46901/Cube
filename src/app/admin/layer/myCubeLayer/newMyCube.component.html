@@ -103,6 +103,7 @@
             </div>
         </div>
         <div class="column">
+            <!-- need to deal with integers -->
             <div *ngIf="editLayerField">
                 Constraints for {{editLayerField.field}} (For creating a select box)
                 <div cdkDropList class="example-list" (cdkDropListDropped)="dropConstraints($event)">

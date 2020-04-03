@@ -15,6 +15,10 @@ export class UserService /*extends ParentService*/ {
 
     constructor(protected _http: HttpClient, protected configuration: Configuration) {
         //super(_http, configuration);
+        this.actionUrl = this.configuration.serverWithApiUrl + 'users/';
+    }
+
+    public getOptions() {
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
         } catch (err) {
@@ -28,51 +32,50 @@ export class UserService /*extends ParentService*/ {
                 //'Access-Control-Allow-Origin': '*'
             })
         }
-        this.actionUrl = this.configuration.serverWithApiUrl + 'users/';
+        return this.options
     }
-
     public GetByRole = (roleID): Observable<any> => {
-        return this._http.get(this.actionUrl + 'byrole?roleID=' + roleID, this.options)
+        return this._http.get(this.actionUrl + 'byrole?roleID=' + roleID, this.getOptions())
         //.catch(this.handleError);
     }
 
     public GetAll = (): Observable<any> => {
-        return this._http.get(this.actionUrl + 'list', this.options)
+        return this._http.get(this.actionUrl + 'list', this.getOptions())
         //.catch(this.handleError);
     }
 
     public GetSingle = (id: any): Observable<any> => {
-        return this._http.get(this.actionUrl + 'single?rowid=' + id, this.options)
+        return this._http.get(this.actionUrl + 'single?rowid=' + id, this.getOptions())
         //.catch(this.handleError);
     }
 
     public GetSingleFromEmail = (email: string): Observable<any> => {
-        return this._http.get(this.actionUrl + 'single?email=' + email /*+API key 12/27/17*/, this.options)
+        return this._http.get(this.actionUrl + 'single?email=' + email /*+API key 12/27/17*/, this.getOptions())
         //.catch(this.handleError);
     }
 
     public Add = (toAdd: any): Observable<any> => {
         console.log(JSON.stringify(toAdd))
-        return this._http.post(this.actionUrl + 'single', JSON.stringify(toAdd), this.options)
+        return this._http.post(this.actionUrl + 'single', JSON.stringify(toAdd), this.getOptions())
         //.catch(this.handleError);
     }
 
     public Update = (itemToUpdate: any): Observable<any> => {
-        return this._http.put(this.actionUrl + 'update', JSON.stringify(itemToUpdate), this.options)
+        return this._http.put(this.actionUrl + 'update', JSON.stringify(itemToUpdate), this.getOptions())
         //.catch(this.handleError);
     }
 
     public Delete = (id: number): Observable<any> => {
-        return this._http.delete(this.actionUrl + 'delete?ID=' + id, this.options)
+        return this._http.delete(this.actionUrl + 'delete?ID=' + id, this.getOptions())
         //.catch(this.handleError);
     }
 
     public generateKey(email: string, firstName: string, lastName: string) {
-        return this._http.post(this.actionUrl + "generateKey", { email: email, firstName: firstName, lastName: lastName }, this.options)
+        return this._http.post(this.actionUrl + "generateKey", { email: email, firstName: firstName, lastName: lastName }, this.getOptions())
     }
 
     public updatePassword(user: User, oldPw: string, newPw: string) {
-        return this._http.put(this.actionUrl + "updatePassword", { currUser: user, password: user.password, oldPassword: oldPw, newPassword: newPw }, this.options)
+        return this._http.put(this.actionUrl + "updatePassword", { currUser: user, password: user.password, oldPassword: oldPw, newPassword: newPw }, this.getOptions())
     }
 
     public login(username: string, password: string) {

@@ -16,6 +16,10 @@ export class MapConfigService {
 
     constructor(protected _http: HttpClient, protected configuration: Configuration) {
         this.actionUrl = this.configuration.serverWithApiUrl + 'mapconfig/';
+       
+    }
+
+    public getOptions() {
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
         } catch (err) {
@@ -30,9 +34,10 @@ export class MapConfigService {
                 //'Access-Control-Allow-Origin': '*'
             })
         }
+        return this.options
     }
     public GetSingle = (mapConfig: MapConfig): Observable<any> => {
-        return this._http.get<any[]>(this.actionUrl + 'single?mapconfig=' + JSON.stringify(mapConfig), this.options)
+        return this._http.get<any[]>(this.actionUrl + 'single?mapconfig=' + JSON.stringify(mapConfig), this.getOptions())
             .pipe(catchError(this.handleError));
     }
 

@@ -103,6 +103,8 @@ import { StyleService } from './map/services/style.service';
 import { GeocodingService } from './map/services/geocoding.service';
 import { StyleComponent } from './map/style/style.component';
 import { SearchComponent } from './search/search.component';
+import { DataFormComponentComponent } from './shared.components/data-form-component/data-form-component.component';
+import { LogFormComponentComponent } from './shared.components/log-form-component/log-form-component.component';
 
 
 @NgModule({
@@ -131,8 +133,10 @@ import { SearchComponent } from './search/search.component';
         PageComponent2,
         PageConfigComponent2,
         ConfirmDeleteComponent,
-        SearchComponent
-    ],
+        SearchComponent,
+        DataFormComponentComponent,
+        LogFormComponentComponent
+  ],
 
     entryComponents: [
         ChangePictureComponent,

@@ -15,17 +15,16 @@ export class NotifService {
     private headers;
 
     constructor(protected _http: HttpClient, protected configuration: Configuration) {
+        this.actionUrl = this.configuration.serverWithApiUrl + 'notification/';
+    }
+
+    getOptions() {
         this.headers = new HttpHeaders();
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
         } catch (err) {
             console.log("Could not find user in local storage. Did you reinstall your browser or delete cookies?\n" + err)
         }
-
-        // this.headers.append('Authorization', 'Bearer ' + this.token);
-        // this.options = new RequestOptions({headers: this.headers})
-        this.actionUrl = this.configuration.serverWithApiUrl + 'notification/';
-
         this.options = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
@@ -33,35 +32,35 @@ export class NotifService {
                 'Authorization': 'Bearer ' + this.token
             })
         }
+        return this.options
     }
-
     public GetByUser = (userID): Observable<any> => {
-        return this._http.get(this.actionUrl + 'byuser?userID=' + userID, this.options)
+        return this._http.get(this.actionUrl + 'byuser?userID=' + userID, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public GetByType = (type): Observable<any> => {
-        return this._http.get(this.actionUrl + 'bytype?objectType=' + type, this.options)
+        return this._http.get(this.actionUrl + 'bytype?objectType=' + type, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public GetBySource = (sourceID): Observable<any> => {
-        return this._http.get(this.actionUrl + 'bysource?sourceID=' + sourceID, this.options)
+        return this._http.get(this.actionUrl + 'bysource?sourceID=' + sourceID, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public Add = (toAdd: any): Observable<any> => {
-        return this._http.post(this.actionUrl + 'create', JSON.stringify(toAdd), this.options)
+        return this._http.post(this.actionUrl + 'create', JSON.stringify(toAdd), this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public Update = (toChange: any): Observable<any> => {
-        return this._http.put(this.actionUrl + 'update', JSON.stringify(toChange), this.options)
+        return this._http.put(this.actionUrl + 'update', JSON.stringify(toChange), this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public Delete = (toDelete: any): Observable<any> => {
-        return this._http.delete(this.actionUrl + 'delete?ID=' + toDelete, this.options)
+        return this._http.delete(this.actionUrl + 'delete?ID=' + toDelete, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 

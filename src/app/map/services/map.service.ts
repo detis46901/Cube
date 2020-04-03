@@ -224,7 +224,6 @@ export class MapService {
                                 break
                             }
                             case "MyCube": {
-                                console.log('loading MyCube', userpagelayer)
                                 this.loadMyCube(userpagelayer, j);
                                 j++;
                                 if (j == this.mapConfig.userpagelayers.length) {
@@ -246,7 +245,7 @@ export class MapService {
                                     console.log(diffWMS.getLegendUrl(23))
                                     userpagelayer.layer.legendURL = diffWMS.getLegendUrl(23)
                                 if (userpagelayer.layer.server.serverType == "ArcGIS WMTS") {
-                                    url = userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
+                                    url = userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/ImageServer/WMTS/1.0.0/WMTSCapabilities.xml'
                                     console.log(url)
                                 }
                                 else {
@@ -459,7 +458,6 @@ export class MapService {
           }
           this.mapConfig.showStyleButton = true
         }
-        console.log(layer.layer.layerType)
 
     }
 

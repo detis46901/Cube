@@ -1,5 +1,7 @@
 <div #mapElement id="mapid"></div>
 <featuredata id="featureData" [mapConfig]="mapConfig"></featuredata>
+<app-data-form-component class="feature-data"></app-data-form-component>
+<app-log-form-component></app-log-form-component>
 <mat-accordion class="tool-container">
     <filtertoolbar *ngIf="mapConfig.filterShow" [mapConfig]="mapConfig"></filtertoolbar>
     <styletoolbar *ngIf="mapConfig.styleShow" [mapConfig]="mapConfig"></styletoolbar>

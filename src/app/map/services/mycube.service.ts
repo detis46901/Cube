@@ -73,7 +73,7 @@ export class MyCubeService extends SQLService {
             .subscribe((constraints) => {
               this.cubeData = this.setConstraints(this.cubeData, constraints)
             })
-          this.getsingles(table, id).then(() => { resolve(this.cubeData) })
+          this.getsingles(table, id).then(() => {resolve(this.cubeData) })
         })
     });
     return promise
@@ -109,7 +109,6 @@ export class MyCubeService extends SQLService {
         }
       })
     })
-
     return items
   }
 
@@ -136,7 +135,6 @@ export class MyCubeService extends SQLService {
     this.loadComments(table, id)
     return promise
   }
-
 
   loadComments(table, id): any {
     this.getComments(table, id)

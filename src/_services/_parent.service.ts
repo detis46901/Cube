@@ -15,6 +15,10 @@ export class ParentService {
     protected token: string;
 
     constructor(protected _http: HttpClient, protected configuration: Configuration) {
+        
+    }
+
+    public getOptions() {
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
         } catch (err) {
@@ -29,55 +33,55 @@ export class ParentService {
                 //'Access-Control-Allow-Origin': '*'
             })
         }
+        return this.options
     }
-
     public GetAll = (): Observable<any> => {
-        return this._http.get<any[]>(this.actionUrl + 'list', this.options)
+        return this._http.get<any[]>(this.actionUrl + 'list', this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public GetSingle = (id: number): Observable<any> => {
-        return this._http.get<any>(this.actionUrl + 'single?rowid=' + id, this.options)
+        return this._http.get<any>(this.actionUrl + 'single?rowid=' + id, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public GetSingleFromEmail = (email: string): Observable<any> => {
-        return this._http.get<any>(this.actionUrl + 'single?email=' + email, this.options)
+        return this._http.get<any>(this.actionUrl + 'single?email=' + email, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public Add = (toAdd: any): Observable<any> => {
-        return this._http.post(this.actionUrl + 'single', JSON.stringify(toAdd), this.options)
+        return this._http.post(this.actionUrl + 'single', JSON.stringify(toAdd), this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public Update = (itemToUpdate: any): Observable<any> => {
-        return this._http.put(this.actionUrl + 'update', JSON.stringify(itemToUpdate), this.options)
+        return this._http.put(this.actionUrl + 'update', JSON.stringify(itemToUpdate), this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public Delete = (id: number): Observable<any> => {
-        return this._http.delete(this.actionUrl + 'delete?ID=' + id, this.options)
+        return this._http.delete(this.actionUrl + 'delete?ID=' + id, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public GetByUser = (userid): Observable<any> => {
-        return this._http.get(this.actionUrl + 'byuser?userid=' + userid, this.options)
+        return this._http.get(this.actionUrl + 'byuser?userid=' + userid, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public GetByUserGroups = (userid): Observable<any> => {
-        return this._http.get(this.actionUrl + 'byusergroups?userID=' + userid, this.options)
+        return this._http.get(this.actionUrl + 'byusergroups?userID=' + userid, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public GetByLayer = (layerid): Observable<any> => {
-        return this._http.get(this.actionUrl + 'bylayer?layerID=' + layerid, this.options)
+        return this._http.get(this.actionUrl + 'bylayer?layerID=' + layerid, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public GetByGroup = (groupid): Observable<any> => {
-        return this._http.get(this.actionUrl + 'bygroup?groupID=' + groupid, this.options)
+        return this._http.get(this.actionUrl + 'bygroup?groupID=' + groupid, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 

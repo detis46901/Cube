@@ -244,3 +244,20 @@ td {
     max-width: 500px;
     width: 100%;
   }
+  
+  .feature-data  {
+    flex-basis: 0;
+    width: 254px;
+    overflow-wrap: break-word;
+    overflow-y: auto;
+    background-color: rgba(255,255,255,.7); 
+    display: block; 
+    position: absolute; 
+    bottom: 0px; left: 0px
+  }
+  
+  .feature-data .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+  }
+  

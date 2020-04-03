@@ -89,7 +89,9 @@ export class MapComponent implements OnDestroy, OnInit{
 
     //Angular component initialization
     ngOnInit() {
+        console.log('mapComponent ngOnInit')
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        console.log(currentUser)
         this.token = currentUser && currentUser.token;
         // this.userID = currentUser && currentUser.userID;
         this.public = currentUser && currentUser.public;
@@ -128,6 +130,7 @@ export class MapComponent implements OnDestroy, OnInit{
 
     private getMapConfig() { //id is used for public pages.
         this.mapConfig.user = this.user
+        console.log(this.user)
         this.mapConfigService.GetSingle(this.mapConfig)
             .subscribe((x) => {
                 this.mapConfig = x

@@ -11,7 +11,8 @@ import { Configuration } from '../../../../_api/api.constants';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SDSConfig, SDSStyles } from './SDS.model'
 import Autolinker from 'autolinker';
-
+import { MyCubeComment } from '_models/layer.model';
+import { environment } from 'environments/environment'
 
 
 @Component({
@@ -38,6 +39,9 @@ export class SDSComponent implements OnInit, OnDestroy {
   public Autolinker = new Autolinker()
   public SDSConfig = new SDSConfig
   public SDSConfigID: number
+  //public newComment = new MyCubeComment
+  public URL: string;
+
 
   constructor(
     public snackBar: MatSnackBar,
@@ -79,11 +83,36 @@ export class SDSComponent implements OnInit, OnDestroy {
           }
         })
       })
+    
+      this.URL = environment.apiUrl + '/api/sql/getanyimage'
+
   }
 
   ngOnDestroy() {
     this.expandedSubscription.unsubscribe()
     clearInterval(this.SDSservice.SDSUpdateInterval);
+  }
+
+  public onFileSelected(event) {
+    console.log(event) //This will be used for adding an image to a comment for myCube.
+    this.SDSConfig.newComment.file = <File>event.target.files[0] //Send to the bytea data type field in comment table.
+  }
+
+  public addMyCubeComment() {
+    this.SDSConfig.newComment.comment = 'Attachment by ' + this.mapConfig.user.firstName + " " + this.mapConfig.user.lastName
+    let ntext: RegExp = /'/g
+    this.SDSConfig.newComment.comment = this.SDSConfig.newComment.comment.replace(ntext, "''")
+    this.SDSConfig.newComment.table = 'modules.m' + this.SDSConfig.moduleInstanceID + 'log';
+    this.SDSConfig.newComment.featureid = this.SDSConfig.selectedItem
+    this.SDSConfig.newComment.userid = this.mapConfig.user.ID
+    this.SDSConfig.newComment.firstName = this.mapConfig.user.firstName
+    this.SDSConfig.newComment.lastName = this.mapConfig.user.lastName
+    this.SDSConfig.newComment.auto = false
+    //Need to add the time in here so it looks right when it is added immediately
+    this.SDSConfig.selectedItemLog.push(this.SDSConfig.newComment)
+    console.log(this.SDSConfig.newComment)
+    this.SDSservice
+      .SDSLog(this.SDSConfigID, this.SDSConfig.newComment)
   }
 
   goToTab(tab) {

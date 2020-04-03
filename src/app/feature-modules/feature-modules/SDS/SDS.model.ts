@@ -25,6 +25,7 @@ export class SDSConfig {
     linkedField: string
     editRecordDisabled: boolean = true
     showLog: boolean = false
+    newComment: MyCubeComment
 }
 
 @Injectable()

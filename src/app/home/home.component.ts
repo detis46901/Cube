@@ -49,35 +49,51 @@ export class HomeComponent {
         this.message = null
         //this.socketService.initSocket() This may be used later.  This initializes a WebSocket
         this.publicName = this.route.snapshot.paramMap.get('publicName')
+        if (this.publicName && !this.userID) {
+            console.log('calling publicname auth service')
+            this.authenticationService.publicLogin(this.publicName).then((x) => {
+                console.log(localStorage.getItem('currentUser'))
+                currentUser = JSON.parse(localStorage.getItem('currentUser'))
+        this.userID = currentUser && currentUser.userID;
+
+                 this.Initiate();
+            })
+        }
+        else {this.Initiate()}
+
+
+
+    }
+
+    private Initiate() {
+        console.log(this.userID)
         this.getAllItems(this.userID).then((x) => {
             if (this.publicName) {
                 //needs to check that the userID matches the record with the publicName
                 if (!this.userID) {
-                    console.log('visiting a public page without authentication.  Authenticating.')
+                    console.log('visiting a public page without authentication.  Authenticating.');
                     this.authenticationService.publicLogin(this.publicName)
-                    .then(() => {this.loaded = true})
+                        .then(() => { this.loaded = true; });
                 }
                 else {
-                    console.log("at least we have some authentication")
-                    this.getAllItems(this.userID).then((x:boolean) => {
-                        if (x==true) {
-                            console.log("We've got the right authentitication")
-                            this.loaded = true
+                    console.log("at least we have some authentication");
+                    this.getAllItems(this.userID).then((x: boolean) => {
+                        if (x == true) {
+                            console.log("We've got the right authentitication");
+                            this.loaded = true;
                         }
                         else {
-                            console.log("Wrong authentication.  Reauthenitcating")
+                            console.log("Wrong authentication.  Reauthenitcating");
                             this.authenticationService.publicLogin(this.publicName)
-                            .then(() => {this.loaded = true})
+                                .then(() => { this.loaded = true; });
                         }
-                    })
+                    });
                 }
             }
             else {
-                this.loaded = true
+                this.loaded = true;
             }
-        })
-
-
+        });
     }
 
     private getAllItems(userID: number): Promise<any> {

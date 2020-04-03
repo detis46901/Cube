@@ -150,7 +150,7 @@ export class ServerLayersComponent implements OnInit {
     }
 
     private filterForMapServer(element, index, array) {
-        return element['type'] == "MapServer"
+        return element['type']  == "ImageServer" || "MapServer"
     }
 
     public getArcGISLayers(service: string): void {
@@ -183,7 +183,7 @@ export class ServerLayersComponent implements OnInit {
     }
     private getArcGISWMTS(service: string): void {
         this.selectedService = service['name']
-        this.getCapabilities(this.server.serverURL + '/' + service['name'] + '/MapServer/WMTS/1.0.0/WMTSCapabilities.xml')
+        this.getCapabilities(this.server.serverURL + '/' + service['name'] + '/ImageServer/WMTS/1.0.0/WMTSCapabilities.xml')
             .subscribe((data) => {
                 let parser = new WMTSCapabilities()
                 let result = parser.read(data)
