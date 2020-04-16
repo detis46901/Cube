@@ -313,7 +313,7 @@ export class WOService {
 
   public updateFields(featureID, featurejson, comment?: string) {
     if (!comment) { comment = 'Object Created' }
-    // this.myCubeService.createAutoMyCubeComment(true, comment, featureID, this.mapConfig.currentLayer.layer.ID, this.mapConfig.user.ID, featurejson['geometry'])
+    this.myCubeService.createAutoMyCubeComment(true, comment, featureID, this.mapConfig.currentLayer.layer.ID, this.mapConfig.user.ID, featurejson['geometry'])
     let mcf = new MyCubeField
     mcf.field = "createdBy"
     mcf.type = "text"
@@ -417,8 +417,8 @@ export class WOService {
     mcf.value = this.WOConfig.selectedWO.assignedTo
     let assignedtoName = this.WOConfig.assignedTo.find((x) => x.name == this.WOConfig.selectedWO.assignedTo)
     this.updateField(featureID, mcf)
-    // if (this.WOConfig.selectedWO.assignNote) { this.myCubeService.createAutoMyCubeComment(true, this.WOConfig.selectedWO.assignNote, featureID, this.mapConfig.currentLayer.layerID, this.mapConfig.user.ID).then((x) => {}) }
-    // this.myCubeService.createAutoMyCubeComment(true, "Work Order assigned to " + assignedtoName.fullName, featureID, this.mapConfig.currentLayer.layerID, this.mapConfig.user.ID)
+    if (this.WOConfig.selectedWO.assignNote) { this.myCubeService.createAutoMyCubeComment(true, this.WOConfig.selectedWO.assignNote, featureID, this.mapConfig.currentLayer.layerID, this.mapConfig.user.ID).then((x) => {}) }
+    this.myCubeService.createAutoMyCubeComment(true, "Work Order assigned to " + assignedtoName.fullName, featureID, this.mapConfig.currentLayer.layerID, this.mapConfig.user.ID)
     let snackBarRef = this.snackBar.open('Work order was assigned.', '', {
       duration: 4000
     });
@@ -438,7 +438,7 @@ export class WOService {
           //this.reloadLayer()
           //this.clearFeature(this.mapConfig, this.mapConfig.currentLayer)
         })
-        // this.myCubeService.createAutoMyCubeComment(true, this.WOConfig.selectedWO.assignNote, this.WOConfig.selectedWO.id, this.mapConfig.currentLayer.layerID, this.mapConfig.user.ID)
+        this.myCubeService.createAutoMyCubeComment(true, this.WOConfig.selectedWO.assignNote, this.WOConfig.selectedWO.id, this.mapConfig.currentLayer.layerID, this.mapConfig.user.ID)
         this.WOConfig.Mode = 'None'
       }
       else {
@@ -471,7 +471,7 @@ export class WOService {
     this.mapConfig.currentLayer.source.removeFeature(this.mapConfig.selectedFeature)
     snackBarRef.afterDismissed().subscribe((x) => {
       if (!didUndo) {
-        // if (this.WOConfig.editWO.assignNote) { this.myCubeService.createAutoMyCubeComment(true, this.WOConfig.selectedWO.assignNote, this.WOConfig.selectedWO.id, this.mapConfig.currentLayer.layerID, this.mapConfig.user.ID) }
+        if (this.WOConfig.editWO.assignNote) { this.myCubeService.createAutoMyCubeComment(true, this.WOConfig.selectedWO.assignNote, this.WOConfig.selectedWO.id, this.mapConfig.currentLayer.layerID, this.mapConfig.user.ID) }
         this.WOConfig.Mode = 'None'
         let mcf = new MyCubeField
         mcf.field = "completed"

@@ -15,7 +15,6 @@ import VectorLayer from "ol/layer/Vector";
 import VectorSource from 'ol/source/Vector';
 import {transform} from 'ol/proj';
 import { environment } from '../../../../environments/environment'
-import { LogField } from 'app/shared.components/data-component/data-form.model';
 
 
 @Injectable()
@@ -542,17 +541,7 @@ export class LocatesService {
                 let snackBarRef = this.snackBar.open('Ticket ' + this.locate.ticket + ' was inserted.', 'Undo', {
                   duration: 4000
                 });
-                let logfield = new LogField
-                logfield.schema = 'mycube'
-                logfield.logTable = 'c' + table
-                logfield.userid = this.mapConfig.user.ID
-                logfield.auto = true
-                logfield.comment = 'Ticket Created'
-                logfield.featureid = id
-                this.sqlService.addAnyComment(logfield).subscribe((x) => {
-                  console.log(x)
-                })
-                // this.myCubeService.createAutoMyCubeComment(true, "Ticket Created", id, table, this.mapConfig.user.ID)
+                this.myCubeService.createAutoMyCubeComment(true, "Ticket Created", id, table, this.mapConfig.user.ID)
                 snackBarRef.onAction().subscribe((x) => {
                   this.sqlService.Delete(table, id)
                     .subscribe((x) => {
