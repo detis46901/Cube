@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   apiUrl: 'https://cube-kokomo.com:5000',
   proxyUrl: 'https://cube-kokomo.com:9876',
-  domain: 'cityofkokomo',
+  domain: 'cityofkokomo.org',
   publicPassword: 'Monday01',
   publicTitle: 'City of Kokomo',
   centerLong: -86.1336,

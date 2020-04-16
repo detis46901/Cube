@@ -24,7 +24,6 @@ export class AuthenticationService {
         let promise = new Promise((resolve) => {
             this.userService.login(publicName.toLocaleLowerCase() + '@' + environment.domain, environment.publicPassword)
                 .subscribe(res => {
-
                     console.log(res)
                     if (res['token']) {
                         this.token = res['token'];
