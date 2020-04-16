@@ -181,30 +181,30 @@ export class MyCubeService extends SQLService {
     return this.mycubeconfig.asObservable();
   }
 
-  public createAutoMyCubeComment(auto: boolean, commentText: string, featureID: string | number, layerID: number, userID: number, geom?: any): Promise<any> {
-    console.log('Creating Auto Comment')
-    let comment = new MyCubeComment()
-    let promise = new Promise((resolve) => {
-      comment.auto = auto
-      comment.comment = commentText
-      comment.featureid = featureID
-      comment.table = layerID
-      comment.userid = userID
-      comment.geom = geom
-      if (geom != undefined) {
-        this.addCommentWithGeom(comment)
-          .subscribe((data) => {
-            console.log(data)
-            resolve()
-          })
-      }
-      else {
-        this.addCommentWithoutGeom(comment)
-          .subscribe((data) => {
-            resolve()
-          })
-      }
-    })
-    return promise
-  }
+  // public createAutoMyCubeComment(auto: boolean, commentText: string, featureID: string | number, layerID: number, userID: number, geom?: any): Promise<any> {
+  //   console.log('Creating Auto Comment')
+  //   let comment = new MyCubeComment()
+  //   let promise = new Promise((resolve) => {
+  //     comment.auto = auto
+  //     comment.comment = commentText
+  //     comment.featureid = featureID
+  //     comment.table = layerID
+  //     comment.userid = userID
+  //     comment.geom = geom
+  //     if (geom != undefined) {
+  //       this.addCommentWithGeom(comment)
+  //         .subscribe((data) => {
+  //           console.log(data)
+  //           resolve()
+  //         })
+  //     }
+  //     else {
+  //       this.addCommentWithoutGeom(comment)
+  //         .subscribe((data) => {
+  //           resolve()
+  //         })
+  //     }
+  //   })
+  //   return promise
+  // }
 }

@@ -66,7 +66,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule, ReactiveFormsModule
   ],
   providers: [DataFormService],
-  exports: [LogFormComponentComponent, DataFormService, DataFormComponentComponent, HtmlFormComponent]
+  exports: [LogFormComponentComponent, DataFormComponentComponent, HtmlFormComponent]
 })
 
 export class DataModule { }

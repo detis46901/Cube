@@ -48,8 +48,8 @@ export class WOComponent implements OnInit, OnDestroy {
     this.userID = currentUser && currentUser.userID;
     let today:Date = new Date()
     this.WOservice.getConfig(this.instance)
-    this.myCubeComments = this.mapConfig.myCubeComment
-    this.myCubeConfig = this.mapConfig.myCubeConfig
+    // this.myCubeComments = this.mapConfig.myCubeComment
+    // this.myCubeConfig = this.mapConfig.myCubeConfig
     this.myCubeData = this.mapConfig.myCubeData
 
   }

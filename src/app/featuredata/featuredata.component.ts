@@ -76,18 +76,18 @@ export class FeatureDataComponent implements OnInit {
     this.myCubeSubscription = this.myCubeService.getMyCubeData().subscribe(myCubeData => { this.myCubeData = myCubeData; this.message = null; this.searchResults = null });
     this.myCubeCommentSubscription = this.myCubeService.getMyCubeComments().subscribe(myCubeComments => { this.myCubeComments = myCubeComments; this.commentText = ""; this.newComment.file = null })
     this.editSubscription = this.myCubeService.getMyCubeConfig().subscribe(data => { this.myCubeConfig = data });
-    this.searchResultsSubscription = this.geocodingService.getSearchResults().subscribe(searchResults => { this.searchResults = searchResults; this.message = null; this.myCubeData = null; this.checkFeatureModule() })
+    // this.searchResultsSubscription = this.geocodingService.getSearchResults().subscribe(searchResults => { this.searchResults = searchResults; this.message = null; this.myCubeData = null; this.checkFeatureModule() })
     this.open = true
     this.myCubeData = this.mapConfig.myCubeData
-    this.myCubeConfig = this.mapConfig.myCubeConfig
-    this.myCubeComments = this.mapConfig.myCubeComment
+    // this.myCubeConfig = this.mapConfig.myCubeConfig
+    // this.myCubeComments = this.mapConfig.myCubeComment
     this.URL = environment.apiUrl + '/api/sql/getimage'
     this.userID = this.mapConfig.user.ID
   }
 
-  public checkFeatureModule() {
-    this.createPointName = this.featuremodulesservice.checkSearch(this.mapConfig, this.mapConfig.currentLayer)
-  }
+  // public checkFeatureModule() {
+  //   this.createPointName = this.featuremodulesservice.checkSearch(this.mapConfig, this.mapConfig.currentLayer)
+  // }
 
   public setCorrectDate() {
     console.log(this.myCubeData)
@@ -108,75 +108,75 @@ export class FeatureDataComponent implements OnInit {
     this.message = null
   }
 
-  public updateMyCube(mycube: MyCubeField): void {
-    let FID: number = this.myCubeData[0].value //required in the case the blur occurs when the object is unselected.
-    if (mycube.changed) {
-      mycube.links = Autolinker.parse(mycube.value, { urls: true, email: true })
-      if (mycube.type == "date") {
-        if (mycube.value) {
-          console.log(mycube.value)
-          mycube.value = mycube.value.toJSON()
-        }
-        else {
-          console.log(mycube.value)
-          mycube.value = null
-        }
-      }
-      if (mycube.type == "text") {
-        let ntext: RegExp = /'/g
-        mycube.value = mycube.value.replace(ntext, "''")
-      }
-      this.sqlservice
-        .Update(this.myCubeConfig.table, this.myCubeData[0].value, mycube)
-        .subscribe((data) => {
-          this.myCubeService.createAutoMyCubeComment(true, mycube.field + " changed to " + mycube.value, FID, this.myCubeConfig.table, this.userID)
-            .then(() => {
-              this.commentText = ""
-              //try is used to not error when the change coinsides with unselecting the object.
-              try { this.myCubeService.loadComments(this.myCubeConfig.table, this.myCubeData[0].value) }
-              catch { }
-            })
-        })
-      if (mycube.type == "text") {
-        let ntext: RegExp = /''/g
-        mycube.value = mycube.value.replace(ntext, "'")
-      }
-    }
-    mycube.changed = false
-  }
+  // public updateMyCube(mycube: MyCubeField): void {
+  //   let FID: number = this.myCubeData[0].value //required in the case the blur occurs when the object is unselected.
+  //   if (mycube.changed) {
+  //     mycube.links = Autolinker.parse(mycube.value, { urls: true, email: true })
+  //     if (mycube.type == "date") {
+  //       if (mycube.value) {
+  //         console.log(mycube.value)
+  //         mycube.value = mycube.value.toJSON()
+  //       }
+  //       else {
+  //         console.log(mycube.value)
+  //         mycube.value = null
+  //       }
+  //     }
+  //     if (mycube.type == "text") {
+  //       let ntext: RegExp = /'/g
+  //       mycube.value = mycube.value.replace(ntext, "''")
+  //     }
+  //     this.sqlservice
+  //       .Update(this.myCubeConfig.table, this.myCubeData[0].value, mycube)
+  //       .subscribe((data) => {
+  //         this.myCubeService.createAutoMyCubeComment(true, mycube.field + " changed to " + mycube.value, FID, this.myCubeConfig.table, this.userID)
+  //           .then(() => {
+  //             this.commentText = ""
+  //             //try is used to not error when the change coinsides with unselecting the object.
+  //             try { this.myCubeService.loadComments(this.myCubeConfig.table, this.myCubeData[0].value) }
+  //             catch { }
+  //           })
+  //       })
+  //     if (mycube.type == "text") {
+  //       let ntext: RegExp = /''/g
+  //       mycube.value = mycube.value.replace(ntext, "'")
+  //     }
+  //   }
+  //   mycube.changed = false
+  // }
 
-  public addMyCubeComment() {
-    this.newComment.comment = this.commentText
-    if (this.newComment.file) {
-      if (!this.commentText) {
-        this.newComment.comment = 'Attachment'
-      }
-    }
-    let ntext: RegExp = /'/g
-    this.newComment.comment = this.newComment.comment.replace(ntext, "''")
-    this.newComment.table = this.myCubeConfig.table
-    this.newComment.featureid = this.myCubeData[0].value
-    this.newComment.userid = this.mapConfig.user.ID
-    this.newComment.firstName = this.userFirstName
-    this.newComment.lastName = this.userLastName
-    this.newComment.auto = false
-    //Need to add the time in here so it looks right when it is added immediately
-    this.myCubeComments.push(this.newComment)
-    console.log(this.newComment)
-    this.sqlservice
-      .addCommentWithoutGeom(this.newComment)
-      .subscribe((data) => {
-        console.log(data)
-        if (this.newComment.file) {
-          console.log('file exists')
-          console.log(data[0][0].id)
-          this.uploadFile(data[0][0].id)
-        }
-        //this.myCubeComments.push(this.newComment)
-        this.myCubeService.loadComments(this.myCubeConfig.table, this.myCubeData[0].value)
-      })
-    this.commentText = ""
-  }
+  // public addMyCubeComment() {
+  //   this.newComment.comment = this.commentText
+  //   if (this.newComment.file) {
+  //     if (!this.commentText) {
+  //       this.newComment.comment = 'Attachment'
+  //     }
+  //   }
+  //   let ntext: RegExp = /'/g
+  //   this.newComment.comment = this.newComment.comment.replace(ntext, "''")
+  //   this.newComment.table = this.myCubeConfig.table
+  //   this.newComment.featureid = this.myCubeData[0].value
+  //   this.newComment.userid = this.mapConfig.user.ID
+  //   this.newComment.firstName = this.userFirstName
+  //   this.newComment.lastName = this.userLastName
+  //   this.newComment.auto = false
+  //   //Need to add the time in here so it looks right when it is added immediately
+  //   this.myCubeComments.push(this.newComment)
+  //   console.log(this.newComment)
+  //   this.sqlservice
+  //     .addCommentWithoutGeom(this.newComment)
+  //     .subscribe((data) => {
+  //       console.log(data)
+  //       if (this.newComment.file) {
+  //         console.log('file exists')
+  //         console.log(data[0][0].id)
+  //         this.uploadFile(data[0][0].id)
+  //       }
+  //       //this.myCubeComments.push(this.newComment)
+  //       this.myCubeService.loadComments(this.myCubeConfig.table, this.myCubeData[0].value)
+  //     })
+  //   this.commentText = ""
+  // }
 
   public changeTextField(mycube: MyCubeField) {
     mycube.changed = true
@@ -209,37 +209,37 @@ export class FeatureDataComponent implements OnInit {
         console.log(result)
       })
   }
-  public createPoint() {
-    if (this.featuremodulesservice.createPoint(this.mapConfig, this.mapConfig.currentLayer) == false) {
-      console.log("creating Point")
-      let featureID: number
-      console.log(this.mapConfig.currentLayer.layer)
-      if (this.mapConfig.currentLayer.layer.layerType == "MyCube") {
-        this.mapConfig.searchResultSource.forEachFeature((x) => {
-          let featurejson = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(x);
-          this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
-            .subscribe((data) => {
-              console.log(data)
-              try { featureID = data[0][0].id }
-              catch (e) {
-                this.sqlService.fixGeometry(this.mapConfig.currentLayer.layer.ID)
-                  .subscribe((x) => {
-                  })
-              }
-              x.setId(featureID);
-              x.setProperties(data[0]);
-              this.mapConfig.currentLayer.source.addFeature(x)
-              //x.setStyle(stylefunction)
-              this.mapService.getFeatureList();
-              this.myCubeService.createAutoMyCubeComment(true, "Object Created", featureID, this.mapConfig.currentLayer.layer.ID, this.userID, featurejson['geometry'])
-              this.searchResults = null
-              this.mapConfig.searchResultSource.clear()
-            })
-        })
-      }
-    }
-    else {
-      this.searchResults = null
-    }
-  }
+  // public createPoint() {
+  //   if (this.featuremodulesservice.createPoint(this.mapConfig, this.mapConfig.currentLayer) == false) {
+  //     console.log("creating Point")
+  //     let featureID: number
+  //     console.log(this.mapConfig.currentLayer.layer)
+  //     if (this.mapConfig.currentLayer.layer.layerType == "MyCube") {
+  //       this.mapConfig.searchResultSource.forEachFeature((x) => {
+  //         let featurejson = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(x);
+  //         this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
+  //           .subscribe((data) => {
+  //             console.log(data)
+  //             try { featureID = data[0][0].id }
+  //             catch (e) {
+  //               this.sqlService.fixGeometry(this.mapConfig.currentLayer.layer.ID)
+  //                 .subscribe((x) => {
+  //                 })
+  //             }
+  //             x.setId(featureID);
+  //             x.setProperties(data[0]);
+  //             this.mapConfig.currentLayer.source.addFeature(x)
+  //             //x.setStyle(stylefunction)
+  //             this.mapService.getFeatureList();
+  //             this.myCubeService.createAutoMyCubeComment(true, "Object Created", featureID, this.mapConfig.currentLayer.layer.ID, this.userID, featurejson['geometry'])
+  //             this.searchResults = null
+  //             this.mapConfig.searchResultSource.clear()
+  //           })
+  //       })
+  //     }
+  //   }
+  //   else {
+  //     this.searchResults = null
+  //   }
+  // }
 }
