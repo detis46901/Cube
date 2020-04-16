@@ -1,11 +1,10 @@
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Configuration } from '../_api/api.constants';
 import { MapConfig } from 'app/map/models/map.model';
-
+import { environment } from 'environments/environment'
 
 @Injectable()
 
@@ -14,9 +13,8 @@ export class MapConfigService {
     public options: any;
     protected token: string;
 
-    constructor(protected _http: HttpClient, protected configuration: Configuration) {
-        this.actionUrl = this.configuration.serverWithApiUrl + 'mapconfig/';
-       
+    constructor(protected _http: HttpClient) {
+        this.actionUrl = environment.apiUrl + environment.apiUrlPath + 'mapconfig/';
     }
 
     public getOptions() {

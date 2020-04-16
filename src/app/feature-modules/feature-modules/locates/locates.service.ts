@@ -80,7 +80,6 @@ export class LocatesService {
   private createInterval() {
     clearInterval(this.layer.updateInterval)
     this.layer.updateInterval= setInterval(() => {
-      // console.log(this.layer.updateInterval)
       this.reloadLayer();
     }, 20000);
   }
@@ -114,7 +113,7 @@ export class LocatesService {
     return promise;
   }
 
-  private getFeatureList(layer?:UserPageLayer): boolean {
+  public getFeatureList(layer?:UserPageLayer): boolean {
     let k: number = 0;
     let tempList = new Array<featureList>();
     if (layer.source.length){console.log(layer.source.length)}
@@ -173,6 +172,8 @@ export class LocatesService {
   }
 
   public unloadLayer(layer: UserPageLayer): boolean {
+    this.locateConfig[0].visible = false
+    this.clearFeature(layer)
     return true
   }
 
@@ -186,24 +187,29 @@ export class LocatesService {
         this.locate = data[0][0]
       })
     this.sendTicket(this.mapConfig.selectedFeature.get('ticket'))
-    this.mapConfig.selectedFeature.setStyle(this.locateStyles.selected)
+    //this.mapConfig.selectedFeature.setStyle(this.locateStyles.selected)
     return false
   }
 
   public clearFeature(layer: UserPageLayer): boolean {
-    let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
-      return (this.styleService.styleFunction(feature, 'current'));
-    })
+    // let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
+    //   console.log(feature)
+    //   return (this.styleService.styleFunction(feature, 'current'));
+    // })
     //this.reloadLayer()  //Can't do this.  It would be circular.
     this.createInterval()
     this.sendTicket(null)
     this.locate = null
-    this.myCubeService.clearMyCubeData()
-    if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction) }
-    return true
+    // this.myCubeService.clearMyCubeData()
+//    if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction) }
+    return false
   }
 
   public styleSelectedFeature(layer: UserPageLayer): boolean {
+    let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
+      return (this.styleService.styleFunction(feature, 'selected'));
+    })
+    this.mapConfig.selectedFeature.setStyle(stylefunction)
     return true
   }
 
@@ -212,7 +218,7 @@ export class LocatesService {
       return (this.styleService.styleFunction(feature, 'current'));
     })
     this.mapConfig.selectedFeature.setStyle(stylefunction)
-    this.mapConfig.selectedFeature = null
+    //this.mapConfig.selectedFeature = null
     return true
   }
 

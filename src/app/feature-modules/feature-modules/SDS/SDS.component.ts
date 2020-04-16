@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MapConfig } from '../../../map/models/map.model';
 import { Subscription } from 'rxjs';
 import { SDSService } from './SDS.service'
@@ -7,12 +7,13 @@ import { User } from '../../../../_models/user.model'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
 import { ModuleInstance } from '../../../../_models/module.model'
 import { Clipboard } from 'ts-clipboard';
-import { Configuration } from '../../../../_api/api.constants';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SDSConfig, SDSStyles } from './SDS.model'
 import Autolinker from 'autolinker';
-import { MyCubeComment } from '_models/layer.model';
+import { UserPageLayer } from '_models/layer.model';
 import { environment } from 'environments/environment'
+import { DataFormConfig, LogFormConfig, LogField } from '../../../shared.components/data-component/data-form.model'
+import { DataFormService } from '../../../shared.components/data-component/data-form.service'
 
 
 @Component({
@@ -20,7 +21,7 @@ import { environment } from 'environments/environment'
   templateUrl: './SDS.component.html',
   styleUrls: ['./SDS.component.css']
 })
-export class SDSComponent implements OnInit, OnDestroy {
+export class SDSComponent implements OnInit {
 
   public expanded: boolean = false
   public expandedSubscription: Subscription;
@@ -28,18 +29,11 @@ export class SDSComponent implements OnInit, OnDestroy {
   public userID: number;
   public token: string;
   public userName: string;
-  public completedNote: string;
-  public filterOpen: boolean = true
   public fromDate: Date
   public toDate: Date
   public tminus30: Date
   public tab: string;
-  public moduleInstanceName: string
-  public label: string
-  public Autolinker = new Autolinker()
   public SDSConfig = new SDSConfig
-  public SDSConfigID: number
-  //public newComment = new MyCubeComment
   public URL: string;
 
 
@@ -49,7 +43,7 @@ export class SDSComponent implements OnInit, OnDestroy {
     public userService: UserService,
     public locateStyles: SDSStyles,
     public moduleInstanceService: ModuleInstanceService,
-    private configuration: Configuration,
+    private dataFormService: DataFormService
   ) { }
 
   @Input() mapConfig: MapConfig;
@@ -57,8 +51,6 @@ export class SDSComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.SDSservice.mapConfig = this.mapConfig
-    this.expandedSubscription = this.SDSservice.getExpanded().subscribe(expanded => { this.SDSConfig.expanded = expanded })
-    this.SDSConfigSubscription = this.SDSservice.getSDSConfig().subscribe(SDSConfig => { this.SDSConfig = SDSConfig[this.SDSConfigID] })
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.token = currentUser && currentUser.token;
     this.userID = currentUser && currentUser.userID;
@@ -70,62 +62,78 @@ export class SDSComponent implements OnInit, OnDestroy {
     this.fromDate = this.tminus30
     this.SDSConfig.label = this.instance.settings['settings'][1]['setting']['value']
     this.SDSConfig.moduleInstanceID = this.instance.ID
-    this.SDSservice.getSchema('modules', this.instance.ID, this.SDSConfig)
-      .then((x) => {
-        this.SDSConfig.itemData[0].type = "id"   //Sets the "id" of the SDS to type = 'id' so it won't be visible.
-        this.SDSConfig.itemData.forEach((x) => {  //probably not the best way to do this.  This finds the linked field and sets it to 'id' so it won't be visible.
-          if (x.field == this.SDSConfig.moduleSettings['settings'][2]['setting']['value']) {
-            this.SDSConfig.itemData[this.SDSConfig.itemData.indexOf(x)].type = 'id'
-            this.SDSConfig.linkedField = x.field
-            this.SDSConfigID = this.SDSservice.SDSConfig.push(this.SDSConfig) - 1
-            // this.SDSservice.getLayerfromSDSConfigID(this.SDSConfig)
-            // this.SDSservice.setReload(SDSConfig)
-          }
-        })
-      })
-    
-      this.URL = environment.apiUrl + '/api/sql/getanyimage'
-
+    this.URL = environment.apiUrl + '/api/sql/getanyimage'
   }
 
-  ngOnDestroy() {
-    this.expandedSubscription.unsubscribe()
-    clearInterval(this.SDSservice.SDSUpdateInterval);
+  public loadLayer(layer: UserPageLayer): boolean {
+    return this.SDSservice.loadLayer(this.mapConfig, layer)
   }
 
-  public onFileSelected(event) {
-    console.log(event) //This will be used for adding an image to a comment for myCube.
-    this.SDSConfig.newComment.file = <File>event.target.files[0] //Send to the bytea data type field in comment table.
+  public unloadLayer(layer): boolean {
+    return this.SDSservice.unloadLayer(layer)
   }
 
-  public addMyCubeComment() {
-    this.SDSConfig.newComment.comment = 'Attachment by ' + this.mapConfig.user.firstName + " " + this.mapConfig.user.lastName
-    let ntext: RegExp = /'/g
-    this.SDSConfig.newComment.comment = this.SDSConfig.newComment.comment.replace(ntext, "''")
-    this.SDSConfig.newComment.table = 'modules.m' + this.SDSConfig.moduleInstanceID + 'log';
-    this.SDSConfig.newComment.featureid = this.SDSConfig.selectedItem
-    this.SDSConfig.newComment.userid = this.mapConfig.user.ID
-    this.SDSConfig.newComment.firstName = this.mapConfig.user.firstName
-    this.SDSConfig.newComment.lastName = this.mapConfig.user.lastName
-    this.SDSConfig.newComment.auto = false
-    //Need to add the time in here so it looks right when it is added immediately
-    this.SDSConfig.selectedItemLog.push(this.SDSConfig.newComment)
-    console.log(this.SDSConfig.newComment)
-    this.SDSservice
-      .SDSLog(this.SDSConfigID, this.SDSConfig.newComment)
+  public setCurrentLayer(layer): boolean {
+    this.SDSConfig.expanded = true
+    this.SDSConfig.visible = true
+    this.dataFormService.setDataFormConfig('modules', 'm' + this.SDSConfig.moduleInstanceID + 'data').then((x) => {
+      x.editMode = true
+      this.SDSConfig.itemDataForm = x
+      this.SDSConfig.linkedField = this.SDSConfig.moduleSettings['settings'][2]['setting']['value']
+    })
+    return this.SDSservice.setCurrentLayer(layer)
+  }
+
+  public unsetCurrentLayer(layer): boolean {
+    this.SDSConfig.expanded = false
+    this.SDSConfig.visible = false
+    return this.SDSservice.unsetCurrentLayer(layer)
+  }
+
+  public styleMyCube(layer: UserPageLayer): boolean {
+    if (layer.layer.layerType != 'MyCube') { return false }
+    return this.SDSservice.styleMyCube(layer)
+  }
+
+  public styleSelectedFeature(layer): boolean {
+    return this.SDSservice.styleSelectedFeature(layer)
+  }
+
+  public selectFeature(layer): boolean {
+    this.mapConfig.showDeleteButton = true
+    this.styleSelectedFeature(layer)
+    this.SDSConfig.itemDataForm.rowID = this.mapConfig.selectedFeature.get('id')
+    this.SDSservice.getSDSRecords(this.SDSConfig.itemDataForm, this.SDSConfig.linkedField).then((x) => {
+      this.SDSConfig.list = x
+      this.goToTab('Input')
+    })
+    return false  //this allows it to load the MyCube layer
+  }
+
+  public getFeatureList(layer): boolean {
+    return false
+  }
+
+  public clearFeature(layer): boolean {
+    this.SDSConfig.list = null
+    this.SDSConfig.tab = 'None'
+    return false
+  }
+
+  public unstyleSelectedFeature(layer): boolean {
+    return this.SDSservice.unstyleSelectedFeature(layer)
   }
 
   goToTab(tab) {
-    this.SDSConfig.tab = tab
-    if (this.SDSConfig.tab == 'Input') {
-      this.SDSConfig.selectedItem = null
-      this.SDSConfig.itemData.forEach((x) => {
-        x.value = null
-        if (x.field == this.SDSConfig.moduleSettings['settings'][2]['setting']['value']) {
-          this.SDSConfig.itemData[this.SDSConfig.itemData.indexOf(x)].value = this.mapConfig.selectedFeature.get('id')  //this will need something more when I add wms features
-        }
+    if (tab == 'Input') {
+      this.dataFormService.setDataFormConfig('modules', this.SDSConfig.itemDataForm.dataTable).then((x) => {
+        this.SDSConfig.itemDataForm = x
+        this.SDSConfig.itemDataForm.logTable = 'm' + this.SDSConfig.itemDataForm + 'log'
+        this.SDSConfig.itemDataForm.editMode = true
       })
+      this.SDSConfig.selectedItem = 0
     }
+    this.SDSConfig.tab = tab
   }
 
   getModuleName() {
@@ -137,79 +145,127 @@ export class SDSComponent implements OnInit, OnDestroy {
     this.SDSConfig.moduleSettings = this.instance.settings
   }
 
-  filter() { //Not sure this is necessary.  It's not being used.
-    let filterString: string = ''
-    let options = { year: 'numeric', month: 'numeric', day: 'numeric' }
-    if (this.filterOpen == true) { filterString = 'closed is Null' }
-    if (filterString != '') { filterString += " and " } else { filterString += " " }
-    if (this.fromDate) {
-      filterString += "tdate BETWEEN '" + new Intl.DateTimeFormat('en-US').format(this.fromDate) + "' AND "
-    }
-    else {
-      filterString += "tdate BETWEEN '" + new Intl.DateTimeFormat('en-US').format(this.tminus30) + "' AND "
-    }
-    if (this.toDate) {
-      filterString += "'" + new Intl.DateTimeFormat('en-US').format(this.toDate) + "'"
-    }
-    else {
-      filterString += "CURRENT_DATE"
-    }
-    console.log(filterString)
-    this.SDSservice.filter = filterString
-    this.runFilter();
-  }
+  // filter() { //Not sure this is necessary.  It's not being used.
+  //   let filterString: string = ''
+  //   let options = { year: 'numeric', month: 'numeric', day: 'numeric' }
+  //   if (this.filterOpen == true) { filterString = 'closed is Null' }
+  //   if (filterString != '') { filterString += " and " } else { filterString += " " }
+  //   if (this.fromDate) {
+  //     filterString += "tdate BETWEEN '" + new Intl.DateTimeFormat('en-US').format(this.fromDate) + "' AND "
+  //   }
+  //   else {
+  //     filterString += "tdate BETWEEN '" + new Intl.DateTimeFormat('en-US').format(this.tminus30) + "' AND "
+  //   }
+  //   if (this.toDate) {
+  //     filterString += "'" + new Intl.DateTimeFormat('en-US').format(this.toDate) + "'"
+  //   }
+  //   else {
+  //     filterString += "CURRENT_DATE"
+  //   }
+  //   this.SDSservice.filter = filterString
+  //   this.runFilter();
+  // }
 
-  private runFilter() {
-    let i = this.SDSservice.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == this.instance.ID);
-    let obj = this.SDSservice.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'myCube Layer Identity (integer)');
-    if (this.SDSservice.mapConfig.currentLayer.layer.ID === +obj['setting']['value']) {
-      this.SDSservice.reloadLayer(this.SDSservice.mapConfig.currentLayer);
-    }
-    else {
-      this.SDSservice.reloadLayer(this.SDSservice.mapConfig.currentLayer);
-    }
-  }
+  // private runFilter() {
+  //   let i = this.SDSservice.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == this.instance.ID);
+  //   let obj = this.SDSservice.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'myCube Layer Identity (integer)');
+  //   if (this.SDSservice.mapConfig.currentLayer.layer.ID === +obj['setting']['value']) {
+  //     this.SDSservice.reloadLayer(this.SDSservice.mapConfig.currentLayer);
+  //   }
+  //   else {
+  //     this.SDSservice.reloadLayer(this.SDSservice.mapConfig.currentLayer);
+  //   }
+  // }
 
-  clearFilter() {
-    this.filterOpen = true
-    this.fromDate = null
-    this.toDate = null
-    this.SDSservice.filter = 'closed is Null'
-    this.runFilter()
-  }
+  // clearFilter() {
+  //   this.filterOpen = true
+  //   this.fromDate = null
+  //   this.toDate = null
+  //   this.SDSservice.filter = 'closed is Null'
+  //   this.runFilter()
+  // }
 
-  public selectItem(itemID, SDSConfigID) {
-    let i: number = 0
-    let selected = this.SDSConfig.list.find((x) => x['id'] == itemID)
-    this.SDSConfig.itemData.forEach((x) => {
-      x.value = selected[x.field]
-      i++
-      if (x.type == "date") {
-        //need to do something about this because the date picker uses the day before the actual date.  There's a time zone issue.
-      }
-      if (x.value && (x.type == 'text' || x.type == 'character varying')) {
-        console.log(x.value)
-        x.links = Autolinker.parse(x.value, { urls: true, email: true })
-      }
+  public selectItem(itemID) {
+    this.dataFormService.setDataFormConfig('modules', 'm' + this.SDSConfig.moduleInstanceID + 'data', itemID).then((dataFormConfig: DataFormConfig) => {
+      dataFormConfig.visible = true
+      dataFormConfig.dataTableTitle = "Inspection Data"
+      dataFormConfig.editMode = false
+      dataFormConfig.logTable = 'm' + this.SDSConfig.moduleInstanceID + 'log'
+      dataFormConfig.userID = this.mapConfig.user.ID
+      this.SDSConfig.itemDataForm = dataFormConfig
+      this.SDSConfig.selectedItem = itemID
+      dataFormConfig.dataForm.find((x) => x.field == 'id').visible = false
+      dataFormConfig.dataForm.find((x) => x.field == this.SDSConfig.moduleSettings['settings'][2]['setting']['value']).visible = false
+      this.loadLogConfig(itemID)
+      this.SDSConfig.tab = 'Item'
     })
 
-    this.SDSConfig.selectedItem = itemID
-    this.SDSConfig.tab = 'Item'
-    // I'm using the existing data it gets when you first select and item to feed the item data.  If it needs to be more dynamic, the code below will help to do that.
-    // this.SDSservice.getData(this.instance, itemID).then((x) => {
-    //   console.log(x)
-    //   this.SDSConfig.itemData = x
-    //   this.editRecord = true //sets the disabled to true
-    //   this.SDSConfig.itemData[0].value = itemID
-    //   this.SDSConfig.selectedItem = itemID
-    // })
-    this.SDSservice.getSDSLog(SDSConfigID, 'modules.m' + this.SDSConfig.moduleInstanceID + 'log', itemID)
+  }
+
+  public loadLogConfig(itemID) {
+    this.dataFormService.setLogConfig('modules', 'm' + this.SDSConfig.moduleInstanceID + 'log', itemID).then((logFormConfig: LogFormConfig) => {
+      this.SDSConfig.selectedItemLog = logFormConfig
+      this.renderLogConfig(logFormConfig);
+    });
+
   }
 
   public copyToClipboard(url: string) {
-    Clipboard.copy(this.configuration.serverWithApiUrl + url + '&apikey=' + this.token);
+    Clipboard.copy(environment.apiUrl + environment.apiUrlPath + + url + '&apikey=' + this.token);
     this.snackBar.open("Copied to the clipboard", "", {
       duration: 2000,
     });
+  }
+
+  public changedDataForm($event) {
+    this.loadLogConfig($event.rowID)
+  }
+
+  public renderLogConfig(logFormConfig: LogFormConfig) {
+    logFormConfig.logTableTitle = "Comments"
+    logFormConfig.visible = true;
+    logFormConfig.logForm.forEach((x) => {
+      if (x.userid == this.mapConfig.user.ID) {
+        x.canDelete = true;
+      }
+    });
+    logFormConfig.userID = this.mapConfig.user.ID;
+    if (this.SDSConfig.selectedItemLog.showAuto) { logFormConfig.showAuto = true }
+    this.SDSConfig.selectedItemLog = logFormConfig
+  }
+  public onNewComment(logFormConfig: LogFormConfig) {
+    this.renderLogConfig(logFormConfig)
+  }
+
+  public addSDS() {
+    this.dataFormService.addDataFormConfig(this.SDSConfig.itemDataForm, this.SDSConfig.linkedField, this.mapConfig.selectedFeature.get('id')).then((x) => {
+      let logField = new LogField
+      logField.userid = this.mapConfig.user.ID
+      logField.auto = true
+      logField.comment = 'Record Added'
+      logField.schema = this.SDSConfig.itemDataForm.schema
+      logField.logTable = 'm' + this.SDSConfig.moduleInstanceID + 'log'
+      logField.featureid = x
+      if (!this.SDSConfig.selectedItemLog.logForm) { this.SDSConfig.selectedItemLog.logForm = new Array<LogField>() }
+      this.SDSConfig.selectedItemLog.logForm.push(logField)
+      this.dataFormService.addLogFormConfig(logField).then((x) => {
+      })
+    })
+  }
+
+  public deleteSDS() {
+    this.dataFormService.deleteDataFormConfig(this.SDSConfig.itemDataForm, this.SDSConfig.itemDataForm.rowID.toString()).then((x) => {
+      this.selectFeature(this.mapConfig.currentLayer)
+      let logField = new LogField
+      logField.userid = this.mapConfig.user.ID
+      logField.auto = true
+      logField.comment = 'Record Deleted'
+      logField.schema = this.SDSConfig.itemDataForm.schema
+      logField.logTable = 'm' + this.SDSConfig.moduleInstanceID + 'log'
+      logField.featureid = this.SDSConfig.itemDataForm.rowID
+      this.dataFormService.addLogFormConfig(logField).then((X) => {
+      })
+    })
+    this.SDSConfig.tab = "List"
   }
 }

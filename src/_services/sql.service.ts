@@ -4,18 +4,18 @@ import {throwError as observableThrowError,  Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { Configuration } from '../_api/api.constants';
 import { MyCubeField, MyCubeComment } from '../_models/layer.model';
+import { LogFormConfig, LogField} from '../app/shared.components/data-component/data-form.model'
+import { environment } from 'environments/environment'
 
 @Injectable()
 export class SQLService {
     protected headers: Headers;
-    private actionUrl = this.configuration.serverWithApiUrl + 'sql/';
+    private actionUrl = environment.apiUrl + environment.apiUrlPath + 'sql/';
     protected token: string;
     protected options;
 
-    constructor(protected _http: HttpClient, protected configuration: Configuration) {
-       
+    constructor(protected _http: HttpClient) {
     }
 
     public getOptions() {
@@ -51,8 +51,8 @@ export class SQLService {
             catchError(this.handleError));
     }
 
-    public GetAnySingle = (table: string, field: string, value: string): Observable<any> => {
-        return this._http.get(this.actionUrl + 'anyone?table=' + table + '&field=' + field + '&value=' + value, this.getOptions()).pipe(
+    public GetAnySingle = (schema: string, table: string, field: string, value: string | number): Observable<any> => {
+        return this._http.get(this.actionUrl + 'anyone?schema=' + schema + '&table=' + table + '&field=' + field + '&value=' + value, this.getOptions()).pipe(
             // .map((response: Response) => <any>response.json())
             catchError(this.handleError));
     }
@@ -91,9 +91,10 @@ export class SQLService {
             catchError(this.handleError));
     }
 
-    public addCommentWithGeom = (comment:MyCubeComment): Observable<any> => {
-        return this._http.post(this.actionUrl + 'addcommentwithgeom',JSON.stringify(comment), this.getOptions())
-            .pipe(catchError(this.handleError));
+    public getSingleLog = (schema: number, table: number, id: string): Observable<any> => {
+        return this._http.get(this.actionUrl + 'singlelog?schema=' + schema + '&table=' + table + '&id=' + id, this.getOptions()).pipe(
+            // .map((response: Response) => <any>response.json())
+            catchError(this.handleError));
     }
 
     public addImage = (formdata:FormData): Observable<any> => {
@@ -122,13 +123,18 @@ export class SQLService {
             .pipe(catchError(this.handleError));
     }
 
-    public addCommentWithoutGeom = (comment:MyCubeComment): Observable<any> => {
-        return this._http.post(this.actionUrl + 'addcommentwithoutgeom',JSON.stringify(comment), this.getOptions())
-            .pipe(catchError(this.handleError));
-    }
+    // public addCommentWithGeom = (comment:MyCubeComment): Observable<any> => {
+    //     return this._http.post(this.actionUrl + 'addanycommentwithoutgeom',JSON.stringify(comment), this.getOptions())
+    //         .pipe(catchError(this.handleError));
+    // }
 
-    public addAnyCommentWithoutGeom = (comment:MyCubeComment): Observable<any> => {
-        return this._http.post(this.actionUrl + 'addanycommentwithoutgeom',JSON.stringify(comment), this.getOptions())
+    // public addCommentWithoutGeom = (comment:MyCubeComment): Observable<any> => {
+    //     return this._http.post(this.actionUrl + 'addcommentwithoutgeom',JSON.stringify(comment), this.getOptions())
+    //         .pipe(catchError(this.handleError));
+    // }
+
+    public addAnyComment = (logField:LogField): Observable<any> => {
+        return this._http.post(this.actionUrl + 'addanycommentwithoutgeom',JSON.stringify(logField), this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
@@ -174,6 +180,7 @@ export class SQLService {
     }
 
     public deleteAnyRecord = (schema: string, table: string, id: any): Observable<any> => {
+        console.log(this.actionUrl + 'deleteAnyRecord?schema=' + schema + '&table=' + table + '&id=' + id)
         return this._http.get(this.actionUrl + 'deleteAnyRecord?schema=' + schema + '&table=' + table + '&id=' + id, this.getOptions()).pipe(
             // .map((response: Response) => <any>response.json())
             catchError(this.handleError));

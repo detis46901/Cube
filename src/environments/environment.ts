@@ -20,5 +20,7 @@ export const environment = {
   MapBoxBaseMapUrl: '',
   localez: 'T05:00:00.000Z', //need to have two localz, I guess.  one for winter and one for summer.
   timeZone: 'America/New_york',
-  cacheSize: 256
+  cacheSize: 256,
+  apiUrlPath: "/api/",
+  serverWithApiUrl: this.ApiUrl + this.apiUrlPath
 };

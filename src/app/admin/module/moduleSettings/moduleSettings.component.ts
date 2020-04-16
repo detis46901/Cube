@@ -3,7 +3,6 @@ import { UserService } from '../../../../_services/_user.service';
 import { User } from '../../../../_models/user.model';
 import { GroupService } from '../../../../_services/_group.service';
 import { Group } from '../../../../_models/group.model';
-import { Configuration } from '../../../../_api/api.constants';
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service';
 import { ModuleService } from '../../../../_services/_module.service'
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
@@ -15,7 +14,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
     selector: 'module-style',
     templateUrl: './moduleSettings.component.html',
     styleUrls: ['./moduleSettings.component.scss'],
-    providers: [UserService, GroupService, Configuration, ModuleInstanceService, LayerPermissionService, FeatureModulesAdminService, ModuleInstanceService]
+    providers: [UserService, GroupService, ModuleInstanceService, LayerPermissionService, FeatureModulesAdminService, ModuleInstanceService]
 })
 
 export class ModuleSettingsComponent implements OnInit {

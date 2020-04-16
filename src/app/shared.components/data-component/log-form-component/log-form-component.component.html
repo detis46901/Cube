@@ -1,0 +1,53 @@
+    <!-- box for comments -->
+    <div style="max-height:360px; overflow-y:auto;overflow-x:hidden">
+        <div *ngFor="let logForm of logFormConfig.logForm" style="position:relative">
+            <span>
+                <div *ngIf="logFormConfig.showAuto === true && logForm.auto === true"
+                    style="font-size: 80%;word-wrap:normal; width:380px">
+                    <!-- name and date -->
+                    <b>{{logForm.firstName}} {{logForm.lastName}}</b>&nbsp;
+                    <i>{{logForm.createdat | date}} at {{logForm.createdat |
+                        date:'shortTime'}}</i>
+                    <br>
+                    {{logForm.comment}}
+                    <br>
+                    <mat-divider></mat-divider>
+                </div>
+                <div *ngIf="logForm.auto != true" style="word-wrap:normal; width:380px">
+                    <!-- name and date -->
+                    <b>{{logForm.firstName}} {{logForm.lastName}}</b>&nbsp;
+                    <i *ngIf="logForm.createdat">{{logForm.createdat | date}} at {{logForm.createdat |
+                        date:'shortTime'}}</i>
+
+                    <!-- delete button -->
+                    <button id="trashButton" *ngIf="logForm.canDelete" mat-button
+                        (click)='deleteLogForm(logForm)'>
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <br>
+                    <span *ngIf="logForm.filename; else elseBlock"><a target="_blank"
+                            [href]="URL + '?schema=' + logFormConfig.schema +'table=' + logFormConfig.logTable + '&id=' + logForm.id">{{logForm.comment}}</a></span>
+                    <ng-template #elseBlock>
+                        <textarea disabled rows="3" cols="45"
+                            name="comment">{{logForm.comment}}</textarea>
+                    </ng-template>
+                    <br>
+                    <mat-divider></mat-divider>
+                </div>
+            </span>
+        </div>
+    </div>
+
+    <mat-form-field style="width:100%">
+        <input matInput id="comment" [(ngModel)]="newLogForm.comment" placeholder="New Comment"
+            (keyup.enter)="addLogForm()">
+    </mat-form-field>
+    <br><button id="showAuto" mat-button (click)='logFormConfig.showAuto = !logFormConfig.showAuto'>{{logFormConfig.showAuto ? 'Hide Feature Changes' :
+        'Show Feature Changes'}}</button>
+    <input style="display: none" #fileInput type="file" (change)="onFileSelected($event)">
+    <button mat-button (click)="fileInput.click()">
+        <mat-icon>attach_file</mat-icon><span *ngIf="newLogForm.file">Attached</span>
+    </button>
+    <span *ngIf="newLogForm.file"><button mat-button (click)="addLogForm()">
+            <mat-icon>add</mat-icon>
+        </button></span>

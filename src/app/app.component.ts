@@ -1,12 +1,11 @@
 import { Component, enableProdMode } from '@angular/core';
 import { UserService } from '../_services/_user.service';
 import { User } from '../_models/user.model';
-import { Configuration } from '../_api/api.constants';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
     selector: 'app',
-    providers: [UserService, Configuration],
+    providers: [UserService],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })

@@ -3,10 +3,9 @@
 
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Configuration } from '../_api/api.constants';
 
 @Injectable()
 export class ParentService {
@@ -14,7 +13,7 @@ export class ParentService {
     public options: any;
     protected token: string;
 
-    constructor(protected _http: HttpClient, protected configuration: Configuration) {
+    constructor(protected _http: HttpClient) {
         
     }
 

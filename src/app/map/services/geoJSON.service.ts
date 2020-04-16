@@ -5,17 +5,18 @@ import {catchError} from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { Configuration } from '../../../_api/api.constants';
 import { MyCubeField } from '../../../_models/layer.model'
+import { environment } from 'environments/environment'
 
 @Injectable()
 export class geoJSONService {
     protected headers: Headers;
     protected options: any;
     protected token: string;
-    private actionUrl = this.configuration.serverWithApiUrl + 'geoJSON/';
+    private actionUrl: string
 
-    constructor(protected _http: HttpClient, protected configuration: Configuration) {
+    constructor(protected _http: HttpClient) {
+        this.actionUrl = environment.apiUrl + environment.apiUrlPath + 'geoJSON/';
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
         } catch (err) {

@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
 import { UserService } from '../../../../_services/_user.service';
-import { Configuration } from '../../../../_api/api.constants';
 import { LayerService } from '../../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { ServerService } from '../../../../_services/_server.service';
@@ -18,7 +17,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
     selector: 'layer-new',
     templateUrl: './layerNew.component.html',
     styleUrls: ['./layerNew.component.scss'],
-    providers: [UserService, Configuration, LayerService, LayerPermissionService, ServerService, LayerPermissionComponent],
+    providers: [UserService, LayerService, LayerPermissionService, ServerService, LayerPermissionComponent],
 })
 
 export class LayerNewComponent implements OnInit {

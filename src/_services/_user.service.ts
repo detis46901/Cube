@@ -1,10 +1,9 @@
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Configuration } from '../_api/api.constants';
-import { ParentService } from './_parent.service';
 import { User } from '../_models/user.model';
+import { environment } from 'environments/environment'
 
 @Injectable()
 export class UserService /*extends ParentService*/ {
@@ -13,9 +12,8 @@ export class UserService /*extends ParentService*/ {
     protected token: string;
     protected options;
 
-    constructor(protected _http: HttpClient, protected configuration: Configuration) {
-        //super(_http, configuration);
-        this.actionUrl = this.configuration.serverWithApiUrl + 'users/';
+    constructor(protected _http: HttpClient) {
+        this.actionUrl = environment.apiUrl + environment.apiUrlPath + 'users/';
     }
 
     public getOptions() {

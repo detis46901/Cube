@@ -18,51 +18,52 @@ export class FeatureModulesService {
   public loadLayer(mapConfig: MapConfig, layer: UserPageLayer, init?: boolean): boolean {
     if (!(layer.userPageInstanceID > 0)) { return false }
     let i = '.loadLayer(mapConfig, layer, init)'
+    console.log('feature-module.service loadLayer()')
     try {return eval(this.getItentity(mapConfig, layer) + i)}
     catch(error) {
       return false
     }
   }
-  public unloadLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    if (!(layer.userPageInstanceID > 0)) { return false }
-    let i = '.unloadLayer(layer)'
-    return eval(this.getItentity(mapConfig, layer) + i)
-  }
-  public setCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    if (!(layer.userPageInstanceID > 0)) { return false }
-    let i = '.setCurrentLayer(layer)'
-    return eval(this.getItentity(mapConfig, layer) + i)
-  }
-  public unsetCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    if (!(layer.userPageInstanceID > 0)) { return false }
-    let i = '.unsetCurrentLayer(layer)'
-    return eval(this.getItentity(mapConfig, layer) + i)
-  }
-  public selectFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    if (!(layer.userPageInstanceID > 0)) { return false }
-    let i = '.selectFeature(layer)'
-    return eval(this.getItentity(mapConfig, layer) + i)
-  }
-  public clearFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    if (!(layer.userPageInstanceID > 0)) { return false }
-    let i = '.clearFeature(layer)'
-    return eval(this.getItentity(mapConfig, layer) + i)
-  }
-  public styleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    if (!(layer.userPageInstanceID > 0)) { return false }
-    let i = '.styleSelectedFeature(layer)'
-    return eval(this.getItentity(mapConfig, layer) + i)
-  }
-  public unstyleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    if (!(layer.userPageInstanceID > 0)) { return false }
-    let i = '.unstyleSelectedFeature(layer)'
-    return eval(this.getItentity(mapConfig, layer) + i)
-  }
-  public getFeatureList(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    if (!(layer.userPageInstanceID > 0)) { return false }
-    let i = '.getFeatureList(layer)'
-    return eval(this.getItentity(mapConfig, layer) + i)
-  }
+  // public unloadLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  //   if (!(layer.userPageInstanceID > 0)) { return false }
+  //   let i = '.unloadLayer(layer)'
+  //   return eval(this.getItentity(mapConfig, layer) + i)
+  // }
+  // public setCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  //   if (!(layer.userPageInstanceID > 0)) { return false }
+  //   let i = '.setCurrentLayer(layer)'
+  //   return eval(this.getItentity(mapConfig, layer) + i)
+  // }
+  // public unsetCurrentLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  //   if (!(layer.userPageInstanceID > 0)) { return false }
+  //   let i = '.unsetCurrentLayer(layer)'
+  //   return eval(this.getItentity(mapConfig, layer) + i)
+  // }
+  // public selectFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  //   if (!(layer.userPageInstanceID > 0)) { return false }
+  //   let i = '.selectFeature(layer)'
+  //   return eval(this.getItentity(mapConfig, layer) + i)
+  // }
+  // public clearFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  //   if (!(layer.userPageInstanceID > 0)) { return false }
+  //   let i = '.clearFeature(layer)'
+  //   return eval(this.getItentity(mapConfig, layer) + i)
+  // }
+  // public styleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  //   if (!(layer.userPageInstanceID > 0)) { return false }
+  //   let i = '.styleSelectedFeature(layer)'
+  //   return eval(this.getItentity(mapConfig, layer) + i)
+  // }
+  // public unstyleSelectedFeature(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  //   if (!(layer.userPageInstanceID > 0)) { return false }
+  //   let i = '.unstyleSelectedFeature(layer)'
+  //   return eval(this.getItentity(mapConfig, layer) + i)
+  // }
+  // public getFeatureList(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  //   if (!(layer.userPageInstanceID > 0)) { return false }
+  //   let i = '.getFeatureList(layer)'
+  //   return eval(this.getItentity(mapConfig, layer) + i)
+  // }
   public draw(mapConfig: MapConfig, layer: UserPageLayer, featuretype): boolean {
     if (!(layer.userPageInstanceID > 0)) { return false }
     let i = '.draw(layer, featuretype)'
@@ -73,21 +74,21 @@ export class FeatureModulesService {
       return false
     }
   }
-  public checkSearch(mapConfig: MapConfig, layer: UserPageLayer): string {
-    if (!(layer.userPageInstanceID > 0)) { return "Create Point" }
-    let i = '.checkSearch(layer)'
-    try {
-      return eval(this.getItentity(mapConfig, layer) + i)
-    }
-    catch (error) {
-      return "Create Point"
-    }
-  }
-  public createPoint(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    if (!(layer.userPageInstanceID > 0)) { return false }
-    let i = '.createPoint(layer)'
-    return eval(this.getItentity(mapConfig, layer) + i)
-  }
+  // public checkSearch(mapConfig: MapConfig, layer: UserPageLayer): string {
+  //   if (!(layer.userPageInstanceID > 0)) { return "Create Point" }
+  //   let i = '.checkSearch(layer)'
+  //   try {
+  //     return eval(this.getItentity(mapConfig, layer) + i)
+  //   }
+  //   catch (error) {
+  //     return "Create Point"
+  //   }
+  // }
+  // public createPoint(mapConfig: MapConfig, layer: UserPageLayer): boolean {
+  //   if (!(layer.userPageInstanceID > 0)) { return false }
+  //   let i = '.createPoint(layer)'
+  //   return eval(this.getItentity(mapConfig, layer) + i)
+  // }
   public getItentity(mapConfig: MapConfig, layer: UserPageLayer): string {
     let tempinstancerow = mapConfig.userpageinstances.findIndex(x => x.ID == layer.userPageInstanceID)
     let tempInstance = mapConfig.userpageinstances[tempinstancerow]

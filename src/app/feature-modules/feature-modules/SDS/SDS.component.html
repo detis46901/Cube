@@ -18,197 +18,35 @@
     (click)="copyToClipboard('sql/getsheets?schema=modules&table=m' + SDSConfig.moduleInstanceID + 'data')">Export</button>
   <!-- <button mat-button mat-raised-button color="primary" (click)="openDashboard()">Dashboard</button> -->
   <div *ngIf="SDSConfig.tab=='Input' && mapConfig.selectedFeature != null" label="Input" class="SDSComponent"><br>
-    <div *ngFor="let item of SDSConfig.itemData">
-      <div *ngIf="item.type=='id'"></div>
-      <div *ngIf="item.type=='geom'"></div>
-      <div
-        *ngIf="item.type=='integer' || item.type == 'smallint' || item.type == 'bigint' || item.type == 'double precision'">
-        <div *ngIf="!item.constraints">
-          <mat-form-field style="width:90%">
-            <input matInput id="textinput" ngModel autocomplete='off' placeholder="{{item.field}}"
-              [matTooltip]="item.description" [(ngModel)]="item.value">
-          </mat-form-field>
-        </div>
-        <div *ngIf="item.constraints">
-          <mat-form-field>
-            <mat-label>{{item.field}}</mat-label>
-            <mat-select [(value)]="item.value">
-              <mat-option *ngFor="let constraint of item.constraints" [(value)]="constraint.name">{{constraint.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div *ngIf="item.type=='boolean'">
-        <!-- checkbox for contracting -->
-        <mat-checkbox [disabled]="false" [(ngModel)]="item.value" [matTooltip]="item.description">
-          {{item.field}}</mat-checkbox>
-      </div>
-      <div>
-        <div *ngIf="item.type=='text' || item.type == 'character varying'" [matTooltip]="item.description"
-          matTooltipPosition="above" matTooltipShowDelay="1000">
-          <div *ngIf="!item.constraints">
-            <mat-form-field style="width:90%">
-              <input type="text" matInput autocomplete='off' rows="3" [disabled]="false" id="textinput" ngModel
-                placeholder="{{item.field}}" [(ngModel)]="item.value">
-            </mat-form-field><br>
-            <!-- <span [innerHTML]="item.value | linky"></span> -->
-            <div *ngIf="item.value != null">
-              <div *ngFor="let link of item.links">
-                <div><a target="_blank" [href]="link.url">Link</a> </div>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="item.constraints">
-            <mat-form-field>
-              <mat-label>{{item.field}}</mat-label>
-              <mat-select [(value)]="item.value">
-                <mat-option *ngFor="let constraint of item.constraints" [(value)]="constraint.name">{{constraint.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="item.type=='date' || item.type=='timestamp with time zone'">
-        <mat-form-field style="width:90%">
-          <input matInput [disabled]="false" autocomplete='off' [matDatepicker]="picker" placeholder="{{item.field}}"
-            [matTooltip]="item.description" [(ngModel)]="item.value">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-      </div>
-    </div>
-    <button mat-button mat-raised-button color="primary" (click)="SDSservice.saveSDS(SDSConfigID)">Save</button>
+    <app-data-form-component class="SDSComponent" [dataFormConfig]=SDSConfig.itemDataForm (changedForm)="changedDataForm($event)"></app-data-form-component>
+    <button mat-button mat-raised-button color="primary" (click)="addSDS()">Save</button>
   </div>
   <div *ngIf="SDSConfig.tab=='Search'" label=Search><br>
-    <!-- <mat-slide-toggle matTooltip="" class="" [checked]="filterOpen" (change)="filterOpen = !filterOpen">
-      <span>Only Open Tickets</span>
-    </mat-slide-toggle><br>
-    <mat-form-field style="width:45%">
-      <input matInput [matDatepicker]="picker" placeholder="From Date (30 Days Ago)" [(ngModel)]="fromDate">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-    <mat-form-field style="width:45%">
-      <input matInput [matDatepicker]="picker2" placeholder="To Date (Current Date)" [(ngModel)]="toDate">
-      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-      <mat-datepicker #picker2></mat-datepicker>
-    </mat-form-field><br>
-    <button mat-button mat-raised-button color="primary" (click)='filter()'>Filter</button>
-    <button mat-button mat-raised-button color="primary" (click)='clearFilter()'>Clear Filter</button> -->
+    <!-- need to add search -->
   </div>
   <div *ngIf="SDSConfig.tab=='List' && mapConfig.selectedFeature" label="List" class="SDSComponent"><br>
     {{SDSConfig.label}}
     <div *ngFor="let item of SDSConfig.list">
       <span *ngIf="item['id'] != SDSConfig.selectedItem"
-        (click)="selectItem(item['id'], SDSConfigID)">{{item[SDSConfig.label]}}</span>
+        (click)="selectItem(item['id'])">{{item[SDSConfig.label]}}</span>
       <span *ngIf="item['id'] == SDSConfig.selectedItem"
-        (click)="selectItem(item['id'], SDSConfigID)"><b>{{item[SDSConfig.label]}}</b></span>
+        (click)="selectItem(item['id'])"><b>{{item[SDSConfig.label]}}</b></span>
     </div>
   </div>
   <div *ngIf="SDSConfig.tab == 'Item'" class="SDSComponent"><br>
-    <div *ngIf="!SDSConfig.showLog">
-      <div *ngFor="let item of SDSConfig.itemData">
-        <div *ngIf="item.type=='id'"></div>
-        <div *ngIf="item.type=='geom'"></div>
-        <div
-          *ngIf="item.type=='integer' || item.type == 'smallint' || item.type == 'bigint' || item.type == 'double precision'">
-          <div *ngIf="!item.constraints">
-            <mat-form-field style="width:90%">
-              <input matInput [disabled]="SDSConfig.editRecordDisabled" id="textinput" ngModel autocomplete='off'
-                placeholder="{{item.field}}" [matTooltip]="item.description" [(ngModel)]="item.value">
-            </mat-form-field>
-          </div>
-          <div *ngIf="item.constraints">
-            <mat-form-field>
-              <mat-label>{{item.field}}</mat-label>
-              <mat-select [(value)]="item.value" [disabled]="SDSConfig.editRecordDisabled">
-                <mat-option *ngFor="let constraint of item.constraints" [(value)]="constraint.name">{{constraint.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-        <div *ngIf="item.type=='boolean'">
-          <!-- checkbox for contracting -->
-          <mat-checkbox [disabled]="SDSConfig.editRecordDisabled" [(ngModel)]="item.value"
-            [matTooltip]="item.description">
-            {{item.field}}</mat-checkbox>
-        </div>
-        <div>
-          <div *ngIf="item.type=='text' || item.type == 'character varying'" [matTooltip]="item.description"
-            matTooltipPosition="above" matTooltipShowDelay="1000">
-            <div *ngIf="!item.constraints">
-              <mat-form-field style="width:90%">
-                <input type="text" matInput [disabled]="SDSConfig.editRecordDisabled" autocomplete='off' rows="3"
-                  [disabled]="false" id="textinput" ngModel placeholder="{{item.field}}" [(ngModel)]="item.value">
-              </mat-form-field><br>
-              <!-- <span [innerHTML]="item.value | linky"></span> -->
-              <div *ngIf="item.value != null">
-                <div *ngFor="let link of item.links">
-                  <div><a target="_blank" [href]="link.url">Link</a> </div>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="item.constraints">
-              <mat-form-field>
-                <mat-label>{{item.field}}</mat-label>
-                <mat-select [(value)]="item.value" [disabled]="SDSConfig.editRecordDisabled">
-                  <mat-option *ngFor="let constraint of item.constraints" [(value)]="constraint.name">
-                    {{constraint.name}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="item.type=='date' || item.type=='timestamp with time zone'">
-          <mat-form-field style="width:90%">
-            <input matInput [disabled]="SDSConfig.editRecordDisabled" [matDatepicker]="picker"
-              placeholder="{{item.field}}" [(ngModel)]="item.value">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-        </div>
-      </div>
-    </div>
     <div *ngIf="SDSConfig.showLog">
-      <div *ngFor="let myCubeComment of SDSConfig.selectedItemLog" style="position:relative">
-        <span>
-          <div style="font-size: 80%;word-wrap:normal; width:380px">
-            <!-- name and date -->
-            <b>{{myCubeComment.firstName}} {{myCubeComment.lastName}}</b>&nbsp;
-            <i>{{myCubeComment.createdat | date}} at {{myCubeComment.createdat |
-                  date:'shortTime'}}</i>
-            <br>
-            <!-- {{myCubeComment.comment}} -->
-          </div>
-          <span *ngIf="myCubeComment.filename; else elseBlock">
-            <a target="_blank" [href]="URL + '?schema=modules&table=m' + SDSConfig.moduleInstanceID + 'log&id=' + myCubeComment.id">{{myCubeComment.comment}}</a></span>
-          <ng-template #elseBlock>
-            <textarea disabled rows="3" cols="45" name="comment">{{myCubeComment.comment}}</textarea>
-          </ng-template>
-        </span>
-        <mat-divider></mat-divider>
-      </div>
-    </div>
-    <button *ngIf='SDSConfig.editRecordDisabled == true' mat-button mat-raised-button color="primary"
-      (click)="SDSConfig.editRecordDisabled = false">Edit</button>
-    <button *ngIf='SDSConfig.editRecordDisabled == false' mat-button mat-raised-button color="primary"
-      (click)="SDSservice.updateSDS(SDSConfigID)">Save</button>
-    <button mat-button mat-raised-button color="primary" (click)="SDSservice.deleteSDS(SDSConfigID)">Delete</button>
-    <button mat-button mat-raised-button color="primary"
-      (click)="SDSConfig.showLog = !SDSConfig.showLog">{{SDSConfig.showLog ? 'Hide Log' : 'Show Log'}}</button>
-    <input style="display: none" #fileInput type="file" (change)="onFileSelected($event)">
-    <button mat-button (click)="fileInput.click()">
-      <mat-icon>attach_file</mat-icon><span *ngIf="SDSConfig.newComment.file">Attached</span>
-    </button>
-    <span *ngIf="SDSConfig.newComment.file"><button mat-button (click)='addMyCubeComment()'>
-        <mat-icon>add</mat-icon>
-      </button></span>
-    <br>
-   
+      <app-log-form-component class="SDSComponent" [logFormConfig]=SDSConfig.selectedItemLog (savedLog)="onNewComment($event)"></app-log-form-component>
+      <button mat-button mat-raised-button color="primary" (click)="SDSConfig.showLog = !SDSConfig.showLog">{{SDSConfig.showLog ? 'Hide Log' : 'Show Log'}}</button>
   </div>
-
+    <div *ngIf="!SDSConfig.showLog && SDSConfig.itemDataForm.visible">
+      <app-data-form-component class="SDSComponent" [dataFormConfig]=SDSConfig.itemDataForm (changedForm)="changedDataForm($event)"></app-data-form-component>
+      <button *ngIf='SDSConfig.itemDataForm.editMode == false' mat-button mat-raised-button color="primary"
+      (click)="SDSConfig.itemDataForm.editMode = true">Start Edit</button>
+    <button *ngIf='SDSConfig.itemDataForm.editMode == true' mat-button mat-raised-button color="primary"
+      (click)="SDSConfig.itemDataForm.editMode = false">Stop Edit</button>
+    <button mat-button mat-raised-button color="primary" (click)="deleteSDS()">Delete</button> <button mat-button mat-raised-button color="primary" (click)="SDSConfig.showLog = !SDSConfig.showLog">{{SDSConfig.showLog ? 'Hide Log' : 'Show Log'}}</button>
+   
+    </div>
+    <br>
+  </div>
 </mat-expansion-panel>

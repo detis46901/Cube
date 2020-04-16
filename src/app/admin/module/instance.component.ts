@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../_services/_user.service';
 import { User } from '../../../_models/user.model';
-import { Configuration } from '../../../_api/api.constants';
 import { ModuleInstanceService } from '../../../_services/_moduleInstance.service';
 import { ModulePermissionService } from '../../../_services/_modulePermission.service';
 import { UserPageInstanceService } from '../../../_services/_userPageInstance.service';
@@ -21,7 +20,7 @@ import { FeatureModulesAdminService } from '../../feature-modules/feature-module
 @Component({
     selector: 'instance',
     templateUrl: './instance.component.html',
-    providers: [UserService, Configuration, ModuleInstanceService, ModulePermissionService, UserPageInstanceService, ModuleService, SQLService, FeatureModulesAdminService],
+    providers: [UserService, ModuleInstanceService, ModulePermissionService, UserPageInstanceService, ModuleService, SQLService, FeatureModulesAdminService],
     styleUrls: ['./instance.component.scss']
 })
 

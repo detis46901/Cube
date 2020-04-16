@@ -1,9 +1,9 @@
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
 import { Observable ,  ErrorObserver } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Configuration } from '../_api/api.constants';
+import { environment } from 'environments/environment'
 
 @Injectable()
 export class ImageService {
@@ -11,11 +11,8 @@ export class ImageService {
     protected options: any;
     protected token: string;
 
-    constructor(protected _http: HttpClient, protected configuration: Configuration) {
-       
-        this.actionUrl = this.configuration.serverWithApiUrl + 'images/'
-
-       
+    constructor(protected _http: HttpClient) {
+        this.actionUrl = environment.apiUrl + environment.apiUrlPath + 'images/'
     }
 
     public getOptions() {

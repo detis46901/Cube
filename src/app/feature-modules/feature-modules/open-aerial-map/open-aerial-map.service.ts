@@ -6,7 +6,6 @@ import { Observable ,  Subject } from 'rxjs';
 import { MyCubeService } from './../../../map/services/mycube.service'
 import { Image } from './open-aerial-map.model'
 import { WMSService } from '../../../map/services/wms.service'
-import * as olobservable from 'ol/Observable';  //Need to figure out how to get this in there.
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
@@ -15,7 +14,6 @@ import WMTSCapabilities from 'ol/format/WMTSCapabilities';
 import WMTS from 'ol/source/WMTS';
 import { optionsFromCapabilities } from 'ol/source/WMTS';
 import TileLayer from 'ol/layer/Tile';
-import TileSource from 'ol/source/Tile';
 
 @Injectable()
 export class OpenAerialMapService {
@@ -28,7 +26,6 @@ export class OpenAerialMapService {
   public mapConfig: MapConfig
   public layer: UserPageLayer
   public images = new Array<Image>()
-  public AOMClickKey: any
   public AOMMouseOver: any
   private disabled = new Subject<boolean>();
   public opacity: number;
@@ -50,44 +47,59 @@ export class OpenAerialMapService {
       x.on = false
       this.mapConfig.map.removeLayer(x.layer)
     })
-    this.setDisabled(true)
     return true
   }
 
   public setCurrentLayer(layer: UserPageLayer): boolean {
-    this.createImageClickEvent()
-    this.setDisabled(false)
+    this.AOMMouseOver = this.mapConfig.map.on('pointermove', (evt: any) => {
+        if (this.mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
+          this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+            if (layer === this.bboxLayer) {
+              this.selectedImage = this.images.find(x => x._id == feature.get('_id'))
+            }
+          })
+        }
+        else {
+          this.mapConfig.mouseoverLayer = null;
+          this.selectedImage = new Image()
+        }
+      })
     this.mapConfig.showStyleButton = true
     return true
   }
+  
   public unsetCurrentLayer(layer: UserPageLayer): boolean {
-    olobservable.unByKey(this.AOMClickKey);
-    this.setDisabled(true)
     return true
   }
   public getFeatureList(layer: UserPageLayer): boolean {
     return true
   }
   public selectFeature(layer: UserPageLayer): boolean {
+    let image: Image
+        let _id: string
+        _id = this.mapConfig.selectedFeature.get('_id')
+        image = this.images.find(x => x._id == _id)
+        if (image.on == false) {
+          this.loadImage(image)
+        }
+        else {
+          this.removeImage(image)
+        }
     return true
   }
+
   public styleSelectedFeature(layer: UserPageLayer): boolean {
     return true
   }
+  
   public unstyleSelectedFeature(layer: UserPageLayer): boolean {
     return true
   }
+
   public clearFeature(layer: UserPageLayer): boolean {
     return true
   }
 
-  getDisabled(): Observable<any> {
-    return this.disabled.asObservable();
-  }
-
-  setDisabled(disabled: boolean) {
-    this.disabled.next(disabled)
-  }
   getImages(mapConfig: MapConfig, layer: UserPageLayer, init?: boolean) {
     this.mapConfig = mapConfig
     let src = new VectorSource();
@@ -139,52 +151,6 @@ export class OpenAerialMapService {
       })
   }
 
-  private createImageClickEvent() {
-    let selectedFeature: ol.Feature
-    this.AOMClickKey = this.mapConfig.map.on('click', (e: any) => {
-      if (this.mapConfig.measureShow) { //makes sure the click event doesn't cause a trigger on the image if the measure is being used.
-        return
-      }
-      var hit = false;
-      this.mapConfig.map.forEachFeatureAtPixel(e.pixel, (feature: ol.Feature, selectedLayer: any) => {
-        if (selectedLayer === this.bboxLayer) {
-          hit = true;
-          selectedFeature = feature
-        }
-        ;
-      }, {
-        hitTolerance: 5
-      });
-      if (hit) {
-        let image: Image
-        let _id: string
-        _id = selectedFeature.get('_id')
-        image = this.images.find(x => x._id == _id)
-        if (image.on == false) {
-          this.loadImage(image)
-        }
-        else {
-          this.removeImage(image)
-        }
-      }
-      else {
-      }
-    });
-    this.AOMMouseOver = this.mapConfig.map.on('pointermove', (evt: any) => {
-      if (this.mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
-        this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
-          if (layer === this.bboxLayer) {
-            this.selectedImage = this.images.find(x => x._id == feature.get('_id'))
-          }
-        })
-      }
-      else {
-        this.mapConfig.mouseoverLayer = null;
-        this.selectedImage = new Image()
-      }
-    }, { hitTolerance: 20 })
-  }
-
   loadImage(image: Image) {
     image.on = true
     this.wmsService.getCapabilities(image.properties.wmts)
@@ -211,16 +177,16 @@ export class OpenAerialMapService {
     this.mapConfig.map.removeLayer(image.layer)
   }
 
-  toggleImage(image: Image) {
-    if (image.on == false) {
-      this.loadImage(image)
-      image.on = true
-    }
-    else {
-      this.mapConfig.map.removeLayer(image['layer'])
-      image['on'] = false
-    }
-  }
+  // toggleImage(image: Image) {
+  //   if (image.on == false) {
+  //     this.loadImage(image)
+  //     image.on = true
+  //   }
+  //   else {
+  //     this.mapConfig.map.removeLayer(image['layer'])
+  //     image['on'] = false
+  //   }
+  // }
 
   public setOpacity(opacity: number) {
     this.opacity = opacity

@@ -11,6 +11,10 @@ import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
 import { Injectable } from "@angular/core";
+import { DataFormConfig, LogFormConfig } from '../../shared.components/data-component/data-form.model'
+import { OverlayKeyboardDispatcher } from '@angular/cdk/overlay';
+import Map from 'ol/Map';
+
 
 export interface MapConfigView {
     projection: string;
@@ -24,24 +28,27 @@ export class MapConfig {
     name?: string;
     user: User;
     userID?: number;
-    map?: any;  // this should be of type ol.Map.  However, that causes a problem with the "getTarget()" method in map.component.ts
+    map?: Map // this should be of type ol.Map.  However, that causes a problem with the "getTarget()" method in map.component.ts
     view?: View;
     geolocation: ol.Geolocation;
     tracking: boolean = false;
-    baseLayers = new Array  //THere is only one base layer, but ol requires it to be an array
+    baseLayers = []  //THere is only one base layer, but ol requires it to be an array
     evkey: any; //current click event
+    toolbar: string;
     selectedFeature?: Feature;
-    selectedFeatures?: Collection<Feature> = new Collection<Feature>()
+    selectedFeatures? = new Collection<Feature>()
     selectedFeatureSource: VectorSource
     selectedFeatureLayer: VectorLayer
     userpages? = new Array<UserPage>();
-    defaultpage?: UserPage;  //This looks like a duplicate that is also in userpages[]
+    defaultpage?: UserPage;  //This is only necessary when the user changes the default page.  It references this to uncheck it.
     currentpage?: UserPage;
+    currentPageName?: string;
     userpagelayers?: UserPageLayer[];
     userpageinstances?: UserPageInstance[];
     userpageinstancelist?: string;
     currentLayer? = new UserPageLayer;
     currentLayerName?: string = "";
+    disableCurrentLayer: boolean
     featureList? =  new Array<featureList>();
     editmode?: boolean;
     showDeleteButton: boolean;
@@ -57,9 +64,10 @@ export class MapConfig {
     measureShow?: boolean;
     featureDataShow: boolean;
     modulesShow?: boolean;
-    myCubeConfig: MyCubeConfig;
+    myCubeConfig = new DataFormConfig;
     myCubeData: MyCubeField[]
-    myCubeComment: MyCubeComment[]
+    myCubeComment = new LogFormConfig;
+    WMSFeatureData: string;
     searchResult: Feature;
     searchResultSource: VectorSource
     searchResultLayer: VectorLayer

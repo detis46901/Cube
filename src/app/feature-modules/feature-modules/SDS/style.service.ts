@@ -68,26 +68,14 @@ export class StyleService {
         // console.log(dt)
         let now = new Date()
 
-        if (feature.get("closed")) {
-            console.log(feature.get("closed"))
-            return '#000000'
-        }
-        if (feature.get("emergency") == true) {
-            return '#A00000'
-        }
-        if (!feature.get("closed")) {
-            if ((dt.getTime() - now.getTime())/1000/86400 < 0) {
-                return '#FF0000'
-            }
-            if ((dt.getTime() - now.getTime())/1000/86400 < 1) {
-                return '#FFFF00'
-            }
-        }
         if (version == 'load') {
             return '#3399CC'
         }
         if (version == 'current') {
             return '#0000FF'
+        }
+        if (version == 'selected') {
+            return '#FF0000'
         }
 
 

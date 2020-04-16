@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
-import { CommonModule, AsyncPipe } from '@angular/common';
 import { UserService } from '../../../_services/_user.service';
 import { User } from '../../../_models/user.model';
 import { Group, GroupMember } from '../../../_models/group.model';
@@ -8,15 +7,13 @@ import { GroupMemberService } from '../../../_services/_groupMember.service';
 import { NewGroupComponent } from './newGroup/newGroup.component';
 import { EditGroupComponent } from './editGroup/editGroup.component'
 import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSelectionList } from '@angular/material/list';
-import { Observable ,  Subscriber ,  from } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'group',
     templateUrl: './group.component.html',
     styleUrls: ['./group.component.scss'],
-    providers: [UserService] //removed Configuration, FilterPipe, NumFilterPipe
+    providers: [UserService]
 })
 
 export class GroupComponent implements OnInit {

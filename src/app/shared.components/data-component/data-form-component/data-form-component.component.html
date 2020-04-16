@@ -2,20 +2,9 @@
 <!-- handles the my cube feature and comments menus -->
 <!-- message is WMS Data -->
 <!-- second accordian menu handling features -->
-<mat-accordion class="feature-data">
-    <mat-expansion-panel [expanded]="true">
-        <mat-expansion-panel-header>
-            <!-- header -->
-            <mat-panel-title>
-                Feature Data
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <div style="max-height: 20vh; overflow-x: auto">
+
             <div *ngFor="let dataForm of dataFormConfig.dataForm">
-                <div *ngIf="dataForm.type=='id'"></div>
-                <div *ngIf="dataForm.type=='geom'"></div>
-                <div
-                    *ngIf="dataForm.type=='integer' || dataForm.type == 'smallint' || dataForm.type == 'bigint' || dataForm.type == 'double precision'">
+                <div *ngIf="(dataForm.type=='integer' || dataForm.type == 'smallint' || dataForm.type == 'bigint' || dataForm.type == 'double precision') && dataForm.visible == true">
                     <div *ngIf="!dataForm.constraints">
                         <mat-form-field style="width:90%">
                             <input matInput [disabled]="!dataFormConfig.editMode" [id]="dataForm.field" ngModel
@@ -64,7 +53,7 @@
                 </div>
                 <div *ngIf="dataForm.type=='date' || dataForm.type=='timestamp with time zone'">
                     <mat-form-field style="width:90%">
-                        <input matInput [disabled]="!dataFormConfig.editMode" [matDatepicker]="picker"
+                        <input matInput [disabled]="!dataFormConfig.editMode" [matDatepicker]="picker" [matTooltip]="dataForm.description"
                             placeholder="{{dataForm.field}}" [(ngModel)]="dataForm.value"
                             (dateChange)="dataForm.changed = true; updateDataForm(dataForm)">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -72,6 +61,4 @@
                     </mat-form-field>
                 </div>
             </div>
-        </div>
-    </mat-expansion-panel>
-</mat-accordion>
+    

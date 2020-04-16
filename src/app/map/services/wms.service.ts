@@ -134,7 +134,6 @@ export class WMSService {
                 if (noProxy) {
                     url = "http://" + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
                 }
-                console.log(url)
                 return url;
             }
             case ('Geoserver'): {

@@ -7,6 +7,7 @@ import { User } from '../../../../_models/user.model'
 import { locateConfig, locateStyles, Locate, disItem, disposition } from './locates.model'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
 import { ModuleInstance } from '_models/module.model';
+import { UserPageLayer } from '_models/layer.model';
 
 
 @Component({
@@ -75,8 +76,38 @@ export class LocatesComponent implements OnInit, OnDestroy {
     this.tab = tab
   }
 
+  public loadLayer(layer): boolean{
+    return this.locatesservice.loadLayer(this.mapConfig, layer)
+  }
+
+  public unloadLayer(layer): boolean {
+    return this.locatesservice.unloadLayer(layer)
+  }
+
+  public setCurrentLayer(layer):boolean {
+    return this.locatesservice.setCurrentLayer(layer)
+  }
+  public unsetCurrentLayer(layer): boolean {
+    console.log('in locates component unsetcurrentlayer')
+    return this.locatesservice.unsetCurrentLayer(layer)
+  }
+  public getFeatureList(layer?): boolean {
+    return this.locatesservice.getFeatureList(layer)
+  }
+  public clearFeature(layer:UserPageLayer): boolean {
+    return this.locatesservice.clearFeature(layer)
+  }
+  public unstyleSelectedFeature(layer:UserPageLayer):boolean {
+    return this.locatesservice.unstyleSelectedFeature(layer)
+  }
+  public styleSelectedFeature(layer:UserPageLayer):boolean {
+    return this.locatesservice.styleSelectedFeature(layer)
+  }
+  public selectFeature(layer:UserPageLayer): boolean {
+    return this.locatesservice.selectFeature(layer)
+  }
+
   importLocate() {
-    console.log('importLocate')
     this.locatesservice.parseLocateInput(this.locateInput, this.mapConfig, this.instance.ID)
     this.locateInput = ""
   }
@@ -116,7 +147,6 @@ export class LocatesComponent implements OnInit, OnDestroy {
     else {
       filterString += "CURRENT_DATE"
     }
-    console.log(filterString)
     this.locatesservice.filter = filterString
     this.runFilter();
 
@@ -141,7 +171,6 @@ export class LocatesComponent implements OnInit, OnDestroy {
   }
 
   public emailContractor(ticket: Locate) {
-    console.log(ticket)
     this.getEmailConfiguration()
     let win = window.open("mailto:" + ticket.email + "?subject=Ticket: " + ticket.ticket + " " + ticket.address + " " + ticket.street + "&body=" + this.completedDisposition.emailBody, "_blank"); //this.moduleSettings['settings'][1]['setting']['value']
     setTimeout(function() { win.close() }, 500);
@@ -152,11 +181,9 @@ export class LocatesComponent implements OnInit, OnDestroy {
     this.moduleInstanceService.GetSingle(this.instance.ID)
     .subscribe((x) => {
       this.moduleSettings = x.settings
-      console.log(this.moduleSettings)
     })
   }
   public openDashboard() {
-    console.log(this.moduleSettings['settings'][2]['setting']['value'])
     window.open(this.moduleSettings['settings'][2]['setting']['value'], '_blank', 'resizable=yes')
   }
 }

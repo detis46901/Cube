@@ -247,17 +247,41 @@ td {
   
   .feature-data  {
     flex-basis: 0;
-    width: 254px;
+    width: 354px;
     overflow-wrap: break-word;
     overflow-y: auto;
     background-color: rgba(255,255,255,.7); 
     display: block; 
     position: absolute; 
-    bottom: 0px; left: 0px
+    bottom: 0px; left: 0px;
+    max-height: 25vh;
   }
   
   .feature-data .mat-expansion-panel-header-description {
     justify-content: space-between;
     align-items: center;
   }
-  
+
+.comment-data  {
+  flex-basis: 0;
+  width: 354px;
+  background-color: rgba(255,255,255,.7); 
+  display: block; 
+  position: absolute; 
+  bottom: 0px; 
+  left: 354px
+}
+
+.comment-data .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.message-data {
+    background-color: rgba(255,255,255,.7); 
+    display: block; 
+    position: absolute; 
+    bottom: 0px; 
+    left: 0px;
+    width: 340px;
+}

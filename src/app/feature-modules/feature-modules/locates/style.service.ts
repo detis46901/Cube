@@ -73,6 +73,9 @@ export class StyleService {
         if (version == 'current') {
             return '#0000FF'
         }
+        if (version == 'selected') {
+            return '#FF0000'
+        }
 
 
         return getFillColor

@@ -15,5 +15,7 @@ export const environment = {
   //MapBoxBaseMapUrl: '',
   localez: 'T04:00:00.000Z',
   timeZone: 'America/New_york',
-  cacheSize: 256
+  cacheSize: 256,
+  apiUrlPath: "/api/",
+  serverWithApiUrl: this.ApiUrl + this.apiUrlPath
 };

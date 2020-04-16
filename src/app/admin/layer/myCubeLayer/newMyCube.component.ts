@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { UserService } from '../../../../_services/_user.service';
-import { Configuration } from '../../../../_api/api.constants';
 import { LayerService } from '../../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { ServerService } from '../../../../_services/_server.service';
@@ -20,7 +19,7 @@ export class MyCubeFieldConfig extends MyCubeField {
     selector: 'layer-new',
     templateUrl: './newMyCube.component.html',
     styleUrls: ['./newMyCube.component.scss'],
-    providers: [UserService, Configuration, LayerService, LayerPermissionService, ServerService],
+    providers: [UserService, LayerService, LayerPermissionService, ServerService],
 })
 
 export class newMyCubeComponent implements OnInit {

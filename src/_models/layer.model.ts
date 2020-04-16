@@ -62,6 +62,7 @@ export class UserPageLayer {
     updateInterval: any;
     userPageInstanceID: number;
     userpageinstance: UserPageInstance;
+    user_page_instance: UserPageInstance
     layerOrder: number;
 }
 

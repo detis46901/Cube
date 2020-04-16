@@ -1,20 +1,20 @@
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Configuration } from '../_api/api.constants';
 import { ParentService } from './_parent.service';
 import { Server } from '../_models/server.model';
+import { environment } from 'environments/environment'
 
 @Injectable()
 export class ServerService extends ParentService {
     protected actionUrl: string;
     protected headers: Headers;
 
-    constructor(protected _http: HttpClient, protected configuration: Configuration) {
-        super(_http, configuration);
-        this.actionUrl = this.configuration.serverWithApiUrl + 'server/';
+    constructor(protected _http: HttpClient) {
+        super(_http);
+        this.actionUrl = environment.apiUrl + environment.apiUrlPath + 'server/';
     }
 
     public getCapabilities(serv: Server): Observable<any> {

@@ -3,7 +3,6 @@ import { UserService } from '../../../../_services/_user.service';
 import { User } from '../../../../_models/user.model';
 import { GroupService } from '../../../../_services/_group.service';
 import { Group } from '../../../../_models/group.model';
-import { Configuration } from '../../../../_api/api.constants';
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service';
 import { ModulePermissionService } from '../../../../_services/_modulePermission.service';
 import { ModulePermission } from '../../../../_models/module.model';
@@ -12,7 +11,7 @@ import { ModulePermission } from '../../../../_models/module.model';
     selector: 'module-permission',
     templateUrl: './modulePermission.component.html',
     styleUrls: ['./modulePermission.component.scss'],
-    providers: [UserService, GroupService, Configuration, ModuleInstanceService, ModulePermissionService]
+    providers: [UserService, GroupService, ModuleInstanceService, ModulePermissionService]
 })
 
 export class ModulePermissionComponent implements OnInit {

@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { SideNavService } from "../../_services/sidenav.service";
 import { MatDialog } from '@angular/material/dialog';
 import { User, Notif } from '../../_models/user.model';
 import { UserPage } from '../../_models/user.model';
@@ -16,7 +15,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
     selector: 'header',
     templateUrl: './header.component.html',
     styleUrls: ['header.component.scss'],
-    providers: [SideNavService, UserService, UserPageService, NotifService]
+    providers: [UserService, UserPageService, NotifService]
 })
 
 export class HeaderComponent implements OnInit {
@@ -34,7 +33,7 @@ export class HeaderComponent implements OnInit {
     public public: boolean
     public showSearch: boolean
 
-    constructor(private sideNavService: SideNavService, private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService, private notificationService: NotifService,
+    constructor(private dialog: MatDialog, private userService: UserService, private userPageService: UserPageService, private notificationService: NotifService,
         public geocodingService: GeocodingService, private route: ActivatedRoute,) { }
 
     ngOnInit() {
@@ -93,34 +92,6 @@ export class HeaderComponent implements OnInit {
              });
     }
 
-    public menuToggle(sCode: number): void {
-        if (this.sideNavService.getHidden() == null) {
-            this.isOpen = true;
-        } else {
-            this.isOpen = this.sideNavService.getHidden();
-        }
-        switch (sCode) {
-            case 0:
-                //throw exception here for a call without a screen code (will default to 0 as assigned above)
-                console.log("Exception")
-                break;
-            case 1:
-                console.log("homeToggle()")
-                this.homeToggle();
-                break;
-            case 2:
-                console.log("adminToggle()")
-                this.adminToggle();
-                break;
-            case 3:
-                console.log("userToggle()")
-                this.userToggle();
-                break;
-            default:
-                console.log("Exception")
-        }
-    }
-
     //Code 1
     public homeToggle(): void {
 
@@ -138,17 +109,14 @@ export class HeaderComponent implements OnInit {
             document.getElementById("add-marker").style.left = "280px";
             document.getElementById("remove-marker").style.position = "absolute";
             document.getElementById("remove-marker").style.left = "320px";
-            this.sideNavService.toggleHidden();
         } else {
             document.getElementById("mySidenav").style.width = "0";
             document.getElementById("place-input").style.left = "15px";
             document.getElementById("goto").style.left = "15px";
             document.getElementById("add-marker").style.left = "30px";
             document.getElementById("remove-marker").style.left = "70px";
-            this.sideNavService.toggleHidden();
         }
 
-        this.isOpen = this.sideNavService.getHidden();
     }
 
     //Code 2
@@ -157,11 +125,9 @@ export class HeaderComponent implements OnInit {
         if (!this.isOpen) {
             document.getElementById("admin_nav").style.display = "block";
             document.getElementById("admin_nav").style.width = "230px";
-            this.sideNavService.toggleHidden();
         } else {
             document.getElementById("admin_nav").style.width = "0";
             document.getElementById("admin_nav").style.display = "none";
-            this.sideNavService.toggleHidden();
         }
     }
 
@@ -171,11 +137,9 @@ export class HeaderComponent implements OnInit {
         if (!this.isOpen) {
             document.getElementById("settings_nav").style.display = "block";
             document.getElementById("settings_nav").style.width = "230px";
-            this.sideNavService.toggleHidden();
         } else {
             document.getElementById("settings_nav").style.width = "0";
             document.getElementById("settings_nav").style.display = "none";
-            this.sideNavService.toggleHidden();
         }
     }
 

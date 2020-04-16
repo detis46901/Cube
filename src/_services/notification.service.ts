@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable ,  Subject } from 'rxjs';
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
-import { Configuration } from '../_api/api.constants';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
 import { catchError } from 'rxjs/operators';
 import { Notif } from '../_models/user.model';
-
+import { environment } from 'environments/environment'
 
 @Injectable()
 export class NotifService {
@@ -14,8 +13,8 @@ export class NotifService {
     private userID: number;
     private headers;
 
-    constructor(protected _http: HttpClient, protected configuration: Configuration) {
-        this.actionUrl = this.configuration.serverWithApiUrl + 'notification/';
+    constructor(protected _http: HttpClient) {
+        this.actionUrl = environment.apiUrl + environment.apiUrlPath + 'notification/';
     }
 
     getOptions() {

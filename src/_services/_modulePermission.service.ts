@@ -1,19 +1,18 @@
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Configuration } from '../_api/api.constants';
 import { ParentService } from './_parent.service';
-import { ModulePermission } from '../_models/module.model';
+import { environment } from '../environments/environment'
 
 @Injectable()
 export class ModulePermissionService extends ParentService {
     protected actionUrl: string;
 
-    constructor(protected _http: HttpClient, protected configuration: Configuration) {
-        super(_http, configuration);
-        this.actionUrl = this.configuration.serverWithApiUrl + 'modulepermission/';
+    constructor(protected _http: HttpClient) {
+        super(_http);
+        this.actionUrl = environment.apiUrl + environment.apiUrlPath + 'modulepermission/';
     }
 
     public GetByInstance = (instanceid): Observable<any> => {

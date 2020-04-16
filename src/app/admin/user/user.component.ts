@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../_services/_user.service';
-import { Configuration } from '../../../_api/api.constants';
 import { UserPageService } from '../../../_services/_userPage.service';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { User, UserPage } from '../../../_models/user.model';
@@ -25,7 +24,7 @@ import { UserDetailsComponent } from '../details/userDetails/userDetails.compone
 @Component({
     selector: 'user',
     templateUrl: './user.component.html',
-    providers: [UserService, UserPageLayerService, UserPageService, Configuration, PagePipe, NumFilterPipe],
+    providers: [UserService, UserPageLayerService, UserPageService, PagePipe, NumFilterPipe],
     styleUrls: ['./user.component.scss'],
 })
 

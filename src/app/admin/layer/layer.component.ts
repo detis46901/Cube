@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../../_services/_user.service';
 import { User } from '../../../_models/user.model';
-import { Configuration } from '../../../_api/api.constants';
 import { LayerService } from '../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../_services/_layerPermission.service';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
@@ -23,7 +22,7 @@ import { layer } from 'openlayers';
 @Component({
     selector: 'layer',
     templateUrl: './layer.component.html',
-    providers: [UserService, Configuration, LayerService, LayerPermissionService, UserPageLayerService, ServerService, SQLService],
+    providers: [UserService, LayerService, LayerPermissionService, UserPageLayerService, ServerService, SQLService],
     styleUrls: ['./layer.component.scss']
 })
 

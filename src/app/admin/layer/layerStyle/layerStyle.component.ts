@@ -3,7 +3,6 @@ import { UserService } from '../../../../_services/_user.service';
 import { User } from '../../../../_models/user.model';
 import { GroupService } from '../../../../_services/_group.service';
 import { Group } from '../../../../_models/group.model';
-import { Configuration } from '../../../../_api/api.constants';
 import { LayerService } from '../../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { Layer } from '../../../../_models/layer.model';
@@ -12,7 +11,7 @@ import { Layer } from '../../../../_models/layer.model';
     selector: 'layer-permission',
     templateUrl: './layerStyle.component.html',
     styleUrls: ['./layerStyle.component.scss'],
-    providers: [UserService, GroupService, Configuration, LayerService, LayerPermissionService]
+    providers: [UserService, GroupService, LayerService, LayerPermissionService]
 })
 
 export class LayerStyleComponent implements OnInit {

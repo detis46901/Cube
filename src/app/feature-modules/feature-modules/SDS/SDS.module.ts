@@ -22,7 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import {MatDividerModule} from '@angular/material/divider';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTooltipModule } from '@angular/material/tooltip'
@@ -35,7 +35,10 @@ import { SDSAdminService } from '../SDS/SDS-admin.service'
 import { SDSStyles } from './SDS.model'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
 import { LinkyModule } from 'ngx-linky';
-
+import { DataModule } from '../../../shared.components/data/data.module'
+// import { DataFormComponentComponent } from '../../../shared.components/data-component/data-form-component/data-form-component.component'
+// import { LogFormComponentComponent } from '../../../shared.components/data-component/log-form-component/log-form-component.component'
+// import { DataFormService } from '../../../shared.components/data-component/data-form.service'
 
 
 @NgModule({
@@ -69,10 +72,14 @@ import { LinkyModule } from 'ngx-linky';
     MatDividerModule,
     FormsModule,
     ReactiveFormsModule,
-    LinkyModule
+    LinkyModule,
+    DataModule
 
   ],
-  declarations: [SDSComponent],
+  declarations: [SDSComponent,
+    // DataFormComponentComponent,
+    // LogFormComponentComponent
+  ],
   providers: [SDSService, SDSAdminService, SDSStyles, ModuleInstanceService, StyleService],
   exports:[SDSComponent]
 })

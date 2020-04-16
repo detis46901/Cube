@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../_services/_user.service';
-import { Configuration } from '../../_api/api.constants';
 import { User } from '../../_models/user.model';
 
 @Component({
     selector: 'settings',
     templateUrl: './settings.component.html',
-    providers: [UserService, Configuration],
+    providers: [UserService],
     styleUrls: ['./settings.component.scss'],
 })
 

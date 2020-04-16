@@ -1,19 +1,17 @@
 import { Component } from '@angular/core';
 import { UserService } from '../../_services/_user.service';
 import { User } from '../../_models/user.model';
-import { Configuration } from '../../_api/api.constants';
 
 @Component({
     selector: 'admin',
     templateUrl: './admin.component.html',
-    providers: [UserService, Configuration],
+    providers: [UserService],
     styleUrls: ['./admin.component.scss'],
 })
 
 export class AdminComponent {
     //screen code identifier (see home.component.html)
     public screen = 2;
-
     public user = new User;
     public userID: number;
 

@@ -7,6 +7,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
 import { OpenAerialMapService } from './open-aerial-map.service'
 import { ModuleInstance } from '_models/module.model';
+import Observable from 'ol/Observable';
+import { User } from '_models/user.model';
+
 
 @Component({
   selector: 'app-open-aerial-map',
@@ -21,13 +24,29 @@ export class OpenAerialMapComponent implements OnInit {
   @Input() instance: ModuleInstance;
   @Input() user: string;
   public canEdit: boolean = false
-  public disabled: boolean = true
+  public visible: boolean = false
   public expanded: boolean = false
   public disabledSubscription: Subscription;
 
   ngOnInit() {
     this.openAerialMapService.mapConfig = this.mapConfig
-    this.disabledSubscription = this.openAerialMapService.getDisabled().subscribe(disabled => {this.expanded = false; this.disabled = disabled})
+  }
+
+  public getFeatureList() {
+    return false
+  }
+  
+  public unloadLayer(layer: UserPageLayer) {
+    this.visible = false
+    return this.openAerialMapService.unloadLayer(layer)
+  }
+  
+  public selectFeature(layer: UserPageLayer) {
+    return this.openAerialMapService.selectFeature(layer)
+  }
+
+  public clearFeature(layer: UserPageLayer) {
+    return false
   }
 
   public setOpacity(e:EventEmitter<MatSliderChange>) {
@@ -38,6 +57,21 @@ export class OpenAerialMapComponent implements OnInit {
     })
     console.log(e)
     this.openAerialMapService.setOpacity(e['value']/100)
+  }
+
+  public setCurrentLayer(layer: UserPageLayer):boolean {
+    this.visible = true
+    this.expanded = true
+    return (this.openAerialMapService.setCurrentLayer(layer))
+  }
+
+  public unsetCurrentLayer(layer: UserPageLayer): boolean {
+    this.visible = false
+    return true
+  }
+
+  public unstyleSelectedFeature(layer: UserPageLayer): boolean {
+    return false
   }
 
   ngOnDestroy() {

@@ -11,7 +11,6 @@ import { LinkyModule } from 'ngx-linky';
 import { FeatureModulesModule } from './feature-modules/feature-modules.module'
 import { AuthGuard } from '../_guards/auth.guard';
 import { AdminGuard } from '../_guards/admin.guard';
-import { Configuration } from '../_api/api.constants';
 import { FilterPipe } from '../_pipes/rowfilter.pipe';
 import { PagePipe } from '../_pipes/rowfilter2.pipe';
 import { NumFilterPipe } from '../_pipes/numfilter.pipe';
@@ -67,8 +66,6 @@ import { ServerService } from '../_services/_server.service';
 import { geoJSONService } from './map/services/geoJSON.service';
 import { MyCubeService } from './/map/services/mycube.service';
 import { WMSService } from './map/services/wms.service';
-import { SideNavService } from '../_services/sidenav.service';
-import { MessageService } from '../_services/message.service';
 import { ImageService } from '../_services/image.service';
 import { NotifService } from '../_services/notification.service';
 import { FeatureModulesService } from '../app/feature-modules/feature-modules.service'
@@ -87,8 +84,8 @@ import { HomeComponent } from './home/home.component';
 import { SettingsComponent } from './settings/settings.component';
 import { PasswordComponent } from './settings/password/password.component';
 import { HeaderComponent } from './header/header.component';
-import { SideNavComponent } from './featuredata/sidenav.component';
-import { FeatureDataComponent } from './featuredata/featuredata.component'
+// import { SideNavComponent } from './featuredata/sidenav.component';
+// import { FeatureDataComponent } from './featuredata/featuredata.component'
 import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
 import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
@@ -103,17 +100,18 @@ import { StyleService } from './map/services/style.service';
 import { GeocodingService } from './map/services/geocoding.service';
 import { StyleComponent } from './map/style/style.component';
 import { SearchComponent } from './search/search.component';
-import { DataFormComponentComponent } from './shared.components/data-form-component/data-form-component.component';
-import { LogFormComponentComponent } from './shared.components/log-form-component/log-form-component.component';
-
+// import { DataFormComponentComponent } from './shared.components/data-component/data-form-component/data-form-component.component';
+// import { LogFormComponentComponent } from './shared.components/data-component/log-form-component/log-form-component.component';
+import { DataModule } from './shared.components/data/data.module';
+import { FeatureModulesComponent } from './feature-modules/feature-modules.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         MapComponent,
         HeaderComponent,
-        SideNavComponent,
-        FeatureDataComponent,
+        // SideNavComponent,
+        // FeatureDataComponent,
         HomeComponent,
         LoginComponent,
         SettingsComponent,
@@ -134,8 +132,8 @@ import { LogFormComponentComponent } from './shared.components/log-form-componen
         PageConfigComponent2,
         ConfirmDeleteComponent,
         SearchComponent,
-        DataFormComponentComponent,
-        LogFormComponentComponent
+        // DataFormComponentComponent,
+        // LogFormComponentComponent
   ],
 
     entryComponents: [
@@ -192,7 +190,8 @@ import { LogFormComponentComponent } from './shared.components/log-form-componen
         LinkyModule,
         FeatureModulesModule,
         DragDropModule,
-        MatSliderModule
+        MatSliderModule,
+        DataModule
     ],
 
     providers: [
@@ -211,13 +210,10 @@ import { LogFormComponentComponent } from './shared.components/log-form-componen
         SQLService,
         UserPageLayerService,
         UserPageService,
-        Configuration,
         ServerService,
         geoJSONService,
         MyCubeService,
         WMSService,
-        SideNavService,
-        MessageService,
         mapStyles,
         ImageService,
         NotifService,
@@ -225,7 +221,8 @@ import { LogFormComponentComponent } from './shared.components/log-form-componen
         UserPageInstanceService,
         ModuleService,
         MapConfigService,
-        UserService
+        UserService,
+        FeatureModulesComponent
     ],
 
     bootstrap: [AppComponent]

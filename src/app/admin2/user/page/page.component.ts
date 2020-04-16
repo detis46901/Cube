@@ -2,13 +2,13 @@ import { Component, Input, OnInit } from '@angular/core';
 import { UserService } from '../../../../_services/_user.service';
 import { User, UserPage } from '../../../../_models/user.model';
 import { UserPageService } from '../../../../_services/_userPage.service';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeleteComponent } from '../../confirmdelete/confirmdelete.component';
 
 @Component({
     selector: 'page',
     templateUrl: './page.component.html',
-    providers: [UserService], //removed Configuration, FilterPipe, NumFilterPipe
+    providers: [UserService], 
     styleUrls: ['./page.component.scss'],
 })
 
