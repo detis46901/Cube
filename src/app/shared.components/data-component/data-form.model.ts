@@ -9,6 +9,7 @@ export class DataFormConfig {
     userID: number
     dataForm: DataField[]
     visible: boolean
+    expanded: boolean
     editMode: boolean
 }
 

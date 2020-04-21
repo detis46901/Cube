@@ -46,6 +46,8 @@ import WMTS from 'ol/source/WMTS';
 import TileWMS from 'ol/source/TileWMS';
 import { FeatureModulesService } from '../feature-modules/feature-modules.service'
 import KML from 'ol/format/KML';
+import {default as ob} from 'ol/Observable';
+
 
 @Component({
     moduleId: module.id,
@@ -204,11 +206,12 @@ export class MapComponent implements OnInit {
                         source: source
                     });
                     this.mapConfig.map.addLayer(layer);
+                    let kml = new KML
                     //drag and drop - needs to be improved.  It only works if, inside formatConstructers, it says KML.  It shows an error, but will work.
                     //Need to make it so these layers can be added permanently.
                     this.mapConfig.map.addInteraction(new DragAndDrop({
                         source: source,
-                        formatConstructors: []
+                        formatConstructors: [kml]
                     }));
                 })
             })
@@ -287,7 +290,19 @@ export class MapComponent implements OnInit {
     }
 
     public drawFeature(featureType: string) {
-        this.mapService.drawFeature(featureType)
+        console.log(featureType)
+        if (this.mapConfig.currentLayer.user_page_instance) {
+            this.featureModuleComponent.checkSomething("draw " + featureType, this.mapConfig.currentLayer).then((x) => {
+                console.log(x)
+                if (!x) {
+                    console.log('going to drawFeature')
+                    this.mapService.drawFeature(featureType)
+                }
+            })
+        }
+        else {
+            this.mapService.drawFeature(featureType)
+        }
     }
 
     public deleteFeature() {
@@ -347,6 +362,10 @@ export class MapComponent implements OnInit {
             this.mapConfig.showFilterButton = false
             this.mapConfig.WMSFeatureData = null
             this.mapConfig.map.removeInteraction(this.mapService.modify);
+            let test = new ob
+            this.mapConfig.drawMode = ""
+            test.un("change", this.mapService.modkey);
+            this.mapConfig.map.removeInteraction(this.mapService.drawInteraction);
             this.mapService.modify = null;
             this.mapService.clearFeature();
             this.mapConfig.userpagelayers.forEach(layer => {
@@ -401,6 +420,7 @@ export class MapComponent implements OnInit {
                 this.mapService.clearFeature()
                 this.mapConfig.showStyleButton = false
                 this.mapConfig.showFilterButton = false
+                this.mapConfig.WMSFeatureData = null
             }
             //could add something here that would move to the next layerShown=true.  Not sure.
             this.mapConfig.editmode = this.mapConfig.currentLayer.layerPermissions.edit  //not sure why I need this
@@ -559,6 +579,7 @@ export class MapComponent implements OnInit {
                         }
                         case "MyCube": {
                             if (this.featureModuleService.loadLayer(this.mapConfig, userpagelayer)) {
+                                console.log('this is a mycube layer that is being loaded by the FMS')
                                 j++
                                 if (j == this.mapConfig.userpagelayers.length) {
                                     resolve()

@@ -4,7 +4,7 @@ import { Fill, Stroke, Circle, Style } from 'ol/style';
 
 @Injectable()
 export class StyleService {
-  public styleFunction(feature: Feature, version: string): Style {
+  public styleFunction(feature: Feature, version): Style {
     let style = new Style({
       image: new Circle({
         radius: 10,

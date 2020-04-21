@@ -1,5 +1,4 @@
 <div #mapElement id="mapid"></div>
-<!-- <featuredata id="featureData" [mapConfig]="mapConfig"></featuredata> -->
 <mat-accordion class="tool-container">
     <filtertoolbar *ngIf="mapConfig.filterShow" [mapConfig]="mapConfig"></filtertoolbar>
     <styletoolbar *ngIf="mapConfig.styleShow" [mapConfig]="mapConfig"></styletoolbar>
@@ -296,6 +295,7 @@
                 </mat-expansion-panel-header>
 
                 <div class="featurelist">
+                    <!-- <div *ngIf='mapConfig.selectedFeature'>{{mapConfig.selectedFeature.get('ticket')}}</div> -->
                     <div *ngFor="let fl of mapConfig.featureList">
                         <a *ngIf="fl.feature != mapConfig.selectedFeature" style="cursor: pointer"
                             (click)="zoomToFeature(fl)">{{fl.label}}</a>
@@ -354,7 +354,7 @@
     </div>
 </div>
 <mat-accordion *ngIf="mapConfig.myCubeConfig.visible" class="feature-data">
-    <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel [expanded]="mapConfig.myCubeConfig.expanded">
         <mat-expansion-panel-header>
             <!-- header -->
             <mat-panel-title>

@@ -46,7 +46,7 @@ export class MapService {
     public modkeystart: any;
     public modify: Modify;
     public base: string = 'base';  //base layer
-    private drawInteraction: any;
+    public drawInteraction: any;
 
 
     constructor(

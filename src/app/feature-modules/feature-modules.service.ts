@@ -21,6 +21,7 @@ export class FeatureModulesService {
     console.log('feature-module.service loadLayer()')
     try {return eval(this.getItentity(mapConfig, layer) + i)}
     catch(error) {
+      console.log(error)
       return false
     }
   }

@@ -25,8 +25,9 @@
                         <mat-icon>delete</mat-icon>
                     </button>
                     <br>
+                    {{logFormConfig.logTable}}
                     <span *ngIf="logForm.filename; else elseBlock"><a target="_blank"
-                            [href]="URL + '?schema=' + logFormConfig.schema +'table=' + logFormConfig.logTable + '&id=' + logForm.id">{{logForm.comment}}</a></span>
+                            [href]="URL + '?schema=' + logFormConfig.schema +'&table=' + logFormConfig.logTable + '&id=' + logForm.id">{{logForm.comment}}</a></span>
                     <ng-template #elseBlock>
                         <textarea disabled rows="3" cols="45"
                             name="comment">{{logForm.comment}}</textarea>

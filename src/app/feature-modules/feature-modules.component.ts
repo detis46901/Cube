@@ -4,6 +4,7 @@ import { SDSComponent } from './feature-modules/SDS/SDS.component';
 import { UserPageLayer } from '_models/layer.model';
 import { OpenAerialMapComponent } from './feature-modules/open-aerial-map/open-aerial-map.component';
 import { LocatesComponent } from './feature-modules/locates/locates.component';
+import { WOComponent } from './feature-modules/WO/WO.component'
 import { featureModule } from './feature-modules.model'
 
 @Component({
@@ -24,6 +25,8 @@ export class FeatureModulesComponent implements OnInit, AfterViewInit, OnDestroy
   @ViewChildren(LocatesComponent) locates: QueryList<LocatesComponent>
   @ViewChildren(FeatureModulesComponent) components: QueryList<any>
   @ViewChildren(OpenAerialMapComponent) OAM: QueryList<any>
+  @ViewChildren(WOComponent) WO: QueryList<any>
+
   private featureModule = new Array<featureModule>()
 
   ngOnInit() {
@@ -58,9 +61,16 @@ export class FeatureModulesComponent implements OnInit, AfterViewInit, OnDestroy
       FM.componentReference = Instance;
       this.featureModule.push(FM);
     });
+    this.WO.forEach(Instance => {
+      let FM = new featureModule;
+      FM.moduleInstanceID = Instance.instance.ID;
+      FM.componentReference = Instance;
+      this.featureModule.push(FM);
+    })
   }
 
   public checkSomething(action: string, layer: UserPageLayer, ):Promise<boolean> {
+    console.log(action)
     if (!this.featureModule) {this.setComponents()}
     let promise = new Promise<boolean>((resolve) => {
       if (!layer.user_page_instance) {
@@ -68,7 +78,6 @@ export class FeatureModulesComponent implements OnInit, AfterViewInit, OnDestroy
       }
       this.featureModule.forEach((FM:featureModule) => {
         if (FM.moduleInstanceID == layer.user_page_instance.moduleInstanceID) {
-          console.log(action)
           try {
             switch(action) {
               case 'loadLayer': {
@@ -109,6 +118,10 @@ export class FeatureModulesComponent implements OnInit, AfterViewInit, OnDestroy
               }
               case 'unstyleSelectedFeature': {
                 resolve(FM.componentReference.unstyleSelectedFeature(layer))
+                break
+              }
+              case 'draw Point': {
+                resolve(FM.componentReference.draw(layer, 'Point'))
                 break
               }
               case 'testLayer': {

@@ -4,6 +4,8 @@ import Feature from 'ol/Feature';
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from 'ol/source/Vector';
 import { defaults as defaultInteractions, Modify, Draw } from 'ol/interaction';
+import { DataFormConfig, LogFormConfig, LogField } from '../../../shared.components/data-component/data-form.model'
+import { DataFormService } from '../../../shared.components/data-component/data-form.service'
 
 export class WOConfig {
     moduleInstanceID: number
@@ -33,6 +35,7 @@ export class WOConfig {
     WOTypes: WOType[]
     assignedTo: assignedTo[]
     sortType = new sortType
+    itemDataForm = new DataFormConfig
 }
 
 export class workOrder {

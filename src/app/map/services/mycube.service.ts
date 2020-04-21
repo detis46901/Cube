@@ -153,21 +153,21 @@ export class MyCubeService extends SQLService {
     this.mycubesubject.next(this.cubeData)
   }
 
-  clearMyCubeData() {
-    this.mycubesubject.next();
-  }
+  // clearMyCubeData() {
+  //   this.mycubesubject.next();
+  // }
 
-  getMyCubeData(): Observable<any> {
-    return this.mycubesubject.asObservable();
-  }
+  // getMyCubeData(): Observable<any> {
+  //   return this.mycubesubject.asObservable();
+  // }
 
-  clearMyCubeComments() {
-    this.mycubecomment.next();
-  }
+  // clearMyCubeComments() {
+  //   this.mycubecomment.next();
+  // }
 
-  getMyCubeComments() {
-    return this.mycubecomment.asObservable();
-  }
+  // getMyCubeComments() {
+  //   return this.mycubecomment.asObservable();
+  // }
 
   public setMyCubeConfig(table: number, edit: boolean) {
     let mycubeconfig = new MyCubeConfig
@@ -191,19 +191,19 @@ export class MyCubeService extends SQLService {
       comment.table = layerID
       comment.userid = userID
       comment.geom = geom
-      if (geom != undefined) {
-        this.addCommentWithGeom(comment)
-          .subscribe((data) => {
-            console.log(data)
-            resolve()
-          })
-      }
-      else {
-        this.addCommentWithoutGeom(comment)
-          .subscribe((data) => {
-            resolve()
-          })
-      }
+      // if (geom != undefined) {
+      //   this.addCommentWithGeom(comment)
+      //     .subscribe((data) => {
+      //       console.log(data)
+      //       resolve()
+      //     })
+      // }
+      // else {
+      //   this.addCommentWithoutGeom(comment)
+      //     .subscribe((data) => {
+      //       resolve()
+      //     })
+      // }
     })
     return promise
   }

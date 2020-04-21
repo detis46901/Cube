@@ -167,7 +167,7 @@ export class SQLService {
     }
 
     public UpdateAnyRecord = (schema: string, table: string, id: string, MyCubeField: MyCubeField): Observable<any> => {
-        // console.log(JSON.stringify(MyCubeField))
+        console.log(JSON.stringify(MyCubeField))
         return this._http.put(this.actionUrl + 'updateAnyRecord', '{"schema":"' + schema + '","table":"' + table + '","id":' + id + ',"mycubefield":' + JSON.stringify(MyCubeField) + '}', this.getOptions())
             // .map((response: Response) => <any>response.json())
             //.catch(this.handleError);

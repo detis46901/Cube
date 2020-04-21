@@ -52,32 +52,20 @@ export class StyleService {
         let dt = new Date(d + ' ' + feature.get('stime'))
         // console.log(dt)
         let now = new Date()
-
-        if (feature.get("closed")) {
-            return '#000000'
-        }
-        if (feature.get("emergency") == true) {
-            return '#A00000'
-        }
+        // if (version == 'load') {getFillColor = '#3399CC'}
+        if (version == 'current' || version == 'load') {getFillColor = '#0000FF'}
+        if (feature.get("closed")) {getFillColor = '#000000'}
+        if (feature.get("emergency") == true) {getFillColor = '#A00000'}
         if (!feature.get("closed")) {
-            if ((dt.getTime() - now.getTime())/1000/86400 < 0) {
-                return '#FF0000'
-            }
             if ((dt.getTime() - now.getTime())/1000/86400 < 1) {
-                return '#FFFF00'
+                getFillColor = '#FFEA00'
+            }
+            if ((dt.getTime() - now.getTime())/1000/86400 < 0) {
+                getFillColor = '#FF0FFF'
             }
         }
-        if (version == 'load') {
-            return '#3399CC'
-        }
-        if (version == 'current') {
-            return '#0000FF'
-        }
-        if (version == 'selected') {
-            return '#FF0000'
-        }
-
-
+        if (version == 'selected') {getFillColor = '#FF0000'}
+        if (version == 'load') getFillColor = getFillColor + '70'
         return getFillColor
     }
 }

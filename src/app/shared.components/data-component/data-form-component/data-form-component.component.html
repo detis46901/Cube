@@ -2,7 +2,7 @@
 <!-- handles the my cube feature and comments menus -->
 <!-- message is WMS Data -->
 <!-- second accordian menu handling features -->
-
+        <div *ngIf="dataFormConfig.visible">
             <div *ngFor="let dataForm of dataFormConfig.dataForm">
                 <div *ngIf="(dataForm.type=='integer' || dataForm.type == 'smallint' || dataForm.type == 'bigint' || dataForm.type == 'double precision') && dataForm.visible == true">
                     <div *ngIf="!dataForm.constraints">
@@ -61,4 +61,5 @@
                     </mat-form-field>
                 </div>
             </div>
+        </div>
     

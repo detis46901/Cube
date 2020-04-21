@@ -20,10 +20,8 @@ export class LocatesComponent implements OnInit, OnDestroy {
   public locateConfig = new locateConfig
   public locateConfigID: number
   public locateInput: string;
-  public ticktSubscription: Subscription;
   public ticket: Locate = null
   public expanded: boolean = false
-  public expandedSubscription: Subscription;
   public userID: number;
   public userName: string;
   public completedNote: string;
@@ -32,10 +30,10 @@ export class LocatesComponent implements OnInit, OnDestroy {
   public fromDate: Date
   public toDate: Date
   public tminus30: Date
-  public tabSubscription: Subscription;
   public tab: string;
   public moduleSettings: JSON
   public disposition = new disposition
+  public layer: UserPageLayer
 
   constructor(
     public locatesservice: LocatesService,
@@ -46,13 +44,9 @@ export class LocatesComponent implements OnInit, OnDestroy {
 
   @Input() mapConfig: MapConfig;
   @Input() instance: ModuleInstance;
-  @Input() user: string;
 
   ngOnInit() {
     this.locatesservice.mapConfig = this.mapConfig
-    this.ticktSubscription = this.locatesservice.getTicket().subscribe(ticket => { this.completedDisposition = new disItem; this.ticket = ticket});
-    this.expandedSubscription = this.locatesservice.getExpanded().subscribe(expanded => { this.expanded = expanded })
-    this.tabSubscription = this.locatesservice.getTab().subscribe(tab => { this.tab = tab })
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.userID = currentUser && currentUser.userID;
     this.getName()
@@ -62,14 +56,10 @@ export class LocatesComponent implements OnInit, OnDestroy {
     this.tminus30.setDate(this.tminus30.getDate()-30)
     this.fromDate = this.tminus30
     this.locateConfig.moduleSettings = this.instance.settings
-    this.locateConfigID = this.locatesservice.locateConfig.push(this.locateConfig) - 1
   }
 
   ngOnDestroy() {
-    this.ticktSubscription.unsubscribe()
-    this.expandedSubscription.unsubscribe()
-    this.tabSubscription.unsubscribe()
-    clearInterval(this.locatesservice.layer.updateInterval)
+    if (this.layer) {clearInterval(this.layer.updateInterval)}
   }
 
   goToTab(tab) {
@@ -77,24 +67,35 @@ export class LocatesComponent implements OnInit, OnDestroy {
   }
 
   public loadLayer(layer): boolean{
+    //probably not being used right now
     return this.locatesservice.loadLayer(this.mapConfig, layer)
   }
-
   public unloadLayer(layer): boolean {
-    return this.locatesservice.unloadLayer(layer)
+    this.locateConfig.visible = false
+    this.ticket = null
+    this.locatesservice.createInterval(layer)
+    return true
   }
-
   public setCurrentLayer(layer):boolean {
-    return this.locatesservice.setCurrentLayer(layer)
+    this.layer = layer
+    this.locateConfig.expanded = true
+    this.locateConfig.visible = true
+    this.locatesservice.setCurrentLayer(layer)
+    return true
+  }
+  public styleMyCube(layer): boolean {
+    return true
   }
   public unsetCurrentLayer(layer): boolean {
-    console.log('in locates component unsetcurrentlayer')
+    this.locateConfig.visible = false
     return this.locatesservice.unsetCurrentLayer(layer)
   }
   public getFeatureList(layer?): boolean {
+    console.log('getFeatureList')
     return this.locatesservice.getFeatureList(layer)
   }
   public clearFeature(layer:UserPageLayer): boolean {
+    this.ticket = null
     return this.locatesservice.clearFeature(layer)
   }
   public unstyleSelectedFeature(layer:UserPageLayer):boolean {
@@ -104,10 +105,18 @@ export class LocatesComponent implements OnInit, OnDestroy {
     return this.locatesservice.styleSelectedFeature(layer)
   }
   public selectFeature(layer:UserPageLayer): boolean {
-    return this.locatesservice.selectFeature(layer)
+    this.goToTab('Process')
+    this.locatesservice.getOneLocate(layer).then((x) => {
+      this.ticket = x
+      this.mapConfig.myCubeConfig.expanded = false
+    })
+    this.locatesservice.selectFeature(layer)
+    return false
   }
 
+  //locate specific procedures
   importLocate() {
+    this.locatesservice.clearFeature(this.mapConfig.currentLayer)
     this.locatesservice.parseLocateInput(this.locateInput, this.mapConfig, this.instance.ID)
     this.locateInput = ""
   }
@@ -155,10 +164,10 @@ export class LocatesComponent implements OnInit, OnDestroy {
     let i = this.locatesservice.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == this.instance.ID);
     let obj = this.locatesservice.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'myCube Layer Identity (integer)');
     if (this.locatesservice.mapConfig.currentLayer.layer.ID === +obj['setting']['value']) {
-      this.locatesservice.reloadLayer();
+      this.locatesservice.reloadLayer(this.mapConfig.currentLayer);
     }
     else {
-      this.locatesservice.reloadLayer();
+      this.locatesservice.reloadLayer(this.mapConfig.currentLayer);
     }
   }
 

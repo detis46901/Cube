@@ -19,7 +19,7 @@ export class LogFormComponentComponent implements OnInit {
   public newLogForm = new LogField()
   public URL: string
   ngOnInit(): void {
-    this.URL = environment.apiUrl + '/api/sql/getimage'
+    this.URL = environment.apiUrl + '/api/sql/getanyimage'
 
   }
 

@@ -33,6 +33,8 @@ import { WOService } from './WO.service'
 import { StyleService } from './style.service'
 import { WOAdminService } from './WO-admin.service'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
+import { DataModule } from '../../../shared.components/data/data.module'
+
 
 
 @NgModule({
@@ -65,7 +67,8 @@ import { ModuleInstanceService } from '../../../../_services/_moduleInstance.ser
     MatSnackBarModule,
     MatDividerModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DataModule
   ],
   declarations: [WOComponent],
   providers: [WOService, WOAdminService, ModuleInstanceService, StyleService],

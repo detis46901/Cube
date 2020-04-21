@@ -1,4 +1,4 @@
-<mat-expansion-panel *ngIf="locateConfig.visible==true" [disabled]="expanded == false" [expanded]="expanded == true">
+<mat-expansion-panel *ngIf="locateConfig.visible==true" [disabled]="locateConfig.expanded == false" [expanded]="locateConfig.expanded == true">
   <mat-expansion-panel-header>
     <mat-panel-title>
       Locates
@@ -61,7 +61,6 @@
         <mat-form-field>
           <textarea [disabled]='ticket.closed != null' [(ngModel)]="completedNote" [value]="completedNote" matInput placeholder="Note" style="width:100%"></textarea>
         </mat-form-field>
-        <br>
       </div>
       <button mat-button mat-raised-button *ngIf="completedDisposition.completesTicket == true" color="primary" (click)='completeTicket()' [disabled]='ticket.closed != null'>Complete Ticket</button>
       <button mat-button mat-raised-button *ngIf="completedDisposition.completesTicket == false" color="primary" (click)='completeTicket()' [disabled]='ticket.closed != null'>Update Status</button>
