@@ -3,7 +3,6 @@ import { UserService } from '../../../../_services/_user.service';
 import { User } from '../../../../_models/user.model';
 import { GroupService } from '../../../../_services/_group.service';
 import { Group } from '../../../../_models/group.model';
-import { Configuration } from '../../../../_api/api.constants';
 import { LayerService } from '../../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { LayerPermission } from '../../../../_models/layer.model';
@@ -12,7 +11,7 @@ import { LayerPermission } from '../../../../_models/layer.model';
     selector: 'layer-permission',
     templateUrl: './layerPermission.component.html',
     styleUrls: ['./layerPermission.component.scss'],
-    providers: [UserService, GroupService, Configuration, LayerService, LayerPermissionService]
+    providers: [UserService, GroupService, LayerService, LayerPermissionService]
 })
 
 export class LayerPermissionComponent implements OnInit {
@@ -23,7 +22,6 @@ export class LayerPermissionComponent implements OnInit {
     public permlessGroups = new Array<Group>();
     public newLayerPermission = new LayerPermission;
     public layerPermissions = new Array<LayerPermission>();
-    public token: string;
     public userID: number;
     public permNames = new Array<string>();
     public layerOwner: number;
@@ -32,13 +30,11 @@ export class LayerPermissionComponent implements OnInit {
     public currDeletedPermObj: any; //Group or User Object
     public currDeletedPermIsUser: boolean; //True if it is a User object from the permission.
 
-    constructor(private layerPermissionService: LayerPermissionService, private userService: UserService, private groupService: GroupService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-    }
+    constructor(private layerPermissionService: LayerPermissionService, private userService: UserService, private groupService: GroupService) {}
 
     ngOnInit() {
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.userID = currentUser && currentUser.userID;
         this.getPermissionItems(false);
         this.newLayerPermission.edit = false;
         this.newLayerPermission.delete = false;
@@ -54,6 +50,7 @@ export class LayerPermissionComponent implements OnInit {
             .GetByLayer(this.layerID)
             .subscribe((data: LayerPermission[]) => {
                 this.layerPermissions = data;
+                console.log(data)
                 for (let p of data) {
                     //If permission applies to a user
                     if (p.userID && !p.groupID) {
@@ -165,7 +162,7 @@ export class LayerPermissionComponent implements OnInit {
         }
     }
 
-    // 2/8/18: permless users/groups are not being updated correctly once an object is deleted. Object deletion should add the object that was 
+    // 2/8/18: permless users/groups are not being updated correctly once an object is deleted. Object deletion should add the object that was
     // deleted to the correct permless list
     public deleteLayerPermission(perm: LayerPermission): void {
         this.currDeletedPermObj = perm

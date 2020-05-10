@@ -1,6 +1,13 @@
 import { Server } from './server.model'
 import { MyCubeStyle } from './style.model'
 import { UserPageInstance, ModulePermission } from './module.model'
+import { User } from './user.model';
+import { Group } from './group.model';
+import {Match} from 'autolinker';
+import VectorLayer from 'ol/layer/Vector';
+import ImageLayer from 'ol/layer/Image';
+import TileLayer from 'ol/layer/Tile';
+
 
 export class Layer {
     ID: number;
@@ -14,6 +21,7 @@ export class Layer {
     serverID: number;
     server: Server;
     defaultStyle: MyCubeStyle;
+    legendURL: string;
 }
 
 export class LayerPermission {
@@ -28,6 +36,8 @@ export class LayerPermission {
     layerID: number;
     layer: Layer;
     groupID: number;
+    user: User;
+    group: Group;
 }
 
 export class LayerClass extends Layer {
@@ -42,7 +52,7 @@ export class UserPageLayer {
     userID: number;
     userPageID: number;
     layerID: number;
-    style: MyCubeStyle;
+    style = new MyCubeStyle;
     layer = new Layer;
     layerPermissions = new LayerPermission();
     modulePermissions = new ModulePermission;
@@ -51,19 +61,49 @@ export class UserPageLayer {
     loadOrder: number;
     loadStatus: string;
     source: any
-    olLayer: any;
+    olLayer: any
     updateInterval: any;
     userPageInstanceID: number;
+    userpageinstance: UserPageInstance;
+    user_page_instance: UserPageInstance
+    layerOrder: number;
+}
+
+export class MyCubeConstraint {
+    name: string | number;
+    option: string;
+}
+
+export class DataFieldConstraint {
+    name: string | number
+    option: string
 }
 
 export class MyCubeField {
     field: string;
     type: string;
+    description?: string;
     value?: any;
     options?: string[]
     label?: boolean;
     changed?: boolean;
-    links? = new Array<string>()
+    links?: any[]
+    constraints? = new Array<MyCubeConstraint>()
+}
+
+export class DataField {
+    field: string;
+    type: string;
+    description?: string;
+    value?: any;
+    changed?: boolean;
+    links?: any[]
+    constraints? = new Array<DataFieldConstraint>()
+}
+
+export class MyCubeURLs {
+  url: string;
+  anchorTag: string;
 }
 
 export class MyCubeConfig {
@@ -72,12 +112,16 @@ export class MyCubeConfig {
 }
 
 export class MyCubeComment {
-    table: number;
+    table: number | string;
     id: number;
-    userID: number;
+    userid: number;
+    firstName: string;
+    lastName: string;
     comment: string = "";
     geom: string;
-    featureID: string | number;
+    featureid: string | number;
+    filename?: string;
+    file?: File;
     auto: boolean;
     createdat: Date;
 }

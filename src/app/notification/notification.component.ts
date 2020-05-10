@@ -9,7 +9,7 @@ import { GroupMemberService } from '../../_services/_groupMember.service';
 import { LayerService } from '../../_services/_layer.service';
 import { UserPageLayerService } from '../../_services/_userPageLayer.service';
 import { UserPageService } from '../../_services/_userPage.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-notification',
@@ -29,9 +29,9 @@ export class NotifComponent implements OnInit {
     public sourceMap = new Map<string, any>();
 
     constructor(private notificationService: NotifService, private userService: UserService, private groupService: GroupService, private groupMemberService: GroupMemberService, private layerService: LayerService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser.token;
-        this.userID = currentUser.userID;
+        //let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        //this.token = currentUser.token;
+        //this.userID = currentUser.userID;
     }
 
     ngOnInit() {

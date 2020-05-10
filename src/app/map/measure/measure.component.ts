@@ -1,10 +1,14 @@
 import { Component, OnInit, Input, HostBinding, NgModule, ModuleWithProviders, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatButtonToggleChange } from '@angular/material';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MapConfig } from '../models/map.model'
-import { NULL_INJECTOR } from '@angular/core/src/render3/component';
-import * as ol from 'openlayers';
-
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import Feature from 'ol/Feature';
+import Draw from 'ol/interaction/Draw';
+import * as olSphere from 'ol/sphere';
+import Text from 'ol/style/Text';
+import {Fill, Stroke, Circle, Style} from 'ol/style';
 
 //import { MangolMap } from './../../core/_index';
 
@@ -20,8 +24,8 @@ import * as ol from 'openlayers';
 export class MeasureComponent implements OnInit, OnDestroy {
     @Input() mapConfig: MapConfig;
     //measure stuff
-    public layer: ol.layer.Vector = null;
-    public draw: ol.interaction.Draw
+    public layer: VectorLayer = null;
+    public draw: Draw
     public value: number
     public measureType: string
     public measureLabel: string
@@ -35,9 +39,9 @@ export class MeasureComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.unit = 'feet'
         this.convert = 1
-        this.layer = new ol.layer.Vector({
-            source: new ol.source.Vector(),
-            style: (feature: ol.Feature) => {
+        this.layer = new VectorLayer({
+            source: new VectorSource(),
+            style: (feature: Feature) => {
                 return this._getStyle(feature);
             }
         });
@@ -58,10 +62,10 @@ export class MeasureComponent implements OnInit, OnDestroy {
         if (mtype == "LineString") { this.unit = "feet"; this.convert = 1; this.measureLabel = "Length" }
         this.measureType = mtype
         this.deactivateDraw();
-        this.draw = new ol.interaction.Draw({
+        this.draw = new Draw({
             source: this.layer.getSource(),
             type: mtype,
-            style: (feature: ol.Feature) => {
+            style: (feature: Feature) => {
                 return this._getStyle(feature);
             }
         });
@@ -70,11 +74,11 @@ export class MeasureComponent implements OnInit, OnDestroy {
             this.layer.getSource().clear();
         });
         this.draw.on('drawend', (e: any) => {
-            const feat: ol.Feature = new ol.Feature({
+            const feat: Feature = new Feature({
                 geometry: e.target,
             });
-            let src = new ol.source.Vector()
-            let vector = new ol.layer.Vector({
+            let src = new VectorSource()
+            let vector = new VectorLayer({
                 source: src
             });
             this.mapConfig.map.addLayer(vector)
@@ -96,20 +100,20 @@ export class MeasureComponent implements OnInit, OnDestroy {
     public _setCursor(cursorType: string) {
     }
 
-    public _getLengthOrArea(feature: ol.Feature): string {
+    public _getLengthOrArea(feature: Feature): string {
         let value = '';
         const geom: any = feature.getGeometry();
         switch (this.measureType) {
             case 'LineString':
                 try {
-                    value = parseFloat((ol.Sphere.getLength(geom) * 3.28084 * this.convert).toString()).toFixed(2).toString();
+                    value = parseFloat((olSphere.getLength(geom) * 3.28084 * this.convert).toString()).toFixed(2).toString();
                     if (value == '0.00') { value = '' }
                     // value = parseFloat((geom.getLength()).toString()).toFixed(2).toString();
                 } catch (error) { }
                 break;
             case 'Polygon':
                 try {
-                    value = parseFloat((ol.Sphere.getArea(geom) * 10.76391 * this.convert).toString()).toFixed(2).toString();
+                    value = parseFloat((olSphere.getArea(geom) * 10.76391 * this.convert).toString()).toFixed(2).toString();
                     if (value == '0.00') { value = '' }
                 } catch (error) { }
                 break;
@@ -130,35 +134,35 @@ export class MeasureComponent implements OnInit, OnDestroy {
         this.layer.getSource().getFeatures()[0].changed()
 
     }
-    public _getStyle(feature: ol.Feature): ol.style.Style[] {
-        return [new ol.style.Style({
-            fill: new ol.style.Fill({
+    public _getStyle(feature: Feature): Style[] {
+        return [new Style({
+            fill: new Fill({
                 color: 'black'
             })
-        }), new ol.style.Style({
-            stroke: new ol.style.Stroke({
+        }), new Style({
+            stroke: new Stroke({
                 color: 'black',
                 width: 2,
                 lineDash: [5, 5]
             }),
-            image: new ol.style.Circle({
+            image: new Circle({
                 radius: 5,
-                stroke: new ol.style.Stroke({
+                stroke: new Stroke({
                     color: 'rgba(0, 0, 0, 0.7)'
                 })
             }),
-            text: new ol.style.Text({
+            text: new Text({
                 textAlign: 'center',
                 textBaseline: 'middle',
                 text: this._getLengthOrArea(feature),
                 font: this.font,
-                fill: new ol.style.Fill({
+                fill: new Fill({
                     color: 'black'
                 }),
                 offsetX: 0,
                 offsetY: 0,
                 rotation: 0,
-                stroke: new ol.style.Stroke({
+                stroke: new Stroke({
                     color: 'white',
                     width: 3
                 }),

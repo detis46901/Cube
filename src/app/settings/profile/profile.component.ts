@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ChangePictureComponent } from './change-picture/change-picture.component';
 import { UserService } from '../../../_services/_user.service';
 import { User } from '../../../_models/user.model';

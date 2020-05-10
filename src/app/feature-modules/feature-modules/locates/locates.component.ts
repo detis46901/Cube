@@ -1,18 +1,13 @@
-import { Component, OnInit, Input, ComponentFactoryResolver } from '@angular/core';
-import { UserPageLayer } from '_models/layer.model';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { MapConfig } from '../../../map/models/map.model';
-import { geoJSONService } from './../../../map/services/geoJSON.service';
-import { FeatureModulesService } from '../../feature-modules.service'
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { LocatesService } from './locates.service'
-import { MyCubeField, MyCubeConfig, MyCubeComment } from "../../../../_models/layer.model"
 import { UserService } from '../../../../_services/_user.service'
 import { User } from '../../../../_models/user.model'
-import { getTypeNameForDebugging } from '@angular/common/src/directives/ng_for_of';
-import { locateStyles, Locate } from './locates.model'
-import { filter } from 'rxjs/operators';
-
-
+import { locateConfig, locateStyles, Locate, disItem, disposition } from './locates.model'
+import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
+import { ModuleInstance } from '_models/module.model';
+import { UserPageLayer } from '_models/layer.model';
 
 
 @Component({
@@ -20,57 +15,117 @@ import { filter } from 'rxjs/operators';
   templateUrl: './locates.component.html',
   styleUrls: ['./locates.component.css']
 })
-export class LocatesComponent implements OnInit {
+export class LocatesComponent implements OnInit, OnDestroy {
 
-  public moduleShow: boolean
+  public locateConfig = new locateConfig
+  public locateConfigID: number
   public locateInput: string;
-  public ticktSubscription: Subscription;
-  public idSubscription: Subscription;
   public ticket: Locate = null
-  public id: string = null
   public expanded: boolean = false
-  public expandedSubscription: Subscription;
   public userID: number;
   public userName: string;
   public completedNote: string;
+  public completedDisposition = new disItem;
   public filterOpen: boolean = true
   public fromDate: Date
   public toDate: Date
   public tminus30: Date
-
-
+  public tab: string;
+  public moduleSettings: JSON
+  public disposition = new disposition
+  public layer: UserPageLayer
 
   constructor(
-    private geojsonservice: geoJSONService, private featureModelService: FeatureModulesService, public locatesservice: LocatesService, public userService: UserService, public locateStyles: locateStyles
-  ) {
-    this.ticktSubscription = this.locatesservice.getTicket().subscribe(ticket => { this.ticket = ticket});
-    this.idSubscription = this.locatesservice.getID().subscribe(id => { this.id = id })
-    this.expandedSubscription = this.locatesservice.getExpanded().subscribe(expanded => { this.expanded = expanded })
-    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    this.userID = currentUser && currentUser.userID;
-  }
+    public locatesservice: LocatesService,
+    public userService: UserService,
+    public locateStyles: locateStyles,
+    public moduleInstanceService: ModuleInstanceService
+  ) {}
 
   @Input() mapConfig: MapConfig;
-  @Input() instanceID: number;
-  @Input() user: string;
+  @Input() instance: ModuleInstance;
 
   ngOnInit() {
+    this.locatesservice.mapConfig = this.mapConfig
+    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.userID = currentUser && currentUser.userID;
     this.getName()
     let today:Date = new Date()
     this.toDate = today
     this.tminus30 = new Date()
     this.tminus30.setDate(this.tminus30.getDate()-30)
     this.fromDate = this.tminus30
+    this.locateConfig.moduleSettings = this.instance.settings
   }
 
+  ngOnDestroy() {
+    if (this.layer) {clearInterval(this.layer.updateInterval)}
+  }
+
+  goToTab(tab) {
+    this.tab = tab
+  }
+
+  public loadLayer(layer): boolean{
+    //probably not being used right now
+    return this.locatesservice.loadLayer(this.mapConfig, layer)
+  }
+  public unloadLayer(layer): boolean {
+    this.locateConfig.visible = false
+    this.ticket = null
+    this.locatesservice.createInterval(layer)
+    return true
+  }
+  public setCurrentLayer(layer):boolean {
+    this.layer = layer
+    this.locateConfig.expanded = true
+    this.locateConfig.visible = true
+    this.locatesservice.setCurrentLayer(layer)
+    return true
+  }
+  public styleMyCube(layer): boolean {
+    return true
+  }
+  public unsetCurrentLayer(layer): boolean {
+    this.locateConfig.visible = false
+    return this.locatesservice.unsetCurrentLayer(layer)
+  }
+  public getFeatureList(layer?): boolean {
+    console.log('getFeatureList')
+    return this.locatesservice.getFeatureList(layer)
+  }
+  public clearFeature(layer:UserPageLayer): boolean {
+    this.ticket = null
+    return this.locatesservice.clearFeature(layer)
+  }
+  public unstyleSelectedFeature(layer:UserPageLayer):boolean {
+    return this.locatesservice.unstyleSelectedFeature(layer)
+  }
+  public styleSelectedFeature(layer:UserPageLayer):boolean {
+    return this.locatesservice.styleSelectedFeature(layer)
+  }
+  public selectFeature(layer:UserPageLayer): boolean {
+    this.goToTab('Process')
+    this.locatesservice.getOneLocate(layer).then((x) => {
+      this.ticket = x
+      this.mapConfig.myCubeConfig.expanded = false
+    })
+    this.locatesservice.selectFeature(layer)
+    return false
+  }
+
+  //locate specific procedures
   importLocate() {
-    this.locatesservice.parseLocateInput(this.locateInput, this.mapConfig, this.instanceID)
+    this.locatesservice.clearFeature(this.mapConfig.currentLayer)
+    this.locatesservice.parseLocateInput(this.locateInput, this.mapConfig, this.instance.ID)
     this.locateInput = ""
   }
 
   completeTicket() {
-    this.locatesservice.completeTicket(this.mapConfig, this.instanceID, this.id, this.userName, this.completedNote)
+    this.ticket.disposition = this.completedDisposition.value
+    this.locatesservice.completeTicket(this.mapConfig, this.instance.ID, this.ticket, this.completedNote, this.userName)
     this.completedNote = null
+    this.completedDisposition = new disItem
     this.ticket = null
   }
 
@@ -79,11 +134,14 @@ export class LocatesComponent implements OnInit {
       .subscribe((data: User) => {
         this.userName = data.firstName + " " + data.lastName
       })
+      this.moduleInstanceService.GetSingle(this.instance.ID)
+    .subscribe((x) => {
+      this.moduleSettings = x.settings
+    })
   }
+
   filter() {
     let filterString: string = ''
-   
-    let options = {year: 'numeric', month: 'numeric', day: 'numeric'}
     if (this.filterOpen == true) { filterString = 'closed is Null' }
     if (filterString != '') {filterString += " and "} else {filterString += " "}
       if (this.fromDate) {
@@ -98,20 +156,18 @@ export class LocatesComponent implements OnInit {
     else {
       filterString += "CURRENT_DATE"
     }
-    // filterString += " and tdate BETWEEN '2019-01-01' AND '2019-02-15'"
-    console.log(filterString)
     this.locatesservice.filter = filterString
     this.runFilter();
 
   }
   private runFilter() {
-    let i = this.locatesservice.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == this.instanceID);
+    let i = this.locatesservice.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == this.instance.ID);
     let obj = this.locatesservice.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'myCube Layer Identity (integer)');
     if (this.locatesservice.mapConfig.currentLayer.layer.ID === +obj['setting']['value']) {
-      this.locatesservice.reloadLayer(this.locateStyles.current);
+      this.locatesservice.reloadLayer(this.mapConfig.currentLayer);
     }
     else {
-      this.locatesservice.reloadLayer(this.locateStyles.load);
+      this.locatesservice.reloadLayer(this.mapConfig.currentLayer);
     }
   }
 
@@ -121,5 +177,22 @@ export class LocatesComponent implements OnInit {
     this.toDate = null
     this.locatesservice.filter = 'closed is Null'
     this.runFilter()
+  }
+
+  public emailContractor(ticket: Locate) {
+    this.getEmailConfiguration()
+    let win = window.open("mailto:" + ticket.email + "?subject=Ticket: " + ticket.ticket + " " + ticket.address + " " + ticket.street + "&body=" + this.completedDisposition.emailBody, "_blank"); //this.moduleSettings['settings'][1]['setting']['value']
+    setTimeout(function() { win.close() }, 500);
+    this.completedNote = "Emailed the contractor."
+  }
+
+  public getEmailConfiguration() {
+    this.moduleInstanceService.GetSingle(this.instance.ID)
+    .subscribe((x) => {
+      this.moduleSettings = x.settings
+    })
+  }
+  public openDashboard() {
+    window.open(this.moduleSettings['settings'][2]['setting']['value'], '_blank', 'resizable=yes')
   }
 }

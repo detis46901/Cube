@@ -1,3 +1,5 @@
+
+import {map} from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ServerService } from '../../../_services/_server.service';
 import { Server } from '../../../_models/server.model';
@@ -6,15 +8,13 @@ import { ServerNewComponent } from './serverNew/serverNew.component';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component';
 import { LayerNewComponent } from '../layer/layerNew/layerNew.component';
-import { MatDialog } from '@angular/material';
-import { ServerValidatorService } from './serverValidator.service';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { MatDialog } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+
+
 import { ServerDetailsComponent } from '../details/serverDetails/serverDetails.component';
 import { ServerLayersComponent } from './serverLayers/serverLayers.component';
-import * as ol from 'openlayers'
+import WMSCapabilities from 'ol/format/WMSCapabilities';
 
 @Component({
     selector: 'server',
@@ -39,27 +39,24 @@ export class ServerComponent implements OnInit {
     public formatArray: Array<string> = [];
     public WMSLayers: Array<WMSLayer> = [];
     public newLayer = new Layer
-
     public displayGeoserverLayers: boolean;
     public displayFolders: boolean;
     public path: string = '';
-
     public serverColumns = ['serverID', 'serverName', 'serverType', 'serverURL', 'actionsColumn']
     public dataSource: any;
-    public http: Http
+    public http: HttpClient
 
-    constructor(private serverService: ServerService, private dialog: MatDialog, http: Http
-    ) {
+    constructor(private serverService: ServerService, private dialog: MatDialog, http: HttpClient) {
     this.http = http
+    }
+
+    ngOnInit() {
         this.options = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Accept': 'text/plain' //use token auth
             })
         }
-    }
-
-    ngOnInit() {
         this.getServers();
         this.displayGeoserverLayers = false;
     }
@@ -74,8 +71,8 @@ export class ServerComponent implements OnInit {
     }
 
     public getCapabilities = (url): Observable<any> => {
-        return this.http.get(url)
-            .map((response: Response) => <any>response.text())
+        return this.http.get(url).pipe(
+            map((response: Response) => <any>response.text()))
     }
 
     public clearArrays(): void {
@@ -106,7 +103,7 @@ export class ServerComponent implements OnInit {
         let url = serv.serverURL //+ '?request=getCapabilities&service=WMS';
         this.getCapabilities(url)
             .subscribe((data) => {
-                let parser = new ol.format.WMSCapabilities();
+                let parser = new WMSCapabilities();
                 let result = parser.read(data)
                 this.WMSLayers = result['Capability']['Layer']['Layer']
                 this.currServer = serv

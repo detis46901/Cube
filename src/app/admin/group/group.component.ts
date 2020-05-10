@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
-import { CommonModule, AsyncPipe } from '@angular/common';
 import { UserService } from '../../../_services/_user.service';
 import { User } from '../../../_models/user.model';
 import { Group, GroupMember } from '../../../_models/group.model';
@@ -8,31 +7,28 @@ import { GroupMemberService } from '../../../_services/_groupMember.service';
 import { NewGroupComponent } from './newGroup/newGroup.component';
 import { EditGroupComponent } from './editGroup/editGroup.component'
 import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component';
-import { MatDialog, MatDialogRef, MatSelectionList } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
-import { Subscriber } from 'rxjs/Subscriber';
-import { from } from 'rxjs/observable/from';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'group',
     templateUrl: './group.component.html',
     styleUrls: ['./group.component.scss'],
-    providers: [UserService] //removed Configuration, FilterPipe, NumFilterPipe
+    providers: [UserService]
 })
 
 export class GroupComponent implements OnInit {
-    @ViewChild('groupUsers') groupSelectionList: any;
+    @ViewChild('groupUsers')  groupSelectionList: any;
     @ViewChild('groupGroups') userSelectionList: any;
 
-    public token: string;
-    public userID: number;
     public objCode = 3;
     public type = "Group"
     public bool = false;
+    public bool2 = false;
 
     public group = new Group;
     public groups: Array<Group>;
     public users: Array<User>;
+    public showUsers: Array<User>;
 
     public selectedUser: User;
     public selectedAvailableUser;
@@ -50,9 +46,6 @@ export class GroupComponent implements OnInit {
 
     constructor(private userService: UserService, private groupService: GroupService,
         private groupMemberService: GroupMemberService, private dialog: MatDialog) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {

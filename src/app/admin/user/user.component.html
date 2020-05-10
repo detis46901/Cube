@@ -1,14 +1,14 @@
 <!-- Jack Reyburn -->
 <!-- User page in admin settings -->
 
-<div class="row">
+<div class="row">        
     <!-- table to contain all of the user information -->
-    <table mat-table id="userDataTable" #table [dataSource]="dataSource">
-
+    <table mat-table id="userDataTable" #table [dataSource]="ds">
         <!-- first column containing user ID -->
         <ng-container matColumnDef="userID">
             <mat-header-cell class="user-sm-head" *matHeaderCellDef>
                 <Strong> ID </Strong>
+                <span>&nbsp;<mat-slide-toggle name="booBoy" [(ngModel)]="publicFilter" (change)="applyFilter()"></mat-slide-toggle><strong>Public</strong></span>
             </mat-header-cell>
             <mat-cell class="user-sm-cell" *matCellDef="let row">
                 {{row.ID}}
@@ -43,10 +43,10 @@
 
         <!-- fourth column containing the user's email -->
         <ng-container matColumnDef="email">
-            <mat-header-cell class="user-lg-head" *matHeaderCellDef>
+            <mat-header-cell class="user-sm-head" *matHeaderCellDef>
                 <Strong></Strong>
             </mat-header-cell>
-            <mat-cell class="user-lg-cell" *matCellDef="let row">
+            <mat-cell class="user-sm-cell" *matCellDef="let row">
                 
                 <!-- <mat-form-field style="width:80%">
                     <input matInput [formControl]="row.validator.controls['email']" [readonly]="!row.editing" [(ngModel)]="row.email">
@@ -60,7 +60,7 @@
                 <Strong> Active </Strong>
             </mat-header-cell>
             <mat-cell class="user-sm-cell" *matCellDef="let row">
-                <i *ngIf="row.active" class="fas fa-check" style="color:green"></i>
+                <mat-icon  *ngIf="row.active">check</mat-icon>
                 <i *ngIf="!row.active" style="color:#673ab7">&ndash;</i>
             </mat-cell>
         </ng-container>
@@ -71,7 +71,7 @@
                 <Strong> Admin </Strong>
             </mat-header-cell>
             <mat-cell class="user-sm-cell" *matCellDef="let row">
-                <i *ngIf="row.administrator" class="fas fa-check" style="color:green"></i>
+                <mat-icon  *ngIf="row.administrator">check</mat-icon>
                 <i *ngIf="!row.administrator" style="color:#673ab7">&ndash;</i>
             </mat-cell>
         </ng-container>
@@ -81,7 +81,7 @@
             <!-- create new user button -->
             <mat-header-cell class="user-xlg-head" *matHeaderCellDef>
                 <button style="border:1px solid white; color:white" mat-button id="userCreateNew" (click)="openNewUser()">
-                    <strong> Create New User </strong>
+                    <strong> New User </strong>
                 </button>
             </mat-header-cell>
             <mat-cell class="user-xlg-cell" *matCellDef="let row">
@@ -105,17 +105,18 @@
                 </button>
                 <mat-menu #menu2="matMenu" [overlapTrigger]="false">
                     <button mat-menu-item id="openConfig" *ngFor="let userpage of (userPages | pagefilter: (row.ID))" (click)="getUserPageItem(userpage.ID, row.ID)">
+                            <!-- <button mat-menu-item id="openConfig" *ngFor="let userpage of (userPages)" (click)="getUserPageItem(userpage.ID, row.ID)"> -->
                         <h5>{{userpage.page}}</h5>
                     </button>
                 </mat-menu>
 
                 <!-- edit user button -->
                 <button mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.ID, row.firstName, row.lastName)">
-                    <i class="fas fa-pencil-alt"></i>
+                    <mat-icon>edit</mat-icon>
                 </button>
                 <!-- delete user button -->
                 <button mat-icon-button style="color:#7e7e7e" title="Delete User" focusable="false" (click)="openConfDel(row.currentData)">
-                    <i class="fa fa-trash mat-icon"></i>
+                    <mat-icon>delete</mat-icon>
                 </button>
             </mat-cell>
         </ng-container>

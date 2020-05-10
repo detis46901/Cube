@@ -3,18 +3,25 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "c-proj": {
+    "cube": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.json",
+            "customWebpackConfig": {
+              "path": "extra-webpack.config.js",
+              "replaceDuplicatePlugins": true,
+              "mergeStrategies": {
+                "externals": "prepend"
+              }
+            },
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules"
@@ -31,14 +38,10 @@
             ],
             "styles": [
               "src/styles.css",
-              "node_modules/openlayers/dist/ol.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/font-awesome/css/font-awesome.min.css",
               "src/styles/_variables.scss"
             ],
-            "scripts": [
-              "node_modules/openlayers/dist/ol.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -63,20 +66,20 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "c-proj:build",
+            "browserTarget": "cube:build",
             "port": 4200,
             "host": "localhost"
           },
           "configurations": {
             "production": {
-              "browserTarget": "c-proj:build:production"
+              "browserTarget": "cube:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "c-proj:build"
+            "browserTarget": "cube:build"
           }
         },
         "test": {
@@ -91,7 +94,6 @@
               "src/styles.css",
               "node_modules/openlayers/dist/ol.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/font-awesome/css/font-awesome.min.css",
               "src/styles/_variables.scss"
             ],
             "assets": [
@@ -114,7 +116,7 @@
         }
       }
     },
-    "c-proj-e2e": {
+    "cube-e2e": {
       "root": "e2e",
       "sourceRoot": "e2e",
       "projectType": "application",
@@ -123,7 +125,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "c-proj:serve"
+            "devServerTarget": "cube:serve"
           }
         },
         "lint": {
@@ -136,22 +138,23 @@
       }
     }
   },
-  "defaultProject": "c-proj",
+  "defaultProject": "cube",
   "cli": {
     "warnings": {
       "typescriptMismatch": false
-    }
+    },
+    "analytics": "2c1a9dfb-70af-4322-b7f5-41c3e2477ea3"
   },
   "schematics": {
     "@schematics/angular:class": {
-      "spec": false
+      "skipTests": true
     },
     "@schematics/angular:component": {
-      "spec": true,
+      "skipTests": false,
       "inlineStyle": false,
       "inlineTemplate": false,
       "prefix": "app",
-      "styleext": "css"
+      "style": "css"
     },
     "@schematics/angular:directive": {
       "prefix": "app"

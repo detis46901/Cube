@@ -1,0 +1,65 @@
+<!-- Jack Reyburn -->
+<!-- handles the my cube feature and comments menus -->
+<!-- message is WMS Data -->
+<!-- second accordian menu handling features -->
+        <div *ngIf="dataFormConfig.visible">
+            <div *ngFor="let dataForm of dataFormConfig.dataForm">
+                <div *ngIf="(dataForm.type=='integer' || dataForm.type == 'smallint' || dataForm.type == 'bigint' || dataForm.type == 'double precision') && dataForm.visible == true">
+                    <div *ngIf="!dataForm.constraints">
+                        <mat-form-field style="width:90%">
+                            <input matInput [disabled]="!dataFormConfig.editMode" [id]="dataForm.field" ngModel
+                                autocomplete='off' placeholder="{{dataForm.field}}" [matTooltip]="dataForm.description"
+                                [(ngModel)]="dataForm.value" (change)="dataForm.changed = true"
+                                (blur)="updateDataForm(dataForm)">
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="dataForm.constraints">
+                        <mat-form-field>
+                          <mat-label>{{dataForm.field}}</mat-label>
+                          <mat-select [(value)]="dataForm.value" (selectionChange)="dataForm.changed = true; updateDataForm(dataForm)">
+                            <mat-option *ngFor="let constraint of dataForm.constraints" [(value)]="constraint.name">{{constraint.name}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                </div>
+                <div *ngIf="dataForm.type=='boolean'">
+                    <!-- checkbox for contracting -->
+                    <mat-checkbox [disabled]="!dataFormConfig.editMode" [(ngModel)]="dataForm.value"
+                        [matTooltip]="dataForm.description" (change)="dataForm.changed = true; updateDataForm(dataForm)">
+                        {{dataForm.field}}</mat-checkbox>
+                </div>
+                <div>
+                    <div *ngIf="dataForm.type=='text' || dataForm.type == 'character varying'"
+                        [matTooltip]="dataForm.description" matTooltipPosition="above" matTooltipShowDelay="1000">
+                        <div *ngIf="!dataForm.constraints">
+                            <mat-form-field style="width:90%">
+                                <input type="text" matInput autocomplete='off' rows="3" [disabled]="!dataFormConfig.editMode"
+                                    [id]="dataForm.field" ngModel placeholder="{{dataForm.field}}" [(ngModel)]="dataForm.value"
+                                    (change)="changeTextField(dataForm)" (blur)="updateDataForm(dataForm)">
+                            </mat-form-field><br>
+                            <div *ngFor="let link of dataForm.links">
+                                    <div><a target="_blank" [href]="link.url">Link</a> </div>
+                            </div>
+                        </div>
+                        <div *ngIf="dataForm.constraints">
+                            <mat-form-field>
+                              <mat-label>{{dataForm.field}}</mat-label>
+                              <mat-select [(value)]="dataForm.value" (selectionChange)="dataForm.changed = true; updateDataForm(dataForm)">
+                                <mat-option *ngFor="let constraint of dataForm.constraints" [(value)]="constraint.name">{{constraint.name}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                    </div>
+                </div>
+                <div *ngIf="dataForm.type=='date' || dataForm.type=='timestamp with time zone'">
+                    <mat-form-field style="width:90%">
+                        <input matInput [disabled]="!dataFormConfig.editMode" [matDatepicker]="picker" [matTooltip]="dataForm.description"
+                            placeholder="{{dataForm.field}}" [(ngModel)]="dataForm.value"
+                            (dateChange)="dataForm.changed = true; updateDataForm(dataForm)">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    

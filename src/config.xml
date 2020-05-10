@@ -15,7 +15,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <standards>
     <project_title>Cube</project_title>
-    <hosturl>http://foster2.cityofkokomo.org</hosturl>
+    <hosturl>https://cube-kokomo.com</hosturl>
     <password>Monday01</password>
     <Server>
         <port>:4200</port>

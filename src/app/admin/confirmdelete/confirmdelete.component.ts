@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
     selector: 'confirm-delete',
@@ -16,14 +16,8 @@ export class ConfirmDeleteComponent implements OnInit {
 
     public objectType: string;
     public dependentWarning: boolean = false;
-    public token: string;
-    public userID: number;
 
-    constructor() {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-    }
+    constructor() {}
 
     ngOnInit() {
         this.assignType();

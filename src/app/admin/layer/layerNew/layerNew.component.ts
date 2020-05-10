@@ -1,24 +1,23 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
 import { UserService } from '../../../../_services/_user.service';
-import { Configuration } from '../../../../_api/api.constants';
 import { LayerService } from '../../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { ServerService } from '../../../../_services/_server.service';
 import { Layer, WMSLayer } from '../../../../_models/layer.model';
 import { Server } from '../../../../_models/server.model';
 import { LayerPermission } from '../../../../_models/layer.model';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { LayerPermissionComponent } from '../layerPermission/layerPermission.component';
 import { User } from '../../../../_models/user.model';
 import { GroupService } from '../../../../_services/_group.service';
 import { Group } from '../../../../_models/group.model';
-import {MAT_DIALOG_DATA} from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
     selector: 'layer-new',
     templateUrl: './layerNew.component.html',
     styleUrls: ['./layerNew.component.scss'],
-    providers: [UserService, Configuration, LayerService, LayerPermissionService, ServerService, LayerPermissionComponent],
+    providers: [UserService, LayerService, LayerPermissionService, ServerService, LayerPermissionComponent],
 })
 
 export class LayerNewComponent implements OnInit {
@@ -31,7 +30,6 @@ export class LayerNewComponent implements OnInit {
 
     public permlessUsers = new Array<User>()
     public permlessGroups = new Array<Group>();
-    public token: string;
     public userID: number;
     public step = 0;
     public isGroup: boolean = false;
@@ -66,14 +64,11 @@ export class LayerNewComponent implements OnInit {
     //provide permissions
     //place on userpages?
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private layerservice: LayerService, private layerPermissionService: LayerPermissionService, private dialog: MatDialog, private serverService: ServerService, private groupService: GroupService, private userService: UserService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-    }
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private layerservice: LayerService, private layerPermissionService: LayerPermissionService, private dialog: MatDialog, private serverService: ServerService, private groupService: GroupService, private userService: UserService) {}
 
     ngOnInit() {
-
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.userID = currentUser && currentUser.userID;
         if (this.data) {
             console.log("Coming from server dialog")
             console.log(this.data['serverLayer'])

@@ -1,13 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UserService } from '../../../_services/_user.service';
-import { Configuration } from '../../../_api/api.constants';
-import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http'
 import { User } from '../../../_models/user.model';
 
 @Component({
     selector: 'password',
     templateUrl: './password.component.html',
-    providers: [UserService, Configuration],
+    providers: [UserService],
     styleUrls: ['./password.component.scss'],
 })
 
@@ -15,7 +13,6 @@ export class PasswordComponent implements OnInit {
     public oldPw: string = "";
     public newPw: string = "";
     public confPw: string = "";
-
     public token: string;
     public userID: string;
     public user = new User;

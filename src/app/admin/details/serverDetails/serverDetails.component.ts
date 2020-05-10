@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Server } from '../../../../_models/server.model';
 import { User, Notif } from '../../../../_models/user.model';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { NotifService } from '../../../../_services/notification.service';
 import { ServerService } from '../../../../_services/_server.service';
 import { UserService } from '../../../../_services/_user.service';
@@ -22,16 +22,13 @@ export class ServerDetailsComponent implements OnInit {
     public changedServerProps = new Array<any>();
     public originalServerProps = new Array<any>();
     public style: string;
-    public token;
     public userID;
 
-    constructor(private dialog: MatDialog, private serverService: ServerService, private userService: UserService, private notificationService: NotifService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-    }
+    constructor(private dialog: MatDialog, private serverService: ServerService, private userService: UserService, private notificationService: NotifService) {}
 
     ngOnInit() {
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.userID = currentUser && currentUser.userID;
         this.getUser(this.userID)
         this.getServer(this.ID)
     }
@@ -57,28 +54,6 @@ export class ServerDetailsComponent implements OnInit {
             .Update(server)
             .subscribe(() => this.dialog.closeAll())
     }
-
-    // public submit(layer) {
-    //     this.whichFieldsChanged(layer)
-    //     var notif: Notif = this.createLayerNotif(layer)
-    //     this.serverService
-    //         .Update(layer)
-    //         .subscribe(() => {
-    //             this.layerPermissionService.GetByLayer(layer.ID).subscribe((perms) => {
-    //                 for(let perm of perms) {
-    //                     if(perm.userID != this.userID) {
-    //                         notif.userID = perm.userID;
-    //                         this.notificationService
-    //                             .Add(notif)
-    //                             .subscribe((res) => {
-    //                                 console.log(res)
-    //                                 this.dialog.closeAll()
-    //                             })
-    //                     }
-    //                 }
-    //             })
-    //         })
-    // }
 
     public whichFieldsChanged(changed: Server) {
         let ix = 0;

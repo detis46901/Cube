@@ -1,21 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../_services/_user.service';
-import { Configuration } from '../../../_api/api.constants';
 import { UserPageService } from '../../../_services/_userPage.service';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { User, UserPage } from '../../../_models/user.model';
 import { UserPageLayer } from '../../../_models/layer.model'
-import { PagePipe } from '../../../_pipes/rowfilter2.pipe';
+import { PagePipe } from '../_pipes/rowfilter2.pipe';
 import { NumFilterPipe } from '../../../_pipes/numfilter.pipe';
 import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component';
 import { PageComponent } from './page/page.component';
 import { PageConfigComponent } from './pageconfig/pageconfig.component';
 import { ChangePasswordComponent } from './changepassword/changepassword.component';
 import { NewUserComponent } from './newUser/newUser.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { DataSource } from '@angular/cdk/collections';
-import { Observable } from 'rxjs/Observable';
-import { UserValidatorService } from './userValidator.service';
+import { Observable } from 'rxjs';
 import { UserDetailsComponent } from '../details/userDetails/userDetails.component';
 //import { UserDataSource } from './userTable/userData';
 
@@ -25,40 +24,31 @@ import { UserDetailsComponent } from '../details/userDetails/userDetails.compone
 @Component({
     selector: 'user',
     templateUrl: './user.component.html',
-    providers: [UserService, UserPageLayerService, UserPageService, Configuration, PagePipe, NumFilterPipe],
+    providers: [UserService, UserPageLayerService, UserPageService, PagePipe, NumFilterPipe],
     styleUrls: ['./user.component.scss'],
 })
 
 
 export class UserComponent implements OnInit {
     public objCode = 1
-    public token: string;
-    public userID: number;
-
+    public publicFilter: boolean = false
     public user = new User;
     public newUser = new User;
-
     public userPage: UserPage;
     public userPages: Array<UserPage>;
     public users: Array<User>;
-    //public userList: User[];
 
     public userColumns = ['userID', 'firstName', 'lastName', 'email', 'active', 'administrator', 'actionsColumn']
     public dataSource: any;
+    public ds = new MatTableDataSource()
 
-    constructor(private userValidator: UserValidatorService, private userService: UserService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private dialog: MatDialog) {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-    }
+    constructor(private userService: UserService, private userPageLayerService: UserPageLayerService, private userPageService: UserPageService, private dialog: MatDialog) {}
 
     ngOnInit() {
+        this.ds.filterPredicate = this.tableFilter();
         this.getUserItems();
         this.getUserPageItems();
     }
-
-    // ngAfterViewInit() {
-    // this.openPages(2,"Josh","Church")
 
     public getUserItems(): void {
         this.userService
@@ -66,8 +56,37 @@ export class UserComponent implements OnInit {
             .subscribe((users: User[]) => {
                 this.users = users;
                 this.dataSource = users;
+                this.ds.data = users
+                this.applyFilter()
             });
     }
+
+    public applyFilter(): void {
+        let g:string
+       if (this.publicFilter == true) {
+        g = 'true'
+       }
+       else {
+           g = 'false'
+       }
+        this.ds.filter = g
+        console.log(this.ds.filteredData)
+    }
+
+    tableFilter(): (data: any, filter: string) => boolean {
+        let filterFunction = function(data, filter): boolean {
+          let g: string
+          if (data.public) {
+            g = 'true'
+          }
+          else {
+              g = 'false'
+          }
+          console.log(g)
+          return g.indexOf(filter) !== -1
+        }
+        return filterFunction;
+      }
 
     public getUserPageItems(): void {
         this.userPageService

@@ -1,7 +1,9 @@
-import 'rxjs/add/operator/map';
+
 import { Injectable } from '@angular/core';
 import { UserPageLayer } from '../../../_models/layer.model';
-import * as ol from 'openlayers';
+import Feature from 'ol/Feature';
+import {Fill, Stroke, Circle, Style} from 'ol/style';
+import Text from 'ol/style/Text';
 
 @Injectable()
 export class StyleService {
@@ -25,43 +27,50 @@ export class StyleService {
             //No Default Filter
         }
     }
-    public styleFunction(feature: ol.Feature, layer: UserPageLayer, mode: string): ol.style.Style {
+    public styleFunction(feature: Feature, layer: UserPageLayer, mode: string): any {
         let color: string
         let width: number
+        let text: string
+        let labelName: string
+        labelName = layer.style.listLabel;
         if (layer.style) {
+            // console.log(layer.style)
             color = layer.style[mode].color; width = layer.style[mode].width
+            if (layer.style.showLabel) {text = feature.get(labelName)}
         }
         else {
             color = layer.layer.defaultStyle[mode].color; width = layer.layer.defaultStyle[mode].width
         }
-        let style = new ol.style.Style({
-            image: new ol.style.Circle({
+        let style = new Style({
+            image: new Circle({
                 radius: 5,
                 fill: null,
-                stroke: new ol.style.Stroke({ color: color, width: width })
+                stroke: new Stroke({ color: color, width: width })
             }),
-            fill: new ol.style.Fill({
+            fill: new Fill({
                 color: 'rgba(255, 255, 255, 0.2)'
             }),
-            stroke: new ol.style.Stroke({
+            stroke: new Stroke({
                 color: color,
                 width: width
             }),
-            text: new ol.style.Text({
-                font: '12px Calibri,sans-serif',
-                fill: new ol.style.Fill({
+            text: new Text({
+                font: '14px Calibri,sans-serif',
+                fill: new Fill({
                     color: '#000'
                 }),
-                stroke: new ol.style.Stroke({
+                stroke: new Stroke({
                     color: '#fff',
                     width: 1
                 }),
+                text: text,
+                offsetY: -10
             })
         });
-        if (this.filterFunction(feature, layer) == false) { style = new ol.style.Style({}) }
+        if (this.filterFunction(feature, layer) == false) { style = new Style({}) }
         return style
     }
-    public filterFunction(feat: ol.Feature, layer: UserPageLayer): boolean {
+    public filterFunction(feat: Feature, layer: UserPageLayer): boolean {
         let filterColumn: string
         let filterOperator: string
         let filterValue: any

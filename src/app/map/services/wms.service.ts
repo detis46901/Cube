@@ -1,12 +1,13 @@
+
+import {map} from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from "@angular/core";
-import { Observable } from 'rxjs'
-import { Subject } from 'rxjs/Subject';
+import { Observable ,  Subject } from 'rxjs'
 import { UserPageLayer } from '../../../_models/layer.model';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { environment } from 'environments/environment'
+import { filter, catchError, mergeMap } from 'rxjs/operators';
 
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/mergeMap";
 @Injectable()
 
 export class WMSService {
@@ -46,8 +47,9 @@ export class WMSService {
     // }
 
     getfeatureinfo(URL, mouseDown: boolean) {
-        return this.http.request("GET", URL, {responseType: 'text'})
-            .map((responseData) => {
+        return this.http.request("GET", URL, {responseType: 'text'}).pipe(
+            map((responseData) => {
+                //console.log(responseData)
                 let temp: string = responseData['_body']
                 try{
                 //This "if" block captures layer features with no pre-formatted "content.ftl" file
@@ -91,7 +93,11 @@ export class WMSService {
                 catch{return responseData}
 
                 return temp;
-            })
+            }))
+    }
+
+    getGeoJSONInfo(URL):Observable<string> {
+        return this.http.request("GET", URL, {responseType: 'text'})
     }
 
     public getCapabilities = (url): Observable<any> => {
@@ -118,12 +124,16 @@ export class WMSService {
         })
     }
 
-    public formLayerRequest(layer: UserPageLayer): string {
+    public formLayerRequest(layer: UserPageLayer, noProxy?:boolean): string {
         switch (layer.layer.layerType) {
             case ('MapServer'): {
                 console.log("Found MapServer Layer")
                 let norest: string = layer.layer.server.serverURL.split('/rest/')[0] + '/' + layer.layer.server.serverURL.split('/rest/')[1];
-                let url: string = 'https://cors-anywhere.herokuapp.com/' + norest + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                let norest2: string = norest.split("//")[1]
+                let url: string = environment.proxyUrl + '/' + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                if (noProxy) {
+                    url = "http://" + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                }
                 return url;
             }
             case ('Geoserver'): {
@@ -133,7 +143,23 @@ export class WMSService {
             case ('ArcGISRest'): {
                 console.log("Found ArcGISRest Layer")
                 let norest: string = layer.layer.server.serverURL.split('/rest/')[0] + '/' + layer.layer.server.serverURL.split('/rest/')[1];
-                let url: string = 'https://cors-anywhere.herokuapp.com/' + norest + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                let norest2: string = norest.split("//")[1]
+                let url: string = environment.proxyUrl + '/' + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                if (noProxy) {
+                    url = "http://" + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                }
+                console.log(url)
+                return url;
+            }
+            case ('WMTS'): {
+                console.log("Found MapServer WMTS Layer")
+                let norest: string = layer.layer.server.serverURL.split('/rest/')[0] + '/' + layer.layer.server.serverURL.split('/rest/')[1];
+                let norest2: string = norest.split("//")[1]
+                let url: string = environment.proxyUrl + '/' + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                if (noProxy) {
+                    url = "http://" + norest2 + '/' + layer.layer.layerService + '/MapServer/WMTS/1.0.0/WMTSCapabilities.xml';
+                }
+                console.log(url)
                 return url;
             }
         }

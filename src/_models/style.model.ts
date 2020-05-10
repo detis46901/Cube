@@ -19,8 +19,10 @@ export class MyCubeStyle {
     load: MyCubeFeatureStyle;
     current: MyCubeFeatureStyle;
     listLabel: string;
-    filter: MyCubeFilterFields;
+    showLabel: boolean;
+    filter = new MyCubeFilterFields;
     filterOperator: MyCubeFilterOperator; //not used yet
+    opacity: number;
 }
 
 //filter classes
@@ -45,4 +47,5 @@ export class filterOperators {
     textOperators = this.isEqual.concat(this.contains)
     dateOperators = this.isEqual.concat(this.beforeAfter)    
     doublePrecisionOperators = this.isEqual.concat(this.inequality)
+    integerOperators = this.isEqual.concat(this.inequality)
 }

@@ -1,4 +1,4 @@
-<div class="layer-parent-container">
+<div>
     <div class="row">
         <!-- table for storing and editing all layer information in house -->
         <table mat-table id="layerDataTable" #table [dataSource]="dataSource">
@@ -63,13 +63,13 @@
                         <button mat-menu-item id="openstyle" (click)="openStyle(row.ID, row.layerName)">Style</button>
                     </mat-menu>
                     <span>
-                        <button mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row.ID, row.layerName)">
-                            <i class="fas fa-pencil-alt"></i>
+                        <button mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false" (click)="openDetails(row)">
+                            <mat-icon>edit</mat-icon>
                         </button>
                     </span>
                     <span>
                         <button mat-icon-button *ngIf="row.layerType != 'Module'" style="color:#7e7e7e" title="Delete Layer" focusable="false" (click)="confirmDelete(row)">    
-                            <i class="fa fa-trash mat-icon"></i>
+                            <mat-icon>delete</mat-icon>
                         </button>
                     </span>
                 </mat-cell>

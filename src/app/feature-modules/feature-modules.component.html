@@ -1,4 +1,9 @@
 <mat-accordion *ngFor="let userPageInstance of mapConfig.userpageinstances">
-  <app-locates *ngIf="userPageInstance.module_instance.module.identity == 'locates'" [mapConfig]="mapConfig" [instanceID]="userPageInstance.module_instance.ID"></app-locates>
-  <app-open-aerial-map *ngIf="userPageInstance.module_instance.module.identity == 'openAerialMap'" [mapConfig]="mapConfig" [instanceID]="userPageInstance.module_instance.ID"></app-open-aerial-map>
+  <div class="insert-a-component-inside">
+    <ng-container #vc></ng-container>
+  </div>
+  <app-locates *ngIf="userPageInstance.module_instance.module.identity == 'locates'" [mapConfig]="mapConfig" [instance]="userPageInstance.module_instance"></app-locates>
+  <app-open-aerial-map *ngIf="userPageInstance.module_instance.module.identity == 'openAerialMap'" [mapConfig]="mapConfig" [instance]="userPageInstance.module_instance"></app-open-aerial-map>
+  <app-SDS *ngIf="userPageInstance.module_instance.module.identity == 'SDS'" [mapConfig]="mapConfig" [instance]="userPageInstance.module_instance"></app-SDS>
+  <app-WO *ngIf="userPageInstance.module_instance.module.identity == 'WO'" [mapConfig]="mapConfig" [instance]="userPageInstance.module_instance"></app-WO>
 </mat-accordion>

@@ -1,96 +1,76 @@
 import { Injectable } from "@angular/core";
 import { MapConfig, mapStyles, featureList } from '../models/map.model';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
+import { UserPageService } from '../../../_services/_userPage.service';
 import { UserPageInstanceService } from '../../../_services/_userPageInstance.service'
-import { LayerPermission, Layer, UserPageLayer, MyCubeField, MyCubeConfig, MyCubeComment } from '../../../_models/layer.model';
+import { LayerPermission, UserPageLayer } from '../../../_models/layer.model';
 import { UserPageInstance, ModulePermission } from '../../../_models/module.model'
+import { UserPage } from '../../../_models/user.model';
 import { LayerPermissionService } from '../../../_services/_layerPermission.service';
 import { ModulePermissionService } from '../../../_services/_modulePermission.service'
 import { geoJSONService } from './../services/geoJSON.service';
-import { MyCubeService } from './../services/mycube.service';
 import { WMSService } from './wms.service';
 import { SQLService } from './../../../_services/sql.service';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
 import { StyleService } from '../services/style.service'
 import { FeatureModulesService } from "app/feature-modules/feature-modules.service";
-import * as ol from 'openlayers';
+import { Modify, Draw } from 'ol/interaction';
+import { Vector as VectorSource } from 'ol/source';
 import { environment } from 'environments/environment'
+import { MatSnackBar } from '@angular/material/snack-bar';
+import VectorLayer from "ol/layer/Vector";
+import ImageWMS from 'ol/source/ImageWMS';
+import ImageLayer from 'ol/layer/Image';
+import ImageArcGISRest from 'ol/source/ImageArcGISRest';
+import WMTSCapabilities from 'ol/format/WMTSCapabilities';
+import TileLayer from 'ol/layer/Tile';
+import WMTS from 'ol/source/WMTS';
+import { optionsFromCapabilities } from 'ol/source/WMTS';
+import TileWMS from 'ol/source/TileWMS';
+import GeoJSON from 'ol/format/GeoJSON';
+import Feature from 'ol/Feature';
+import Observable from 'ol/Observable';
+import GeometryCollection from 'ol/geom/GeometryCollection';
+import Geometry from 'ol/geom/Geometry';
+import XYZ from 'ol/source/XYZ';
+import OSM from 'ol/source/OSM';
+import BingMaps from 'ol/source/BingMaps';
+import { GeocodingService } from '../services/geocoding.service'
+import { DataFormService } from '../../shared.components/data-component/data-form.service'
+import { DataFormConfig, DataField, LogFormConfig, LogField } from "app/shared.components/data-component/data-form.model";
+import { click, shiftKeyOnly } from 'ol/events/condition'
+
 
 @Injectable()
 export class MapService {
     public modifyingobject: boolean = false
-    public shown: boolean
-    public mapConfig: MapConfig;
-    public vectorlayer = new ol.layer.Vector();
+    public mapConfig = new MapConfig;
     public modkey: any;
     public modkeystart: any;
-    public modify: ol.interaction.Modify;
-    public selectedLayer: any;
-    public editmode: boolean = false;
-    //public featurelist = new Array<featureList>();
+    public modify: Modify;
     public base: string = 'base';  //base layer
-    private drawMode: boolean = false;
-    private drawInteraction: any;
-    public userID: number
+    public drawInteraction: any;
+
 
     constructor(
         private userPageLayerService: UserPageLayerService,
+        private userPageService: UserPageService,
         private userPageInstanceService: UserPageInstanceService,
         private layerPermissionService: LayerPermissionService,
         private modulePermissionService: ModulePermissionService,
         private geojsonservice: geoJSONService,
-        private myCubeService: MyCubeService,
         private wmsService: WMSService,
         private sqlService: SQLService,
         private mapstyles: mapStyles,
         private styleService: StyleService,
-        private featuremodulesservice: FeatureModulesService
+        private featuremodulesservice: FeatureModulesService,
+        private snackBar: MatSnackBar,
+        private dataFormService: DataFormService
     ) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.userID = currentUser && currentUser.userID;
+        this.mapConfig.userID = currentUser && currentUser.userID;
     }
 
-    public initMap(mapConfig: MapConfig): Promise<any> {
-        this.mapConfig = mapConfig;
-        //sets the base layer
-        this.mapConfig.layers = [];
-        let osm_layer: any = new ol.layer.Tile({
-            source: new ol.source.OSM()
-        });
-        osm_layer.setVisible(true);
-        this.mapConfig.sources.push(new ol.source.OSM());
-        this.mapConfig.layers.push(osm_layer);
-        //continues the initialization
-        let promise = new Promise((resolve) => {
-            this.getUserPageLayers(this.mapConfig)  //only sending an argument because I have to.
-                .then(() => this.getUserPageInstances(this.mapConfig))
-                .then(() => this.getLayerPerms())
-                .then(() => this.getModulePerms())
-                .then(() => this.loadLayers(this.mapConfig, true).then(() => {
-                    this.mapConfig.view = new ol.View({
-                        projection: 'EPSG:3857',
-                        center: ol.proj.transform([environment.centerLong, environment.centerLat], 'EPSG:4326', 'EPSG:3857'),
-                        zoom: environment.centerZoom,
-                        enableRotation: false
-                    })
-                    this.mapConfig.map = new ol.Map({
-                        layers: this.mapConfig.layers,
-                        view: this.mapConfig.view,
-                        controls: ol.control.defaults({
-                            attribution: false,
-                            zoom: null
-                        })
-                    });
-                    resolve(this.mapConfig);
-                })
-                )
-        })
-        return promise;
-    }
-
-    public getUserPageLayers(mapConfig): Promise<any> {
-        this.mapConfig = mapConfig; //only necessary on changed page
+    public getUserPageLayers(): Promise<any> {
         let promise = new Promise((resolve, reject) => {
             this.userPageLayerService
                 .GetPageLayers(this.mapConfig.currentpage.ID)
@@ -106,8 +86,7 @@ export class MapService {
         return promise;
     }
 
-    public getUserPageInstances(mapConfig): Promise<any> {
-        this.mapConfig = mapConfig; //only necessary on changed page
+    public getUserPageInstances(): Promise<any> {
         let promise = new Promise((resolve, reject) => {
             this.userPageInstanceService
                 .GetPageInstances(this.mapConfig.currentpage.ID)
@@ -124,14 +103,13 @@ export class MapService {
     public getLayerPerms(): Promise<any> {
         let promise = new Promise((resolve, reject) => {
             this.layerPermissionService
-                .GetByUserGroups(this.mapConfig.userID)
+                .GetByUserGroups(this.mapConfig.user.ID)
                 .subscribe((data: LayerPermission[]) => {
                     this.mapConfig.layerpermission = data;
                     this.mapConfig.userpagelayers.forEach((userpagelayer) => {
                         let j = this.mapConfig.layerpermission.findIndex((x) => x.layerID == userpagelayer.layerID);
                         if (j >= 0) {
                             userpagelayer.layerPermissions = this.mapConfig.layerpermission[j];
-                            //need to make sure the maximum permissions get provided.  probably need to use foreach instead of findIndex  It uses the first one instead of the most liberal.
                         }
                         else {
                             //if there isn't an entry for the layer, it allows the viewing, but not anything else.  This is necessary because I'm not adding permissions to layers required by a module.
@@ -156,7 +134,6 @@ export class MapService {
                         let j = this.mapConfig.modulepermission.findIndex((x) => x.moduleInstanceID == userpagelayer.userPageInstanceID);
                         if (j >= 0) {
                             userpagelayer.modulePermissions = this.mapConfig.modulepermission[j];
-                            //need to make sure the maximum permissions get provided.  probably need to use foreach instead of findIndex  It uses the first one instead of the most liberal.
                         }
                     })
                     resolve();
@@ -165,217 +142,188 @@ export class MapService {
         return promise;
     }
 
-    //loadLayers will load during map init and load the layers that should come on by themselves with the "defaultON" property set (in userPageLayers)
-    public loadLayers(mapConfig: MapConfig, init: boolean): Promise<any> {
-        let j = 0;
-        if (mapConfig.evkey) { //removes the previous click event if there wasn't one.
-            ol.Observable.unByKey(mapConfig.evkey);
-        }
-        if (this.modkey) { //removes the previous modify even if there wasn't one.
-            ol.Observable.unByKey(this.modkey);
-        }
-        let promise = new Promise((resolve, reject) => {
-            this.mapConfig.userpagelayers.forEach(userpagelayer => {
-                userpagelayer.layerShown = userpagelayer.defaultON;
-                //this if is for layers that are connected to modules
-                if (userpagelayer.userPageInstanceID > 0) {
-                    if (this.featuremodulesservice.loadLayer(this.mapConfig, userpagelayer)) {
-                        j++
-                        if (j == this.mapConfig.userpagelayers.length) {
-                            resolve();
-                        }
-                    }
-                }
-                else {
-                    switch (userpagelayer.layer.layerType) {
-                        case "ArcGISRest": {
-                            let wmsSource = new ol.source.ImageArcGISRest()
-                            wmsSource.setUrl(userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/MapServer')
-                            let wmsLayer = new ol.layer.Image({
-                                source: wmsSource
-                            }) 
-                            wmsLayer.setVisible(userpagelayer.defaultON);
-                            if (init) {
-                                this.mapConfig.layers.push(wmsLayer);  //to delete
-                            }
-                            userpagelayer.olLayer = wmsLayer
-                            userpagelayer.source = wmsSource
-                            this.wmsService.setLoadStatus(userpagelayer);
-                            if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
-                                mapConfig.map.addLayer(wmsLayer);
-                            }
-                            j++;
-                            if (j == this.mapConfig.userpagelayers.length) {
-                                resolve();
-                            }
-                            break
-
-                        }
-                        case "MyCube": {
-                            this.loadMyCube(userpagelayer);
-                            j++;
-                            if (j == this.mapConfig.userpagelayers.length) {
-                                resolve();
-                            }
-                            break;
-                        }
-                        case "WMTS": {
-                            this.wmsService.getCapabilities(userpagelayer.layer.server.serverURL)
-                                .subscribe((data) => {
-                                    let parser = new ol.format.WMTSCapabilities();
-                                    let result = parser.read(data);
-                                    let options = ol.source.WMTS.optionsFromCapabilities(result, {
-                                        layer: userpagelayer.layer.layerIdent,
-                                        matrixSet: 'EPSG:3857'
-                                    });
-                                    let wmsSource = new ol.source.WMTS(options);
-                                    let wmsLayer = new ol.layer.Tile({
-                                        opacity: 1,
-                                        source: new ol.source.WMTS(options)
-                                    });
-                                    wmsLayer.setVisible(userpagelayer.defaultON);
-                                    userpagelayer.olLayer = wmsLayer
-                                    userpagelayer.source = wmsSource
-                                    this.wmsService.setLoadStatus(userpagelayer);
-                                    if (init == false) {
-                                        mapConfig.map.addLayer(wmsLayer);
-                                    }
-                                    j++;
-                                    if (j == this.mapConfig.userpagelayers.length) {
-                                        resolve();
-                                    }
-                                })
-                            break;
-                        }
-                        default: {  //this is the WMS load
-                            let wmsSource = new ol.source.TileWMS({
-                                url: this.wmsService.formLayerRequest(userpagelayer),
-                                params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
-                                projection: 'EPSG:4326',
-                                serverType: 'geoserver',
-                                crossOrigin: 'anonymous'
-                            });
-                            let wmsLayer = new ol.layer.Tile({
-                                source: wmsSource
-                            });
-                            wmsLayer.setVisible(userpagelayer.defaultON);
-                            if (init) {
-                                this.mapConfig.layers.push(wmsLayer);  //to delete
-                            }
-                            userpagelayer.olLayer = wmsLayer
-                            userpagelayer.source = wmsSource
-                            this.wmsService.setLoadStatus(userpagelayer);
-                            if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
-                                mapConfig.map.addLayer(wmsLayer);
-                            }
-                            j++;
-                            if (j == this.mapConfig.userpagelayers.length) {
-                                resolve();
-                            }
-                        }
-                    }
-                }
-            }
-            )
+    public loadARCGISRest(mapConfig: MapConfig, userpagelayer: UserPageLayer, init: boolean, j: number) {
+        let wmsSource = new ImageArcGISRest()
+        wmsSource.setUrl(userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/MapServer')
+        let wmsLayer: ImageLayer = new ImageLayer({
+            source: wmsSource
         })
-        return promise;
+        wmsLayer.setZIndex(j)
+        wmsLayer.setVisible(userpagelayer.defaultON);
+        if (userpagelayer.style['opacity']) { wmsLayer.setOpacity(userpagelayer.style['opacity']) }
+        if (init) {
+            //this.mapConfig.layers.push(wmsLayer);  //to delete
+        }
+        userpagelayer.olLayer = wmsLayer
+        userpagelayer.source = wmsSource
+        this.wmsService.setLoadStatus(userpagelayer);
+        if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
+            mapConfig.map.addLayer(wmsLayer);
+        }
     }
 
-    public loadMyCube(layer: UserPageLayer) {
-        let stylefunction = ((feature) => {
-            return (this.styleService.styleFunction(feature, layer, "load"));
+    public loadWMTS(mapConfig: MapConfig, userpagelayer: UserPageLayer, init: boolean) {
+        let url: string
+        let diffWMS: ImageWMS
+        diffWMS = new ImageWMS({
+            url: this.wmsService.formLayerRequest(userpagelayer, true),
+            params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
+            projection: 'EPSG:4326',
+            serverType: 'geoserver',
+            crossOrigin: 'anonymous'
         })
-        let source = new ol.source.Vector({
-            format: new ol.format.GeoJSON()
-        })
 
-        this.styleService.setDefaultStyleandFilter(layer)
-
-        layer.updateInterval = setInterval(() => {
-            this.runInterval(layer);
-        }, 20000);
-
-        this.getMyCubeData(layer).then((data) => {
-            console.log(data)
-            if (data[0][0]['jsonb_build_object']['features']) {
-                source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
-            }
-            this.vectorlayer = new ol.layer.Vector({ source: source, style: stylefunction });
-            this.vectorlayer.setVisible(layer.defaultON);
-            this.mapConfig.map.addLayer(this.vectorlayer);
-            layer.olLayer = this.vectorlayer
-            layer.source = source
-        })
-    }
-
-    //Reads index of layer in dropdown, layer, and if it is shown or not. Needs to remove a layer if a new one is selected
-    public toggleLayers(layer: UserPageLayer): void {
-        if (layer.olLayer) {layer.olLayer.setVisible(!layer.layerShown)}
-        layer.layerShown = !layer.layerShown;   
-        if (layer.layerShown === false) {
-            if (layer.userPageInstanceID > 0) {
-                this.featuremodulesservice.unloadLayer(this.mapConfig, layer)
-            }
-            if (this.mapConfig.currentLayer == layer) {
-                this.mapConfig.currentLayer = new UserPageLayer;
-                this.mapConfig.currentLayerName = "";
-                this.clearFeature()
-                if (layer.userPageInstanceID > 0) {
-                    this.featuremodulesservice.unsetCurrentLayer(this.mapConfig, layer)
-                }
-            }
-            //could add something here that would move to the next layerShown=true.  Not sure.
-            this.mapConfig.editmode = this.mapConfig.currentLayer.layerPermissions.edit
+        userpagelayer.layer.legendURL = diffWMS.getLegendUrl(23)
+        if (userpagelayer.layer.server.serverType == "ArcGIS WMTS") {
+            url = userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/ImageServer/WMTS/1.0.0/WMTSCapabilities.xml'
         }
         else {
-            this.setCurrentLayer(layer);
+            url = userpagelayer.layer.server.serverURL
         }
+        this.wmsService.getCapabilities(url)
+            .subscribe((data) => {
+                let parser = new WMTSCapabilities();
+                let result = parser.read(data);
+                let options = optionsFromCapabilities(result, {
+                    layer: userpagelayer.layer.layerIdent,
+                    matrixSet: 'EPSG:3857',
+                    cacheSize: environment.cacheSize
+                });
+                let wmtsSource = new WMTS(options);
+                let wmtsLayer = new TileLayer({
+                    opacity: 1,
+                    source: new WMTS(options)
+                });
+                wmtsLayer.setVisible(userpagelayer.defaultON);
+                if (init) {
+                    //this.mapConfig.layers.push(wmtsLayer);  //to delete
+                }
+                userpagelayer.olLayer = wmtsLayer
+                userpagelayer.source = wmtsSource
+                this.wmsService.setLoadStatus(userpagelayer);
+                if (init == false) {
+                    mapConfig.map.addLayer(wmtsLayer);
+                }
+                if (userpagelayer.style['opacity']) { userpagelayer.olLayer.setOpacity(+userpagelayer.style['opacity'] / 100) }
+            })
     }
 
-    public runInterval(layer: UserPageLayer) {
+    public loadMyCube(layer: UserPageLayer, order?: number): Promise<any> {
+        let promise = new Promise<any>((resolve) => {
+            let source = new VectorSource({
+                format: new GeoJSON()
+            })
+            this.getMyCubeData(layer).then((data) => {
+                if (data[0][0]['jsonb_build_object']['features']) {
+                    source.addFeatures(new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
+                }
+                let vectorlayer = new VectorLayer({ source: source });
+                vectorlayer.setVisible(layer.defaultON);
+                if (order) { vectorlayer.setZIndex(order) }
+                try {
+                    this.mapConfig.map.addLayer(vectorlayer);
+                }
+                catch (e) {
+                    console.log('Theres an error, for some reason')
+                    console.log('reloading the layer')
+                }
+                layer.olLayer = vectorlayer
+                layer.source = source
+                // this.styleMyCube(layer)
+                resolve(layer)
+            })
+        })
+        return promise
+    }
+
+    public loadWMS(mapConfig: MapConfig, userpagelayer: UserPageLayer, init: boolean, j: number) {
+        let wmsSource = new TileWMS({
+            url: this.wmsService.formLayerRequest(userpagelayer),
+            params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
+            projection: 'EPSG:4326',
+            serverType: 'geoserver',
+            crossOrigin: 'anonymous',
+            cacheSize: environment.cacheSize
+        });
+        let wmsLayer: TileLayer = new TileLayer({
+            source: wmsSource
+        });
+        wmsLayer.setZIndex(j)
+        wmsLayer.setVisible(userpagelayer.defaultON);
+        if (init) {
+            this.mapConfig.baseLayers.push(wmsLayer);  //to delete
+        }
+        userpagelayer.olLayer = wmsLayer
+        userpagelayer.source = wmsSource
+        this.wmsService.setLoadStatus(userpagelayer);
+        if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
+            mapConfig.map.addLayer(wmsLayer);
+        }
+
+        if (userpagelayer.style['opacity']) { userpagelayer.olLayer.setOpacity(+userpagelayer.style['opacity'] / 100) }
+        let diffWMS: ImageWMS
+        diffWMS = new ImageWMS({
+            url: this.wmsService.formLayerRequest(userpagelayer, true),
+            params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
+            projection: 'EPSG:4326',
+            serverType: 'geoserver',
+            crossOrigin: 'anonymous'
+        })
+        if (userpagelayer.layer.legendURL) { userpagelayer.layer.legendURL = diffWMS.getLegendUrl(2).split('&SCALE')[0] }
+    }
+
+    public runInterval(layer: UserPageLayer): Promise<any> {
+        let promise = new Promise<any>((resolve) => {
+            this.getMyCubeData(layer).then((data) => {
+                if (data[0]) {
+                    if (data[0][0]['jsonb_build_object']['features']) {
+                        layer.source.clear();
+                        layer.source.addFeatures(new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
+                        //this.setStyle(layer)
+                        if (this.mapConfig.currentLayer == layer) {
+                            this.getFeatureList();
+                            if (this.mapConfig.selectedFeature) {
+                                this.mapConfig.selectedFeature = layer.source.getFeatureById(this.mapConfig.selectedFeature.getId());
+                                if (this.mapConfig.selectedFeature) {
+                                    this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected);
+                                    this.selectMyCubeFeature(layer, true)
+                                } //need to make sure the feature still exists
+                            }
+                        }
+                        //may need to add something in here that compares new data to old data and makes sure the selected feature remains selected.
+                    }
+                }
+                resolve()
+            })
+
+        })
+        return promise
+    }
+
+    public setStyle(layer: UserPageLayer, st?: string) {
+        if (st = null) { st = 'current' }
         let stylefunction = ((feature, resolution) => {
             if (this.mapConfig.currentLayer == layer) {
-                return (this.styleService.styleFunction(feature, layer, "current"));
+                if (feature == this.mapConfig.selectedFeature) {
+                    return (this.styleService.styleFunction(feature, layer, "selected"))
+                }
+                else {
+                    return (this.styleService.styleFunction(feature, layer, "current"));
+                }
             }
             else {
                 return (this.styleService.styleFunction(feature, layer, "load"));
             }
         })
-        this.getMyCubeData(layer).then((data) => {
-            if (data[0]) {
-                if (data[0][0]['jsonb_build_object']['features']) {
-                    //clearInterval(this.interval)
-                    //need to put something in here so that when an object is being edited, it doesn't update...
-                    //might just be that the layer doesn't update unless something has changed.
-                    layer.source.clear();
-                    layer.source.addFeatures(new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
-                    let index = this.mapConfig.userpagelayers.findIndex(x => x == layer);
-                    //this.mapConfig.layers[index].setStyle(stylefunction) 
-                    layer.source.forEachFeature(feat => {
-                        feat.setStyle(stylefunction);
-                    })
-                    //this.filterFunction(layer, source)
-                    if (this.mapConfig.currentLayer == layer) {
-                        this.getFeatureList();
-                        if (this.mapConfig.selectedFeature) {
-                            this.mapConfig.selectedFeature = layer.source.getFeatureById(this.mapConfig.selectedFeature.getId());
-                            if (this.mapConfig.selectedFeature) {
-                                this.selectFeature(layer, true)
-                            } //need to make sure the feature still exists
-                            //source.getFeatureById(this.mapConfig.selectedFeature.getId()).setStyle(this.mapstyles.selected)
-                            //this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected)
-                        }
-                    }
-                    //may need to add something in here that compares new data to old data and makes sure the selected feature remains selected.
-                }
-            }
-        })
+        if (layer.layer.layerType == 'MyCube') {
+            layer.olLayer.setStyle(stylefunction)
+        }
     }
 
     private getMyCubeData(layer): Promise<any> {
         let promise = new Promise((resolve, reject) => {
             this.geojsonservice.GetAll(layer.layer.ID)
-                .subscribe((data: GeoJSON.Feature<any>) => {
+                .subscribe((data: any) => { //This response contains geoJSON data
                     resolve(data);
                 })
         })
@@ -383,210 +331,90 @@ export class MapService {
     }
 
     public setCurrentLayer(layer: UserPageLayer): void {
-        this.clearLayerConfig();
-        this.mapConfig.currentLayer = layer;
-        this.mapConfig.currentLayerName = layer.layer.layerName  //Puts the current name in the component
-        if (layer.userPageInstanceID > 0) {
-            if (this.featuremodulesservice.setCurrentLayer(this.mapConfig, layer)) {
-                this.mapConfig.featureList = [];
-                if (!this.featuremodulesservice.getFeatureList(this.mapConfig, layer)) {
-                    this.getFeatureList();
-                }
-                if (layer.layer.layerType == "MyCube") {this.createMyCubeClickEvent(layer)}
-                return
-            }
-        }       
+        this.mapConfig.currentLayer = layer
+        this.setStyle(layer)  //This gets the styling right.
+
         if (layer.layerShown === true && layer.layer.layerType == "MyCube") {
-            this.setCurrentMyCube(layer)
+            this.mapConfig.editmode = layer.layerPermissions.edit;
+            this.mapConfig.showFilterButton = true
+            this.mapConfig.showStyleButton = true
+            this.mapConfig.showDeleteButton = true
         }
-        if (layer.layerShown === true && layer.layer.layerType != "MyCube") {
-            this.createClick(layer);
+        if (layer.layer.layerType == "MyCube" && layer.style.filter.column) {
+            this.mapConfig.filterOn = true
         }
+        this.mapConfig.showStyleButton = true
+        this.getFeatureList()
     }
 
-    private setCurrentMyCube(layer: UserPageLayer) {
-        let stylefunction = ((feature) => {
-            return (this.styleService.styleFunction(feature, layer, "current"));
-        })
-
-        try {
-            if (layer.style.filter.column) {
-                this.mapConfig.filterOn = true;
-            }
-            else {
-                this.mapConfig.filterOn = false;
-            }
-        }
-        catch (e) {
-        }
-        this.mapConfig.editmode = layer.layerPermissions.edit;
-        this.mapConfig.featureList = [];
-
-        layer.olLayer.setStyle(stylefunction);
-        this.getFeatureList();
-        this.createMyCubeClickEvent(layer);
-
-        this.myCubeService.prebuildMyCube(layer); //This needs a lot of work
-    }
-
-    private createMyCubeClickEvent(layer: UserPageLayer) {
-        this.mapConfig.evkey = this.mapConfig.map.on('click', (e:any) => {
-            if (this.mapConfig.selectedFeature) {
-                if (layer.userPageInstanceID > 0 ) {
-                    if (!this.featuremodulesservice.unstyleSelectedFeature(this.mapConfig, layer)) {
-                        this.mapConfig.selectedFeature.setStyle(null);
-                    }
-                }
-                else {this.mapConfig.selectedFeature.setStyle(null);}
-               
-            }
-            var hit = false;
-            this.mapConfig.map.forEachFeatureAtPixel(e.pixel, (feature: ol.Feature, selectedLayer: any) => {
-                this.selectedLayer = selectedLayer;
-                if (selectedLayer === layer.olLayer) {
-                    hit = true;
-                    this.mapConfig.selectedFeature = feature;
-                }
-                ;
-            }, {
-                    hitTolerance: 5
-                });
-            if (hit) {
-                this.selectFeature(layer);
-            }
-            else {
-                this.clearFeature();
-            }
-        });
-    }
-
-    private clearLayerConfig(): void {
-        this.mapConfig.filterOn = false;
-        this.mapConfig.filterShow = false;
-        this.mapConfig.styleShow = false;
-        this.mapConfig.editmode = false;
-        this.mapConfig.map.removeInteraction(this.modify);
-        this.modify = null;
-        this.clearFeature();
-        if (this.mapConfig.selectedFeature) {
-            this.mapConfig.selectedFeature.setStyle(null);
-        }
-        if (this.mapConfig.evkey) {
-            ol.Observable.unByKey(this.mapConfig.evkey);
-        }
-        if (this.modkey) {
-            ol.Observable.unByKey(this.modkey); //removes the previous modify even if there was one.
-        }
-        this.mapConfig.userpagelayers.forEach(layer => {
-            if (layer.userPageInstanceID > 0) {
-                if (this.featuremodulesservice.unsetCurrentLayer(this.mapConfig, layer)) {
-                    return
-                }
-            }
-            if (layer.layer.layerType == "MyCube") {
-                let stylefunction = ((feature) => {
-                    return (this.styleService.styleFunction(feature, layer, "load"));
-                })
-                layer.olLayer.setStyle(stylefunction)
-            }
-        });
-
-    }
-
-    private createClick(layer: UserPageLayer) { //this is for WMS layers
-        // switch (layer.layer.layerType) {
-        //     case ('ArcGISRest'): {
-        //         this.mapConfig.evkey = this.mapConfig.map.on('click', (evt: any) => {
-        //             let wmsSource = new ol.source.ImageArcGISRest({
-        //                 url: layer.layer.server.serverURL + '/' + layer.layer.layerService + '/' + layer.layer.layerIdent,
-        //                 projection: 'EPSG:4326',
-        //                 crossOrigin: 'anonymous'
-        //             });
-        //             let feats = this.mapConfig.map.getFeaturesAtPixel(evt.pixel) 
-        //             console.log(feats)
-        //             // let viewResolution = this.mapConfig.map.getView().getResolution();
-        //             // let url = wmsSource.getGetFeatureInfoUrl(
-        //             //     evt.coordinate, viewResolution, 'EPSG:3857',
-        //             //     { 'INFO_FORMAT': 'text/html' });
-        //             // if (url) {
-        //             //     this.wmsService.getfeatureinfo(url, false)
-        //             //         .subscribe((data: any) => {
-        //             //             this.myCubeService.parseAndSendWMS(data);
-        //             //         });
-        //             // }
-        //         });
-        //     }
-        // }
-        this.mapConfig.evkey = this.mapConfig.map.on('click', (evt: any) => {
-            let url2 = this.wmsService.formLayerRequest(layer);
-            let wmsSource = new ol.source.ImageWMS({
-                url: url2,
-                params: { 'LAYERS': layer.layer.layerIdent },
-                projection: 'EPSG:4326',
-                serverType: 'geoserver',
-                crossOrigin: 'anonymous'
-            });
-            console.log(wmsSource)
-            let viewResolution = this.mapConfig.map.getView().getResolution();
-            let url = wmsSource.getGetFeatureInfoUrl(
-                evt.coordinate, viewResolution, 'EPSG:3857',
-                { 'INFO_FORMAT': 'text/html' });
-            console.log(url)
-            if (url) {
-                this.wmsService.getfeatureinfo(url, false)
-                    .subscribe((data: any) => {
-                        this.myCubeService.parseAndSendWMS(data);
-                    });
-            }
-        });
-    }
-
-    private selectFeature(layer: UserPageLayer, refresh: boolean = false): void {
-        if (layer.userPageInstanceID > 0) {
-            if (this.featuremodulesservice.selectFeature(this.mapConfig, layer)) {
-                return
-            }
-            if (this.featuremodulesservice.styleSelectedFeature(this.mapConfig, layer)) {
-            }
-            else {
-                this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected);
-            }
+    public parseAndSendWMS(WMS: string): void {
+        WMS = WMS.split("<body>")[1];
+        WMS = WMS.split("</body>")[0];
+        if (WMS.length < 10) {
+            this.mapConfig.WMSFeatureData = ""
         }
         else {
-            this.mapConfig.selectedFeature.setStyle(this.mapstyles.selected);
+            this.mapConfig.WMSFeatureData = WMS; //This allows the service to render the actual HTML unsanitized
         }
-       
+    }
+
+    public selectMyCubeFeature(layer: UserPageLayer, refresh: boolean = false): void {
         if (refresh == false) {
-            this.mapConfig.myCubeConfig = this.myCubeService.setMyCubeConfig(layer.layer.ID, layer.layerPermissions.edit);
-            this.myCubeService.getAndSendMyCubeData(layer.layer.ID, this.mapConfig.selectedFeature).then(data => {
-                this.mapConfig.myCubeData = data
-                this.mapConfig.featureDataShow = true;
+            this.dataFormService.setDataFormConfig('mycube', 't' + layer.layer.ID, this.mapConfig.selectedFeature.getId()).then((dataFormConfig: DataFormConfig) => {
+                dataFormConfig.visible = true
+                dataFormConfig.dataTableTitle = "Feature Data"
+                dataFormConfig.editMode = layer.layerPermissions.edit
+                dataFormConfig.logTable = 'c' + layer.layer.ID
+                dataFormConfig.userID = this.mapConfig.user.ID
+                this.mapConfig.myCubeConfig = dataFormConfig
+                this.mapConfig.myCubeConfig.dataForm.find(x => x.field == 'id').visible = false
             })
+            this.loadLogConfig(layer);
         }
-        this.mapConfig.selectedFeatures.clear();
+        if (this.mapConfig.selectedFeatures) { this.mapConfig.selectedFeatures.clear(); }
         this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature);
         if (layer.layerPermissions.edit == true) {
             if (!this.modify) {
-                this.modify = new ol.interaction.Modify({ features: this.mapConfig.selectedFeatures });
+                console.log(this.mapConfig.selectedFeatures)
+                this.mapConfig.selectedFeatures.clear()
+                this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature)
+                this.modify = new Modify({
+                    features: this.mapConfig.selectedFeatures,
+                    // deleteCondition: ((event) => {
+                    //     console.log(shiftKeyOnly(event) && click(event))
+                    //     return shiftKeyOnly(event) && click(event)
+                    //     // if (event.originalEvent.button == 1) {return true} else {return false}
+                    //  })
+                });
                 this.mapConfig.map.addInteraction(this.modify);
             }
-            this.modkeystart = this.modify.on('modifystart', (e: ol.interaction.Modify.Event) => {
+            this.modkeystart = this.modify.on('modifystart', (e: any) => {  //need to get the right type
                 this.modifyingobject = true
                 clearInterval(layer.updateInterval)
             })
-            this.modkey = this.modify.on('modifyend', (e: ol.interaction.Modify.Event) => {
+            this.modkey = this.modify.on('modifyend', (e: any) => {  //need to get the right type
                 e.features.forEach(element => {
                     if (this.modifyingobject) {
                         this.mapConfig.selectedFeature = element;
-                        let featurejson = new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(this.mapConfig.selectedFeature);
+                        let featurejson = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(this.mapConfig.selectedFeature);
                         let fjson2 = JSON.parse(featurejson)
                         let featureID = fjson2['id']
                         this.geojsonservice.updateGeometry(layer.layer.ID, JSON.parse(featurejson))
                             .subscribe((data) => {
-                                this.myCubeService.createAutoMyCubeComment(true, "Geometry Modified", featureID, this.mapConfig.currentLayer.layer.ID, this.userID, JSON.parse(featurejson))
-                                    .then(() => {
-                                        this.myCubeService.loadComments(this.mapConfig.currentLayer.layer.ID, featureID)
-                                        layer.updateInterval = this.runInterval(layer)
+                                let logField = new LogField
+                                logField.schema = this.mapConfig.myCubeComment.schema
+                                logField.logTable = this.mapConfig.myCubeComment.logTable
+                                logField.auto = true
+                                logField.comment = "Geometry Modified"
+                                logField.featureid = featureID
+                                logField.geom = JSON.parse(featurejson)
+                                logField.userid = this.mapConfig.user.ID
+                                this.sqlService.addAnyComment(logField)
+                                    .subscribe((x) => {
+                                        this.loadLogConfig(this.mapConfig.currentLayer)
+                                        if (layer.userPageInstanceID == 0) {
+                                            layer.updateInterval = this.runInterval(layer)
+                                        }
                                     })
                             })
                         this.modifyingobject = false
@@ -596,102 +424,181 @@ export class MapService {
         }
     }
 
-    private clearFeature() {
-        if (this.mapConfig.currentLayer.userPageInstanceID > 0) {
-            if (this.featuremodulesservice.clearFeature(this.mapConfig, this.mapConfig.currentLayer)) {return}
-        }
+    public loadLogConfig(layer: UserPageLayer) {
+        if (!this.mapConfig.selectedFeature) { return }
+        this.dataFormService.setLogConfig(this.mapConfig.user.ID, 'mycube', 'c' + layer.layer.ID, this.mapConfig.selectedFeature.getId()).then((logFormConfig: LogFormConfig) => {
+            this.renderLogConfig(logFormConfig);
+        });
+    }
+
+    public renderLogConfig(logFormConfig: LogFormConfig) {
+        if (logFormConfig.logForm) {
+            logFormConfig.logTableTitle = "Comments (" + logFormConfig.logForm.length + ")"
+            logFormConfig.visible = true;
+            logFormConfig.logForm.forEach((x) => {
+                if (x.userid == this.mapConfig.user.ID) {
+                    x.canDelete = true;
+                }
+            });
+        };
+        logFormConfig.userID = this.mapConfig.user.ID;
+        this.mapConfig.myCubeComment = logFormConfig;
+    }
+
+    public clearFeature() {
+        console.log('clearing Feature')
+        if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeatureSource.clear() }
         if (this.mapConfig.selectedFeature) {
-            this.mapConfig.selectedFeature.setStyle(null);
+            // this.mapConfig.selectedFeature.setStyle(null);
             this.mapConfig.selectedFeature = null;
         }
         this.mapConfig.map.removeInteraction(this.modify);
         this.modify = null;
         if (this.modkey) {
-            ol.Observable.unByKey(this.modkey); //removes the previous modify even if there was one.
+            let test = new Observable
+            test.un("change", this.modkey); //removes the previous modify even if there was one.
         }
-        this.myCubeService.clearMyCubeData();
+        this.mapConfig.myCubeConfig = new DataFormConfig
+        this.mapConfig.myCubeComment = new LogFormConfig
     }
 
-    public draw(featuretype: any) {
+    public drawFeature(featuretype: any) {
+        //this looks like it still needs to go to mapComponent
+        let stylefunction = ((feature) => {
+            return (this.styleService.styleFunction(feature, this.mapConfig.currentLayer, "current"));
+        })
         let featureID: number
         this.clearFeature()
-        if (this.drawMode == true) {
-            this.drawMode = false
+        if (this.mapConfig.drawMode != "") {
+            let test = new Observable
+            // this.drawMode = false
             this.mapConfig.drawMode = ""
-            ol.Observable.unByKey(this.modkey);
+            test.un("change", this.modkey);
             this.mapConfig.map.removeInteraction(this.drawInteraction);
         }
         else {
-            this.drawMode = true
-            let src = new ol.source.Vector();
-            let vector = new ol.layer.Vector({
-                source: src,
-                style: this.mapstyles.selected
-            });
-            this.drawInteraction = new ol.interaction.Draw({
-                type: featuretype,
-                source: src,
-            })
-            this.mapConfig.map.addLayer(vector);
-            this.modkey = this.mapConfig.map.addInteraction(this.drawInteraction);
-            this.drawInteraction.once('drawend', (e) => {
-                let featurejson = new ol.format.GeoJSON({ defaultDataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(e.feature);
-                this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
-                    .subscribe((data) => {
-                        try { featureID = data[0][0].id }
-                        catch (e) {
-                            this.sqlService.fixGeometry(this.mapConfig.currentLayer.layer.ID)
-                                .subscribe(() => {
-                                })
-                        }
-                        e.feature.setId(featureID);
-                        e.feature.setProperties(data[0]);
-                        this.mapConfig.currentLayer.source.addFeature(e.feature)
-                        this.getFeatureList();
-                        this.myCubeService.createAutoMyCubeComment(true, "Object Created", featureID, this.mapConfig.currentLayer.layer.ID, this.userID, featurejson['geometry'])
-                    })
-                this.mapConfig.map.removeLayer(vector);
-                this.mapConfig.map.changed();
-                ol.Observable.unByKey(this.modkey);
-                this.mapConfig.map.removeInteraction(this.drawInteraction);
-                this.mapConfig.drawMode = ""
-                this.drawMode = false
-            })
+            //this is the reason it needs to move
+            if (this.featuremodulesservice.draw(this.mapConfig, this.mapConfig.currentLayer, featuretype)) {
+                return
+            }
+            else {
+                this.mapConfig.drawMode = featuretype
+                let src = new VectorSource();
+                let vector = new VectorLayer({
+                    source: src,
+                    style: this.mapstyles.current
+                });
+                this.drawInteraction = new Draw({
+                    type: featuretype,
+                    source: src,
+                })
+                this.mapConfig.map.addLayer(vector);
+                this.modkey = this.mapConfig.map.addInteraction(this.drawInteraction);
+                this.drawInteraction.once('drawend', (e) => {
+                    let featurejson = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(e.feature);
+                    this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
+                        .subscribe((data) => {
+                            //need to get an error check to fix if the MyCube has been jacked up by QGIS (3Dvs2D)
+                            try { featureID = data[0][0].id }
+                            catch (e) {
+                                this.sqlService.fixGeometry(this.mapConfig.currentLayer.layer.ID)
+                                    .subscribe((x) => {
+                                    })
+                            }
+                            e.feature.setId(featureID);
+                            e.feature.setProperties(data[0]);
+                            this.mapConfig.currentLayer.source.addFeature(e.feature)
+                            e.feature.setStyle(stylefunction)
+                            this.getFeatureList();
+                            let logField = new LogField
+                            logField.schema = 'mycube'
+                            logField.logTable = 'c' + this.mapConfig.currentLayer.layer.ID
+                            logField.auto = true
+                            logField.comment = "Object Created"
+                            logField.featureid = featureID
+                            logField.geom = featurejson['geometry']
+                            logField.userid = this.mapConfig.user.ID
+                            this.dataFormService.addLogForm(logField).then((x) => {
+                                console.log(x)
+                            })
+                        })
+                    this.mapConfig.map.removeLayer(vector);
+                    this.mapConfig.map.changed();
+                    let test = new Observable
+                    test.un("change", this.modkey);
+                    this.mapConfig.map.removeInteraction(this.drawInteraction);
+                    this.mapConfig.drawMode = ""
+                    // this.drawMode = false
+                })
+            }
         }
     }
 
-    public delete(mapconfig: MapConfig) {
-        this.mapConfig.selectedFeatures.forEach((feat) => {
-            mapconfig.currentLayer.source.removeFeature(feat)
-            this.sqlService.Delete(mapconfig.currentLayer.layer.ID, feat.getId())
-                .subscribe((data) => {
-                    if (this.modkey) {
-                        ol.Observable.unByKey(this.modkey); //removes the previous modify even if there was one.
-                    }
-                    this.mapConfig.map.removeInteraction(this.modify);
-                    this.modify = null;
-                    this.myCubeService.createAutoMyCubeComment(true, "Object Deleted", feat.getId(), mapconfig.currentLayer.layer.ID, this.userID)
-                })
-            this.myCubeService.clearMyCubeData();
-        })
-        this.getFeatureList();
+    public deleteFeature() {
+        let didUndo: boolean = false
+        let feat: Feature = this.mapConfig.selectedFeature
+        this.mapConfig.currentLayer.source.removeFeature(this.mapConfig.selectedFeature)
         this.mapConfig.selectedFeature = null
+        this.getFeatureList();
+        this.mapConfig.map.removeInteraction(this.modify);
+        let snackBarRef = this.snackBar.open('Feature deleted.', 'Undo', {
+            duration: 4000
+        });
+        let schema = this.mapConfig.myCubeComment.schema
+        let table = this.mapConfig.myCubeComment.logTable
+        this.mapConfig.myCubeConfig = new DataFormConfig
+        this.mapConfig.myCubeComment = new LogFormConfig
+        snackBarRef.afterDismissed().subscribe((x) => {
+            if (!didUndo) {
+                this.sqlService.Delete(this.mapConfig.currentLayer.layer.ID, feat.getId())
+                    .subscribe((data) => {
+                        if (this.modkey) {
+                            let test = new Observable
+                            test.un("change", this.modkey); //removes the previous modify even if there was one.
+                        }
+                        this.modify = null;
+                        this.mapConfig.map.removeInteraction(this.modify);
+                        let logField = new LogField
+                        logField.schema = schema
+                        logField.logTable = table
+                        logField.auto = true
+                        logField.comment = "Object Deleted"
+                        logField.featureid = feat.getId()
+                        logField.userid = this.mapConfig.user.ID
+                        this.mapConfig.myCubeComment.logForm.push(logField)
+                        this.sqlService.addAnyComment(logField)
+                            .subscribe((x) => {
+                            })
+                    })
+
+            }
+        })
+        snackBarRef.onAction().subscribe((x) => {
+            let newSnackBarRef = this.snackBar.open("Undone", '', { duration: 4000 })
+            didUndo = true
+            this.mapConfig.selectedFeature = feat
+            this.mapConfig.currentLayer.source.addFeature(this.mapConfig.selectedFeature)
+            this.selectMyCubeFeature(this.mapConfig.currentLayer, false)
+        })
     }
 
-    private getFeatureList() {
+    public getFeatureList() {
         let k: number = 0;
         let tempList = new Array<featureList>();
         try {
             let labelName: string = this.mapConfig.currentLayer.layer.defaultStyle.listLabel;
-            if (this.mapConfig.currentLayer.style.listLabel != null) {
-                labelName = this.mapConfig.currentLayer.style.listLabel;
+            if (this.mapConfig.currentLayer.style != null) {
+                if (this.mapConfig.currentLayer.style.listLabel != null) {
+                    labelName = this.mapConfig.currentLayer.style.listLabel;
+                }
             }
             if (labelName != null && labelName.length != 0) {
-                this.mapConfig.currentLayer.source.forEachFeature((x: ol.Feature) => {
+                this.mapConfig.currentLayer.source.forEachFeature((x: Feature) => {
                     let i = this.mapConfig.currentLayer.source.getFeatures().findIndex((j) => j == x);
                     let fl = new featureList;
                     if (this.styleService.filterFunction(x, this.mapConfig.currentLayer)) {
                         fl.label = x.get(labelName);
+                        if (x.get(labelName) == null) { fl.label = '(blank)' }
                         fl.feature = x;
                         if (i > -1 && fl != null) {
                             tempList.push(fl);
@@ -716,26 +623,10 @@ export class MapService {
         }
     }
 
-    public zoomToFeature(featurelist: featureList): void {
-        this.clearFeature();
-        this.mapConfig.view.fit(featurelist.feature.getGeometry().getExtent(), {
-            duration: 1000,
-            maxZoom: 18
-        })
-        this.mapConfig.selectedFeature = featurelist.feature;
-        this.selectFeature(this.mapConfig.currentLayer);
-    }
-
-    //required (called from html)
-    public zoomExtents(): void {
-        this.mapConfig.view.animate({ zoom: environment.centerZoom, center: ol.proj.transform([environment.centerLong, environment.centerLat], 'EPSG:4326', 'EPSG:3857') })
-
-    }
-
     public zoomToLayer(layer: UserPageLayer) {
         //this needs to be fed the layer and work with it instead of the featurelist.
-        let collection = new ol.geom.GeometryCollection
-        let feats = new Array<ol.geom.Geometry>()
+        let collection = new GeometryCollection
+        let feats = new Array<Geometry>()
         layer.source.forEachFeature((i) => {
             feats.push(i.getGeometry())
             //may want to filter this down to only visible features.
@@ -747,30 +638,28 @@ export class MapService {
         })
     }
 
-    //required (called from html)
     public toggleBasemap() {
-        let aerial = new ol.source.BingMaps({
+        let aerial = new BingMaps({
             key: environment.BingMapsKey,
             imagerySet: 'AerialWithLabels',
-            maxZoom: 19
+            maxZoom: 19,
+            cacheSize: environment.cacheSize
         })
-        let base = new ol.source.OSM();
+        let base: any
+        if (environment.MapBoxBaseMapUrl != '') {
+            base = new XYZ({ "url": environment.MapBoxBaseMapUrl });
+        }
+        else {
+            base = new OSM({ cacheSize: environment.cacheSize });
+        }
         if (this.base == 'base') {
             this.base = 'aerial';
-            this.mapConfig.layers[0].setSource(aerial);
+            this.mapConfig.baseLayers[0].setSource(aerial);
         }
         else {
             this.base = 'base';
-            this.mapConfig.layers[0].setSource(base);
+            this.mapConfig.baseLayers[0].setSource(base);
         }
-    }
-
-    public stopInterval() {
-        if (this.mapConfig) {
-        this.mapConfig.userpagelayers.forEach((UPL) => {
-            clearInterval(UPL.updateInterval)
-        })
-    }
     }
 
     public isolate(layer: UserPageLayer) {
@@ -782,14 +671,103 @@ export class MapService {
         })
     }
 
-    public toggleDefaultON(layer: UserPageLayer) {
+    public toggleDefaultOn(layer: UserPageLayer) {
         layer.defaultON = !layer.defaultON
         let templayer = new UserPageLayer
         templayer.ID = layer.ID
         templayer.defaultON = layer.defaultON
+        templayer.style = layer.style  //This is a stupid hack.
         this.userPageLayerService
             .Update(templayer)
             .subscribe((data) => {
             })
+    }
+
+    public cleanPage(): void {
+        // The tempUPL is set up so that the expansion panel can immediately get cleared while the page is cleaning.
+        this.mapConfig.disableCurrentLayer = true
+        let tempUPL: UserPageLayer[]
+        tempUPL = this.mapConfig.userpagelayers
+        this.mapConfig.userpagelayers = []
+        tempUPL.forEach((x) => {
+            this.mapConfig.map.removeLayer(x.olLayer)
+            this.mapConfig.currentLayerName = "";
+            this.mapConfig.featureList = []
+            if (x.layer.layerType == "MyCube") {
+                clearInterval(x.updateInterval)
+                x.source.clear(true)
+            }
+        })
+        this.mapConfig.editmode = false
+        this.mapConfig.filterOn = false;
+        this.mapConfig.filterShow = false;
+        this.mapConfig.styleShow = false
+        this.mapConfig.showDeleteButton = false
+        this.mapConfig.showFilterButton = false
+        this.mapConfig.showStyleButton = false
+        this.mapConfig.WMSFeatureData = ""
+        this.mapConfig.selectedFeatureSource.clear()
+        this.mapConfig.myCubeConfig = new DataFormConfig
+        this.mapConfig.myCubeComment = new LogFormConfig
+    }
+
+    public addUserPageLayer(UPL: UserPageLayer) {
+        let newUPL = new UserPageLayer
+        newUPL.userPageID = this.mapConfig.currentpage.ID
+        newUPL.userID = this.mapConfig.user.ID;
+        newUPL.defaultON = UPL.layerShown;
+        newUPL.style = UPL.style
+        newUPL.serverID = UPL.serverID
+        newUPL.userID = UPL.userID
+        newUPL.layerID = UPL.layer.ID
+        this.userPageLayerService
+            .Add(newUPL)
+            .subscribe((result: UserPageLayer) => {
+                UPL.ID = result.ID
+            });
+    }
+
+    public deleteUserPageLayer(userPageLayer: UserPageLayer): void {
+        this.mapConfig.map.removeLayer(userPageLayer.olLayer)
+        this.mapConfig.userpagelayers.splice(this.mapConfig.userpagelayers.findIndex((x) => x == userPageLayer), 1)
+        this.userPageLayerService
+            .Delete(userPageLayer.ID)
+            .subscribe(() => { });
+    }
+
+    public setDefaultPage(userPage: UserPage) {
+        this.mapConfig.defaultpage.default = false;
+        this.userPageService
+            .Update(this.mapConfig.defaultpage)
+            .subscribe();
+        userPage.default = true;
+        this.userPageService
+            .Update(userPage)
+            .subscribe((data) => {
+                this.mapConfig.defaultpage = userPage;
+            })
+    }
+
+    public setDefaultPageLayer() { //not being used right now.
+        this.mapConfig.userpagelayers.forEach((userpagelayer) => {
+            if (this.mapConfig.currentpage.defaultLayer == userpagelayer.ID) {
+                this.setCurrentLayer(userpagelayer)
+            }
+        })
+    }
+
+    public setCurrentMyCube(layer: UserPageLayer): void {
+        this.setStyle(layer)  //This gets the styling right.
+        this.getFeatureList()
+        if (layer.layerShown === true && layer.layer.layerType == "MyCube") {
+            this.mapConfig.editmode = layer.layerPermissions.edit;
+            this.mapConfig.showFilterButton = true
+            this.mapConfig.showStyleButton = true
+            this.mapConfig.showDeleteButton = true
+        }
+        if (layer.layer.layerType == "MyCube" && layer.style.filter.column) {
+            this.mapConfig.filterOn = true
+        }
+        this.mapConfig.showStyleButton = true
     }
 }

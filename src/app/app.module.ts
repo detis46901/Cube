@@ -1,33 +1,44 @@
 //Angular/Miscellaneous
 import { BrowserModule } from '@angular/platform-browser';
+import { Routing } from './app.routing';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+//import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
-import { HttpModule, ConnectionBackend, Http } from '@angular/http';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import { Routes, RouterModule } from '@angular/router';
 import { LinkyModule } from 'ngx-linky';
 import { FeatureModulesModule } from './feature-modules/feature-modules.module'
-import { Routing } from './app.routing';
-import { BaseRequestOptions } from '@angular/http';
 import { AuthGuard } from '../_guards/auth.guard';
 import { AdminGuard } from '../_guards/admin.guard';
-import { Configuration } from '../_api/api.constants';
 import { FilterPipe } from '../_pipes/rowfilter.pipe';
 import { PagePipe } from '../_pipes/rowfilter2.pipe';
 import { NumFilterPipe } from '../_pipes/numfilter.pipe';
+//import { AdminModule } from './admin/admin.module'
 
 //Angular Material
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+//import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatMenuModule } from '@angular/material/menu'
-import {
-    MatRadioModule, MatIconModule, MatCardModule, MatDialogModule, MatSelectModule, MatListModule,
-    MatSidenavModule, MatInputModule, MatCheckboxModule, MatButtonModule, MatTableModule, 
-    MatFormFieldModule, MatProgressSpinnerModule, MatToolbarModule, MatNativeDateModule
-} from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTableModule } from '@angular/material/table';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import {MatSliderModule, MatSlider} from '@angular/material/slider'
 import {MatDividerModule} from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -38,10 +49,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 //pipes
 import {LayerFilterPipe} from '../_pipes/rowfilter2.pipe'
-import 'hammerjs';
 
 //Services
-import { UserService } from '../_services/_user.service';
 import { GroupService } from '../_services/_group.service';
 import { GroupMemberService } from '../_services/_groupMember.service';
 import { LayerService } from '../_services/_layer.service';
@@ -57,47 +66,28 @@ import { ServerService } from '../_services/_server.service';
 import { geoJSONService } from './map/services/geoJSON.service';
 import { MyCubeService } from './/map/services/mycube.service';
 import { WMSService } from './map/services/wms.service';
-import { SideNavService } from '../_services/sidenav.service';
-import { MessageService } from '../_services/message.service';
 import { ImageService } from '../_services/image.service';
-import { UserValidatorService } from './admin/user/userValidator.service';
 import { NotifService } from '../_services/notification.service';
 import { FeatureModulesService } from '../app/feature-modules/feature-modules.service'
+import { MapConfigService } from '../_services/mapConfig.service'
+import { UserService } from '../_services/_user.service';
 //import { MapService } from './map/services/map.service';
 //import { FilterService } from './map/services/filter.service';
 //import { GeocodingService } from './map/services/geocoding.service';
 
 //Components
 import { LoginComponent } from './login/login.component';
+import { PageComponent2 } from './admin2/user/page/page.component'  //This needs to be fixed!
+import { ConfirmDeleteComponent } from './admin2/confirmdelete/confirmdelete.component'
+import { PageConfigComponent2 } from './admin2/user/pageconfig/pageconfig.component'  //This needs to be fixed!
 import { HomeComponent } from './home/home.component';
-import { AdminComponent } from './admin/admin.component';
-import { AdminNavComponent } from './admin/adminnav/adminnav.component';
-import { LayerComponent } from './admin/layer/layer.component';
-import { InstanceComponent } from './admin/module/instance.component';
-import { InstanceNewComponent } from './admin/module/instanceNew/instanceNew.component'
-import { LayerPermissionComponent } from './admin/layer/layerPermission/layerPermission.component';
-import { ModulePermissionComponent } from './admin/module/modulePermission/modulePermission.component';
-import { LayerStyleComponent } from './admin/layer/layerStyle/layerStyle.component'
-import { PageComponent } from './admin/user/page/page.component';
-import { PageConfigComponent } from './admin/user/pageconfig/pageconfig.component';
-import { LayerNewComponent } from './admin/layer/layerNew/layerNew.component';
-import { newMyCubeComponent } from './admin/layer/myCubeLayer/newMyCube.component';
-import { UserComponent } from './admin/user/user.component';
-import { DefaultsComponent } from './admin/default/default.component';
-import { ServerComponent } from './admin/server/server.component';
-import { ConfirmDeleteComponent } from './admin/confirmdelete/confirmdelete.component';
 import { SettingsComponent } from './settings/settings.component';
 import { PasswordComponent } from './settings/password/password.component';
-import { ServerNewComponent } from './admin/server/serverNew/serverNew.component';
-import { ChangePasswordComponent } from './admin/user/changepassword/changepassword.component';
 import { HeaderComponent } from './header/header.component';
-import { SideNavComponent } from './featuredata/sidenav.component';
-import { FeatureDataComponent } from './featuredata/featuredata.component'
+// import { SideNavComponent } from './featuredata/sidenav.component';
+// import { FeatureDataComponent } from './featuredata/featuredata.component'
 import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
-import { GroupComponent } from './admin/group/group.component';
-import { NewGroupComponent } from './admin/group/newGroup/newGroup.component';
-import { NewUserComponent } from './admin/user/newUser/newUser.component';
 import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
 import { ProfileComponent } from './settings/profile/profile.component';
 import { ChangePictureComponent } from './settings/profile/change-picture/change-picture.component';
@@ -105,103 +95,60 @@ import { NotifComponent } from '../app/notification/notification.component';
 import { MeasureComponent } from './map/measure/measure.component';
 import { FilterComponent } from './map/filter/filter.component';
 import { mapStyles } from '../app/map/models/map.model';
-import { LayerDetailsComponent } from './admin/details/layerDetails/layerDetails.component';
-import { InstanceDetailsComponent } from './admin/details/instanceDetails/instanceDetails.component';
 import { MapService } from './map/services/map.service';
 import { StyleService } from './map/services/style.service';
 import { GeocodingService } from './map/services/geocoding.service';
-import { EditGroupComponent } from './admin/group/editGroup/editGroup.component'
-import { UserDetailsComponent } from './admin/details/userDetails/userDetails.component';
-import { ServerDetailsComponent } from './admin/details/serverDetails/serverDetails.component';
-import { ServerLayersComponent } from './admin/server/serverLayers/serverLayers.component';
 import { StyleComponent } from './map/style/style.component';
-import { ModuleSettingsComponent } from './admin/module/moduleSettings/moduleSettings.component'
-
+import { SearchComponent } from './search/search.component';
+// import { DataFormComponentComponent } from './shared.components/data-component/data-form-component/data-form-component.component';
+// import { LogFormComponentComponent } from './shared.components/data-component/log-form-component/log-form-component.component';
+import { DataModule } from './shared.components/data/data.module';
+import { FeatureModulesComponent } from './feature-modules/feature-modules.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         MapComponent,
-        PageComponent,
         HeaderComponent,
-        SideNavComponent,
-        FeatureDataComponent,
+        // SideNavComponent,
+        // FeatureDataComponent,
         HomeComponent,
         LoginComponent,
-        AdminComponent,
-        AdminNavComponent,
-        GroupComponent,
-        LayerComponent,
-        InstanceComponent,
-        UserComponent,
         SettingsComponent,
         PasswordComponent,
         FilterPipe,
         NumFilterPipe,
         PagePipe,
-        LayerPermissionComponent,
-        ModulePermissionComponent,
-        LayerStyleComponent,
-        PageComponent,
-        PageConfigComponent,
-        LayerNewComponent,
-        newMyCubeComponent,
-        ConfirmDeleteComponent,
-        DefaultsComponent,
         NotifComponent,
-        ServerComponent,
-        ServerNewComponent,
-        ChangePasswordComponent,
-        NewUserComponent,
         ApiKeyComponent,
-        NewGroupComponent,
         ProfileComponent,
         ChangePictureComponent,
-        LayerDetailsComponent,
-        InstanceDetailsComponent,
         NotifComponent,
         MeasureComponent,
         FilterComponent,
-        EditGroupComponent,
-        UserDetailsComponent,
-        ServerDetailsComponent,
-        ServerLayersComponent,
         StyleComponent,
-        ModuleSettingsComponent,
-        InstanceNewComponent,
         LayerFilterPipe,
-    ],
+        PageComponent2,
+        PageConfigComponent2,
+        ConfirmDeleteComponent,
+        SearchComponent,
+        // DataFormComponentComponent,
+        // LogFormComponentComponent
+  ],
 
     entryComponents: [
-        LayerNewComponent,
-        newMyCubeComponent,
-        ChangePasswordComponent,
-        LayerPermissionComponent,
-        ModulePermissionComponent,
-        LayerStyleComponent,
-        PageComponent,
-        PageConfigComponent,
-        ConfirmDeleteComponent,
-        ServerNewComponent,
-        NewUserComponent,
-        NewGroupComponent,
-        EditGroupComponent,
         ChangePictureComponent,
-        LayerDetailsComponent,
-        UserDetailsComponent,
-        ServerDetailsComponent,
-        ServerLayersComponent,
-        ModuleSettingsComponent,
-        InstanceNewComponent
+        PageComponent2,
+        PageConfigComponent2,
+        ConfirmDeleteComponent
     ],
 
     imports: [
         BrowserModule,
         FormsModule,
-        CommonModule,
+        //CommonModule,
         HttpClientModule,
         HttpClientJsonpModule,
-        HttpModule,
         Routing,
         RouterModule.forRoot([
             {
@@ -209,9 +156,11 @@ import { ModuleSettingsComponent } from './admin/module/moduleSettings/moduleSet
                 component: HomeComponent
             }
         ]),
+        //AdminModule,
         FormsModule,
         ReactiveFormsModule,
-        BrowserAnimationsModule,
+        //BrowserAnimationsModule,
+        NoopAnimationsModule,
         MatCardModule,
         MatSidenavModule,
         MatSlideToggleModule,
@@ -239,11 +188,13 @@ import { ModuleSettingsComponent } from './admin/module/moduleSettings/moduleSet
         MatDividerModule,
         MatAutocompleteModule,
         LinkyModule,
-        FeatureModulesModule
+        FeatureModulesModule,
+        DragDropModule,
+        MatSliderModule,
+        DataModule
     ],
 
     providers: [
-        UserService,
         MapService,
         StyleService,
         GeocodingService,
@@ -259,23 +210,19 @@ import { ModuleSettingsComponent } from './admin/module/moduleSettings/moduleSet
         SQLService,
         UserPageLayerService,
         UserPageService,
-        Configuration,
-        BaseRequestOptions,
         ServerService,
         geoJSONService,
         MyCubeService,
         WMSService,
-        SideNavService,
-        MessageService,
         mapStyles,
         ImageService,
-        UserValidatorService,
         NotifService,
         FeatureModulesService,
         UserPageInstanceService,
         ModuleService,
-        
-
+        MapConfigService,
+        UserService,
+        FeatureModulesComponent
     ],
 
     bootstrap: [AppComponent]

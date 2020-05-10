@@ -1,4 +1,4 @@
-<header [user]="user" [screenCode]="screen"></header>
-<map id='map'></map>
-<app-notification></app-notification>
-<sidenav></sidenav>
+<header *ngIf="loaded" [screenCode]="screen"></header>
+<map *ngIf="loaded" [user]="user"></map>
+<!-- <app-notification></app-notification> -->
+<!-- <sidenav></sidenav> -->

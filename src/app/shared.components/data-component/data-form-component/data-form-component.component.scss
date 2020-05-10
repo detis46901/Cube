@@ -1,0 +1,37 @@
+#btnHide {
+    margin: 15px 0 0 180px;
+}
+
+#comment {
+    width: 100%;
+}
+
+#trashButton {
+    position:absolute;
+    top:-10px;
+    right:-10px;
+}
+
+hr {
+    border-color: gray;
+}
+
+#layerMarkup {
+    font: 16px black;
+}
+
+
+.comment-data .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+  width: 354px;
+}
+
+.comment-data .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.message-data {
+  width: 354px;
+}

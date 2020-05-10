@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../_services/_user.service';
 import { User } from '../../../_models/user.model';
-import { Configuration } from '../../../_api/api.constants';
 import { ModuleInstanceService } from '../../../_services/_moduleInstance.service';
 import { ModulePermissionService } from '../../../_services/_modulePermission.service';
 import { UserPageInstanceService } from '../../../_services/_userPageInstance.service';
@@ -13,37 +12,29 @@ import { InstanceNewComponent } from './instanceNew/instanceNew.component';
 import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component';
 import { ModuleService } from '../../../_services/_module.service';
 import { Server } from '../../../_models/server.model';
-import { MatDialog, MatDialogConfig } from '@angular/material';
-// import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
-import { InstanceValidatorService } from './instanceValidator.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { InstanceDetailsComponent } from '../details/instanceDetails/instanceDetails.component';
 import { FeatureModulesAdminService } from '../../feature-modules/feature-modules-admin.service'
+import { FeatureModulesAdminComponent } from '../../feature-modules/feature-modules-admin/feature-modules-admin.component'
 
 
 @Component({
     selector: 'instance',
     templateUrl: './instance.component.html',
-    providers: [UserService, Configuration, ModuleInstanceService, ModulePermissionService, UserPageInstanceService, ModuleService, SQLService, FeatureModulesAdminService],
+    providers: [UserService, ModuleInstanceService, ModulePermissionService, UserPageInstanceService, ModuleService, SQLService, FeatureModulesAdminService],
     styleUrls: ['./instance.component.scss']
 })
 
 export class InstanceComponent implements OnInit {
     //objCode refers to the  menu tab the user is on, so the openConfDel method knows what to interpolate based on what it's deleting
     public objCode: number = 2;
-    public token: string;
-    public userID: number;
-
     public instances: ModuleInstance[];
     public modules: Module[];
 
     public instanceColumns = ['instanceID', 'name', /*'identity', 'service', 'server', 'description',*/ /*'format', */'description', /*'geometry', */'actionsColumn'];
     public dataSource: any;
 
-    constructor(private moduleInstanceService: ModuleInstanceService, private dialog: MatDialog, private modulePermissionService: ModulePermissionService, private userPageInstanceService: UserPageInstanceService, private moduleService: ModuleService, private sqlservice: SQLService, private featureModuleAdminService: FeatureModulesAdminService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser.token;
-        this.userID = currentUser.userID;
-    }
+    constructor(private moduleInstanceService: ModuleInstanceService, private dialog: MatDialog, private modulePermissionService: ModulePermissionService, private userPageInstanceService: UserPageInstanceService, private moduleService: ModuleService, private sqlservice: SQLService, private featureModuleAdminService: FeatureModulesAdminService) {}
 
     ngOnInit() {
         this.getInstanceItems();
@@ -83,7 +74,7 @@ export class InstanceComponent implements OnInit {
     }
 
     public openSettings(instanceid: number, instancename: string): void {
-        const dialogRef = this.dialog.open(ModuleSettingsComponent, { height: '450px', width: '450px' });
+        const dialogRef = this.dialog.open(ModuleSettingsComponent, { height: '450px', width: '750px' });
         dialogRef.componentInstance.instanceID = instanceid;
         dialogRef.componentInstance.instanceName = instancename;
     }

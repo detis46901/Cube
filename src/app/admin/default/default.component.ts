@@ -16,7 +16,6 @@ export class DefaultsComponent implements OnInit {
 
     constructor(private layerService: LayerService) { }
     ngOnInit() {
-        //this.layerService.GetAll().subscribe((res) => this.layers = res)
         this.layers = this.layerService.GetAll()
     }
 

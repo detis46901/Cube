@@ -17,79 +17,19 @@
         <!-- name entry box -->
         <div class="row" style="width:100%">
             <mat-form-field id="layerNameEntry">
-                <input matInput name="layerDetailName" [(ngModel)]="layer.layerName" placeholder="Name" (change)="checkLength()">
+                <input matInput name="layerDetailName" [(ngModel)]="instanceDetails.name" placeholder="Name">
             </mat-form-field>
 
             <!-- description entry box -->
             <mat-form-field id="layerDescriptionEntry">
-                <input matInput name="layerDetailDesc" [(ngModel)]="layer.layerDescription" placeholder="Description">
+                <input matInput name="layerDetailDesc" [(ngModel)]="instanceDetails.description" placeholder="Description">
             </mat-form-field>
         </div>
         <br>
-
-        <!-- type entry box -->
-        <div class="row" style="width:100%">
-            <mat-form-field id="layerTypeEntry">
-                <mat-select id="newlayertype" name="newlayertype" [(ngModel)]="layer.layerType" required placeholder="Type">
-                    <mat-option value="PostGIS">PostGIS</mat-option>
-                    <mat-option value="Geoserver">Geoserver</mat-option>
-                    <mat-option value="MapServer">MapServer</mat-option>
-                    <mat-option value="WMS">WMS</mat-option>
-                    <mat-option value="WMTS">WMTS</mat-option>
-                    <mat-option value="KML-Link">KML-Link</mat-option>
-                    <mat-option value="KML-Drive">KML-Drive</mat-option>
-                    <mat-option value="GeoJSON">GeoJSON</mat-option>
-                </mat-select>
-            </mat-form-field>
-
-            <!-- service entry box -->
-            <mat-form-field id="layerServiceEntry">
-                <input matInput name="layerDetailService" [(ngModel)]="layer.layerService" placeholder="Service">
-            </mat-form-field>
-        </div>
-        <br>
-
-        <!-- identity entry box -->
-        <div class="row" style="width:100%">
-            <mat-form-field id="layerIdentityEntry">
-                <input matInput name="layerDetailIdent" [(ngModel)]="layer.layerIdent" placeholder="Identity">
-            </mat-form-field>
-
-            <!-- format entry box -->
-            <mat-form-field id="layerFormatEntry">
-                <input matInput name="layerDetailFormat" [(ngModel)]="layer.layerFormat" placeholder="Format">
-            </mat-form-field>
-        </div>
-        <br>
-
-        <!-- geometry entry box -->
-        <div class="row" style="width:100%">
-            <mat-form-field id="layerGeometryEntry">
-                <input matInput name="layerDetailGeom" [(ngModel)]="layer.layerGeom" placeholder="Geometry">
-            </mat-form-field>
-
-            <!-- service entry box -->
-            <mat-form-field id="layerServerEntry">
-                <mat-select id="newLayerServer" name="newLayerServer" [(ngModel)]="layer.serverID" required placeholder="Server">
-                    <mat-option [value]="server.ID" *ngFor="let server of servers">
-                        {{server.serverName}}
-                    </mat-option>
-                </mat-select>
-                
-            </mat-form-field>
-        </div>
-        <br>
-
-        <!-- style entry box -->
-        <div class="row" id="layerStyleEntry">
-            <mat-form-field id="layerStyleEntry">
-                <input matInput name="layerDetailStyle" [(ngModel)]="style" placeholder="Style">
-            </mat-form-field>
-        </div>
     </form>
 </mat-dialog-content>
 
 <!-- button to submit changes -->
 <mat-dialog-actions style="justify-content:center">
-    <button mat-dialog-close id="submitChangesButton" (click)="submit(layer)">Submit Changes</button>
+    <button mat-dialog-close id="submitChangesButton" (click)="updateInstanceDetails()">Submit Changes</button>
 </mat-dialog-actions>

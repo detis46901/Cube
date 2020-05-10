@@ -27,6 +27,7 @@
 
 #headerBar {
     display: flex;
+    min-height: 40px
 }
 
 // styles the left buttons
@@ -44,6 +45,7 @@
     position: relative;
     margin-left: 10px;
     margin-right: 10px;
+
 }
 #headerNotifications {
     margin-left: 5px;
@@ -63,13 +65,24 @@ h5, h4, h3 {
     min-width: 25px;
 }
 
+.setheight {
+  max-height: 2vh
+}
+
 #logoutButton, #adminSettingsButton {
     position: relative;
     color: white;
-    border: 1px solid white;
-    top: -5px;
     margin-left: 5px;
     left: 5px;
+    font-size: 1vh;
+}
+
+.logoutButton {
+  height: 20px;
+  font-size: 2vh;
+  padding: -1vh;
+  color: white;
+  margin-bottom: 2vh
 }
 
 :focus {

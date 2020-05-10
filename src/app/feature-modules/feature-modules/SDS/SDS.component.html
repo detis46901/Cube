@@ -1,0 +1,52 @@
+<mat-expansion-panel *ngIf="SDSConfig.visible == true" [expanded]="SDSConfig.expanded == true">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      {{instance.name}}
+    </mat-panel-title>
+    <mat-panel-description>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <button mat-button mat-raised-button color="primary" *ngIf="mapConfig.selectedFeature"
+    (click)="goToTab('Input')">Input</button>
+  <button mat-button mat-raised-button color="primary" *ngIf="mapConfig.selectedFeature"
+    (click)="goToTab('Search')">Search</button>
+  <button mat-button mat-raised-button color="primary" *ngIf="mapConfig.selectedFeature"
+    (click)="goToTab('List')">List</button>
+  <button mat-button mat-raised-button color="primary" *ngIf="SDSConfig.selectedItem"
+    (click)="goToTab('Item')">Item</button>
+  <button mat-button mat-raised-button color="primary" matTooltip="Use this in an Excel Data Connection"
+    (click)="copyToClipboard('sql/getsheets?schema=modules&table=m' + SDSConfig.moduleInstanceID + 'data')">Export</button>
+  <!-- <button mat-button mat-raised-button color="primary" (click)="openDashboard()">Dashboard</button> -->
+  <div *ngIf="SDSConfig.tab=='Input' && mapConfig.selectedFeature != null" label="Input" class="SDSComponent"><br>
+    <app-data-form-component class="SDSComponent" [dataFormConfig]=SDSConfig.itemDataForm (changedForm)="changedDataForm($event)"></app-data-form-component>
+    <button mat-button mat-raised-button color="primary" (click)="addSDS()">Save</button>
+  </div>
+  <div *ngIf="SDSConfig.tab=='Search'" label=Search><br>
+    <!-- need to add search -->
+  </div>
+  <div *ngIf="SDSConfig.tab=='List' && mapConfig.selectedFeature" label="List" class="SDSComponent"><br>
+    {{SDSConfig.label}}
+    <div *ngFor="let item of SDSConfig.list">
+        <span *ngIf="item['id'] != SDSConfig.selectedItem"
+          (click)="selectItem(item['id'])">{{item[SDSConfig.label]}}</span>
+        <span *ngIf="item['id'] == SDSConfig.selectedItem"
+          (click)="selectItem(item['id'])"><b>{{item[SDSConfig.label]}}</b></span>
+    </div>
+  </div>
+  <div *ngIf="SDSConfig.tab == 'Item'" class="SDSComponent"><br>
+    <div *ngIf="SDSConfig.showLog">
+      <app-log-form-component class="SDSComponent" [logFormConfig]=SDSConfig.selectedItemLog (savedLog)="onNewComment($event)"></app-log-form-component>
+      <button mat-button mat-raised-button color="primary" (click)="SDSConfig.showLog = !SDSConfig.showLog">{{SDSConfig.showLog ? 'Hide Log' : 'Show Log'}}</button>
+  </div>
+    <div *ngIf="!SDSConfig.showLog && SDSConfig.itemDataForm.visible">
+      <app-data-form-component class="SDSComponent" [dataFormConfig]=SDSConfig.itemDataForm (changedForm)="changedDataForm($event)"></app-data-form-component>
+      <button *ngIf='SDSConfig.itemDataForm.editMode == false' mat-button mat-raised-button color="primary"
+      (click)="SDSConfig.itemDataForm.editMode = true">Start Edit</button>
+    <button *ngIf='SDSConfig.itemDataForm.editMode == true' mat-button mat-raised-button color="primary"
+      (click)="SDSConfig.itemDataForm.editMode = false">Stop Edit</button>
+    <button mat-button mat-raised-button color="primary" (click)="deleteSDS()">Delete</button> <button mat-button mat-raised-button color="primary" (click)="SDSConfig.showLog = !SDSConfig.showLog">{{SDSConfig.showLog ? 'Hide Log' : 'Show Log'}}</button>
+   
+    </div>
+    <br>
+  </div>
+</mat-expansion-panel>

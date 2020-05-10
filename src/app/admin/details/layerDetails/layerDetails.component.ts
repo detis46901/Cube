@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgModel } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Layer } from '../../../../_models/layer.model';
 import { User, Notif } from '../../../../_models/user.model';
 import { ServerService } from '../../../../_services/_server.service';
@@ -28,7 +28,6 @@ export class LayerDetailsComponent implements OnInit {
     public changedLayerProps = new Array<any>();
     public originalLayerProps = new Array<any>();
     public style: string;
-    public token;
     public userID;
     public user: User;
     public servers: Array<Server>;
@@ -36,12 +35,11 @@ export class LayerDetailsComponent implements OnInit {
     constructor(private dialog: MatDialog, private layerService: LayerService, private layerPermissionService: LayerPermissionService,
         private serverService: ServerService, private userService: UserService, private groupService: GroupService,
         private groupMemberService: GroupMemberService, private notificationService: NotifService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.userID = currentUser && currentUser.userID;
         this.getLayer(this.ID);
         this.getUser(this.userID);
         this.getServers();

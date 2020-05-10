@@ -1,14 +1,11 @@
 //Parent Service: most services inherit methods from this file.
 //The "_" in the files in this directory denotes a service that inherits from this parent service.
 
-import 'rxjs/add/operator/map';
+
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
-import { RequestOptions, Headers } from '@angular/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
 import { Observable } from 'rxjs';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
-import { Configuration } from '../_api/api.constants';
 
 @Injectable()
 export class ParentService {
@@ -16,7 +13,11 @@ export class ParentService {
     public options: any;
     protected token: string;
 
-    constructor(protected _http: HttpClient, protected configuration: Configuration) {
+    constructor(protected _http: HttpClient) {
+        
+    }
+
+    public getOptions() {
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
         } catch (err) {
@@ -31,51 +32,71 @@ export class ParentService {
                 //'Access-Control-Allow-Origin': '*'
             })
         }
+        return this.options
     }
-
     public GetAll = (): Observable<any> => {
-        return this._http.get<any[]>(this.actionUrl + 'list', this.options)
+        return this._http.get<any[]>(this.actionUrl + 'list', this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public GetSingle = (id: number): Observable<any> => {
-        return this._http.get<any>(this.actionUrl + 'one?rowid=' + id, this.options)
+        return this._http.get<any>(this.actionUrl + 'single?rowid=' + id, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public GetSingleFromEmail = (email: string): Observable<any> => {
-        return this._http.get<any>(this.actionUrl + 'one?email=' + email /*+API key 12/27/17*/, this.options)
+        return this._http.get<any>(this.actionUrl + 'single?email=' + email, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public Add = (toAdd: any): Observable<any> => {
-        console.log("adding: " + this.actionUrl)
-        return this._http.post(this.actionUrl + 'create', JSON.stringify(toAdd), this.options)
+        return this._http.post(this.actionUrl + 'single', JSON.stringify(toAdd), this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public Update = (itemToUpdate: any): Observable<any> => {
-        return this._http.put(this.actionUrl + 'update', JSON.stringify(itemToUpdate), this.options)
+        return this._http.put(this.actionUrl + 'update', JSON.stringify(itemToUpdate), this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public Delete = (id: number): Observable<any> => {
-        return this._http.delete(this.actionUrl + 'delete?ID=' + id, this.options)
+        return this._http.delete(this.actionUrl + 'delete?ID=' + id, this.getOptions())
+            .pipe(catchError(this.handleError));
+    }
+
+    public GetByUser = (userid): Observable<any> => {
+        return this._http.get(this.actionUrl + 'byuser?userid=' + userid, this.getOptions())
+            .pipe(catchError(this.handleError));
+    }
+
+    public GetByUserGroups = (userid): Observable<any> => {
+        return this._http.get(this.actionUrl + 'byusergroups?userID=' + userid, this.getOptions())
+            .pipe(catchError(this.handleError));
+    }
+
+    public GetByLayer = (layerid): Observable<any> => {
+        return this._http.get(this.actionUrl + 'bylayer?layerID=' + layerid, this.getOptions())
+            .pipe(catchError(this.handleError));
+    }
+
+    public GetByGroup = (groupid): Observable<any> => {
+        return this._http.get(this.actionUrl + 'bygroup?groupID=' + groupid, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     protected handleError(error: HttpErrorResponse) {
-        if (error.error instanceof ErrorEvent) {
-            // A client-side or network error occurred. Handle it accordingly.
-            console.error('An error occurred:', error.error.message);
-        } else {
-            // The backend returned an unsuccessful response code.
-            // The response body may contain clues as to what went wrong,
-            console.error(
-                `Backend returned code ${error.status}, ` +
-                `body was: ${error.error}`);
-        }
-        // return an ErrorObservable with a user-facing error message
-        return new ErrorObservable();
+        // if (error.error instanceof ErrorEvent) {
+        //     // A client-side or network error occurred. Handle it accordingly.
+        //     console.error('An error occurred:', error.error.message);
+        // } else {
+        //     // The backend returned an unsuccessful response code.
+        //     // The response body may contain clues as to what went wrong,
+        //     console.error(
+        //         `Backend returned code ${error.status}, ` +
+        //         `body was: ${error.error}`);
+        // }
+        // // return an ErrorObservable with a user-facing error message
+
+        return 'there is an error'
     }
 }

@@ -1,13 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MapConfig } from '../models/map.model';
 import { MapService } from '../services/map.service';
-import { SQLService } from '../../../_services/sql.service';
-import { MyCubeField, UserPageLayer } from '_models/layer.model';
+//import { SQLService } from '../../../_services/sql.service';
+import { MyCubeService } from '../../map/services/mycube.service'
+import { MyCubeField, UserPageLayer, MyCubeConstraint } from '_models/layer.model';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { StyleService } from '../services/style.service';
 import { LayerService } from '../../../_services/_layer.service';
 import { filterOperators, MyCubeFilterFields } from '../../../_models/style.model';
-
 
 @Component({
     selector: 'filtertoolbar',
@@ -31,11 +31,11 @@ export class FilterComponent implements OnInit {
     public options: string[] = ['One', 'Two', 'Three'];
 
 
-    constructor(private mapService: MapService, private sqlSerivce: SQLService, private userPageLayerService: UserPageLayerService,
+    constructor(private mapService: MapService, private myCubeSerivce: MyCubeService, private userPageLayerService: UserPageLayerService,
         private layerService: LayerService) {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.admin = currentUser && currentUser.admin;
-        
+
     }
 
     ngOnInit() {
@@ -43,7 +43,6 @@ export class FilterComponent implements OnInit {
             if (this.mapConfig.currentLayer.style.filter.column != "") {
                 this.filterColumn.field = this.mapConfig.currentLayer.style.filter.column
                 this.filterOperator = this.mapConfig.currentLayer.style.filter.operator
-                this.filterColumn.value = this.mapConfig.currentLayer.style.filter.value
             }
         }
         catch (e) {
@@ -52,10 +51,15 @@ export class FilterComponent implements OnInit {
             this.mapConfig.currentLayer.style.filter.operator = ""
             this.mapConfig.currentLayer.style.filter.value = ""
         }
-        this.sqlSerivce.GetSchema(this.mapConfig.currentLayer.layerID)
+        this.myCubeSerivce.GetSchema('mycube', 't' + this.mapConfig.currentLayer.layerID)
             .subscribe((data) => {
                 this.columns = data[0].slice(2, data[0].length)
-                this.updateColumn()
+                this.myCubeSerivce.getConstraints('mycube', 't' + this.mapConfig.currentLayer.layerID)
+                    .subscribe((constraints) => {
+                            this.columns = this.myCubeSerivce.setConstraints(this.columns, constraints)
+                        this.updateColumn()
+                        this.filterColumn.value = this.mapConfig.currentLayer.style.filter.value
+                })
             })
     }
 
@@ -77,6 +81,8 @@ export class FilterComponent implements OnInit {
             this.columns.forEach(x => {
                 if (this.filterColumn.field == x.field) {
                     this.filterColumn.type = x.type
+                    this.filterColumn.constraints = x.constraints
+                    this.filterColumn.value = null
                 }
             })
         }
@@ -162,13 +168,16 @@ export class FilterComponent implements OnInit {
                 return (this.modelOperator.booleanOperators)
             }
             case "text": {
-               return (this.modelOperator.textOperators)
+                return (this.modelOperator.textOperators)
             }
             case "date": {
                 return (this.modelOperator.dateOperators)
             }
             case "double precision": {
                 return (this.modelOperator.doublePrecisionOperators)
+            }
+            case "integer": {
+                return (this.modelOperator.integerOperators)
             }
         }
     }

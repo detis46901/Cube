@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { Configuration } from '../_api/api.constants';
+import {environment } from '../environments/environment'
+import { HttpClient } from '@angular/common/http';
 import { ParentService } from './_parent.service';
-import { Group } from '../_models/group.model';
 
 @Injectable()
 export class GroupService extends ParentService {
     protected actionUrl: string;
 
-    constructor(protected _http: HttpClient, protected configuration: Configuration) {
-        super(_http, configuration);
-        this.actionUrl = this.configuration.serverWithApiUrl + 'group/';
+    constructor(protected _http: HttpClient) {
+        super(_http);
+        this.actionUrl = environment.apiUrl + environment.apiUrlPath + 'group/';
     }
 }

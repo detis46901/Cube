@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GroupService } from '../../../../_services/_group.service';
 import { Group } from '../../../../_models/group.model';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-newGroup',
@@ -11,17 +11,10 @@ import { MatDialog } from '@angular/material';
 })
 
 export class NewGroupComponent implements OnInit {
-    public token: string;
-    public userID: number;
-
     public groups: Group[];
     public newGroup = new Group;
 
-    constructor(private dialog: MatDialog, private groupService: GroupService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
-    }
+    constructor(private dialog: MatDialog, private groupService: GroupService) {}
 
     ngOnInit() {
         this.groupService

@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../../_services/_user.service';
 import { User } from '../../../_models/user.model';
-import { Configuration } from '../../../_api/api.constants';
 import { LayerService } from '../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../_services/_layerPermission.service';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
@@ -14,16 +13,16 @@ import { ConfirmDeleteComponent } from '../confirmdelete/confirmdelete.component
 import { newMyCubeComponent } from './myCubeLayer/newMyCube.component';
 import { ServerService } from '../../../_services/_server.service';
 import { Server } from '../../../_models/server.model';
-import { MatDialog, MatDialogConfig } from '@angular/material';
-import { TableDataSource, DefaultValidatorService, ValidatorService, TableElement } from 'angular4-material-table';
-import { LayerValidatorService } from './layerValidator.service';
-import {MatPaginator, MatTableDataSource} from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { LayerDetailsComponent } from '../details/layerDetails/layerDetails.component';
+import { layer } from 'openlayers';
 
 @Component({
     selector: 'layer',
     templateUrl: './layer.component.html',
-    providers: [UserService, Configuration, LayerService, LayerPermissionService, UserPageLayerService, ServerService, SQLService, { provide: ValidatorService, useClass: LayerValidatorService }],
+    providers: [UserService, LayerService, LayerPermissionService, UserPageLayerService, ServerService, SQLService],
     styleUrls: ['./layer.component.scss']
 })
 
@@ -31,20 +30,12 @@ export class LayerComponent implements OnInit {
     //objCode refers to the  menu tab the user is on, so the openConfDel method knows what to interpolate based on what it's deleting
     @ViewChild(MatPaginator) paginator: MatPaginator;
     public objCode: number = 2;
-    public token: string;
-    public userID: number;
-
     public layers: Layer[];
     public servers: Server[];
-
     public layerColumns = ['layerID', 'name', /*'identity', 'service', 'server', 'description',*/ /*'format', */'type', /*'geometry', */'actionsColumn'];
     public dataSource: any
 
-    constructor(private layerValidator: ValidatorService, private layerService: LayerService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser.token;
-        this.userID = currentUser.userID;
-    }
+    constructor(private layerService: LayerService, private dialog: MatDialog, private layerPermissionService: LayerPermissionService, private userPageLayerService: UserPageLayerService, private serverService: ServerService, private sqlservice: SQLService) {}
 
     ngOnInit() {
         this.getLayerItems();
@@ -76,7 +67,7 @@ export class LayerComponent implements OnInit {
     }
 
     public createMyCube(): void {
-        const dialogRef = this.dialog.open(newMyCubeComponent, { height: '520px', width: '480px' });
+        const dialogRef = this.dialog.open(newMyCubeComponent, { height: '820px', width: '880px' });
         dialogRef.afterClosed().subscribe(() => {
             this.getLayerItems();
         });
@@ -94,13 +85,23 @@ export class LayerComponent implements OnInit {
         dialogRef.componentInstance.layerName = layername;
     }
 
-    public openDetails(id: number, name: string): void {
-        const dialogRef = this.dialog.open(LayerDetailsComponent, { width: '450px' });
-        dialogRef.componentInstance.ID = id;
-        dialogRef.componentInstance.name = name;
-        dialogRef.afterClosed().subscribe(() => {
-            this.getLayerItems();
-        })
+    public openDetails(layer:Layer): void {
+        console.log(layer)
+        if (layer.layerType == "MyCube") {
+            const dialogRef = this.dialog.open(newMyCubeComponent, { height: '820px', width: '880px' })
+            dialogRef.componentInstance.inputLayer = layer
+            dialogRef.afterClosed().subscribe(() => {
+                this.getLayerItems();
+            })
+        }
+        else {
+            const dialogRef = this.dialog.open(LayerDetailsComponent, { width: '450px' });
+            dialogRef.componentInstance.ID = layer.ID;
+            dialogRef.componentInstance.name = layer.layerName;
+            dialogRef.afterClosed().subscribe(() => {
+                this.getLayerItems();
+            })
+        }
     }
 
     public confirmDelete(layer: Layer): void {

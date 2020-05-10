@@ -4,3 +4,8 @@ export class Server {
     serverType: string;
     serverURL: string;
 }
+
+export class ArcGISServer {
+  name: string;
+  type: string;
+}

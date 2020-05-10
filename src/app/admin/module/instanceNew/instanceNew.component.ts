@@ -1,24 +1,23 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
 import { UserService } from '../../../../_services/_user.service';
-import { Configuration } from '../../../../_api/api.constants';
 import { LayerService } from '../../../../_services/_layer.service';
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service';
 import { ServerService } from '../../../../_services/_server.service';
 import { Layer, WMSLayer } from '../../../../_models/layer.model';
 import { Server } from '../../../../_models/server.model';
 import { LayerPermission } from '../../../../_models/layer.model';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ModulePermissionComponent } from '../modulePermission/modulePermission.component';
 import { User } from '../../../../_models/user.model';
 import { GroupService } from '../../../../_services/_group.service';
 import { Group } from '../../../../_models/group.model';
-import {MAT_DIALOG_DATA} from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
     selector: 'instance-new',
     templateUrl: './instanceNew.component.html',
     styleUrls: ['./instanceNew.component.scss'],
-    providers: [UserService, Configuration, LayerService, LayerPermissionService, ServerService, ModulePermissionComponent],
+    providers: [UserService, LayerService, LayerPermissionService, ServerService, ModulePermissionComponent],
 })
 
 export class InstanceNewComponent implements OnInit {

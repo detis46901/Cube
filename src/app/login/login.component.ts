@@ -16,15 +16,13 @@ export class LoginComponent implements OnInit {
     error = '';
     public token;
 
-    constructor(private router: Router, private authenticationService: AuthenticationService, private userService: UserService) {
-    }
+    constructor(private router: Router, private authenticationService: AuthenticationService, private userService: UserService) {}
 
     ngOnInit() {
         //reset login status
         this.authenticationService.logout();
         this.token = null;
         localStorage.clear();
-
         document.getElementById("loginPassword")
             .addEventListener("keyup", function (event) {
                 event.preventDefault();
@@ -67,10 +65,13 @@ export class LoginComponent implements OnInit {
                                  this.token = res['token'];
                                  let userID = res['userID']
                                  let admin = res['admin']
+
                                  localStorage.setItem('currentUser', JSON.stringify({
                                      userID: userID,
                                      admin: admin,
-                                     token: this.token
+                                     token: this.token,
+                                     firstName: res['firstName'],
+                                     lastName: res['lastName']
                                  }))
                     this.token = res
                     this.loading = false;

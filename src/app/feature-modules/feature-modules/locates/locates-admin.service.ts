@@ -2,24 +2,20 @@ import { Injectable } from '@angular/core';
 import { UserPageLayer, MyCubeField } from '_models/layer.model';
 import { UserPageInstance, ModuleInstance } from '_models/module.model'
 import { Layer } from '_models/layer.model'
-import { MapConfig, mapStyles, featureList } from 'app/map/models/map.model';
+import { MapConfig } from 'app/map/models/map.model';
 import { geoJSONService } from 'app/map/services/geoJSON.service';
 import { Locate, locateStyles } from './locates.model'
 //http dependancies
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http'
-import { Observable } from 'rxjs/Observable';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
-import { catchError } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http'
+import { Subject } from 'rxjs';
 import { SQLService } from '../../../../_services/sql.service';
-import { Subject } from 'rxjs/Subject';
 import { MyCubeService } from '../../../map/services/mycube.service'
 import { UserPageLayerService } from '../../../../_services/_userPageLayer.service'
 import { LayerService } from '../../../../_services/_layer.service'
 import { LayerPermissionService } from '../../../../_services/_layerPermission.service'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
 import { UserPageInstanceService } from '../../../../_services/_userPageInstance.service'
-import * as ol from 'openlayers';
-//import { P } from '@angular/core/src/render3';
+import VectorLayer from 'ol/layer/Vector';
 
 
 
@@ -27,7 +23,7 @@ import * as ol from 'openlayers';
 @Injectable()
 export class LocatesAdminService {
   public completed: string
-  public vectorlayer = new ol.layer.Vector()
+  public vectorlayer = new VectorLayer()
   public locate = new Locate()
   public mapConfig: MapConfig
   public UPL: UserPageLayer
@@ -132,7 +128,7 @@ export class LocatesAdminService {
         console.log("Settings Updated")
     });
   }
-  
+
   private createTable(id): void {
     this.sqlService
       .Create(id)
@@ -143,6 +139,9 @@ export class LocatesAdminService {
           tempField.field = key
           console.log(tempField)
           switch (tempField.field) {
+            //need to add a case for "ticket" to run this SQL script
+            //ALTER TABLE {mycube.table} UNIQUE (ticket)
+
             case 'ttime': {
               tempField.type = 'date'
               break
@@ -160,7 +159,7 @@ export class LocatesAdminService {
               tempField.type = "text"
             }
           }
-          if (tempField.field != 'geom' || 'id') {this.addColumn(id, tempField)} 
+          if (tempField.field != 'geom' || 'id') {this.addColumn(id, tempField)}
         });
 
         this.sqlService

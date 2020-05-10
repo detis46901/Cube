@@ -1,10 +1,9 @@
-import 'rxjs/add/operator/map';
+
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
-import { Observable } from 'rxjs';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
+import { Observable ,  ErrorObserver } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Configuration } from '../_api/api.constants';
+import { environment } from 'environments/environment'
 
 @Injectable()
 export class ImageService {
@@ -12,15 +11,16 @@ export class ImageService {
     protected options: any;
     protected token: string;
 
-    constructor(protected _http: HttpClient, protected configuration: Configuration) {
+    constructor(protected _http: HttpClient) {
+        this.actionUrl = environment.apiUrl + environment.apiUrlPath + 'images/'
+    }
+
+    public getOptions() {
         try {
             this.token = JSON.parse(localStorage.getItem('currentUser')).token
         } catch (err) {
             console.log("Could not find user in local storage. Did you reinstall your browser or delete cookies?\n" + err)
         }
-
-        this.actionUrl = this.configuration.serverWithApiUrl + 'images/'
-
         this.options = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
@@ -29,15 +29,15 @@ export class ImageService {
                 'Access-Control-Allow-Origin': '*'
             })
         }
+        return this.options
     }
-
     public GetAll = (): Observable<any> => {
-        return this._http.get<any[]>(this.actionUrl + 'list', this.options)
+        return this._http.get<any[]>(this.actionUrl + 'list', this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
     public Upload = (image/*: FormData*/): Observable<any> => {
-        return this._http.post(this.actionUrl + 'create', image, this.options)
+        return this._http.post(this.actionUrl + 'create', image, this.getOptions())
             .pipe(catchError(this.handleError));
     }
 
@@ -53,6 +53,6 @@ export class ImageService {
                 `body was: ${error.error}`);
         }
         // return an ErrorObservable with a user-facing error message
-        return new ErrorObservable();
+        return 'new ErrorObservable()';
     }
 }

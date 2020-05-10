@@ -1,4 +1,4 @@
-<mat-expansion-panel [disabled]="disabled == true" [expanded]="expanded" (opened)="expanded = true">
+<mat-expansion-panel *ngIf="visible == true" [expanded]="expanded" (opened)="expanded = true">
   <mat-expansion-panel-header>
     <mat-panel-title>
       Drone Aerial Photos
@@ -6,7 +6,10 @@
     <mat-panel-description>
     </mat-panel-description>
   </mat-expansion-panel-header>
-  
- 
+
+
   <mat-slider style="width:100%" [max]="100" [step]="1" [value]="100" [thumbLabel]="true" (change)="setOpacity($event)"></mat-slider><br>Opacity<br>
+  Selected Image<br>
+  {{openAerialMapService.selectedImage.title}}<br>
+  {{openAerialMapService.selectedImage.acquisition_start}} - {{openAerialMapService.selectedImage.acquisition_end}}
 </mat-expansion-panel>

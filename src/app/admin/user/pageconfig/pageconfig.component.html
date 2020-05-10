@@ -36,7 +36,7 @@
                 <!-- trash button to delete pages and current layer names are the first column -->
                 <span id="pageConfigLayersColumn" class="col-sm-6" style="position:relative; left:0px; text-align:left; overflow:hidden; white-space:nowrap">
                     <a *ngIf="upl.userPageInstanceID == null" (click)="deleteUserPageLayer(upl.ID)">
-                        <i class="fas fa-trash" aria-hidden="true"></i>
+                        <mat-icon>delete</mat-icon>
                     </a>
                     &nbsp;{{upl.layer.layerName}}
                 </span>
@@ -79,7 +79,7 @@
                 <!-- trash button to delete pages and current layer names are the first column -->
                 <span id="pageConfigLayersColumn" class="col-sm-6" style="position:relative; left:0px; text-align:left; overflow:hidden; white-space:nowrap">
                     <a (click)="deleteUserPageInstance(upi)">
-                        <i class="fas fa-trash" aria-hidden="true"></i>
+                        <mat-icon>delete</mat-icon>
                     </a>
                     &nbsp;{{upi.module_instance.name}}
                 </span>
