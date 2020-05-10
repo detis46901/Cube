@@ -29,6 +29,9 @@ export class StyleService {
 
   getFillColor(feature: Feature, version: string): string {
     let getFillColor: string
+    if (version == 'empty') {
+      return '#00000000'
+    }
     if (version == 'selected') {
       return '#FF0000'
     }
@@ -60,6 +63,6 @@ export class StyleService {
     if (featName == "Point")
     {ZI = 0}
     return ZI
-
   }
+
 }

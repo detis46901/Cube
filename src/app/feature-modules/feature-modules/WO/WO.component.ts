@@ -3,7 +3,7 @@ import { MapConfig } from '../../../map/models/map.model';
 import { Subscription } from 'rxjs';
 import { WOService } from './WO.service'
 import { UserService } from '../../../../_services/_user.service'
-import { WOType, workOrder, WOConfig } from './WO.model'
+import { WOType, WorkOrder, WOConfig, assignedTo } from './WO.model'
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
 import { ModuleInstance } from '../../../../_models/module.model'
 import VectorLayer from 'ol/layer/Vector';
@@ -16,6 +16,7 @@ import { GroupService } from '../../../../_services/_group.service';
 import { Group } from '_models/group.model'
 import { User } from '_models/user.model';
 import { cloneDeep } from 'lodash'
+import { shiftKeyOnly, singleClick } from 'ol/events/condition'
 
 
 @Component({
@@ -25,38 +26,35 @@ import { cloneDeep } from 'lodash'
 })
 export class WOComponent implements OnInit, OnDestroy {
 
-  public moduleShow: boolean
   public expanded: boolean = false
-  public expandedSubscription: Subscription;
-  public userID: number;
-  public userName: string;
   public filterOpen: boolean = true
   public tab: string;
-  public moduleSettings: JSON
-  public myCubeComments: MyCubeComment[]
-  public showAuto: boolean = false;
-  public myCubeConfig: MyCubeConfig;
-  public myCubeData: MyCubeField[]
   public layer: UserPageLayer
   public WOConfig = new WOConfig
   public fromDate: Date
   public toDate: Date
+  public tminus30: Date
 
   constructor(
     public WOservice: WOService,
     public userService: UserService,
-    public moduleInstanceService: ModuleInstanceService,
     public dataFormService: DataFormService,
     public groupService: GroupService
   ) { }
 
   @Input() mapConfig: MapConfig;
   @Input() instance: ModuleInstance;
-  @Input() user: string;
-
+  
   ngOnInit() {
     this.WOservice.mapConfig = this.mapConfig  //This is here just in case
-    let today: Date = new Date()
+    let today:Date = new Date()
+    let tomorrow: Date = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1);  //this crap is making sure that the filter sets up right.
+    today = tomorrow
+    this.toDate = today
+    this.tminus30 = new Date()
+    this.tminus30.setDate(this.tminus30.getDate()-30)
+    this.fromDate = this.tminus30
     console.log('WOComponent Initialized')
   }
 
@@ -73,38 +71,55 @@ export class WOComponent implements OnInit, OnDestroy {
     this.mapConfig.editmode = true
     this.mapConfig.showStyleButton = false
     this.expanded = true
-    return this.WOservice.setCurrentLayer(layer)
+    if (layer.updateInterval) {clearInterval(layer.updateInterval)}  //this is the inital load interval (because I'm loading in the service)
+    this.createInterval(layer)
+    return this.WOservice.setCurrentLayer(layer, this.WOConfig.filter, this.WOConfig.sortType)
   }
   public unsetCurrentLayer(layer: UserPageLayer): boolean {
-    return this.WOservice.unsetCurrentLayer(layer)
+    clearInterval(layer.updateInterval)
+    return this.WOservice.unsetCurrentLayer(layer, this.WOConfig.filter, this.WOConfig.sortType)
   }
   public styleMyCube(layer: UserPageLayer): boolean {
     //probably not using
-    return false
+    return true
   }
   public styleSelectedFeature(layer: UserPageLayer): boolean {
     return this.WOservice.styleSelectedFeature(layer)
   }
   public selectFeature(layer: UserPageLayer): boolean {
+    if (this.WOConfig.Mode == 'Edit') {return true}
     clearInterval(layer.updateInterval)
-    this.WOConfig.selectedWO = new workOrder
+    this.WOConfig.selectedWO = new WorkOrder
     this.WOConfigure(layer)
-    this.WOservice.selectFeature(layer).then((x: workOrder) => {
+    this.WOservice.selectFeature(layer).then((x: WorkOrder) => {
       this.WOConfig.selectedWO = x
       this.goToTab('Details')
+      this.dataFormService.setLogConfig(this.mapConfig.user.ID, 'mycube', 'c' + this.mapConfig.currentLayer.layerID, this.mapConfig.selectedFeature.getId()).then((x:LogFormConfig) => {
+        x.userID = this.mapConfig.user.ID
+        this.WOConfig.selectedWO.WOLog = x
+        console.log(this.WOConfig.selectedWO)
+        this.WOConfig.selectedWO.WOLog.logForm.forEach((x) => {
+          if (x.userid == this.mapConfig.user.ID) {
+              x.canDelete = true;
+          }
+      })
     })
+    
+  })
     return true
   }
   public getFeatureList(layer: UserPageLayer): boolean {
     return this.WOservice.getFeatureList(layer, this.WOConfig.sortType)
   }
-  public clearFeature(layer: UserPageLayer): boolean {
+  public clearFeature(layer: UserPageLayer, filter?:string): boolean {
+    if (this.WOConfig.Mode == 'Edit') {return true}
     this.WOConfig.tab = ''
-    this.WOservice.createInterval(layer)
+    this.createInterval(layer)
     this.WOConfig.selectedWO = null
     return this.WOservice.clearFeature(layer)
   }
   public unstyleSelectedFeature(layer: UserPageLayer): boolean {
+    if (this.WOConfig.Mode == 'Edit') {return true}
     return this.WOservice.unstyleSelectedFeature(layer)
   }
   public draw(layer: UserPageLayer, featureType): boolean {
@@ -122,7 +137,8 @@ export class WOComponent implements OnInit, OnDestroy {
     this.mapConfig.map.addLayer(this.WOConfig.vectorLayer);
     let modkey: any = this.mapConfig.map.addInteraction(drawInteraction);
     drawInteraction.once('drawend', (e) => {
-      this.WOConfig.selectedWO = new workOrder
+      this.WOConfig.selectedWO = new WorkOrder
+      this.WOConfig.selectedWO.feature = e.feature
       this.mapConfig.selectedFeature = e.feature
       this.mapConfig.selectedFeatures.clear()
       this.mapConfig.selectedFeatures.push(e.feature)
@@ -131,9 +147,8 @@ export class WOComponent implements OnInit, OnDestroy {
         this.WOConfigure(layer)
       })
       this.mapConfig.selectedFeature.setStyle(this.WOservice.styleFunction(this.mapConfig.selectedFeature, layer))
-      this.WOConfig.modify = new Modify({ features: this.mapConfig.selectedFeatures });
+      this.WOConfig.modify = new Modify({ features: this.mapConfig.selectedFeatures});
       this.mapConfig.map.addInteraction(this.WOConfig.modify);
-      this.WOConfig.selectedWO = new workOrder
       this.WOConfig.selectedWO.createdBy = this.mapConfig.user.ID
       this.WOConfig.selectedWO.feature = e.feature
       this.WOConfig.tab = "Details"
@@ -146,6 +161,13 @@ export class WOComponent implements OnInit, OnDestroy {
 
     })
     return true
+  }
+
+  public createInterval(layer: UserPageLayer) {
+    if (layer.updateInterval) {clearInterval(layer.updateInterval)}
+    layer.updateInterval = setInterval(() => {
+      this.WOservice.reloadLayer(layer, this.WOConfig.filter, this.WOConfig.sortType);
+    }, 20000);
   }
 
   ngOnDestroy() {
@@ -164,15 +186,76 @@ export class WOComponent implements OnInit, OnDestroy {
     this.clearFeature(this.mapConfig.currentLayer)
   }
 
+public cancelEditWorkOrder() {
+  console.log('cancelEditWorkOrder')
+    this.mapConfig.map.removeInteraction(this.WOConfig.modify)
+    this.WOConfig.Mode = "None"
+    this.clearFeature(this.mapConfig.currentLayer)
+    this.WOservice.reloadLayer(this.layer, this.WOConfig.filter, this.WOConfig.sortType)
+}
 
+  public assignWorkOrder() {
+    this.WOConfig.tab = "Details"
+    this.WOConfig.Mode = "None"
+    this.WOservice.assignWorkOrder(this.WOConfig).then((x) => {
+      this.dataFormService.updateLogConfig(this.WOConfig.selectedWO.WOLog)
+      // this.dataFormService.setLogConfig(this.mapConfig.user.ID, 'mycube', 'c' + this.mapConfig.currentLayer.layerID, this.mapConfig.selectedFeature.getId()).then((x:LogFormConfig) => {
+      //   x.userID = this.mapConfig.user.ID
+      //   this.WOConfig.selectedWO.WOLog = x
+      //   this.WOConfig.selectedWO.WOLog.logForm.forEach((x) => {
+      //     if (x.userid == this.mapConfig.user.ID) {
+      //         x.canDelete = true;
+      //     }
+      // })
+      // })
+    })
+  }
 
   goToTab(tab) {
     this.WOConfig.tab = tab
   }
 
+  public onNewComment(event) {
+      event.logForm.forEach((x) => {
+        if (x.userid == this.mapConfig.user.ID) {
+            x.canDelete = true;
+        }
+    })
+  }
+
   public WOConfigure(layer: UserPageLayer) {
-    this.WOConfig.WOTypes = layer.user_page_instance.module_instance.settings['settings'][1]['setting']['WOType']
-    this.WOConfig.assignedTo = layer.user_page_instance.module_instance.settings['settings'][2]['setting']['AssignedTo']
+    this.WOConfig.WOTypes = new Array<WOType>()
+    layer.user_page_instance.module_instance.settings.properties.forEach((x) => {
+      if (x.arrayType) {
+        if (x.arrayType.name == "Work Orders and Default Assigned Users and Groups"){
+          x.arrayType.items.forEach((y) => {
+            let WOT = new WOType
+            WOT.id = y.id
+            y.properties.forEach((z) => {
+              if (z.stringType.name == "Work Order Name") {WOT.name = z.stringType.value}
+              if (z.stringType.name == "Default Assigned User or Group") {WOT.defaultAssignedTo = z.stringType.value}
+            })
+            this.WOConfig.WOTypes.push(WOT)
+          })
+        }
+      }
+    })
+    this.WOConfig.assignedTo = new Array<assignedTo>()
+    layer.user_page_instance.module_instance.settings.properties.forEach((x) => {
+      if (x.arrayType) {
+        if (x.arrayType.name == "Available Users and Groups") {
+          x.arrayType.items.forEach((y) => {
+            let AT = new assignedTo
+            y.properties.forEach((z) => {
+              if (z.stringType.name == "Users and Groups Available") {
+                AT.name = z.stringType.value
+              }
+              this.WOConfig.assignedTo.push(AT)
+            })
+          })
+        }
+      }
+    })
     this.WOConfig.assignedTo.forEach((x) => {
       if (x.name.startsWith('G') == true) {
         this.groupService.GetSingle(+x.name.substr(1))
@@ -219,18 +302,26 @@ export class WOComponent implements OnInit, OnDestroy {
     })
   }
 
-  public createWorkOrder(complete?: boolean): Promise<workOrder> {
+  public createWorkOrder(complete?: boolean): Promise<WorkOrder> {
     let promise = new Promise<any>((resolve) => {
       console.log(this.WOConfig.selectedWO.feature)
       this.WOservice.createWorkOrder(this.WOConfig.selectedWO).then((x) => {
+        this.WOConfig.selectedWO = x
+        console.log(x.priority)
+        let logField = new LogField
+        logField.comment = 'Work Order created'
+        logField.featureid = this.WOConfig.selectedWO.feature.getId()
+        logField.logTable = 'c' + this.mapConfig.currentLayer.layer.ID
+        logField.schema = 'mycube'
+        logField.userid = this.mapConfig.user.ID
+        logField.auto = true
+        this.dataFormService.addLogForm(logField)
         this.mapConfig.map.removeLayer(this.WOConfig.vectorLayer)
         this.WOConfig.vectorSource = new VectorSource
         this.WOConfig.vectorLayer = new VectorLayer
         this.WOConfig.Mode = "None"
         this.mapConfig.map.removeInteraction(this.WOConfig.modify)
-        this.getFeatureList(this.mapConfig.currentLayer);
-        // console.log(this.layer)
-        this.WOservice.reloadLayer(this.layer)
+        this.WOservice.reloadLayer(this.layer, this.WOConfig.filter, this.WOConfig.sortType)
         this.mapConfig.drawMode = ''
         if (!complete) {
           this.clearFeature(this.layer)
@@ -242,81 +333,75 @@ export class WOComponent implements OnInit, OnDestroy {
     return promise
   }
 
-  public completeWorkOrder(workOrder?: workOrder) {
+  public completeWorkOrder(workOrder?: WorkOrder) {
     if (workOrder) {this.WOConfig.selectedWO = workOrder}
-    console.log(this.WOConfig.selectedWO)
-    this.WOConfig.editWO = cloneDeep(this.WOConfig.selectedWO)
+    // this.WOConfig.editWO = cloneDeep(this.WOConfig.selectedWO)
+    this.WOConfig.editWO = {...this.WOConfig.selectedWO}
     this.WOConfig.editWO.feature = this.mapConfig.selectedFeature.clone()
-    console.log(this.WOConfig.editWO.feature)
-    this.WOservice.completeWorkOrder(this.WOConfig.editWO)
-    this.mapConfig.currentLayer.source.removeFeature(this.mapConfig.selectedFeature)
-    this.clearFeature(this.mapConfig.currentLayer)
+    this.WOservice.completeWorkOrder(this.WOConfig).then((x) => {
+      this.clearFeature(this.mapConfig.currentLayer)
+    })
   }
 
   public createCompleteWorkOrder() {
-    this.createWorkOrder(true).then((x: workOrder) => {
+    this.createWorkOrder(true).then((x: WorkOrder) => {
       this.WOConfig.selectedWO = x
       this.completeWorkOrder(x)
     })
   }
 
   public deleteWorkOrder() {
-    this.WOservice.deleteWorkOrder()
+    this.WOservice.deleteWorkOrder(this.WOConfig)
+    this.WOConfig.selectedWO = null
   }
 
   public saveWorkOrder() {
     this.WOConfig.Mode = "None"
     this.WOConfig.selectedWO.id = +this.mapConfig.selectedFeature.getId()
-    console.log(this.WOConfig.selectedWO)
+    this.mapConfig.selectedFeature.set('priority', this.WOConfig.selectedWO.priority)
     this.WOservice.saveWorkOrder(this.WOConfig.selectedWO)
     this.mapConfig.map.removeInteraction(this.WOConfig.modify);
-    this.clearFeature(this.mapConfig.currentLayer)
+    //this.clearFeature(this.mapConfig.currentLayer)
   }
   filter() {
-    // let filterString: string = ''
-    // if (this.filterOpen == true) { filterString = 'closed is Null' }
-    // if (filterString != '') {filterString += " and "} else {filterString += " "}
-    //   if (this.fromDate) {
-    //     filterString += "tdate BETWEEN '" + new Intl.DateTimeFormat('en-US').format(this.fromDate) + "' AND "
-    //   }
-    // else {
-    //     filterString += "tdate BETWEEN '" + new Intl.DateTimeFormat('en-US').format(this.tminus30) + "' AND "
-    // }
-    // if (this.toDate) {
-    //   filterString += "'" + new Intl.DateTimeFormat('en-US').format(this.toDate) + "'"
-    // }
-    // else {
-    //   filterString += "CURRENT_DATE"
-    // }
-    // console.log(filterString)
-    // this.WOservice.filter = filterString
-    // this.runFilter();
+    let filterString: string = ''
+    if (this.filterOpen == true) { filterString = 'completed is Null' }
+    if (filterString != '') {filterString += " and "} else {filterString += " "}
+      if (this.fromDate) {
+        filterString += "created BETWEEN '" + new Intl.DateTimeFormat('en-US').format(this.fromDate) + "' AND "
+      }
+    else {
+        filterString += "created BETWEEN '" + new Intl.DateTimeFormat('en-US').format(this.tminus30) + "' AND "
+    }
+    if (this.toDate) {
+      filterString += "'" + new Intl.DateTimeFormat('en-US').format(this.toDate) + "'"
+    }
+    else {
+      filterString += "CURRENT_DATE"
+    }
+    console.log(filterString)
+    this.WOConfig.filter = filterString
+    this.runFilter();
   }
 
   private runFilter() {
-    let i = this.WOservice.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == this.instance.ID);
-    let obj = this.WOservice.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'myCube Layer Identity (integer)');
-    if (this.WOservice.mapConfig.currentLayer.layer.ID === +obj['setting']['value']) {
-      this.WOservice.reloadLayer(this.mapConfig.currentLayer);
-    }
-    else {
-      this.WOservice.reloadLayer(this.mapConfig.currentLayer);
-    }
+     this.WOservice.reloadLayer(this.mapConfig.currentLayer, this.WOConfig.filter, this.WOConfig.sortType);
   }
 
   clearFilter() {
     this.filterOpen = true
-    this.WOConfig.filter = 'closed is Null'
+    this.WOConfig.filter = 'completed is Null'
     this.runFilter()
   }
 
   public editWorkOrder() {
     this.WOConfig.Mode = "Edit"
     this.mapConfig.selectedFeatures.clear()
-    this.WOConfig.editWO = cloneDeep(this.WOConfig.selectedWO)
+    // this.WOConfig.editWO = cloneDeep(this.WOConfig.selectedWO)
+    this.WOConfig.editWO = {...this.WOConfig.selectedWO}
     this.WOConfig.editWO.feature = this.mapConfig.selectedFeature.clone()
     this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature)
-    this.WOConfig.modify = new Modify({ features: this.mapConfig.selectedFeatures });
+    this.WOConfig.modify = new Modify({ features: this.mapConfig.selectedFeatures});    
     this.WOConfig.modkey = this.WOConfig.modify.on('modifyend', (e: any) => {
       this.WOservice.fillAddress().then((x) => {
         this.WOConfig.selectedWO.address = x

@@ -4,6 +4,9 @@ import { UserPageInstance, ModulePermission } from './module.model'
 import { User } from './user.model';
 import { Group } from './group.model';
 import {Match} from 'autolinker';
+import VectorLayer from 'ol/layer/Vector';
+import ImageLayer from 'ol/layer/Image';
+import TileLayer from 'ol/layer/Tile';
 
 
 export class Layer {

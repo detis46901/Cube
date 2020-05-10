@@ -31,7 +31,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { LocatesModule } from './feature-modules/locates/locates.module';
 import { SDSModule } from './feature-modules/SDS/SDS.module'
 import { openAerialMapModule } from './feature-modules/open-aerial-map/open-aerial-map.module';
-import {WOModule} from './feature-modules/WO/WO.module'
+import {WOModule} from './feature-modules/WO/WO.module';
+import { FeatureModulesAdminComponent } from './feature-modules-admin/feature-modules-admin.component'
 
 @NgModule({
   imports: [
@@ -70,7 +71,7 @@ import {WOModule} from './feature-modules/WO/WO.module'
         MatSnackBarModule,
         MatDividerModule,
   ],
-  declarations: [FeatureModulesComponent],
+  declarations: [FeatureModulesComponent, FeatureModulesAdminComponent],
   exports: [FeatureModulesComponent]
 })
 export class FeatureModulesModule { }

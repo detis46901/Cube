@@ -15,6 +15,7 @@ import { Server } from '../../../_models/server.model';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { InstanceDetailsComponent } from '../details/instanceDetails/instanceDetails.component';
 import { FeatureModulesAdminService } from '../../feature-modules/feature-modules-admin.service'
+import { FeatureModulesAdminComponent } from '../../feature-modules/feature-modules-admin/feature-modules-admin.component'
 
 
 @Component({
@@ -73,7 +74,7 @@ export class InstanceComponent implements OnInit {
     }
 
     public openSettings(instanceid: number, instancename: string): void {
-        const dialogRef = this.dialog.open(ModuleSettingsComponent, { height: '450px', width: '450px' });
+        const dialogRef = this.dialog.open(ModuleSettingsComponent, { height: '450px', width: '750px' });
         dialogRef.componentInstance.instanceID = instanceid;
         dialogRef.componentInstance.instanceName = instancename;
     }

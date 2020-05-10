@@ -5,6 +5,8 @@ import { UserPageLayer, MyCubeField, MyCubeComment, DataField } from '_models/la
 import { DataFormConfig } from '../../../shared.components/data-component/data-form.model'
 import { LogFormConfig } from '../../../shared.components/data-component/data-form.model'
 import { Injectable } from "@angular/core";
+import { InstanceSettings } from '_models/module.model';
+
 
 export class SDSRecord {
     itemData = new Array<DataField>()
@@ -18,7 +20,7 @@ export class SDSConfig {
     layerState: string
     updateInterval: any
     moduleName: string
-    moduleSettings: JSON
+    moduleSettings: InstanceSettings
     filter: string;
     label: string;
     list = new Array<SDSRecord>()

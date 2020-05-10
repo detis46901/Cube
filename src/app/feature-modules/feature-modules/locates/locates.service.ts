@@ -74,6 +74,7 @@ export class LocatesService {
 
   
   public getFeatureList(layer?:UserPageLayer): boolean {
+    console.log('getFeatureList')
     let k: number = 0;
     let tempList = new Array<featureList>();
     try {
@@ -151,6 +152,7 @@ export class LocatesService {
       if (layer == this.mapConfig.currentLayer) {layerState = 'current'}
     }
     this.getMyLocateData(layer).then((loadedLayer:UserPageLayer) => {
+        this.getFeatureList(layer)
           layer.source.forEachFeature((feat: Feature) => {
             feat.setStyle(this.styleService.styleFunction(feat, layerState));
           })
@@ -350,8 +352,6 @@ export class LocatesService {
       else {
         locate.email = ""
       }
-
-
       this.locate = locate
       this.geolocate(Addname, instanceID)
     }
@@ -463,7 +463,7 @@ export class LocatesService {
                 logForm.userid = this.mapConfig.user.ID
                 logForm.featureid = id   
                 logForm.auto = true             
-                this.dataFormService.addLogFormConfig(logForm)
+                this.dataFormService.addLogForm(logForm)
                 snackBarRef.onAction().subscribe((x) => {
                   this.sqlService.Delete(table, id)
                     .subscribe((x) => {

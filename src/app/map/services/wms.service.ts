@@ -152,12 +152,12 @@ export class WMSService {
                 return url;
             }
             case ('WMTS'): {
-                console.log("Found MapServer Layer")
+                console.log("Found MapServer WMTS Layer")
                 let norest: string = layer.layer.server.serverURL.split('/rest/')[0] + '/' + layer.layer.server.serverURL.split('/rest/')[1];
                 let norest2: string = norest.split("//")[1]
                 let url: string = environment.proxyUrl + '/' + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
                 if (noProxy) {
-                    url = "http://" + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
+                    url = "http://" + norest2 + '/' + layer.layer.layerService + '/MapServer/WMTS/1.0.0/WMTSCapabilities.xml';
                 }
                 console.log(url)
                 return url;

@@ -27,10 +27,10 @@
   <div *ngIf="SDSConfig.tab=='List' && mapConfig.selectedFeature" label="List" class="SDSComponent"><br>
     {{SDSConfig.label}}
     <div *ngFor="let item of SDSConfig.list">
-      <span *ngIf="item['id'] != SDSConfig.selectedItem"
-        (click)="selectItem(item['id'])">{{item[SDSConfig.label]}}</span>
-      <span *ngIf="item['id'] == SDSConfig.selectedItem"
-        (click)="selectItem(item['id'])"><b>{{item[SDSConfig.label]}}</b></span>
+        <span *ngIf="item['id'] != SDSConfig.selectedItem"
+          (click)="selectItem(item['id'])">{{item[SDSConfig.label]}}</span>
+        <span *ngIf="item['id'] == SDSConfig.selectedItem"
+          (click)="selectItem(item['id'])"><b>{{item[SDSConfig.label]}}</b></span>
     </div>
   </div>
   <div *ngIf="SDSConfig.tab == 'Item'" class="SDSComponent"><br>

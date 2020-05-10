@@ -1,10 +1,11 @@
 import {Fill, Stroke, Circle, Style} from 'ol/style';
 import { Injectable } from "@angular/core";
+import { InstanceSettings } from '_models/module.model';
 
 export class locateConfig {
     visible: boolean
     expanded: boolean
-    moduleSettings: JSON
+    moduleSettings: InstanceSettings
     layerState: string
 }
 

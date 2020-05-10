@@ -124,6 +124,14 @@ export class FeatureModulesComponent implements OnInit, AfterViewInit, OnDestroy
                 resolve(FM.componentReference.draw(layer, 'Point'))
                 break
               }
+              case 'draw LineString': {
+                resolve(FM.componentReference.draw(layer, 'LineString'))
+                break
+              }
+              case 'draw Polygon': {
+                resolve(FM.componentReference.draw(layer, 'Polygon'))
+                break
+              }
               case 'testLayer': {
                 resolve(true)
                 break

@@ -103,7 +103,7 @@ export class DataFormService {
   }
 
   ///Log Procedures
-  public setLogConfig(schema, table, id): Promise<any> {
+  public setLogConfig(userID, schema, table, id): Promise<any> {
     let promise = new Promise((resolve) => {
       this.sqlService.getSingleLog(schema, table, id)
         .subscribe((cdata: any) => {
@@ -111,6 +111,7 @@ export class DataFormService {
           logFormConfig.schema = schema
           logFormConfig.logTable = table
           logFormConfig.dataFormID = id
+          logFormConfig.userID = userID
           if (cdata[0]) {logFormConfig.logForm = cdata[0]}  //not sure this is necessary
           resolve(logFormConfig)
         })
@@ -118,7 +119,18 @@ export class DataFormService {
     return promise
   }
 
-  public addDataFormConfig(dataFormConfig: DataFormConfig, field: string, value: string): Promise<any> {
+  public updateLogConfig(logFormConfig:LogFormConfig): Promise<LogFormConfig> {
+    let promise = new Promise<LogFormConfig>((resolve) => {
+      this.sqlService.getSingleLog(logFormConfig.schema, logFormConfig.logTable, logFormConfig.dataFormID)
+        .subscribe((cdata: any) => {
+          if (cdata[0]) {logFormConfig.logForm = cdata[0]}  //not sure this is necessary
+          resolve(logFormConfig)
+        })
+    })
+    return promise
+  }
+
+  public addDataForm(dataFormConfig: DataFormConfig, field: string, value: string): Promise<any> {
     let snackBarRef = this.snackBar.open('Record added', '', {
       duration: 4000
     });
@@ -130,7 +142,6 @@ export class DataFormService {
             if (x.type != 'id' && x.value != null) {
               this.sqlService.UpdateAnyRecord(dataFormConfig.schema, dataFormConfig.dataTable, id, x)
                 .subscribe((z) => {
-                  console.log(z)
                   resolve(id)
                 })
             }
@@ -140,13 +151,12 @@ export class DataFormService {
     return promise
   }
 
-  public addLogFormConfig(logField: LogField): Promise<any> {
+  
+  public addLogForm(logField: LogField): Promise<any> {
     let promise = new Promise<any>((resolve) => {
-      console.log(logField)
       this.sqlService.addAnyComment(logField)
         .subscribe((x) => {
-          console.log(x)
-          resolve()
+          resolve(x)
         })
     })
     return promise
@@ -160,26 +170,9 @@ export class DataFormService {
     let promise = new Promise<any>((resolve) => {
       this.sqlService.deleteAnyRecord(dataFormConfig.schema, dataFormConfig.dataTable, field)
         .subscribe((x) => {
-          console.log(x)
-         
           resolve()
         })
     })
     return promise
   }
- 
- 
-// let comment = new MyCubeComment
-// comment.auto = true
-// comment.comment = "Record deleted by " + this.mapConfig.user.firstName + ' ' + this.mapConfig.user.lastName
-// comment.featureid = this.SDSConfig[SDSConfigID].itemData[0].value
-// comment.userid = this.mapConfig.user.ID
-// comment.table = 'modules.m' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'log'
-// let SDSLog = new LogField
-// SDSLog.auto = true
-// SDSLog.comment = 'Record deleted by ' + this.mapConfig.user.firstName + ' ' + this.mapConfig.user.lastName;
-// SDSLog.featureid = this.SDSConfig[SDSConfigID].itemData[0].value
-// SDSLog.logTable = 'modules.m' + this.SDSConfig[SDSConfigID].moduleInstanceID + 'log'
-// SDSLog.userid = this.mapConfig.user.ID
-// // this.SDSLog(SDSConfigID, SDSLog)
 }

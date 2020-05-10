@@ -122,8 +122,11 @@ export class SDSService {
     this.mapConfig.view.animate({ zoom: 17, center: transform([geometry['geometry']['coordinates'][0], geometry['geometry']['coordinates'][1]], 'EPSG:4326', 'EPSG:3857') })
   }
 
-  public getSDSRecords(dataFormConfig: DataFormConfig, linkedField: string):Promise<Array<SDSRecord>> {
+  public getSDSRecords(dataFormConfig: DataFormConfig, linkedField: string):Promise<Array<any>> {
+    console.log(dataFormConfig)
+    console.log(linkedField)
     let promise = new Promise<Array<SDSRecord>>((resolve) => {
+      console.log(dataFormConfig.schema, dataFormConfig.dataTable, linkedField, dataFormConfig.rowID)
       this.sqlService.GetAnySingle(dataFormConfig.schema, dataFormConfig.dataTable, linkedField, dataFormConfig.rowID)
         .subscribe((x)=> {
           console.log(x)

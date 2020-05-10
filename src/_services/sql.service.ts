@@ -4,7 +4,7 @@ import {throwError as observableThrowError,  Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { MyCubeField, MyCubeComment } from '../_models/layer.model';
+import { MyCubeField, MyCubeComment, DataField } from '../_models/layer.model';
 import { LogFormConfig, LogField} from '../app/shared.components/data-component/data-form.model'
 import { environment } from 'environments/environment'
 
@@ -91,7 +91,7 @@ export class SQLService {
             catchError(this.handleError));
     }
 
-    public getSingleLog = (schema: number, table: number, id: string): Observable<any> => {
+    public getSingleLog = (schema: string, table: string, id: string): Observable<any> => {
         return this._http.get(this.actionUrl + 'singlelog?schema=' + schema + '&table=' + table + '&id=' + id, this.getOptions()).pipe(
             // .map((response: Response) => <any>response.json())
             catchError(this.handleError));
@@ -166,9 +166,8 @@ export class SQLService {
             catchError(this.handleError));
     }
 
-    public UpdateAnyRecord = (schema: string, table: string, id: string, MyCubeField: MyCubeField): Observable<any> => {
-        console.log(JSON.stringify(MyCubeField))
-        return this._http.put(this.actionUrl + 'updateAnyRecord', '{"schema":"' + schema + '","table":"' + table + '","id":' + id + ',"mycubefield":' + JSON.stringify(MyCubeField) + '}', this.getOptions())
+    public UpdateAnyRecord = (schema: string, table: string, id: string, dataField: DataField): Observable<any> => {
+        return this._http.put(this.actionUrl + 'updateAnyRecord', '{"schema":"' + schema + '","table":"' + table + '","id":' + id + ',"datafield":' + JSON.stringify(dataField) + '}', this.getOptions())
             // .map((response: Response) => <any>response.json())
             //.catch(this.handleError);
     }

@@ -57,17 +57,17 @@ export class HeaderComponent implements OnInit {
             .GetSingle(this.userID)
             .subscribe((user: User) => {
                 this.currUser = user;
-                this.notificationService
-                    .GetByUser(user.ID)
-                    .subscribe((notifs: Notif[]) => {
-                        this.notifications = notifs;
-                        for (let n of notifs) {
-                            if (!n.read) {
-                                this.shakeNotifications()
-                                return;
-                            }
-                        }
-                    })
+                // this.notificationService
+                //     .GetByUser(user.ID)
+                //     .subscribe((notifs: Notif[]) => {
+                //         this.notifications = notifs;
+                //         for (let n of notifs) {
+                //             if (!n.read) {
+                //                 this.shakeNotifications()
+                //                 return;
+                //             }
+                //         }
+                //     })
             })
     }
 

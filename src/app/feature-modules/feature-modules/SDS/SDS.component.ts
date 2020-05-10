@@ -60,7 +60,8 @@ export class SDSComponent implements OnInit {
     this.tminus30 = new Date()
     this.tminus30.setDate(this.tminus30.getDate() - 30)
     this.fromDate = this.tminus30
-    this.SDSConfig.label = this.instance.settings['settings'][1]['setting']['value']
+    this.SDSConfig.moduleSettings = this.instance.settings
+    //this.SDSConfig.label = this.instance.settings['settings'][1]['setting']['value']
     this.SDSConfig.moduleInstanceID = this.instance.ID
     this.URL = environment.apiUrl + '/api/sql/getanyimage'
   }
@@ -76,14 +77,26 @@ export class SDSComponent implements OnInit {
   public setCurrentLayer(layer): boolean {
     this.SDSConfig.expanded = true
     this.SDSConfig.visible = true
-    this.dataFormService.setDataFormConfig('modules', 'm' + this.SDSConfig.moduleInstanceID + 'data').then((x) => {
-      x.editMode = true
-      this.SDSConfig.itemDataForm = x
-      this.SDSConfig.linkedField = this.SDSConfig.moduleSettings['settings'][2]['setting']['value']
-    })
+    this.clearInputForm()
     return this.SDSservice.setCurrentLayer(layer)
   }
 
+  public clearInputForm() {
+    this.dataFormService.setDataFormConfig('modules', 'm' + this.SDSConfig.moduleInstanceID + 'data').then((x) => {
+      x.editMode = true
+      this.SDSConfig.itemDataForm = x
+      this.SDSConfig.itemDataForm.visible = true
+      this.SDSConfig.moduleSettings.properties.forEach((x) => {
+        if (x.stringType.name == "SDS Linked Field") {
+          this.SDSConfig.linkedField = x.stringType.value
+        }
+        if (x.stringType.name == "Label") {
+          this.SDSConfig.label = x.stringType.value
+        }
+      })
+    })
+  }
+  
   public unsetCurrentLayer(layer): boolean {
     this.SDSConfig.expanded = false
     this.SDSConfig.visible = false
@@ -101,10 +114,12 @@ export class SDSComponent implements OnInit {
 
   public selectFeature(layer): boolean {
     this.mapConfig.showDeleteButton = true
-    this.styleSelectedFeature(layer)
+    //this.styleSelectedFeature(layer)
     this.SDSConfig.itemDataForm.rowID = this.mapConfig.selectedFeature.get('id')
     this.SDSservice.getSDSRecords(this.SDSConfig.itemDataForm, this.SDSConfig.linkedField).then((x) => {
       this.SDSConfig.list = x
+      console.log(this.SDSConfig.list)
+      this.SDSConfig.itemDataForm.visible = true
       this.goToTab('Input')
     })
     return false  //this allows it to load the MyCube layer
@@ -126,11 +141,12 @@ export class SDSComponent implements OnInit {
 
   goToTab(tab) {
     if (tab == 'Input') {
-      this.dataFormService.setDataFormConfig('modules', this.SDSConfig.itemDataForm.dataTable).then((x) => {
-        this.SDSConfig.itemDataForm = x
-        this.SDSConfig.itemDataForm.logTable = 'm' + this.SDSConfig.itemDataForm + 'log'
-        this.SDSConfig.itemDataForm.editMode = true
-      })
+      this.clearInputForm()
+      // this.dataFormService.setDataFormConfig('modules', this.SDSConfig.itemDataForm.dataTable).then((x) => {
+      //   this.SDSConfig.itemDataForm = x
+      //   this.SDSConfig.itemDataForm.logTable = 'm' + this.SDSConfig.itemDataForm + 'log'
+      //   this.SDSConfig.itemDataForm.editMode = true
+      // })
       this.SDSConfig.selectedItem = 0
     }
     this.SDSConfig.tab = tab
@@ -142,6 +158,7 @@ export class SDSComponent implements OnInit {
         this.userName = data.firstName + " " + data.lastName
       })
     this.SDSConfig.moduleName = this.instance.name
+    console.log(this.instance.settings)
     this.SDSConfig.moduleSettings = this.instance.settings
   }
 
@@ -195,7 +212,13 @@ export class SDSComponent implements OnInit {
       this.SDSConfig.itemDataForm = dataFormConfig
       this.SDSConfig.selectedItem = itemID
       dataFormConfig.dataForm.find((x) => x.field == 'id').visible = false
-      dataFormConfig.dataForm.find((x) => x.field == this.SDSConfig.moduleSettings['settings'][2]['setting']['value']).visible = false
+      this.SDSConfig.showLog = false
+      // this.SDSConfig.moduleSettings.properties.forEach((x) => {
+      //   if (x.stringType.name == "Label Field") {
+      //     dataFormConfig.dataForm.find((y) => {y.field == x.stringType.value}).visible = false
+      //   }
+      // })
+      // dataFormConfig.dataForm.find((x) => x.field == this.SDSConfig.moduleSettings['settings'][2]['setting']['value']).visible = false
       this.loadLogConfig(itemID)
       this.SDSConfig.tab = 'Item'
     })
@@ -203,7 +226,7 @@ export class SDSComponent implements OnInit {
   }
 
   public loadLogConfig(itemID) {
-    this.dataFormService.setLogConfig('modules', 'm' + this.SDSConfig.moduleInstanceID + 'log', itemID).then((logFormConfig: LogFormConfig) => {
+    this.dataFormService.setLogConfig(this.mapConfig.user.ID, 'modules', 'm' + this.SDSConfig.moduleInstanceID + 'log', itemID).then((logFormConfig: LogFormConfig) => {
       this.SDSConfig.selectedItemLog = logFormConfig
       this.renderLogConfig(logFormConfig);
     });
@@ -211,6 +234,7 @@ export class SDSComponent implements OnInit {
   }
 
   public copyToClipboard(url: string) {
+    console.log()
     Clipboard.copy(environment.apiUrl + environment.apiUrlPath + + url + '&apikey=' + this.token);
     this.snackBar.open("Copied to the clipboard", "", {
       duration: 2000,
@@ -238,7 +262,7 @@ export class SDSComponent implements OnInit {
   }
 
   public addSDS() {
-    this.dataFormService.addDataFormConfig(this.SDSConfig.itemDataForm, this.SDSConfig.linkedField, this.mapConfig.selectedFeature.get('id')).then((x) => {
+    this.dataFormService.addDataForm(this.SDSConfig.itemDataForm, this.SDSConfig.linkedField, this.mapConfig.selectedFeature.get('id')).then((x) => {
       let logField = new LogField
       logField.userid = this.mapConfig.user.ID
       logField.auto = true
@@ -248,7 +272,7 @@ export class SDSComponent implements OnInit {
       logField.featureid = x
       if (!this.SDSConfig.selectedItemLog.logForm) { this.SDSConfig.selectedItemLog.logForm = new Array<LogField>() }
       this.SDSConfig.selectedItemLog.logForm.push(logField)
-      this.dataFormService.addLogFormConfig(logField).then((x) => {
+      this.dataFormService.addLogForm(logField).then((x) => {
       })
     })
   }
@@ -263,7 +287,7 @@ export class SDSComponent implements OnInit {
       logField.schema = this.SDSConfig.itemDataForm.schema
       logField.logTable = 'm' + this.SDSConfig.moduleInstanceID + 'log'
       logField.featureid = this.SDSConfig.itemDataForm.rowID
-      this.dataFormService.addLogFormConfig(logField).then((X) => {
+      this.dataFormService.addLogForm(logField).then((X) => {
       })
     })
     this.SDSConfig.tab = "List"

@@ -52,7 +52,7 @@ export class DataFormComponentComponent implements OnInit {
           logField.userid = this.dataFormConfig.userID
           this.sqlService.addAnyComment(logField)
             .subscribe((x)=> {
-              this.dataFormService.setLogConfig(logField.schema, logField.logTable, logField.featureid).then(() => {
+              this.dataFormService.setLogConfig(logField.userid, logField.schema, logField.logTable, logField.featureid).then(() => {
                 this.changedForm.emit(this.dataFormConfig)
               })
             })

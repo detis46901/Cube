@@ -14,7 +14,7 @@ export class ModuleInstance {
     ID?: number;
     name: string;
     description: string;
-    settings: JSON;
+    settings: InstanceSettings;
     moduleID: number;
     module: Module
 }
@@ -42,4 +42,60 @@ export class UserPageInstance {
     moduleInstanceID?: number;
     module_instance: ModuleInstance;
     instanceOrder: number;
+}
+
+export class InstanceSettings {
+    id?: number;
+    title: string
+    type: string;
+    description: string;
+    properties = new Array<Properties>()
+}
+
+export class Properties {
+    stringType: StringType
+    integerType: IntegerType
+    arrayType: ArrayType
+}
+
+export class StringType {
+    name: string;
+    type = 'string';
+    format: string;
+    description: string;
+    minLength: number;
+    default: string;
+    value: string;
+    enum = new Array<KeyValue>()
+}
+
+export class KeyValue {
+    key: string
+    value: string
+}
+
+export class IntegerType {
+    name: string;
+    type = 'integer';
+    description: string;
+    default: number;
+    minimum: number;
+    maximum: number;
+    value: number;
+}
+
+export class ArrayType {
+    name: string;
+    format: string;
+    type = 'array';
+    title: string;
+    uniqueItems: boolean;
+    itemType: string;
+    defaultItem: InstanceSettings
+    items: Array<InstanceSettings>
+}
+
+export class UsersGroups {
+    id: string;
+    name: string;
 }

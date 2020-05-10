@@ -9,7 +9,7 @@ export class DataFormConfig {
     userID: number
     dataForm: DataField[]
     visible: boolean
-    expanded: boolean
+    expanded: boolean = true
     editMode: boolean
 }
 
@@ -40,9 +40,9 @@ export class LogFormConfig {
     showAuto: boolean
 }
 export class LogField {
-    schema: string
-    logTable: string
     id: number;
+    schema?: string;
+    logTable?: string;
     userid: number;
     firstName: string;
     lastName: string;

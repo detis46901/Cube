@@ -37,6 +37,8 @@ import BingMaps from 'ol/source/BingMaps';
 import { GeocodingService } from '../services/geocoding.service'
 import { DataFormService } from '../../shared.components/data-component/data-form.service'
 import { DataFormConfig, DataField, LogFormConfig, LogField } from "app/shared.components/data-component/data-form.model";
+import { click, shiftKeyOnly } from 'ol/events/condition'
+
 
 @Injectable()
 export class MapService {
@@ -207,7 +209,7 @@ export class MapService {
     }
 
     public loadMyCube(layer: UserPageLayer, order?: number): Promise<any> {
-        let promise = new Promise<any> ((resolve) => {
+        let promise = new Promise<any>((resolve) => {
             let source = new VectorSource({
                 format: new GeoJSON()
             })
@@ -215,7 +217,7 @@ export class MapService {
                 if (data[0][0]['jsonb_build_object']['features']) {
                     source.addFeatures(new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']));
                 }
-                let vectorlayer = new VectorLayer({ source: source});
+                let vectorlayer = new VectorLayer({ source: source });
                 vectorlayer.setVisible(layer.defaultON);
                 if (order) { vectorlayer.setZIndex(order) }
                 try {
@@ -293,7 +295,7 @@ export class MapService {
                 }
                 resolve()
             })
-           
+
         })
         return promise
     }
@@ -327,25 +329,25 @@ export class MapService {
         })
         return promise;
     }
-    
-    public setCurrentLayer(layer: UserPageLayer): void {
-            this.mapConfig.currentLayer = layer
-            this.setStyle(layer)  //This gets the styling right.
 
-            if (layer.layerShown === true && layer.layer.layerType == "MyCube") {
-                this.mapConfig.editmode = layer.layerPermissions.edit;
-                this.mapConfig.showFilterButton = true
-                this.mapConfig.showStyleButton = true
-                this.mapConfig.showDeleteButton = true
-            }
-            if (layer.layer.layerType == "MyCube" && layer.style.filter.column) {
-                this.mapConfig.filterOn = true
-            }
+    public setCurrentLayer(layer: UserPageLayer): void {
+        this.mapConfig.currentLayer = layer
+        this.setStyle(layer)  //This gets the styling right.
+
+        if (layer.layerShown === true && layer.layer.layerType == "MyCube") {
+            this.mapConfig.editmode = layer.layerPermissions.edit;
+            this.mapConfig.showFilterButton = true
             this.mapConfig.showStyleButton = true
-            this.getFeatureList()
+            this.mapConfig.showDeleteButton = true
+        }
+        if (layer.layer.layerType == "MyCube" && layer.style.filter.column) {
+            this.mapConfig.filterOn = true
+        }
+        this.mapConfig.showStyleButton = true
+        this.getFeatureList()
     }
-   
-    public parseAndSendWMS(WMS: string): void { 
+
+    public parseAndSendWMS(WMS: string): void {
         WMS = WMS.split("<body>")[1];
         WMS = WMS.split("</body>")[0];
         if (WMS.length < 10) {
@@ -373,7 +375,17 @@ export class MapService {
         this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature);
         if (layer.layerPermissions.edit == true) {
             if (!this.modify) {
-                this.modify = new Modify({ features: this.mapConfig.selectedFeatures });
+                console.log(this.mapConfig.selectedFeatures)
+                this.mapConfig.selectedFeatures.clear()
+                this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature)
+                this.modify = new Modify({
+                    features: this.mapConfig.selectedFeatures,
+                    // deleteCondition: ((event) => {
+                    //     console.log(shiftKeyOnly(event) && click(event))
+                    //     return shiftKeyOnly(event) && click(event)
+                    //     // if (event.originalEvent.button == 1) {return true} else {return false}
+                    //  })
+                });
                 this.mapConfig.map.addInteraction(this.modify);
             }
             this.modkeystart = this.modify.on('modifystart', (e: any) => {  //need to get the right type
@@ -390,12 +402,12 @@ export class MapService {
                         this.geojsonservice.updateGeometry(layer.layer.ID, JSON.parse(featurejson))
                             .subscribe((data) => {
                                 let logField = new LogField
+                                logField.schema = this.mapConfig.myCubeComment.schema
+                                logField.logTable = this.mapConfig.myCubeComment.logTable
                                 logField.auto = true
                                 logField.comment = "Geometry Modified"
                                 logField.featureid = featureID
                                 logField.geom = JSON.parse(featurejson)
-                                logField.logTable = 'c' + this.mapConfig.currentLayer.layer.ID
-                                logField.schema = 'mycube'
                                 logField.userid = this.mapConfig.user.ID
                                 this.sqlService.addAnyComment(logField)
                                     .subscribe((x) => {
@@ -413,7 +425,8 @@ export class MapService {
     }
 
     public loadLogConfig(layer: UserPageLayer) {
-        this.dataFormService.setLogConfig('mycube', 'c' + layer.layer.ID, this.mapConfig.selectedFeature.getId()).then((logFormConfig: LogFormConfig) => {
+        if (!this.mapConfig.selectedFeature) { return }
+        this.dataFormService.setLogConfig(this.mapConfig.user.ID, 'mycube', 'c' + layer.layer.ID, this.mapConfig.selectedFeature.getId()).then((logFormConfig: LogFormConfig) => {
             this.renderLogConfig(logFormConfig);
         });
     }
@@ -433,6 +446,7 @@ export class MapService {
     }
 
     public clearFeature() {
+        console.log('clearing Feature')
         if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeatureSource.clear() }
         if (this.mapConfig.selectedFeature) {
             // this.mapConfig.selectedFeature.setStyle(null);
@@ -497,16 +511,16 @@ export class MapService {
                             e.feature.setStyle(stylefunction)
                             this.getFeatureList();
                             let logField = new LogField
+                            logField.schema = 'mycube'
+                            logField.logTable = 'c' + this.mapConfig.currentLayer.layer.ID
                             logField.auto = true
                             logField.comment = "Object Created"
                             logField.featureid = featureID
                             logField.geom = featurejson['geometry']
-                            logField.logTable = 'c' + this.mapConfig.currentLayer.layer.ID
-                            logField.schema = 'mycube'
                             logField.userid = this.mapConfig.user.ID
-                            this.sqlService.addAnyComment(logField)
-                                .subscribe((x) => {
-                                })
+                            this.dataFormService.addLogForm(logField).then((x) => {
+                                console.log(x)
+                            })
                         })
                     this.mapConfig.map.removeLayer(vector);
                     this.mapConfig.map.changed();
@@ -525,13 +539,15 @@ export class MapService {
         let feat: Feature = this.mapConfig.selectedFeature
         this.mapConfig.currentLayer.source.removeFeature(this.mapConfig.selectedFeature)
         this.mapConfig.selectedFeature = null
-        this.mapConfig.myCubeConfig = new DataFormConfig
-        this.mapConfig.myCubeComment = new LogFormConfig
         this.getFeatureList();
         this.mapConfig.map.removeInteraction(this.modify);
         let snackBarRef = this.snackBar.open('Feature deleted.', 'Undo', {
             duration: 4000
         });
+        let schema = this.mapConfig.myCubeComment.schema
+        let table = this.mapConfig.myCubeComment.logTable
+        this.mapConfig.myCubeConfig = new DataFormConfig
+        this.mapConfig.myCubeComment = new LogFormConfig
         snackBarRef.afterDismissed().subscribe((x) => {
             if (!didUndo) {
                 this.sqlService.Delete(this.mapConfig.currentLayer.layer.ID, feat.getId())
@@ -541,13 +557,15 @@ export class MapService {
                             test.un("change", this.modkey); //removes the previous modify even if there was one.
                         }
                         this.modify = null;
+                        this.mapConfig.map.removeInteraction(this.modify);
                         let logField = new LogField
+                        logField.schema = schema
+                        logField.logTable = table
                         logField.auto = true
                         logField.comment = "Object Deleted"
                         logField.featureid = feat.getId()
-                        logField.logTable = 'c' + this.mapConfig.currentLayer.layer.ID
-                        logField.schema = 'mycube'
                         logField.userid = this.mapConfig.user.ID
+                        this.mapConfig.myCubeComment.logForm.push(logField)
                         this.sqlService.addAnyComment(logField)
                             .subscribe((x) => {
                             })
@@ -714,7 +732,7 @@ export class MapService {
         this.mapConfig.userpagelayers.splice(this.mapConfig.userpagelayers.findIndex((x) => x == userPageLayer), 1)
         this.userPageLayerService
             .Delete(userPageLayer.ID)
-            .subscribe(() => {});
+            .subscribe(() => { });
     }
 
     public setDefaultPage(userPage: UserPage) {

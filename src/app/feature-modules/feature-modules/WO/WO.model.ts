@@ -16,14 +16,13 @@ export class WOConfig {
     moduleSettings: JSON
     filter: string = `"completed" IS Null`
     label: string;
-    list = new Array<workOrder>()
+    list = new Array<WorkOrder>()
     tab: string
-    sortBy: string = "Address"
-    selectedWO: workOrder
-    editWO = new workOrder
+    selectedWO: WorkOrder
+    editWO = new WorkOrder
     selectedWOComments: MyCubeComment[]
     autoShow: boolean = true
-    selectedItemLog: MyCubeComment[]
+    //selectedItemLog = new LogFormConfig
     linkedField: string
     editRecordDisabled: boolean = true
     showLog: boolean = false
@@ -34,11 +33,11 @@ export class WOConfig {
     modkey: any
     WOTypes: WOType[]
     assignedTo: assignedTo[]
-    sortType = new sortType
+    sortType = new SortType
     itemDataForm = new DataFormConfig
 }
 
-export class workOrder {
+export class WorkOrder {
     id: number = 0
     geom: string = ""
     WONumber: string
@@ -51,6 +50,8 @@ export class workOrder {
     WOTypeID: number
     assignNote: string
     priority: string = "Normal"
+    completed: Date
+    WOLog = new LogFormConfig
 }
 
 export class WOType {
@@ -65,7 +66,7 @@ export class assignedTo {
   fullName: string
 }
 
-export class sortType {
+export class SortType {
   name: string = 'Address'
   field: string = 'address'
 }

@@ -7,31 +7,38 @@
     </mat-panel-description>
   </mat-expansion-panel-header>
   <button mat-button mat-raised-button color="primary" (click)="goToTab('Search')">Search</button>
-  <button mat-button mat-raised-button color="primary" (click)="flipSortBy()">Sorting By {{WOConfig.sortType.name}}</button>
-  <button *ngIf="mapConfig.selectedFeature" mat-button mat-raised-button color="primary" (click)="goToTab('Details')">Details</button>
-  <button *ngIf="mapConfig.selectedFeature" mat-button mat-raised-button color="primary" (click)="goToTab('History')">History</button>
-   {{WOConfig.Mode}}
+  <button mat-button mat-raised-button color="primary" (click)="flipSortBy()">Sorting By
+    {{WOConfig.sortType.name}}</button>
+  <button *ngIf="mapConfig.selectedFeature" mat-button mat-raised-button color="primary"
+    (click)="goToTab('Details')">Details</button>
+  <button *ngIf="mapConfig.selectedFeature" mat-button mat-raised-button color="primary"
+    (click)="goToTab('History')">History</button>
   <div *ngIf="WOConfig.tab=='Details' && WOConfig.selectedWO" label="Work Order" width="100%"><br>
     <div *ngIf="WOConfig.selectedWO.created">{{WOConfig.selectedWO.created | date:'medium':'-0000'}}<br></div>
-      <br>
+    <span>{{WOConfig.selectedWO.WONumber}}</span>
+    <br>
     <mat-form-field width="200%">
-      <input matInput  [disabled]="WOConfig.Mode == 'None'" [(ngModel)]="WOConfig.selectedWO.address" id='AddressInput' placeholder="Address"
-        autocomplete="off">
+      <input matInput [disabled]="WOConfig.Mode == 'None'" [(ngModel)]="WOConfig.selectedWO.address" id='AddressInput'
+        placeholder="Address" autocomplete="off">
     </mat-form-field><br>
     <mat-form-field>
       <mat-label>Type</mat-label>
-      <mat-select [(value)]="WOConfig.selectedWO.WOTypeID" [disabled]="WOConfig.Mode == 'None'" (selectionChange) = 'changeWOType()'>
+      <mat-select [(value)]="WOConfig.selectedWO.WOTypeID" [disabled]="WOConfig.Mode == 'None'"
+        (selectionChange)='changeWOType()'>
         <mat-option *ngFor="let WOType of WOConfig.WOTypes" [(value)]="WOType.id">{{WOType.name}}</mat-option>
       </mat-select>
     </mat-form-field><br>
     <mat-form-field>
       <mat-label>Assigned To</mat-label>
       <mat-select [(value)]="WOConfig.selectedWO.assignedTo" [disabled]="WOConfig.Mode != 'Add'">
-        <mat-option *ngFor="let assignedTo of WOConfig.assignedTo" [(value)]="assignedTo.name">{{assignedTo.fullName}}</mat-option>
+        <mat-option *ngFor="let assignedTo of WOConfig.assignedTo" [(value)]="assignedTo.name">{{assignedTo.fullName}}
+        </mat-option>
       </mat-select>
     </mat-form-field><br>
     <mat-form-field>
-      <textarea cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" matInput [(ngModel)]="WOConfig.selectedWO.description" [disabled]="WOConfig.Mode == 'None'" id='DescriptionInput' placeholder="Description" autocomplete="off"></textarea>
+      <textarea cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+        matInput [(ngModel)]="WOConfig.selectedWO.description" [disabled]="WOConfig.Mode == 'None'"
+        id='DescriptionInput' placeholder="Description" autocomplete="off"></textarea>
     </mat-form-field><br>
     <mat-form-field>
       <mat-label>Priority</mat-label>
@@ -39,38 +46,52 @@
         <mat-option *ngFor="let priority of WOservice.priority" [value]="priority">{{priority}}</mat-option>
       </mat-select>
     </mat-form-field><br>
-    <button *ngIf="WOConfig.Mode == 'Add'" mat-button mat-raised-button color="primary" (click)='createWorkOrder()' [disabled]='WOConfig.selectedWO.WOTypeID == null'>Enter</button>
-      <button *ngIf="WOConfig.Mode == 'Add'" mat-button mat-raised-button color="primary" (click)='cancelAddWorkOrder()'>Cancel</button>
-      <button *ngIf="WOConfig.Mode == 'Add'" mat-button mat-raised-button color="primary" (click)='createCompleteWorkOrder()' [disabled]='WOConfig.selectedWO.WOTypeID == null'>Save and Complete</button>
-      <button *ngIf="WOConfig.Mode == 'None'" mat-button mat-raised-button color="primary" (click)="goToTab('Assign')">Assign</button>
-      <button *ngIf="WOConfig.Mode == 'None'" mat-button mat-raised-button color="primary" (click)='editWorkOrder()'>Edit</button>
-      <button *ngIf="WOConfig.Mode == 'None'" mat-button mat-raised-button color="primary" (click)='deleteWorkOrder()'>Delete</button>
-      <button *ngIf="WOConfig.Mode == 'None'" mat-button mat-raised-button color="primary" (click)='WOConfig.tab = "Complete"'>Complete</button>
-      <button *ngIf="WOConfig.Mode == 'Edit'" mat-button mat-raised-button color="primary" (click)='saveWorkOrder()'>Save</button>
-      <button *ngIf="WOConfig.Mode == 'Edit'" mat-button mat-raised-button color="primary" (click)='WOservice.cancelEditWorkOrder()'>Cancel</button>
+    <button *ngIf="WOConfig.Mode == 'Add'" mat-button mat-raised-button color="primary" (click)='createWorkOrder()'
+      [disabled]='WOConfig.selectedWO.WOTypeID == null'>Enter</button>
+    <button *ngIf="WOConfig.Mode == 'Add'" mat-button mat-raised-button color="primary"
+      (click)='cancelAddWorkOrder()'>Cancel</button>
+    <button *ngIf="WOConfig.Mode == 'Add'" mat-button mat-raised-button color="primary"
+      (click)='createCompleteWorkOrder()' [disabled]='WOConfig.selectedWO.WOTypeID == null'>Save and Complete</button>
+    <button *ngIf="WOConfig.Mode == 'None' && !WOConfig.selectedWO.completed" mat-button mat-raised-button color="primary"
+      (click)="goToTab('Assign')">Assign</button>
+    <button *ngIf="WOConfig.Mode == 'None' && !WOConfig.selectedWO.completed" mat-button mat-raised-button color="primary"
+      (click)='editWorkOrder()'>Edit</button>
+    <button *ngIf="WOConfig.Mode == 'None'" mat-button mat-raised-button color="primary"
+      (click)='deleteWorkOrder()'>Delete</button>
+    <button *ngIf="WOConfig.Mode == 'None' && !WOConfig.selectedWO.completed" mat-button mat-raised-button color="primary"
+      (click)='WOConfig.tab = "Complete"'>Complete</button>
+    <button *ngIf="WOConfig.Mode == 'Edit'" mat-button mat-raised-button color="primary"
+      (click)='saveWorkOrder()'>Save</button>
+    <button *ngIf="WOConfig.Mode == 'Edit'" mat-button mat-raised-button color="primary"
+      (click)='cancelEditWorkOrder()'>Cancel</button>
   </div>
   <div *ngIf="WOConfig.tab == 'Assign'" label="Assign"><br>
     <mat-form-field>
-      <textarea cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" matInput [(ngModel)]="WOConfig.selectedWO.assignNote" id='DescriptionInput' placeholder="Add Note" autocomplete="off"></textarea>
+      <textarea cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+        matInput [(ngModel)]="WOConfig.selectedWO.assignNote" id='DescriptionInput' placeholder="Add Note"
+        autocomplete="off"></textarea>
     </mat-form-field><br>
     <mat-form-field>
       <mat-label>Assigned To</mat-label>
       <mat-select [(value)]="WOConfig.selectedWO.assignedTo">
-        <mat-option *ngFor="let assignedTo of WOConfig.assignedTo" [(value)]="assignedTo.name">{{assignedTo.fullName}}</mat-option>
+        <mat-option *ngFor="let assignedTo of WOConfig.assignedTo" [(value)]="assignedTo.name">{{assignedTo.fullName}}
+        </mat-option>
       </mat-select>
     </mat-form-field><br>
-    <button mat-button mat-raised-button color="primary" (click)='WOservice.assignWorkOrder()'>Assign</button>
+    <button mat-button mat-raised-button color="primary" (click)='assignWorkOrder()'>Assign</button>
     <button mat-button mat-raised-button color="primary" (click)="goToTab('Details')">Cancel</button>
   </div>
   <div *ngIf="WOConfig.tab == 'Complete'" label="Complete"><br>
     <mat-form-field>
-      <textarea cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" matInput [(ngModel)]="WOConfig.selectedWO.assignNote" id='DescriptionInput' placeholder="Add Note" autocomplete="off"></textarea>
+      <textarea cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+        matInput [(ngModel)]="WOConfig.selectedWO.assignNote" id='DescriptionInput' placeholder="Add Note"
+        autocomplete="off"></textarea>
     </mat-form-field><br>
     <button mat-button mat-raised-button color="primary" (click)='completeWorkOrder()'>Complete</button>
   </div>
   <div *ngIf="WOConfig.tab=='Search'" label=Search><br>
     <mat-slide-toggle matTooltip="" class="" [checked]="filterOpen" (change)="filterOpen = !filterOpen">
-      <span>Only Open Tickets</span>
+      <span>Only Open Work Orders</span>
     </mat-slide-toggle><br>
     <mat-form-field style="width:45%">
       <input matInput [matDatepicker]="picker" placeholder="From Date (30 Days Ago)" [(ngModel)]="fromDate">
@@ -86,44 +107,9 @@
     <button mat-button mat-raised-button color="primary" (click)='clearFilter()'>Clear Filter</button>
   </div>
   <div *ngIf="WOConfig.tab =='History'" label="History" style="width:100%"><br>
-    <div style="max-height:360px; overflow-y:auto;overflow-x:hidden">
-      <div *ngFor="let myCubeComment of WOConfig.selectedWOComments" style="position:relative">
-          <span>
-              <div *ngIf="WOConfig.autoShow === true && myCubeComment.auto === true"
-                  style="font-size: 80%;word-wrap:normal; width:380px">
-                  <!-- name and date -->
-                  <b>{{myCubeComment.firstName}} {{myCubeComment.lastName}}</b>&nbsp;
-                  <i>{{myCubeComment.createdat | date}} at {{myCubeComment.createdat |
-                      date:'shortTime'}}</i>
-                  <br>
-                  {{myCubeComment.comment}}
-                  <br>
-                  <mat-divider></mat-divider>
-              </div>
-              <div *ngIf="myCubeComment.auto != true" style="word-wrap:normal; width:380px">
-                  <!-- name and date -->
-                  <b>{{myCubeComment.firstName}} {{myCubeComment.lastName}}</b>&nbsp;
-                  <i *ngIf="myCubeComment.createdat">{{myCubeComment.createdat | date}} at {{myCubeComment.createdat |
-                      date:'shortTime'}}</i>
+    <app-log-form-component class="SDSComponent" [logFormConfig]="WOConfig.selectedWO.WOLog" (savedLog)="onNewComment($event)"></app-log-form-component>
 
-                  <!-- delete button -->
-                  <!-- <button id="trashButton" *ngIf="userID == myCubeComment.userID" mat-button
-                      (click)='deleteMyCubeComment(myCubeConfig.table, myCubeComment)'>
-                      <mat-icon>delete</mat-icon>
-                  </button> -->
-                  <br>
-                  <!-- <span *ngIf="myCubeComment.filename; else elseBlock"><a target="_blank"
-                          [href]="URL + '?table=' + myCubeConfig.table + '&id=' + myCubeComment.id">{{myCubeComment.comment}}</a></span> -->
-                  <ng-template #elseBlock>
-                      <textarea disabled rows="3" cols="45"
-                          name="comment">{{myCubeComment.comment}}</textarea>
-                  </ng-template>
-                  <br>
-                  <mat-divider></mat-divider>
-              </div>
-          </span>
-      </div>
-  </div>      <br>
+  <br>
     <!-- </div> -->
   </div>
 

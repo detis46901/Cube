@@ -91,6 +91,7 @@ export class MapComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        console.log('4-21-20')
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.public = currentUser && currentUser.public;
@@ -206,13 +207,26 @@ export class MapComponent implements OnInit {
                         source: source
                     });
                     this.mapConfig.map.addLayer(layer);
-                    let kml = new KML
                     //drag and drop - needs to be improved.  It only works if, inside formatConstructers, it says KML.  It shows an error, but will work.
                     //Need to make it so these layers can be added permanently.
-                    this.mapConfig.map.addInteraction(new DragAndDrop({
-                        source: source,
-                        formatConstructors: [kml]
-                    }));
+                    // let dragAndDropInteraction = new DragAndDrop({
+                    //     formatConstructors: [
+                    //       KML
+                    //     ]
+                    //   });
+                    // dragAndDropInteraction.on('addfeatures', ((event) => {
+                    //     var vectorSource = new VectorSource({
+                    //       features: event.features
+                    //     });
+                    //     this.mapConfig.map.addLayer(new VectorLayer({
+                    //       source: vectorSource
+                    //     }));
+                    //     this.mapConfig.map.getView().fit(vectorSource.getExtent(), {
+                    //         duration: 1000,
+                    //         maxZoom: 18
+                    //     });
+                    //   }));
+                    // this.mapConfig.map.addInteraction(dragAndDropInteraction)
                 })
             })
     }
@@ -630,7 +644,8 @@ export class MapComponent implements OnInit {
                             })
                             userpagelayer.layer.legendURL = diffWMS.getLegendUrl(23)
                             if (userpagelayer.layer.server.serverType == "ArcGIS WMTS") {
-                                url = userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/ImageServer/WMTS/1.0.0/WMTSCapabilities.xml'
+                                url = userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
+                                // '/ImageServer/WMTS/1.0.0/WMTSCapabilities.xml'
                             }
                             else {
                                 url = userpagelayer.layer.server.serverURL

@@ -2,67 +2,97 @@
 <!-- This modal open the style edit window for layers -->
 
 <!-- creates a row to cotnain the header and the close button -->
-<div class="row">
+<div *ngIf="isLoaded" class="row">
     <!-- header -->
     <h4 id="styleHeader">
-        <b>Current Styles</b>
-        <button mat-dialog-close class="close" id="closingX" >&times;</button>
-    </h4>    
+        <b>{{instanceSettings.title}}</b>
+        <button mat-dialog-close class="close" id="closingX">&times;</button>
+    </h4>
 </div>
 <hr>
 
 <!-- container to hold the text area to view and edit json styles -->
 <mat-dialog-content>
-        <!-- text area in which the admin can edit styles -->
-        <!-- <mat-form-field>
-            <textarea matInput name="layerStyle" [(ngModel)]="settings" placeholder="JSON Style"></textarea>
-        </mat-form-field> -->
-        <div *ngIf="newInstance == true">
-            <mat-form-field>
-                <mat-select [(ngModel)]="selectedModule" (change)="getModuleSettings()" aria-placeholder="Modules">
-                    <mat-option *ngFor="let module of modules" [value]="module">
-                        {{module.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field><br>
-        </div>
-        <div *ngIf="moduleSelected == true">
-            <mat-form-field>
-                <input matInput [(ngModel)]="moduleInstance.name" placeholder="name">
-              </mat-form-field>   
-              <mat-form-field>
-                <input matInput [(ngModel)]="moduleInstance.description" placeholder="description">
-              </mat-form-field>   
-                     
-        </div>
-        <div *ngFor="let setting of settingsArray">
-            <div *ngIf="setting.type=='integer'">
+    <div *ngIf="newInstance == true">
+        <mat-form-field>
+            <mat-select [(ngModel)]="selectedModule" (change)="getModuleSettings()" aria-placeholder="Modules">
+                <mat-option *ngFor="let module of modules" [value]="module">
+                    {{module.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field><br>
+    </div>
+    <div *ngIf="moduleSelected == true">
+        <mat-form-field>
+            <input matInput [(ngModel)]="moduleInstance.name" placeholder="name">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput [(ngModel)]="moduleInstance.description" placeholder="description">
+        </mat-form-field>
+
+    </div>
+    <div *ngIf="isLoaded">
+        <div *ngFor="let prop of instanceSettings.properties">
+            <div *ngIf="prop.integerType">
+                {{prop.integerType.name}}
                 <!-- input field -->
                 <mat-form-field style="width:90%">
-                    <input matInput id="textinput" ngModel required placeholder="{{setting.name}}" [(ngModel)]="setting.value"
-                        (change)="setting.changed = true">
+                    <input matInput id="textinput" ngModel required placeholder="{{prop.integerType.name}}"
+                        [(ngModel)]="prop.integerType.value" (change)="setting.changed = true">
                 </mat-form-field>
             </div>
-            <div *ngIf="setting.type=='double precision'">
-                <!-- input field -->
-                <mat-form-field style="width:90%">
-                    <input matInput id="textinput" ngModel required placeholder="{{setting.name}}" [(ngModel)]="setting.value"
-                        (change)="setting.changed = true">
+            <div *ngIf="prop.stringType && prop.stringType.enum.length > 0" matTooltip="" matTooltipPosition="above"
+                matTooltipShowDelay="1000">
+                {{prop.stringType.name}}
+                <mat-form-field>
+                    <mat-label>{{prop.stringType.name}}</mat-label>
+                    <mat-select [(value)]="prop.stringType.value">
+                        <mat-option *ngFor="let option of prop.stringType.enum" [value]='option.key'>
+                            {{option.value}}
+                        </mat-option>
+                    </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="setting.type=='boolean'">
-                <!-- checkbox for contracting -->
-                <mat-checkbox [(ngModel)]="setting.value">{{setting.name}}</mat-checkbox>
-            </div>
-            <div *ngIf="setting.type=='text' || setting.type == 'character varying'" matTooltip="" matTooltipPosition="above" matTooltipShowDelay="1000">
-                <mat-form-field style="width:90%">
-                    <input matInput id="textinput" name="textbox" ngModel placeholder="{{setting.name}}"
-                        [(ngModel)]="setting.value" (change)="setting.changed = true">
+            <div *ngIf="prop.stringType && prop.stringType.enum.length == 0">
+                {{prop.stringType.name}}
+                <mat-form-field style="width:40%">
+                    <input matInput id="textinput" name="textbox" ngModel placeholder="{{prop.stringType.name}}"
+                        [(ngModel)]="prop.stringType.value" (change)="prop.changed = true">
                 </mat-form-field><br>
             </div>
+            <div *ngIf="prop.arrayType">
+                {{prop.arrayType.name}}
+                <button mat-button (click)="addItem(prop.arrayType)">Add Item</button>
+                    <div *ngFor="let item of prop.arrayType.items">
+                                           <span *ngFor="let p of item.properties">      
+                                        <mat-form-field *ngIf="p.integerType" style="width:40%">
+                                            <input matInput id="textinput" ngModel required
+                                                placeholder="{{p.integerType.name}}" [(ngModel)]="p.integerType.value"
+                                                (change)="setting.changed = true">
+                                        </mat-form-field>
+                                        <mat-form-field *ngIf="p.stringType && p.stringType.enum.length > 0">
+                                            <mat-label>{{p.stringType.name}}</mat-label>
+                                            <mat-select [(value)]="p.stringType.value">
+                                                <mat-option *ngFor="let option of p.stringType.enum"
+                                                    [value]='option.key'>
+                                                    {{option.value}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field *ngIf="p.stringType && p.stringType.enum.length == 0">
+                                            <input matInput id="textinput" name="textbox" ngModel
+                                                placeholder="{{p.stringType.name}}" [(ngModel)]="p.stringType.value"
+                                                (change)="p.changed = true">
+                                        </mat-form-field>
+                            </span>
+                            <button mat-button (click)="deleteItem(prop.arrayType, item)">Delete</button>
+                    </div>
+         
+            </div>
         </div>
-        <button *ngIf="newInstance == false" mat-button (click)="updateSettings()">Update Settings</button>
-        <button *ngIf="newInstance == true" mat-button (click)="createInstance()">Create Instance</button>
-        <br>
-        {{selectedModule.description}}
+    </div>
+    <button *ngIf="newInstance == false" mat-button (click)="updateSettings()">Update Settings</button>
+    <button *ngIf="newInstance == true" mat-button (click)="createInstance()">Create Instance</button>
+    <br>
+    {{selectedModule.description}}
 </mat-dialog-content>

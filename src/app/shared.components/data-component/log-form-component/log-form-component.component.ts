@@ -36,14 +36,14 @@ export class LogFormComponentComponent implements OnInit {
       this.newLogForm.auto = false
       //Need to add the time in here so it looks right when it is added immediately
       this.logFormConfig.logForm.push(this.newLogForm)
-      this.newLogForm.schema = this.logFormConfig.schema
-      this.newLogForm.logTable = this.logFormConfig.logTable
       this.saveLog(this.newLogForm).then((x) => {
         
       })    
   }
 
   public saveLog(logForm: LogField): Promise<any> {
+    logForm.schema = this.logFormConfig.schema
+    logForm.logTable = this.logFormConfig.logTable
     let promise = new Promise((resolve) => {
       this.sqlService
       .addAnyComment(logForm)
@@ -54,26 +54,30 @@ export class LogFormComponentComponent implements OnInit {
           console.log(data[0][0].id)
           this.uploadFile(logForm, data[0][0].id)
         }
-        //this.myCubeComments.push(this.newComment)
-        this.dataFormService.setLogConfig(this.logFormConfig.schema, this.logFormConfig.logTable, this.logFormConfig.dataFormID).then((x) => {
+        this.dataFormService.setLogConfig(this.logFormConfig.userID, this.logFormConfig.schema, this.logFormConfig.logTable, this.logFormConfig.dataFormID).then((x) => {
+          let tempShowAuto: boolean = this.logFormConfig.showAuto
           this.logFormConfig = x
+          this.logFormConfig.showAuto = tempShowAuto
           this.savedLog.emit(this.logFormConfig)
           this.newLogForm = new LogField()
         this.newLogForm.comment = null
         this.newLogForm.file = null
+        resolve()
         })
       })
     })
     return promise
   }
 
-  public deleteLogForm(logForm: LogField) {
-    console.log(logForm)
-    this.sqlService.deleteAnyRecord(this.logFormConfig.schema, this.logFormConfig.logTable, logForm.id)
+  public deleteLogForm(id: number) {
+    this.sqlService.deleteAnyRecord(this.logFormConfig.schema, this.logFormConfig.logTable, id)
       .subscribe((x) => {
         console.log(x)
-        this.dataFormService.setLogConfig(this.logFormConfig.schema, this.logFormConfig.logTable, this.logFormConfig.dataFormID).then((logFormConfig: LogFormConfig) => {
+        //can probably just remove the record from the dataset...
+        this.dataFormService.setLogConfig(this.logFormConfig.userID, this.logFormConfig.schema, this.logFormConfig.logTable, this.logFormConfig.dataFormID).then((logFormConfig: LogFormConfig) => {
+          let tempShowAuto: boolean = this.logFormConfig.showAuto
           this.logFormConfig = logFormConfig
+          this.logFormConfig.showAuto = tempShowAuto
           this.savedLog.emit(logFormConfig)
         })
       })
@@ -87,13 +91,13 @@ export class LogFormComponentComponent implements OnInit {
   public uploadFile(logForm: LogField, id: string) {
     let formdata: FormData = new FormData()
     formdata.append('photo', logForm.file)
-    formdata.append('schema', logForm.schema)
-    formdata.append('table', logForm.logTable.toString())
+    formdata.append('schema', this.logFormConfig.schema)
+    formdata.append('table', this.logFormConfig.logTable.toString())
     formdata.append('id', id)
     this.sqlService
       .addImage(formdata)
       .subscribe((result) => {
-        this.dataFormService.setLogConfig(this.logFormConfig.schema, this.logFormConfig.logTable, this.logFormConfig.dataFormID).then((logFormConfig: LogFormConfig) => {
+        this.dataFormService.setLogConfig(logForm.userid, this.logFormConfig.schema, this.logFormConfig.logTable, this.logFormConfig.dataFormID).then((logFormConfig: LogFormConfig) => {
           this.logFormConfig = logFormConfig
           this.savedLog.emit(logFormConfig)
         })

@@ -6,7 +6,7 @@
             <!-- Name and the 3 buttons for settings, map, and messages -->
             <h3>
                 <!-- username -->
-                <a *ngIf="!public" style="font-size: 2vh;" id="headerSettings">{{currUser.firstName}}&nbsp;{{currUser.lastName}}</a>
+                <button mat-button *ngIf="!public" style="font-size: 2vh;" id="headerSettings" routerLink="home">{{currUser.firstName}}&nbsp;{{currUser.lastName}}</button>
                 <a *ngIf="public" id="headerSettings">{{currUser.lastName}}</a>
                 <!-- {{ (currUser$ | async)?.firstName }}
             <div *ngIf="currUser$ | async as user; else loading">
@@ -20,10 +20,6 @@
                 <button *ngIf="!public" mat-icon-button title="User Settings" [matMenuTriggerFor]="menu">
                     <mat-icon style="font-size:2vh"  id="settingsButton">settings</mat-icon>
                 </button>
-                <!-- map button -->
-                <a *ngIf="!public" style="height:100px" id="mapButton" title="Return to map" routerLink="home">
-                    <i style="font-size:2vh" class="fa fa-cube"></i>
-                </a>
                 <button mat-icon-button *ngIf="screenCode == 1 && !public" id="headerNotifications"
                     title="Notifications" (click)="openNotifications(userID)">
                     <mat-icon style="font-size:2vh" id="headerNotifIcon">email</mat-icon>
