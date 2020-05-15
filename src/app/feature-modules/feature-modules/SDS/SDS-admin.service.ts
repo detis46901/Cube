@@ -34,7 +34,12 @@ export class SDSAdminService {
   public addModuleToPage(userPageInstance: UserPageInstance) {
     let UPL = new UserPageLayer
     UPL.defaultON = true
-    UPL.layerID = userPageInstance.module_instance.settings['settings'][0]['setting']['value']
+    userPageInstance.module_instance.settings.properties.forEach((x) => {
+      if (x.stringType.name == "myCube Layer Identity (integer)") {
+        UPL.layerID = +x.stringType.value
+      }
+    })
+    console.log(UPL)
     UPL.userPageInstanceID = userPageInstance.ID
     UPL.userPageID = userPageInstance.userPageID
     UPL.userID = userPageInstance.userID
