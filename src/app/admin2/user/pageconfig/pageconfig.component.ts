@@ -141,11 +141,12 @@ export class PageConfigComponent2 implements OnInit {
             .Add(this.newUserPageInstance)
             .subscribe((data: UserPageInstance) => {
                 console.log(data)
-                newUserPageInstance.ID = data.ID
+                //this.newUserPageInstance.ID = data.ID
                 this.layerPermissions = [];
                 this.featureModuleAdminService.addModuleToPage(newUserPageInstance)
                 this.getUserPageInstances();
                 this.getUserPageLayers()
+                this.getAllByUser();
             });
     }
 
@@ -169,6 +170,7 @@ export class PageConfigComponent2 implements OnInit {
             .Delete(userPageLayerID)
             .subscribe((res) => {
                 this.layerPermissions = [];
+                this.getAllByUser();
                 this.getUserPageLayers();
             });
     }
@@ -184,6 +186,7 @@ export class PageConfigComponent2 implements OnInit {
                     console.log(res)
                     this.layerPermissions = [];
                     this.getUserPageInstances();
+                    this.getAllByUser();
                     
                 });    
             }
@@ -194,6 +197,7 @@ export class PageConfigComponent2 implements OnInit {
                     console.log(res)
                     this.layerPermissions = [];
                     this.getUserPageInstances();
+                    this.getAllByUser();
                     
                 }); 
             }

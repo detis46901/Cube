@@ -335,12 +335,53 @@ export class MapComponent implements OnInit {
             UPLUpdate.ID = x.ID
             UPLUpdate.layerOrder = x.layerOrder
             UPLUpdate.style = x.style //another stupid hack
+            console.log(`new index of ${x.layer.layerName}: ${UPLUpdate.layerOrder}`)
             this.userPageLayerService.Update(UPLUpdate).subscribe();
         })
+        console.log('-----')
     }
 
+    // new features: assignNewLayerIndex, deleteLayerIndex, reloadIndex -BB
+
+    public assignNewLayerIndex(layer: UserPageLayer){
+        let len = this.mapService.mapConfig.userpagelayers.length
+        layer.layerOrder = (len - 1)
+        this.reloadIndex()
+        this.mapService.mapConfig.userpagelayers.forEach((x) => {
+            console.log(x.layerOrder)
+        })        
+    }
+
+    public deleteLayerIndex(layer: UserPageLayer){
+        let ind = layer.layerOrder
+        console.log(ind)
+        this.reloadIndex()
+        this.mapService.mapConfig.userpagelayers.splice(ind, 0)
+        console.log(`layer deleted`)
+        this.reloadIndex()
+    }
+
+    public reloadIndex(){
+        let i: number = 0
+        this.mapService.mapConfig.userpagelayers.forEach((x) => {
+            x.layerOrder = i
+            i++
+        })
+        this.mapService.mapConfig.userpagelayers.forEach((x) => {
+            let UPLUpdate = new UserPageLayer
+            UPLUpdate.ID = x.ID
+            UPLUpdate.layerOrder = x.layerOrder
+            UPLUpdate.style = x.style //another stupid hack
+            this.userPageLayerService.Update(UPLUpdate).subscribe();
+        })
+        console.log('index reloaded')
+    }
+    
     public addUserPageLayer(layer: UserPageLayer) {
-        this.mapService.addUserPageLayer(layer)
+        this.mapService.addUserPageLayer(layer)  
+        console.log(`${layer.layer.layerName} has been added to the page`)
+        this.assignNewLayerIndex(layer)
+        console.log(`index of ${layer.layer.layerName}: `+ layer.layerOrder) 
     }
 
     public toggleDefaultOn(layer: UserPageLayer) {
@@ -349,6 +390,7 @@ export class MapComponent implements OnInit {
 
     public deleteUserPageLayer(layer: UserPageLayer) {
         this.mapService.deleteUserPageLayer(layer)
+        this.deleteLayerIndex(layer)
     }
 
     public copyToClipboard(url: string) {
@@ -464,7 +506,10 @@ export class MapComponent implements OnInit {
         this.mapConfig.userpagelayers.push(UPL)
         this.loadLayers(this.mapConfig, false, true)
         this.showNewLayer = false
-        this.layerCtrl.setValue('')
+        //this.layerCtrl.setValue('')
+        console.log('added layer')
+        this.assignNewLayerIndex(UPL)
+        console.log(`index of ${UPL.layer.layerName}: `+ UPL.layerOrder)
     }
 
     public addSearch(searchResults): void {
@@ -525,6 +570,7 @@ export class MapComponent implements OnInit {
 
     //loadLayers will load during map init and load the layers that should come on by themselves with the "defaultON" property set (in userPageLayers)
     public loadLayers(mapConfig: MapConfig, init: boolean, single?: boolean): Promise<any> {
+        //this.reloadOrder()
         this.mapConfig = mapConfig
         let j = 0;
         let promise = new Promise((resolve) => {
