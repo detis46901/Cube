@@ -47,6 +47,7 @@ import TileWMS from 'ol/source/TileWMS';
 import { FeatureModulesService } from '../feature-modules/feature-modules.service'
 import KML from 'ol/format/KML';
 import {default as ob} from 'ol/Observable';
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 
 
 @Component({
@@ -86,7 +87,8 @@ export class MapComponent implements OnInit {
         private mapConfigService: MapConfigService,
         private mapStyles: mapStyles,
         private wmsService: WMSService,
-        private featureModuleService: FeatureModulesService
+        private featureModuleService: FeatureModulesService,
+        protected _http: HttpClient
 
     ) { }
 
@@ -352,7 +354,12 @@ export class MapComponent implements OnInit {
     }
 
     public copyToClipboard(url: string) {
-        Clipboard.copy(environment.serverWithApiUrl + url + '&apikey=' + this.token);
+        url = environment.serverWithApiUrl + url + '&apikey=' + this.token
+        const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
+        console.log(environment.proxyUrl + '/tinyurl.com/api-create.php?url=' + encodeURIComponent(url))
+        this._http.get(environment.proxyUrl + '/tinyurl.com/api-create.php?url=' + encodeURIComponent(url), { headers, responseType: 'text'}).subscribe((x) => {
+            Clipboard.copy(x)
+        })
         this.snackBar.open("Copied to the clipboard", "", {
             duration: 2000,
         });

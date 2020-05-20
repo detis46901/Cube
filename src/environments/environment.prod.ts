@@ -17,5 +17,5 @@ export const environment = {
   timeZone: 'America/New_york',
   cacheSize: 256,
   apiUrlPath: "/api/",
-  serverWithApiUrl: this.ApiUrl + this.apiUrlPath
+  serverWithApiUrl: 'https://cube-kokomo.com:5000' + "/api/"
 };
