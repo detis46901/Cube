@@ -52,8 +52,8 @@
           </mat-form-field>
       <mat-form-field>
         <mat-label>Disposition</mat-label>
-        <mat-select [disabled]='ticket.closed != null' [(value)]="completedDisposition">
-          <mat-option *ngFor="let item of disposition.disposition" [value]="item">
+        <mat-select [disabled]='ticket.closed != null' [(value)]="completedDisposition.value">
+          <mat-option *ngFor="let item of disposition.disposition" [value]="item.value">
             {{item.shortDescription}}
           </mat-option>
         </mat-select>

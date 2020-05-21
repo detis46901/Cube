@@ -109,6 +109,8 @@ export class LocatesComponent implements OnInit, OnDestroy {
     this.locatesservice.getOneLocate(layer).then((x) => {
       this.ticket = x
       this.mapConfig.myCubeConfig.expanded = false
+      this.completedDisposition.value = x.disposition
+      this.completedNote = x.note
     })
     this.locatesservice.selectFeature(layer)
     return false
