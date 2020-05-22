@@ -55,12 +55,13 @@ export class LocatesAdminService {
     let UPL = new UserPageLayer
     UPL.defaultON = true
     UPL.layerID = userPageInstance.module_instance.settings['settings'][0]['setting']['value']
-    UPL.userPageInstanceID = userPageInstance.ID
-    UPL.userPageID = userPageInstance.userPageID
+    UPL.userPageInstanceID = userPageInstance.ID;
+    UPL.userPageID = userPageInstance.userPageID;
     UPL.userID = userPageInstance.userID
     this.userPageLayerService.Add(UPL)
-      .subscribe(data => {
+      .subscribe((data: UserPageInstance) => {
         console.log(data)
+        console.log(userPageInstance.ID)
       })
 
   }

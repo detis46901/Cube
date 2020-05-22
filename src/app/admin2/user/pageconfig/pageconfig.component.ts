@@ -118,7 +118,7 @@ export class PageConfigComponent2 implements OnInit {
         this.newUserPageLayer.userID = this.userID;
         this.newUserPageLayer.defaultON = true;
         this.newUserPageLayer.layerID = newUserPageLayer.layerID;
-        this.newUserPageLayer.style = this.selectedLP.layer.defaultStyle
+        this.newUserPageLayer.style = this.selectedLP.layer.defaultStyle;
         this.userPageLayerService
             .Add(this.newUserPageLayer)
             .subscribe(() => {
@@ -129,6 +129,7 @@ export class PageConfigComponent2 implements OnInit {
     }
 
     public addUserPageInstance(newUserPageInstance: UserPageInstance): void {
+        this.getAllByUser()
         console.log(newUserPageInstance)
         var element = <HTMLInputElement>document.getElementById("pageConfigSubmit");
         console.log(this.selectedLP)
@@ -136,18 +137,20 @@ export class PageConfigComponent2 implements OnInit {
         this.newUserPageInstance.userID = this.userID;
         this.newUserPageInstance.defaultON = true;
         this.newUserPageInstance.moduleInstanceID = newUserPageInstance.module_instance.ID;
-        this.newUserPageInstance.module_instance = newUserPageInstance.module_instance
+        this.newUserPageInstance.module_instance = newUserPageInstance.module_instance;
+        this.newUserPageInstance.ID = (newUserPageInstance.ID + 1)
         this.userPageInstanceService
             .Add(this.newUserPageInstance)
-            .subscribe((data: UserPageInstance) => {
+            .subscribe((data) => {
                 console.log(data)
-                //this.newUserPageInstance.ID = data.ID
+                newUserPageInstance.ID = data.ID;
+                console.log(newUserPageInstance.ID)
                 this.layerPermissions = [];
                 this.featureModuleAdminService.addModuleToPage(newUserPageInstance)
                 this.getUserPageInstances();
-                this.getUserPageLayers()
+                this.getUserPageLayers();
                 this.getAllByUser();
-            });
+        });
     }
 
     public updateUserPageLayer(userPageLayer: UserPageLayer): void {
@@ -179,6 +182,7 @@ export class PageConfigComponent2 implements OnInit {
         //this.featureModuleAdminService.removeModuleFromPage(userPageInstance)
         this.userPageLayers.forEach(x => {
             if (x.userPageInstanceID == userPageInstance.ID) {
+                console.log(userPageInstance.ID)
                 this.deleteUserPageLayer(x.ID)
                 this.userPageInstanceService
                 .Delete(userPageInstance.ID)
