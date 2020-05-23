@@ -182,6 +182,8 @@ export class LocatesComponent implements OnInit, OnDestroy {
   }
 
   public emailContractor(ticket: Locate) {
+    console.log(ticket.disposition)
+    this.completedDisposition = this.disposition.disposition.find((x) => x.value == ticket.disposition)
     this.getEmailConfiguration()
     let win = window.open("mailto:" + ticket.email + "?subject=Ticket: " + ticket.ticket + " " + ticket.address + " " + ticket.street + "&body=" + this.completedDisposition.emailBody, "_blank"); //this.moduleSettings['settings'][1]['setting']['value']
     setTimeout(function() { win.close() }, 500);

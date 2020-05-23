@@ -52,7 +52,7 @@
           </mat-form-field>
       <mat-form-field>
         <mat-label>Disposition</mat-label>
-        <mat-select [disabled]='ticket.closed != null' [(value)]="completedDisposition.value">
+        <mat-select [disabled]='ticket.closed != null' [(value)]="ticket.disposition">
           <mat-option *ngFor="let item of disposition.disposition" [value]="item.value">
             {{item.shortDescription}}
           </mat-option>
@@ -62,10 +62,13 @@
           <textarea [disabled]='ticket.closed != null' [(ngModel)]="completedNote" [value]="completedNote" matInput placeholder="Note" style="width:100%"></textarea>
         </mat-form-field>
       </div>
-      <button mat-button mat-raised-button *ngIf="completedDisposition.completesTicket == true" color="primary" (click)='completeTicket()' [disabled]='ticket.closed != null'>Complete Ticket</button>
-      <button mat-button mat-raised-button *ngIf="completedDisposition.completesTicket == false" color="primary" (click)='completeTicket()' [disabled]='ticket.closed != null'>Update Status</button>
-      <button mat-button mat-raised-button *ngIf="completedDisposition.completesTicket == true" color="primary" (click)='emailContractor(ticket)' [disabled]='ticket.closed != null || !ticket.email'>Email Contractor</button> <br>
+      <div *ngFor="let item of disposition.disposition">
+        <div *ngIf="item.value == ticket.disposition">
+          <button mat-button mat-raised-button *ngIf="item.completesTicket == true" color="primary" (click)='completeTicket()' [disabled]='ticket.closed != null'>Complete Ticket</button>
+          <button mat-button mat-raised-button *ngIf="item.completesTicket == false" color="primary" (click)='completeTicket()' [disabled]='ticket.closed != null'>Update Status</button>
+          <button mat-button mat-raised-button *ngIf="item.completesTicket == true" color="primary" (click)='emailContractor(ticket)' [disabled]='ticket.closed != null || !ticket.email'>Email Contractor</button> <br>
+        </div>  
+      </div>
     </div>
   </div>
-
 </mat-expansion-panel>
