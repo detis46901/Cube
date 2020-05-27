@@ -50,7 +50,7 @@ export class LocatesService {
       style: stylefunction
     });
     layer.olLayer = vectorlayer
-    layer.source = source
+    // layer.source = source
     this.getMyLocateData(layer).then((loadedLayer:UserPageLayer) => {
       // var clusterSource = new ol.source.Cluster({
       //   distance: 90,
@@ -78,8 +78,8 @@ export class LocatesService {
     let k: number = 0;
     let tempList = new Array<featureList>();
     try {
-      layer.source.forEachFeature((x: Feature) => {
-        let i = layer.source.getFeatures().findIndex((j) => j == x);
+      layer.olLayer.getSource().forEachFeature((x: Feature) => {
+        let i = layer.olLayer.getSource().getFeatures().findIndex((j) => j == x);
         let fl = new featureList;
         fl.id = x.get('id')
         if (x.get("address") == "") { fl.label = x.get("street") + " and " + x.get("crossst") }
@@ -153,7 +153,7 @@ export class LocatesService {
     }
     this.getMyLocateData(layer).then((loadedLayer:UserPageLayer) => {
         this.getFeatureList(layer)
-          layer.source.forEachFeature((feat: Feature) => {
+          layer.olLayer.getSource().forEachFeature((feat: Feature) => {
             feat.setStyle(this.styleService.styleFunction(feat, layerState));
           })
     })
@@ -174,7 +174,8 @@ export class LocatesService {
       this.geojsonservice.GetSome(layer.layer.ID, this.filter)
         .subscribe((data: any) => { //GeoJSON.Feature<any>
           if (data[0][0]['jsonb_build_object']['features']) {
-            layer.source.addFeatures(new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']))
+            layer.olLayer.getSource().clear()
+            layer.olLayer.getSource().addFeatures(new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data[0][0]['jsonb_build_object']))
           }
           resolve(layer);
         })
