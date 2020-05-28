@@ -85,17 +85,17 @@
 
     <!-- sets up the two arrow buttons for moving groups and users in and out of their respective lists -->
     <div class="transfer-controls">
-        <button mat-button class="group_arrow" *ngIf="!bool" (click)="addAvailableGroup(selectedAvailableGroup)" style="margin-bottom:10px; color:white; background: transparent;">
+        <button mat-button class="group_arrow" *ngIf="!bool" (click)="addAvailableGroup(selectedAvailableGroup)" style="margin-bottom:10px; color:white">
           <i class="material-icons">keyboard_arrow_right</i>
         </button>
-        <button mat-button class="group_arrow" *ngIf="bool" (click)="addAvailableUser(selectedAvailableUser)" style="margin-bottom:10px; color:white; background: transparent;">
+        <button mat-button class="group_arrow" *ngIf="bool" (click)="addAvailableUser(selectedAvailableUser)" style="margin-bottom:10px; color:white">
           <i class="material-icons">keyboard_arrow_right</i>
         </button>
         <br>
-        <button mat-button class="group_arrow" *ngIf="!bool" (click)="removeMemberGroup(selectedMemberGroup)" style="color:white; background: transparent;">
+        <button mat-button class="group_arrow" *ngIf="!bool" (click)="removeMemberGroup(selectedMemberGroup)" style="color:white">
           <i class="material-icons">keyboard_arrow_left</i>
         </button>
-        <button mat-button class="group_arrow" *ngIf="bool" (click)="removeMemberUser(selectedMemberUser)" style="color:white; background: transparent;">
+        <button mat-button class="group_arrow" *ngIf="bool" (click)="removeMemberUser(selectedMemberUser)" style="color:white">
           <i class="material-icons">keyboard_arrow_left</i>
         </button>
     </div>

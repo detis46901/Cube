@@ -4,8 +4,8 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    margin-top: -270px;
-    margin-left: -750px;
+    margin-top: -320px;
+    margin-left: -850px;
     padding: 10px 10px 20px 10px;
     display: flex;
     width: 83vw;
@@ -46,7 +46,7 @@ button {
     margin-left: 20px;
 }
 
-// formats the 3 headers 
+// formats the 3 headers
 h4 {
     display: inline-block;
     font-family: 'Roboto', sans-serif;
@@ -67,8 +67,8 @@ mat-slide-toggle {
 
 // formats the arrow buttons to match colors
 .group_arrow {
-    background-color: #623c65;
+    background-color:transparent;
 }
-.fa-arrow-left, .fa-arrow-right {
+.keyboard_arrow_right, .keyboard_arrow_left {
     color: white;
 }

@@ -54,6 +54,11 @@ mat-table mat-header-row mat-header-cell {
     margin-left:20%;
 }
 
+#booBoy {
+    margin-left:20%;
+    margin-top:10%;
+}
+
 //allocats space for each of the current columns
 mat-table mat-row mat-cell.user-xlg-cell, mat-table mat-header-row mat-header-cell.user-xlg-head {
     max-width: 28%;
