@@ -86,6 +86,7 @@ export class SDSComponent implements OnInit {
       x.editMode = true
       this.SDSConfig.itemDataForm = x
       this.SDSConfig.itemDataForm.visible = true
+      this.SDSConfig.itemDataForm.dataForm.find((x) => x.field == 'id').visible = false
       this.SDSConfig.moduleSettings.properties.forEach((x) => {
         if (x.stringType.name == "SDS Linked Field") {
           this.SDSConfig.linkedField = x.stringType.value
@@ -118,8 +119,9 @@ export class SDSComponent implements OnInit {
     this.SDSConfig.itemDataForm.rowID = this.mapConfig.selectedFeature.get('id')
     this.SDSservice.getSDSRecords(this.SDSConfig.itemDataForm, this.SDSConfig.linkedField).then((x) => {
       this.SDSConfig.list = x
-      console.log(this.SDSConfig.list)
+      // console.log(this.SDSConfig.list)
       this.SDSConfig.itemDataForm.visible = true
+      console.log(this.SDSConfig.itemDataForm)
       this.goToTab('Input')
     })
     return false  //this allows it to load the MyCube layer

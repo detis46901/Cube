@@ -4,7 +4,7 @@
 <!-- second accordian menu handling features -->
         <div *ngIf="dataFormConfig.visible">
             <div *ngFor="let dataForm of dataFormConfig.dataForm">
-                <div *ngIf="(dataForm.type=='integer' || dataForm.type == 'smallint' || dataForm.type == 'bigint' || dataForm.type == 'double precision') && dataForm.visible == true">
+                <div *ngIf="(dataForm.type=='integer' || dataForm.type == 'smallint' || dataForm.type == 'bigint' || dataForm.type == 'double precision') && dataForm.visible != false">
                     <div *ngIf="!dataForm.constraints">
                         <mat-form-field style="width:90%">
                             <input matInput [disabled]="!dataFormConfig.editMode" [id]="dataForm.field" ngModel

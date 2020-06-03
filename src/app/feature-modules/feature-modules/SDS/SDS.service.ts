@@ -129,7 +129,7 @@ export class SDSService {
       console.log(dataFormConfig.schema, dataFormConfig.dataTable, linkedField, dataFormConfig.rowID)
       this.sqlService.GetAnySingle(dataFormConfig.schema, dataFormConfig.dataTable, linkedField, dataFormConfig.rowID)
         .subscribe((x)=> {
-          console.log(x)
+          // console.log(x)
           resolve (x[0])
         })
     })
