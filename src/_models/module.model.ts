@@ -49,6 +49,7 @@ export class InstanceSettings {
     title: string
     type: string;
     description: string;
+    auto_select: boolean;
     properties = new Array<Properties>()
 }
 
