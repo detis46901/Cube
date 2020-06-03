@@ -5,7 +5,7 @@
 
             <!-- first column used to contain layer id numbers -->
             <ng-container matColumnDef="layerID">
-                <mat-header-cell class="layer-sm-head" *matHeaderCellDef> ID </mat-header-cell>
+                <mat-header-cell class="layer-sm-head" *matHeaderCellDef><h6><Strong> ID </Strong></h6></mat-header-cell>
                 <mat-cell class="layer-sm-cell" *matCellDef="let row">
                     <b>{{row.ID}}</b>
                 </mat-cell>
@@ -13,7 +13,7 @@
 
             <!-- second column containing the name of the layer -->
             <ng-container matColumnDef="name">
-                <mat-header-cell class="layer-md-head" *matHeaderCellDef> Name </mat-header-cell>
+                <mat-header-cell class="layer-md-head" *matHeaderCellDef><h6><Strong> Name </Strong></h6></mat-header-cell>
                 <mat-cell class="layer-md-cell" *matCellDef="let row">
                     {{row.layerName}}
                     <!-- <mat-form-field #input style="width:80%">
@@ -34,7 +34,7 @@
 
             <!-- fourth column containing type -->
             <ng-container matColumnDef="type">
-                <mat-header-cell class="layer-md-head" *matHeaderCellDef> Type </mat-header-cell>
+                <mat-header-cell class="layer-md-head" *matHeaderCellDef><h6><Strong> Type </Strong></h6></mat-header-cell>
                 <mat-cell class="layer-md-cell" *matCellDef="let row">
                     {{row.layerType}}
                     <!-- <mat-form-field >

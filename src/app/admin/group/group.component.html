@@ -36,10 +36,10 @@
                         {{group.name}}
                         <span style="float:right; position:relative; left:20px">
                             <button class="group_editGroup" style="color:#7e7e7e" title="Edit Details" (click)="editDetails(group)">
-                                <i class="fas fa-pencil-alt"></i>
+                              
                             </button>
                             <button class="group_deleteGroup" style="color:#7e7e7e" title="Delete Group" (click)="confDelGroup(group)">
-                                <i class="fas fa-trash"></i>
+                              <i class="material-icons">delete</i>
                             </button>
                         </span>
                     </span>
@@ -64,10 +64,10 @@
                         {{group.name}}
                         <span style="float:right; position:relative; left:20px;">
                             <button class="group_editGroup" style="color:#7e7e7e" title="Edit Details" (click)="editDetails(group)">
-                                <i class="fas fa-pencil-alt"></i>
+                              <i class="material-icons">edit</i>
                             </button>
                             <button class="group_deleteGroup" style="color:#7e7e7e" title="Delete Group" (click)="confDelGroup(group)">
-                                <i class="fas fa-trash"></i>
+                              <i class="material-icons">delete</i>
                             </button>
                         </span>
                     </span>
@@ -85,18 +85,18 @@
 
     <!-- sets up the two arrow buttons for moving groups and users in and out of their respective lists -->
     <div class="transfer-controls">
-        <button mat-button class="group_arrow" *ngIf="!bool" (click)="addAvailableGroup(selectedAvailableGroup)" style="margin-bottom:10px;">
-            <i style="font-size:30px;" class="fas fa-arrow-right"></i>
+        <button mat-button class="group_arrow" *ngIf="!bool" (click)="addAvailableGroup(selectedAvailableGroup)" style="margin-bottom:10px; color:white">
+          <i class="material-icons">keyboard_arrow_right</i>
         </button>
-        <button mat-button class="group_arrow" *ngIf="bool" (click)="addAvailableUser(selectedAvailableUser)" style="margin-bottom:10px;">
-            <i style="font-size:30px;" class="fas fa-arrow-right"></i>
+        <button mat-button class="group_arrow" *ngIf="bool" (click)="addAvailableUser(selectedAvailableUser)" style="margin-bottom:10px; color:white">
+          <i class="material-icons">keyboard_arrow_right</i>
         </button>
         <br>
-        <button mat-button class="group_arrow" *ngIf="!bool" (click)="removeMemberGroup(selectedMemberGroup)">
-            <i style="font-size:30px;" class="fas fa-arrow-left"></i>
+        <button mat-button class="group_arrow" *ngIf="!bool" (click)="removeMemberGroup(selectedMemberGroup)" style="color:white">
+          <i class="material-icons">keyboard_arrow_left</i>
         </button>
-        <button mat-button class="group_arrow" *ngIf="bool" (click)="removeMemberUser(selectedMemberUser)">
-            <i style="font-size:30px;" class="fas fa-arrow-left"></i>
+        <button mat-button class="group_arrow" *ngIf="bool" (click)="removeMemberUser(selectedMemberUser)" style="color:white">
+          <i class="material-icons">keyboard_arrow_left</i>
         </button>
     </div>
 

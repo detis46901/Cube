@@ -5,7 +5,7 @@
 
             <!-- first column used to contain instance id numbers -->
             <ng-container matColumnDef="instanceID">
-                <mat-header-cell class="instance-sm-head" *matHeaderCellDef> ID </mat-header-cell>
+                <mat-header-cell class="instance-sm-head" *matHeaderCellDef><h6><Strong> ID </Strong></h6></mat-header-cell>
                 <mat-cell class="instance-sm-cell" *matCellDef="let row">
                     <b>{{row.ID}}</b>
                 </mat-cell>
@@ -13,7 +13,7 @@
 
             <!-- second column containing the name of the instance -->
             <ng-container matColumnDef="name">
-                <mat-header-cell class="instance-md-head" *matHeaderCellDef> Instance Name </mat-header-cell>
+                <mat-header-cell class="instance-md-head" *matHeaderCellDef><h6><Strong> Instance Name </Strong></h6></mat-header-cell>
                 <mat-cell class="instance-md-cell" *matCellDef="let row">
                     {{row.name}}
                     <!-- <mat-form-field #input style="width:80%">
@@ -25,7 +25,7 @@
 
             <!-- fourth column containing type -->
             <ng-container matColumnDef="description">
-                <mat-header-cell class="instance-md-head" *matHeaderCellDef> Type </mat-header-cell>
+                <mat-header-cell class="instance-md-head" *matHeaderCellDef><h6><Strong> Type </Strong></h6></mat-header-cell>
                 <mat-cell class="instance-md-cell" *matCellDef="let row">
                     {{row.description}}
                     <!-- <mat-form-field>

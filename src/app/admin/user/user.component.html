@@ -7,8 +7,10 @@
         <!-- first column containing user ID -->
         <ng-container matColumnDef="userID">
             <mat-header-cell class="user-sm-head" *matHeaderCellDef>
-                <Strong> ID </Strong>
-                <span>&nbsp;<mat-slide-toggle name="booBoy" [(ngModel)]="publicFilter" (change)="applyFilter()"></mat-slide-toggle><strong>Public</strong></span>
+                <h6><Strong> ID </Strong></h6>
+                <span>&nbsp;
+                    <mat-slide-toggle name="booBoy" mat-slide-toggle id ="booBoy" [(ngModel)]="publicFilter" (change)="applyFilter()"></mat-slide-toggle><strong>Public</strong>
+                </span>
             </mat-header-cell>
             <mat-cell class="user-sm-cell" *matCellDef="let row">
                 {{row.ID}}
@@ -18,7 +20,7 @@
         <!-- second column containing the user's first name -->
         <ng-container matColumnDef="firstName">
             <mat-header-cell class="user-md-head" *matHeaderCellDef>
-                <Strong> First Name </Strong>
+                <h6><Strong> First Name </Strong></h6>
             </mat-header-cell>
             <mat-cell class="user-md-cell" *matCellDef="let row">
                 {{row.firstName}}
@@ -31,7 +33,7 @@
         <!-- third column containing the user's last name -->
         <ng-container matColumnDef="lastName">
             <mat-header-cell class="user-md-head" *matHeaderCellDef>
-                <Strong> Last Name </Strong>
+                <h6><Strong> Last Name </Strong></h6>
             </mat-header-cell>
             <mat-cell class="user-md-cell" *matCellDef="let row">
                 {{row.lastName}}
@@ -57,7 +59,7 @@
         <!-- fifth column stating whether the user is active or not with either check marks or a '-' -->
         <ng-container matColumnDef="active">
             <mat-header-cell class="user-sm-head" style="position:relative; right:1%;" *matHeaderCellDef>
-                <Strong> Active </Strong>
+                <h6><Strong> Active </Strong></h6>
             </mat-header-cell>
             <mat-cell class="user-sm-cell" *matCellDef="let row">
                 <mat-icon  *ngIf="row.active">check</mat-icon>
@@ -68,7 +70,7 @@
         <!-- sicth column stating whether the user is an admin or not with either check marks or a '-' -->
         <ng-container matColumnDef="administrator">
             <mat-header-cell class="user-sm-head" style="position:relative; right:1.2%;" *matHeaderCellDef>
-                <Strong> Admin </Strong>
+                <h6><Strong> Admin </Strong></h6>
             </mat-header-cell>
             <mat-cell class="user-sm-cell" *matCellDef="let row">
                 <mat-icon  *ngIf="row.administrator">check</mat-icon>
@@ -81,7 +83,7 @@
             <!-- create new user button -->
             <mat-header-cell class="user-xlg-head" *matHeaderCellDef>
                 <button style="border:1px solid white; color:white" mat-button id="userCreateNew" (click)="openNewUser()">
-                    <strong> New User </strong>
+                    New User 
                 </button>
             </mat-header-cell>
             <mat-cell class="user-xlg-cell" *matCellDef="let row">

@@ -695,7 +695,7 @@ export class MapService {
             this.mapConfig.featureList = []
             if (x.layer.layerType == "MyCube") {
                 clearInterval(x.updateInterval)
-                x.source.clear(true)
+                x.olLayer.getSource().clear(true)
             }
         })
         this.mapConfig.editmode = false
@@ -764,8 +764,8 @@ export class MapService {
             this.mapConfig.showFilterButton = true
             this.mapConfig.showStyleButton = true
             this.mapConfig.showDeleteButton = true
-        }
-        if (layer.layer.layerType == "MyCube" && layer.style.filter.column) {
+        }else{
+        // if (layer.layer.layerType == "MyCube" && layer.style.filter.column){
             this.mapConfig.filterOn = true
         }
         this.mapConfig.showStyleButton = true
