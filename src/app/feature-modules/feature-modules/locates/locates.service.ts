@@ -496,7 +496,7 @@ export class LocatesService {
     let strDate = new Date()
     i = mapConfig.userpagelayers.findIndex(x => x.layerID == table)
     let feat: Feature = this.mapConfig.selectedFeature
-    this.mapConfig.currentLayer.source.removeFeature(this.mapConfig.selectedFeature)
+    this.mapConfig.currentLayer.olLayer.getSource().removeFeature(this.mapConfig.selectedFeature)
     this.clearFeature(mapConfig.userpagelayers[i])
     let snackBarRef = this.snackBar.open('Ticket completed.', 'Undo', {
       duration: 4000
