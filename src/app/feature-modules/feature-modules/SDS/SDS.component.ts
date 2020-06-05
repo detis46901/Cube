@@ -28,6 +28,8 @@ import {unByKey} from 'ol/Observable';
 import { Select } from "ol/interaction";
 import { TestBed } from "@angular/core/testing";
 import {GeocodingService} from '../../../map/services/geocoding.service'
+import { Feature } from "ol";
+import Geometry from "ol/geom/Geometry";
 
 @Component({
   selector: "app-SDS",
@@ -371,8 +373,6 @@ export class SDSComponent implements OnInit {
       return;
     }
     this.mapConfig.selectedFeatureSource.clear();
-
-    let selectedFeature = 0;
     // if (this.SDSConfig.moduleSettings.auto_select != true){
     //   let test = new Observable
     //         test.un("change", this.AutoSelect);
@@ -395,6 +395,7 @@ export class SDSComponent implements OnInit {
             LAYERS: layer.layer.layerIdent,
             exceptions: "application/vnd.ogc.se_inimage",
             tilesOrigin: 179999.975178479 + "," + 1875815.463803232,
+            buffer: 25,
           },
           projection: "EPSG:4326",
           serverType: "geoserver",
@@ -411,7 +412,8 @@ export class SDSComponent implements OnInit {
           this.mapConfig.map.getView().getCenter(),
           viewResolution,
           "EPSG:3857",
-          { INFO_FORMAT: "application/json" }
+          { INFO_FORMAT: "application/json",
+            buffer: 25, }
         );
         if (url3) {
           this.wmsService.getGeoJSONInfo(url3).subscribe((data: string) => {
@@ -423,7 +425,12 @@ export class SDSComponent implements OnInit {
               this.clearFeature(this.mapConfig.currentLayer);
             } else {
               console.log("feature found");
-              if (this.SDSConfig.selectedItem != selectedFeature) {
+              let tempFeature: Feature<Geometry>
+              tempFeature = new GeoJSON({
+                dataProjection: "EPSG:4326",
+                featureProjection: "EPSG:3857",
+              }).readFeatures(data)[0];
+              if (tempFeature != this.mapConfig.selectedFeature) {
                 this.mapConfig.selectedFeature = new GeoJSON({
                   dataProjection: "EPSG:4326",
                   featureProjection: "EPSG:3857",
@@ -433,9 +440,11 @@ export class SDSComponent implements OnInit {
                 );
                 this.mapConfig.selectedFeature.setStyle(this.mapStyles.selected);
                 this.selectFeature(this.mapConfig.currentLayer);
-                this.SDSConfig.selectedItem = selectedFeature
+                //this.SDSConfig.selectedItem = selectedFeature
                 }else{
                   console.log("feature already found")
+                  // this.mapConfig.selectedFeature.setStyle(this.mapStyles.selected);
+                  // this.selectFeature(this.mapConfig.currentLayer);
                 }
               }      
             if (url) {
@@ -493,6 +502,7 @@ export class SDSComponent implements OnInit {
             LAYERS: layer.layer.layerIdent,
             exceptions: "application/vnd.ogc.se_inimage",
             tilesOrigin: 179999.975178479 + "," + 1875815.463803232,
+            buffer: 25,
           },
           projection: "EPSG:4326",
           serverType: "geoserver",

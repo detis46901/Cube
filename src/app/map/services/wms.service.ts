@@ -59,10 +59,10 @@ export class WMSService {
         // let getFeatureInfoController = Ext.ComponentMgr.all.find(function(c) {
         //     return c instanceof gxp.plugins.WMSGetFeatureInfo;
         //   });
-        this.options = {
-            'Buffer': '30',
+        this.options.getfeatureinfo = {
+            'Buffer':'25'           
         }
-        console.log(this.options)
+        console.log(this.options.getfeatureinfo)
         return this.http.request("GET", URL, {responseType: 'text'}).pipe(
             map((responseData) => {
                 //console.log(responseData)
