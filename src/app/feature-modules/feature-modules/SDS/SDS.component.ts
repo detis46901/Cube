@@ -124,6 +124,7 @@ export class SDSComponent implements OnInit {
         this.SDSConfig.moduleSettings.properties.forEach((x) => {
           if (x.stringType.name == "SDS Linked Field") {
             this.SDSConfig.linkedField = x.stringType.value;
+            this.SDSConfig.itemDataForm.dataForm.find((y) => y.field == this.SDSConfig.linkedField).visible = false
           }
           if (x.stringType.name == "Label") {
             this.SDSConfig.label = x.stringType.value;
@@ -151,8 +152,7 @@ export class SDSComponent implements OnInit {
   }
 
   public selectFeature(layer): boolean {
-    this.mapConfig.showDeleteButton = true;
-    //this.styleSelectedFeature(layer)
+    if (this.mapConfig.currentLayer.layerPermissions.edit) {this.mapConfig.showDeleteButton = true;}
     this.SDSConfig.itemDataForm.rowID = this.mapConfig.selectedFeature.get(
       "id"
     );
