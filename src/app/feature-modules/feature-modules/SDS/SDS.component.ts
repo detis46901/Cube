@@ -27,6 +27,7 @@ import Observable from "ol/Observable";
 import {unByKey} from 'ol/Observable';
 import { Select } from "ol/interaction";
 import { TestBed } from "@angular/core/testing";
+import {GeocodingService} from '../../../map/services/geocoding.service'
 
 @Component({
   selector: "app-SDS",
@@ -57,7 +58,8 @@ export class SDSComponent implements OnInit {
     private dataFormService: DataFormService,
     private wmsService: WMSService,
     private mapStyles: mapStyles,
-    private mapService: MapService
+    private mapService: MapService,
+    private geocodingService: GeocodingService
   ) {}
 
   @Input() mapConfig: MapConfig;
@@ -98,7 +100,7 @@ export class SDSComponent implements OnInit {
         this.SDSConfig.moduleName,
         this.SDSConfig.moduleSettings.auto_select
       );
-      this.AutoSelect = this.mapConfig.map.on("moveend", (e: any) => {
+      this.AutoSelect = this.geocodingService.geolocation.on("change", e => {
         // this.selectFeature(this.mapConfig.currentLayer)
         this.mapClickEvent(e);
       });
