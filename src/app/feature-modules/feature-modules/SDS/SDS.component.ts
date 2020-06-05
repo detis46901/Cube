@@ -371,6 +371,8 @@ export class SDSComponent implements OnInit {
       return;
     }
     this.mapConfig.selectedFeatureSource.clear();
+
+    let selectedFeature = 0;
     // if (this.SDSConfig.moduleSettings.auto_select != true){
     //   let test = new Observable
     //         test.un("change", this.AutoSelect);
@@ -421,16 +423,21 @@ export class SDSComponent implements OnInit {
               this.clearFeature(this.mapConfig.currentLayer);
             } else {
               console.log("feature found");
-              this.mapConfig.selectedFeature = new GeoJSON({
-                dataProjection: "EPSG:4326",
-                featureProjection: "EPSG:3857",
-              }).readFeatures(data)[0];
-              this.mapConfig.selectedFeatureSource.addFeature(
-                this.mapConfig.selectedFeature
-              );
-              this.mapConfig.selectedFeature.setStyle(this.mapStyles.selected);
-              this.selectFeature(this.mapConfig.currentLayer);
-            }
+              if (this.SDSConfig.selectedItem != selectedFeature) {
+                this.mapConfig.selectedFeature = new GeoJSON({
+                  dataProjection: "EPSG:4326",
+                  featureProjection: "EPSG:3857",
+                }).readFeatures(data)[0];
+                this.mapConfig.selectedFeatureSource.addFeature(
+                  this.mapConfig.selectedFeature
+                );
+                this.mapConfig.selectedFeature.setStyle(this.mapStyles.selected);
+                this.selectFeature(this.mapConfig.currentLayer);
+                this.SDSConfig.selectedItem = selectedFeature
+                }else{
+                  console.log("feature already found")
+                }
+              }      
             if (url) {
               this.wmsService
                 .getfeatureinfo(url, false)

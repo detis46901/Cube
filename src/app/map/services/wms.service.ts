@@ -1,5 +1,5 @@
 
-import {map} from 'rxjs/operators';
+import {map, buffer} from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from "@angular/core";
 import { Observable ,  Subject } from 'rxjs'
@@ -7,6 +7,11 @@ import { UserPageLayer } from '../../../_models/layer.model';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from 'environments/environment'
 import { filter, catchError, mergeMap } from 'rxjs/operators';
+import { FnParam } from '@angular/compiler/src/output/output_ast';
+import { WMTS } from 'ol/source';
+import { MapService } from "../../map/services/map.service";
+import { Options } from 'ol/source/WMTS'
+
 
 @Injectable()
 
@@ -18,7 +23,10 @@ export class WMSService {
     public popupText = new Subject<string>();
     popupText$ = this.popupText.asObservable();
     private messageSubject = new Subject<any>();
-    public sanitizedURL: SafeResourceUrl
+    public sanitizedURL: SafeResourceUrl;
+    public wmts: WMTS;
+    private mapService: MapService;
+    public wmsoptions: Options
 
     constructor(http: HttpClient, public sanitizer: DomSanitizer) {
         this.http = http;
@@ -45,8 +53,16 @@ export class WMSService {
     //     console.log("in Get Message")
     //     return this.messageSubject.asObservable();
     // }
+    
 
     getfeatureinfo(URL, mouseDown: boolean) {
+        // let getFeatureInfoController = Ext.ComponentMgr.all.find(function(c) {
+        //     return c instanceof gxp.plugins.WMSGetFeatureInfo;
+        //   });
+        this.options = {
+            'Buffer': '30',
+        }
+        console.log(this.options)
         return this.http.request("GET", URL, {responseType: 'text'}).pipe(
             map((responseData) => {
                 //console.log(responseData)
