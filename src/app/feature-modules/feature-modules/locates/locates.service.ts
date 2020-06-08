@@ -3,7 +3,7 @@ import { UserPageLayer, MyCubeField } from '_models/layer.model';
 import { MapConfig, featureList } from 'app/map/models/map.model';
 import { geoJSONService } from 'app/map/services/geoJSON.service';
 import { Locate, locateStyles, locateConfig } from './locates.model'
-import { LogFormConfig, LogField } from '../../../shared.components/data-component/data-form.model'
+import { DataFormConfig, LogFormConfig, LogField } from '../../../shared.components/data-component/data-form.model'
 import { StyleService } from './style.service'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
@@ -126,6 +126,8 @@ export class LocatesService {
     this.createInterval(layer)
     this.locate = null
    if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction) }
+   this.mapConfig.myCubeConfig = new DataFormConfig
+        this.mapConfig.myCubeComment = new LogFormConfig
     return false
   }
 
@@ -354,7 +356,18 @@ export class LocatesService {
         locate.email = ""
       }
       this.locate = locate
-      this.geolocate(Addname, instanceID)
+      this.geojsonservice.GetSome(this.mapConfig.currentLayer.layer.ID, "ticket = '" + locate.ticket + "'")
+        .subscribe((x) => {
+          console.log(x[0][0])
+          if (x[0][0]['features']) {
+            let snackBarRef = this.snackBar.open('Ticket was not inserted.  It is a duplicate.', '', {
+              duration: 4000
+            });
+          }
+          else {
+            this.geolocate(Addname, instanceID)
+          }
+        })
     }
     catch (e) {
       let snackBarRef = this.snackBar.open('Locate email is not formed correctly.', '', {
@@ -473,11 +486,14 @@ export class LocatesService {
                 })
               }
               else {
+                //Code should never get to this point.  There is another check further up.
                 let snackBarRef = this.snackBar.open('Ticket was not inserted.  It is a duplicate.', '', {
                   duration: 4000
                 });
                 this.sqlService.Delete(table, id)
-                  .subscribe()
+                  .subscribe((x) => {
+
+                  })
               }
             })
         }

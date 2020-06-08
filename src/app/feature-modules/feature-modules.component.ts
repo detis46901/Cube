@@ -1,6 +1,7 @@
 import { Component, OnInit, Input,ViewChildren, QueryList, AfterViewInit, OnDestroy } from '@angular/core';
 import { MapConfig } from '../map/models/map.model';
 import { SDSComponent } from './feature-modules/SDS/SDS.component';
+import { PaserComponent } from './feature-modules/paser/paser.component'
 import { UserPageLayer } from '_models/layer.model';
 import { OpenAerialMapComponent } from './feature-modules/open-aerial-map/open-aerial-map.component';
 import { LocatesComponent } from './feature-modules/locates/locates.component';
@@ -26,6 +27,7 @@ export class FeatureModulesComponent implements OnInit, AfterViewInit, OnDestroy
   @ViewChildren(FeatureModulesComponent) components: QueryList<any>
   @ViewChildren(OpenAerialMapComponent) OAM: QueryList<any>
   @ViewChildren(WOComponent) WO: QueryList<any>
+  @ViewChildren(PaserComponent) paser: QueryList<any>
 
   private featureModule = new Array<featureModule>()
 
@@ -47,6 +49,12 @@ export class FeatureModulesComponent implements OnInit, AfterViewInit, OnDestroy
       let FM = new featureModule;
       FM.moduleInstanceID = SDSInstance.instance.ID;
       FM.componentReference = SDSInstance;
+      this.featureModule.push(FM);
+    });
+    this.paser.forEach(PaserInstance => {
+      let FM = new featureModule;
+      FM.moduleInstanceID = PaserInstance.instance.ID;
+      FM.componentReference = PaserInstance;
       this.featureModule.push(FM);
     });
     this.locates.forEach(locatesInstance => {

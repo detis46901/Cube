@@ -30,6 +30,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { LocatesModule } from './feature-modules/locates/locates.module';
 import { SDSModule } from './feature-modules/SDS/SDS.module'
+import { PaserModule } from './feature-modules/paser/paser.module'
 import { openAerialMapModule } from './feature-modules/open-aerial-map/open-aerial-map.module';
 import {WOModule} from './feature-modules/WO/WO.module';
 import { FeatureModulesAdminComponent } from './feature-modules-admin/feature-modules-admin.component'
@@ -41,6 +42,7 @@ import { FeatureModulesAdminComponent } from './feature-modules-admin/feature-mo
     LocatesModule,
     openAerialMapModule,
     SDSModule,
+    PaserModule,
     WOModule,
     FormsModule,
         ReactiveFormsModule,

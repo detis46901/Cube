@@ -18,7 +18,7 @@ import View from 'ol/View';
 import XYZ from 'ol/source/XYZ';
 import OSM from 'ol/source/OSM';
 import { transform } from 'ol/proj';
-import { defaults as defaultControls } from 'ol/control';
+import { defaults as defaultControls, Control } from 'ol/control';
 import Collection from 'ol/Collection';
 import Feature from 'ol/Feature';
 import { GeocodingService } from './services/geocoding.service'
@@ -184,15 +184,12 @@ export class MapComponent implements OnInit {
                         projection: 'EPSG:3857',
                         center: transform([environment.centerLong, environment.centerLat], 'EPSG:4326', 'EPSG:3857'),
                         zoom: environment.centerZoom,
-                        enableRotation: false
+                        enableRotation: true
                     })
                     this.mapConfig.map = new Map({
                         layers: this.mapConfig.baseLayers,
                         view: this.mapConfig.view,
-                        controls: defaultControls({
-                            attribution: false,
-                            zoom: null
-                        })
+                        controls: []
                     });   
 
                     this.mapConfig.evkey = this.mapConfig.map.on('click', (e: any) => {

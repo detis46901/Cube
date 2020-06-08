@@ -80,6 +80,7 @@ export class LocatesComponent implements OnInit, OnDestroy {
     this.layer = layer
     this.locateConfig.expanded = true
     this.locateConfig.visible = true
+    this.ticket = null
     this.locatesservice.setCurrentLayer(layer)
     return true
   }

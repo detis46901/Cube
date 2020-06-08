@@ -1,14 +1,14 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { MapConfig, mapStyles } from "../../../map/models/map.model";
 import { Subscription } from "rxjs";
-import { SDSService } from "./SDS.service";
+import { PaserService } from "./paser.service";
 import { UserService } from "../../../../_services/_user.service";
 import { User } from "../../../../_models/user.model";
 import { ModuleInstanceService } from "../../../../_services/_moduleInstance.service";
 import { ModuleInstance } from "../../../../_models/module.model";
 import { Clipboard } from "ts-clipboard";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { SDSConfig, SDSStyles } from "./SDS.model";
+import { PaserConfig, PaserStyles } from "./paser.model";
 import Autolinker from "autolinker";
 import { UserPageLayer } from "_models/layer.model";
 import { environment } from "environments/environment";
@@ -32,11 +32,11 @@ import { Feature } from "ol";
 import Geometry from "ol/geom/Geometry";
 
 @Component({
-  selector: "app-SDS",
-  templateUrl: "./SDS.component.html",
-  styleUrls: ["./SDS.component.css"],
+  selector: "app-paser",
+  templateUrl: "./paser.component.html",
+  styleUrls: ["./paser.component.css"],
 })
-export class SDSComponent implements OnInit {
+export class PaserComponent implements OnInit {
   public expanded: boolean = false;
   public expandedSubscription: Subscription;
   public SDSConfigSubscription: Subscription;
@@ -47,15 +47,15 @@ export class SDSComponent implements OnInit {
   public toDate: Date;
   public tminus30: Date;
   public tab: string;
-  public SDSConfig = new SDSConfig();
+  public SDSConfig = new PaserConfig();
   public URL: string;
   public AutoSelect: any;
 
   constructor(
     public snackBar: MatSnackBar,
-    public SDSservice: SDSService,
+    public SDSservice: PaserService,
     public userService: UserService,
-    public locateStyles: SDSStyles,
+    public locateStyles: PaserStyles,
     public moduleInstanceService: ModuleInstanceService,
     private dataFormService: DataFormService,
     private wmsService: WMSService,
@@ -102,10 +102,15 @@ export class SDSComponent implements OnInit {
         this.SDSConfig.moduleName,
         this.SDSConfig.moduleSettings.autoSelect
       );
-      this.AutoSelect = this.geocodingService.geolocation.on("change", e => {
-        // this.selectFeature(this.mapConfig.currentLayer)
-        this.mapClickEvent(e);
-      });
+      //this isn't optimal.  You'll have to make sure it's in navigation mode BEFORE you select it current.  I'd rather have it do this whenever these items are true.
+      // perhaps put it in the "reloadLayer" function?  At least it would come on at most 20 seconds after selecting current.
+      if (this.geocodingService.centerMapToggle == true && this.geocodingService.isTracking == true) {
+        this.AutoSelect = this.geocodingService.geolocation.on("change", e => {
+          // this.selectFeature(this.mapConfig.currentLayer)
+          this.mapClickEvent(e);
+        });
+  
+      }
     } 
     return this.SDSservice.setCurrentLayer(layer);
   }
@@ -120,9 +125,6 @@ export class SDSComponent implements OnInit {
         x.editMode = true;
         this.SDSConfig.itemDataForm = x;
         this.SDSConfig.itemDataForm.visible = true;
-        this.SDSConfig.itemDataForm.dataForm.find(
-          (x) => x.field == "id"
-        ).visible = false;
         this.SDSConfig.moduleSettings.properties.forEach((x) => {
           if (x.stringType.name == "SDS Linked Field") {
             this.SDSConfig.linkedField = x.stringType.value;
@@ -155,17 +157,13 @@ export class SDSComponent implements OnInit {
 
   public selectFeature(layer): boolean {
     if (this.mapConfig.currentLayer.layerPermissions.edit) {this.mapConfig.showDeleteButton = true;}
-    this.SDSConfig.itemDataForm.rowID = this.mapConfig.selectedFeature.get(
-      "id"
-    );
+    this.SDSConfig.itemDataForm.rowID = this.mapConfig.selectedFeature.get(this.SDSConfig.linkedField);
     this.SDSservice.getSDSRecords(
       this.SDSConfig.itemDataForm,
       this.SDSConfig.linkedField
     ).then((x) => {
       this.SDSConfig.list = x;
-      // console.log(this.SDSConfig.list)
       this.SDSConfig.itemDataForm.visible = true;
-      console.log(this.SDSConfig.itemDataForm);
       this.goToTab("Input");
     });
     return false; //this allows it to load the MyCube layer
@@ -264,7 +262,6 @@ export class SDSComponent implements OnInit {
         this.SDSConfig.selectedItem = itemID;
         dataFormConfig.dataForm.find((x) => x.field == "id").visible = false;
         this.SDSConfig.itemDataForm.dataForm.find((y) => y.field == this.SDSConfig.linkedField).visible = false
-
         this.SDSConfig.showLog = false;
         // this.SDSConfig.moduleSettings.properties.forEach((x) => {
         //   if (x.stringType.name == "Label Field") {
@@ -327,14 +324,28 @@ export class SDSComponent implements OnInit {
     this.renderLogConfig(logFormConfig);
   }
 
-  public addSDS() {
+  public addSDS(rating: number) {
+    this.SDSConfig.itemDataForm.dataForm.forEach((x) => {
+      if (x.field == 'rating') {
+        x.value = rating
+      }
+    })
     this.dataFormService
       .addDataForm(
         this.SDSConfig.itemDataForm,
         this.SDSConfig.linkedField,
-        this.mapConfig.selectedFeature.get("id")
+        this.mapConfig.selectedFeature.get(this.SDSConfig.linkedField)
       )
       .then((x) => {
+        this.SDSConfig.itemDataForm.rowID = this.mapConfig.selectedFeature.get(this.SDSConfig.linkedField);
+        this.SDSservice.getSDSRecords(
+          this.SDSConfig.itemDataForm,
+          this.SDSConfig.linkedField
+        ).then((x) => {
+          this.SDSConfig.list = x;
+          this.SDSConfig.itemDataForm.visible = true;
+          this.goToTab("Input");
+        });
         let logField = new LogField();
         logField.userid = this.mapConfig.user.ID;
         logField.auto = true;
@@ -347,6 +358,8 @@ export class SDSComponent implements OnInit {
         }
         this.SDSConfig.selectedItemLog.logForm.push(logField);
         this.dataFormService.addLogForm(logField).then((x) => {});
+       
+    
       });
   }
 
