@@ -27,7 +27,6 @@ import Observable from "ol/Observable";
 import {unByKey} from 'ol/Observable';
 import { Select } from "ol/interaction";
 import { TestBed } from "@angular/core/testing";
-import {GeocodingService} from '../../../map/services/geocoding.service'
 import { Feature } from "ol";
 import Geometry from "ol/geom/Geometry";
 
@@ -61,7 +60,6 @@ export class SDSComponent implements OnInit {
     private wmsService: WMSService,
     private mapStyles: mapStyles,
     private mapService: MapService,
-    private geocodingService: GeocodingService
   ) {}
 
   @Input() mapConfig: MapConfig;
@@ -102,10 +100,6 @@ export class SDSComponent implements OnInit {
         this.SDSConfig.moduleName,
         this.SDSConfig.moduleSettings.autoSelect
       );
-      this.AutoSelect = this.geocodingService.geolocation.on("change", e => {
-        // this.selectFeature(this.mapConfig.currentLayer)
-        this.mapClickEvent(e);
-      });
     } 
     return this.SDSservice.setCurrentLayer(layer);
   }
@@ -368,167 +362,5 @@ export class SDSComponent implements OnInit {
         this.dataFormService.addLogForm(logField).then((X) => {});
       });
     this.SDSConfig.tab = "List";
-  }
-
-  public mapClickEvent(evt) {
-    if (this.mapConfig.drawMode != "") {
-      return;
-    }
-    this.mapConfig.selectedFeatureSource.clear();
-    // if (this.SDSConfig.moduleSettings.auto_select != true){
-    //   let test = new Observable
-    //         test.un("change", this.AutoSelect);
-    // }
-    if (this.mapConfig.measureShow) {
-      return;
-    } //disables select/deselect when the measure tool is open.
-    let layer = this.mapConfig.currentLayer;
-    switch (this.mapConfig.currentLayer.layer.layerType) {
-      case "Geoserver": {
-        let hit = false;
-        let url2 = this.wmsService.formLayerRequest(layer);
-        if (layer.layer.layerType == "WMTS") {
-        }
-        let wmsSource = new ImageWMS({
-          url: url2,
-          params: {
-            FORMAT: "image/png",
-            VERSION: "1.1.1",
-            LAYERS: layer.layer.layerIdent,
-            exceptions: "application/vnd.ogc.se_inimage",
-            tilesOrigin: 179999.975178479 + "," + 1875815.463803232,
-            buffer: 25,
-          },
-          projection: "EPSG:4326",
-          serverType: "geoserver",
-          crossOrigin: "anonymous",
-        });
-        let viewResolution = this.mapConfig.map.getView().getResolution();
-        let url = wmsSource.getFeatureInfoUrl(
-          this.mapConfig.map.getView().getCenter(),
-          viewResolution,
-          "EPSG:3857",
-          { INFO_FORMAT: "text/html" }
-        );
-        let url3 = wmsSource.getFeatureInfoUrl(
-          this.mapConfig.map.getView().getCenter(),
-          viewResolution,
-          "EPSG:3857",
-          { INFO_FORMAT: "application/json",
-            buffer: 25, }
-        );
-        if (url3) {
-          this.wmsService.getGeoJSONInfo(url3).subscribe((data: string) => {
-            hit = true;
-            let data1 = data.split('numberReturned":'); //probably a better way to do this.
-            if (data1[1][0] == "0") {
-              console.log("no feature found");
-              //if (this.featuremodulesservice.clearFeature(this.mapConfig, this.mapConfig.currentLayer)) { return }
-              this.clearFeature(this.mapConfig.currentLayer);
-            } else {
-              console.log("feature found");
-              let tempFeature: Feature<Geometry>
-              tempFeature = new GeoJSON({
-                dataProjection: "EPSG:4326",
-                featureProjection: "EPSG:3857",
-              }).readFeatures(data)[0];
-              if (tempFeature != this.mapConfig.selectedFeature) {
-                this.mapConfig.selectedFeature = new GeoJSON({
-                  dataProjection: "EPSG:4326",
-                  featureProjection: "EPSG:3857",
-                }).readFeatures(data)[0];
-                this.mapConfig.selectedFeatureSource.addFeature(
-                  this.mapConfig.selectedFeature
-                );
-                this.mapConfig.selectedFeature.setStyle(this.mapStyles.selected);
-                this.selectFeature(this.mapConfig.currentLayer);
-                //this.SDSConfig.selectedItem = selectedFeature
-                }else{
-                  console.log("feature already found")
-                  // this.mapConfig.selectedFeature.setStyle(this.mapStyles.selected);
-                  // this.selectFeature(this.mapConfig.currentLayer);
-                }
-              }      
-            if (url) {
-              this.wmsService
-                .getfeatureinfo(url, false)
-                .subscribe((data: any) => {
-                  this.mapService.parseAndSendWMS(data);
-                });
-            }
-          });
-        }
-        break;
-      }
-      case "MapServer": {
-        let url2 = this.wmsService.formLayerRequest(layer);
-        let wmsSource = new ImageWMS({
-          url: url2,
-          params: {
-            FORMAT: "image/png",
-            VERSION: "1.1.1",
-            LAYERS: layer.layer.layerIdent,
-            exceptions: "application/vnd.ogc.se_inimage",
-            tilesOrigin: 179999.975178479 + "," + 1875815.463803232,
-          },
-          projection: "EPSG:4326",
-          serverType: "geoserver",
-          crossOrigin: "anonymous",
-        });
-        let viewResolution = this.mapConfig.map.getView().getResolution();
-        let url = wmsSource.getFeatureInfoUrl(
-          this.mapConfig.map.getView().getCenter(),
-          viewResolution,
-          "EPSG:3857",
-          { INFO_FORMAT: "text/html" }
-        );
-        if (url) {
-          this.wmsService.getfeatureinfo(url, false).subscribe((data: any) => {
-            this.mapService.parseAndSendWMS(data);
-          });
-          this.selectFeature(this.mapConfig.currentLayer);
-        }
-        break;
-      }
-      case "WMTS": {
-        let url2 = this.wmsService.formLayerRequest(layer);
-        if (layer.layer.layerType == "WMTS") {
-          let layerroot = layer.layer.server.serverURL.split("/gwc")[0];
-          url2 = layerroot + "/wms?";
-        }
-        let wmsSource = new ImageWMS({
-          url: url2,
-          params: {
-            FORMAT: "image/png",
-            VERSION: "1.1.1",
-            LAYERS: layer.layer.layerIdent,
-            exceptions: "application/vnd.ogc.se_inimage",
-            tilesOrigin: 179999.975178479 + "," + 1875815.463803232,
-            buffer: 25,
-          },
-          projection: "EPSG:4326",
-          serverType: "geoserver",
-          crossOrigin: "anonymous",
-        });
-        let viewResolution = this.mapConfig.map.getView().getResolution();
-        wmsSource.get;
-        let url = wmsSource.getFeatureInfoUrl(
-          this.mapConfig.map.getView().getCenter(),
-          viewResolution,
-          "EPSG:3857",
-          { INFO_FORMAT: "text/html" }
-        );
-        if (url) {
-          this.wmsService.getfeatureinfo(url, false).subscribe((data: any) => {
-            this.mapService.parseAndSendWMS(data);
-          });
-        }
-        break;
-      }
-      // case ("MyCube"): {
-      //     this.findMyCubeFeature(evt)
-      //     break
-      // }
-    }
   }
 }

@@ -4,6 +4,7 @@ import { LocatesAdminService } from './feature-modules/locates/locates-admin.ser
 import { OpenAerialMapAdminService} from './feature-modules/open-aerial-map/open-aerial-map-admin.service'
 import { SDSAdminService } from './feature-modules/SDS/SDS-admin.service'
 import { WOAdminService } from './feature-modules/WO/WO-admin.service'
+import {PaserAdminService} from './feature-modules/paser/paser-admin.service'
 
 //add the service name
 
@@ -12,7 +13,7 @@ import { WOAdminService } from './feature-modules/WO/WO-admin.service'
 export class FeatureModulesAdminService {
 
   //add [module identity] + 'service: ' + [module service name]
-  constructor(public locatesadminservice: LocatesAdminService, public openAerialMapadminservice: OpenAerialMapAdminService, public SDSadminservice: SDSAdminService, public WOadminservice: WOAdminService) { }
+  constructor(public locatesadminservice: LocatesAdminService, public openAerialMapadminservice: OpenAerialMapAdminService, public SDSadminservice: SDSAdminService, public WOadminservice: WOAdminService, public paseradminservice: PaserAdminService) { }
 
   public determineModule() {
 
