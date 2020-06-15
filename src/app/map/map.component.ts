@@ -841,8 +841,10 @@ export class MapComponent implements OnInit {
         this.mapConfig.selectedFeatureSource.clear()
         if (this.mapConfig.measureShow) { return }  //disables select/deselect when the measure tool is open.
         let layer = this.mapConfig.currentLayer
+        console.log(this.mapConfig.currentLayer.layer.layerType)
         switch (this.mapConfig.currentLayer.layer.layerType) {
-            case ("GeoserverWFS"): {
+            case ("GeoserverWFS"):
+            case ("Geoserver"): {
                 let url2 = this.wmsService.formLayerRequest(layer);
                 if (layer.layer.layerType == 'WMTS') { }
                 let wmsSource = new ImageWMS({
@@ -929,12 +931,6 @@ export class MapComponent implements OnInit {
                 this.findMyCubeFeature(evt)
                 break
             }
-            case ("GeoserverWFS"): {
-                console.log('GeoserverWFS selectFeature')
-
-                this.findMyCubeFeature(evt)
-                break
-            }
             case ("Module"): {
                 let hit = false;
 
@@ -988,8 +984,6 @@ export class MapComponent implements OnInit {
                         if (selectedLayer === layer.olLayer) {
                             hit = true;
                             this.mapConfig.selectedFeature = feature;
-                            console.log(this.mapConfig.selectedFeature.get('name'))
-                            this.mapConfig.selectedFeature.setId(this.mapConfig.selectedFeature.get('name'))
                         }
                         ;
                     }, {
