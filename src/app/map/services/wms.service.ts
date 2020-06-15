@@ -156,6 +156,11 @@ export class WMSService {
                 let url: string = layer.layer.server.serverURL;
                 return url;
             }
+            case ('GeoserverWFS'): {
+                let url: string = layer.layer.server.serverURL;
+                return url;
+                // let service: string = layer.layer.layerIdent.split(':')[0]
+            }
             case ('ArcGISRest'): {
                 console.log("Found ArcGISRest Layer")
                 let norest: string = layer.layer.server.serverURL.split('/rest/')[0] + '/' + layer.layer.server.serverURL.split('/rest/')[1];

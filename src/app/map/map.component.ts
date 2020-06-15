@@ -46,8 +46,12 @@ import WMTS from 'ol/source/WMTS';
 import TileWMS from 'ol/source/TileWMS';
 import { FeatureModulesService } from '../feature-modules/feature-modules.service'
 import KML from 'ol/format/KML';
-import {default as ob} from 'ol/Observable';
+import { default as ob } from 'ol/Observable';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { bbox as bboxStrategy } from 'ol/loadingstrategy';
+import { Stroke, Style } from 'ol/style';
+import GML3 from 'ol/format/GML3';
+import {transformExtent} from 'ol/proj';
 
 
 @Component({
@@ -93,7 +97,7 @@ export class MapComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        console.log('4-21-20')
+        console.log('6-14-20')
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.public = currentUser && currentUser.public;
@@ -186,11 +190,12 @@ export class MapComponent implements OnInit {
                         zoom: environment.centerZoom,
                         enableRotation: true
                     })
+                    console.log(this.mapConfig.baseLayers)
                     this.mapConfig.map = new Map({
                         layers: this.mapConfig.baseLayers,
                         view: this.mapConfig.view,
                         controls: []
-                    });   
+                    });
 
                     this.mapConfig.evkey = this.mapConfig.map.on('click', (e: any) => {
                         this.mapClickEvent(e)
@@ -342,16 +347,16 @@ export class MapComponent implements OnInit {
 
     // new features: assignNewLayerIndex, deleteLayerIndex, reloadIndex -BB
 
-    public assignNewLayerIndex(layer: UserPageLayer){
+    public assignNewLayerIndex(layer: UserPageLayer) {
         let len = this.mapService.mapConfig.userpagelayers.length
         layer.layerOrder = (len - 1)
         this.reloadIndex()
         this.mapService.mapConfig.userpagelayers.forEach((x) => {
             console.log(x.layerOrder)
-        })        
+        })
     }
 
-    public deleteLayerIndex(layer: UserPageLayer){
+    public deleteLayerIndex(layer: UserPageLayer) {
         let ind = layer.layerOrder
         console.log(ind)
         this.reloadIndex()
@@ -360,7 +365,7 @@ export class MapComponent implements OnInit {
         this.reloadIndex()
     }
 
-    public reloadIndex(){
+    public reloadIndex() {
         let i: number = 0
         this.mapService.mapConfig.userpagelayers.forEach((x) => {
             x.layerOrder = i
@@ -375,12 +380,12 @@ export class MapComponent implements OnInit {
         })
         console.log('index reloaded')
     }
-    
+
     public addUserPageLayer(layer: UserPageLayer) {
-        this.mapService.addUserPageLayer(layer)  
+        this.mapService.addUserPageLayer(layer)
         console.log(`${layer.layer.layerName} has been added to the page`)
         this.assignNewLayerIndex(layer)
-        console.log(`index of ${layer.layer.layerName}: `+ layer.layerOrder) 
+        console.log(`index of ${layer.layer.layerName}: ` + layer.layerOrder)
     }
 
     public toggleDefaultOn(layer: UserPageLayer) {
@@ -396,7 +401,7 @@ export class MapComponent implements OnInit {
         url = environment.serverWithApiUrl + url + '&apikey=' + this.token
         const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
         console.log(environment.proxyUrl + '/tinyurl.com/api-create.php?url=' + encodeURIComponent(url))
-        this._http.get(environment.proxyUrl + '/tinyurl.com/api-create.php?url=' + encodeURIComponent(url), { headers, responseType: 'text'}).subscribe((x) => {
+        this._http.get(environment.proxyUrl + '/tinyurl.com/api-create.php?url=' + encodeURIComponent(url), { headers, responseType: 'text' }).subscribe((x) => {
             Clipboard.copy(x)
         })
         this.snackBar.open("Copied to the clipboard", "", {
@@ -465,7 +470,7 @@ export class MapComponent implements OnInit {
                 })
             }
             else {
-                if (layer.layer.layerType == 'MyCube') {this.mapService.setCurrentMyCube(layer)}
+                if (layer.layer.layerType == 'MyCube') { this.mapService.setCurrentMyCube(layer) }
             }
         });
     }
@@ -513,7 +518,7 @@ export class MapComponent implements OnInit {
         //this.layerCtrl.setValue('')
         console.log('added layer')
         this.assignNewLayerIndex(UPL)
-        console.log(`index of ${UPL.layer.layerName}: `+ UPL.layerOrder)
+        console.log(`index of ${UPL.layer.layerName}: ` + UPL.layerOrder)
     }
 
     public addSearch(searchResults): void {
@@ -572,9 +577,16 @@ export class MapComponent implements OnInit {
         console.log('testButton')
     }
 
+
+
+    public styleFunction(layer: UserPageLayer, feature: Feature, version: string): Style {
+        let style = this.featureModuleService.styleLayer(this.mapConfig, layer, feature, 'load')
+        return style
+    }
     //loadLayers will load during map init and load the layers that should come on by themselves with the "defaultON" property set (in userPageLayers)
     public loadLayers(mapConfig: MapConfig, init: boolean, single?: boolean): Promise<any> {
         //this.reloadOrder()
+
         this.mapConfig = mapConfig
         let j = 0;
         let promise = new Promise((resolve) => {
@@ -586,10 +598,57 @@ export class MapComponent implements OnInit {
                     }
                 }
                 userpagelayer.layerShown = userpagelayer.defaultON;
-
                 if (!userpagelayer.olLayer) {
-
                     switch (userpagelayer.layer.layerType) {
+                        case "GeoserverWFS": {
+                            let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
+                                return (this.styleFunction(userpagelayer, feature, 'current'));
+                            })
+                            var vectorSource = new VectorSource({
+                                format: new GeoJSON(),
+                                url: function (extent) {
+                                    // Commented items are for KML stuff
+                                    // let newExtent = transformExtent(extent, "EPSG:3857", "EPSG:4326")
+                                    // console.log(newExtent)
+                                    return userpagelayer.layer.server.serverURL.split('/wms')[0] + '/' + userpagelayer.layer.layerIdent.split(':')[0] + '/ows?service=WFS&version=1.0.0&request=GetFeature&'+
+                                    '&typeName=' + userpagelayer.layer.layerIdent + '&outputFormat=application/json&srsname=EPSG:3857&' +
+                                    // console.log('https://cube-kokomo.com:8080/geoserver/Kokomo/wms?service=wms&request=GetMap&version=1.1.1&format=application/vnd.google-earth.kml+xml&layers=Kokomo:paser_inspections&styles=paser&height=1328&width=2048&transparent=false&srs=EPSG:4326&format_options=AUTOFIT:true;KMATTR:true;KMPLACEMARK:false;KMSCORE:20;MODE:superoverlay&superoverlay_mode=raster&' + 'bbox=' + newExtent.join(','))
+                                    // return 'https://cube-kokomo.com:8080/geoserver/Kokomo/wms?service=wms&request=GetMap&version=1.1.1&format=application/vnd.google-earth.kml+xml&layers=Kokomo:paser_inspections&styles=paser&height=1328&width=2048&transparent=false&srs=EPSG:4326&format_options=AUTOFIT:true;KMATTR:true;KMPLACEMARK:false;KMSCORE:20;MODE:superoverlay&superoverlay_mode=raster&'
+                                    // https://cube-kokomo.com:8080/geoserver/Kokomo/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Kokomo%3Apaser_inspections&maxFeatures=50&outputFormat=application%2Fjson
+                                    // return 'https://cube-kokomo.com:8080/geoserver/Kokomo/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Kokomo%3Apaser_inspections&' +
+                                        // 'outputFormat=gml3&srsname=EPSG:3857&' +
+                                        'bbox=' + extent.join(',') + ',EPSG:3857';
+                                },
+                                strategy: bboxStrategy,
+                                
+                            });
+                            userpagelayer.source = vectorSource
+                            var vector = new VectorLayer({
+                                source: vectorSource,
+                                style: stylefunction
+                            })
+                            if (init) {
+                                this.mapConfig.baseLayers.push(vector);  //to delete
+                            }
+                            userpagelayer.olLayer = vector
+                            userpagelayer.source = vectorSource
+                            if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
+                                mapConfig.map.addLayer(vector);
+                            }
+                            console.log('GeoserverWFS')
+                            if (this.featureModuleService.loadLayer(this.mapConfig, userpagelayer)) {
+                                // console.log('this is a mycube layer that is being loaded by the FMS')
+                                // j++
+                                // if (j == this.mapConfig.userpagelayers.length) {
+                                //     resolve()
+                                // }
+                            }
+                            j++;
+                            if (j == this.mapConfig.userpagelayers.length) {
+                                resolve();
+                            }
+                            break
+                        }
                         case "GeoserverMosaic": {
                             {  //testing...
                                 let wmsSource = new ImageWMS({
@@ -783,7 +842,7 @@ export class MapComponent implements OnInit {
         if (this.mapConfig.measureShow) { return }  //disables select/deselect when the measure tool is open.
         let layer = this.mapConfig.currentLayer
         switch (this.mapConfig.currentLayer.layer.layerType) {
-            case ("Geoserver"): {
+            case ("GeoserverWFS"): {
                 let url2 = this.wmsService.formLayerRequest(layer);
                 if (layer.layer.layerType == 'WMTS') { }
                 let wmsSource = new ImageWMS({
@@ -870,19 +929,25 @@ export class MapComponent implements OnInit {
                 this.findMyCubeFeature(evt)
                 break
             }
+            case ("GeoserverWFS"): {
+                console.log('GeoserverWFS selectFeature')
+
+                this.findMyCubeFeature(evt)
+                break
+            }
             case ("Module"): {
                 let hit = false;
-               
-                    this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature: Feature, selectedLayer: any) => {
-                        if (selectedLayer === layer.olLayer) {
-                            hit = true;
-                            this.mapConfig.selectedFeature = feature;
-                        }
-                        ;
-                    }, {
-                        hitTolerance: 5
-                    });
-        
+
+                this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature: Feature, selectedLayer: any) => {
+                    if (selectedLayer === layer.olLayer) {
+                        hit = true;
+                        this.mapConfig.selectedFeature = feature;
+                    }
+                    ;
+                }, {
+                    hitTolerance: 5
+                });
+
                 if (hit) {
                     this.featureModuleComponent.checkSomething('selectFeature', layer).then((x) => {
                         if (x) { return }
@@ -923,6 +988,8 @@ export class MapComponent implements OnInit {
                         if (selectedLayer === layer.olLayer) {
                             hit = true;
                             this.mapConfig.selectedFeature = feature;
+                            console.log(this.mapConfig.selectedFeature.get('name'))
+                            this.mapConfig.selectedFeature.setId(this.mapConfig.selectedFeature.get('name'))
                         }
                         ;
                     }, {
@@ -984,5 +1051,5 @@ export class MapComponent implements OnInit {
         }
     }
 
-    
+
 }

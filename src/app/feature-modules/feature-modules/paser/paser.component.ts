@@ -85,6 +85,7 @@ export class PaserComponent implements OnInit {
   }
 
   public loadLayer(layer: UserPageLayer): boolean {
+    console.log('paser loadlayer component')
     return this.SDSservice.loadLayer(this.mapConfig, layer);
   }
 
@@ -93,6 +94,7 @@ export class PaserComponent implements OnInit {
   }
 
   public setCurrentLayer(layer): boolean {
+    console.log(layer.olLayer.getSource())
     this.SDSConfig.expanded = true;
     this.SDSConfig.visible = true;
     this.clearInputForm();
@@ -156,8 +158,12 @@ export class PaserComponent implements OnInit {
   }
 
   public selectFeature(layer): boolean {
+    console.log('selectedFeature in paser')
+    console.log(this.mapConfig.selectedFeature)
     if (this.mapConfig.currentLayer.layerPermissions.edit) {this.mapConfig.showDeleteButton = true;}
     this.SDSConfig.itemDataForm.rowID = this.mapConfig.selectedFeature.get(this.SDSConfig.linkedField);
+    // this.SDSConfig.itemDataForm.rowID = this.mapConfig.selectedFeature.get('name')
+    // this.mapConfig.WMSFeatureData = this.mapConfig.selectedFeature.get('description')
     this.SDSservice.getSDSRecords(
       this.SDSConfig.itemDataForm,
       this.SDSConfig.linkedField
@@ -166,7 +172,7 @@ export class PaserComponent implements OnInit {
       this.SDSConfig.itemDataForm.visible = true;
       this.goToTab("Input");
     });
-    return false; //this allows it to load the MyCube layer
+    return true; //this allows it to load the MyCube layer
   }
 
   public getFeatureList(layer): boolean {
@@ -180,6 +186,7 @@ export class PaserComponent implements OnInit {
   }
 
   public unstyleSelectedFeature(layer): boolean {
+    return true
     return this.SDSservice.unstyleSelectedFeature(layer);
   }
 
@@ -337,6 +344,7 @@ export class PaserComponent implements OnInit {
         this.mapConfig.selectedFeature.get(this.SDSConfig.linkedField)
       )
       .then((x) => {
+        this.SDSservice.reloadLayer(this.mapConfig.currentLayer)
         this.SDSConfig.itemDataForm.rowID = this.mapConfig.selectedFeature.get(this.SDSConfig.linkedField);
         this.SDSservice.getSDSRecords(
           this.SDSConfig.itemDataForm,
@@ -370,6 +378,7 @@ export class PaserComponent implements OnInit {
         this.SDSConfig.itemDataForm.rowID.toString()
       )
       .then((x) => {
+        this.SDSservice.reloadLayer(this.mapConfig.currentLayer)
         this.selectFeature(this.mapConfig.currentLayer);
         let logField = new LogField();
         logField.userid = this.mapConfig.user.ID;

@@ -22,15 +22,47 @@ import {Fill, Stroke, Circle, Style} from 'ol/style';
 export class StyleService {
     private locateStyles = new PaserStyles
     public styleFunction(feature: Feature, version: string): Style {
+        //console.log(feature.getProperties())
+        let color: string
+        switch(feature.get('rating')) {
+            case 10:
+                color = '#bcdf27'
+            break
+            case 9:
+                color = '#7ad251'
+            break
+            case 8:
+                color = '#43bf70'
+            break
+            case 7:
+                color = '#22a884'
+            break
+            case 6:
+                color = '#20908d'
+            break
+            case 5:
+                color = '#29788e'
+            break
+            case 4:
+                color = '#345f8d'
+            break
+            case 3:
+                color = '#404387'
+            break
+            case 2:
+                color = '#482475'
+            break
+            case 1:
+                color = '#440154'
+            break
+            case null:
+                color = '#fd2445'
+            break
+        }
         let style = new Style({
-            image: new Circle({
-                radius: this.getDepthRadius(feature),
-                stroke: new Stroke({
-                    color: '#fff'
-                }),
-                fill: new Fill({
-                    color: this.getFillColor(feature, version)
-                })
+            stroke: new Stroke({
+              color: color, //'rgba(0, 0, 255, 1.0)',
+              width: 2
             }),
         });
         return style
