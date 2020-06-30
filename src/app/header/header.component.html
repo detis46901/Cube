@@ -27,15 +27,15 @@
                 <button mat-icon-button
                     *ngIf="geocodingService.centerMapToggle == true && geocodingService.isTracking == true"
                     (click)="geocodingService.centerMapToggle = false">
-                    <mat-icon style="font-size:2vh">near_me</mat-icon>
+                    <mat-icon style="font-size:2vh" id="locationButton">near_me</mat-icon>
                 </button>
                 <button mat-icon-button
                     *ngIf="geocodingService.centerMapToggle == false && geocodingService.isTracking == true  && public != true"
                     (click)="setTracking(false)">
-                    <mat-icon style="font-size:2vh">location_on</mat-icon>
+                    <mat-icon style="font-size:2vh" id="locationButton">location_on</mat-icon>
                 </button>
                 <button mat-icon-button *ngIf="geocodingService.isTracking == false" (click)="setTracking(true)">
-                    <mat-icon style="font-size:2vh">location_off</mat-icon>
+                    <mat-icon style="font-size:2vh" id="locationButton">location_off</mat-icon>
                 </button>
               </h3>
         </span>

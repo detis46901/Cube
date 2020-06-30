@@ -11,6 +11,12 @@
 // formats user name
 #userName {
     color:white;
+    position: relative;
+    bottom: 40px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 0;
+    z-index: 1;
 }
 
 // sizes the icons
@@ -31,7 +37,7 @@
 }
 
 // styles the left buttons
-#headerNotifications, #settingsButton {
+#headerNotifications, #settingsButton, #locationButton {
     color: white;
     position: relative;
     bottom: 5px;
@@ -40,6 +46,8 @@
     padding: 0;
     z-index: 1;
 }
+
+
 #mapButton {
     color: white;
     position: relative;
@@ -74,7 +82,7 @@ h5, h4, h3 {
     color: white;
     margin-left: 5px;
     left: 5px;
-    font-size: 1vh;
+    font-size: 2vh;
 }
 
 .logoutButton {

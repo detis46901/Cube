@@ -4,13 +4,14 @@
 // formatting and positioning for parent container
 .profile-parent-container {
     width: 240px;
-    height: 280px;
+    height: 290px;
     position: absolute;
     top: 50%;
     left: 50%;
     margin-top: -200px;
     margin-left: -100px;
     background-color: white;
+    border-radius: 15px;
 }
 
 // formats header
