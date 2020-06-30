@@ -59,13 +59,13 @@
                     </mat-menu>
                     <span>
                         <button mat-icon-button style="color:#7e7e7e" title="Edit Details" focusable="false"
-                            (click)="openDetails(row.ID, row.name)">
+                            (click)="openDetails(row.ID, row.name)" id="edit">
                             <mat-icon>edit</mat-icon>
                         </button>
                     </span>
                     <span>
                         <button mat-icon-button style="color:#7e7e7e" title="Delete Instance" focusable="false"
-                            (click)="confirmDelete(row)">
+                            (click)="confirmDelete(row)" id="delete">
                             <mat-icon>delete</mat-icon>
                         </button>
                     </span>

@@ -148,6 +148,10 @@ export class StyleComponent implements OnInit {
     public applyStyle() {
         // if (this.styleColumn['field'] == "" || this.styleColumn['field'] == null) {}
         // else {}
+        if (this.styleColumn.field == null){
+            this.styleColumn.field = ""
+        }else{
+        }
         switch (this.mapConfig.currentLayer.layer.layerType) {
             case ("MyCube"):
                 this.mapConfig.currentLayer.style.load.color = this.selectedColor

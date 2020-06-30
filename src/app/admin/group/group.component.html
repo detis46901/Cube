@@ -4,16 +4,19 @@
     <!-- creats the first box of three -->
     <div class="col-md">
         <!-- creates a row of two headers and one sliding toggle -->
+        
         <span>
-            <h4>Private</h4>
-            <mat-slide-toggle name="booBoy" [(ngModel)]="bool2" value="bool2"></mat-slide-toggle>
-            <h4>Public</h4>
+            <h4 id="privacy">Private</h4>
+            <mat-slide-toggle name="booBoy" [(ngModel)]="bool2" value="bool2" id="privacy"></mat-slide-toggle>
+            <h4 id="privacy">Public</h4>
         </span>
+        <br>
         <span>
-            <h4>User view</h4>
-            <mat-slide-toggle name="booBoy" [(ngModel)]="bool" value="bool" (click)="showme(bool)"></mat-slide-toggle>
-            <h4>Group view</h4>
+            <h4 id="view">User view</h4>
+            <mat-slide-toggle name="booBoy" [(ngModel)]="bool" value="bool" (click)="showme(bool)" id="view"></mat-slide-toggle>
+            <h4 id="view">Group view</h4>
         </span>
+        
 
         <!-- creates the first information box  -->
         <div class="group-list-container">
@@ -50,7 +53,8 @@
 
     <!-- creates the second box for infomration including header-->
     <div class="col-md">
-        <h4>{{type}}s Available</h4>
+        <h4 id='head'>{{type}}s Available</h4>
+        
 
         <div class="group-list-container">
             <!-- creates a selection list depending on the toggle -->
