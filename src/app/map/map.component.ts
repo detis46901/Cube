@@ -340,9 +340,11 @@ export class MapComponent implements OnInit {
             UPLUpdate.layerOrder = x.layerOrder
             UPLUpdate.style = x.style //another stupid hack
             console.log(`new index of ${x.layer.layerName}: ${UPLUpdate.layerOrder}`)
+            let zdex = x.layerOrder
+            this.mapConfig.selectedFeatureLayer.setZIndex(zdex)
+            console.log(this.mapConfig.selectedFeatureLayer.getZIndex())
             this.userPageLayerService.Update(UPLUpdate).subscribe();
         })
-        console.log('-----')
     }
 
     // new features: assignNewLayerIndex, deleteLayerIndex, reloadIndex -BB
