@@ -52,6 +52,8 @@ import { bbox as bboxStrategy } from 'ol/loadingstrategy';
 import { Stroke, Style } from 'ol/style';
 import GML3 from 'ol/format/GML3';
 import {transformExtent} from 'ol/proj';
+import { getLength } from 'ol/sphere';
+import { invert } from 'lodash';
 
 
 @Component({
@@ -333,18 +335,27 @@ export class MapComponent implements OnInit {
         this.mapService.mapConfig.userpagelayers.forEach((x) => {
             x.layerOrder = i
             i++
+            console.log(x.layerOrder)
         })
+        //setting a variable to be index of last user page layer
+        let leng = this.mapService.mapConfig.userpagelayers.length
+        let a = leng - 1
+        
         this.mapService.mapConfig.userpagelayers.forEach((x) => {
             let UPLUpdate = new UserPageLayer
             UPLUpdate.ID = x.ID
             UPLUpdate.layerOrder = x.layerOrder
             UPLUpdate.style = x.style //another stupid hack
             console.log(`new index of ${x.layer.layerName}: ${UPLUpdate.layerOrder}`)
-            let zdex = x.layerOrder
+            let zdex = a
+            a-- //decrementing from index of last user page layer
             this.mapConfig.selectedFeatureLayer.setZIndex(zdex)
-            console.log(this.mapConfig.selectedFeatureLayer.getZIndex())
+            console.log(`ZIndex = ${this.mapConfig.selectedFeatureLayer.getZIndex()}`)
             this.userPageLayerService.Update(UPLUpdate).subscribe();
+            
         })
+        //this.userPageService.Update()
+        window.location.reload(true)
     }
 
     // new features: assignNewLayerIndex, deleteLayerIndex, reloadIndex -BB
@@ -622,7 +633,7 @@ export class MapComponent implements OnInit {
                                         'bbox=' + extent.join(',') + ',EPSG:3857';
                                 },
                                 strategy: bboxStrategy,
-                                
+
                             });
                             userpagelayer.source = vectorSource
                             var vector = new VectorLayer({
