@@ -32,12 +32,7 @@ export class PaserService {
 
   //loads the SDS Layer
   public loadLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
-    console.log(layer.layer.layerType)
     this.mapConfig = mapConfig
-    if (layer.layer.layerType == 'GeoserverWFS') {
-      console.log("this is a paser GeoserverWFS")
-      console.log(layer.olLayer.getSource())
-    }
     this.styleMyCube(layer, 'load')
     return false
   }
@@ -68,7 +63,6 @@ export class PaserService {
         // layer.olLayer.getSource().clear()
         layer.olLayer.setSource(vectorSource)
         layer.source = vectorSource
-        console.log('GeoserverWFS')
       }
     }
     //   this.getMyFeatureData(layer).then((data) => {
@@ -162,13 +156,9 @@ export class PaserService {
   }
 
   public getSDSRecords(dataFormConfig: DataFormConfig, linkedField: string): Promise<Array<any>> {
-    console.log(dataFormConfig)
-    console.log(linkedField)
     let promise = new Promise<Array<PaserRecord>>((resolve) => {
-      console.log(dataFormConfig.schema, dataFormConfig.dataTable, linkedField, dataFormConfig.rowID)
       this.sqlService.GetAnySingle(dataFormConfig.schema, dataFormConfig.dataTable, linkedField, dataFormConfig.rowID)
         .subscribe((x) => {
-          console.log(x)
           resolve(x[0])
         })
     })

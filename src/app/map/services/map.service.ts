@@ -375,7 +375,6 @@ export class MapService {
         this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature);
         if (layer.layerPermissions.edit == true) {
             if (!this.modify) {
-                console.log(this.mapConfig.selectedFeatures)
                 this.mapConfig.selectedFeatures.clear()
                 this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature)
                 this.modify = new Modify({
@@ -519,7 +518,6 @@ export class MapService {
                             logField.geom = featurejson['geometry']
                             logField.userid = this.mapConfig.user.ID
                             this.dataFormService.addLogForm(logField).then((x) => {
-                                console.log(x)
                             })
                         })
                     this.mapConfig.map.removeLayer(vector);

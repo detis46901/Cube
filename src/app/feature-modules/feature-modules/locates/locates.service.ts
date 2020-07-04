@@ -7,7 +7,7 @@ import { DataFormConfig, LogFormConfig, LogField } from '../../../shared.compone
 import { StyleService } from './style.service'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
-import { Observable ,  Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { SQLService } from './../../../../_services/sql.service';
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
@@ -74,7 +74,6 @@ export class LocatesService {
 
   
   public getFeatureList(layer?:UserPageLayer): boolean {
-    console.log('getFeatureList')
     let k: number = 0;
     let tempList = new Array<featureList>();
     try {
@@ -358,7 +357,6 @@ export class LocatesService {
       this.locate = locate
       this.geojsonservice.GetSome(this.mapConfig.currentLayer.layer.ID, "ticket = '" + locate.ticket + "'")
         .subscribe((x) => {
-          console.log(x[0][0])
           if (x[0][0]['features']) {
             let snackBarRef = this.snackBar.open('Ticket was not inserted.  It is a duplicate.', '', {
               duration: 4000
@@ -514,6 +512,8 @@ export class LocatesService {
     let feat: Feature = this.mapConfig.selectedFeature
     this.mapConfig.currentLayer.olLayer.getSource().removeFeature(this.mapConfig.selectedFeature)
     this.clearFeature(mapConfig.userpagelayers[i])
+    let flItemIndex: number = this.mapConfig.featureList.findIndex(x => x.feature == feat)
+    let flItem: featureList = this.mapConfig.featureList.splice(flItemIndex)[0]
     let snackBarRef = this.snackBar.open('Ticket completed.', 'Undo', {
       duration: 4000
     });
@@ -525,6 +525,7 @@ export class LocatesService {
       let snackBarRef = this.snackBar.open('Undone.', '', {
         duration: 4000
       });
+
     })
     snackBarRef.afterDismissed().subscribe((x) => {
       if (!undo) {
@@ -536,6 +537,7 @@ export class LocatesService {
         this.updateRecord(table, ticketID, 'disposition', 'text', ticket.disposition)
         undo = false
         this.sendUpdateToIRTH(instanceID, ticket)
+        this.reloadLayer(this.mapConfig.currentLayer, "current")
       }
     })
   }

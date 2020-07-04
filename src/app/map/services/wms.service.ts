@@ -62,7 +62,6 @@ export class WMSService {
         this.options.getfeatureinfo = {
             'Buffer':'25'           
         }
-        console.log(this.options.getfeatureinfo)
         return this.http.request("GET", URL, {responseType: 'text'}).pipe(
             map((responseData) => {
                 //console.log(responseData)

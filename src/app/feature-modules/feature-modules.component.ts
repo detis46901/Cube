@@ -32,7 +32,6 @@ export class FeatureModulesComponent implements OnInit, AfterViewInit, OnDestroy
   private featureModule = new Array<featureModule>()
 
   ngOnInit() {
-    console.log('FM initiated')
   }
 
   ngAfterViewInit() {

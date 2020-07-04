@@ -190,7 +190,6 @@ export class MapComponent implements OnInit {
                         zoom: environment.centerZoom,
                         enableRotation: true
                     })
-                    console.log(this.mapConfig.baseLayers)
                     this.mapConfig.map = new Map({
                         layers: this.mapConfig.baseLayers,
                         view: this.mapConfig.view,
@@ -247,6 +246,7 @@ export class MapComponent implements OnInit {
             x.pageOrder = i
             i++
         })
+        if (this.public) {return}
         this.mapService.mapConfig.userpages.forEach((x) => {
             let pageUpdate = new UserPage
             pageUpdate.ID = x.ID
@@ -334,6 +334,7 @@ export class MapComponent implements OnInit {
             x.layerOrder = i
             i++
         })
+        if (this.public) {return}
         this.mapService.mapConfig.userpagelayers.forEach((x) => {
             let UPLUpdate = new UserPageLayer
             UPLUpdate.ID = x.ID
@@ -342,7 +343,6 @@ export class MapComponent implements OnInit {
             console.log(`new index of ${x.layer.layerName}: ${UPLUpdate.layerOrder}`)
             this.userPageLayerService.Update(UPLUpdate).subscribe();
         })
-        console.log('-----')
     }
 
     // new features: assignNewLayerIndex, deleteLayerIndex, reloadIndex -BB
@@ -351,17 +351,12 @@ export class MapComponent implements OnInit {
         let len = this.mapService.mapConfig.userpagelayers.length
         layer.layerOrder = (len - 1)
         this.reloadIndex()
-        this.mapService.mapConfig.userpagelayers.forEach((x) => {
-            console.log(x.layerOrder)
-        })
     }
 
     public deleteLayerIndex(layer: UserPageLayer) {
         let ind = layer.layerOrder
-        console.log(ind)
         this.reloadIndex()
         this.mapService.mapConfig.userpagelayers.splice(ind, 0)
-        console.log(`layer deleted`)
         this.reloadIndex()
     }
 
@@ -378,14 +373,11 @@ export class MapComponent implements OnInit {
             UPLUpdate.style = x.style //another stupid hack
             this.userPageLayerService.Update(UPLUpdate).subscribe();
         })
-        console.log('index reloaded')
     }
 
     public addUserPageLayer(layer: UserPageLayer) {
         this.mapService.addUserPageLayer(layer)
-        console.log(`${layer.layer.layerName} has been added to the page`)
         this.assignNewLayerIndex(layer)
-        console.log(`index of ${layer.layer.layerName}: ` + layer.layerOrder)
     }
 
     public toggleDefaultOn(layer: UserPageLayer) {
@@ -400,7 +392,6 @@ export class MapComponent implements OnInit {
     public copyToClipboard(url: string) {
         url = environment.serverWithApiUrl + url + '&apikey=' + this.token
         const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
-        console.log(environment.proxyUrl + '/tinyurl.com/api-create.php?url=' + encodeURIComponent(url))
         this._http.get(environment.proxyUrl + '/tinyurl.com/api-create.php?url=' + encodeURIComponent(url), { headers, responseType: 'text' }).subscribe((x) => {
             Clipboard.copy(x)
         })
@@ -515,10 +506,8 @@ export class MapComponent implements OnInit {
         this.mapConfig.userpagelayers.push(UPL)
         this.loadLayers(this.mapConfig, false, true)
         this.showNewLayer = false
-        //this.layerCtrl.setValue('')
-        console.log('added layer')
+        this.layerCtrl.setValue('')
         this.assignNewLayerIndex(UPL)
-        console.log(`index of ${UPL.layer.layerName}: ` + UPL.layerOrder)
     }
 
     public addSearch(searchResults): void {
@@ -533,6 +522,7 @@ export class MapComponent implements OnInit {
         this.mapConfig.selectedFeatureLayer.setZIndex(1000)
         this.mapConfig.map.addLayer(this.mapConfig.searchResultLayer)
         this.geocodingService.sendSearchResults(searchResults)
+        this.searchCtrl.setValue('')
     }
 
     public setSearch() {
@@ -572,12 +562,6 @@ export class MapComponent implements OnInit {
     public _searchDisplay(results) {
         return results && results.display_name ? results.display_name : '';
     }
-
-    public testButton() {
-        console.log('testButton')
-    }
-
-
 
     public styleFunction(layer: UserPageLayer, feature: Feature, version: string): Style {
         let style = this.featureModuleService.styleLayer(this.mapConfig, layer, feature, 'load')
@@ -635,7 +619,6 @@ export class MapComponent implements OnInit {
                             if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
                                 mapConfig.map.addLayer(vector);
                             }
-                            console.log('GeoserverWFS')
                             if (this.featureModuleService.loadLayer(this.mapConfig, userpagelayer)) {
                                 // console.log('this is a mycube layer that is being loaded by the FMS')
                                 // j++
@@ -702,7 +685,6 @@ export class MapComponent implements OnInit {
                         }
                         case "MyCube": {
                             if (this.featureModuleService.loadLayer(this.mapConfig, userpagelayer)) {
-                                console.log('this is a mycube layer that is being loaded by the FMS')
                                 j++
                                 if (j == this.mapConfig.userpagelayers.length) {
                                     resolve()
@@ -841,7 +823,6 @@ export class MapComponent implements OnInit {
         this.mapConfig.selectedFeatureSource.clear()
         if (this.mapConfig.measureShow) { return }  //disables select/deselect when the measure tool is open.
         let layer = this.mapConfig.currentLayer
-        console.log(this.mapConfig.currentLayer.layer.layerType)
         switch (this.mapConfig.currentLayer.layer.layerType) {
             case ("GeoserverWFS"):
             case ("Geoserver"): {
