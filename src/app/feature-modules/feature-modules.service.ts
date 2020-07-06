@@ -18,11 +18,8 @@ export class FeatureModulesService {
     public locatesservice: LocatesService, public openAerialMapservice: OpenAerialMapService, public SDSservice: SDSService, public WOservice: WOService, public paserservice: PaserService) { }
 
   public loadLayer(mapConfig: MapConfig, layer: UserPageLayer, init?: boolean): boolean {
-    console.log('feature-modules.service loadLayer')
-    console.log(layer.userPageInstanceID)
     if (!(layer.userPageInstanceID > 0)) { return false }
     let i = '.loadLayer(mapConfig, layer, init)'
-    console.log('feature-module.service loadLayer()')
     try {return eval(this.getItentity(mapConfig, layer) + i)}
     catch(error) {
       console.log(error)

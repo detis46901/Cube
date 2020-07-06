@@ -8,6 +8,11 @@ import { locateConfig, locateStyles, Locate, disItem, disposition } from './loca
 import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
 import { ModuleInstance } from '_models/module.model';
 import { UserPageLayer } from '_models/layer.model';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector'
+import { Feature } from 'ol';
+import Polygon from 'ol/geom/Polygon';
+import { transform } from 'ol/proj';
 
 
 @Component({
@@ -114,6 +119,12 @@ export class LocatesComponent implements OnInit, OnDestroy {
       this.completedNote = x.note
     })
     this.locatesservice.selectFeature(layer)
+    let source = new VectorSource({wrapX: false});
+    this.locateConfig.boundaryLayer = new VectorLayer({
+      source: source
+    })
+    // let pg = new Polygon([[-86.133029, 40.493279]])
+    // let bf = new Feature({ geometry: new Polygon([[-86.133029, 40.493279], [-86.133029,40.492171], [-86.130551, 40.493279], [-86.130551, 40.492171]], 'EPSG:4326', 'EPSG:3857')) })
     return false
   }
 
@@ -183,7 +194,6 @@ export class LocatesComponent implements OnInit, OnDestroy {
   }
 
   public emailContractor(ticket: Locate) {
-    console.log(ticket.disposition)
     this.completedDisposition = this.disposition.disposition.find((x) => x.value == ticket.disposition)
     this.getEmailConfiguration()
     let win = window.open("mailto:" + ticket.email + "?subject=Ticket: " + ticket.ticket + " " + ticket.address + " " + ticket.street + "&body=" + this.completedDisposition.emailBody, "_blank"); //this.moduleSettings['settings'][1]['setting']['value']

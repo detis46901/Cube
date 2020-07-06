@@ -94,7 +94,6 @@ export class PaserComponent implements OnInit {
   }
 
   public setCurrentLayer(layer): boolean {
-    console.log(layer.olLayer.getSource())
     this.SDSConfig.expanded = true;
     this.SDSConfig.visible = true;
     this.clearInputForm();
@@ -158,8 +157,6 @@ export class PaserComponent implements OnInit {
   }
 
   public selectFeature(layer): boolean {
-    console.log('selectedFeature in paser')
-    console.log(this.mapConfig.selectedFeature)
     if (this.mapConfig.currentLayer.layerPermissions.edit) {this.mapConfig.showDeleteButton = true;}
     this.SDSConfig.itemDataForm.rowID = this.mapConfig.selectedFeature.get(this.SDSConfig.linkedField);
     // this.SDSConfig.itemDataForm.rowID = this.mapConfig.selectedFeature.get('name')
@@ -208,7 +205,6 @@ export class PaserComponent implements OnInit {
       this.userName = data.firstName + " " + data.lastName;
     });
     this.SDSConfig.moduleName = this.instance.name;
-    console.log(this.instance.settings);
     this.SDSConfig.moduleSettings = this.instance.settings;
   }
 

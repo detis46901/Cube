@@ -1,23 +1,19 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { MapConfig } from '../../../map/models/map.model';
-import { Subscription } from 'rxjs';
 import { WOService } from './WO.service'
 import { UserService } from '../../../../_services/_user.service'
 import { WOType, WorkOrder, WOConfig, assignedTo } from './WO.model'
-import { ModuleInstanceService } from '../../../../_services/_moduleInstance.service'
 import { ModuleInstance } from '../../../../_models/module.model'
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import { UserPageLayer, MyCubeField, MyCubeComment, MyCubeConfig } from '_models/layer.model';
-import { defaults as defaultInteractions, Modify, Draw } from 'ol/interaction';
-import { DataFormConfig, DataFieldConstraint, LogFormConfig, LogField } from '../../../shared.components/data-component/data-form.model'
+import { UserPageLayer } from '_models/layer.model';
+import Modify from 'ol/interaction/Modify';
+import Draw from 'ol/interaction/Draw';
+import { LogFormConfig, LogField } from '../../../shared.components/data-component/data-form.model'
 import { DataFormService } from '../../../shared.components/data-component/data-form.service'
 import { GroupService } from '../../../../_services/_group.service';
 import { Group } from '_models/group.model'
 import { User } from '_models/user.model';
-import { cloneDeep } from 'lodash'
-import { shiftKeyOnly, singleClick } from 'ol/events/condition'
-
 
 @Component({
   selector: 'app-WO',
@@ -25,7 +21,6 @@ import { shiftKeyOnly, singleClick } from 'ol/events/condition'
   styleUrls: ['./WO.component.css']
 })
 export class WOComponent implements OnInit, OnDestroy {
-
   public expanded: boolean = false
   public filterOpen: boolean = true
   public tab: string;

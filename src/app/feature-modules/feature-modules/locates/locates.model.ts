@@ -1,12 +1,14 @@
 import {Fill, Stroke, Circle, Style} from 'ol/style';
 import { Injectable } from "@angular/core";
 import { InstanceSettings } from '_models/module.model';
+import VectorLayer from 'ol/layer/Vector';
 
 export class locateConfig {
     visible: boolean
     expanded: boolean
     moduleSettings: InstanceSettings
     layerState: string
+    boundaryLayer: VectorLayer
 }
 
 export class Locate {

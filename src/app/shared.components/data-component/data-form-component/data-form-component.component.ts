@@ -36,10 +36,10 @@ export class DataFormComponentComponent implements OnInit {
           dataField.value = null
         }
       }
-      // if (dataField.type == "text") {
-      //   let ntext: RegExp = /'/g
-      //   dataField.value = dataField.value.replace(ntext, "'")
-      // }
+      if (dataField.type == "text") {
+        let ntext: RegExp = /'/g
+        dataField.value = dataField.value.replace(ntext, "'")
+      }
       this.sqlService
         .UpdateAnyRecord(this.dataFormConfig.schema, this.dataFormConfig.dataTable, this.dataFormConfig.dataForm[0].value, dataField)
         .subscribe((data) => {
@@ -58,10 +58,10 @@ export class DataFormComponentComponent implements OnInit {
             })
 
         })
-      // if (dataField.type == "text") {
-      //   let ntext: RegExp = /''/g
-      //   dataField.value = dataField.value.replace(ntext, "'")
-      // }
+      if (dataField.type == "text") {
+        let ntext: RegExp = /''/g
+        dataField.value = dataField.value.replace(ntext, "'")
+      }
     }
     dataField.changed = false
 

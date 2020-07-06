@@ -9,7 +9,7 @@ import { LayerPermissionService } from '../../../../_services/_layerPermission.s
 import { ModuleInstance, Module, UsersGroups, InstanceSettings, StringType, ArrayType, IntegerType, Properties, KeyValue } from '../../../../_models/module.model';
 import { FeatureModulesAdminService } from '../../../feature-modules/feature-modules-admin.service'
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { cloneDeep } from 'lodash'
+import  cloneDeep  from 'lodash.clonedeep'
 
 @Component({
     selector: 'module-style',
