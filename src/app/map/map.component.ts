@@ -355,7 +355,7 @@ export class MapComponent implements OnInit {
             
         })
         //this.userPageService.Update()
-        window.location.reload(true)
+        //window.location.reload(true)
     }
 
     // new features: assignNewLayerIndex, deleteLayerIndex, reloadIndex -BB
