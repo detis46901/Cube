@@ -21,6 +21,7 @@ export class User {
     administrator: boolean;
     public: boolean;
     domain: Domain;
+    apikey: string;
 }
 
 export class UserPage {
@@ -43,4 +44,10 @@ export class Notif {
     read: boolean;
     objectType: string;
     sourceID: number;
+}
+
+export class APIKey {
+    ID: number;
+    apikey: string;
+    userID: number;
 }

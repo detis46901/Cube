@@ -71,6 +71,7 @@ import { NotifService } from '../_services/notification.service';
 import { FeatureModulesService } from '../app/feature-modules/feature-modules.service'
 import { MapConfigService } from '../_services/mapConfig.service'
 import { UserService } from '../_services/_user.service';
+import { APIKeyService } from '../_services/_apikey.service';
 //import { MapService } from './map/services/map.service';
 //import { FilterService } from './map/services/filter.service';
 //import { GeocodingService } from './map/services/geocoding.service';
@@ -202,6 +203,7 @@ import { FeatureModulesComponent } from './feature-modules/feature-modules.compo
         AdminGuard,
         AuthenticationService,
         UserService,
+        APIKeyService,
         GroupService,
         GroupMemberService,
         LayerService,
@@ -221,7 +223,6 @@ import { FeatureModulesComponent } from './feature-modules/feature-modules.compo
         UserPageInstanceService,
         ModuleService,
         MapConfigService,
-        UserService,
         FeatureModulesComponent
     ],
 
