@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../_services/_user.service';
-import { User } from '../../../_models/user.model';
+import { User, APIKey } from '../../../_models/user.model';
+import { APIKeyService} from '../../../_services/_apikey.service'
 
 @Component({
     selector: 'apiKey',
@@ -12,31 +13,45 @@ import { User } from '../../../_models/user.model';
 export class ApiKeyComponent implements OnInit {
 
     public apiKeyToken: string;
-    public user: User;
+    public user = new User;
     public token: string;
     public userID: number;
+    public apiKeys = new Array<APIKey>()
 
-    constructor(private userService: UserService) {
+    constructor(private userService: UserService, private apiKeyService:APIKeyService) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {
-        this.getUserItems(this.userID)
+        this.getUserItems()
     }
 
-    getUserItems(userID): void {
-        this.userService
-        .GetSingle(userID)
-        .subscribe((data:User) => {
-            this.user = data
+    getUserItems(): void {
             this.userService
-            .generateKey(data.email, data.firstName, data.lastName) //error: 500 hash comparison failed on API
-            .subscribe((key) => {
-                console.log(key)
-                this.apiKeyToken = key['apiKey'];
+            .GetSingle(this.userID)
+            .subscribe((user:User) => {
+                this.user = user
+                // this.apiKeyToken = key['apiKey'];
             })
+    }
+
+    generateKey(): void {
+        this.user.apikey = null
+        this.userService
+        .Update(this.user) 
+        .subscribe((key) => {
+            console.log(key)
+            this.getUserItems()
+        })
+    }
+
+    deleteKey(ID: number): void {
+        this.apiKeyService
+        .Delete(ID)
+        .subscribe((x) => {
+            this.getUserItems()
         })
     }
 }

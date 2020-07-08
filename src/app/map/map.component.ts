@@ -101,6 +101,7 @@ export class MapComponent implements OnInit {
 
     ngOnInit() {
         console.log('6-14-20')
+        console.log(this.user)
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.public = currentUser && currentUser.public;
@@ -404,18 +405,16 @@ export class MapComponent implements OnInit {
     }
 
     public copyToClipboard(url: string) {
-        url = environment.serverWithApiUrl + url + '&apikey=' + this.token
+        url = environment.serverWithApiUrl + url + '&apikey=' + this.user.apikey
         const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
-        this._http.get(environment.proxyUrl + '/tinyurl.com/api-create.php?url=' + encodeURIComponent(url), { headers, responseType: 'text' }).subscribe((x) => {
-            Clipboard.copy(x)
-        })
+        Clipboard.copy(environment.serverWithApiUrl + url);
         this.snackBar.open("Copied to the clipboard", "", {
             duration: 2000,
         });
     }
 
     public copyGSToClipboard(url: string) {
-        Clipboard.copy('=IMPORTHTML("' + environment.serverWithApiUrl + url + '&apikey=' + this.token + '", "table", 1)');
+        Clipboard.copy('=IMPORTHTML("' + environment.serverWithApiUrl + url + '&apikey=' + this.user.apikey + '", "table", 1)');
         this.snackBar.open("Copied to the clipboard", "", {
             duration: 2000,
         });

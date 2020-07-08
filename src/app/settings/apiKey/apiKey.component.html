@@ -1,4 +1,9 @@
 <div style="text-align:center" class="api-key-parent-container">
     <h4>API Key:</h4>
-    <a>{{apiKeyToken}}</a>
+    <!-- <a>{{apiKeyToken}}</a> -->
+    {{user.apikey}}
+    <!-- <div *ngFor="let apiKey of apiKeys">
+        {{apiKey.apikey}} <button mat-button (click)='deleteKey(apiKey.ID)'>Delete</button>
+    </div> -->
+    <button mat-button (click)='generateKey()'>Generate Key</button>
 </div>

@@ -68,9 +68,10 @@ export class UserService /*extends ParentService*/ {
         //.catch(this.handleError);
     }
 
-    public generateKey(email: string, firstName: string, lastName: string) {
-        return this._http.post(this.actionUrl + "generateKey", { email: email, firstName: firstName, lastName: lastName }, this.getOptions())
-    }
+    // public generateKey(user: User) {
+    //     console.log(this.actionUrl + "generateKey")
+    //     return this._http.put(this.actionUrl + "generateKey", { user: user }, this.getOptions())
+    // }
 
     public updatePassword(user: User, oldPw: string, newPw: string) {
         return this._http.put(this.actionUrl + "updatePassword", { currUser: user, password: user.password, oldPassword: oldPw, newPassword: newPw }, this.getOptions())
