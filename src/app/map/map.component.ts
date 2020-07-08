@@ -54,6 +54,7 @@ import GML3 from 'ol/format/GML3';
 import {transformExtent} from 'ol/proj';
 import { getLength } from 'ol/sphere';
 import { invert } from 'lodash';
+import { MyCubeStyle } from '_models/style.model';
 
 
 @Component({
@@ -697,6 +698,7 @@ export class MapComponent implements OnInit {
                             break
                         }
                         case "MyCube": {
+                            //if (userpagelayer.style['opacity']) { userpagelayer.olLayer.setOpacity(userpagelayer.style['opacity'] / 100) }
                             if (this.featureModuleService.loadLayer(this.mapConfig, userpagelayer)) {
                                 j++
                                 if (j == this.mapConfig.userpagelayers.length) {
