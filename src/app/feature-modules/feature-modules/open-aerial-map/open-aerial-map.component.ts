@@ -33,6 +33,7 @@ export class OpenAerialMapComponent implements OnInit {
   public expanded: boolean = false
   public disabledSubscription: Subscription;
   public loadedImages = new Array<Image>()
+  public opacityValue: number = 100
 
 
   ngOnInit() {
@@ -45,11 +46,18 @@ export class OpenAerialMapComponent implements OnInit {
   
   public unloadLayer(layer: UserPageLayer) {
     this.visible = false
+    this.loadedImages = new Array<Image>()
     return this.openAerialMapService.unloadLayer(layer)
   }
   
   public selectFeature(layer: UserPageLayer) {
-    this.loadedImages =  this.openAerialMapService.selectFeature(layer)
+    let loadedImage:Image =  this.openAerialMapService.selectFeature(layer)
+    if (loadedImage.function == 'add') {
+      this.loadedImages.push(loadedImage)
+    }
+    if (loadedImage.function == 'subtract') {
+      this.loadedImages.splice(this.loadedImages.indexOf(loadedImage), 1)
+    }
     return true
   }
 
@@ -63,7 +71,6 @@ export class OpenAerialMapComponent implements OnInit {
         x.layer.setOpacity(e['value']/100)
       }
     })
-    console.log(e)
     this.openAerialMapService.setOpacity(e['value']/100)
   }
 
@@ -88,6 +95,16 @@ export class OpenAerialMapComponent implements OnInit {
       duration: 2000,
   });
   }
+  public zoomToFeature(image: Image) {
+    this.mapConfig.view.fit(image.feature.getGeometry().getExtent(), {
+        duration: 1000,
+        maxZoom: 18
+    })
+}
+public removeImage(image:Image) {
+  this.openAerialMapService.removeImage(image)
+  this.loadedImages.splice(this.loadedImages.indexOf(image), 1)
+}
   ngOnDestroy() {
     let layer: UserPageLayer
     this.openAerialMapService.unloadLayer(layer)

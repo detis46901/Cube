@@ -8,12 +8,23 @@
   </mat-expansion-panel-header>
 
 
-  <mat-slider style="width:100%" [max]="100" [step]="1" [value]="100" [thumbLabel]="true" (change)="setOpacity($event)"></mat-slider><br>Opacity<br>
-  Selected Image<br>
+  
+  <span *ngIf="openAerialMapService.selectedImage.title">
+  Selected Image</span><br>
   {{openAerialMapService.selectedImage.title}}<br>
-  {{openAerialMapService.selectedImage.acquisition_start}} - {{openAerialMapService.selectedImage.acquisition_end}}<br>
-  Loaded Images<br>
-  <div *ngFor="let image of loadedImages">
-    {{image.title}}<button mat-button (click) = "copyURL(image)"><mat-icon>content_copy</mat-icon></button>
-  </div>
+  {{openAerialMapService.selectedImage.acquisition_end | date}}<br>
+<br>
+  <span *ngIf="loadedImages.length>0"><mat-divider></mat-divider><br>
+    <mat-slider style="width:100%" [(ngModel)]="opacityValue" [max]="100" [step]="1" [value]="100" [thumbLabel]="true" (change)="setOpacity($event)"></mat-slider><br>Opacity<br>
+    <br>
+    Loaded Images<br>
+  </span>
+  <table style="width:100%">
+    <tr *ngFor="let image of loadedImages">
+      <td><button mat-button (click)="zoomToFeature(image)" matTooltip="Zoom to image">{{image.title}}</button></td><td><button mat-button (click) = "copyURL(image)" matTooltip="Copy WMTS link"><mat-icon>content_copy</mat-icon></button></td><td><button mat-button (click)="removeImage(image)" matTooltip="Remove image"><mat-icon>remove_circle</mat-icon></button></td>
+    </tr>
+  </table>
+  <!-- <div *ngFor="let image of loadedImages">
+    <button mat-button (click)="zoomToFeature(image)">{{image.title}}</button><button mat-button (click) = "copyURL(image)"><mat-icon>content_copy</mat-icon></button><button mat-button (click)="removeImage(image)"><mat-icon>remove_circle</mat-icon></button>
+  </div> -->
 </mat-expansion-panel>

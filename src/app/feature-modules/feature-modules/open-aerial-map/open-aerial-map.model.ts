@@ -1,4 +1,7 @@
 import TileLayer from 'ol/layer/Tile';
+import Geometry from 'ol/geom/Geometry';
+import Feature from 'ol/Feature';
+
 
 export class Image {
     _id: string;
@@ -8,7 +11,7 @@ export class Image {
     acquisition_end: string;
     bbox: Array<number>
     polys: [Number, Number][][]
-    feature: ol.Feature
+    feature: Feature
     on: Boolean = false;
     layer: TileLayer
     function: string //add or substract

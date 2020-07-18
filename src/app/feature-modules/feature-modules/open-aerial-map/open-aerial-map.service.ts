@@ -75,7 +75,7 @@ export class OpenAerialMapService {
   public getFeatureList(layer: UserPageLayer): boolean {
     return true
   }
-  public selectFeature(layer: UserPageLayer): Array<Image> {
+  public selectFeature(layer: UserPageLayer): Image {
     let image: Image
         let _id: string
         _id = this.mapConfig.selectedFeature.get('_id')
@@ -88,7 +88,7 @@ export class OpenAerialMapService {
           this.removeImage(image)
           image.function = 'subtract'
         }
-    return 
+    return image
   }
 
   public styleSelectedFeature(layer: UserPageLayer): boolean {
@@ -140,6 +140,7 @@ export class OpenAerialMapService {
           let dest = 'EPSG:3857'
           feature.getGeometry().transform(src1, dest)
           src.addFeature(feature)
+          x.feature = feature
         })
         layer.olLayer = this.bboxLayer
         if (init) {
@@ -155,14 +156,12 @@ export class OpenAerialMapService {
   }
 
   loadImage(image: Image) {
-    this.loadedImages.push(image)
     image.on = true
     this.wmsService.getCapabilities(image.properties.wmts)
       .subscribe((data) => {
         let parser = new WMTSCapabilities();
         let result = parser.read(data);
-        console.log(image.properties.wmts)
-        let options = optionsFromCapabilities(result, {
+          let options = optionsFromCapabilities(result, {
           layer: 'None',
           matrixSet: 'EPSG:3857'
         });
