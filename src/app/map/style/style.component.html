@@ -12,7 +12,7 @@
         <mat-panel-description>
         </mat-panel-description>
     </mat-expansion-panel-header>
-    <form *ngIf="mapConfig.currentLayer.layer.layerType == 'MyCube'">
+    <form *ngIf="mapConfig.currentLayer.layer.layerType == 'MyCube'">    
     <mat-form-field>
     <mat-select placeholder="Color" [(ngModel)]="selectedColor" name="color">
         <mat-option *ngFor="let color of colors" [value]="color.value">
@@ -31,7 +31,8 @@
         <mat-slide-toggle name="showLabel" [(ngModel)]="showLabel" [checked]="showLabel">Label Map</mat-slide-toggle>
         <br>
     </form>
-    <form *ngIf="mapConfig.currentLayer.layer.layerType != 'MyCube'">
+    <form>
+    <!-- <form *ngIf="mapConfig.currentLayer.layer.layerType != 'MyCube'"> -->
         <mat-slider name="styleopacity" style="width:100%" [max]="100" [step]="1" [value]="100" [thumbLabel]="true" (change)="setOpacity($event)" [(ngModel)]="opacity"></mat-slider><br>Opacity<br>
         {{opacity}}
     </form>

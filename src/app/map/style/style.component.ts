@@ -95,6 +95,7 @@ export class StyleComponent implements OnInit {
                 this.mapConfig.currentLayer.olLayer.setOpacity(+this.mapConfig.currentLayer.style.opacity / 100)
                 this.opacity = this.mapConfig.currentLayer.style.opacity
                 console.log(this.opacity)
+                console.log(this.mapConfig.userpagelayers)
             }
 
         }
