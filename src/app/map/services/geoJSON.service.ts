@@ -1,7 +1,7 @@
 
-import {throwError as observableThrowError,  Observable } from 'rxjs';
+import {throwError as observableThrowError,  Observable, timer, Subject } from 'rxjs';
 
-import {catchError} from 'rxjs/operators';
+import {catchError, switchMap, retry, takeUntil, share} from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
@@ -14,6 +14,7 @@ export class geoJSONService {
     protected options: any;
     protected token: string;
     private actionUrl: string
+    public stopPolling = new Subject()
 
     constructor(protected _http: HttpClient) {
         this.actionUrl = environment.apiUrl + environment.apiUrlPath + 'geoJSON/';
@@ -33,14 +34,21 @@ export class geoJSONService {
     }
 
     public GetAll = (layerID: number): Observable<any> => {
-        let ob = this._http.get(this.actionUrl + 'all?table=' + layerID, this.options).pipe(
-            catchError(this.handleError));
+        let ob = this._http.get(this.actionUrl + 'all?table=' + layerID, this.options).pipe(catchError(this.handleError))
+        // let ob = timer(1, 3000).pipe(
+        //     switchMap(() => this._http.get(this.actionUrl + 'all?table=' + layerID, this.options).pipe(catchError(this.handleError))), retry(), takeUntil(this.stopPolling));
         return ob
     }
     public GetSome = (layerID: number, where: string): Observable<any> => {
+        // let ob = timer(1, 3000).pipe(
+        //     switchMap(() => this._http.get(this.actionUrl + 'some?table=' + layerID + '&where=' + where, this.options).pipe(catchError(this.handleError))),retry(), takeUntil(this.stopPolling), share())
         let ob = this._http.get(this.actionUrl + 'some?table=' + layerID + '&where=' + where, this.options).pipe(
             catchError(this.handleError));
         return ob
+    }
+
+    public stopPollingFunc() {
+        this.stopPolling.next()
     }
 
     public GetSingle = (id: number): Observable<any> => {

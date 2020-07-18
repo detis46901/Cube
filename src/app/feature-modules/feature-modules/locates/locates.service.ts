@@ -124,7 +124,8 @@ export class LocatesService {
     })
     this.createInterval(layer)
     this.locate = null
-   if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction) }
+    // this.reloadLayer(layer, 'current')
+  //  if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction) }
    this.mapConfig.myCubeConfig = new DataFormConfig
         this.mapConfig.myCubeComment = new LogFormConfig
     return false

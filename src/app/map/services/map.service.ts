@@ -448,7 +448,7 @@ export class MapService {
         console.log('clearing Feature')
         if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeatureSource.clear() }
         if (this.mapConfig.selectedFeature) {
-            // this.mapConfig.selectedFeature.setStyle(null);
+            this.mapConfig.selectedFeature.setStyle(null);
             this.mapConfig.selectedFeature = null;
         }
         this.mapConfig.map.removeInteraction(this.modify);
@@ -482,6 +482,7 @@ export class MapService {
             }
             else {
                 this.mapConfig.drawMode = featuretype
+                this.clearFeature()
                 let src = new VectorSource();
                 let vector = new VectorLayer({
                     source: src,
