@@ -11,5 +11,9 @@
   <mat-slider style="width:100%" [max]="100" [step]="1" [value]="100" [thumbLabel]="true" (change)="setOpacity($event)"></mat-slider><br>Opacity<br>
   Selected Image<br>
   {{openAerialMapService.selectedImage.title}}<br>
-  {{openAerialMapService.selectedImage.acquisition_start}} - {{openAerialMapService.selectedImage.acquisition_end}}
+  {{openAerialMapService.selectedImage.acquisition_start}} - {{openAerialMapService.selectedImage.acquisition_end}}<br>
+  Loaded Images<br>
+  <div *ngFor="let image of loadedImages">
+    {{image.title}}<button mat-button (click) = "copyURL(image)"><mat-icon>content_copy</mat-icon></button>
+  </div>
 </mat-expansion-panel>

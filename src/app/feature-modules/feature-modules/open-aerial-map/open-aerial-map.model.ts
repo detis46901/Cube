@@ -11,6 +11,7 @@ export class Image {
     feature: ol.Feature
     on: Boolean = false;
     layer: TileLayer
+    function: string //add or substract
 }
 
 export class Properties {

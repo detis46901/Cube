@@ -31,6 +31,7 @@ export class OpenAerialMapService {
   public opacity: number;
   public selectedImage = new Image()
   public imageZIndex: number
+  
 
   public GetImagesFromURL = (): Observable<any> => {
     return this._http.get('https://api.openaerialmap.org/meta?provider=City%20of%20Kokomo')
@@ -74,18 +75,20 @@ export class OpenAerialMapService {
   public getFeatureList(layer: UserPageLayer): boolean {
     return true
   }
-  public selectFeature(layer: UserPageLayer): boolean {
+  public selectFeature(layer: UserPageLayer): Array<Image> {
     let image: Image
         let _id: string
         _id = this.mapConfig.selectedFeature.get('_id')
         image = this.images.find(x => x._id == _id)
         if (image.on == false) {
           this.loadImage(image)
+          image.function = 'add'
         }
         else {
           this.removeImage(image)
+          image.function = 'subtract'
         }
-    return true
+    return 
   }
 
   public styleSelectedFeature(layer: UserPageLayer): boolean {
@@ -152,11 +155,13 @@ export class OpenAerialMapService {
   }
 
   loadImage(image: Image) {
+    this.loadedImages.push(image)
     image.on = true
     this.wmsService.getCapabilities(image.properties.wmts)
       .subscribe((data) => {
         let parser = new WMTSCapabilities();
         let result = parser.read(data);
+        console.log(image.properties.wmts)
         let options = optionsFromCapabilities(result, {
           layer: 'None',
           matrixSet: 'EPSG:3857'

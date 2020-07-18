@@ -9,6 +9,10 @@ import { OpenAerialMapService } from './open-aerial-map.service'
 import { ModuleInstance } from '_models/module.model';
 import Observable from 'ol/Observable';
 import { User } from '_models/user.model';
+import { Image } from './open-aerial-map.model'
+import { Clipboard } from 'ts-clipboard';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 
 @Component({
@@ -18,7 +22,8 @@ import { User } from '_models/user.model';
 })
 export class OpenAerialMapComponent implements OnInit {
 
-  constructor(private wmsService: WMSService, private dialog: MatDialog, public openAerialMapService: OpenAerialMapService) {}
+  constructor(private wmsService: WMSService, private dialog: MatDialog, public openAerialMapService: OpenAerialMapService, public snackBar: MatSnackBar
+    ) {}
 
   @Input() mapConfig: MapConfig;
   @Input() instance: ModuleInstance;
@@ -27,6 +32,8 @@ export class OpenAerialMapComponent implements OnInit {
   public visible: boolean = false
   public expanded: boolean = false
   public disabledSubscription: Subscription;
+  public loadedImages = new Array<Image>()
+
 
   ngOnInit() {
     this.openAerialMapService.mapConfig = this.mapConfig
@@ -42,7 +49,8 @@ export class OpenAerialMapComponent implements OnInit {
   }
   
   public selectFeature(layer: UserPageLayer) {
-    return this.openAerialMapService.selectFeature(layer)
+    this.loadedImages =  this.openAerialMapService.selectFeature(layer)
+    return true
   }
 
   public clearFeature(layer: UserPageLayer) {
@@ -74,6 +82,12 @@ export class OpenAerialMapComponent implements OnInit {
     return false
   }
 
+  public copyURL(image: Image) {
+    Clipboard.copy(image.properties.wmts)
+    this.snackBar.open("Copied to the clipboard", "", {
+      duration: 2000,
+  });
+  }
   ngOnDestroy() {
     let layer: UserPageLayer
     this.openAerialMapService.unloadLayer(layer)
