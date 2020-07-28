@@ -69,6 +69,8 @@ export class MapComponent implements OnInit {
     // This is necessary to access the html element to set the map target (after view init)!
     @ViewChild("mapElement") mapElement: ElementRef;
     @ViewChild("layers") layers: ElementRef;
+    @ViewChild("newLayer") newLayer: ElementRef 
+    @ViewChild("setSearchElement") setSearchElement: ElementRef
     @ViewChild(FeatureModulesComponent)
     private featureModuleComponent: FeatureModulesComponent
     @Input() user: User;
@@ -100,7 +102,7 @@ export class MapComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        console.log('7-6-20')
+        console.log('7-19-20')
         console.log(this.user)
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
@@ -433,7 +435,7 @@ export class MapComponent implements OnInit {
             this.mapConfig.map.removeInteraction(this.mapService.modify);
             let test = new ob
             this.mapConfig.drawMode = ""
-            test.un("change", this.mapService.modkey);
+            // test.un("change", this.mapService.modkey);
             this.mapConfig.map.removeInteraction(this.mapService.drawInteraction);
             this.mapService.modify = null;
             this.mapService.clearFeature();
@@ -535,17 +537,33 @@ export class MapComponent implements OnInit {
         this.mapConfig.selectedFeatureLayer.setZIndex(1000)
         this.mapConfig.map.addLayer(this.mapConfig.searchResultLayer)
         this.geocodingService.sendSearchResults(searchResults)
-        this.searchCtrl.setValue('')
+        // this.searchCtrl.setValue('')
     }
 
     public setSearch() {
         this.showSearch = !this.showSearch
-        if (!this.showSearch) {
+        this.showNewLayer = false
+        if(this.showSearch) {
+            setTimeout(()=>{ // this will make the execution after the above boolean has changed
+                this.setSearchElement.nativeElement.focus();
+              },0);    
+        }
+        else {
             if (this.mapConfig.searchResultSource) { this.mapConfig.searchResultSource.clear() }
             this.searchCtrl.setValue(null)
             this.geocodingService.sendSearchResults(null)
         }
     }
+
+    public setNewLayer() {
+        this.showNewLayer = !this.showNewLayer
+        this.showSearch = false
+        if (this.showNewLayer) {
+            setTimeout(()=>{ // this will make the execution after the above boolean has changed
+                this.newLayer.nativeElement.focus();
+              },0);    
+        }
+            }
 
     public zoomToFeature(fl: featureList) {
         this.mapConfig.view.fit(fl.feature.getGeometry().getExtent(), {
