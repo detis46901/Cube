@@ -19,7 +19,7 @@
             {{ color.viewValue }}
         </mat-option>
     </mat-select>
-</mat-form-field>
+    </mat-form-field>
     <br>
         <mat-form-field>
             <mat-select placeholder="List Title" [(ngModel)]="selectedListTitle" name="listTitle">
@@ -30,12 +30,14 @@
         </mat-form-field>
         <mat-slide-toggle name="showLabel" [(ngModel)]="showLabel" [checked]="showLabel">Label Map</mat-slide-toggle>
         <br>
+        <mat-radio-button name="heatmap" [(ngModel)]="HeatMap" (change)="heatMap()">Heat Map</mat-radio-button>
     </form>
     <form>
     <!-- <form *ngIf="mapConfig.currentLayer.layer.layerType != 'MyCube'"> -->
         <mat-slider name="styleopacity" style="width:100%" [max]="100" [step]="1" [value]="100" [thumbLabel]="true" (change)="setOpacity($event)" [(ngModel)]="opacity"></mat-slider><br>Opacity<br>
         {{opacity}}
     </form>
+    
 
 
     <!-- buttons to apply, clear, save to page or layer, and close -->

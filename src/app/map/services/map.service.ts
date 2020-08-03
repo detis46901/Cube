@@ -38,6 +38,7 @@ import { GeocodingService } from '../services/geocoding.service'
 import { DataFormService } from '../../shared.components/data-component/data-form.service'
 import { DataFormConfig, DataField, LogFormConfig, LogField } from "app/shared.components/data-component/data-form.model";
 import { click, shiftKeyOnly } from 'ol/events/condition'
+import { style } from "@angular/animations";
 
 
 @Injectable()
@@ -668,6 +669,13 @@ export class MapService {
                 x.layerShown = false;
             }
         })
+    }
+
+    public heatMap(layer:UserPageLayer){
+        layer = this.mapConfig.currentLayer
+        console.log(layer.layer.layerName)
+        // console.log(this.mapConfig.currentLayer.style.current.color) 
+        
     }
 
     public toggleDefaultOn(layer: UserPageLayer) {

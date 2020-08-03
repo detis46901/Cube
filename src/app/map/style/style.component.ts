@@ -12,6 +12,8 @@ import { LayerService } from '../../../_services/_layer.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
 import { MyCubeStyle } from '_models/style.model';
+import { MatRadioButton } from '@angular/material/radio';
+import { WMSService } from './../services/wms.service';
 
 
 @Component({
@@ -53,10 +55,28 @@ export class StyleComponent implements OnInit {
         { value: 'isLessThan', viewValue: 'Less Than' },
         { value: 'contains', viewValue: 'Contains' }
     ];
+    gradient = [
+        {value: 'rgba(0,255,255,0)', viewValue: '1'},
+        {value: 'rgba(0,255,255,1)', viewValue: '2'},
+        {value: 'rgba(0,191,255,1)', viewValue: '3'},
+        {value: 'rgba(0,127,255,1)', viewValue: '4'},
+        {value: 'rgba(0,63,255,1)', viewValue: '5'},
+        {value: 'rgba(0,0,255,1)', viewValue: '6'},
+        {value: 'rgba(0,0,223,1)', viewValue: '7'},
+        {value: 'rgba(0,0,191,1)', viewValue: '8'},
+        {value: 'rgba(0,0,159,1)', viewValue: '9'},
+        {value: 'rgba(0,0,127,1)', viewValue: '10'},
+        {value: 'rgba(63,0,91,1)', viewValue: '11'},
+        {value: 'rgba(127,0,63,1)', viewValue: '12'},
+        {value: 'rgba(191,0,31,1)', viewValue: '13'},
+        {value: 'rgba(255,0,0,1)', viewValue: '14'}
+    ];
 
 
     constructor(public mapService: MapService, private styleService: StyleService,
-        private sqlSerivce: SQLService, private userPageLayerService: UserPageLayerService,
+        private sqlSerivce: SQLService, 
+        private userPageLayerService: UserPageLayerService,
+        private wmsService: WMSService,
         private layerService: LayerService) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.admin = currentUser && currentUser.admin;
@@ -145,7 +165,9 @@ export class StyleComponent implements OnInit {
         this.mapConfig.currentLayer.style.opacity = (e['value'])
       }
 
-    // applies the style to the map and only shows the appllicable items //not fully working
+    
+
+    // applies the style to the map and only shows the applicable items //not fully working
     public applyStyle() {
         // if (this.styleColumn['field'] == "" || this.styleColumn['field'] == null) {}
         // else {}

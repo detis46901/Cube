@@ -313,6 +313,9 @@ export class MapComponent implements OnInit {
         this.mapService.toggleBasemap()
     }
 
+
+
+
     public drawFeature(featureType: string) {
         console.log(featureType)
         if (this.mapConfig.currentLayer.user_page_instance) {
@@ -390,6 +393,11 @@ export class MapComponent implements OnInit {
             UPLUpdate.style = x.style //another stupid hack
             this.userPageLayerService.Update(UPLUpdate).subscribe();
         })
+    }
+
+    public heatMap(layer: UserPageLayer){
+        layer = this.mapConfig.currentLayer
+        this.mapService.heatMap(layer)
     }
 
     public addUserPageLayer(layer: UserPageLayer) {
