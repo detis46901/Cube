@@ -39,6 +39,8 @@ import { DataFormService } from '../../shared.components/data-component/data-for
 import { DataFormConfig, DataField, LogFormConfig, LogField } from "app/shared.components/data-component/data-form.model";
 import { click, shiftKeyOnly } from 'ol/events/condition'
 import { style } from "@angular/animations";
+import { newArray } from "@angular/compiler/src/util";
+//import Heatmap from 'ol/layer/Heatmap';
 
 
 @Injectable()
@@ -65,7 +67,8 @@ export class MapService {
         private styleService: StyleService,
         private featuremodulesservice: FeatureModulesService,
         private snackBar: MatSnackBar,
-        private dataFormService: DataFormService
+        private dataFormService: DataFormService,
+        //private heatMap: Heatmap
     ) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.mapConfig.userID = currentUser && currentUser.userID;
@@ -671,12 +674,14 @@ export class MapService {
         })
     }
 
-    public heatMap(layer:UserPageLayer){
-        layer = this.mapConfig.currentLayer
-        console.log(layer.layer.layerName)
-        // console.log(this.mapConfig.currentLayer.style.current.color) 
-        
-    }
+    // public createHeatMap(layer:UserPageLayer){
+    //     layer = this.mapConfig.currentLayer
+    //     console.log(layer.layer.layerName)
+    //     console.log(layer.layer.layerType)
+    //     let heat = new Heatmap
+    //     this.heatMap.getSource()
+
+    // }
 
     public toggleDefaultOn(layer: UserPageLayer) {
         layer.defaultON = !layer.defaultON

@@ -395,10 +395,10 @@ export class MapComponent implements OnInit {
         })
     }
 
-    public heatMap(layer: UserPageLayer){
-        layer = this.mapConfig.currentLayer
-        this.mapService.heatMap(layer)
-    }
+    // public createHeatMap(layer: UserPageLayer){
+    //     layer = this.mapConfig.currentLayer
+    //     this.mapService.createHeatMap(layer)
+    // }
 
     public addUserPageLayer(layer: UserPageLayer) {
         this.mapService.addUserPageLayer(layer)
