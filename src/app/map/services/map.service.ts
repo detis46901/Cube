@@ -524,7 +524,7 @@ export class MapService {
                     this.mapConfig.map.removeLayer(vector);
                     this.mapConfig.map.changed();
                     let test = new Observable
-                    test.un("change", this.modkey);
+                    // test.un("change", this.modkey);
                     this.mapConfig.map.removeInteraction(this.drawInteraction);
                     this.mapConfig.drawMode = ""
                     // this.drawMode = false
