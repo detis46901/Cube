@@ -219,7 +219,7 @@
                             matTooltip="Layers" (click)="setNewLayer()">
                             <mat-icon>layers</mat-icon>
                         </button>
-                        <button mat-icon-button (click)="setSearch()">
+                        <button mat-icon-button (click)="setSearch()" matTooltip="Search">
                           <mat-icon>search</mat-icon>
                       </button>
                         <button mat-icon-button (click)="mapConfig.measureShow = !mapConfig.measureShow">
@@ -264,6 +264,13 @@
                             <mat-icon matTooltip="Delete Feature">delete</mat-icon>
                         </button>
                     </div>
+                </mat-action-row>
+                <mat-action-row *ngIf="mapConfig.currentLayerName != ''">
+                    <div style="text-align:right">
+                        <button *ngIf="mapConfig.currentLayerName != ''" mat-icon-button (click)="mapService.heatMap()">
+                            <i class="material-icons">blur_on</i>
+                        </button>
+                    </div> 
                 </mat-action-row>
             </mat-expansion-panel>
 
