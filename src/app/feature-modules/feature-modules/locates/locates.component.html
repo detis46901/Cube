@@ -1,4 +1,4 @@
-<mat-expansion-panel *ngIf="locateConfig.visible==true" [disabled]="locateConfig.expanded == false" [expanded]="locateConfig.expanded == true">
+<mat-expansion-panel class="expansiontab" *ngIf="locateConfig.visible==true" [disabled]="locateConfig.expanded == false" [expanded]="locateConfig.expanded == true">
   <mat-expansion-panel-header>
     <mat-panel-title>
       Locates
@@ -11,6 +11,7 @@
   <button mat-button mat-raised-button color="primary" (click)="goToTab('Process')">Process</button>
   <button *ngIf="locatesservice.showSortBy" mat-button mat-raised-button color="primary" (click)="locatesservice.flipSortBy()">Sorting By {{locatesservice.sortBy}}</button>
   <!-- <button mat-button mat-raised-button color="primary" (click)="openDashboard()">Dashboard</button> -->
+  <div style="max-height: 40vh; overflow:auto">
   <div *ngIf="tab=='Input'" label="Input"><br>
     <mat-form-field>
       <input matInput [(ngModel)]="locateInput" id='locateInput' placeholder="Paste Locate Email Here"
@@ -71,4 +72,5 @@
       </div>
     </div>
   </div>
+</div>
 </mat-expansion-panel>

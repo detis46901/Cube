@@ -15,3 +15,7 @@
     max-width: 100px;
     overflow-wrap: break-word;
   }
+
+  .expansiontab {
+    max-height: 50vh;
+  }

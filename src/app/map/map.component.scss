@@ -93,22 +93,22 @@ p {
 }
 
 
-.leaflet-container.default-enabled {
-    cursor:default
-}
+// .leaflet-container.default-enabled {
+//     cursor:default
+// }
 
-/*any time the cursor goes over the added current layer, enable pointer*/
-.leaflet-container.pointer-enabled {
-    cursor:pointer
-}
+// /*any time the cursor goes over the added current layer, enable pointer*/
+// .leaflet-container.pointer-enabled {
+//     cursor:pointer
+// }
 
-.leaflet-container.grabbing-enabled {
-    cursor:grabbing
-}
+// .leaflet-container.grabbing-enabled {
+//     cursor:grabbing
+// }
 
-.leaflet-container.grab-enabled {
-    cursor:grab
-}
+// .leaflet-container.grab-enabled {
+//     cursor:grab
+// }
 .example-radio-group {
     display: inline-flex;
     flex-direction: column;
@@ -254,7 +254,7 @@ td {
     display: block; 
     position: absolute; 
     bottom: 0px; left: 0px;
-    max-height: 25vh;
+    max-height: 43vh // or 250vh;
   }
   
   .feature-data .mat-expansion-panel-header-description {
@@ -269,7 +269,8 @@ td {
   display: block; 
   position: absolute; 
   bottom: 0px; 
-  left: 354px
+  left: 354px;
+  max-height: 50%;
 }
 
 .comment-data .mat-expansion-panel-header-description {
