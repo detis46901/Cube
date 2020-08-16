@@ -614,6 +614,7 @@ export class MapComponent implements OnInit {
         let j = 0;
         let promise = new Promise((resolve) => {
             this.mapConfig.userpagelayers.forEach(userpagelayer => {
+                console.log(this.mapConfig.userpagelayers.length)
                 if (single) { //If you're adding a single layer, under the "addLayer() from the map.component"
                     j++
                     if (j < this.mapConfig.userpagelayers.length) {
@@ -621,6 +622,7 @@ export class MapComponent implements OnInit {
                     }
                 }
                 userpagelayer.layerShown = userpagelayer.defaultON;
+                console.log(userpagelayer.olLayer)
                 if (!userpagelayer.olLayer) {
                     switch (userpagelayer.layer.layerType) {
                         case "GeoserverWFS": {
@@ -851,6 +853,10 @@ export class MapComponent implements OnInit {
                             if (userpagelayer.layer.legendURL) { userpagelayer.layer.legendURL = diffWMS.getLegendUrl(2).split('&SCALE')[0] }
                         }
                     }
+                }
+                else {
+                    j++
+                                if (j == this.mapConfig.userpagelayers.length) { resolve() }
                 }
             }
             )

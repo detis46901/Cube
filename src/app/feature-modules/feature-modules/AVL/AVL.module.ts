@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FeatureModulesComponent } from './feature-modules.component';
-import { MatExpansionModule } from '@angular/material/expansion';
+//Angular Material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatMenuModule } from '@angular/material/menu'
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -22,60 +21,60 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import {MatSliderModule} from '@angular/material/slider'
 import {MatDividerModule} from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { LocatesModule } from './feature-modules/locates/locates.module';
-import { SDSModule } from './feature-modules/SDS/SDS.module'
-import { PaserModule } from './feature-modules/paser/paser.module'
-import { openAerialMapModule } from './feature-modules/open-aerial-map/open-aerial-map.module';
-import {WOModule} from './feature-modules/WO/WO.module';
-import { AVLModule } from './feature-modules/AVL/AVL.module'
-import { FeatureModulesAdminComponent } from './feature-modules-admin/feature-modules-admin.component'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AVLComponent } from './AVL.component'
+import { AVLService } from './AVL.service'
+import { AVLHTTPService } from './AVL.HTTP.service'
+import { AVLAdminService } from './AVL-admin.service'
+import { StyleService } from './style.service'
+
 
 @NgModule({
   imports: [
     CommonModule,
+    BrowserAnimationsModule,
     MatExpansionModule,
-    LocatesModule,
-    openAerialMapModule,
-    SDSModule,
-    PaserModule,
-    WOModule,
-    AVLModule,
+    MatCardModule,
+    MatSidenavModule,
+    MatSlideToggleModule,
+    MatButtonToggleModule,
+    MatTabsModule,
+    MatExpansionModule,
+    MatRadioModule,
+    MatMenuModule,
+    MatIconModule,
+    MatDialogModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatTableModule,
+    MatProgressSpinnerModule,
+    MatToolbarModule,
+    MatChipsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatListModule,
+    MatTooltipModule,
+    MatSnackBarModule,
+    MatDividerModule,
+    MatSliderModule,
     FormsModule,
-        ReactiveFormsModule,
-        BrowserAnimationsModule,
-        MatCardModule,
-        MatSidenavModule,
-        MatSlideToggleModule,
-        MatButtonToggleModule,
-        MatTabsModule,
-        MatExpansionModule,
-        MatRadioModule,
-        MatMenuModule,
-        MatIconModule,
-        MatDialogModule,
-        MatSelectModule,
-        MatCheckboxModule,
-        MatInputModule,
-        MatFormFieldModule,
-        MatButtonModule,
-        MatTableModule,
-        MatProgressSpinnerModule,
-        MatToolbarModule,
-        MatChipsModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        MatListModule,
-        MatTooltipModule,
-        MatSnackBarModule,
-        MatDividerModule,
+    ReactiveFormsModule
+
   ],
-  declarations: [FeatureModulesComponent, FeatureModulesAdminComponent],
-  exports: [FeatureModulesComponent]
+  declarations: [AVLComponent],
+  entryComponents: [
+],
+  providers: [AVLService, AVLAdminService, AVLHTTPService, StyleService],
+  exports:[AVLComponent]
 })
-export class FeatureModulesModule { }
+export class AVLModule { }

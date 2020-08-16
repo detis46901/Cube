@@ -4,6 +4,7 @@ import { SDSComponent } from './feature-modules/SDS/SDS.component';
 import { PaserComponent } from './feature-modules/paser/paser.component'
 import { UserPageLayer } from '_models/layer.model';
 import { OpenAerialMapComponent } from './feature-modules/open-aerial-map/open-aerial-map.component';
+import { AVLComponent } from './feature-modules/AVL/AVL.component';
 import { LocatesComponent } from './feature-modules/locates/locates.component';
 import { WOComponent } from './feature-modules/WO/WO.component'
 import { featureModule } from './feature-modules.model'
@@ -26,6 +27,7 @@ export class FeatureModulesComponent implements OnInit, AfterViewInit, OnDestroy
   @ViewChildren(LocatesComponent) locates: QueryList<LocatesComponent>
   @ViewChildren(FeatureModulesComponent) components: QueryList<any>
   @ViewChildren(OpenAerialMapComponent) OAM: QueryList<any>
+  @ViewChildren(AVLComponent) AVL: QueryList<any>
   @ViewChildren(WOComponent) WO: QueryList<any>
   @ViewChildren(PaserComponent) paser: QueryList<any>
 
@@ -63,6 +65,12 @@ export class FeatureModulesComponent implements OnInit, AfterViewInit, OnDestroy
       this.featureModule.push(FM);
     });
     this.OAM.forEach(Instance => {
+      let FM = new featureModule;
+      FM.moduleInstanceID = Instance.instance.ID;
+      FM.componentReference = Instance;
+      this.featureModule.push(FM);
+    });
+    this.AVL.forEach(Instance => {
       let FM = new featureModule;
       FM.moduleInstanceID = Instance.instance.ID;
       FM.componentReference = Instance;

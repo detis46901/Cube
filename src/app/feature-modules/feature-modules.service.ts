@@ -8,6 +8,7 @@ import { OpenAerialMapService } from '../feature-modules/feature-modules/open-ae
 import { SDSService } from '../feature-modules/feature-modules/SDS/SDS.service'
 import { WOService } from './feature-modules/WO/WO.service'
 import { PaserService } from './feature-modules/paser/paser.service'
+import { AVLService } from './feature-modules/AVL/AVL.service'
 import { Feature } from 'ol';
 
 @Injectable()
@@ -15,7 +16,12 @@ export class FeatureModulesService {
 
   //add [module identity] + 'service: ' + [module service name]
   constructor(
-    public locatesservice: LocatesService, public openAerialMapservice: OpenAerialMapService, public SDSservice: SDSService, public WOservice: WOService, public paserservice: PaserService) { }
+    public locatesservice: LocatesService, 
+    public openAerialMapservice: OpenAerialMapService, 
+    public SDSservice: SDSService, 
+    public WOservice: WOService, 
+    public paserservice: PaserService,
+    public AVLservice: AVLService) { }
 
   public loadLayer(mapConfig: MapConfig, layer: UserPageLayer, init?: boolean): boolean {
     if (!(layer.userPageInstanceID > 0)) { return false }
