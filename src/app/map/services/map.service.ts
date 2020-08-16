@@ -14,7 +14,7 @@ import { SQLService } from './../../../_services/sql.service';
 import { StyleService } from '../services/style.service'
 import { FeatureModulesService } from "app/feature-modules/feature-modules.service";
 import { Modify, Draw } from 'ol/interaction';
-import { Vector as VectorSource } from 'ol/source';
+import { Vector as VectorSource, Stamen } from 'ol/source';
 import { environment } from 'environments/environment'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import VectorLayer from "ol/layer/Vector";
@@ -39,6 +39,10 @@ import { DataFormService } from '../../shared.components/data-component/data-for
 import { DataFormConfig, DataField, LogFormConfig, LogField } from "app/shared.components/data-component/data-form.model";
 import { click, shiftKeyOnly } from 'ol/events/condition'
 import { style } from "@angular/animations";
+import { newArray } from "@angular/compiler/src/util";
+import { Heatmap as HeatmapLayer } from 'ol/layer'
+import KML from "ol/format/KML";
+
 
 
 @Injectable()
@@ -50,6 +54,7 @@ export class MapService {
     public modify: Modify;
     public base: string = 'base';  //base layer
     public drawInteraction: any;
+    public heatMap: HeatmapLayer;
 
 
     constructor(
@@ -65,7 +70,7 @@ export class MapService {
         private styleService: StyleService,
         private featuremodulesservice: FeatureModulesService,
         private snackBar: MatSnackBar,
-        private dataFormService: DataFormService
+        private dataFormService: DataFormService,     
     ) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.mapConfig.userID = currentUser && currentUser.userID;
@@ -671,11 +676,33 @@ export class MapService {
         })
     }
 
-    public heatMap(layer:UserPageLayer){
-        layer = this.mapConfig.currentLayer
-        console.log(layer.layer.layerName)
-        // console.log(this.mapConfig.currentLayer.style.current.color) 
-        
+    public createHeatMap(layer: UserPageLayer){
+        layer = this.mapConfig.currentLayer        
+        var vector = new HeatmapLayer({
+            source: new VectorSource({
+                url: 'https://cube-kokomo.com:8080/geoserver/wms', 
+                format: new KML({
+                    extractStyles: false
+                })            
+            }),
+            radius: 20,
+            blur: 15,
+            visible: true,
+        });
+        var raster = new TileLayer({
+            source: new Stamen({
+                layer: 'toner'
+            })
+        });
+        vector.getSource().on('addfeature', function(event){
+            var score = event.feature.get('score');
+            event.feature.set('weight', score);
+        });
+        console.log('685')
+        console.log(vector)
+        this.mapConfig.map.addLayer(vector)
+        this.mapConfig.map.addLayer(raster)
+
     }
 
     public toggleDefaultOn(layer: UserPageLayer) {

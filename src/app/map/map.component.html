@@ -267,7 +267,7 @@
                 </mat-action-row>
                 <mat-action-row *ngIf="mapConfig.currentLayerName != ''">
                     <div style="text-align:right">
-                        <button *ngIf="mapConfig.currentLayerName != ''" mat-icon-button (click)="mapService.heatMap()">
+                        <button *ngIf="mapConfig.currentLayerName != ''" mat-icon-button (click)="mapService.createHeatMap()" matTooltip="Heat Map">
                             <i class="material-icons">blur_on</i>
                         </button>
                     </div> 
