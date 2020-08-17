@@ -70,7 +70,7 @@ export class AVLService {
 
   public mapCurrentLocations(AVLconfig: AVLConfig) {
     AVLconfig.UPL.olLayer.getSource().clear()
-    AVLconfig.vehicles.forEach((y) => {
+    AVLconfig.vehicles.forEach((y: Vehicle) => {
             if (y.currentLocation) {
               let crd = new Array<number>()
               crd.push(y.currentLocation.longitude)
@@ -84,8 +84,7 @@ export class AVLService {
                 let dest = 'EPSG:3857'
                 feature.getGeometry().transform(src1, dest)
                 AVLconfig.UPL.olLayer.getSource().addFeature(feature)
-                console.log(this.styleService.styleFunction())
-                feature.setStyle(this.styleService.styleFunction())
+                feature.setStyle(this.styleService.stylePoint(y.currentLocation))
             }
           })
           console.log('mapped')
@@ -99,9 +98,7 @@ export class AVLService {
     });
     this.AVLHTTPservice.getTrackCall(AVLconfig.token, vehicle.id).subscribe((x) => {
       let gpsTracks: GpsMessage[]
-      gpsTracks = x['gpsMessage']
-      console.log(gpsTracks)
-     
+      gpsTracks = x['gpsMessage']     
       let crds = new Array <Array<number>>()
       gpsTracks.forEach((track:GpsMessage) => {
         let crd1 = new Array <number>(2)
@@ -120,13 +117,15 @@ export class AVLService {
                 let dest = 'EPSG:3857'
                 feature.getGeometry().transform(src1, dest)
                 AVLconfig.olTrackSource.addFeature(feature)
+                feature.setStyle(this.styleService.stylePoint(track))
+
       })
-      console.log(crds)
       let ln = new Feature({
         geometry: new LineString(crds)
       })
       ln.getGeometry().transform('EPSG:4326','EPSG:3857')
       AVLconfig.olTrackSource.addFeature(ln)
+      ln.setStyle(this.styleService.styleLineString())
       this.mapConfig.map.addLayer(AVLconfig.olTrackLayer)
     })
   }

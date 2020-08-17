@@ -7,10 +7,10 @@
     </mat-panel-description>
   </mat-expansion-panel-header>
   {{AVLConfig.selectedVehicle.label}}<br>
-  <button mat-button mat-raised-button color="primary" (click)="goToTab('Vehicles')">Vehicles</button>
-  <button mat-button mat-raised-button color="primary" (click)="goToTab('Track')">Track</button>
-  <button mat-button mat-raised-button color="primary" (click)="goToTab('Diagnostics')">Diagnostics</button>
-  <button mat-button mat-raised-button color="primary" (click)="clearTracks()">Clear</button><br>
+  <button *ngIf="AVLConfig.selectedVehicle.id != null" mat-button mat-raised-button color="primary" (click)="goToTab('Vehicles')">Vehicles</button>
+  <button *ngIf="AVLConfig.selectedVehicle.id != null" mat-button mat-raised-button color="primary" (click)="goToTab('Track')">Track</button>
+  <button *ngIf="AVLConfig.selectedVehicle.id != null" mat-button mat-raised-button color="primary" (click)="goToTab('Diagnostics')">Diagnostics</button>
+  <button *ngIf="AVLConfig.selectedVehicle.id != null" mat-button mat-raised-button color="primary" (click)="clearTracks()">Clear</button><br>
   <div *ngIf="tab == 'Vehicles'">
     <div *ngFor="let vehicle of AVLConfig.vehicles">
       <span *ngIf="vehicle == AVLConfig.selectedVehicle" (click)='goToTrack(vehicle)'><b>{{vehicle.label}}</b></span>
