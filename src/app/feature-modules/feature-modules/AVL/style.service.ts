@@ -31,6 +31,7 @@ export class StyleService {
           })
         }
         else {
+            // console.log(gpsMessage.heading)
             var stroke = new Stroke({color: 'black', width: 2});
             var fill = new Fill({color: 'green'});
             style =  new Style({
@@ -39,7 +40,7 @@ export class StyleService {
                   stroke: stroke,
                   points: 3,
                   radius: 8,
-                  angle: Math.PI / 4,
+                  angle: gpsMessage.heading /180 * Math.PI, //Math.PI / 4,
                 }),
               })
         }        

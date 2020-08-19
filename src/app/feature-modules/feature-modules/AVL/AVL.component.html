@@ -7,18 +7,59 @@
     </mat-panel-description>
   </mat-expansion-panel-header>
   {{AVLConfig.selectedVehicle.label}}<br>
-  <button *ngIf="AVLConfig.selectedVehicle.id != null" mat-button mat-raised-button color="primary" (click)="goToTab('Vehicles')">Vehicles</button>
-  <button *ngIf="AVLConfig.selectedVehicle.id != null" mat-button mat-raised-button color="primary" (click)="goToTab('Track')">Track</button>
-  <button *ngIf="AVLConfig.selectedVehicle.id != null" mat-button mat-raised-button color="primary" (click)="goToTab('Diagnostics')">Diagnostics</button>
-  <button *ngIf="AVLConfig.selectedVehicle.id != null" mat-button mat-raised-button color="primary" (click)="clearTracks()">Clear</button><br>
-  <div *ngIf="tab == 'Vehicles'">
-    <div *ngFor="let vehicle of AVLConfig.vehicles">
-      <span *ngIf="vehicle == AVLConfig.selectedVehicle" (click)='goToTrack(vehicle)'><b>{{vehicle.label}}</b></span>
-      <span *ngIf="vehicle != AVLConfig.selectedVehicle" (click)='goToTrack(vehicle)'>{{vehicle.label}}</span>
-    </div>  
-  </div>
-  <div *ngIf="tab == 'Track'">
-    <button mat-button mat-raised-button color="primary" (click)="goToTab('Vehicles')">Today</button>
-    <button mat-button mat-raised-button color="primary" (click)="goToTab('Vehicles')">Custom</button>
+  <button *ngIf="AVLConfig.selectedVehicle.id != null" mat-button mat-raised-button color="primary"
+    (click)="goToTab('Vehicles')">Vehicles</button>
+  <button *ngIf="AVLConfig.selectedVehicle.id != null" mat-button mat-raised-button color="primary"
+    (click)="goToTab('Track')">Track</button>
+  <button *ngIf="AVLConfig.selectedVehicle.id != null" mat-button mat-raised-button color="primary"
+    (click)="goToTab('Diagnostics')">Diagnostics</button>
+  <button *ngIf="AVLConfig.selectedVehicle.id != null" mat-button mat-raised-button color="primary"
+    (click)="clearTracks()">Clear</button><br>
+  <div style="max-height: 60vh; overflow:auto">
+    <div *ngIf="tab == 'Vehicles'">
+      <div *ngFor="let vehicle of AVLConfig.vehicles"> 
+        <span *ngIf="vehicle == AVLConfig.selectedVehicle" (click)='goToTrack(vehicle)'><b>{{vehicle.label}}</b></span>
+        <span *ngIf="vehicle != AVLConfig.selectedVehicle" (click)='goToTrack(vehicle)'>{{vehicle.label}}</span>
+      </div>
+    </div>
+    <div *ngIf="tab == 'Track'">
+      <button mat-button mat-raised-button color="primary" (click)="goToTab('Vehicles')">Today</button>
+      <button mat-button mat-raised-button color="primary" (click)="goToTab('Vehicles')">Custom</button><br>
+      <span *ngIf="AVLConfig.selectedVehicle.track">{{AVLConfig.selectedVehicle.track[0].messageTime | date:'fullDate'}}</span>
+      <div *ngFor="let track of AVLConfig.selectedVehicle.track">
+        <table>
+          <tr *ngIf="track == AVLConfig.selectedPoint" (click)="zoomToPoint(track)">
+            <td>
+              <b>{{track.messageTime | date:'shortTime'}}</b>
+            </td>
+            <td *ngIf="!track.keyOn">
+             <b>Stopped</b>
+            </td>
+            <td *ngIf="track.keyOn">
+              <b>{{track.avgSpeed}}MPH</b>
+            </td>
+            <td>
+             <b><span *ngIf="track.heading">{{track.heading}}&deg;</span></b>
+            </td>
+          </tr>
+          <tr *ngIf="track != AVLConfig.selectedPoint" (click)="zoomToPoint(track)">
+            <td>
+              {{track.messageTime | date:'shortTime'}}
+            </td>
+            <td *ngIf="!track.keyOn">
+              Stopped
+            </td>
+            <td *ngIf="track.keyOn">
+              {{track.avgSpeed}}MPH
+            </td>
+            <td>
+              <span *ngIf="track.heading">{{track.heading}}&deg;</span>
+            </td>
+          </tr>
+        </table>
+        <!-- <span *ngIf="track == AVLConfig.selectedPoint" (click)="zoomToPoint(track)"><b>{{track.messageTime | date:'shortTime'}} <span *ngIf="!track.keyOn">Stopped</span> <span *ngIf="track.keyOn">{{track.avgSpeed}}MPH</span>{{track.heading}}</b></span>
+        <span *ngIf="track != AVLConfig.selectedPoint" (click)="zoomToPoint(track)">{{track.messageTime | date:'shortTime'}} <span *ngIf="!track.keyOn">Stopped</span> <span *ngIf="track.keyOn">{{track.avgSpeed}}MPH</span>{{track.heading}}</span> -->
+      </div>
+    </div>
   </div>
 </mat-expansion-panel>

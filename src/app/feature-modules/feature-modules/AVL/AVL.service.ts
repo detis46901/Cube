@@ -91,16 +91,19 @@ export class AVLService {
         }
   
   public mapTrack(AVLconfig: AVLConfig, vehicle: Vehicle) {
+    console.log(vehicle)
     this.mapConfig.map.removeLayer(AVLconfig.olTrackLayer)
     AVLconfig.olTrackSource = new VectorSource();
     AVLconfig.olTrackLayer = new VectorLayer({
       source: AVLconfig.olTrackSource,
     });
-    this.AVLHTTPservice.getTrackCall(AVLconfig.token, vehicle.id).subscribe((x) => {
-      let gpsTracks: GpsMessage[]
-      gpsTracks = x['gpsMessage']     
+      let y0: number
+      let x0: number 
+      let angle: number
+      let degrees: number
       let crds = new Array <Array<number>>()
-      gpsTracks.forEach((track:GpsMessage) => {
+      vehicle.track.forEach((track:GpsMessage) => {
+        console.log(track.heading)
         let crd1 = new Array <number>(2)
           crd1[0] = track.longitude
           crd1[1] = track.latitude
@@ -117,6 +120,22 @@ export class AVLService {
                 let dest = 'EPSG:3857'
                 feature.getGeometry().transform(src1, dest)
                 AVLconfig.olTrackSource.addFeature(feature)
+                track.olPoint = feature
+                //this needs to be worked on to get the heading right.
+                // if (gpsTracks.indexOf(track) > 0) {
+                //   let x1 = feature.getGeometry()['flatCoordinates'][0]
+                //   let y1 = feature.getGeometry()['flatCoordinates'][1]
+                //   let dx = x1-x0
+                //   let dy = y1-y0
+                //   console.log(dy, dx)
+                //   angle = Math.atan2(-dy,dx)
+                //   degrees = 360-(angle*180/Math.PI)-90
+                //   angle = degrees / 180 * Math.PI
+                //   gpsTracks[gpsTracks.indexOf(track)-1].heading = angle
+                //   console.log(degrees)
+                // }
+                // x0 = feature.getGeometry()['flatCoordinates'][0]
+                // y0 = feature.getGeometry()['flatCoordinates'][1]
                 feature.setStyle(this.styleService.stylePoint(track))
 
       })
@@ -127,7 +146,6 @@ export class AVLService {
       AVLconfig.olTrackSource.addFeature(ln)
       ln.setStyle(this.styleService.styleLineString())
       this.mapConfig.map.addLayer(AVLconfig.olTrackLayer)
-    })
   }
 
   public getGroup(token, id):Observable<any> {
@@ -147,15 +165,18 @@ export class AVLService {
     return true
   }
 
-  public setCurrentLayer(layer: UserPageLayer): boolean {
+  public setCurrentLayer(layer: UserPageLayer, AVLconfig:AVLConfig): boolean {
     // this.getGroups()
     // this.getVehicles()
     // this.getLocations()
     this.AOMMouseOver = this.mapConfig.map.on('pointermove', (evt: any) => {
+      
         if (this.mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
-          this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
-            if (layer === this.bboxLayer) {
-              this.selectedImage = this.images.find(x => x._id == feature.get('_id'))
+          this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature, mouselayer) => {
+            if (mouselayer === layer.olLayer || AVLconfig.olTrackLayer) {
+
+              console.log(evt)
+              // this.selectedImage = this.images.find(x => x._id == feature.get('_id'))
             }
           })
         }

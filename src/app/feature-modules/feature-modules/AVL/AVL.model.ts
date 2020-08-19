@@ -5,6 +5,7 @@ import { UserPageLayer } from '_models/layer.model';
 import Layer from 'ol/layer/Layer';
 import {Fill, Stroke, Circle, Style} from 'ol/style';
 import { Injectable } from "@angular/core";
+import VectorSource from 'ol/source/Vector';
 
 
 
@@ -42,13 +43,15 @@ export class AVLConfig {
     vehicles = new Array<Vehicle>()
     fleetLocations = new Array<GpsMessage>()
     selectedVehicle = new Vehicle
+    selectedPoint = new GpsMessage
     startDate: Date
     endDate: Date
     olTrackLayer: Layer
-    olTrackSource: any 
+    olTrackSource = new VectorSource()
 }
 
 export class GpsMessage {
+    messageTime: Date
     latitude: number
     longitude: number
     accuracy: number
@@ -60,7 +63,8 @@ export class GpsMessage {
     maxSpeed: number
     heading: number
     vehicleId: number
-    vehicleLabel: string 
+    vehicleLabel: string
+    olPoint: Feature
 }
 
 export class Group {
@@ -85,6 +89,7 @@ export class Vehicle {
     vin: string //needs to be it's own object
     year: number
     currentLocation: GpsMessage
+    track = new Array <GpsMessage>()
 }
 
 @Injectable()

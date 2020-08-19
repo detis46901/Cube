@@ -1,0 +1,21 @@
+.example-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .example-container > * {
+    width: 100%;
+  }
+
+  .example-stretched-tabs {
+    max-width: 50px;
+  }
+
+  .ticketLocation {
+    max-width: 100px;
+    overflow-wrap: break-word;
+  }
+
+  .expansiontab {
+    max-height: 50vh;
+  }

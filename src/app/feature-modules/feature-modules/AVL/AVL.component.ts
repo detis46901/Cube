@@ -49,10 +49,11 @@ export class AVLComponent implements OnInit, OnDestroy {
     this.AVLservice.createLayer(this.mapConfig, this.AVLConfig.UPL)
     this.loadLayer()
     this.AVLservice.mapConfig = this.mapConfig
-
     //keep working on this
     this.AVLConfig.startDate = new Date()
-    console.log(this.AVLConfig.startDate.toISOString())
+    this.AVLConfig.startDate.setHours(0,0,0,0)
+    this.AVLConfig.endDate = new Date()
+    this.AVLConfig.endDate.setHours(24,0,0,0)
   }
 
   
@@ -80,7 +81,17 @@ export class AVLComponent implements OnInit, OnDestroy {
               if (foundLocation) {
                 v.currentLocation = foundLocation
               }
-            if (i == this.AVLConfig.group.vehicleIds['id'].length) {resolve()}
+            if (i == this.AVLConfig.group.vehicleIds['id'].length) {
+              this.AVLConfig.vehicles.sort((a, b): number => {
+                if (a.label > b.label) {
+                  return 1;
+                }
+                if (a.label < b.label) {
+                  return -1;
+                }
+                return 0;
+              })
+              resolve()}
             })
           })
         })
@@ -97,7 +108,12 @@ export class AVLComponent implements OnInit, OnDestroy {
     this.AVLConfig.selectedVehicle = vehicle
     console.log('showTrack')
     this.tab = 'Track'
-    this.AVLservice.mapTrack(this.AVLConfig, vehicle)
+    this.AVLHTTPservice.getTrackCall(this.AVLConfig.token, vehicle.id, this.AVLConfig.startDate.toISOString(), this.AVLConfig.endDate.toISOString()).subscribe((tracks) => {
+      console.log(tracks)
+      this.AVLConfig.selectedVehicle.track = tracks['gpsMessage']
+      vehicle.track = tracks['gpsMessage']
+      this.AVLservice.mapTrack(this.AVLConfig, vehicle)
+    })
   }
 
   // public showTrack(vehicle: Vehicle) {
@@ -105,6 +121,15 @@ export class AVLComponent implements OnInit, OnDestroy {
   //     console.log(x)
   //   })
   // }
+
+  public zoomToPoint(track:GpsMessage) {
+    console.log(track)
+    this.mapConfig.view.fit(track.olPoint.getGeometry().getExtent(), {
+      duration: 1000,
+      maxZoom: 16
+    })
+    this.AVLConfig.selectedPoint = track
+  }
 
   public clearTracks() {
     this.mapConfig.map.removeLayer(this.AVLConfig.olTrackLayer)
@@ -166,7 +191,7 @@ export class AVLComponent implements OnInit, OnDestroy {
     if (this.AVLConfig.olTrackLayer) {this.AVLConfig.olTrackLayer.setVisible(true)}
     this.visible = true
     this.expanded = true
-    return (this.AVLservice.setCurrentLayer(layer))
+    return (this.AVLservice.setCurrentLayer(layer, this.AVLConfig))
   }
 
   public unsetCurrentLayer(layer: UserPageLayer): boolean {
