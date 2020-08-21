@@ -65,6 +65,11 @@ export class GpsMessage {
     vehicleId: number
     vehicleLabel: string
     olPoint: Feature
+    status: string
+    comment: string
+    idleTime: number
+    stoppedTime: number
+    hide: boolean
 }
 
 export class Group {

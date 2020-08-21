@@ -34,6 +34,7 @@ import { AVLService } from './AVL.service'
 import { AVLHTTPService } from './AVL.HTTP.service'
 import { AVLAdminService } from './AVL-admin.service'
 import { StyleService } from './style.service'
+import { GpsMessagePipe} from './pipes/filter.pipe'
 
 
 @NgModule({
@@ -71,7 +72,7 @@ import { StyleService } from './style.service'
     ReactiveFormsModule
 
   ],
-  declarations: [AVLComponent],
+  declarations: [AVLComponent, GpsMessagePipe],
   entryComponents: [
 ],
   providers: [AVLService, AVLAdminService, AVLHTTPService, StyleService],

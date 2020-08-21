@@ -26,14 +26,14 @@
       <button mat-button mat-raised-button color="primary" (click)="goToTab('Vehicles')">Today</button>
       <button mat-button mat-raised-button color="primary" (click)="goToTab('Vehicles')">Custom</button><br>
       <span *ngIf="AVLConfig.selectedVehicle.track">{{AVLConfig.selectedVehicle.track[0].messageTime | date:'fullDate'}}</span>
-      <div *ngFor="let track of AVLConfig.selectedVehicle.track">
+      <div *ngFor="let track of AVLConfig.selectedVehicle.track | gpsMessagefilter">
         <table>
           <tr *ngIf="track == AVLConfig.selectedPoint" (click)="zoomToPoint(track)">
             <td>
               <b>{{track.messageTime | date:'shortTime'}}</b>
             </td>
             <td *ngIf="!track.keyOn">
-             <b>Stopped</b>
+             <b> Stopped<span *ngIf="track.stoppedTime"> for {{track.stoppedTime}} minutes</span></b>
             </td>
             <td *ngIf="track.keyOn">
               <b>{{track.avgSpeed}}MPH</b>
@@ -41,19 +41,25 @@
             <td>
              <b><span *ngIf="track.heading">{{track.heading}}&deg;</span></b>
             </td>
+            <td>
+              <b><span *ngIf="track.idleTime">Idle for {{track.idleTime}} minutes</span></b>
+            </td>
           </tr>
           <tr *ngIf="track != AVLConfig.selectedPoint" (click)="zoomToPoint(track)">
             <td>
               {{track.messageTime | date:'shortTime'}}
             </td>
             <td *ngIf="!track.keyOn">
-              Stopped
+              Stopped<span *ngIf="track.stoppedTime"> for {{track.stoppedTime}} minutes</span>
             </td>
             <td *ngIf="track.keyOn">
               {{track.avgSpeed}}MPH
             </td>
             <td>
               <span *ngIf="track.heading">{{track.heading}}&deg;</span>
+            </td>
+            <td>
+              <span *ngIf="track.idleTime">Idle for {{track.idleTime}} minutes</span>
             </td>
           </tr>
         </table>

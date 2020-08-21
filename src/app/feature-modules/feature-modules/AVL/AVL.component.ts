@@ -112,6 +112,43 @@ export class AVLComponent implements OnInit, OnDestroy {
       console.log(tracks)
       this.AVLConfig.selectedVehicle.track = tracks['gpsMessage']
       vehicle.track = tracks['gpsMessage']
+      let idle:Date
+      let stopped:Date
+      let commentMessage: GpsMessage
+      vehicle.track.forEach((x, i) => {
+          if (!x.heading && x.keyOn == true && x.avgSpeed < 5) {
+            x.status = 'idle'
+            if (!idle) {  console.log('first idle call'); idle = x.messageTime }
+            else {console.log('not first idle call'); x.hide = true}
+          }
+          else {
+            if (x.keyOn == false) {
+              if(idle) {
+                commentMessage = vehicle.track.find((z) => z.messageTime == idle)
+                let diff:number = new Date(x.messageTime).getTime() - new Date(commentMessage.messageTime).getTime()
+                commentMessage.idleTime = Math.abs(Math.round(diff /=60000))
+                console.log(commentMessage.idleTime)
+              idle = null}
+              x.status = 'stopped'
+              if (vehicle.track[i+1]) {
+                let diff: number = new Date(vehicle.track[i+1].messageTime).getTime() - new Date (x.messageTime).getTime()
+                x.stoppedTime = Math.abs(Math.round(diff /= 60000))
+              }
+            }
+            else {
+              x.status = 'moving'
+              if(idle) {
+                commentMessage = vehicle.track.find((z) => z.messageTime == idle)
+                let diff:number = new Date(x.messageTime).getTime() - new Date(commentMessage.messageTime).getTime()
+                commentMessage.idleTime = Math.abs(Math.round(diff /=60000))
+                console.log(commentMessage.idleTime)
+              idle = null
+              }
+            }
+
+            
+          }
+      })
       this.AVLservice.mapTrack(this.AVLConfig, vehicle)
     })
   }
@@ -133,6 +170,7 @@ export class AVLComponent implements OnInit, OnDestroy {
 
   public clearTracks() {
     this.mapConfig.map.removeLayer(this.AVLConfig.olTrackLayer)
+    this.mapConfig.currentLayer.olLayer.setOpacity(1)
     this.AVLConfig.selectedVehicle = new Vehicle
     this.tab = "Vehicles"
   }

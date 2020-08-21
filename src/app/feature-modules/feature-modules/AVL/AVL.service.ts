@@ -22,7 +22,9 @@ import { Coordinate } from 'ol/coordinate';
 import { AVLHTTPService } from './AVL.HTTP.service'
 import { AVLComponent } from './AVL.component';
 import {StyleService } from './style.service'
-
+import { MapBrowserEvent } from 'ol';
+import Select from 'ol/interaction/Select';
+import {altKeyOnly, click, pointerMove} from 'ol/events/condition';
 
 @Injectable()
 export class AVLService {
@@ -77,8 +79,8 @@ export class AVLService {
               crd.push(y.currentLocation.latitude)
               let feature = new Feature({
                 geometry: new Point(crd),
-                name: 'x.title',
-                _id: 'x._id'
+                name: y.label,
+                _id: y.vin
               });
               let src1 = 'EPSG:4326'
                 let dest = 'EPSG:3857'
@@ -103,7 +105,7 @@ export class AVLService {
       let degrees: number
       let crds = new Array <Array<number>>()
       vehicle.track.forEach((track:GpsMessage) => {
-        console.log(track.heading)
+        // console.log(track.heading)
         let crd1 = new Array <number>(2)
           crd1[0] = track.longitude
           crd1[1] = track.latitude
@@ -145,6 +147,7 @@ export class AVLService {
       ln.getGeometry().transform('EPSG:4326','EPSG:3857')
       AVLconfig.olTrackSource.addFeature(ln)
       ln.setStyle(this.styleService.styleLineString())
+      this.mapConfig.currentLayer.olLayer.setOpacity(.5)
       this.mapConfig.map.addLayer(AVLconfig.olTrackLayer)
   }
 
@@ -169,13 +172,16 @@ export class AVLService {
     // this.getGroups()
     // this.getVehicles()
     // this.getLocations()
-    this.AOMMouseOver = this.mapConfig.map.on('pointermove', (evt: any) => {
-      
+    // let selectPointerMove = new Select({condition:pointerMove})
+    // this.mapConfig.map.addInteraction(selectPointerMove)
+    // selectPointerMove.on('select', (e) => {
+    //   console.log(e.target)
+    // })
+    this.AOMMouseOver = this.mapConfig.map.on('pointermove', (evt: MapBrowserEvent) => {
         if (this.mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
-          this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature, mouselayer) => {
+          this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature: Feature, mouselayer) => {
             if (mouselayer === layer.olLayer || AVLconfig.olTrackLayer) {
-
-              console.log(evt)
+              console.log(feature.getProperties())
               // this.selectedImage = this.images.find(x => x._id == feature.get('_id'))
             }
           })
