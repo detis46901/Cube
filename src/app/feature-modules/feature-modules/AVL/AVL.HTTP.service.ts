@@ -35,6 +35,7 @@ export class AVLHTTPService {
   }
   public getTrackCall(token, id, startDate:string, endDate:string): Observable<any> {
     let params:string = ''
+    // startDate = '2020-08-21T04:00:00.000Z'
     if (startDate) {
       params = params.concat('?with-start-date=',startDate)
       console.log(params)

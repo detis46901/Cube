@@ -276,7 +276,7 @@
 
             <!-- feature list that shows the current features within a my cube layer, should only show visible features but
             currently shows all features regardless of filter -->
-            <mat-expansion-panel *ngIf="mapConfig.currentLayer.layer.layerType == 'MyCube'">
+            <mat-expansion-panel [expanded]="mapConfig.toolbar === 'Feature List'" *ngIf="mapConfig.featureList.length > 0">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         Feature List ({{mapConfig.featureList.length}})
@@ -287,6 +287,7 @@
                 <div class="featurelist">
                     <!-- <div *ngIf='mapConfig.selectedFeature'>{{mapConfig.selectedFeature.get('ticket')}}</div> -->
                     <div *ngFor="let fl of mapConfig.featureList">
+                        <!-- {{fl.label}} -->
                         <a *ngIf="fl.feature != mapConfig.selectedFeature" style="cursor: pointer"
                             (click)="zoomToFeature(fl)">{{fl.label}}</a>
                         <a *ngIf="fl.feature == mapConfig.selectedFeature" style="cursor: pointer"

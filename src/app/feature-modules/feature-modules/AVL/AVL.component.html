@@ -17,17 +17,29 @@
     (click)="clearTracks()">Clear</button><br>
   <div style="max-height: 60vh; overflow:auto">
     <div *ngIf="tab == 'Vehicles'">
-      <div *ngFor="let vehicle of AVLConfig.vehicles"> 
+      <div *ngFor="let vehicle of AVLConfig.vehicles">
         <span *ngIf="vehicle == AVLConfig.selectedVehicle" (click)='goToTrack(vehicle)'><b>{{vehicle.label}}</b></span>
         <span *ngIf="vehicle != AVLConfig.selectedVehicle" (click)='goToTrack(vehicle)'>{{vehicle.label}}</span>
       </div>
     </div>
     <div *ngIf="tab == 'Track'">
-      <button mat-button mat-raised-button color="primary" (click)="goToTab('Vehicles')">Today</button>
-      <button mat-button mat-raised-button color="primary" (click)="goToTab('Vehicles')">Custom</button><br>
-      <span *ngIf="AVLConfig.selectedVehicle.track">{{AVLConfig.selectedVehicle.track[0].messageTime | date:'fullDate'}}</span>
+      <span>{{AVLConfig.startDate | date:'fullDate'}} - {{AVLConfig.endDate | date:'fullDate'}}</span><br>
+      <mat-form-field style="width:90%">
+        <input matInput [matDatepicker]="picker" matTooltip="Start Date" placeholder="Start"
+          [(ngModel)]="AVLConfig.startDate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field><br>
+      <mat-form-field style="width:90%">
+        <input matInput [matDatepicker]="picker2" matTooltip="End Date" placeholder="End"
+          [(ngModel)]="AVLConfig.endDate">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field><br>
+      <button mat-button mat-raised-button color="primary" (click)="updateTrack()">Update</button>
+      <button mat-button mat-raised-button color="primary" (click)="updateTrack(true)">Today</button><br>
       <div *ngFor="let track of AVLConfig.selectedVehicle.track | gpsMessagefilter">
-        <table>
+        <!-- <table>
           <tr *ngIf="track == AVLConfig.selectedPoint" (click)="zoomToPoint(track)">
             <td>
               <b>{{track.messageTime | date:'shortTime'}}</b>
@@ -62,7 +74,7 @@
               <span *ngIf="track.idleTime">Idle for {{track.idleTime}} minutes</span>
             </td>
           </tr>
-        </table>
+        </table> -->
         <!-- <span *ngIf="track == AVLConfig.selectedPoint" (click)="zoomToPoint(track)"><b>{{track.messageTime | date:'shortTime'}} <span *ngIf="!track.keyOn">Stopped</span> <span *ngIf="track.keyOn">{{track.avgSpeed}}MPH</span>{{track.heading}}</b></span>
         <span *ngIf="track != AVLConfig.selectedPoint" (click)="zoomToPoint(track)">{{track.messageTime | date:'shortTime'}} <span *ngIf="!track.keyOn">Stopped</span> <span *ngIf="track.keyOn">{{track.avgSpeed}}MPH</span>{{track.heading}}</span> -->
       </div>

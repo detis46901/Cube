@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, OnDestroy } from '@angular/core';
 import { UserPageLayer } from '_models/layer.model';
-import { MapConfig } from '../../../map/models/map.model';
+import { MapConfig, featureList } from '../../../map/models/map.model';
 import { Subscription } from 'rxjs';
 import { WMSService } from '../../../map/services/wms.service'
 import { MatDialog } from '@angular/material/dialog';
@@ -106,20 +106,25 @@ export class AVLComponent implements OnInit, OnDestroy {
 
   public goToTrack(vehicle: Vehicle) {
     this.AVLConfig.selectedVehicle = vehicle
-    console.log('showTrack')
+    this.mapConfig.toolbar = "Feature List"
+    this.mapConfig.featureList = new Array<featureList>();
     this.tab = 'Track'
     this.AVLHTTPservice.getTrackCall(this.AVLConfig.token, vehicle.id, this.AVLConfig.startDate.toISOString(), this.AVLConfig.endDate.toISOString()).subscribe((tracks) => {
       console.log(tracks)
       this.AVLConfig.selectedVehicle.track = tracks['gpsMessage']
       vehicle.track = tracks['gpsMessage']
       let idle:Date
-      let stopped:Date
       let commentMessage: GpsMessage
-      vehicle.track.forEach((x, i) => {
+      this.AVLservice.mapTrack(this.AVLConfig, vehicle)
+      if (vehicle.track) {
+        vehicle.track.forEach((x, i) => {
+          console.log(new Date(x.messageTime).toDateString())
+          x.comment = new Date(x.messageTime).toTimeString().substring(0,9)
+          x.comment = x.comment.concat(' ' + x.avgSpeed + 'MPH')
           if (!x.heading && x.keyOn == true && x.avgSpeed < 5) {
             x.status = 'idle'
-            if (!idle) {  console.log('first idle call'); idle = x.messageTime }
-            else {console.log('not first idle call'); x.hide = true}
+            if (!idle) {idle = x.messageTime }
+            else {x.hide = true}
           }
           else {
             if (x.keyOn == false) {
@@ -133,6 +138,9 @@ export class AVLComponent implements OnInit, OnDestroy {
               if (vehicle.track[i+1]) {
                 let diff: number = new Date(vehicle.track[i+1].messageTime).getTime() - new Date (x.messageTime).getTime()
                 x.stoppedTime = Math.abs(Math.round(diff /= 60000))
+                if (x.stoppedTime > 0) {
+                  x.comment = x.comment.concat(" Stopped for ",x.stoppedTime.toString(), " min.")
+                }  
               }
             }
             else {
@@ -142,17 +150,40 @@ export class AVLComponent implements OnInit, OnDestroy {
                 let diff:number = new Date(x.messageTime).getTime() - new Date(commentMessage.messageTime).getTime()
                 commentMessage.idleTime = Math.abs(Math.round(diff /=60000))
                 console.log(commentMessage.idleTime)
-              idle = null
+                if (commentMessage.idleTime > 0) {
+                  commentMessage.comment = commentMessage.comment.concat(" Idle for ",commentMessage.idleTime.toString(), " min.")
+                }    
+             idle = null
               }
             }
-
-            
           }
+          //need to put something in here to add the date on multiple date queries.
       })
-      this.AVLservice.mapTrack(this.AVLConfig, vehicle)
+      }
+      if (vehicle.track) {
+        vehicle.track.forEach((v:GpsMessage) => {
+          if (!v.hide) {
+            let fl = new featureList
+            fl.id = v.vehicleId
+            fl.label = v.comment
+            fl.feature = v.olPoint
+            this.mapConfig.featureList.push(fl)  
+          }
+        })  
+      }
     })
   }
 
+  public updateTrack(today?:boolean) {
+    if (today) {
+      this.AVLConfig.startDate = new Date()
+      this.AVLConfig.startDate.setHours(0,0,0,0)
+      this.AVLConfig.endDate = new Date()
+      this.AVLConfig.endDate.setHours(24,0,0,0)  
+    }
+    this.goToTrack(this.AVLConfig.selectedVehicle)
+    this.goToTab("Track")  
+  }
   // public showTrack(vehicle: Vehicle) {
   //   this.AVLHTTPservice.getTrackCall(this.token, vehicle.id).subscribe((x) => {
   //     console.log(x)
@@ -201,18 +232,24 @@ export class AVLComponent implements OnInit, OnDestroy {
   }
 
   public selectFeature(layer: UserPageLayer) {
-    let loadedImage: Image = this.AVLservice.selectFeature(layer)
-    if (loadedImage.function == 'add') {
-      this.loadedImages.push(loadedImage)
-    }
-    if (loadedImage.function == 'subtract') {
-      this.loadedImages.splice(this.loadedImages.indexOf(loadedImage), 1)
-    }
+    console.log('AVLcomponent selectFeature')
+    // let loadedImage: Image = this.AVLservice.selectFeature(layer)
+    // if (loadedImage.function == 'add') {
+    //   this.loadedImages.push(loadedImage)
+    // }
+    // if (loadedImage.function == 'subtract') {
+    //   this.loadedImages.splice(this.loadedImages.indexOf(loadedImage), 1)
+    // }
     return true
   }
 
   public clearFeature(layer: UserPageLayer) {
-    return false
+    if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeatureSource.clear() }
+        if (this.mapConfig.selectedFeature) {
+            // this.mapConfig.selectedFeature.setStyle(null);
+            this.mapConfig.selectedFeature = null;
+        }
+    return true
   }
 
   public setOpacity(e: EventEmitter<MatSliderChange>) {

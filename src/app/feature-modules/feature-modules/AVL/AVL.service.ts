@@ -104,43 +104,45 @@ export class AVLService {
       let angle: number
       let degrees: number
       let crds = new Array <Array<number>>()
-      vehicle.track.forEach((track:GpsMessage) => {
-        // console.log(track.heading)
-        let crd1 = new Array <number>(2)
-          crd1[0] = track.longitude
-          crd1[1] = track.latitude
-          crds.push(crd1)
-        let crd = new Array<number>()
-              crd.push(track.longitude)
-              crd.push(track.latitude)
-              let feature = new Feature({
-                geometry: new Point(crd),
-                name: 'x.title',
-                _id: 'x._id'
-              });
-              let src1 = 'EPSG:4326'
-                let dest = 'EPSG:3857'
-                feature.getGeometry().transform(src1, dest)
-                AVLconfig.olTrackSource.addFeature(feature)
-                track.olPoint = feature
-                //this needs to be worked on to get the heading right.
-                // if (gpsTracks.indexOf(track) > 0) {
-                //   let x1 = feature.getGeometry()['flatCoordinates'][0]
-                //   let y1 = feature.getGeometry()['flatCoordinates'][1]
-                //   let dx = x1-x0
-                //   let dy = y1-y0
-                //   console.log(dy, dx)
-                //   angle = Math.atan2(-dy,dx)
-                //   degrees = 360-(angle*180/Math.PI)-90
-                //   angle = degrees / 180 * Math.PI
-                //   gpsTracks[gpsTracks.indexOf(track)-1].heading = angle
-                //   console.log(degrees)
-                // }
-                // x0 = feature.getGeometry()['flatCoordinates'][0]
-                // y0 = feature.getGeometry()['flatCoordinates'][1]
-                feature.setStyle(this.styleService.stylePoint(track))
-
-      })
+      if (vehicle.track) {
+        vehicle.track.forEach((track:GpsMessage) => {
+          // console.log(track.heading)
+          let crd1 = new Array <number>(2)
+            crd1[0] = track.longitude
+            crd1[1] = track.latitude
+            crds.push(crd1)
+          let crd = new Array<number>()
+                crd.push(track.longitude)
+                crd.push(track.latitude)
+                let feature = new Feature({
+                  geometry: new Point(crd),
+                  name: 'x.title',
+                  _id: 'x._id'
+                });
+                let src1 = 'EPSG:4326'
+                  let dest = 'EPSG:3857'
+                  feature.getGeometry().transform(src1, dest)
+                  AVLconfig.olTrackSource.addFeature(feature)
+                  track.olPoint = feature
+                  //this needs to be worked on to get the heading right.
+                  // if (gpsTracks.indexOf(track) > 0) {
+                  //   let x1 = feature.getGeometry()['flatCoordinates'][0]
+                  //   let y1 = feature.getGeometry()['flatCoordinates'][1]
+                  //   let dx = x1-x0
+                  //   let dy = y1-y0
+                  //   console.log(dy, dx)
+                  //   angle = Math.atan2(-dy,dx)
+                  //   degrees = 360-(angle*180/Math.PI)-90
+                  //   angle = degrees / 180 * Math.PI
+                  //   gpsTracks[gpsTracks.indexOf(track)-1].heading = angle
+                  //   console.log(degrees)
+                  // }
+                  // x0 = feature.getGeometry()['flatCoordinates'][0]
+                  // y0 = feature.getGeometry()['flatCoordinates'][1]
+                  feature.setStyle(this.styleService.stylePoint(track))
+  
+        })
+      }
       let ln = new Feature({
         geometry: new LineString(crds)
       })

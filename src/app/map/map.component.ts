@@ -578,7 +578,12 @@ export class MapComponent implements OnInit {
             duration: 1000,
             maxZoom: 18
         })
-        this.findMyCubeFeature(undefined, fl.feature)
+        if(this.mapConfig.currentLayer.layer.layerType == 'MyCube') {this.findMyCubeFeature(undefined, fl.feature)}
+        if (this.mapConfig.currentLayer.layer.layerType == 'Module') {
+            this.featureModuleComponent.checkSomething('selectFeature', this.mapConfig.currentLayer).then((x) => {
+                this.mapConfig.selectedFeature = fl.feature
+            })
+        }
     }
 
     public changedDataForm() {
