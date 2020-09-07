@@ -1,71 +1,53 @@
 import { Injectable } from '@angular/core';
 import { UserPageLayer } from '_models/layer.model';
-import { MapConfig } from 'app/map/models/map.model';
+import { MapConfig, featureList } from '../../../map/models/map.model';
 import { HttpClient } from '@angular/common/http';
-import { Observable ,  Subject } from 'rxjs';
-import { MyCubeService } from '../../../map/services/mycube.service'
-import { Image, GpsMessage, Vehicle, AVLConfig } from './AVL.model'
-import { WMSService } from '../../../map/services/wms.service'
+import { Observable } from 'rxjs';
+import { GpsMessage, Vehicle, AVLConfig } from './AVL.model'
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import LineString from 'ol/geom/LineString'
-import WMTSCapabilities from 'ol/format/WMTSCapabilities';
-import WMTS from 'ol/source/WMTS';
-import { optionsFromCapabilities } from 'ol/source/WMTS';
-import TileLayer from 'ol/layer/Tile';
 import { HttpHeaders } from '@angular/common/http';
-import { environment } from 'environments/environment';
-import { from } from 'rxjs'
-import { Coordinate } from 'ol/coordinate';
 import { AVLHTTPService } from './AVL.HTTP.service'
-import { AVLComponent } from './AVL.component';
-import {StyleService } from './style.service'
+import { StyleService } from './style.service'
 import { MapBrowserEvent } from 'ol';
-import Select from 'ol/interaction/Select';
-import {altKeyOnly, click, pointerMove} from 'ol/events/condition';
+import { DataFormConfig, DataField } from 'app/shared.components/data-component/data-form.model';
+import { buffer } from 'ol/extent';
 
 @Injectable()
 export class AVLService {
   constructor(protected _http: HttpClient,
-    private myCubeService: MyCubeService,
-    private wmsService: WMSService,
     private AVLHTTPservice: AVLHTTPService,
     private styleService: StyleService
   ) { }
 
-  public bboxLayer: VectorLayer
   public mapConfig: MapConfig
-  public layer: UserPageLayer
-  public images = new Array<Image>()
-  public AOMMouseOver: any
-  private disabled = new Subject<boolean>();
-  public opacity: number;
-  public selectedImage = new Image()
-  public imageZIndex: number
-  public options
-  public body
-  public token: JSON
-  public vehicleLocations: GpsMessage[]
 
-  public getToken(): Observable<any> {
-  let params = new URLSearchParams()
-  params.append('grant_type','password')
-  params.append('username','city536fleet')
-  params.append('password','Kokomo01')
-  let headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'})
-
-  return this._http.post('https://cube-kokomo.com:9876/https://auth.networkfleet.com/token',params.toString(), {headers: headers})
+  public loadLayer(mapConfig: MapConfig, layer: UserPageLayer, init?: boolean): boolean {
+    console.log('AVLservice loadLayer')
+    this.mapConfig = mapConfig
+    return true
   }
 
-  public createLayer(mapConfig: MapConfig, layer: UserPageLayer) {
+  public getToken(username: string, password: string): Observable<any> {
+    let params = new URLSearchParams()
+    params.append('grant_type', 'password')
+    params.append('username', username)
+    params.append('password', password)
+    let headers = new HttpHeaders({ 'Content-type': 'application/x-www-form-urlencoded; charset=utf-8' })
+    return this._http.post('https://cube-kokomo.com:9876/https://auth.networkfleet.com/token', params.toString(), { headers: headers })
+  }
+
+  public createLayer(mapConfig: MapConfig, layer: UserPageLayer) { //creates the currenlocation layer (the default layer of the module)
     this.mapConfig = mapConfig
+    let ly: VectorLayer
     let src = new VectorSource();
-    this.bboxLayer = new VectorLayer({
+    ly = new VectorLayer({
       source: src,
     });
-    layer.olLayer = this.bboxLayer
+    layer.olLayer = ly
     this.mapConfig.map.addLayer(layer.olLayer)
     layer.olLayer.setVisible(layer.defaultON)
   }
@@ -73,254 +55,207 @@ export class AVLService {
   public mapCurrentLocations(AVLconfig: AVLConfig) {
     AVLconfig.UPL.olLayer.getSource().clear()
     AVLconfig.vehicles.forEach((y: Vehicle) => {
-            if (y.currentLocation) {
-              let crd = new Array<number>()
-              crd.push(y.currentLocation.longitude)
-              crd.push(y.currentLocation.latitude)
-              let feature = new Feature({
-                geometry: new Point(crd),
-                name: y.label,
-                _id: y.vin
-              });
-              let src1 = 'EPSG:4326'
-                let dest = 'EPSG:3857'
-                feature.getGeometry().transform(src1, dest)
-                AVLconfig.UPL.olLayer.getSource().addFeature(feature)
-                feature.setStyle(this.styleService.stylePoint(y.currentLocation))
-            }
-          })
-          console.log('mapped')
-        }
-  
-  public mapTrack(AVLconfig: AVLConfig, vehicle: Vehicle) {
-    console.log(vehicle)
-    this.mapConfig.map.removeLayer(AVLconfig.olTrackLayer)
-    AVLconfig.olTrackSource = new VectorSource();
-    AVLconfig.olTrackLayer = new VectorLayer({
-      source: AVLconfig.olTrackSource,
-    });
-      let y0: number
-      let x0: number 
-      let angle: number
-      let degrees: number
-      let crds = new Array <Array<number>>()
-      if (vehicle.track) {
-        vehicle.track.forEach((track:GpsMessage) => {
-          // console.log(track.heading)
-          let crd1 = new Array <number>(2)
-            crd1[0] = track.longitude
-            crd1[1] = track.latitude
-            crds.push(crd1)
-          let crd = new Array<number>()
-                crd.push(track.longitude)
-                crd.push(track.latitude)
-                let feature = new Feature({
-                  geometry: new Point(crd),
-                  name: 'x.title',
-                  _id: 'x._id'
-                });
-                let src1 = 'EPSG:4326'
-                  let dest = 'EPSG:3857'
-                  feature.getGeometry().transform(src1, dest)
-                  AVLconfig.olTrackSource.addFeature(feature)
-                  track.olPoint = feature
-                  //this needs to be worked on to get the heading right.
-                  // if (gpsTracks.indexOf(track) > 0) {
-                  //   let x1 = feature.getGeometry()['flatCoordinates'][0]
-                  //   let y1 = feature.getGeometry()['flatCoordinates'][1]
-                  //   let dx = x1-x0
-                  //   let dy = y1-y0
-                  //   console.log(dy, dx)
-                  //   angle = Math.atan2(-dy,dx)
-                  //   degrees = 360-(angle*180/Math.PI)-90
-                  //   angle = degrees / 180 * Math.PI
-                  //   gpsTracks[gpsTracks.indexOf(track)-1].heading = angle
-                  //   console.log(degrees)
-                  // }
-                  // x0 = feature.getGeometry()['flatCoordinates'][0]
-                  // y0 = feature.getGeometry()['flatCoordinates'][1]
-                  feature.setStyle(this.styleService.stylePoint(track))
-  
-        })
+      if (y.currentLocation) {
+        let crd = new Array<number>()
+        crd.push(y.currentLocation.longitude)
+        crd.push(y.currentLocation.latitude)
+        let feature = new Feature({  //maybe I should be adding all current location data into this.  Maybe not?
+          geometry: new Point(crd),
+          name: y.label,
+          id: y.id
+        });
+        let src1 = 'EPSG:4326'
+        let dest = 'EPSG:3857'
+        feature.getGeometry().transform(src1, dest)
+        AVLconfig.UPL.olLayer.getSource().addFeature(feature)
+        feature.setStyle(this.styleService.stylePoint(y.currentLocation))
       }
-      let ln = new Feature({
-        geometry: new LineString(crds)
-      })
-      ln.getGeometry().transform('EPSG:4326','EPSG:3857')
-      AVLconfig.olTrackSource.addFeature(ln)
-      ln.setStyle(this.styleService.styleLineString())
-      this.mapConfig.currentLayer.olLayer.setOpacity(.5)
-      this.mapConfig.map.addLayer(AVLconfig.olTrackLayer)
+    })
   }
 
-  public getGroup(token, id):Observable<any> {
+  public showTrack(AVLconfig: AVLConfig, vehicle: Vehicle) {
+    let zoomToTrack: boolean = true
+    if (AVLconfig.trackUpdateInterval) {zoomToTrack = false}  //keeps it from zooming more than once when a vehicle is selected.
+    clearInterval(AVLconfig.trackUpdateInterval)
+    AVLconfig.trackUpdateInterval = setInterval(() => {
+      this.showTrack(AVLconfig, vehicle)
+    }, 20000)
+    AVLconfig.selectedVehicle = vehicle
+    let tempFeatureList = new Array<featureList>()
+    this.AVLHTTPservice.getTrackCall(AVLconfig.token, vehicle.id, AVLconfig.startDate.toISOString(), AVLconfig.endDate.toISOString()).subscribe((tracks) => {
+      AVLconfig.selectedVehicle.track = tracks['gpsMessage']
+      vehicle.track = tracks['gpsMessage']
+      let idle: Date
+      let commentMessage: GpsMessage
+      this.mapTrack(AVLconfig, vehicle, zoomToTrack)
+      if (vehicle.track) {
+        vehicle.track.forEach((x, i) => {
+          x.comment = new Date(x.messageTime).toTimeString().substring(0, 9)
+          x.comment = x.comment.concat(' ' + x.avgSpeed + 'MPH')
+          if (!x.heading && x.keyOn == true && x.avgSpeed < 5) {
+            x.status = 'idle'
+            if (!idle) { idle = x.messageTime }
+            else { x.hide = true }
+          }
+          else {
+            if (x.keyOn == false) {
+              if (idle) {
+                commentMessage = vehicle.track.find((z) => z.messageTime == idle)
+                let diff: number = new Date(x.messageTime).getTime() - new Date(commentMessage.messageTime).getTime()
+                commentMessage.idleTime = Math.abs(Math.round(diff /= 60000))
+                idle = null
+              }
+              x.status = 'stopped'
+              if (vehicle.track[i + 1]) {
+                let diff: number = new Date(vehicle.track[i + 1].messageTime).getTime() - new Date(x.messageTime).getTime()
+                x.stoppedTime = Math.abs(Math.round(diff /= 60000))
+                if (x.stoppedTime > 0) {
+                  x.comment = x.comment.concat(" Stopped for ", x.stoppedTime.toString(), " min.")
+                }
+              }
+            }
+            else {
+              x.status = 'moving'
+              if (idle) {
+                commentMessage = vehicle.track.find((z) => z.messageTime == idle)
+                let diff: number = new Date(x.messageTime).getTime() - new Date(commentMessage.messageTime).getTime()
+                commentMessage.idleTime = Math.abs(Math.round(diff /= 60000))
+                if (commentMessage.idleTime > 0) {
+                  commentMessage.comment = commentMessage.comment.concat(" Idle for ", commentMessage.idleTime.toString(), " min.")
+                }
+                idle = null
+              }
+            }
+          }
+          //need to put something in here to add the date on multiple date queries.
+        })
+      }
+      if (vehicle.track) {
+        vehicle.track.forEach((v: GpsMessage) => {
+          if (!v.hide) {
+            let fl = new featureList
+            fl.id = v.vehicleId
+            fl.label = v.comment
+            fl.feature = v.olPoint
+            tempFeatureList.push(fl)
+          }
+        })
+        tempFeatureList = tempFeatureList.reverse()
+        this.mapConfig.featureList = tempFeatureList
+      }
+    })
+  }
+
+  public mapTrack(AVLconfig: AVLConfig, vehicle: Vehicle, zoomToTrack: boolean) {
+    this.mapConfig.map.removeLayer(AVLconfig.olTrackLayer)
+    let olTrackSource = new VectorSource();
+    AVLconfig.olTrackLayer = new VectorLayer({
+      source: olTrackSource,
+    });
+    let crds = new Array<Array<number>>()
+    if (vehicle.track) {
+      vehicle.track.forEach((track: GpsMessage) => {
+        let crd1 = new Array<number>(2)
+        crd1[0] = track.longitude
+        crd1[1] = track.latitude
+        crds.push(crd1)
+        let crd = new Array<number>()
+        crd.push(track.longitude)
+        crd.push(track.latitude)
+        let feature = new Feature({
+          geometry: new Point(crd),
+          accuracy: track.accuracy,
+          keyOn: track.keyOn,
+        });
+        let src1 = 'EPSG:4326'
+        let dest = 'EPSG:3857'
+        feature.getGeometry().transform(src1, dest)
+        olTrackSource.addFeature(feature)
+        track.olPoint = feature
+        feature.setStyle(this.styleService.stylePoint(track))
+
+      })
+    }
+    let ln = new Feature({
+      geometry: new LineString(crds)
+    })
+    ln.getGeometry().transform('EPSG:4326', 'EPSG:3857')
+    olTrackSource.addFeature(ln)
+    if (olTrackSource.getFeatures().length > 1 && zoomToTrack) { this.mapConfig.map.getView().fit(buffer(olTrackSource.getExtent(), 1000), { duration: 1000 }) }
+    ln.setStyle(this.styleService.styleLineString())
+    this.mapConfig.currentLayer.olLayer.setOpacity(.5)
+    this.mapConfig.map.addLayer(AVLconfig.olTrackLayer)
+  }
+
+  public getGroup(token, id): Observable<any> {
     return this.AVLHTTPservice.getGroupCall(token, id)
   }
 
-  public loadLayer(mapConfig: MapConfig, layer: UserPageLayer, init?: boolean): boolean {
-    console.log('AVLservice loadLayer')
-    this.mapConfig = mapConfig
-    return true
-  }
   public unloadLayer(layer: UserPageLayer): boolean {
-    this.images.forEach(x => {
-      x.on = false
-      this.mapConfig.map.removeLayer(x.layer)
-    })
     return true
   }
 
-  public setCurrentLayer(layer: UserPageLayer, AVLconfig:AVLConfig): boolean {
-    // this.getGroups()
-    // this.getVehicles()
-    // this.getLocations()
-    // let selectPointerMove = new Select({condition:pointerMove})
-    // this.mapConfig.map.addInteraction(selectPointerMove)
-    // selectPointerMove.on('select', (e) => {
-    //   console.log(e.target)
-    // })
-    this.AOMMouseOver = this.mapConfig.map.on('pointermove', (evt: MapBrowserEvent) => {
-        if (this.mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
-          this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature: Feature, mouselayer) => {
-            if (mouselayer === layer.olLayer || AVLconfig.olTrackLayer) {
-              console.log(feature.getProperties())
-              // this.selectedImage = this.images.find(x => x._id == feature.get('_id'))
-            }
-          })
-        }
-        else {
-          this.mapConfig.mouseoverLayer = null;
-          this.selectedImage = new Image()
-        }
-      })
+  public setCurrentLayer(layer: UserPageLayer, AVLconfig: AVLConfig): boolean {
+    let data = new DataFormConfig
+    AVLconfig.AVLmouseover = this.mapConfig.map.on('pointermove', (evt: MapBrowserEvent) => {
+      if (this.mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
+        this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature: Feature, mouselayer) => {
+          if (mouselayer === layer.olLayer) {
+            let df = new DataField
+            df.field = "Vehicle"
+            df.type = "text"
+            df.value = feature.get('name')
+            df.constraints = null
+            data.dataForm = new Array<DataField>()
+            data.dataForm.push(df)
+            data.visible = true
+            this.mapConfig.myCubeConfig = data
+          }
+        })
+      }
+      else {
+        this.mapConfig.mouseoverLayer = null;
+        data.visible = false
+      }
+    })
     this.mapConfig.showStyleButton = true
     return true
   }
-  
+
   public unsetCurrentLayer(layer: UserPageLayer): boolean {
     return true
   }
   public getFeatureList(layer: UserPageLayer): boolean {
     return true
   }
-  public selectFeature(layer: UserPageLayer): Image {
-    let image: Image
-        let _id: string
-        _id = this.mapConfig.selectedFeature.get('_id')
-        image = this.images.find(x => x._id == _id)
-        if (image.on == false) {
-          this.loadImage(image)
-          image.function = 'add'
-        }
-        else {
-          this.removeImage(image)
-          image.function = 'subtract'
-        }
-    return image
+  public selectFeature(AVLconfig: AVLConfig, layer: UserPageLayer): boolean { //Not being used right now.
+    let data = new DataFormConfig
+    if (layer.olLayer === layer.olLayer) {
+      let df = new DataField
+      df.field = "Vehicle"
+      df.type = "text"
+      df.value = this.mapConfig.selectedFeature.get('id')
+      df.constraints = null
+      AVLconfig.selectedVehicle = AVLconfig.vehicles.find((x) => x.id == df.value)
+      AVLconfig.tab = "Track"
+      this.showTrack(AVLconfig, AVLconfig.selectedVehicle)
+      data.dataForm = new Array<DataField>()
+      data.dataForm.push(df)
+      data.visible = true
+      this.mapConfig.myCubeConfig = data
+    }
+    return true
   }
 
   public styleSelectedFeature(layer: UserPageLayer): boolean {
     return true
   }
-  
+
   public unstyleSelectedFeature(layer: UserPageLayer): boolean {
     return true
   }
 
   public clearFeature(layer: UserPageLayer): boolean {
     return true
-  }
-
-  // getImages(mapConfig: MapConfig, layer: UserPageLayer, init?: boolean) {
-  //   this.mapConfig = mapConfig
-  //   let src = new VectorSource();
-  //   this.bboxLayer = new VectorLayer({
-  //     source: src,
-  //   });
-  //   this.imageZIndex = this.mapConfig.userpagelayers.findIndex(x => x === layer)
-  //   this.bboxLayer.setZIndex(this.imageZIndex)
-  //   this.GetImagesFromURL()
-  //     .subscribe(data => {
-  //       this.images = data['results']
-  //       this.images.forEach((x) => {
-  //         x.on = false
-  //         let coordinate1: [number, number]
-  //         let coordinate2: [number, number]
-  //         let coordinate3: [number, number]
-  //         let coordinate4: [number, number]
-  //         let p1 = new Array<[number, number]>()
-  //         let p = new Array<Array<[number, number]>>()
-  //         coordinate1 = [x.bbox[0], x.bbox[1]]
-  //         coordinate2 = [x.bbox[2], x.bbox[1]]
-  //         coordinate3 = [x.bbox[2], x.bbox[3]]
-  //         coordinate4 = [x.bbox[0], x.bbox[3]]
-  //         p1.push(coordinate1)
-  //         p1.push(coordinate2)
-  //         p1.push(coordinate3)
-  //         p1.push(coordinate4)
-  //         p.push(p1)
-  //         let feature = new Feature({
-  //           // geometry: new Polygon(p),
-  //           // name: x.title,
-  //           // _id: x._id
-  //         });
-  //         let src1 = 'EPSG:4326'
-  //         let dest = 'EPSG:3857'
-  //         feature.getGeometry().transform(src1, dest)
-  //         src.addFeature(feature)
-  //         x.feature = feature
-  //       })
-  //       layer.olLayer = this.bboxLayer
-  //       if (init) {
-  //         this.mapConfig.baseLayers.push(layer.olLayer);  //I think this might be able to be deleted.
-  //         this.mapConfig.map.addLayer(layer.olLayer)
-  //         layer.olLayer.setVisible(layer.defaultON)
-  //       }
-  //       else {
-  //         this.mapConfig.map.addLayer(layer.olLayer)
-  //         layer.olLayer.setVisible(layer.defaultON)
-  //       }
-  //     })
-  // }
-
-  loadImage(image: Image) {
-    image.on = true
-    this.wmsService.getCapabilities(image.properties.wmts)
-      .subscribe((data) => {
-        let parser = new WMTSCapabilities();
-        let result = parser.read(data);
-          let options = optionsFromCapabilities(result, {
-          layer: 'None',
-          matrixSet: 'EPSG:3857'
-        });
-        let wmsLayer = new TileLayer({
-          opacity: this.opacity,
-          source: new WMTS(options)
-        });
-        wmsLayer.setZIndex(this.imageZIndex)
-        wmsLayer.setVisible(true);
-        this.mapConfig.map.addLayer(wmsLayer);
-        image.layer = wmsLayer
-      })
-  }
-
-  removeImage(image: Image) {
-    image.on = false
-    this.mapConfig.map.removeLayer(image.layer)
-  }
-
-  // toggleImage(image: Image) {
-  //   if (image.on == false) {
-  //     this.loadImage(image)
-  //     image.on = true
-  //   }
-  //   else {
-  //     this.mapConfig.map.removeLayer(image['layer'])
-  //     image['on'] = false
-  //   }
-  // }
-
-  public setOpacity(opacity: number) {
-    this.opacity = opacity
   }
 }

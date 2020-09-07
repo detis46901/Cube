@@ -55,6 +55,7 @@ import {transformExtent} from 'ol/proj';
 import { getLength } from 'ol/sphere';
 import { invert } from 'lodash';
 import { MyCubeStyle } from '_models/style.model';
+import { MapBrowserEvent } from 'ol';
 
 
 @Component({
@@ -164,8 +165,9 @@ export class MapComponent implements OnInit {
                 baseLayer.setVisible(true);
                 this.mapConfig.baseLayers.push(baseLayer);
                 //sets up so WMS layers can show selected features
-                this.mapConfig.selectedFeatureSource = new VectorSource({ format: new GeoJSON() })
-                this.mapConfig.selectedFeatureLayer = new VectorLayer({ source: this.mapConfig.selectedFeatureSource })
+                let selectedFeatureSource = new VectorSource({ format: new GeoJSON() })
+                // this.mapConfig.selectedFeatureSource = new VectorSource({ format: new GeoJSON() })
+                this.mapConfig.selectedFeatureLayer = new VectorLayer({ source: selectedFeatureSource })
                 this.mapConfig.selectedFeatureLayer.setZIndex(1000)
                 this.mapConfig.baseLayers.push(this.mapConfig.selectedFeatureLayer)
                 if (this.mapConfig.userpagelayers.length == 0) {
@@ -202,8 +204,11 @@ export class MapComponent implements OnInit {
                         controls: []
                     });
 
-                    this.mapConfig.evkey = this.mapConfig.map.on('click', (e: any) => {
+                    this.mapConfig.clickKey = this.mapConfig.map.on('click', (e: any) => {
                         this.mapClickEvent(e)
+                    })
+                    this.mapConfig.pointermoveKey = this.mapConfig.map.on('pointermove', (e: any) => {
+                        this.mapPointermoveEvent(e)
                     })
                     this.mapConfig.map.setTarget(this.mapElement.nativeElement.id)  //This is supposed to be run in ngAfterViewInit(), but it's assumed that will have already happened.
                     this.mapConfig.toolbar = "Layers"
@@ -338,34 +343,19 @@ export class MapComponent implements OnInit {
 
     public dropLayer(event: CdkDragDrop<string[]>) {
         moveItemInArray(this.mapService.mapConfig.userpagelayers, event.previousIndex, event.currentIndex);
-        let i: number = 0
-        this.mapService.mapConfig.userpagelayers.forEach((x) => {
-            x.layerOrder = i
-            i++
-            console.log(x.layerOrder)
-        })
-        //setting a variable to be index of last user page layer
-        let leng = this.mapService.mapConfig.userpagelayers.length
-        let a = leng - 1
-        
-        this.mapService.mapConfig.userpagelayers.forEach((x) => {
+          //setting a variable to be index of last user page layer
+          let leng = this.mapService.mapConfig.userpagelayers.length
+          let a = leng - 1  
+        this.mapService.mapConfig.userpagelayers.forEach((x, index) => {
+            x.layerOrder = index
+            x.olLayer.setZIndex(index)
             let UPLUpdate = new UserPageLayer
             UPLUpdate.ID = x.ID
             UPLUpdate.layerOrder = x.layerOrder
             UPLUpdate.style = x.style //another stupid hack
-            console.log(`new index of ${x.layer.layerName}: ${UPLUpdate.layerOrder}`)
-            let zdex = a
-            a-- //decrementing from index of last user page layer
-            this.mapConfig.selectedFeatureLayer.setZIndex(zdex)
-            console.log(`ZIndex = ${this.mapConfig.selectedFeatureLayer.getZIndex()}`)
             this.userPageLayerService.Update(UPLUpdate).subscribe();
-            
         })
-        //this.userPageService.Update()
-        //window.location.reload(true)
     }
-
-    // new features: assignNewLayerIndex, deleteLayerIndex, reloadIndex -BB
 
     public assignNewLayerIndex(layer: UserPageLayer) {
         let len = this.mapService.mapConfig.userpagelayers.length
@@ -500,6 +490,7 @@ export class MapComponent implements OnInit {
                 this.mapConfig.showStyleButton = false
                 this.mapConfig.showFilterButton = false
                 this.mapConfig.WMSFeatureData = null
+                this.mapConfig.featureList = new Array<featureList>()
             }
             //could add something here that would move to the next layerShown=true.  Not sure.
             this.mapConfig.editmode = this.mapConfig.currentLayer.layerPermissions.edit  //not sure why I need this
@@ -619,7 +610,6 @@ export class MapComponent implements OnInit {
         let j = 0;
         let promise = new Promise((resolve) => {
             this.mapConfig.userpagelayers.forEach(userpagelayer => {
-                console.log(this.mapConfig.userpagelayers.length)
                 if (single) { //If you're adding a single layer, under the "addLayer() from the map.component"
                     j++
                     if (j < this.mapConfig.userpagelayers.length) {
@@ -627,7 +617,6 @@ export class MapComponent implements OnInit {
                     }
                 }
                 userpagelayer.layerShown = userpagelayer.defaultON;
-                console.log(userpagelayer.olLayer)
                 if (!userpagelayer.olLayer) {
                     switch (userpagelayer.layer.layerType) {
                         case "GeoserverWFS": {
@@ -869,9 +858,23 @@ export class MapComponent implements OnInit {
         return promise;
     }
 
+    public mapPointermoveEvent(evt:MapBrowserEvent) {
+        this.mapConfig.mouseoverLayer = null
+        this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature: Feature, selectedLayer: any) => {
+            if(selectedLayer) {this.mapConfig.mouseoverLayer = selectedLayer}
+        }, {
+            hitTolerance: 5
+        });
+        // this.mapConfig.map.forEachLayerAtPixel(evt.pixel, (layer) => {
+        //     console.log(layer, this.mapConfig.currentLayer.olLayer)
+        // }, {layerFilter: (lay) => lay == this.mapConfig.currentLayer.olLayer
+        // })
+        //need to add functionality for layers other layer types
+    }
+
     public mapClickEvent(evt) {
         if (this.mapConfig.drawMode != '') { return }
-        this.mapConfig.selectedFeatureSource.clear()
+        this.mapConfig.selectedFeatureLayer.getSource().clear()
         if (this.mapConfig.measureShow) { return }  //disables select/deselect when the measure tool is open.
         let layer = this.mapConfig.currentLayer
         switch (this.mapConfig.currentLayer.layer.layerType) {
@@ -901,7 +904,7 @@ export class MapComponent implements OnInit {
                             }
                             else {
                                 this.mapConfig.selectedFeature = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).readFeatures(data)[0];
-                                this.mapConfig.selectedFeatureSource.addFeature(this.mapConfig.selectedFeature)
+                                this.mapConfig.selectedFeatureLayer.getSource().addFeature(this.mapConfig.selectedFeature)
                                 this.mapConfig.selectedFeature.setStyle(this.mapStyles.selected);
                                 this.featureModuleComponent.checkSomething('selectFeature', layer).then(() => { })
                             }
@@ -1001,6 +1004,7 @@ export class MapComponent implements OnInit {
     }
 
     public findMyCubeFeature(evt?, selectedFeature?: Feature) {
+        console.log('findMyCubeFeature')
         //the selectedFeature part would only come from the zoomToFeature() command
         let layer = this.mapConfig.currentLayer
         if (this.mapConfig.currentLayer.userPageInstanceID) {
@@ -1057,6 +1061,8 @@ export class MapComponent implements OnInit {
                     if (selectedLayer === layer.olLayer) {
                         hit = true;
                         this.mapConfig.selectedFeature = feature;
+                        console.log(this.mapConfig.toolbar)
+                        this.mapConfig.toolbar = 'Feature List'    
                     }
                     ;
                 }, {

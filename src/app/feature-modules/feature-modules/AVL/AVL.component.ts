@@ -1,17 +1,16 @@
-import { Component, OnInit, Input, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { UserPageLayer } from '_models/layer.model';
 import { MapConfig, featureList } from '../../../map/models/map.model';
-import { Subscription } from 'rxjs';
 import { WMSService } from '../../../map/services/wms.service'
 import { MatDialog } from '@angular/material/dialog';
-import { MatSliderChange } from '@angular/material/slider';
 import { AVLService } from './AVL.service'
 import { ModuleInstance } from '_models/module.model';
-import { Clipboard } from 'ts-clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Image, AVLConfig, GpsMessage, Vehicle } from './AVL.model'
+import { AVLConfig, GpsMessage, Vehicle } from './AVL.model'
 import { AVLHTTPService } from './AVL.HTTP.service'
-import { resolve } from 'dns';
+import {buffer} from 'ol/extent';
+import { EventEmitter } from 'events';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-AVL',
@@ -26,15 +25,10 @@ export class AVLComponent implements OnInit, OnDestroy {
   @Input() mapConfig: MapConfig;
   @Input() instance: ModuleInstance;
   @Input() user: string;
-  public canEdit: boolean = false
   public visible: boolean = false
   public expanded: boolean = false
-  public disabledSubscription: Subscription;
-  public loadedImages = new Array<Image>()
-  public opacityValue: number = 100
   public token: JSON
-  public AVLConfig = new AVLConfig
-  public tab: string = 'Vehicles'
+  public AVLconfig = new AVLConfig
 
   ngOnInit() {
     console.log('Initializing AVLComponent')
@@ -42,47 +36,54 @@ export class AVLComponent implements OnInit, OnDestroy {
     this.mapConfig.userpagelayers.forEach((upl) => {
       if (upl.user_page_instance) {
         if (this.instance.ID == upl.user_page_instance.moduleInstanceID) {
-          this.AVLConfig.UPL = upl
+          this.AVLconfig.UPL = upl
         }
       }
     })
-    this.AVLservice.createLayer(this.mapConfig, this.AVLConfig.UPL)
+    this.AVLservice.createLayer(this.mapConfig, this.AVLconfig.UPL)
     this.loadLayer()
     this.AVLservice.mapConfig = this.mapConfig
     //keep working on this
-    this.AVLConfig.startDate = new Date()
-    this.AVLConfig.startDate.setHours(0,0,0,0)
-    this.AVLConfig.endDate = new Date()
-    this.AVLConfig.endDate.setHours(24,0,0,0)
+    this.AVLconfig.startDate = new Date()
+    this.AVLconfig.startDate.setHours(0,0,0,0)
+    this.AVLconfig.endDate = new Date()
+    this.AVLconfig.endDate.setHours(24,0,0,0)
   }
-
   
   public reloadLayer() {
     this.buildConfig().then(() => {
-      this.AVLservice.mapCurrentLocations(this.AVLConfig)
+      this.AVLservice.mapCurrentLocations(this.AVLconfig)
     })
   }
 
   public buildConfig(): Promise<any> {
     let promise = new Promise<any> ((resolve) => {
-      this.AVLHTTPservice.getFleetLocationsCall(this.AVLConfig.token).subscribe((locations) => {
-        this.AVLConfig.fleetLocations = locations['gpsMessage']
-        this.AVLHTTPservice.getGroupCall(this.AVLConfig.token, 473643).subscribe((x) => {
-          this.AVLConfig.group = x
+      this.AVLHTTPservice.getFleetLocationsCall(this.AVLconfig.token).subscribe((locations) => {
+        this.AVLconfig.fleetLocations = locations['gpsMessage']
+        this.AVLHTTPservice.getGroupCall(this.AVLconfig.token, 473643).subscribe((x) => {
+          this.AVLconfig.group = x
           let i: number = 0
-          this.AVLConfig.vehicles = [] //probably need to come up with a better way on this so it doesn't take too long to refresh.
-          this.AVLConfig.group.vehicleIds['id'].forEach((z) => {
-            this.AVLHTTPservice.getVehicleCall(this.AVLConfig.token, z).subscribe((v: Vehicle) => {
-              i += 1
-              this.AVLConfig.vehicles.push(v)
-              v.id = v['@id']  //This is because Networkfleet decided to put an @ in front and that doesn't work well (typ).
-              v.type = v['@type']
-              let foundLocation = this.AVLConfig.fleetLocations.find((fl) => fl.vehicleId == v.id)
-              if (foundLocation) {
-                v.currentLocation = foundLocation
+          this.AVLconfig.group.vehicleIds['id'].forEach((z) => {
+            this.AVLHTTPservice.getVehicleCall(this.AVLconfig.token, z).subscribe((v: Vehicle) => {
+              let tempVehicle:Vehicle = this.AVLconfig.vehicles.find((x) => x.id == v['@id'])
+              if (tempVehicle) {
+                let foundLocation = this.AVLconfig.fleetLocations.find((fl) => fl.vehicleId == v['@id'])
+                if (foundLocation) {
+                  tempVehicle.currentLocation = foundLocation
+                }  
               }
-            if (i == this.AVLConfig.group.vehicleIds['id'].length) {
-              this.AVLConfig.vehicles.sort((a, b): number => {
+              else {
+                this.AVLconfig.vehicles.push(v)
+                v.id = v['@id']  //This is because Networkfleet decided to put an @ in front and that doesn't work well (typ).
+                v.type = v['@type']
+                let foundLocation = this.AVLconfig.fleetLocations.find((fl) => fl.vehicleId == v.id)
+                if (foundLocation) {
+                  v.currentLocation = foundLocation
+                }
+              }
+              i += 1
+            if (i == this.AVLconfig.group.vehicleIds['id'].length) {
+              this.AVLconfig.vehicles.sort((a, b): number => {
                 if (a.label > b.label) {
                   return 1;
                 }
@@ -101,109 +102,44 @@ export class AVLComponent implements OnInit, OnDestroy {
   }
 
   public goToTab(tab) {
-    this.tab = tab
+    this.AVLconfig.tab = tab
   }
 
-  public goToTrack(vehicle: Vehicle) {
-    this.AVLConfig.selectedVehicle = vehicle
+  public showTrack(vehicle: Vehicle) {
+    this.AVLconfig.tab = 'Track'
     this.mapConfig.toolbar = "Feature List"
-    this.mapConfig.featureList = new Array<featureList>();
-    this.tab = 'Track'
-    this.AVLHTTPservice.getTrackCall(this.AVLConfig.token, vehicle.id, this.AVLConfig.startDate.toISOString(), this.AVLConfig.endDate.toISOString()).subscribe((tracks) => {
-      console.log(tracks)
-      this.AVLConfig.selectedVehicle.track = tracks['gpsMessage']
-      vehicle.track = tracks['gpsMessage']
-      let idle:Date
-      let commentMessage: GpsMessage
-      this.AVLservice.mapTrack(this.AVLConfig, vehicle)
-      if (vehicle.track) {
-        vehicle.track.forEach((x, i) => {
-          console.log(new Date(x.messageTime).toDateString())
-          x.comment = new Date(x.messageTime).toTimeString().substring(0,9)
-          x.comment = x.comment.concat(' ' + x.avgSpeed + 'MPH')
-          if (!x.heading && x.keyOn == true && x.avgSpeed < 5) {
-            x.status = 'idle'
-            if (!idle) {idle = x.messageTime }
-            else {x.hide = true}
-          }
-          else {
-            if (x.keyOn == false) {
-              if(idle) {
-                commentMessage = vehicle.track.find((z) => z.messageTime == idle)
-                let diff:number = new Date(x.messageTime).getTime() - new Date(commentMessage.messageTime).getTime()
-                commentMessage.idleTime = Math.abs(Math.round(diff /=60000))
-                console.log(commentMessage.idleTime)
-              idle = null}
-              x.status = 'stopped'
-              if (vehicle.track[i+1]) {
-                let diff: number = new Date(vehicle.track[i+1].messageTime).getTime() - new Date (x.messageTime).getTime()
-                x.stoppedTime = Math.abs(Math.round(diff /= 60000))
-                if (x.stoppedTime > 0) {
-                  x.comment = x.comment.concat(" Stopped for ",x.stoppedTime.toString(), " min.")
-                }  
-              }
-            }
-            else {
-              x.status = 'moving'
-              if(idle) {
-                commentMessage = vehicle.track.find((z) => z.messageTime == idle)
-                let diff:number = new Date(x.messageTime).getTime() - new Date(commentMessage.messageTime).getTime()
-                commentMessage.idleTime = Math.abs(Math.round(diff /=60000))
-                console.log(commentMessage.idleTime)
-                if (commentMessage.idleTime > 0) {
-                  commentMessage.comment = commentMessage.comment.concat(" Idle for ",commentMessage.idleTime.toString(), " min.")
-                }    
-             idle = null
-              }
-            }
-          }
-          //need to put something in here to add the date on multiple date queries.
-      })
-      }
-      if (vehicle.track) {
-        vehicle.track.forEach((v:GpsMessage) => {
-          if (!v.hide) {
-            let fl = new featureList
-            fl.id = v.vehicleId
-            fl.label = v.comment
-            fl.feature = v.olPoint
-            this.mapConfig.featureList.push(fl)  
-          }
-        })  
-      }
-    })
+    this.AVLservice.showTrack(this.AVLconfig, vehicle)
   }
 
   public updateTrack(today?:boolean) {
+    if(this.AVLconfig.trackUpdateInterval) {clearInterval(this.AVLconfig.trackUpdateInterval); this.AVLconfig.trackUpdateInterval = null}
     if (today) {
-      this.AVLConfig.startDate = new Date()
-      this.AVLConfig.startDate.setHours(0,0,0,0)
-      this.AVLConfig.endDate = new Date()
-      this.AVLConfig.endDate.setHours(24,0,0,0)  
+      this.AVLconfig.startDate = new Date()
+      this.AVLconfig.startDate.setHours(0,0,0,0)
+      this.AVLconfig.endDate = new Date()
+      this.AVLconfig.endDate.setHours(24,0,0,0)  
     }
-    this.goToTrack(this.AVLConfig.selectedVehicle)
+    this.showTrack(this.AVLconfig.selectedVehicle)
     this.goToTab("Track")  
   }
-  // public showTrack(vehicle: Vehicle) {
-  //   this.AVLHTTPservice.getTrackCall(this.token, vehicle.id).subscribe((x) => {
-  //     console.log(x)
-  //   })
-  // }
 
-  public zoomToPoint(track:GpsMessage) {
-    console.log(track)
-    this.mapConfig.view.fit(track.olPoint.getGeometry().getExtent(), {
+  public zoomToPoint(point:GpsMessage) {
+    this.mapConfig.view.fit(point.olPoint.getGeometry().getExtent(), {
       duration: 1000,
       maxZoom: 16
     })
-    this.AVLConfig.selectedPoint = track
+    this.AVLconfig.selectedPoint = point
   }
 
   public clearTracks() {
-    this.mapConfig.map.removeLayer(this.AVLConfig.olTrackLayer)
+    this.mapConfig.map.removeLayer(this.AVLconfig.olTrackLayer)
     this.mapConfig.currentLayer.olLayer.setOpacity(1)
-    this.AVLConfig.selectedVehicle = new Vehicle
-    this.tab = "Vehicles"
+    this.AVLconfig.selectedVehicle = new Vehicle
+    this.AVLconfig.tab = "Vehicles"
+    this.mapConfig.featureList = new Array<featureList>()
+    this.mapConfig.toolbar = "Layers"
+    this.mapConfig.map.getView().fit(buffer(this.mapConfig.currentLayer.olLayer.getSource().getExtent(), 1000), {duration: 1000})
+    if(this.AVLconfig.trackUpdateInterval) {clearInterval(this.AVLconfig.trackUpdateInterval); this.AVLconfig.trackUpdateInterval = null}
   }
 
   public getFeatureList() {
@@ -212,61 +148,54 @@ export class AVLComponent implements OnInit, OnDestroy {
 
   public loadLayer() {
     console.log('AVLComponent Loadlayer')
-    this.AVLservice.createLayer(this.mapConfig, this.AVLConfig.UPL)
-    this.AVLservice.getToken().subscribe((x) => {
-      this.AVLConfig.token = x
+    this.AVLservice.createLayer(this.mapConfig, this.AVLconfig.UPL)
+    let username: string
+    let password: string
+    let groupID: number
+    try {username = this.AVLconfig.UPL.user_page_instance.module_instance.settings.properties.find((x) => x.stringType.name == "username").stringType.value}
+    catch(error) {}
+    try {password = this.AVLconfig.UPL.user_page_instance.module_instance.settings.properties.find((x) => x.stringType.name == "password").stringType.value}
+    catch(error){}
+    try {groupID = this.AVLconfig.UPL.user_page_instance.module_instance.settings.properties.find((x) => x.integerType.name == "groupID").integerType.value}
+    catch(error){}
+    this.AVLservice.getToken(username, password).subscribe((x) => {
+      this.AVLconfig.token = x
       this.buildConfig().then(() => {
-        this.AVLservice.mapCurrentLocations(this.AVLConfig)
+        this.AVLservice.mapCurrentLocations(this.AVLconfig)
       })
     })
-    this.AVLConfig.UPL.updateInterval = setInterval(() => {
+    this.AVLconfig.UPL.updateInterval = setInterval(() => {
       this.reloadLayer()
     },20000)
-    return this.AVLservice.loadLayer(this.mapConfig, this.AVLConfig.UPL)
+    return this.AVLservice.loadLayer(this.mapConfig, this.AVLconfig.UPL)
   }
 
   public unloadLayer(layer: UserPageLayer) {
     this.visible = false
-    this.AVLConfig.olTrackLayer.setVisible(false)
+    if(this.AVLconfig.olTrackLayer) {this.AVLconfig.olTrackLayer.setVisible(false)}
     return this.AVLservice.unloadLayer(layer)
   }
 
   public selectFeature(layer: UserPageLayer) {
     console.log('AVLcomponent selectFeature')
-    // let loadedImage: Image = this.AVLservice.selectFeature(layer)
-    // if (loadedImage.function == 'add') {
-    //   this.loadedImages.push(loadedImage)
-    // }
-    // if (loadedImage.function == 'subtract') {
-    //   this.loadedImages.splice(this.loadedImages.indexOf(loadedImage), 1)
-    // }
+    this.AVLservice.selectFeature(this.AVLconfig, layer)
     return true
   }
 
   public clearFeature(layer: UserPageLayer) {
     if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeatureSource.clear() }
         if (this.mapConfig.selectedFeature) {
-            // this.mapConfig.selectedFeature.setStyle(null);
             this.mapConfig.selectedFeature = null;
         }
     return true
   }
 
-  public setOpacity(e: EventEmitter<MatSliderChange>) {
-    this.AVLservice.images.forEach((x) => {
-      if (x.layer) {
-        x.layer.setOpacity(e['value'] / 100)
-      }
-    })
-    this.AVLservice.setOpacity(e['value'] / 100)
-  }
-
   public setCurrentLayer(layer: UserPageLayer): boolean {
     console.log("AVL setCurrentLayer")
-    if (this.AVLConfig.olTrackLayer) {this.AVLConfig.olTrackLayer.setVisible(true)}
+    if (this.AVLconfig.olTrackLayer) {this.AVLconfig.olTrackLayer.setVisible(true)}
     this.visible = true
     this.expanded = true
-    return (this.AVLservice.setCurrentLayer(layer, this.AVLConfig))
+    return (this.AVLservice.setCurrentLayer(layer, this.AVLconfig))
   }
 
   public unsetCurrentLayer(layer: UserPageLayer): boolean {
@@ -278,27 +207,22 @@ export class AVLComponent implements OnInit, OnDestroy {
     return false
   }
 
-  public copyURL(image: Image) {
-    Clipboard.copy(image.properties.wmts)
-    this.snackBar.open("Copied to the clipboard", "", {
-      duration: 2000,
-    });
-  }
-  public zoomToFeature(image: Image) {
-    this.mapConfig.view.fit(image.feature.getGeometry().getExtent(), {
-      duration: 1000,
-      maxZoom: 18
-    })
-  }
-  public removeImage(image: Image) {
-    this.AVLservice.removeImage(image)
-    this.loadedImages.splice(this.loadedImages.indexOf(image), 1)
-  }
   ngOnDestroy() {
       console.log('destroying AVLComponent')
-      this.mapConfig.map.removeLayer(this.AVLConfig.olTrackLayer)
-      clearInterval(this.AVLConfig.UPL.updateInterval)
-    // let layer: UserPageLayer
-    // this.AVLservice.unloadLayer(layer)
+      this.mapConfig.map.removeLayer(this.AVLconfig.olTrackLayer)
+      clearInterval(this.AVLconfig.UPL.updateInterval)
+      clearInterval(this.AVLconfig.trackUpdateInterval)
   }
+
+    myFilterStart = (d: Date | null): boolean => {
+      return d < new Date()
+    }
+
+    myFilterEnd = (d: Date | null): boolean => {
+      return d < new Date(new Date().getTime() + 24 * 60 * 60 * 1000) && d >= this.AVLconfig.startDate
+    }
+
+    public dateChange(e: any) {
+      this.AVLconfig.endDate = new Date(this.AVLconfig.startDate.getTime() + 24 * 60 * 60 * 1000)
+    }
 }

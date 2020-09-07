@@ -29,24 +29,25 @@ export class AVLAdminService {
     private myCubeService: MyCubeService,
     private userPageLayerService: UserPageLayerService) { }
 
-
 public addModuleToPage(userPageInstance:UserPageInstance) {
   console.log("addModuleToPage")
   console.log(userPageInstance)
   let UPL = new UserPageLayer
   UPL.defaultON = true
   userPageInstance.module_instance.settings.properties.forEach((x) => {
-    if (x.stringType.name == "myCube Layer Identity (integer)") {
-      UPL.layerID = +x.stringType.value
+    try{
+      if (x.stringType.name == "myCube Layer Identity (integer)") {
+        UPL.layerID = +x.stringType.value
+      }
     }
-  })
-  console.log(UPL)
+    catch(error) {}
+  })    
   UPL.userPageInstanceID = userPageInstance.ID
   UPL.userPageID = userPageInstance.userPageID
   UPL.userID = userPageInstance.userID
   this.userPageLayerService.Add(UPL)
   .subscribe(data => {
-    console.log(data)
+    // console.log(data)
   })
 }
 

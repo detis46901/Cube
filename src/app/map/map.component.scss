@@ -25,10 +25,6 @@
     color:white;
     background: #000000
 }
-.selected {
-    color:white;
-    background: #000000
-}
 
 .featurelist {
     position: relative;
@@ -52,6 +48,7 @@
 .example-margin {
     font-weight: normal;
 }
+
 #dropdownMenu1, #dropdownMenu2 {
     border: 2px solid rgb(26, 117, 255);
     margin: 25px 15px 0 0;
@@ -61,6 +58,10 @@
     right:100px;
     background-color: whitesmoke;
     -webkit-text-fill-color: black;
+}
+
+.selected {
+    font-weight: bold;
 }
 
 #dropdownMenu1 {
@@ -122,6 +123,10 @@ p {
     flex: 1 1 auto; /* make this grow and shrink */
     min-width: 0; /* see link to see why this is needed */
     margin-right: 16px;
+}
+
+.loading {
+    font-style: italic;
 }
 
 .example-radio-button > div {

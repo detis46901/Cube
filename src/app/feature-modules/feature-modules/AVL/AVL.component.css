@@ -19,3 +19,11 @@
   .expansiontab {
     max-height: 50vh;
   }
+
+  .selected {
+    font-weight: bold;
+}
+
+.hlinkLook {
+  cursor:pointer
+}

@@ -190,16 +190,11 @@
                             </mat-menu>
 
                             <!-- button to disable or enable layer layer view on the map, radio button to enable user interaction with specified layer -->
-                            <mat-radio-button [disabled]="!userpagelayer.layerShown" class="example-radio-button"
+                            <mat-radio-button [disabled]="!userpagelayer.layerShown" class="example-radio-button" [class.loading]="userpagelayer.loadStatus=='Loading'"
                                 [value]="userpagelayer" (change)="setCurrentLayer(userpagelayer)">
-                                <mat-slide-toggle color="primary" matTooltip="{{userpagelayer.layer.ID}}" class="example-margin"
-                                    [checked]="userpagelayer.layerShown"
-                                    (change)="toggleLayers(userpagelayer)">
-                                    <b
-                                        *ngIf="userpagelayer == mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</b>
-                                    <i *ngIf="userpagelayer.loadStatus=='Loading'">{{userpagelayer.layer.layerName}}</i>
-                                    <span class="font-weight-normal"
-                                        *ngIf="userpagelayer.loadStatus != 'Loading' &&  userpagelayer != mapConfig.mouseoverLayer">{{userpagelayer.layer.layerName}}</span>
+                                <mat-slide-toggle color="primary" [class.selected]="userpagelayer.olLayer && userpagelayer.olLayer == mapConfig.mouseoverLayer" matTooltip="{{userpagelayer.layer.ID}}" 
+                                    [checked]="userpagelayer.layerShown" (change)="toggleLayers(userpagelayer)">
+                                    <span>{{userpagelayer.layer.layerName}}</span>
                                 </mat-slide-toggle>
                             </mat-radio-button>
                             <mat-icon *ngIf="userpagelayer.loadStatus=='Error'">error</mat-icon>
@@ -265,13 +260,13 @@
                         </button>
                     </div>
                 </mat-action-row>
-                <mat-action-row *ngIf="mapConfig.currentLayerName != ''">
+                <!-- <mat-action-row *ngIf="mapConfig.currentLayerName != ''">
                     <div style="text-align:right">
                         <button *ngIf="mapConfig.currentLayerName != ''" mat-icon-button (click)="mapService.createHeatMap()" matTooltip="Heat Map">
                             <i class="material-icons">blur_on</i>
                         </button>
                     </div> 
-                </mat-action-row>
+                </mat-action-row> -->
             </mat-expansion-panel>
 
             <!-- feature list that shows the current features within a my cube layer, should only show visible features but
@@ -288,10 +283,8 @@
                     <!-- <div *ngIf='mapConfig.selectedFeature'>{{mapConfig.selectedFeature.get('ticket')}}</div> -->
                     <div *ngFor="let fl of mapConfig.featureList">
                         <!-- {{fl.label}} -->
-                        <a *ngIf="fl.feature != mapConfig.selectedFeature" style="cursor: pointer"
+                        <a style="cursor: pointer" [class.selected]="fl.feature == mapConfig.selectedFeature"
                             (click)="zoomToFeature(fl)">{{fl.label}}</a>
-                        <a *ngIf="fl.feature == mapConfig.selectedFeature" style="cursor: pointer"
-                            (click)="zoomToFeature(fl)"><b>{{fl.label}}</b></a>
                     </div>
                 </div>
 

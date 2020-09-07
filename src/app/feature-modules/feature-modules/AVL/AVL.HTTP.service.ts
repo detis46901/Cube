@@ -38,7 +38,6 @@ export class AVLHTTPService {
     // startDate = '2020-08-21T04:00:00.000Z'
     if (startDate) {
       params = params.concat('?with-start-date=',startDate)
-      console.log(params)
       if (endDate) {params = params.concat('&')}
     }
     if (endDate) {
@@ -46,9 +45,7 @@ export class AVLHTTPService {
       params = params.concat('with-end-date=', endDate)
     }
     params = params.concat('&limit=1000')
-    console.log(params)
     let headers = new HttpHeaders({'Content-type': 'application/vnd.networkfleet.api-v1+json', 'Authorization': 'Bearer ' + token['access_token'], 'Accept': 'application/vnd.networkfleet.api-v1+json', 'Cache-Control': 'no-cache'})
-    console.log('https://cube-kokomo.com:9876/https://api.networkfleet.com/locations/vehicle/'.concat(id,'/track',params))
     return this._http.get('https://cube-kokomo.com:9876/https://api.networkfleet.com/locations/vehicle/'.concat(id,'/track',params), {headers: headers})
   }
 }

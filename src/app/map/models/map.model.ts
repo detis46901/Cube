@@ -33,11 +33,11 @@ export class MapConfig {
     geolocation: ol.Geolocation;
     tracking: boolean = false;
     baseLayers = []  //THere is only one base layer, but ol requires it to be an array
-    evkey: any; //current click event
+    clickKey: any; //current click event
+    pointermoveKey: any;
     toolbar: string;
     selectedFeature?: Feature;
     selectedFeatures? = new Collection<Feature>()
-    selectedFeatureSource: VectorSource
     selectedFeatureLayer: VectorLayer
     userpages? = new Array<UserPage>();
     defaultpage?: UserPage;  //This is only necessary when the user changes the default page.  It references this to uncheck it.

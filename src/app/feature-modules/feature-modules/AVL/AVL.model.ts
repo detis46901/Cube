@@ -7,47 +7,20 @@ import {Fill, Stroke, Circle, Style} from 'ol/style';
 import { Injectable } from "@angular/core";
 import VectorSource from 'ol/source/Vector';
 
-
-
-export class Image {
-    _id: string;
-    title: string;
-    properties: Properties
-    acquisition_start: string;
-    acquisition_end: string;
-    bbox: Array<number>
-    polys: [Number, Number][][]
-    feature: Feature
-    on: Boolean = false;
-    layer: TileLayer
-    function: string //add or substract
-}
-
-export class Properties {
-    wmts: string
-}
-
-export class coord {
-    lat: Number
-    lng: Number
-}
-
-export class poly {
-    poly: Array<coord>
-}
-
 export class AVLConfig {
     token: JSON
     UPL: UserPageLayer
+    tab: string = 'Vehicles'
     group: Group
     vehicles = new Array<Vehicle>()
-    fleetLocations = new Array<GpsMessage>()
+    fleetLocations = new Array<GpsMessage>() //Just a holder until they can be placed in the vehicle object
     selectedVehicle = new Vehicle
     selectedPoint = new GpsMessage
     startDate: Date
     endDate: Date
     olTrackLayer: Layer
-    olTrackSource = new VectorSource()
+    trackUpdateInterval: any
+    AVLmouseover: any
 }
 
 export class GpsMessage {
@@ -97,60 +70,60 @@ export class Vehicle {
     track = new Array <GpsMessage>()
 }
 
-@Injectable()
-export class AVLStyles {
-    public load = new Style({
-        image: new Circle({
-            radius: 10,
-            stroke: new Stroke({
-                color: '#fff'
-            }),
-            fill: new Fill({
-                color: '#3399CC'
-            })
-        }),
-        // text: new ol.style.Text({
-        //   text: '1',
-        //   fill: new ol.style.Fill({
-        //     color: '#fff'
-        //   })
-        // })
-    });
+// @Injectable()
+// export class AVLStyles {
+//     public load = new Style({
+//         image: new Circle({
+//             radius: 10,
+//             stroke: new Stroke({
+//                 color: '#fff'
+//             }),
+//             fill: new Fill({
+//                 color: '#3399CC'
+//             })
+//         }),
+//         // text: new ol.style.Text({
+//         //   text: '1',
+//         //   fill: new ol.style.Fill({
+//         //     color: '#fff'
+//         //   })
+//         // })
+//     });
 
-    public current = new Style({
-        image: new Circle({
-            radius: 10,
-            stroke: new Stroke({
-                color: '#fff'
-            }),
-            fill: new Fill({
-                color: '#0000FF'
-            })
-        }),
-        // text: new ol.style.Text({
-        //   text: '1',
-        //   fill: new ol.style.Fill({
-        //     color: '#fff'
-        //   })
-        // })
-    });
+//     public current = new Style({
+//         image: new Circle({
+//             radius: 10,
+//             stroke: new Stroke({
+//                 color: '#fff'
+//             }),
+//             fill: new Fill({
+//                 color: '#0000FF'
+//             })
+//         }),
+//         // text: new ol.style.Text({
+//         //   text: '1',
+//         //   fill: new ol.style.Fill({
+//         //     color: '#fff'
+//         //   })
+//         // })
+//     });
 
-    public selected = new Style({
-        image: new Circle({
-            radius: 10,
-            stroke: new Stroke({
-                color: '#fff'
-            }),
-            fill: new Fill({
-                color: '#FF0000'
-            })
-        }),
-        zIndex: 100
-        // text: new ol.style.Text({
-        //   text: '1',
-        //   fill: new ol.style.Fill({
-        //     color: '#fff'
-        //   })
-        // })
-    });
-}
+//     public selected = new Style({
+//         image: new Circle({
+//             radius: 10,
+//             stroke: new Stroke({
+//                 color: '#fff'
+//             }),
+//             fill: new Fill({
+//                 color: '#FF0000'
+//             })
+//         }),
+//         zIndex: 100
+//         // text: new ol.style.Text({
+//         //   text: '1',
+//         //   fill: new ol.style.Fill({
+//         //     color: '#fff'
+//         //   })
+//         // })
+//     });
+// }

@@ -367,6 +367,7 @@ export class MapService {
     public selectMyCubeFeature(layer: UserPageLayer, refresh: boolean = false): void {
         if (refresh == false) {
             this.dataFormService.setDataFormConfig('mycube', 't' + layer.layer.ID, this.mapConfig.selectedFeature.getId()).then((dataFormConfig: DataFormConfig) => {
+                console.log(dataFormConfig)
                 dataFormConfig.visible = true
                 dataFormConfig.dataTableTitle = "Feature Data"
                 dataFormConfig.editMode = layer.layerPermissions.edit
@@ -452,7 +453,7 @@ export class MapService {
 
     public clearFeature() {
         console.log('clearing Feature')
-        if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeatureSource.clear() }
+        if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeatureLayer.getSource().clear() }
         if (this.mapConfig.selectedFeature) {
             this.mapConfig.selectedFeature.setStyle(null);
             this.mapConfig.selectedFeature = null;
@@ -501,42 +502,58 @@ export class MapService {
                 this.mapConfig.map.addLayer(vector);
                 this.modkey = this.mapConfig.map.addInteraction(this.drawInteraction);
                 this.drawInteraction.once('drawend', (e) => {
+                    let success: boolean = true
                     let featurejson = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }).writeFeature(e.feature);
                     this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
                         .subscribe((data) => {
                             //need to get an error check to fix if the MyCube has been jacked up by QGIS (3Dvs2D)
                             try { featureID = data[0][0].id }
-                            catch (e) {
+                            catch (f) {
+                                success = false
+                                console.log(f)
                                 this.sqlService.fixGeometry(this.mapConfig.currentLayer.layer.ID)
                                     .subscribe((x) => {
+                                        console.log(x)
+                                        this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
+                                        .subscribe((data) => {
+                                            featureID = data[0][0].id
+                                            console.log(data)
+                                            this.finishDraw(e, featureID, data, stylefunction, featurejson);
+                                        })
                                     })
                             }
-                            e.feature.setId(featureID);
-                            e.feature.setProperties(data[0]);
-                            this.mapConfig.currentLayer.source.addFeature(e.feature)
-                            e.feature.setStyle(stylefunction)
-                            this.getFeatureList();
-                            let logField = new LogField
-                            logField.schema = 'mycube'
-                            logField.logTable = 'c' + this.mapConfig.currentLayer.layer.ID
-                            logField.auto = true
-                            logField.comment = "Object Created"
-                            logField.featureid = featureID
-                            logField.geom = featurejson['geometry']
-                            logField.userid = this.mapConfig.user.ID
-                            this.dataFormService.addLogForm(logField).then((x) => {
-                            })
+                            console.log(success)
+                            if (success) {this.finishDraw(e, featureID, data, stylefunction, featurejson);}
                         })
                     this.mapConfig.map.removeLayer(vector);
                     this.mapConfig.map.changed();
-                    let test = new Observable
-                    // test.un("change", this.modkey);
                     this.mapConfig.map.removeInteraction(this.drawInteraction);
                     this.mapConfig.drawMode = ""
-                    // this.drawMode = false
                 })
             }
         }
+    }
+
+    private finishDraw(e: any, featureID: number, data: any, stylefunction: (feature: any) => any, featurejson: string) {
+        e.feature.setId(featureID);
+        e.feature.setProperties(data[0]);
+        this.mapConfig.currentLayer.source.addFeature(e.feature);
+        e.feature.setStyle(stylefunction);
+        this.getFeatureList();
+        let logField = new LogField;
+        logField.schema = 'mycube';
+        logField.logTable = 'c' + this.mapConfig.currentLayer.layer.ID;
+        logField.auto = true;
+        logField.comment = "Object Created";
+        logField.featureid = featureID;
+        logField.geom = featurejson['geometry'];
+        logField.userid = this.mapConfig.user.ID;
+        this.dataFormService.addLogForm(logField).then((x) => {
+        });
+    }
+
+    public completeDraw() {
+
     }
 
     public deleteFeature() {
@@ -740,7 +757,7 @@ export class MapService {
         this.mapConfig.showFilterButton = false
         this.mapConfig.showStyleButton = false
         this.mapConfig.WMSFeatureData = ""
-        this.mapConfig.selectedFeatureSource.clear()
+        this.mapConfig.selectedFeatureLayer.getSource().clear()
         this.mapConfig.myCubeConfig = new DataFormConfig
         this.mapConfig.myCubeComment = new LogFormConfig
     }

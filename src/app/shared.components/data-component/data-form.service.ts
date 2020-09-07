@@ -24,6 +24,7 @@ export class DataFormService {
       if (record) { dataFormConfig.rowID = record.toString() }
       this.sqlService.GetSchema(schema, table)
         .subscribe((data) => {
+          console.log(data)
           dataFormConfig.dataForm = data[0]
           this.sqlService.getConstraints(schema, table)
             .subscribe((constraints) => {
@@ -137,11 +138,13 @@ export class DataFormService {
     let promise = new Promise<any>((resolve) => {
       this.sqlService.addAnyRecord(dataFormConfig.schema, dataFormConfig.dataTable, field, value)
         .subscribe((x) => {
+          console.log(x)
           let id = x[0][0]['id']
           dataFormConfig.dataForm.forEach((x) => {
             if (x.type != 'id' && x.value != null) {
               this.sqlService.UpdateAnyRecord(dataFormConfig.schema, dataFormConfig.dataTable, id, x)
                 .subscribe((z) => {
+                  console.log(z)
                   resolve(id)
                 })
             }
@@ -156,6 +159,7 @@ export class DataFormService {
     let promise = new Promise<any>((resolve) => {
       this.sqlService.addAnyComment(logField)
         .subscribe((x) => {
+          console.log(x)
           resolve(x)
         })
     })
