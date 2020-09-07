@@ -1,12 +1,14 @@
-import { Component, Output, OnDestroy, enableProdMode } from '@angular/core';
+import { Component, Output, enableProdMode, HostListener, isDevMode } from '@angular/core';
 import { UserService } from '../../_services/_user.service';
 import { User } from '../../_models/user.model';
 import { WMSService } from '../map/services/wms.service';
-import { Subscription ,  Observable } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { MyCubeField, MyCubeConfig, MyCubeComment } from '../../_models/layer.model'
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { AuthenticationService } from '../../_services/authentication.service'
+import { LoginLogService } from '../../_services/_loginlog.service'
+import { LoginLog } from '../../_models/loginlog.model'
 
 @Component({
     selector: 'home',
@@ -17,7 +19,6 @@ import { AuthenticationService } from '../../_services/authentication.service'
 
 export class HomeComponent {
     //@Output() user;
-
     //This is the variable that tells the header's toggle menu button which screen the user is on
     public screen = 1;
     public user = new User;
@@ -33,19 +34,23 @@ export class HomeComponent {
     public myCubeConfig: MyCubeConfig;
     public messageSubscription: Subscription;
     public hero$: Observable<any>;
-    public hero:any;
+    public hero: any;
     public publicName: string;
     public loaded: boolean
 
     constructor(private dataService: UserService,
         private route: ActivatedRoute,
-        private authenticationService: AuthenticationService) {
+        private authenticationService: AuthenticationService, private loginlogService: LoginLogService) {
     }
 
     ngOnInit() {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.userID = currentUser && currentUser.userID;
         this.message = null
+        let ll = new LoginLog
+        ll.username =  JSON.parse(localStorage.getItem('currentUser'))['firstName'] + ' ' + JSON.parse(localStorage.getItem('currentUser'))['lastName']
+        ll.result = 'Page Load'
+        this.loginlogService.addLoginLog(ll).subscribe((x) => {})
         //this.socketService.initSocket() This may be used later.  This initializes a WebSocket
         this.publicName = this.route.snapshot.paramMap.get('publicName')
         if (this.publicName && !this.userID) {
@@ -53,19 +58,14 @@ export class HomeComponent {
             this.authenticationService.publicLogin(this.publicName).then((x) => {
                 console.log(localStorage.getItem('currentUser'))
                 currentUser = JSON.parse(localStorage.getItem('currentUser'))
-        this.userID = currentUser && currentUser.userID;
-
-                 this.Initiate();
+                this.userID = currentUser && currentUser.userID;
+                this.Initiate();
             })
         }
-        else {this.Initiate()}
-
-
-
+        else { this.Initiate() }
     }
 
     private Initiate() {
-        console.log(this.userID)
         this.getAllItems(this.userID).then((x) => {
             if (this.publicName) {
                 //needs to check that the userID matches the record with the publicName
@@ -98,23 +98,27 @@ export class HomeComponent {
     private getAllItems(userID: number): Promise<any> {
         let promise = new Promise((resolve) => {
             this.dataService
-            .GetSingle(userID)
-            .subscribe((data: User) => {
-                this.user = data;
-                if (this.user.firstName == this.publicName) {
-                    resolve(true)
-                }
-                else {
-                    resolve(false)
-                }
-            });
+                .GetSingle(userID)
+                .subscribe((data: User) => {
+                    this.user = data;
+                    if (this.user.firstName == this.publicName) {
+                        resolve(true)
+                    }
+                    else {
+                        resolve(false)
+                    }
+                });
 
         })
         return promise
     }
 
-    ngOnDestroy() {
+    @HostListener('window:beforeunload', ['$event'])
+    beforeUnloadHander(event) {
+            let ll = new LoginLog
+            ll.username =  JSON.parse(localStorage.getItem('currentUser'))['firstName'] + ' ' + JSON.parse(localStorage.getItem('currentUser'))['lastName']
+            ll.result = 'Page Close'
+            this.loginlogService.addLoginLog(ll).subscribe((x) => {})
     }
-
 
 }

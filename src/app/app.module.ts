@@ -51,6 +51,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {LayerFilterPipe} from '../_pipes/rowfilter2.pipe'
 
 //Services
+import { LoginLogService } from '../_services/_loginlog.service'
 import { GroupService } from '../_services/_group.service';
 import { GroupMemberService } from '../_services/_groupMember.service';
 import { LayerService } from '../_services/_layer.service';
@@ -204,6 +205,7 @@ import { FeatureModulesComponent } from './feature-modules/feature-modules.compo
         AuthenticationService,
         UserService,
         APIKeyService,
+        LoginLogService,
         GroupService,
         GroupMemberService,
         LayerService,

@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from '../../_services/authentication.service';
 import { UserService } from '../../_services/_user.service';
 import { User } from '../../_models/user.model';
+import { LoginLog } from '../../_models/loginlog.model'
+import { LoginLogService } from '../../_services/_loginlog.service'
 
 @Component({
     templateUrl: 'login.component.html',
@@ -16,7 +18,7 @@ export class LoginComponent implements OnInit {
     error = '';
     public token;
 
-    constructor(private router: Router, private authenticationService: AuthenticationService, private userService: UserService) {}
+    constructor(private router: Router, private authenticationService: AuthenticationService, private userService: UserService, private loginlogService: LoginLogService) {}
 
     ngOnInit() {
         //reset login status
@@ -55,13 +57,17 @@ export class LoginComponent implements OnInit {
         }
         else {
             console.log("Logging in")
-            let that = this;
             this.loading = true;
             let username: string = this.model.username
             this.userService.login(username.toLowerCase(), this.model.password)
                 .subscribe(res => {
                     console.log(res)
                     if(res['token']) {
+                                let ll = new LoginLog
+                                ll.username = username
+                                ll.result = 'Success'
+                                this.loginlogService.addLoginLog(ll).subscribe((x) => {})
+
                                  this.token = res['token'];
                                  let userID = res['userID']
                                  let admin = res['admin']
@@ -79,6 +85,10 @@ export class LoginComponent implements OnInit {
                                 }
                 }, error => {
                     this.loading = false;
+                    let ll = new LoginLog
+                                ll.username = username
+                                ll.result = 'Incorrect password or username'
+                                this.loginlogService.addLoginLog(ll).subscribe((x) => {})
                     alert("Incorrect password or username.")
                 })
         }
