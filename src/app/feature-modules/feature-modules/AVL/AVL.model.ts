@@ -24,6 +24,7 @@ export class AVLConfig {
 }
 
 export class GpsMessage {
+    id: number
     messageTime: Date
     latitude: number
     longitude: number

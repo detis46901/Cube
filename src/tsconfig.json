@@ -14,5 +14,6 @@
     },
     "angularCompilerOptions": {
       "preserveWhitespaces": "off"
-    }
+    },
+    "exclude": ["node_modules", "**/*.spec.ts"]
 }

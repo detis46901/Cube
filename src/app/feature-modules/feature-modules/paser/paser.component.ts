@@ -392,7 +392,7 @@ export class PaserComponent implements OnInit {
     if (this.mapConfig.drawMode != "") {
       return;
     }
-    this.mapConfig.selectedFeatureSource.clear();
+    this.mapConfig.selectedFeatureLayer.getSource().clear();
     // if (this.SDSConfig.moduleSettings.auto_select != true){
     //   let test = new Observable
     //         test.un("change", this.AutoSelect);
@@ -455,7 +455,7 @@ export class PaserComponent implements OnInit {
                   dataProjection: "EPSG:4326",
                   featureProjection: "EPSG:3857",
                 }).readFeatures(data)[0];
-                this.mapConfig.selectedFeatureSource.addFeature(
+                this.mapConfig.selectedFeatureLayer.getSource().addFeature(
                   this.mapConfig.selectedFeature
                 );
                 this.mapConfig.selectedFeature.setStyle(this.mapStyles.selected);

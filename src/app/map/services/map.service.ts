@@ -455,7 +455,6 @@ export class MapService {
         console.log('clearing Feature')
         if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeatureLayer.getSource().clear() }
         if (this.mapConfig.selectedFeature) {
-            this.mapConfig.selectedFeature.setStyle(null);
             this.mapConfig.selectedFeature = null;
         }
         this.mapConfig.map.removeInteraction(this.modify);
@@ -613,6 +612,7 @@ export class MapService {
                 if (this.mapConfig.currentLayer.style.listLabel != null) {
                     labelName = this.mapConfig.currentLayer.style.listLabel;
                 }
+                else (labelName = 'No Label')  //This is in case there is no label.  Probably needs fixed.
             }
             if (labelName != null && labelName.length != 0) {
                 this.mapConfig.currentLayer.source.forEachFeature((x: Feature) => {

@@ -82,8 +82,11 @@ export class AVLService {
     }, 20000)
     AVLconfig.selectedVehicle = vehicle
     let tempFeatureList = new Array<featureList>()
-    this.AVLHTTPservice.getTrackCall(AVLconfig.token, vehicle.id, AVLconfig.startDate.toISOString(), AVLconfig.endDate.toISOString()).subscribe((tracks) => {
+    this.AVLHTTPservice.getTrackCall(AVLconfig.token, vehicle.id, AVLconfig.startDate.toISOString(), AVLconfig.endDate.toISOString()).subscribe((tracks: JSON[]) => {
       AVLconfig.selectedVehicle.track = tracks['gpsMessage']
+      tracks['gpsMessage'].forEach((x) => {
+        x.id = x['@id']
+      })
       vehicle.track = tracks['gpsMessage']
       let idle: Date
       let commentMessage: GpsMessage
@@ -134,8 +137,9 @@ export class AVLService {
         vehicle.track.forEach((v: GpsMessage) => {
           if (!v.hide) {
             let fl = new featureList
-            fl.id = v.vehicleId
+            fl.id = v.id
             fl.label = v.comment
+            v.olPoint.set('id', v.id)
             fl.feature = v.olPoint
             tempFeatureList.push(fl)
           }
@@ -228,7 +232,8 @@ export class AVLService {
   public getFeatureList(layer: UserPageLayer): boolean {
     return true
   }
-  public selectFeature(AVLconfig: AVLConfig, layer: UserPageLayer): boolean { //Not being used right now.
+  public selectFeature(AVLconfig: AVLConfig, layer: UserPageLayer): boolean { //select a vehicle to get current track
+    console.log(this.mapConfig.selectedFeature.get('id'))
     let data = new DataFormConfig
     if (layer.olLayer === layer.olLayer) {
       let df = new DataField
@@ -236,7 +241,10 @@ export class AVLService {
       df.type = "text"
       df.value = this.mapConfig.selectedFeature.get('id')
       df.constraints = null
+      console.log(this.mapConfig.selectedFeature)
       AVLconfig.selectedVehicle = AVLconfig.vehicles.find((x) => x.id == df.value)
+      console.log(AVLconfig.vehicles)
+      console.log(AVLconfig.selectedVehicle)
       AVLconfig.tab = "Track"
       this.showTrack(AVLconfig, AVLconfig.selectedVehicle)
       data.dataForm = new Array<DataField>()

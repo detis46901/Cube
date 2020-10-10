@@ -178,12 +178,18 @@ export class AVLComponent implements OnInit, OnDestroy {
 
   public selectFeature(layer: UserPageLayer) {
     console.log('AVLcomponent selectFeature')
-    this.AVLservice.selectFeature(this.AVLconfig, layer)
+    if (this.AVLconfig.vehicles.find((x) => x.id == this.mapConfig.selectedFeature.get('id'))) {
+      this.AVLservice.selectFeature(this.AVLconfig, layer)
+    }
+    else {
+      console.log(this.mapConfig.selectedFeature.get('id'))
+      console.log('must be a track')
+    }
     return true
   }
 
   public clearFeature(layer: UserPageLayer) {
-    if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeatureSource.clear() }
+    if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeatureLayer.getSource().clear() }
         if (this.mapConfig.selectedFeature) {
             this.mapConfig.selectedFeature = null;
         }
@@ -200,6 +206,7 @@ export class AVLComponent implements OnInit, OnDestroy {
 
   public unsetCurrentLayer(layer: UserPageLayer): boolean {
     this.visible = false
+    
     return true
   }
 

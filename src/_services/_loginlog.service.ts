@@ -16,10 +16,11 @@ export class LoginLogService extends ParentService {
     }
 
     public addLoginLog(ll:LoginLog): Observable<any> {
-        if (!isDevMode) {
+        if (environment.production) {
             return this.Add(ll)
         }
         else {
+            console.log('development mode - not logging')
             return of('in dev mode')
         }
     }

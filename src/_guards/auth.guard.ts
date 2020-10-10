@@ -11,10 +11,15 @@ export class AuthGuard implements CanActivate {
 
     constructor(private router: Router,  private route: ActivatedRoute) {}
  
-    //Decides if a user can log in.
+    //Decides if a user is logged in.
     public canActivate(): boolean {
         //console.log(localStorage)
         if (localStorage.getItem('currentUser')) {
+            let currentUser = JSON.parse(localStorage.getItem('currentUser'))
+            if (currentUser.public) {
+                console.log('not a private user')
+                this.router.navigate(['/login']);
+                return false} //this person is public trying to get to a non-public part
             // logged in so return true
             //console.log("returning true from auth guard")
             return true;

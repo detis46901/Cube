@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <div *ngIf="dataForm.constraints">
-                            <mat-form-field>
+                            <mat-form-field style="width:90%">
                               <mat-label>{{dataForm.field}}</mat-label>
                               <mat-select [(value)]="dataForm.value" (selectionChange)="dataForm.changed = true; updateDataForm(dataForm)">
                                 <mat-option *ngFor="let constraint of dataForm.constraints" [(value)]="constraint.name">{{constraint.name}}</mat-option>

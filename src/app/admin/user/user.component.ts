@@ -161,6 +161,7 @@ export class UserComponent implements OnInit {
 
     public openConfDel(user: User): void {
         const dialogRef = this.dialog.open(ConfirmDeleteComponent);
+        console.log(user)
         dialogRef.componentInstance.objCode = this.objCode;
         dialogRef.componentInstance.objID = user.ID;
         dialogRef.componentInstance.objName = user.firstName + ' ' + user.lastName;

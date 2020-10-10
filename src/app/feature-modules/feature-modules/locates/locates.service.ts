@@ -119,9 +119,10 @@ export class LocatesService {
   }
 
   public clearFeature(layer: UserPageLayer): boolean {
-    let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
-      return (this.styleService.styleFunction(feature, 'current'));
-    })
+    // let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
+    //   console.log('clearing feature')
+    //   return (this.styleService.styleFunction(feature, 'current'));
+    // })
     this.createInterval(layer)
     this.locate = null
     // this.reloadLayer(layer, 'current')
@@ -154,7 +155,7 @@ export class LocatesService {
       if (layer == this.mapConfig.currentLayer) {layerState = 'current'}
     }
     this.getMyLocateData(layer).then((loadedLayer:UserPageLayer) => {
-        this.getFeatureList(layer)
+        if (layerState == 'current') {this.getFeatureList(layer)}
           layer.olLayer.getSource().forEachFeature((feat: Feature) => {
             feat.setStyle(this.styleService.styleFunction(feat, layerState));
           })

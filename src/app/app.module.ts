@@ -11,6 +11,7 @@ import { LinkyModule } from 'ngx-linky';
 import { FeatureModulesModule } from './feature-modules/feature-modules.module'
 import { AuthGuard } from '../_guards/auth.guard';
 import { AdminGuard } from '../_guards/admin.guard';
+import { PublicGuard } from '../_guards/public.guard'
 import { FilterPipe } from '../_pipes/rowfilter.pipe';
 import { PagePipe } from '../_pipes/rowfilter2.pipe';
 import { NumFilterPipe } from '../_pipes/numfilter.pipe';
@@ -98,6 +99,7 @@ import { MeasureComponent } from './map/measure/measure.component';
 import { FilterComponent } from './map/filter/filter.component';
 import { mapStyles } from '../app/map/models/map.model';
 import { MapService } from './map/services/map.service';
+import { LayerConfigService } from './map/services/layerConfig.service'
 import { StyleService } from './map/services/style.service';
 import { GeocodingService } from './map/services/geocoding.service';
 import { StyleComponent } from './map/style/style.component';
@@ -198,10 +200,12 @@ import { FeatureModulesComponent } from './feature-modules/feature-modules.compo
 
     providers: [
         MapService,
+        LayerConfigService,
         StyleService,
         GeocodingService,
         AuthGuard,
         AdminGuard,
+        PublicGuard,
         AuthenticationService,
         UserService,
         APIKeyService,

@@ -4,7 +4,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 
  
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class PublicGuard implements CanActivate {
 
     private id: string
     public publicName: string

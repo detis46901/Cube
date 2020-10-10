@@ -50,7 +50,6 @@ export class StyleService {
         let d: string = feature.get('sdate')
         let t: string = (feature.get('stime'))
         let dt = new Date(d + ' ' + feature.get('stime'))
-        // console.log(dt)
         let now = new Date()
         // if (version == 'load') {getFillColor = '#3399CC'}
         if (version == 'current' || version == 'load') {getFillColor = '#0000FF'}
@@ -65,7 +64,7 @@ export class StyleService {
             }
         }
         if (version == 'selected') {getFillColor = '#FF0000'}
-        if (version == 'load') getFillColor = getFillColor + '70'
+        if (version == 'load') {getFillColor = getFillColor + '70'}
         return getFillColor
     }
 }

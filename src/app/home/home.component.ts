@@ -33,8 +33,6 @@ export class HomeComponent {
     public editSubscription: Subscription;
     public myCubeConfig: MyCubeConfig;
     public messageSubscription: Subscription;
-    public hero$: Observable<any>;
-    public hero: any;
     public publicName: string;
     public loaded: boolean
 
@@ -45,15 +43,10 @@ export class HomeComponent {
 
     ngOnInit() {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.userID = currentUser && currentUser.userID;
-        this.message = null
-        let ll = new LoginLog
-        ll.username =  JSON.parse(localStorage.getItem('currentUser'))['firstName'] + ' ' + JSON.parse(localStorage.getItem('currentUser'))['lastName']
-        ll.result = 'Page Load'
-        this.loginlogService.addLoginLog(ll).subscribe((x) => {})
-        //this.socketService.initSocket() This may be used later.  This initializes a WebSocket
+        console.log(currentUser)
         this.publicName = this.route.snapshot.paramMap.get('publicName')
         if (this.publicName && !this.userID) {
+            //need to clear logined credential if they are there.
             console.log('calling publicname auth service')
             this.authenticationService.publicLogin(this.publicName).then((x) => {
                 console.log(localStorage.getItem('currentUser'))
@@ -61,11 +54,21 @@ export class HomeComponent {
                 this.userID = currentUser && currentUser.userID;
                 this.Initiate();
             })
+            this.userID = currentUser && currentUser.userID;
+            //this.socketService.initSocket() This may be used later.  This initializes a WebSocket
         }
-        else { this.Initiate() }
+        else {
+            let ll = new LoginLog
+            ll.result = 'Page Load'
+            ll.username = JSON.parse(localStorage.getItem('currentUser'))['firstName'] + ' ' + JSON.parse(localStorage.getItem('currentUser'))['lastName']
+            this.loginlogService.addLoginLog(ll).subscribe((x) => { })
+            this.userID = currentUser && currentUser.userID;
+            this.Initiate()
+        }
     }
 
     private Initiate() {
+        console.log(this.userID)
         this.getAllItems(this.userID).then((x) => {
             if (this.publicName) {
                 //needs to check that the userID matches the record with the publicName
@@ -115,10 +118,10 @@ export class HomeComponent {
 
     @HostListener('window:beforeunload', ['$event'])
     beforeUnloadHander(event) {
-            let ll = new LoginLog
-            ll.username =  JSON.parse(localStorage.getItem('currentUser'))['firstName'] + ' ' + JSON.parse(localStorage.getItem('currentUser'))['lastName']
-            ll.result = 'Page Close'
-            this.loginlogService.addLoginLog(ll).subscribe((x) => {})
+        let ll = new LoginLog
+        ll.username = JSON.parse(localStorage.getItem('currentUser'))['firstName'] + ' ' + JSON.parse(localStorage.getItem('currentUser'))['lastName']
+        ll.result = 'Page Close'
+        this.loginlogService.addLoginLog(ll).subscribe((x) => { })
     }
 
 }

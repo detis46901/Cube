@@ -1,9 +1,7 @@
-<mat-expansion-panel [expanded]=true>
+<mat-expansion-panel [expanded]=true> 
     <mat-expansion-panel-header>
         <mat-panel-title>
-            <span class="measure-help" id="measure-help" matTooltip="Click once to start measurement. Click again to create an angle. Double-click to end measurement. Click the arrow to measure length, click the box to measure area.">
-                <i class="fas fa-question"></i>
-            </span>
+                <mat-icon matTooltip="Click once to start measurement. Click again to create an angle. Double-click to end measurement. Click the arrow to measure length, click the box to measure area.">help</mat-icon>
         </mat-panel-title>
         <mat-panel-description>
             <span *ngIf="!value">
@@ -19,7 +17,7 @@
        
     </mat-expansion-panel-header>
     
-    <mat-action-row style="display:flex; padding-left:10px">
+    <mat-action-row >
         <div>
             <button mat-button *ngIf="measureType == 'LineString'" (click)="changeUnit('feet',1)">Feet</button>
             <button mat-button *ngIf="measureType == 'LineString'" (click)="changeUnit('miles',1/5280)">Miles</button>

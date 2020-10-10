@@ -1,7 +1,7 @@
 import { Routes, ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthGuard } from '../_guards/auth.guard';
 import { AdminGuard } from '../_guards/admin.guard';
-
+// import { PublicGuard } from '../_guards/public.guard'
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 // import { AdminComponent } from './admin/admin.component';
@@ -15,6 +15,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { PasswordComponent } from './settings/password/password.component';
 import { ApiKeyComponent } from './settings/apiKey/apiKey.component';
 import { ProfileComponent } from './settings/profile/profile.component';
+import { PublicGuard } from '_guards/public.guard';
 
 // import { LayerPermissionComponent } from './admin/layer/layerPermission/layerPermission.component'
 // import { ModulePermissionComponent } from './admin/module/modulePermission/modulePermission.component'
@@ -22,7 +23,7 @@ import { ProfileComponent } from './settings/profile/profile.component';
 //consider setting up different routes for desktop and mobile
 const appRoutes: Routes = [
     // Login/Map
-    { path: 'public/:publicName', component: HomeComponent },
+    { path: 'public/:publicName', component: HomeComponent},
     { path: 'login', component: LoginComponent },
     { path: 'logout', redirectTo: 'login' },
     { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },

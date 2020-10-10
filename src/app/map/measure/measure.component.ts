@@ -137,7 +137,7 @@ export class MeasureComponent implements OnInit, OnDestroy {
     public _getStyle(feature: Feature): Style[] {
         return [new Style({
             fill: new Fill({
-                color: 'black'
+                color: 'rgba(0, 0, 0, 0.6)'
             })
         }), new Style({
             stroke: new Stroke({

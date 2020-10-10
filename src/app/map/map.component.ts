@@ -56,6 +56,7 @@ import { getLength } from 'ol/sphere';
 import { invert } from 'lodash';
 import { MyCubeStyle } from '_models/style.model';
 import { MapBrowserEvent } from 'ol';
+import { LayerConfigService } from './services/layerConfig.service'
 
 
 @Component({
@@ -98,12 +99,13 @@ export class MapComponent implements OnInit {
         private mapStyles: mapStyles,
         private wmsService: WMSService,
         private featureModuleService: FeatureModulesService,
+        private layerConfigService: LayerConfigService,
         protected _http: HttpClient
 
     ) { }
 
     ngOnInit() {
-        console.log('8-8-20')
+        console.log('9-14-20')
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.public = currentUser && currentUser.public;
@@ -421,6 +423,7 @@ export class MapComponent implements OnInit {
 
     public clearLayerConfig(): Promise<boolean> { //The only time this is called is during 'setCurrentLayer'
         let promise = new Promise<boolean>((resolve) => {
+            this.mapConfig.featureList = new Array<featureList>()
             this.mapConfig.filterOn = false;
             this.mapConfig.filterShow = false;
             this.mapConfig.styleShow = false;
@@ -430,9 +433,7 @@ export class MapComponent implements OnInit {
             this.mapConfig.showFilterButton = false
             this.mapConfig.WMSFeatureData = null
             this.mapConfig.map.removeInteraction(this.mapService.modify);
-            let test = new ob
             this.mapConfig.drawMode = ""
-            // test.un("change", this.mapService.modkey);
             this.mapConfig.map.removeInteraction(this.mapService.drawInteraction);
             this.mapService.modify = null;
             this.mapService.clearFeature();
@@ -459,6 +460,7 @@ export class MapComponent implements OnInit {
     }
 
     public setCurrentLayer(layer: UserPageLayer): void {
+        console.log(layer)
         this.clearLayerConfig().then((x) => {
             this.mapConfig.currentLayer = layer;
             this.mapConfig.currentLayerName = layer.layer.layerName  //Puts the current name in the component
@@ -469,6 +471,7 @@ export class MapComponent implements OnInit {
                     }
                 })
                 this.featureModuleComponent.checkSomething('getFeatureList', layer).then((x) => {
+                    console.log('getFeatureList')
                     if (!x && layer.layer.layerType == "MyCube") { this.mapService.getFeatureList() }
                 })
             }
@@ -492,7 +495,6 @@ export class MapComponent implements OnInit {
                 this.mapConfig.featureList = new Array<featureList>()
             }
             //could add something here that would move to the next layerShown=true.  Not sure.
-            this.mapConfig.editmode = this.mapConfig.currentLayer.layerPermissions.edit  //not sure why I need this
         }
         else {
             this.setCurrentLayer(layer);
@@ -570,8 +572,9 @@ export class MapComponent implements OnInit {
         })
         if(this.mapConfig.currentLayer.layer.layerType == 'MyCube') {this.findMyCubeFeature(undefined, fl.feature)}
         if (this.mapConfig.currentLayer.layer.layerType == 'Module') {
+            this.mapConfig.selectedFeature = fl.feature
             this.featureModuleComponent.checkSomething('selectFeature', this.mapConfig.currentLayer).then((x) => {
-                this.mapConfig.selectedFeature = fl.feature
+                
             })
         }
     }
@@ -603,8 +606,6 @@ export class MapComponent implements OnInit {
     }
     //loadLayers will load during map init and load the layers that should come on by themselves with the "defaultON" property set (in userPageLayers)
     public loadLayers(mapConfig: MapConfig, init: boolean, single?: boolean): Promise<any> {
-        //this.reloadOrder()
-
         this.mapConfig = mapConfig
         let j = 0;
         let promise = new Promise((resolve) => {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import Feature from 'ol/Feature';
-import { AVLStyles, GpsMessage } from './AVL.model'
+import { GpsMessage } from './AVL.model'
 import { Fill, Stroke, Circle, Style, RegularShape } from 'ol/style';
 
 @Injectable()

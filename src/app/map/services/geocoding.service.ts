@@ -78,7 +78,7 @@ export class GeocodingService {
   }
 
   trackMe(mapConfig: MapConfig) {
-    //console.log("TrackMe")
+    // console.log("TrackMe")
     this.mapConfig = mapConfig
     //console.log(this.mapConfig.map.getView().getProjection())
     this.geolocation = new Geolocation({
@@ -123,12 +123,12 @@ export class GeocodingService {
       }
     });
 
-    {
+    if (this.sr.getFeatures().length == 0 ) { //For some reason, this runs twice as soon as you log in.  After a login, it doesn't, hence this if statement.
       this.sr.addFeature(this.positionFeature)
       this.sr.addFeature(this.accuracyFeature)
       this.ly.setSource(this.sr)
       this.mapConfig.map.addLayer(this.ly)
-    }
+    }    
   }
 
   public centerMap(coordinates) {
