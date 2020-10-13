@@ -30,6 +30,8 @@ export class ServerLayersComponent implements OnInit {
     public server = new Server
     private options: any;
     public layers: any;
+    public WMSLayers = new Array<Layer>()
+    public WMTSLayers = new Array<Layer>()
     public folders: any;
     public services: ArcGISServer[];
     private selectedService: any;
@@ -75,6 +77,16 @@ export class ServerLayersComponent implements OnInit {
     public getArcGIS = (url): Observable<any> => {
         console.log("getArcGIS (with proxy server")
         //This may also need to be addressed as well.  While unlikely, this won't work if the ArcGIS server is on the same domain as Cube.
+        console.log(url)
+        //return this.http.get(environment.proxyUrl + '/' + url2)
+            return this.http.get(url).pipe(
+                catchError(err => this.handleError(url))
+            )
+        
+        //environment.proxyUrl + '/' + //this may need to go back in here somewhere.
+    }
+
+    public handleError(url): Observable<any> {
         let url2 = url.split('//')[1]
         return this.http.get(environment.proxyUrl + '/' + url2)
     }
@@ -82,15 +94,16 @@ export class ServerLayersComponent implements OnInit {
         console.log("getArcGIS (with proxy server")
         //This may also need to be addressed as well.  While unlikely, this won't work if the ArcGIS server is on the same domain as Cube.
         let url2 = url.split('//')[1]
+        return this.http.get(url, { observe: 'body', responseType: 'text'} ).pipe(
+            catchError(err => this.handleError2(url))
+        )
+    }
+    public handleError2(url): Observable<any> {
+        let url2 = url.split('//')[1]
         return this.http.get(environment.proxyUrl + '/' + url2, { observe: 'body', responseType: 'text'} )
     }
-
     public getLayers(serv: Server): void {
         switch (serv.serverType) {
-            case "Geoserver WMS": {
-                this.getGeoserverLayers()
-                break
-            }
             case "ArcGIS WMS": {
                 this.getFolders()
                 break
@@ -104,21 +117,59 @@ export class ServerLayersComponent implements OnInit {
                 this.getFolders()
                 break
             }
+            case "Geoserver": {
+                this.getGeoserverLayers()
+                break
+            }
         }
     }
     private getGeoserverLayers(): void {
         this.selectedService = "None"
         this.selectedServiceType = "Geoserver"
-        this.getCapabilities(this.server.serverURL + '?service=wms&version=1.1.1&request=GetCapabilities')
+        this.getCapabilities(this.server.serverURL + '/wms?service=wms&version=1.1.1&request=GetCapabilities')
             .subscribe(
                 data => {
                     let parser = new WMSCapabilities()
                     let result = parser.read(data);
-                    this.layers = result['Capability']['Layer']['Layer']
-                    console.log(this.layers)
+                    let WMSLayers:any[] = result['Capability']['Layer']['Layer'] 
+                    // this.WMSLayers = result['Capability']['Layer']['Layer']
+                    WMSLayers.forEach((x) => {
+                        let ly = new Layer
+                        ly.layerFormat = "Geoserver WMS"
+                        ly.layerDescription = x['Abstract']
+                        ly.layerIdent = x['Name']
+                        ly.layerName = x['Title']
+                        ly.layerType = 'Geoserver WMS'
+                        ly.layerGeom = 'Point' //this just needs to be removed
+                        ly.layerService = 'None'
+                        ly.server = this.server
+                        ly.layerFormat = 'image/png'
+                        ly.serverID = this.server.ID
+                        this.WMSLayers.push(ly)
+                    })
                 }
                // err => console.log('HTTP Error', err)
             )
+            this.getCapabilities(this.server.serverURL + "/gwc/service/wmts?request=GetCapabilities")
+            .subscribe((data) => {
+                let parser = new WMTSCapabilities()
+                let result:any = parser.read(data)
+                let WMTSLayers: any
+                WMTSLayers = result['Contents']['Layer']
+                WMTSLayers.forEach((x) => {
+                    let ly = new Layer
+                    ly.layerFormat = "Geoserver WMTS"
+                    ly.layerIdent = x['Identifier']
+                    ly.layerName = x['Title']
+                    ly.layerType = 'Geoserver WMTS'
+                    ly.layerGeom = 'Point' //this just needs to be removed
+                    ly.layerService = 'None'
+                    ly.server = this.server
+                    ly.layerFormat = 'image/png'
+                    ly.serverID = this.server.ID
+                    this.WMTSLayers.push(ly)
+                })
+            })
     }
     private getWMTSLayers(): void {
         this.getCapabilities(this.server.serverURL + "?request=GetCapabilities")
@@ -134,9 +185,10 @@ export class ServerLayersComponent implements OnInit {
             .subscribe((data) => {
                 this.folders = data['folders']
                 this.services = data['services']
-                console.log(this.services)
+                console.log(data)
                 this.selected.setValue(0)
             })
+            
     }
     public getServices(folder: string): void {
         console.log('getServices')
@@ -155,10 +207,10 @@ export class ServerLayersComponent implements OnInit {
 
     public getArcGISLayers(service: string): void {
         console.log('getArcGISLayers')
-        if (this.server.serverType == 'ArcGIS WMTS') {
-            this.getArcGISWMTS(service)
-            return
-        }
+        // if (this.server.serverType == 'ArcGIS WMTS') {
+        //     this.getArcGISWMTS(service)
+        //     return
+        // }
         this.selectedService = service['name']
         this.selectedServiceType = service['type']
         let norest: string
@@ -171,6 +223,22 @@ export class ServerLayersComponent implements OnInit {
                 let parser = new WMSCapabilities()
                 let result = parser.read(data);
                 this.layers = result['Capability']['Layer']['Layer']
+                let WMSLayers:any[] = result['Capability']['Layer']['Layer'] 
+                // this.WMSLayers = result['Capability']['Layer']['Layer']
+                WMSLayers.forEach((x) => {
+                    let ly = new Layer
+                    ly.layerFormat = "MapServer WMS"
+                    ly.layerDescription = x['Abstract']
+                    ly.layerIdent = x['Name']
+                    ly.layerName = x['Title']
+                    ly.layerType = 'MapServer WMS'
+                    ly.layerGeom = 'Point' //this just needs to be removed
+                    ly.layerService = service['name']
+                    ly.server = this.server
+                    ly.layerFormat = 'image/png'
+                    ly.serverID = this.server.ID
+                    this.WMSLayers.push(ly)
+                })
                 this.selected.setValue(2);
             },
                 error => {
@@ -180,10 +248,11 @@ export class ServerLayersComponent implements OnInit {
                         })
                     }
                 })
+            this.getArcGISWMTS(service)
     }
     private getArcGISWMTS(service: string): void {
-        this.selectedService = service['name']
-        this.getCapabilities(this.server.serverURL + '/' + service['name'] + '/ImageServer/WMTS/1.0.0/WMTSCapabilities.xml')
+        this.selectedService = service
+        this.getCapabilities(this.server.serverURL + '/' + service['name'] + '/'  + service['type'] + '/WMTS/1.0.0/WMTSCapabilities.xml')
             .subscribe((data) => {
                 let parser = new WMTSCapabilities()
                 let result = parser.read(data)
@@ -194,6 +263,22 @@ export class ServerLayersComponent implements OnInit {
                 else {
                     console.log('No WMTS Layers')
                 }
+                let WMTSLayers: any
+                WMTSLayers = result['Contents']['Layer']
+                WMTSLayers.forEach((x) => {
+                    console.log(x)
+                    let ly = new Layer
+                    ly.layerFormat = service['type'] + " WMTS"
+                    ly.layerIdent = x['Identifier']
+                    ly.layerName = x['Title']
+                    ly.layerType = service['type'] + ' WMTS'
+                    ly.layerGeom = 'Point' //this just needs to be removed
+                    ly.layerService = service['name']
+                    ly.server = this.server
+                    ly.layerFormat = 'image/png'
+                    ly.serverID = this.server.ID
+                    this.WMTSLayers.push(ly)
+                })
             },
                 err => {
                     let snackBarRef = this.snackBar.open('No WMTS Layers Found', '', {
@@ -234,30 +319,34 @@ export class ServerLayersComponent implements OnInit {
         // needs to add implementation for services
     }
 
-    public openCreateLayer(layer) {
+    public openCreateLayer(layer:Layer) {
         console.log('in openCreateLayer')
         console.log(layer)
         console.log(this.selectedService)
-        let ly = new Layer
-        ly.layerName = layer['Title']
-        ly.layerDescription = layer['Abstract']
-        ly.layerIdent = layer['Name']
-        ly.layerService = this.selectedService
-        ly.layerType = this.selectedServiceType
-        ly.serverID = this.server.ID
-        if (this.server.serverType == "WMTS") {
-            ly.layerGeom = "Coverage"
-            ly.layerType = "WMTS"
-            ly.layerDescription = layer['Abstract']
-            ly.layerIdent = layer['Identifier']
-        }
-        if (this.server.serverType == "ArcGIS WMTS") {
-            ly.layerGeom = "Coverage"
-            ly.layerType = "WMTS"
-            ly.layerDescription = layer['Abstract']
-            ly.layerIdent = layer['Identifier']
-        }
-        console.log(ly)
-        const dialogRef = this.dialog.open(LayerNewComponent, { data: { serverLayer: ly, layerName: layer['Name'] }, width: '500px' });
+        // let ly = new Layer
+        // ly.layerName = layer['Title']
+        // ly.layerDescription = layer['Abstract']
+        // ly.layerIdent = layer['Name']
+        // ly.layerService = this.selectedService
+        // ly.layerType = this.selectedServiceType
+        // ly.serverID = this.server.ID
+        // if (this.server.serverType == "WMTS") {
+        //     ly.layerGeom = "Coverage"
+        //     ly.layerType = "WMTS"
+        //     ly.layerDescription = layer['Abstract']
+        //     ly.layerIdent = layer['Identifier']
+        // }
+        // if (this.server.serverType == "ArcGIS WMTS") {
+        //     ly.layerGeom = "Coverage"
+        //     ly.layerType = "WMTS"
+        //     ly.layerDescription = layer['Abstract']
+        //     ly.layerIdent = layer['Identifier']
+        // }
+        // console.log(ly)
+        const dialogRef = this.dialog.open(LayerNewComponent, { data: { serverLayer: layer, layerName: layer.layerName }, width: '500px' });
+    }
+
+    public setTab(event) {
+        
     }
 }

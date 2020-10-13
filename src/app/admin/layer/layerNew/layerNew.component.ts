@@ -73,6 +73,7 @@ export class LayerNewComponent implements OnInit {
             console.log("Coming from server dialog")
             console.log(this.data['serverLayer'])
             this.newLayer = this.data['serverLayer']
+            console.log(this.newLayer.serverID)
         }
         this.getServers();
     }

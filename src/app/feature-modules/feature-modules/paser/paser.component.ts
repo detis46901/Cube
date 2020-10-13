@@ -407,6 +407,7 @@ export class PaserComponent implements OnInit {
         let url2 = this.wmsService.formLayerRequest(layer);
         if (layer.layer.layerType == "WMTS") {
         }
+        console.log(url2)
         let wmsSource = new ImageWMS({
           url: url2,
           params: {

@@ -141,7 +141,7 @@ export class WMSService {
 
     public formLayerRequest(layer: UserPageLayer, noProxy?:boolean): string {
         switch (layer.layer.layerType) {
-            case ('MapServer'): {
+            case ('MapServer WMS'): {
                 console.log("Found MapServer Layer")
                 let norest: string = layer.layer.server.serverURL.split('/rest/')[0] + '/' + layer.layer.server.serverURL.split('/rest/')[1];
                 let norest2: string = norest.split("//")[1]
@@ -151,12 +151,12 @@ export class WMSService {
                 }
                 return url;
             }
-            case ('Geoserver'): {
-                let url: string = layer.layer.server.serverURL;
+            case ('Geoserver WMS'): {
+                let url: string = layer.layer.server.serverURL + '/wms';
                 return url;
             }
             case ('GeoserverWFS'): {
-                let url: string = layer.layer.server.serverURL;
+                let url: string = layer.layer.server.serverURL + '/wms';
                 return url;
                 // let service: string = layer.layer.layerIdent.split(':')[0]
             }
@@ -171,7 +171,7 @@ export class WMSService {
                 console.log(url)
                 return url;
             }
-            case ('WMTS'): {
+            case ('Geoserver WMTS'): {
                 console.log("Found MapServer WMTS Layer")
                 let norest: string = layer.layer.server.serverURL.split('/rest/')[0] + '/' + layer.layer.server.serverURL.split('/rest/')[1];
                 let norest2: string = norest.split("//")[1]

@@ -32,10 +32,11 @@
             <mat-form-field id="layerTypeEntry">
                 <mat-select id="newlayertype" name="newlayertype" [(ngModel)]="layer.layerType" required placeholder="Type">
                     <mat-option value="PostGIS">PostGIS</mat-option>
-                    <mat-option value="Geoserver">Geoserver</mat-option>
+                    <mat-option value="Geoserver WMS">Geoserver WMS</mat-option>
+                    <mat-option value="MapServer WMS">MapServer WMS</mat-option>
                     <mat-option value="MapServer">MapServer</mat-option>
                     <mat-option value="WMS">WMS</mat-option>
-                    <mat-option value="WMTS">WMTS</mat-option>
+                    <mat-option value="Geoserver WMTS">Geoserver WMTS</mat-option>
                     <mat-option value="KML-Link">KML-Link</mat-option>
                     <mat-option value="KML-Drive">KML-Drive</mat-option>
                     <mat-option value="GeoJSON">GeoJSON</mat-option>

@@ -701,9 +701,11 @@ export class MapComponent implements OnInit {
                                 break
                             }
                         }
-                        case "ArcGISRest": {
+                        case "MapServer WMS": {
+                            console.log('loading MapServer WMS')
                             let wmsSource = new ImageArcGISRest()
                             wmsSource.setUrl(userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/MapServer')
+                            console.log(wmsSource.getUrl())
                             let wmsLayer: ImageLayer = new ImageLayer({ source: wmsSource })
                             wmsLayer.setZIndex(j)
                             wmsLayer.setVisible(userpagelayer.defaultON);
@@ -760,48 +762,23 @@ export class MapComponent implements OnInit {
                             break;
                         }
                         case "WMTS": {
-                            let url: string
-                            let diffWMS: ImageWMS
-                            diffWMS = new ImageWMS({
-                                url: this.wmsService.formLayerRequest(userpagelayer, true),
-                                params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
-                                projection: 'EPSG:4326',
-                                serverType: 'geoserver',
-                                crossOrigin: 'anonymous'
+                            console.log('loading WMTS')
+                            this.layerConfigService.loadWMTS(this.mapConfig, init, userpagelayer).then((x) => {
+                                j++;
+                                if (userpagelayer.style['opacity']) { userpagelayer.olLayer.setOpacity(+userpagelayer.style['opacity'] / 100) }
+                                if (j == this.mapConfig.userpagelayers.length) { console.log('resolving'); resolve() }
                             })
-                            userpagelayer.layer.legendURL = diffWMS.getLegendUrl(23)
-                            if (userpagelayer.layer.server.serverType == "ArcGIS WMTS") {
-                                url = userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
-                                // '/ImageServer/WMTS/1.0.0/WMTSCapabilities.xml'
-                            }
-                            else {
-                                url = userpagelayer.layer.server.serverURL
-                            }
-                            this.wmsService.getCapabilities(url)
-                                .subscribe((data) => {
-                                    let parser = new WMTSCapabilities();
-                                    let result = parser.read(data);
-                                    let options = optionsFromCapabilities(result, {
-                                        layer: userpagelayer.layer.layerIdent,
-                                        matrixSet: 'EPSG:3857',
-                                        cacheSize: environment.cacheSize
-                                    });
-                                    let wmtsSource = new WMTS(options);
-                                    let wmtsLayer = new TileLayer({
-                                        opacity: 1,
-                                        source: new WMTS(options)
-                                    });
-                                    wmtsLayer.setVisible(userpagelayer.defaultON);
-                                    userpagelayer.olLayer = wmtsLayer
-                                    userpagelayer.source = wmtsSource
-                                    this.wmsService.setLoadStatus(userpagelayer);
-                                    if (init == false) {
-                                        mapConfig.map.addLayer(wmtsLayer);
-                                    }
-                                    j++;
-                                    if (userpagelayer.style['opacity']) { userpagelayer.olLayer.setOpacity(+userpagelayer.style['opacity'] / 100) }
-                                    if (j == this.mapConfig.userpagelayers.length) { resolve() }
-                                })
+                                // })
+                            break;
+                        }
+                        case "Geoserver WMTS": {
+                            console.log('loading WMTS')
+                            this.layerConfigService.loadWMTS(this.mapConfig, init, userpagelayer).then((x) => {
+                                j++;
+                                if (userpagelayer.style['opacity']) { userpagelayer.olLayer.setOpacity(+userpagelayer.style['opacity'] / 100) }
+                                if (j == this.mapConfig.userpagelayers.length) { console.log('resolving'); resolve() }
+                            })
+                                // })
                             break;
                         }
                         case "Module": {
@@ -812,39 +789,22 @@ export class MapComponent implements OnInit {
                             }
                             break
                         }
-                        default: {  //this is the WMS load
-                            let wmsSource = new TileWMS({
-                                url: this.wmsService.formLayerRequest(userpagelayer),
-                                params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
-                                projection: 'EPSG:4326',
-                                serverType: 'geoserver',
-                                crossOrigin: 'anonymous',
-                                cacheSize: environment.cacheSize
-                            });
-                            let wmsLayer: TileLayer = new TileLayer({ source: wmsSource });
-                            wmsLayer.setZIndex(j)
-                            wmsLayer.setVisible(userpagelayer.defaultON);
-                            if (init) {
-                                this.mapConfig.baseLayers.push(wmsLayer);  //to delete
-                            }
-                            userpagelayer.olLayer = wmsLayer
-                            userpagelayer.source = wmsSource
-                            this.wmsService.setLoadStatus(userpagelayer);
-                            if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
-                                mapConfig.map.addLayer(wmsLayer);
-                            }
-                            j++;
-                            if (userpagelayer.style['opacity']) { userpagelayer.olLayer.setOpacity(+userpagelayer.style['opacity'] / 100) }
+                        case "Geoserver WMS": {
+                            console.log('using Geoserver WMS load')
+                            this.layerConfigService.loadGeoserverWMS(mapConfig, init, userpagelayer).then((x) => {
+                                userpagelayer.olLayer.setZIndex(j)
+                                j++
                             if (j == this.mapConfig.userpagelayers.length) { resolve() }
-                            let diffWMS: ImageWMS
-                            diffWMS = new ImageWMS({
-                                url: this.wmsService.formLayerRequest(userpagelayer, true),
-                                params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
-                                projection: 'EPSG:4326',
-                                serverType: 'geoserver',
-                                crossOrigin: 'anonymous'
                             })
-                            if (userpagelayer.layer.legendURL) { userpagelayer.layer.legendURL = diffWMS.getLegendUrl(2).split('&SCALE')[0] }
+                            break
+                        }
+                        default: {  //this is the WMS load
+                            console.log('using default load')
+                            this.layerConfigService.loadGeoserverWMS(mapConfig, init, userpagelayer).then((x) => {
+                                userpagelayer.olLayer.setZIndex(j)
+                                j++
+                            if (j == this.mapConfig.userpagelayers.length) { resolve() }
+                            })
                         }
                     }
                 }
@@ -878,8 +838,10 @@ export class MapComponent implements OnInit {
         if (this.mapConfig.measureShow) { return }  //disables select/deselect when the measure tool is open.
         let layer = this.mapConfig.currentLayer
         switch (this.mapConfig.currentLayer.layer.layerType) {
-            case ("GeoserverWFS"):
-            case ("Geoserver"): {
+            case ("Geoserver WFS"): {
+                break
+            }
+            case ("Geoserver WMS"): {
                 let url2 = this.wmsService.formLayerRequest(layer);
                 if (layer.layer.layerType == 'WMTS') { }
                 let wmsSource = new ImageWMS({
@@ -918,7 +880,8 @@ export class MapComponent implements OnInit {
                 }
                 break
             }
-            case ("MapServer"): {
+            case ("MapServer WMS"): {
+                console.log('MapServer WMS')
                 let url2 = this.wmsService.formLayerRequest(layer);
                 let wmsSource = new ImageWMS({
                     url: url2,
@@ -1082,6 +1045,4 @@ export class MapComponent implements OnInit {
             }
         }
     }
-
-
 }

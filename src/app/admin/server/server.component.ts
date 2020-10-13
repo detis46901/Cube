@@ -226,7 +226,7 @@ export class ServerComponent implements OnInit {
 
 
     public openServerNew(): void {
-        const dialogRef = this.dialog.open(ServerNewComponent, { height: '300px', width: '360px' });
+        const dialogRef = this.dialog.open(ServerNewComponent, { height: '600px', width: '760px' });
         dialogRef.afterClosed()
             .subscribe(result => {
                 this.getServers();

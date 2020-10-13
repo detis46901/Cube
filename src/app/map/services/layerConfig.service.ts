@@ -65,7 +65,8 @@ export class LayerConfigService {
     ) {
     }
     
-    public loadWMS(mapConfig: MapConfig, init: boolean, userpagelayer: UserPageLayer) {
+    public loadGeoserverWMS(mapConfig: MapConfig, init: boolean, userpagelayer: UserPageLayer): Promise<any> {
+        let promise = new Promise((resolve) => {
         let wmsSource = new TileWMS({
             url: this.wmsService.formLayerRequest(userpagelayer),
             params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
@@ -98,6 +99,44 @@ export class LayerConfigService {
             crossOrigin: 'anonymous'
         })
         if (userpagelayer.layer.legendURL) { userpagelayer.layer.legendURL = diffWMS.getLegendUrl(2).split('&SCALE')[0] }
+        resolve()
+    })
+return promise
     }
-    
+    public loadWMTS(mapConfig: MapConfig, init: boolean, userpagelayer: UserPageLayer): Promise<any> {
+        let promise = new Promise((resolve) => {
+            let url: string
+            if (userpagelayer.layer.server.serverType == "ArcGIS WMTS") { //if the server is of type ArchGISWMTS
+                url = userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
+            }
+            else {
+                url = userpagelayer.layer.server.serverURL + '/gwc/service/wmts'
+                console.log(url)
+            }
+            this.wmsService.getCapabilities(url)
+                .subscribe((data) => {
+                    let parser = new WMTSCapabilities();
+                    let result = parser.read(data);
+                    let options = optionsFromCapabilities(result, {
+                        layer: userpagelayer.layer.layerIdent,
+                        matrixSet: 'EPSG:3857',
+                        cacheSize: environment.cacheSize
+                    });
+                    let wmtsSource = new WMTS(options);
+                    let wmtsLayer = new TileLayer({
+                        opacity: 1,
+                        source: new WMTS(options)
+                    });
+                    wmtsLayer.setVisible(userpagelayer.defaultON);
+                    userpagelayer.olLayer = wmtsLayer
+                    userpagelayer.source = wmtsSource
+                    this.wmsService.setLoadStatus(userpagelayer);
+                    if (init == false) {
+                        mapConfig.map.addLayer(wmtsLayer);
+                    }
+                    resolve()
+                })
+        })
+        return promise
+    }
 }
