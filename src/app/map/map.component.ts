@@ -51,7 +51,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { bbox as bboxStrategy } from 'ol/loadingstrategy';
 import { Stroke, Style } from 'ol/style';
 import GML3 from 'ol/format/GML3';
-import {transformExtent} from 'ol/proj';
+import { transformExtent } from 'ol/proj';
 import { getLength } from 'ol/sphere';
 import { invert } from 'lodash';
 import { MyCubeStyle } from '_models/style.model';
@@ -71,7 +71,7 @@ export class MapComponent implements OnInit {
     // This is necessary to access the html element to set the map target (after view init)!
     @ViewChild("mapElement") mapElement: ElementRef;
     @ViewChild("layers") layers: ElementRef;
-    @ViewChild("newLayer") newLayer: ElementRef 
+    @ViewChild("newLayer") newLayer: ElementRef
     @ViewChild("setSearchElement") setSearchElement: ElementRef
     @ViewChild(FeatureModulesComponent)
     private featureModuleComponent: FeatureModulesComponent
@@ -105,7 +105,7 @@ export class MapComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        console.log('9-14-20')
+        console.log('10-14-20')
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.public = currentUser && currentUser.public;
@@ -258,7 +258,7 @@ export class MapComponent implements OnInit {
             x.pageOrder = i
             i++
         })
-        if (this.public) {return}
+        if (this.public) { return }
         this.mapService.mapConfig.userpages.forEach((x) => {
             let pageUpdate = new UserPage
             pageUpdate.ID = x.ID
@@ -344,9 +344,9 @@ export class MapComponent implements OnInit {
 
     public dropLayer(event: CdkDragDrop<string[]>) {
         moveItemInArray(this.mapService.mapConfig.userpagelayers, event.previousIndex, event.currentIndex);
-          //setting a variable to be index of last user page layer
-          let leng = this.mapService.mapConfig.userpagelayers.length
-          let a = leng - 1  
+        //setting a variable to be index of last user page layer
+        let leng = this.mapService.mapConfig.userpagelayers.length
+        let a = leng - 1
         this.mapService.mapConfig.userpagelayers.forEach((x, index) => {
             x.layerOrder = index
             x.olLayer.setZIndex(index)
@@ -543,10 +543,10 @@ export class MapComponent implements OnInit {
     public setSearch() {
         this.showSearch = !this.showSearch
         this.showNewLayer = false
-        if(this.showSearch) {
-            setTimeout(()=>{ // this will make the execution after the above boolean has changed
+        if (this.showSearch) {
+            setTimeout(() => { // this will make the execution after the above boolean has changed
                 this.setSearchElement.nativeElement.focus();
-              },0);    
+            }, 0);
         }
         else {
             if (this.mapConfig.searchResultSource) { this.mapConfig.searchResultSource.clear() }
@@ -559,22 +559,22 @@ export class MapComponent implements OnInit {
         this.showNewLayer = !this.showNewLayer
         this.showSearch = false
         if (this.showNewLayer) {
-            setTimeout(()=>{ // this will make the execution after the above boolean has changed
+            setTimeout(() => { // this will make the execution after the above boolean has changed
                 this.newLayer.nativeElement.focus();
-              },0);    
+            }, 0);
         }
-            }
+    }
 
     public zoomToFeature(fl: featureList) {
         this.mapConfig.view.fit(fl.feature.getGeometry().getExtent(), {
             duration: 1000,
             maxZoom: 18
         })
-        if(this.mapConfig.currentLayer.layer.layerType == 'MyCube') {this.findMyCubeFeature(undefined, fl.feature)}
+        if (this.mapConfig.currentLayer.layer.layerType == 'MyCube') { this.findMyCubeFeature(undefined, fl.feature) }
         if (this.mapConfig.currentLayer.layer.layerType == 'Module') {
             this.mapConfig.selectedFeature = fl.feature
             this.featureModuleComponent.checkSomething('selectFeature', this.mapConfig.currentLayer).then((x) => {
-                
+
             })
         }
     }
@@ -617,9 +617,20 @@ export class MapComponent implements OnInit {
                     }
                 }
                 userpagelayer.layerShown = userpagelayer.defaultON;
+                // var vectorSource2 = new TileLayer( {
+                //     source: new XYZ({
+                //         attributions:
+                //           'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/' +
+                //           'rest/services/World_Topo_Map/MapServer">ArcGIS</a>',
+                //         url:
+                //           'https://server.arcgisonline.com/arcgis/rest/services/' +
+                //           'Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+                //       })
+                // })
+                // this.mapConfig.baseLayers.push(vectorSource2)
                 if (!userpagelayer.olLayer) {
                     switch (userpagelayer.layer.layerType) {
-                        case "GeoserverWFS": {
+                        case "Geoserver WFS": {
                             let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
                                 return (this.styleFunction(userpagelayer, feature, 'current'));
                             })
@@ -629,12 +640,12 @@ export class MapComponent implements OnInit {
                                     // Commented items are for KML stuff
                                     // let newExtent = transformExtent(extent, "EPSG:3857", "EPSG:4326")
                                     // console.log(newExtent)
-                                    return userpagelayer.layer.server.serverURL.split('/wms')[0] + '/' + userpagelayer.layer.layerIdent.split(':')[0] + '/ows?service=WFS&version=1.0.0&request=GetFeature&'+
-                                    '&typeName=' + userpagelayer.layer.layerIdent + '&outputFormat=application/json&srsname=EPSG:3857&' +
-                                    // console.log('https://cube-kokomo.com:8080/geoserver/Kokomo/wms?service=wms&request=GetMap&version=1.1.1&format=application/vnd.google-earth.kml+xml&layers=Kokomo:paser_inspections&styles=paser&height=1328&width=2048&transparent=false&srs=EPSG:4326&format_options=AUTOFIT:true;KMATTR:true;KMPLACEMARK:false;KMSCORE:20;MODE:superoverlay&superoverlay_mode=raster&' + 'bbox=' + newExtent.join(','))
-                                    // return 'https://cube-kokomo.com:8080/geoserver/Kokomo/wms?service=wms&request=GetMap&version=1.1.1&format=application/vnd.google-earth.kml+xml&layers=Kokomo:paser_inspections&styles=paser&height=1328&width=2048&transparent=false&srs=EPSG:4326&format_options=AUTOFIT:true;KMATTR:true;KMPLACEMARK:false;KMSCORE:20;MODE:superoverlay&superoverlay_mode=raster&'
-                                    // https://cube-kokomo.com:8080/geoserver/Kokomo/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Kokomo%3Apaser_inspections&maxFeatures=50&outputFormat=application%2Fjson
-                                    // return 'https://cube-kokomo.com:8080/geoserver/Kokomo/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Kokomo%3Apaser_inspections&' +
+                                    return userpagelayer.layer.server.serverURL.split('/wms')[0] + '/' + userpagelayer.layer.layerIdent.split(':')[0] + '/ows?service=WFS&version=1.0.0&request=GetFeature&' +
+                                        '&typeName=' + userpagelayer.layer.layerIdent + '&outputFormat=application/json&srsname=EPSG:3857&' +
+                                        // console.log('https://cube-kokomo.com:8080/geoserver/Kokomo/wms?service=wms&request=GetMap&version=1.1.1&format=application/vnd.google-earth.kml+xml&layers=Kokomo:paser_inspections&styles=paser&height=1328&width=2048&transparent=false&srs=EPSG:4326&format_options=AUTOFIT:true;KMATTR:true;KMPLACEMARK:false;KMSCORE:20;MODE:superoverlay&superoverlay_mode=raster&' + 'bbox=' + newExtent.join(','))
+                                        // return 'https://cube-kokomo.com:8080/geoserver/Kokomo/wms?service=wms&request=GetMap&version=1.1.1&format=application/vnd.google-earth.kml+xml&layers=Kokomo:paser_inspections&styles=paser&height=1328&width=2048&transparent=false&srs=EPSG:4326&format_options=AUTOFIT:true;KMATTR:true;KMPLACEMARK:false;KMSCORE:20;MODE:superoverlay&superoverlay_mode=raster&'
+                                        // https://cube-kokomo.com:8080/geoserver/Kokomo/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Kokomo%3Apaser_inspections&maxFeatures=50&outputFormat=application%2Fjson
+                                        // return 'https://cube-kokomo.com:8080/geoserver/Kokomo/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Kokomo%3Apaser_inspections&' +
                                         // 'outputFormat=gml3&srsname=EPSG:3857&' +
                                         'bbox=' + extent.join(',') + ',EPSG:3857';
                                 },
@@ -720,6 +731,20 @@ export class MapComponent implements OnInit {
                             if (j == this.mapConfig.userpagelayers.length) { resolve() }
                             break
                         }
+                        case "MapServer WMTS": {
+                            console.log('loading MapServer WMTS')
+                            this.layerConfigService.loadMapServerWMTS(userpagelayer, j, init, mapConfig);
+                            j++;
+                            if (j == this.mapConfig.userpagelayers.length) { resolve() }
+                            break
+                        }
+                        case "FeatureServer": {
+                            console.log('loading FeatureServer')
+                            this.layerConfigService.loadFeatureServer(userpagelayer, j, init, mapConfig)
+                            j++
+                            if (j == this.mapConfig.userpagelayers.length) {resolve() }
+                            break
+                        }
                         case "MyCube": {
                             //if (userpagelayer.style['opacity']) { userpagelayer.olLayer.setOpacity(userpagelayer.style['opacity'] / 100) }
                             if (this.featureModuleService.loadLayer(this.mapConfig, userpagelayer)) {
@@ -768,7 +793,7 @@ export class MapComponent implements OnInit {
                                 if (userpagelayer.style['opacity']) { userpagelayer.olLayer.setOpacity(+userpagelayer.style['opacity'] / 100) }
                                 if (j == this.mapConfig.userpagelayers.length) { console.log('resolving'); resolve() }
                             })
-                                // })
+                            // })
                             break;
                         }
                         case "Geoserver WMTS": {
@@ -778,7 +803,7 @@ export class MapComponent implements OnInit {
                                 if (userpagelayer.style['opacity']) { userpagelayer.olLayer.setOpacity(+userpagelayer.style['opacity'] / 100) }
                                 if (j == this.mapConfig.userpagelayers.length) { console.log('resolving'); resolve() }
                             })
-                                // })
+                            // })
                             break;
                         }
                         case "Module": {
@@ -791,26 +816,25 @@ export class MapComponent implements OnInit {
                         }
                         case "Geoserver WMS": {
                             console.log('using Geoserver WMS load')
-                            this.layerConfigService.loadGeoserverWMS(mapConfig, init, userpagelayer).then((x) => {
-                                userpagelayer.olLayer.setZIndex(j)
+                            this.layerConfigService.loadGeoserverWMS(userpagelayer, j, init, mapConfig).then((x) => {
                                 j++
-                            if (j == this.mapConfig.userpagelayers.length) { resolve() }
+                                if (j == this.mapConfig.userpagelayers.length) { resolve() }
                             })
                             break
                         }
                         default: {  //this is the WMS load
                             console.log('using default load')
-                            this.layerConfigService.loadGeoserverWMS(mapConfig, init, userpagelayer).then((x) => {
+                            this.layerConfigService.loadGeoserverWMS(userpagelayer, j, init, mapConfig).then((x) => {
                                 userpagelayer.olLayer.setZIndex(j)
                                 j++
-                            if (j == this.mapConfig.userpagelayers.length) { resolve() }
+                                if (j == this.mapConfig.userpagelayers.length) { resolve() }
                             })
                         }
                     }
                 }
                 else {
                     j++
-                                if (j == this.mapConfig.userpagelayers.length) { resolve() }
+                    if (j == this.mapConfig.userpagelayers.length) { resolve() }
                 }
             }
             )
@@ -818,10 +842,10 @@ export class MapComponent implements OnInit {
         return promise;
     }
 
-    public mapPointermoveEvent(evt:MapBrowserEvent) {
+    public mapPointermoveEvent(evt: MapBrowserEvent) {
         this.mapConfig.mouseoverLayer = null
         this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature: Feature, selectedLayer: any) => {
-            if(selectedLayer) {this.mapConfig.mouseoverLayer = selectedLayer}
+            if (selectedLayer) { this.mapConfig.mouseoverLayer = selectedLayer }
         }, {
             hitTolerance: 5
         });
@@ -839,11 +863,12 @@ export class MapComponent implements OnInit {
         let layer = this.mapConfig.currentLayer
         switch (this.mapConfig.currentLayer.layer.layerType) {
             case ("Geoserver WFS"): {
+            //     console.log('Geoserver WFS')
+            this.findMyCubeFeature(evt)
                 break
             }
             case ("Geoserver WMS"): {
                 let url2 = this.wmsService.formLayerRequest(layer);
-                if (layer.layer.layerType == 'WMTS') { }
                 let wmsSource = new ImageWMS({
                     url: url2,
                     params: { 'FORMAT': 'image/png', 'VERSION': '1.1.1', 'LAYERS': layer.layer.layerIdent, 'exceptions': 'application/vnd.ogc.se_inimage', tilesOrigin: 179999.975178479 + "," + 1875815.463803232 },
@@ -931,7 +956,6 @@ export class MapComponent implements OnInit {
             }
             case ("Module"): {
                 let hit = false;
-
                 this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature: Feature, selectedLayer: any) => {
                     if (selectedLayer === layer.olLayer) {
                         hit = true;
@@ -960,7 +984,6 @@ export class MapComponent implements OnInit {
                         }
                     })
                 }
-
                 console.log("this is a module layer.  It gets its click event from the feature module during setCurrentLayer()")
             }
         }
@@ -995,12 +1018,13 @@ export class MapComponent implements OnInit {
                 }
                 if (hit) {
                     this.featureModuleComponent.checkSomething('selectFeature', layer).then((x) => {
+                        this.featureModuleComponent.checkSomething('styleSelectedFeature', layer).then(() => {
+                        })
                         if (x) { return }
                         else {
                             this.mapService.selectMyCubeFeature(layer)
                         }
-                        this.featureModuleComponent.checkSomething('styleSelectedFeature', layer).then(() => {
-                        })
+                        
                     })
                 }
                 else {
@@ -1025,7 +1049,7 @@ export class MapComponent implements OnInit {
                         hit = true;
                         this.mapConfig.selectedFeature = feature;
                         console.log(this.mapConfig.toolbar)
-                        this.mapConfig.toolbar = 'Feature List'    
+                        this.mapConfig.toolbar = 'Feature List'
                     }
                     ;
                 }, {

@@ -117,7 +117,10 @@ export class PaserService {
   }
 
   public styleSelectedFeature(layer: UserPageLayer): boolean {
-    if (layer.layer.layerType == "MyCube") { this.styleMyCube(layer) }
+    let selectedFeature: Feature = this.mapConfig.selectedFeature.clone()
+    selectedFeature.setStyle(this.styleService.styleSelected())
+    this.mapConfig.selectedFeatureLayer.getSource().addFeature(selectedFeature)
+    // if (layer.layer.layerType == "MyCube" || layer.layer.layerType == "Geoserver WFS") { this.styleMyCube(layer); console.log("Geoserver WFS") }
     return true
   }
 

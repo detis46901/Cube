@@ -168,7 +168,6 @@ export class WMSService {
                 if (noProxy) {
                     url = "http://" + norest2 + '/' + layer.layer.layerService + '/MapServer/WMSServer';
                 }
-                console.log(url)
                 return url;
             }
             case ('Geoserver WMTS'): {
@@ -179,7 +178,6 @@ export class WMSService {
                 if (noProxy) {
                     url = "http://" + norest2 + '/' + layer.layer.layerService + '/MapServer/WMTS/1.0.0/WMTSCapabilities.xml';
                 }
-                console.log(url)
                 return url;
             }
         }

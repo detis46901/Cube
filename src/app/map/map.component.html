@@ -387,7 +387,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
        
-<app-data-form-component style="max-height: 20vh; overflow-x: auto" [dataFormConfig]=mapConfig.myCubeConfig (changedForm)="changedDataForm($event)"></app-data-form-component>
+<app-data-form-component style="overflow-x: auto" [dataFormConfig]=mapConfig.myCubeConfig (changedForm)="changedDataForm($event)"></app-data-form-component>
 </mat-expansion-panel>
 </mat-accordion>
 <mat-accordion *ngIf="mapConfig.myCubeComment.visible" class="comment-data">

@@ -11,8 +11,8 @@ export const environment = {
   publicPassword: 'Monday01',
   publicTitle: 'City of Kokomo',
   centerLong: -86.1336,
-  centerLat: 40.4864,
-  centerZoom: 13,
+  centerLat: 40.4698,
+  centerZoom: 12.75,
   viewbox: "-86.5,40.3,-86,40.6",  //to limit the search area
   BingMapsKey: 'AqG6nmU6MBeqJnfsjQ-285hA5Iw5wgEp3krxwvP9ZpE3-nwYqO050K5SJ8D7CkAw',
   //user Carto version if using a MapBox Basemap.  If not, make the line below '' and the default OSM will be used.

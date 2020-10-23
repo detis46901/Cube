@@ -84,15 +84,23 @@ export class LoginComponent implements OnInit {
                     this.router.navigate(['/'])
                                 }
                 }, error => {
-                    this.loading = false;
-                    let ll = new LoginLog
-                                ll.username = username
-                                ll.result = 'Incorrect password or username'
-                                this.loginlogService.addLoginLog(ll).subscribe((x) => {})
-                    alert("Incorrect password or username.")
+                    console.log(error)
+                    switch(error.statusText) {
+                        case "Unknown Error": {
+                            alert("Connection Error")
+                            break
+                        }
+                        case "Unauthorized": {
+                            this.loading = false;
+                            let ll = new LoginLog
+                                        ll.username = username
+                                        ll.result = 'Incorrect password or username'
+                                        this.loginlogService.addLoginLog(ll).subscribe((x) => {})
+                            alert("Incorrect password or username.")
+                        }
+                    }
                 })
         }
-
         this.clearInputs();
     }
 

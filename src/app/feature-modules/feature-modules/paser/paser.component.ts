@@ -389,6 +389,7 @@ export class PaserComponent implements OnInit {
   }
 
   public mapClickEvent(evt) {
+    console.log('mapClickEvent')
     if (this.mapConfig.drawMode != "") {
       return;
     }
@@ -402,7 +403,7 @@ export class PaserComponent implements OnInit {
     } //disables select/deselect when the measure tool is open.
     let layer = this.mapConfig.currentLayer;
     switch (this.mapConfig.currentLayer.layer.layerType) {
-      case "Geoserver": {
+      case "Geoserver WFS": {
         let hit = false;
         let url2 = this.wmsService.formLayerRequest(layer);
         if (layer.layer.layerType == "WMTS") {

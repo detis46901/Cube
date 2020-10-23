@@ -22,7 +22,6 @@ import {Fill, Stroke, Circle, Style} from 'ol/style';
 export class StyleService {
     private locateStyles = new PaserStyles
     public styleFunction(feature: Feature, version: string): Style {
-        //console.log(feature.getProperties())
         let color: string
         switch(feature.get('rating')) {
             case 10:
@@ -109,8 +108,16 @@ export class StyleService {
         if (version == 'selected') {
             return '#FF0000'
         }
-
-
         return getFillColor
+    }
+
+    styleSelected():Style {
+        let style = new Style({
+            stroke: new Stroke({
+              color: "#ff0000", //'rgba(0, 0, 255, 1.0)',
+              width: 4
+            }),
+        });
+        return style
     }
 }

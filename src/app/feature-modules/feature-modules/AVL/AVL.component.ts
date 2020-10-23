@@ -11,6 +11,8 @@ import { AVLHTTPService } from './AVL.HTTP.service'
 import {buffer} from 'ol/extent';
 import { EventEmitter } from 'events';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import Observable from 'ol/Observable';
+import { unByKey } from "ol/Observable"
 
 @Component({
   selector: 'app-AVL',
@@ -219,6 +221,8 @@ export class AVLComponent implements OnInit, OnDestroy {
       this.mapConfig.map.removeLayer(this.AVLconfig.olTrackLayer)
       clearInterval(this.AVLconfig.UPL.updateInterval)
       clearInterval(this.AVLconfig.trackUpdateInterval)
+      unByKey(this.AVLconfig.AVLmouseover)
+      unByKey(this.AVLconfig.AVLClick)
   }
 
     myFilterStart = (d: Date | null): boolean => {
@@ -231,5 +235,11 @@ export class AVLComponent implements OnInit, OnDestroy {
 
     public dateChange(e: any) {
       this.AVLconfig.endDate = new Date(this.AVLconfig.startDate.getTime() + 24 * 60 * 60 * 1000)
+    }
+
+    public moveDate(delta: number) {
+      this.AVLconfig.startDate = new Date(this.AVLconfig.startDate.getTime() + 24 * 60 * 60 * 1000 * delta)
+      this.AVLconfig.endDate = new Date(this.AVLconfig.endDate.getTime() + 24 * 60 * 60 * 1000 * delta)
+      this.updateTrack()
     }
 }

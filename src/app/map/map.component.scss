@@ -284,12 +284,15 @@ td {
 }
 
 .message-data {
+    flex-basis: 0;
+    width: 354px;
+    overflow-wrap: break-word;
+    overflow-y: auto;
     background-color: rgba(255,255,255,.7); 
     display: block; 
     position: absolute; 
-    bottom: 0px; 
-    left: 0px;
-    width: 340px;
+    bottom: 0px; left: 0px;
+    max-height: 43vh // or 250vh;
 }
 
 .ol-overlaycontainer-stopevent {

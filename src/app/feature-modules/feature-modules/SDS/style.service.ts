@@ -32,6 +32,10 @@ export class StyleService {
                     color: this.getFillColor(feature, version)
                 })
             }),
+            stroke: new Stroke({
+                color: this.getFillColor(feature, version),
+                width: 2
+            })
         });
         return style
     }

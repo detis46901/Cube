@@ -2,10 +2,12 @@ import TileLayer from 'ol/layer/Tile';
 import Geometry from 'ol/geom/Geometry';
 import Feature from 'ol/Feature';
 import { UserPageLayer } from '_models/layer.model';
-import Layer from 'ol/layer/Layer';
+import VectorLayer from 'ol/layer/Layer';
 import {Fill, Stroke, Circle, Style} from 'ol/style';
 import { Injectable } from "@angular/core";
 import VectorSource from 'ol/source/Vector';
+import { Select } from 'ol/interaction';
+import { EventsKey } from 'openlayers';
 
 export class AVLConfig {
     token: JSON
@@ -18,9 +20,10 @@ export class AVLConfig {
     selectedPoint = new GpsMessage
     startDate: Date
     endDate: Date
-    olTrackLayer: Layer
+    olTrackLayer: VectorLayer
     trackUpdateInterval: any
     AVLmouseover: any
+    AVLClick: any
 }
 
 export class GpsMessage {

@@ -4,6 +4,7 @@ import { UserPageLayerService } from '../../../_services/_userPageLayer.service'
 import { UserPageService } from '../../../_services/_userPage.service';
 import { UserPageInstanceService } from '../../../_services/_userPageInstance.service'
 import { LayerPermission, UserPageLayer } from '../../../_models/layer.model';
+import { Observable, of } from 'rxjs';
 import { UserPageInstance, ModulePermission } from '../../../_models/module.model'
 import { UserPage } from '../../../_models/user.model';
 import { LayerPermissionService } from '../../../_services/_layerPermission.service';
@@ -28,7 +29,7 @@ import { optionsFromCapabilities } from 'ol/source/WMTS';
 import TileWMS from 'ol/source/TileWMS';
 import GeoJSON from 'ol/format/GeoJSON';
 import Feature from 'ol/Feature';
-import Observable from 'ol/Observable';
+import { default as ob } from 'ol/Observable';
 import GeometryCollection from 'ol/geom/GeometryCollection';
 import Geometry from 'ol/geom/Geometry';
 import XYZ from 'ol/source/XYZ';
@@ -42,6 +43,9 @@ import { style } from "@angular/animations";
 import { newArray } from "@angular/compiler/src/util";
 import { Heatmap as HeatmapLayer } from 'ol/layer'
 import KML from "ol/format/KML";
+import { Http2ServerRequest } from "http2";
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+
 
 
 
@@ -61,11 +65,12 @@ export class LayerConfigService {
         private styleService: StyleService,
         private featuremodulesservice: FeatureModulesService,
         private snackBar: MatSnackBar,
-        private dataFormService: DataFormService,     
+        private dataFormService: DataFormService, 
+        private _http:HttpClient    
     ) {
     }
     
-    public loadGeoserverWMS(mapConfig: MapConfig, init: boolean, userpagelayer: UserPageLayer): Promise<any> {
+    public loadGeoserverWMS(userpagelayer: UserPageLayer, j: number, init: boolean, mapConfig: MapConfig): Promise<any> {
         let promise = new Promise((resolve) => {
         let wmsSource = new TileWMS({
             url: this.wmsService.formLayerRequest(userpagelayer),
@@ -76,7 +81,7 @@ export class LayerConfigService {
             cacheSize: environment.cacheSize
         });
         let wmsLayer: TileLayer = new TileLayer({ source: wmsSource });
-        // wmsLayer.setZIndex(j)
+        wmsLayer.setZIndex(j)
         wmsLayer.setVisible(userpagelayer.defaultON);
         if (init) {
             mapConfig.baseLayers.push(wmsLayer);  //to delete
@@ -139,4 +144,45 @@ return promise
         })
         return promise
     }
+
+    public loadMapServerWMTS(userpagelayer: UserPageLayer, j: number, init: boolean, mapConfig: MapConfig):Promise<any> {
+        let promise = new Promise((resolve) => {
+            let wmtsSource = new XYZ({
+                attributions: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/' +
+                    'rest/services/World_Topo_Map/MapServer">ArcGIS</a>',
+                url: userpagelayer.layer.server.serverURL + '/' +
+                    userpagelayer.layer.layerService + '/MapServer/tile/{z}/{y}/{x}',
+            });
+            let wmtsLayer = new TileLayer({
+                source: wmtsSource
+            });
+            mapConfig.baseLayers.push(wmtsLayer);
+            console.log(userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/MapServer/tile/{z}/{y}/{x}');
+            wmtsLayer.setZIndex(j);
+            wmtsLayer.setVisible(userpagelayer.defaultON);
+            if (userpagelayer.style['opacity']) { wmtsLayer.setOpacity(userpagelayer.style['opacity']); }
+            userpagelayer.olLayer = wmtsLayer;
+            userpagelayer.source = wmtsSource;
+            this.wmsService.setLoadStatus(userpagelayer);
+            if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
+                mapConfig.map.addLayer(wmtsLayer);
+            }
+        })
+        return promise
+    }
+
+    private getFeatureServerData(url):Observable<any> {
+        return this._http.get(url)
+
+    }
+    public loadFeatureServer(userpagelayer: UserPageLayer, j: number, init: boolean, mapConfig: MapConfig):Promise<any> {
+        let promise = new Promise((resolve) => {
+            this.getFeatureServerData(userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/FeatureServer' + userpagelayer.layer.layerIdent)
+            .subscribe((data) => {
+                console.log(data)
+            })
+        })
+        return promise
+    }
+
 }
