@@ -742,7 +742,7 @@ export class MapComponent implements OnInit {
                             console.log('loading FeatureServer')
                             this.layerConfigService.loadFeatureServer(userpagelayer, j, init, mapConfig)
                             j++
-                            if (j == this.mapConfig.userpagelayers.length) {resolve() }
+                            if (j == this.mapConfig.userpagelayers.length) { resolve() }
                             break
                         }
                         case "MyCube": {
@@ -863,8 +863,8 @@ export class MapComponent implements OnInit {
         let layer = this.mapConfig.currentLayer
         switch (this.mapConfig.currentLayer.layer.layerType) {
             case ("Geoserver WFS"): {
-            //     console.log('Geoserver WFS')
-            this.findMyCubeFeature(evt)
+                //     console.log('Geoserver WFS')
+                this.findMyCubeFeature(evt)
                 break
             }
             case ("Geoserver WMS"): {
@@ -923,6 +923,33 @@ export class MapComponent implements OnInit {
                             this.mapService.parseAndSendWMS(data)
                         });
                     this.featureModuleComponent.checkSomething('selectFeature', layer).then(() => { })
+                }
+                break
+            }
+            case ("FeatureServer"): {
+                console.log('FeatureServer')
+                let hit: boolean
+                let selectedFeature: Feature
+                this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature: Feature, selectedLayer: any) => {
+                    if (selectedLayer === layer.olLayer) {
+                        hit = true
+                        selectedFeature = feature
+                    }
+                }, {
+                    hitTolerance: 5
+                });
+                if (hit) {
+                    let output: string = ''
+                    this.mapConfig.selectedFeature = selectedFeature;
+                        selectedFeature.getKeys().forEach((x) => {
+                            if(x !="geometry") {
+                                output = output.concat("<b>", x, ": </b>", selectedFeature.get(x), '<br>')
+                            }
+                        })
+                        this.mapConfig.WMSFeatureData = output
+                }
+                else {
+                    this.mapConfig.WMSFeatureData = null
                 }
                 break
             }
@@ -1024,7 +1051,7 @@ export class MapComponent implements OnInit {
                         else {
                             this.mapService.selectMyCubeFeature(layer)
                         }
-                        
+
                     })
                 }
                 else {

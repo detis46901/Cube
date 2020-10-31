@@ -15,7 +15,7 @@ import { SQLService } from '../../../_services/sql.service';
 import { StyleService } from './style.service'
 import { FeatureModulesService } from "app/feature-modules/feature-modules.service";
 import { Modify, Draw } from 'ol/interaction';
-import { Vector as VectorSource, Stamen } from 'ol/source';
+import VectorSource from 'ol/source/vector';
 import { environment } from 'environments/environment'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import VectorLayer from "ol/layer/Vector";
@@ -45,6 +45,11 @@ import { Heatmap as HeatmapLayer } from 'ol/layer'
 import KML from "ol/format/KML";
 import { Http2ServerRequest } from "http2";
 import { HttpClient, HttpHeaders } from '@angular/common/http'
+import EsriJSON from 'ol/format/EsriJSON';
+import { tile as tileStrategy } from 'ol/loadingstrategy';
+import { createXYZ } from 'ol/tilegrid';
+import { Icon, Style } from "ol/style";
+
 
 
 
@@ -65,48 +70,48 @@ export class LayerConfigService {
         private styleService: StyleService,
         private featuremodulesservice: FeatureModulesService,
         private snackBar: MatSnackBar,
-        private dataFormService: DataFormService, 
-        private _http:HttpClient    
+        private dataFormService: DataFormService,
+        private _http: HttpClient
     ) {
     }
-    
+
     public loadGeoserverWMS(userpagelayer: UserPageLayer, j: number, init: boolean, mapConfig: MapConfig): Promise<any> {
         let promise = new Promise((resolve) => {
-        let wmsSource = new TileWMS({
-            url: this.wmsService.formLayerRequest(userpagelayer),
-            params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
-            projection: 'EPSG:4326',
-            serverType: 'geoserver',
-            crossOrigin: 'anonymous',
-            cacheSize: environment.cacheSize
-        });
-        let wmsLayer: TileLayer = new TileLayer({ source: wmsSource });
-        wmsLayer.setZIndex(j)
-        wmsLayer.setVisible(userpagelayer.defaultON);
-        if (init) {
-            mapConfig.baseLayers.push(wmsLayer);  //to delete
-        }
-        userpagelayer.olLayer = wmsLayer
-        userpagelayer.source = wmsSource
-        this.wmsService.setLoadStatus(userpagelayer);
-        if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
-            mapConfig.map.addLayer(wmsLayer);
-        }
-        // j++;
-        if (userpagelayer.style['opacity']) { userpagelayer.olLayer.setOpacity(+userpagelayer.style['opacity'] / 100) }
-        // if (j == mapConfig.userpagelayers.length) { resolve() }
-        let diffWMS: ImageWMS
-        diffWMS = new ImageWMS({
-            url: this.wmsService.formLayerRequest(userpagelayer, true),
-            params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
-            projection: 'EPSG:4326',
-            serverType: 'geoserver',
-            crossOrigin: 'anonymous'
+            let wmsSource = new TileWMS({
+                url: this.wmsService.formLayerRequest(userpagelayer),
+                params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
+                projection: 'EPSG:4326',
+                serverType: 'geoserver',
+                crossOrigin: 'anonymous',
+                cacheSize: environment.cacheSize
+            });
+            let wmsLayer: TileLayer = new TileLayer({ source: wmsSource });
+            wmsLayer.setZIndex(j)
+            wmsLayer.setVisible(userpagelayer.defaultON);
+            if (init) {
+                mapConfig.baseLayers.push(wmsLayer);  //to delete
+            }
+            userpagelayer.olLayer = wmsLayer
+            userpagelayer.source = wmsSource
+            this.wmsService.setLoadStatus(userpagelayer);
+            if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
+                mapConfig.map.addLayer(wmsLayer);
+            }
+            // j++;
+            if (userpagelayer.style['opacity']) { userpagelayer.olLayer.setOpacity(+userpagelayer.style['opacity'] / 100) }
+            // if (j == mapConfig.userpagelayers.length) { resolve() }
+            let diffWMS: ImageWMS
+            diffWMS = new ImageWMS({
+                url: this.wmsService.formLayerRequest(userpagelayer, true),
+                params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
+                projection: 'EPSG:4326',
+                serverType: 'geoserver',
+                crossOrigin: 'anonymous'
+            })
+            if (userpagelayer.layer.legendURL) { userpagelayer.layer.legendURL = diffWMS.getLegendUrl(2).split('&SCALE')[0] }
+            resolve()
         })
-        if (userpagelayer.layer.legendURL) { userpagelayer.layer.legendURL = diffWMS.getLegendUrl(2).split('&SCALE')[0] }
-        resolve()
-    })
-return promise
+        return promise
     }
     public loadWMTS(mapConfig: MapConfig, init: boolean, userpagelayer: UserPageLayer): Promise<any> {
         let promise = new Promise((resolve) => {
@@ -145,7 +150,7 @@ return promise
         return promise
     }
 
-    public loadMapServerWMTS(userpagelayer: UserPageLayer, j: number, init: boolean, mapConfig: MapConfig):Promise<any> {
+    public loadMapServerWMTS(userpagelayer: UserPageLayer, j: number, init: boolean, mapConfig: MapConfig): Promise<any> {
         let promise = new Promise((resolve) => {
             let wmtsSource = new XYZ({
                 attributions: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/' +
@@ -171,16 +176,90 @@ return promise
         return promise
     }
 
-    private getFeatureServerData(url):Observable<any> {
+    private getFeatureServerData(url): Observable<any> {
+        url = environment.proxyUrl + '/' + url + '?f=pjson';
+        // console.log(url)
         return this._http.get(url)
 
     }
-    public loadFeatureServer(userpagelayer: UserPageLayer, j: number, init: boolean, mapConfig: MapConfig):Promise<any> {
+    public loadFeatureServer(userpagelayer: UserPageLayer, j: number, init: boolean, mapConfig: MapConfig): Promise<any> {
+        let iconStyle = new Style()
+        let url = userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/FeatureServer/' + userpagelayer.layer.layerIdent
+        let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
+            this.getFeatureServerData(url)
+                .subscribe((x) => {
+                    // console.log(x)
+                    let iconURL = userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/FeatureServer/' + userpagelayer.layer.layerIdent + '/images/' + x['drawingInfo']['renderer']['symbol']['url']
+                    iconStyle = new Style({
+                        image: new Icon({
+                            src: iconURL
+                        })
+                    })
+                })
+            return iconStyle
+        })
         let promise = new Promise((resolve) => {
-            this.getFeatureServerData(userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/FeatureServer' + userpagelayer.layer.layerIdent)
-            .subscribe((data) => {
-                console.log(data)
+            let vectorSource = new VectorSource({
+                format: new EsriJSON(),
+                url: function (extent) {
+                    // console.log(environment.proxyUrl + '/' + userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/FeatureServer/' + userpagelayer.layer.layerIdent +
+                    //     '/query/?f=json&' +
+                    //     'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
+                    //     encodeURIComponent(
+                    //         '{"xmin":' +
+                    //         extent[0] +
+                    //         ',"ymin":' +
+                    //         extent[1] +
+                    //         ',"xmax":' +
+                    //         extent[2] +
+                    //         ',"ymax":' +
+                    //         extent[3] +
+                    //         ',"spatialReference":{"wkid":102100}}'
+                    //     ) +
+                    //     '&geometryType=esriGeometryEnvelope&inSR=102100&outFields=*' +
+                    //     '&outSR=102100')
+                    return environment.proxyUrl + '/' + userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/FeatureServer/' + userpagelayer.layer.layerIdent +
+                        '/query/?f=json&' +
+                        'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
+                        encodeURIComponent(
+                            '{"xmin":' +
+                            extent[0] +
+                            ',"ymin":' +
+                            extent[1] +
+                            ',"xmax":' +
+                            extent[2] +
+                            ',"ymax":' +
+                            extent[3] +
+                            ',"spatialReference":{"wkid":102100}}'
+                        ) +
+                        '&geometryType=esriGeometryEnvelope&inSR=102100&outFields=*' +
+                        '&outSR=102100';
+                },
+                strategy: tileStrategy(
+                    createXYZ({
+                        tileSize: 512
+                    })
+                )
             })
+
+            console.log(iconStyle)
+            var vector = new VectorLayer({
+                source: vectorSource,
+                style: stylefunction
+            })
+            if (init) {
+                mapConfig.baseLayers.push(vector);  //to delete
+            }
+            userpagelayer.olLayer = vector
+            userpagelayer.source = vectorSource
+            if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
+                mapConfig.map.addLayer(vector);
+            }
+            // this.getFeatureServerData(userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/FeatureServer/' + userpagelayer.layer.layerIdent)
+            // .subscribe((data) => {
+            //     console.log(data)
+            //     let esrijsonFormat = new EsriJSON()
+            // })
         })
         return promise
     }

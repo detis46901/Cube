@@ -23,18 +23,18 @@
       </div>
     </div>
     <div *ngIf="AVLconfig.tab == 'Track'"><br>
-      <mat-form-field style="width:90%">
+      <mat-form-field style="width:50%">
         <input matInput [matDatepicker]="picker" [matDatepickerFilter]="myFilterStart" matTooltip="Start Date" placeholder="Start" (dateChange) = "dateChange()"
           [(ngModel)]="AVLconfig.startDate"> 
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker> 
-      </mat-form-field> <button mat-icon-button (click)="moveDate(-1)"><mat-icon>keyboard_arrow_left</mat-icon></button> <br>
-      <mat-form-field style="width:90%">
+      </mat-form-field> <button mat-icon-button (click)="moveDate(-1)"><mat-icon>keyboard_arrow_left</mat-icon></button> <button mat-icon-button (click)="moveDate(1)"><mat-icon>keyboard_arrow_right</mat-icon></button><br>
+      <mat-form-field style="width:50%">
         <input matInput [matDatepicker]="picker2" [matDatepickerFilter]="myFilterEnd" matTooltip="End Date" placeholder="End"
           [(ngModel)]="AVLconfig.endDate">
         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
         <mat-datepicker #picker2></mat-datepicker>
-      </mat-form-field> <button mat-icon-button (click)="moveDate(1)"><mat-icon>keyboard_arrow_right</mat-icon></button> <br><br>
+      </mat-form-field>  <br><br>
       <button mat-button mat-raised-button color="primary" (click)="updateTrack()">Update</button>
       <button mat-button mat-raised-button color="primary" (click)="updateTrack(true)">Today</button><br>
      
