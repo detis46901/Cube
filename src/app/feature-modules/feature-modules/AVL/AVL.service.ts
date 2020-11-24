@@ -220,7 +220,6 @@ export class AVLService {
   public setCurrentLayer(layer: UserPageLayer, AVLconfig: AVLConfig): boolean {
     AVLconfig.AVLmouseover = this.mapConfig.map.on('pointermove', (evt: MapBrowserEvent) => {
     let data = new DataFormConfig
-    console.log('AVLmouseover')
     if (this.mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
       this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature: Feature, mouselayer) => {
         if (mouselayer === layer.olLayer) {
@@ -238,7 +237,7 @@ export class AVLService {
     }
     else {
       this.mapConfig.mouseoverLayer = null;
-      data.visible = false
+      this.mapConfig.myCubeConfig =  new DataFormConfig
     }
   })
     AVLconfig.AVLClick = this.mapConfig.map.on('click', (evt: MapBrowserEvent) => {

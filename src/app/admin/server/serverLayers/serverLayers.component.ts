@@ -200,7 +200,7 @@ export class ServerLayersComponent implements OnInit {
             .subscribe((data) => {
                 console.log(data['services'])
                 this.services = data['services']
-                this.services = this.services.filter(this.filterForMapServer)
+                //this.services = this.services.filter(this.filterForMapServer)
             })
         this.selected.setValue(1);
     }
@@ -268,17 +268,19 @@ export class ServerLayersComponent implements OnInit {
             let layers = new Array<any>()
             layers = x['layers']
             console.log(layers)
-            layers.forEach((y) => {
-                let ly = new Layer
-                ly.layerName = y['name']
-                ly.layerIdent = y['id']
-                ly.layerType = "FeatureServer"
-                ly.layerGeom = y['defaultVisibility']
-                ly.layerService = service['name']
-                ly.layerFormat = 'image/png'
-                ly.serverID = this.server.ID
-                this.FeatureServerLayers.push(ly)
-            })
+            if (layers) {
+                layers.forEach((y) => {
+                    let ly = new Layer
+                    ly.layerName = y['name']
+                    ly.layerIdent = y['id']
+                    ly.layerType = "FeatureServer"
+                    ly.layerGeom = y['defaultVisibility']
+                    ly.layerService = service['name']
+                    ly.layerFormat = 'image/png'
+                    ly.serverID = this.server.ID
+                    this.FeatureServerLayers.push(ly)
+                })    
+            }
         })
     }
 

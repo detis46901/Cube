@@ -48,10 +48,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import EsriJSON from 'ol/format/EsriJSON';
 import { tile as tileStrategy } from 'ol/loadingstrategy';
 import { createXYZ } from 'ol/tilegrid';
-import { Icon, Style } from "ol/style";
-
-
-
+import { Icon, Style, Fill, Stroke, Circle } from "ol/style";
 
 
 @Injectable()
@@ -188,13 +185,31 @@ export class LayerConfigService {
         let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
             this.getFeatureServerData(url)
                 .subscribe((x) => {
-                    // console.log(x)
-                    let iconURL = userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/FeatureServer/' + userpagelayer.layer.layerIdent + '/images/' + x['drawingInfo']['renderer']['symbol']['url']
-                    iconStyle = new Style({
-                        image: new Icon({
-                            src: iconURL
+                    let iconURL: string
+                    if (x['drawingInfo']['renderer']['symbol']['url']) {
+                        iconURL = userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/FeatureServer/' + userpagelayer.layer.layerIdent + '/images/' + x['drawingInfo']['renderer']['symbol']['url']
+                        iconStyle = new Style({
+                            image: new Icon({
+                                src: iconURL
+                            })
+                        })    
+                    }
+                    else {
+                        iconStyle = new Style({
+                            image: new Circle({
+                                radius: 5,
+                                fill: null,
+                                stroke: new Stroke({ color: 'rgba(0, 102, 153, 1)', width: 4 })
+                            }),
+                            fill: new Fill({
+                                color: 'rgba(0, 102, 153, 1)'
+                            }),
+                            stroke: new Stroke({
+                                color: 'rgba(0, 102, 153, 1)',
+                                width: 4
+                            }),
                         })
-                    })
+                    }
                 })
             return iconStyle
         })
@@ -252,6 +267,7 @@ export class LayerConfigService {
             }
             userpagelayer.olLayer = vector
             userpagelayer.source = vectorSource
+            userpagelayer.olLayer.setVisible(userpagelayer.layerShown)
             if (init == false) { //necessary during initialization only, as the map requires the layers in an array to start with.
                 mapConfig.map.addLayer(vector);
             }

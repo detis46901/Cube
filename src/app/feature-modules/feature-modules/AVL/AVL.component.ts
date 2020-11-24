@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { UserPageLayer } from '_models/layer.model';
+import { MyCubeField, UserPageLayer } from '_models/layer.model';
 import { MapConfig, featureList } from '../../../map/models/map.model';
 import { WMSService } from '../../../map/services/wms.service'
 import { MatDialog } from '@angular/material/dialog';
@@ -134,6 +134,7 @@ export class AVLComponent implements OnInit, OnDestroy {
   }
 
   public clearTracks() {
+    console.log('ClearTracks')
     this.mapConfig.map.removeLayer(this.AVLconfig.olTrackLayer)
     this.mapConfig.currentLayer.olLayer.setOpacity(1)
     this.AVLconfig.selectedVehicle = new Vehicle
@@ -208,7 +209,8 @@ export class AVLComponent implements OnInit, OnDestroy {
 
   public unsetCurrentLayer(layer: UserPageLayer): boolean {
     this.visible = false
-    
+    unByKey(this.AVLconfig.AVLmouseover)
+    unByKey(this.AVLconfig.AVLClick)
     return true
   }
 

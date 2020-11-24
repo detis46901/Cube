@@ -87,6 +87,8 @@ export class SDSComponent implements OnInit {
   }
 
   public unloadLayer(layer): boolean {
+    this.SDSConfig.expanded = false
+    this.SDSConfig.visible = false
     return this.SDSservice.unloadLayer(layer);
   }
 

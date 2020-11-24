@@ -65,7 +65,7 @@ export class OpenAerialMapService {
           this.selectedImage = new Image()
         }
       })
-    this.mapConfig.showStyleButton = true
+    // this.mapConfig.showStyleButton = true
     return true
   }
   

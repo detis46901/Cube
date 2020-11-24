@@ -41,12 +41,12 @@
             <h3 matSubheader>{{selectedFolder}}</h3>
             <mat-list-item *ngFor="let service of services" (click)="getArcGISLayers(service)">
                 <mat-icon matListIcon>Services</mat-icon>
-                <h4 matLine>{{service.name}}</h4>
+                <h4 matLine>{{service.name}} ({{service.type}})</h4>
             </mat-list-item>
             <mat-divider></mat-divider>
         </mat-list>
     </mat-tab>
-    <mat-tab label=" WMS Layers">
+    <mat-tab label="WMS Layers">
         <mat-list class="matlist">
             <h3 matSubheader>WMS Layers</h3>
             <mat-list-item *ngFor="let layer of WMSLayers" (click)="openCreateLayer(layer)">

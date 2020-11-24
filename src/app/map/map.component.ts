@@ -105,7 +105,7 @@ export class MapComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        console.log('10-14-20')
+        console.log('11-23-20')
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.public = currentUser && currentUser.public;
@@ -143,9 +143,10 @@ export class MapComponent implements OnInit {
     private getMapConfig() { //id is used for public pages.
         this.mapConfig.user = this.user
         this.mapConfigService.GetSingle(this.mapConfig)
-            .subscribe((x) => {
+            .subscribe((x:MapConfig) => {
                 this.mapConfig = x
                 this.mapConfig.modulesShow = true  //this delays the rendering of the modules until the mapConfig is loaded.
+                //need to figure out why the selected page doesn't bold on load, only when there is a click.
                 this.mapConfig.currentPageName = this.mapConfig.currentpage.page
                 this.mapConfig.selectedFeatures = new Collection<Feature>() //for some reason, this is necessary
                 this.mapConfig.selectedFeatures.push(this.mapConfig.selectedFeature)
@@ -408,20 +409,22 @@ export class MapComponent implements OnInit {
     public copyToClipboard(url: string) {
         url = environment.serverWithApiUrl + url + '&apikey=' + this.user.apikey
         const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
-        Clipboard.copy(environment.serverWithApiUrl + url);
+        Clipboard.copy(url);
         this.snackBar.open("Copied to the clipboard", "", {
             duration: 2000,
         });
     }
 
     public copyGSToClipboard(url: string) {
-        Clipboard.copy('=IMPORTHTML("' + environment.serverWithApiUrl + url + '&apikey=' + this.user.apikey + '", "table", 1)');
+        url = environment.serverWithApiUrl + url + '&apikey=' + this.user.apikey
+        Clipboard.copy('=IMPORTHTML("' + url + '", "table", 1)');
         this.snackBar.open("Copied to the clipboard", "", {
             duration: 2000,
         });
     }
 
     public clearLayerConfig(): Promise<boolean> { //The only time this is called is during 'setCurrentLayer'
+        console.log('clearlayerconfig')
         let promise = new Promise<boolean>((resolve) => {
             this.mapConfig.featureList = new Array<featureList>()
             this.mapConfig.filterOn = false;
@@ -482,6 +485,7 @@ export class MapComponent implements OnInit {
     }
 
     public toggleLayers(layer: UserPageLayer) {
+        console.log('toggling layers')
         if (layer.olLayer) { layer.olLayer.setVisible(!layer.layerShown) }
         layer.layerShown = !layer.layerShown;
         if (layer.layerShown === false) { //turning a layer off
@@ -492,6 +496,7 @@ export class MapComponent implements OnInit {
                 this.mapConfig.showStyleButton = false
                 this.mapConfig.showFilterButton = false
                 this.mapConfig.WMSFeatureData = null
+                this.mapConfig.editmode = false
                 this.mapConfig.featureList = new Array<featureList>()
             }
             //could add something here that would move to the next layerShown=true.  Not sure.
@@ -500,6 +505,7 @@ export class MapComponent implements OnInit {
             this.setCurrentLayer(layer);
         }
         if (layer.layerShown === false) { //turning a layer off
+
             this.featureModuleComponent.checkSomething('unloadLayer', layer).then(() => {
                 if (this.mapConfig.currentLayer == layer) {
                     this.featureModuleComponent.checkSomething('unSetCurrentLayer', layer)
@@ -617,6 +623,7 @@ export class MapComponent implements OnInit {
                     }
                 }
                 userpagelayer.layerShown = userpagelayer.defaultON;
+                console.log(userpagelayer)
                 // var vectorSource2 = new TileLayer( {
                 //     source: new XYZ({
                 //         attributions:
