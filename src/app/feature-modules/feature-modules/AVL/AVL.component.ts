@@ -108,8 +108,10 @@ export class AVLComponent implements OnInit, OnDestroy {
   }
 
   public showTrack(vehicle: Vehicle) {
-    this.AVLconfig.tab = 'Track'
+    //this.AVLconfig.tab = 'Track'
     this.mapConfig.toolbar = "Feature List"
+    clearInterval(this.AVLconfig.trackUpdateInterval)
+    this.AVLconfig.trackUpdateInterval = null
     this.AVLservice.showTrack(this.AVLconfig, vehicle)
   }
 
@@ -122,7 +124,7 @@ export class AVLComponent implements OnInit, OnDestroy {
       this.AVLconfig.endDate.setHours(24,0,0,0)  
     }
     this.showTrack(this.AVLconfig.selectedVehicle)
-    this.goToTab("Track")  
+    //this.goToTab("Track")  
   }
 
   public zoomToPoint(point:GpsMessage) {

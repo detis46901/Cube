@@ -169,6 +169,7 @@ export class AVLService {
   }
 
   public mapTrack(AVLconfig: AVLConfig, vehicle: Vehicle, zoomToTrack: boolean) {
+    console.log('zoomToTrack', zoomToTrack)
     this.mapConfig.map.removeLayer(AVLconfig.olTrackLayer)
     let olTrackSource = new VectorSource();
     AVLconfig.olTrackLayer = new VectorLayer({

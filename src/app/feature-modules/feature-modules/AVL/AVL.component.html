@@ -18,9 +18,23 @@
     <div *ngIf="AVLconfig.selectedVehicle.id != null"><br></div>
   <div style="max-height: 60vh; overflow:auto">
     <div *ngIf="AVLconfig.tab == 'Vehicles'">
-      <div *ngFor="let vehicle of AVLconfig.vehicles">
+      <table><tr><td><div *ngFor="let vehicle of AVLconfig.vehicles">
         <span class="hlinkLook" [class.selected]="vehicle == AVLconfig.selectedVehicle" (click)='showTrack(vehicle)'>{{vehicle.label}}</span>
-      </div>
+      </div></td><td *ngIf="AVLconfig.selectedVehicle.id != null"><mat-form-field style="width:50%">
+        <input matInput [matDatepicker]="picker" [matDatepickerFilter]="myFilterStart" matTooltip="Start Date" placeholder="Start" (dateChange) = "dateChange()"
+          [(ngModel)]="AVLconfig.startDate"> 
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker> 
+      </mat-form-field> <br>
+      <mat-form-field style="width:50%">
+        <input matInput [matDatepicker]="picker2" [matDatepickerFilter]="myFilterEnd" matTooltip="End Date" placeholder="End"
+          [(ngModel)]="AVLconfig.endDate">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field><br><button mat-icon-button (click)="moveDate(-1)"><mat-icon>keyboard_arrow_left</mat-icon></button> <button mat-icon-button (click)="moveDate(1)"><mat-icon>keyboard_arrow_right</mat-icon></button><br>
+      <button mat-button mat-raised-button color="primary" (click)="updateTrack()">Update</button>
+      <button mat-button mat-raised-button color="primary" (click)="updateTrack(true)">Today</button><br></td></tr></table>
+      
     </div>
     <div *ngIf="AVLconfig.tab == 'Track'"><br>
       <mat-form-field style="width:50%">
