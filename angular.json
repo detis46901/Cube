@@ -140,9 +140,7 @@
   },
   "defaultProject": "cube",
   "cli": {
-    "warnings": {
-      "typescriptMismatch": false
-    },
+    "warnings": {},
     "analytics": "2c1a9dfb-70af-4322-b7f5-41c3e2477ea3"
   },
   "schematics": {
