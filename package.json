@@ -17,12 +17,12 @@
   "dependencies": {
     "@angular-builders/custom-webpack": "^9.1.0",
     "@angular/animations": "^10.2.4",
-    "@angular/cdk": "^9.2.4",
+    "@angular/cdk": "^10.2.7",
     "@angular/common": "^10.2.4",
     "@angular/compiler": "^10.2.4",
     "@angular/core": "^10.2.4",
     "@angular/forms": "^10.2.4",
-    "@angular/material": "^9.2.4",
+    "@angular/material": "^10.2.7",
     "@angular/platform-browser": "^10.2.4",
     "@angular/platform-browser-dynamic": "^10.2.4",
     "@angular/platform-server": "^10.2.4",
@@ -60,7 +60,7 @@
     "ts-helpers": "^1.1.2",
     "tslib": "^2.0.0",
     "typeorm": "^0.2.31",
-    "typescript": "^4.0.7",
+    "typescript": "^3.9.2",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack-dev-server": "^3.11.2",
     "zone.js": "~0.11.4"
