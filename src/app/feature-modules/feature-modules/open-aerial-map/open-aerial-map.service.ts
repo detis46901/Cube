@@ -34,7 +34,7 @@ export class OpenAerialMapService {
   
 
   public GetImagesFromURL = (): Observable<any> => {
-    return this._http.get('https://api.openaerialmap.org/meta?provider=City%20of%20Kokomo')
+    return this._http.get('https://api.openaerialmap.org/meta?provider=City%20of%20Kokomo&limit=1000')
   }
 
   public loadLayer(mapConfig: MapConfig, layer: UserPageLayer, init?: boolean): boolean {

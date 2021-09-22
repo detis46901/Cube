@@ -105,7 +105,7 @@ export class MapComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        console.log('11-23-20')
+        console.log('05-18-2021')
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
         this.public = currentUser && currentUser.public;

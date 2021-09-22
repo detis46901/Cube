@@ -17,7 +17,7 @@ export const environment = {
   BingMapsKey: 'AqG6nmU6MBeqJnfsjQ-285hA5Iw5wgEp3krxwvP9ZpE3-nwYqO050K5SJ8D7CkAw',
   //user Carto version if using a MapBox Basemap.  If not, make the line below '' and the default OSM will be used.
   //MapBoxBaseMapUrl: 'https://api.mapbox.com/styles/v1/careystranahan/ck0it1pm20hll1clmfheoupbq/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiY2FyZXlzdHJhbmFoYW4iLCJhIjoiY2lobDZkaDNmMDZreXUyajd4OW85MG4yZCJ9.KWMtpJfoSPadPLeydp5W8g',
-  MapBoxBaseMapUrl: '',
+  MapBoxBaseMapUrl: 'https://a.cube-kokomo.com/data/map/{z}/{x}/{y}.png',
   localez: 'T05:00:00.000Z', //need to have two localz, I guess.  one for winter and one for summer.
   timeZone: 'America/New_york',
   cacheSize: 256,

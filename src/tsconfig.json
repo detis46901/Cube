@@ -4,7 +4,7 @@
       "declaration": false,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
-      "lib": ["es6", "dom"],
+      "lib": ["es6", "ES2020", "ESNext","dom"],
       "mapRoot": "./",
       "module": "commonjs",
       "moduleResolution": "node",
@@ -13,6 +13,7 @@
       "target": "es5"
     },
     "angularCompilerOptions": {
+      "enableIvy": false,
       "preserveWhitespaces": "off"
     },
     "exclude": ["node_modules", "**/*.spec.ts"]
