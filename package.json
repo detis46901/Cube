@@ -47,7 +47,7 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "next": "^10.2.0",
-    "ngx-linky": "^2.2.0",
+    "ngx-linky": "^3.0.0",
     "node-pre-gyp": "^0.17.0",
     "node-sass": "^4.14.1",
     "nodinatim": "^2.1.0",
