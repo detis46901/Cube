@@ -32,7 +32,7 @@ export class AuthenticationService {
     }
 
     public publicLogin(publicName: string): Promise<any> {
-        let promise = new Promise((resolve) => {
+        let promise = new Promise<void>((resolve) => {
             this.userService.login(publicName.toLocaleLowerCase() + '@' + environment.domain, environment.publicPassword)
                 .subscribe(res => {
                     let ll = new LoginLog

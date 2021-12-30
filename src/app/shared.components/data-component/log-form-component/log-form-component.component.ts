@@ -44,7 +44,7 @@ export class LogFormComponentComponent implements OnInit {
   public saveLog(logForm: LogField): Promise<any> {
     logForm.schema = this.logFormConfig.schema
     logForm.logTable = this.logFormConfig.logTable
-    let promise = new Promise((resolve) => {
+    let promise = new Promise<void>((resolve) => {
       this.sqlService
       .addAnyComment(logForm)
       .subscribe((data) => {

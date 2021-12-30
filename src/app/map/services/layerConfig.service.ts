@@ -73,7 +73,7 @@ export class LayerConfigService {
     }
 
     public loadGeoserverWMS(userpagelayer: UserPageLayer, j: number, init: boolean, mapConfig: MapConfig): Promise<any> {
-        let promise = new Promise((resolve) => {
+        let promise = new Promise<void>((resolve) => {
             let wmsSource = new TileWMS({
                 url: this.wmsService.formLayerRequest(userpagelayer),
                 params: { 'LAYERS': userpagelayer.layer.layerIdent, TILED: true },
@@ -111,7 +111,7 @@ export class LayerConfigService {
         return promise
     }
     public loadWMTS(mapConfig: MapConfig, init: boolean, userpagelayer: UserPageLayer): Promise<any> {
-        let promise = new Promise((resolve) => {
+        let promise = new Promise<void>((resolve) => {
             let url: string
             if (userpagelayer.layer.server.serverType == "ArcGIS WMTS") { //if the server is of type ArchGISWMTS
                 url = userpagelayer.layer.server.serverURL + '/' + userpagelayer.layer.layerService + '/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'

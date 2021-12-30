@@ -240,7 +240,7 @@ export class WOService {
   }
 
   private updateFields(selectedWO: WorkOrder, featurejson, comment?: string): Promise<any> {
-    let promise = new Promise((resolve) => {
+    let promise = new Promise<void>((resolve) => {
       console.log('updateFields')
       if (!comment) { comment = 'Object Created' }
       let mcf = new DataField
@@ -371,7 +371,7 @@ export class WOService {
   }
 
   completeWorkOrder(WOConfig: WOConfig): Promise<any> {
-    let promise = new Promise<any> ((resolve) => {
+    let promise = new Promise<void> ((resolve) => {
       let didUndo: boolean = false
       let snackBarRef = this.snackBar.open('Work Order Completed', 'Undo', {
         duration: 4000

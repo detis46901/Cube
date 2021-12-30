@@ -77,7 +77,7 @@ export class MapService {
     }
 
     public getUserPageLayers(): Promise<any> {
-        let promise = new Promise((resolve, reject) => {
+        let promise = new Promise<void>((resolve, reject) => {
             this.userPageLayerService
                 .GetPageLayers(this.mapConfig.currentpage.ID)
                 .subscribe((data: UserPageLayer[]) => {
@@ -93,7 +93,7 @@ export class MapService {
     }
 
     public getUserPageInstances(): Promise<any> {
-        let promise = new Promise((resolve, reject) => {
+        let promise = new Promise<void>((resolve, reject) => {
             this.userPageInstanceService
                 .GetPageInstances(this.mapConfig.currentpage.ID)
                 .subscribe((data: UserPageInstance[]) => {
@@ -107,7 +107,7 @@ export class MapService {
     }
 
     public getLayerPerms(): Promise<any> {
-        let promise = new Promise((resolve, reject) => {
+        let promise = new Promise<void>((resolve, reject) => {
             this.layerPermissionService
                 .GetByUserGroups(this.mapConfig.user.ID)
                 .subscribe((data: LayerPermission[]) => {
@@ -131,7 +131,7 @@ export class MapService {
     }
 
     public getModulePerms(): Promise<any> {
-        let promise = new Promise((resolve, reject) => {
+        let promise = new Promise<void>((resolve, reject) => {
             this.modulePermissionService
                 .GetByUserGroups(this.mapConfig.userID)
                 .subscribe((data: ModulePermission[]) => {
@@ -279,7 +279,7 @@ export class MapService {
     }
 
     public runInterval(layer: UserPageLayer): Promise<any> {
-        let promise = new Promise<any>((resolve) => {
+        let promise = new Promise<void>((resolve) => {
             this.getMyCubeData(layer).then((data) => {
                 if (data[0]) {
                     if (data[0][0]['jsonb_build_object']['features']) {

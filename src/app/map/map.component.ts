@@ -614,7 +614,7 @@ export class MapComponent implements OnInit {
     public loadLayers(mapConfig: MapConfig, init: boolean, single?: boolean): Promise<any> {
         this.mapConfig = mapConfig
         let j = 0;
-        let promise = new Promise((resolve) => {
+        let promise = new Promise<void>((resolve) => {
             this.mapConfig.userpagelayers.forEach(userpagelayer => {
                 if (single) { //If you're adding a single layer, under the "addLayer() from the map.component"
                     j++

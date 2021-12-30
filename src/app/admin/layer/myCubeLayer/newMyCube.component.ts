@@ -208,7 +208,7 @@ export class newMyCubeComponent implements OnInit {
     }
 
     public moveColumn(mcf: MyCubeFieldConfig, ID): Promise<any> {
-        let promise = new Promise((resolve, reject) => {
+        let promise = new Promise<void>((resolve, reject) => {
                             this.sqlservice.moveColumn(ID, mcf)
                             .subscribe((x) => {
                                 this.updateConstraint(mcf, ID)
@@ -266,7 +266,7 @@ export class newMyCubeComponent implements OnInit {
     }
 
     public addColumn(id, element): Promise<any> {
-        let promise = new Promise<any>((resolve, reject) => {
+        let promise = new Promise<void>((resolve, reject) => {
             console.log(element)
             this.sqlservice
                 .addColumn(id, element)

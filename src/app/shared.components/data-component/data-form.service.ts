@@ -171,7 +171,7 @@ export class DataFormService {
     let snackBarRef = this.snackBar.open('Record deleted', '', {
       duration: 4000
     });
-    let promise = new Promise<any>((resolve) => {
+    let promise = new Promise<void>((resolve) => {
       this.sqlService.deleteAnyRecord(dataFormConfig.schema, dataFormConfig.dataTable, field)
         .subscribe((x) => {
           resolve()

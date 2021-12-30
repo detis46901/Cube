@@ -59,7 +59,7 @@ export class AVLComponent implements OnInit, OnDestroy {
   }
 
   public buildConfig(): Promise<any> {
-    let promise = new Promise<any> ((resolve) => {
+    let promise = new Promise<void> ((resolve) => {
       this.AVLHTTPservice.getFleetLocationsCall(this.AVLconfig.token).subscribe((locations) => {
         this.AVLconfig.fleetLocations = locations['gpsMessage']
         this.AVLHTTPservice.getGroupCall(this.AVLconfig.token, 473643).subscribe((x) => {

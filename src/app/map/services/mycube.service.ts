@@ -113,7 +113,7 @@ export class MyCubeService extends SQLService {
   }
 
   getsingles(table, id): Promise<any> {
-    let promise = new Promise(resolve => {
+    let promise = new Promise<void>(resolve => {
       this.GetSingle('mycube.t' + table, id)
         .subscribe((sdata: JSON) => {
           let z = 0
