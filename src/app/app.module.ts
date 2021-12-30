@@ -155,11 +155,11 @@ import { FeatureModulesComponent } from './feature-modules/feature-modules.compo
         HttpClientJsonpModule,
         Routing,
         RouterModule.forRoot([
-            {
-                path: 'home',
-                component: HomeComponent
-            }
-        ]),
+    {
+        path: 'home',
+        component: HomeComponent
+    }
+], { relativeLinkResolution: 'legacy' }),
         //AdminModule,
         FormsModule,
         ReactiveFormsModule,
