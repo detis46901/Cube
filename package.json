@@ -44,7 +44,7 @@
     "lodash": "^4.17.21",
     "material-design-icons": "^3.0.1",
     "mdi": "^2.2.43",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.33",
     "next": "^10.2.0",
     "ngx-linky": "^3.0.0",
