@@ -45,33 +45,34 @@ export class LocatesComponent implements OnInit, OnDestroy {
     public userService: UserService,
     public locateStyles: locateStyles,
     public moduleInstanceService: ModuleInstanceService
-  ) {}
+  ) { }
 
   @Input() mapConfig: MapConfig;
   @Input() instance: ModuleInstance;
 
   ngOnInit() {
-    this.locatesservice.mapConfig = this.mapConfig
-    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    this.userID = currentUser && currentUser.userID;
+  this.locatesservice.mapConfig = this.mapConfig
+  const userStr = localStorage.getItem('currentUser');
+  const currentUser = userStr ? JSON.parse(userStr) : null;
+  this.userID = currentUser && currentUser.userID;
     this.getName()
-    let today:Date = new Date()
+    let today: Date = new Date()
     this.toDate = today
     this.tminus30 = new Date()
-    this.tminus30.setDate(this.tminus30.getDate()-30)
+    this.tminus30.setDate(this.tminus30.getDate() - 30)
     this.fromDate = this.tminus30
     this.locateConfig.moduleSettings = this.instance.settings
   }
 
   ngOnDestroy() {
-    if (this.layer) {clearInterval(this.layer.updateInterval)}
+    if (this.layer) { clearInterval(this.layer.updateInterval) }
   }
 
   goToTab(tab) {
     this.tab = tab
   }
 
-  public loadLayer(layer): boolean{
+  public loadLayer(layer): boolean {
     //probably not being used right now
     return this.locatesservice.loadLayer(this.mapConfig, layer)
   }
@@ -81,7 +82,7 @@ export class LocatesComponent implements OnInit, OnDestroy {
     this.locatesservice.createInterval(layer)
     return true
   }
-  public setCurrentLayer(layer):boolean {
+  public setCurrentLayer(layer): boolean {
     this.layer = layer
     this.locateConfig.expanded = true
     this.locateConfig.visible = true
@@ -100,17 +101,17 @@ export class LocatesComponent implements OnInit, OnDestroy {
     console.log('getFeatureList')
     return this.locatesservice.getFeatureList(layer)
   }
-  public clearFeature(layer:UserPageLayer): boolean {
+  public clearFeature(layer: UserPageLayer): boolean {
     this.ticket = null
     return this.locatesservice.clearFeature(layer)
   }
-  public unstyleSelectedFeature(layer:UserPageLayer):boolean {
+  public unstyleSelectedFeature(layer: UserPageLayer): boolean {
     return this.locatesservice.unstyleSelectedFeature(layer)
   }
-  public styleSelectedFeature(layer:UserPageLayer):boolean {
+  public styleSelectedFeature(layer: UserPageLayer): boolean {
     return this.locatesservice.styleSelectedFeature(layer)
   }
-  public selectFeature(layer:UserPageLayer): boolean {
+  public selectFeature(layer: UserPageLayer): boolean {
     this.goToTab('Process')
     this.locatesservice.getOneLocate(layer).then((x) => {
       this.ticket = x
@@ -119,7 +120,7 @@ export class LocatesComponent implements OnInit, OnDestroy {
       this.completedNote = x.note
     })
     this.locatesservice.selectFeature(layer)
-    let source = new VectorSource({wrapX: false});
+    let source = new VectorSource({ wrapX: false });
     this.locateConfig.boundaryLayer = new VectorLayer({
       source: source
     })
@@ -135,7 +136,9 @@ export class LocatesComponent implements OnInit, OnDestroy {
     this.locateInput = ""
   }
 
-  completeTicket() {
+  completeTicket(ticket: Locate) {
+    this.completedDisposition = this.disposition.disposition.find((x) => x.value == ticket.disposition)
+    console.log("Completed Disposition Value", this.completedDisposition.value)
     this.ticket.disposition = this.completedDisposition.value
     this.locatesservice.completeTicket(this.mapConfig, this.instance.ID, this.ticket, this.completedNote, this.userName)
     this.completedNote = null
@@ -148,21 +151,21 @@ export class LocatesComponent implements OnInit, OnDestroy {
       .subscribe((data: User) => {
         this.userName = data.firstName + " " + data.lastName
       })
-      this.moduleInstanceService.GetSingle(this.instance.ID)
-    .subscribe((x) => {
-      this.moduleSettings = x.settings
-    })
+    this.moduleInstanceService.GetSingle(this.instance.ID)
+      .subscribe((x) => {
+        this.moduleSettings = x.settings
+      })
   }
 
   filter() {
     let filterString: string = ''
     if (this.filterOpen == true) { filterString = 'closed is Null' }
-    if (filterString != '') {filterString += " and "} else {filterString += " "}
-      if (this.fromDate) {
-        filterString += "tdate BETWEEN '" + new Intl.DateTimeFormat('en-US').format(this.fromDate) + "' AND "
-      }
+    if (filterString != '') { filterString += " and " } else { filterString += " " }
+    if (this.fromDate) {
+      filterString += "tdate BETWEEN '" + new Intl.DateTimeFormat('en-US').format(this.fromDate) + "' AND "
+    }
     else {
-        filterString += "tdate BETWEEN '" + new Intl.DateTimeFormat('en-US').format(this.tminus30) + "' AND "
+      filterString += "tdate BETWEEN '" + new Intl.DateTimeFormat('en-US').format(this.tminus30) + "' AND "
     }
     if (this.toDate) {
       filterString += "'" + new Intl.DateTimeFormat('en-US').format(this.toDate) + "'"
@@ -197,15 +200,15 @@ export class LocatesComponent implements OnInit, OnDestroy {
     this.completedDisposition = this.disposition.disposition.find((x) => x.value == ticket.disposition)
     this.getEmailConfiguration()
     let win = window.open("mailto:" + ticket.email + "?subject=Ticket: " + ticket.ticket + " " + ticket.address + " " + ticket.street + "&body=" + this.completedDisposition.emailBody, "_blank"); //this.moduleSettings['settings'][1]['setting']['value']
-    setTimeout(function() { win.close() }, 500);
+    setTimeout(function () { win.close() }, 500);
     this.completedNote = "Emailed the contractor."
   }
 
   public getEmailConfiguration() {
     this.moduleInstanceService.GetSingle(this.instance.ID)
-    .subscribe((x) => {
-      this.moduleSettings = x.settings
-    })
+      .subscribe((x) => {
+        this.moduleSettings = x.settings
+      })
   }
   public openDashboard() {
     window.open(this.moduleSettings['settings'][2]['setting']['value'], '_blank', 'resizable=yes')

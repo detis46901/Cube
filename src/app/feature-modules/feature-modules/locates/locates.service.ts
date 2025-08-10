@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserPageLayer, MyCubeField } from '_models/layer.model';
 import { MapConfig, featureList } from 'app/map/models/map.model';
 import { geoJSONService } from 'app/map/services/geoJSON.service';
-import { Locate, locateStyles, locateConfig } from './locates.model'
+import { Locate, locateStyles, locateConfig, disposition } from './locates.model'
 import { DataFormConfig, LogFormConfig, LogField } from '../../../shared.components/data-component/data-form.model'
 import { StyleService } from './style.service'
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,10 +13,12 @@ import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from 'ol/source/Vector';
-import {transform} from 'ol/proj';
+import { transform } from 'ol/proj';
 import { environment } from '../../../../environments/environment'
 import { DataFormService } from '../../../shared.components/data-component/data-form.service'
 import { UserPage } from '_models/user.model';
+import { PositiveResponseService } from './locateupload.service';
+import { tick } from '@angular/core/testing';
 
 
 @Injectable()
@@ -27,13 +29,13 @@ export class LocatesService {
   public filter: string = 'closed IS Null'
   public sortBy: string = "Address"
   public showSortBy: Boolean
-  
-  constructor(private geojsonservice: geoJSONService,
+
+  constructor(private geojsonservice: geoJSONService, public positiveResponseService: PositiveResponseService,
     protected _http: HttpClient,
     private styleService: StyleService,
     private sqlService: SQLService,
     private dataFormService: DataFormService,
-    private snackBar: MatSnackBar) {}
+    private snackBar: MatSnackBar) { }
 
   //loads the locate data
   public loadLayer(mapConfig: MapConfig, layer: UserPageLayer): boolean {
@@ -51,7 +53,7 @@ export class LocatesService {
     });
     layer.olLayer = vectorlayer
     // layer.source = source
-    this.getMyLocateData(layer).then((loadedLayer:UserPageLayer) => {
+    this.getMyLocateData(layer).then((loadedLayer: UserPageLayer) => {
       // var clusterSource = new ol.source.Cluster({
       //   distance: 90,
       //   source: source
@@ -67,13 +69,13 @@ export class LocatesService {
 
   public createInterval(layer: UserPageLayer) {
     clearInterval(layer.updateInterval)
-    layer.updateInterval= setInterval(() => {
+    layer.updateInterval = setInterval(() => {
       this.reloadLayer(layer);
     }, 20000);
   }
 
-  
-  public getFeatureList(layer?:UserPageLayer): boolean {
+
+  public getFeatureList(layer?: UserPageLayer): boolean {
     let k: number = 0;
     let tempList = new Array<featureList>();
     try {
@@ -114,21 +116,21 @@ export class LocatesService {
 
   public selectFeature(layer: UserPageLayer): boolean {
     clearInterval(layer.updateInterval)
-    layer.updateInterval= null
+    layer.updateInterval = null
     return false
   }
 
   public clearFeature(layer: UserPageLayer): boolean {
-    // let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
-    //   console.log('clearing feature')
-    //   return (this.styleService.styleFunction(feature, 'current'));
-    // })
+    let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
+      console.log('clearing feature')
+      return (this.styleService.styleFunction(feature, 'current'));
+    })
     this.createInterval(layer)
     this.locate = null
     // this.reloadLayer(layer, 'current')
-  //  if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction) }
-   this.mapConfig.myCubeConfig = new DataFormConfig
-        this.mapConfig.myCubeComment = new LogFormConfig
+    if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction) }
+    this.mapConfig.myCubeConfig = new DataFormConfig
+    this.mapConfig.myCubeComment = new LogFormConfig
     return false
   }
 
@@ -144,7 +146,7 @@ export class LocatesService {
     let stylefunction = ((feature: Feature, resolution) => {  //"resolution" has to be here to make sure feature gets the feature and not the resolution
       return (this.styleService.styleFunction(feature, 'current'));
     })
-    if (this.mapConfig.selectedFeature) {this.mapConfig.selectedFeature.setStyle(stylefunction)}
+    if (this.mapConfig.selectedFeature) { this.mapConfig.selectedFeature.setStyle(stylefunction) }
     return true
   }
 
@@ -152,22 +154,22 @@ export class LocatesService {
   public reloadLayer(layer: UserPageLayer, layerState?: string) {
     if (!layerState) {
       layerState = 'load'
-      if (layer == this.mapConfig.currentLayer) {layerState = 'current'}
+      if (layer == this.mapConfig.currentLayer) { layerState = 'current' }
     }
-    this.getMyLocateData(layer).then((loadedLayer:UserPageLayer) => {
-        if (layerState == 'current') {this.getFeatureList(layer)}
-          layer.olLayer.getSource().forEachFeature((feat: Feature) => {
-            feat.setStyle(this.styleService.styleFunction(feat, layerState));
-          })
+    this.getMyLocateData(layer).then((loadedLayer: UserPageLayer) => {
+      if (layerState == 'current') { this.getFeatureList(layer) }
+      layer.olLayer.getSource().forEachFeature((feat: Feature) => {
+        feat.setStyle(this.styleService.styleFunction(feat, layerState));
+      })
     })
   }
 
-  public getOneLocate(layer: UserPageLayer):Promise<Locate> {
+  public getOneLocate(layer: UserPageLayer): Promise<Locate> {
     let promise = new Promise<Locate>((resolve) => {
       this.sqlService.GetSingle('mycube.t' + layer.layerID, this.mapConfig.selectedFeature.get('id'))
-      .subscribe((data) => {
-        resolve(data[0][0])
-      })
+        .subscribe((data) => {
+          resolve(data[0][0])
+        })
     })
     return promise
   }
@@ -189,203 +191,170 @@ export class LocatesService {
   public parseLocateInput(Loc: string, MapConfig: MapConfig, instanceID: number): void {
     this.mapConfig = MapConfig
     let locate = new Locate
+    let duplicate: boolean = false
     let i: number
     let ii: number
     try {
-      let tp = Loc.split("CNCL")
-      if (tp.length > 1) {locate.cancel = true}
-      let t = Loc.split("Ticket : ")
-      locate.ticket = t[1].substr(0, 10)
-      t = Loc.split("Date: ")
-      locate.tdate = t[1].substr(0, 10)
-      t = Loc.split("Time: ")
-      locate.ttime = t[1].substr(0, 5)
-      t = Loc.split("Subdivision:")
-      locate.subdivision = t[1].split("Address :")[0]
+      // Helper: get text between two markers
+      const between = (source: string, start: string, end: string, trim = true) => {
+        const startIdx = source.indexOf(start);
+        if (startIdx === -1) return '';
+        const from = startIdx + start.length;
+        const endIdx = source.indexOf(end, from);
+        const raw = endIdx !== -1 ? source.substring(from, endIdx) : source.substring(from);
+        return trim ? raw.trim() : raw;
+      };
 
-      i = Loc.indexOf("Address :")
-      ii = Loc.indexOf("Street  :")
-      if (i + 16 > ii) { locate.address = Loc.substring(i + 10, ii - 1) } else { locate.address = '' }
-      i = Loc.indexOf("Street  :")
-      ii = Loc.indexOf("Cross ")
-      if (ii < 5) { ii = Loc.indexOf("Location") }
-      locate.street = Loc.substr(i + 10, ii - i - 11)
-      i = Loc.indexOf("Cross ")
-      locate.crossst = ""
-      if (i < 5) { locate.crossst = "" }
-      else {
-        ii = Loc.indexOf("Within")
-        locate.crossst = Loc.substr(i + 10, ii - i - 11)
+      // Helper: get fixed-length substring after marker
+      const after = (source: string, start: string, length: number) => {
+        const startIdx = source.indexOf(start);
+        return startIdx !== -1 ? source.substr(startIdx + start.length, length).trim() : '';
+      };
+
+      // Parse flags
+      locate.cancel = Loc.includes('CNCL');
+
+      // Parse ticket info
+      locate.ticket = after(Loc, 'Ticket : ', 11);
+      locate.tdate = after(Loc, 'Date: ', 10);
+      locate.ttime = after(Loc, 'Time: ', 5);
+      locate.subdivision = between(Loc, 'Subdivision:', 'Address :');
+
+      // Parse address & street
+      const addressStart = Loc.indexOf('Address :');
+      const streetStart = Loc.indexOf('Street  :');
+      if (addressStart + 16 > streetStart) {
+        locate.address = Loc.substring(addressStart + 10, streetStart - 1).trim();
+      } else {
+        locate.address = '';
       }
+      const crossStart = Loc.indexOf('Cross ');
+      const streetEnd = crossStart > -1 ? crossStart : Loc.indexOf('Location');
+      locate.street = Loc.substring(streetStart + 10, streetEnd - 1).trim();
+      locate.crossst = crossStart > -1
+        ? between(Loc, 'Cross ', 'Within')
+        : '';
 
-      let Addname: string
-      if (locate.address.length > 3) {
-        Addname = locate.address + " " + locate.street + " Kokomo, IN"
-      }
-      else {
-        Addname = locate.street + " and " + locate.crossst + " Kokomo, IN"
-      }
+      // Build Addname
+      const Addname = locate.address.length > 3
+        ? `${locate.address} ${locate.street} Kokomo, IN`
+        : `${locate.street} and ${locate.crossst} Kokomo, IN`;
 
-      i = Loc.indexOf("Location")
-      ii = Loc.indexOf("Grids")
-      locate.location = Loc.substr(i + 10, ii - 2 - i - 10)
+      // Location & boundaries
+      locate.location = between(Loc, 'Location', 'Grids');
+      const BN = after(Loc, 'Boundary', 9);
+      const BS = Loc.substring(Loc.indexOf('Boundary') + 27, Loc.indexOf('Boundary') + 36);
+      const BW = Loc.substring(Loc.indexOf('Boundary') + 42, Loc.indexOf('Boundary') + 52);
+      const BE = Loc.substring(Loc.indexOf('Boundary') + 58, Loc.indexOf('Boundary') + 68);
+      const Boundary = `${BW} ${BN},${BE} ${BN},${BE} ${BS},${BW} ${BS},${BW} ${BN}`;
+      // ^ Not sure if this is actually used
 
-      i = Loc.indexOf("Boundary")
-      let BN = Loc.substring(i + 12, i + 21)
-      let BS = Loc.substring(i + 27, i + 36)
-      let BW = Loc.substring(i + 42, i + 52)
-      let BE = Loc.substring(i + 58, i + 68)
+      // Work & company info
+      locate.wtype = between(Loc, 'Work type', 'Done for');
+      locate.dfor = between(Loc, 'Done for', 'Start date');
+      locate.sdate = after(Loc, 'Start date', 10);
+      locate.stime = after(Loc, 'Start date', 35 - (Loc.indexOf('Start date') + 30)); // adjust if needed
+      locate.priority = after(Loc, 'Priority', 4);
 
-      //not sure I need this
-      let Boundary = BW + " " + BN + "," + BE + " " + BN + "," + BE + " " + BS + "," + BW + " " + BS + "," + BW + " " + BN
+      // Boolean flags
+      locate.blasting = after(Loc, 'Blasting:', 1) === 'Y' ? 't' : 'f';
+      locate.boring = after(Loc, 'Boring:', 1) === 'Y' ? 't' : 'f';
+      locate.railroad = after(Loc, 'Railroad:', 1) === 'Y' ? 't' : 'f';
+      locate.emergency = after(Loc, 'Emergency: ', 1) === 'Y' ? 't' : 'f';
 
-      i = Loc.indexOf("Work type")
-      ii = Loc.indexOf("Done for")
+      // Project details
+      locate.duration = between(Loc, 'Duration  :', 'Depth:');
+      locate.depth = between(Loc, 'Depth:', 'Company :');
+      locate.company = between(Loc, 'Company :', 'Type:');
+      locate.ctype = between(Loc, 'Type:', 'Co addr :');
+      locate.coaddr = between(Loc, 'Co addr', 'City    :');
+      locate.cocity = between(Loc, 'City    :', 'Zip:');
+      locate.cozip = between(Loc, 'Zip:', 'Caller  :');
+      locate.caller = between(Loc, 'Caller  : ', 'Phone:');
 
-      locate.wtype = Loc.substring(i + 12, ii - 1)
+      // Phone/contact details
+      locate.callphone = between(Loc, 'Phone:', Loc.includes('Contact :') ? 'Contact :' : 'BestTime');
+      locate.contact = Loc.includes('Contact :')
+        ? between(Loc, 'Contact :', 'Phone:')
+        : '';
+      locate.mobile = Loc.includes('Mobile  :')
+        ? between(Loc, 'Mobile  :', 'Fax')
+        : '';
+      locate.fax = Loc.includes('Fax')
+        ? between(Loc, 'Fax', 'Email  ')
+        : '';
+      locate.email = Loc.includes('Email  ')
+        ? between(Loc, 'Email  ', 'Remarks ')
+        : '';
 
-      i = Loc.indexOf("Done for")
-      ii = Loc.indexOf("Start date")
-      locate.dfor = Loc.substring(i + 12, ii - 1)
+      // Store
+      this.locate = locate;
 
-      i = Loc.indexOf("Start date")
-      locate.sdate = Loc.substring(i + 12, i + 22)
-      locate.stime = Loc.substring(i + 30, i + 35)
+      // Debug logging
+      console.log('Ticket:', locate.ticket);
+      console.log('Layer ID:', this.mapConfig.currentLayer.layer.ID);
 
-      i = Loc.indexOf("Priority")
-      locate.priority = Loc.substring(i + 10, i + 14)
 
-      i = Loc.indexOf("Blasting:")
-      let BlastingYN = Loc.substring(i + 10, i + 11)
-      if (BlastingYN == "Y") {
-        locate.blasting = 't'
-      }
-      else {
-        locate.blasting = 'f'
-      }
+      console.log('Locate to be added');
 
-      i = Loc.indexOf("Boring:")
-      if (Loc.substring(i + 8, i + 9) == 'Y') { locate.boring = 't' }
-      else { locate.boring = 'f' }
+      // Duplicate check
+      const layerId = this.mapConfig.currentLayer.layer.ID;
+      const filter = `ticket = '${locate.ticket}'`;
 
-      i = Loc.indexOf("Railroad:")
-      if (Loc.substring(i + 10, i + 11) == "Y") { locate.railroad = 't' }
-      else { locate.railroad = 'f' }
+      this.geojsonservice.GetSome(layerId, filter).subscribe((response) => {
+        const features = response?.[0]?.[0]?.jsonb_build_object?.features ?? null;
+        console.log('GetSome features:', features);
 
-      i = Loc.indexOf("Emergency: ")
-      if (Loc.substring(i + 11, i + 12) == "Y") { locate.emergency = 't' }
-      else { locate.emergency = 'f' }
-
-      i = Loc.indexOf("Duration  :")
-      ii = Loc.indexOf("Depth:")
-      locate.duration = Loc.substring(i + 12, ii - 1)
-
-      i = Loc.indexOf("Depth:")
-      ii = Loc.indexOf("Company :")
-      locate.depth = Loc.substring(i + 7, ii - 2)
-
-      i = Loc.indexOf("Company :")
-      ii = Loc.indexOf("Type:")
-      locate.company = Loc.substring(i + 10, ii - 1)
-
-      i = Loc.indexOf("Type:")
-      ii = Loc.indexOf("Co addr :")
-      locate.ctype = Loc.substring(i + 6, ii - 1)
-
-      i = Loc.indexOf("Co addr")
-      ii = Loc.indexOf("City    :")
-      locate.coaddr = Loc.substring(i + 10, ii - 1)
-
-      i = Loc.indexOf("City    :")
-      ii = Loc.indexOf("Zip:")
-      locate.cocity = Loc.substring(i + 10, ii - 10)
-
-      i = Loc.indexOf("Zip:")
-      ii = Loc.indexOf("Caller  : ")
-      locate.cozip = Loc.substring(i + 5, ii - 1)
-
-      i = Loc.indexOf("Caller  : ")
-      ii = Loc.indexOf("Phone:")
-      locate.caller = Loc.substring(i + 10, ii - 1)
-
-      i = Loc.indexOf("Phone:")
-      ii = Loc.indexOf("Contact :")
-      if (ii < 5) {
-        ii = Loc.indexOf("BestTime")
-      }
-      locate.callphone = Loc.substring(i + 7, ii - 1)
-
-      i = Loc.indexOf("Contact :")
-      if (i < 5) { locate.contact = "" }
-      else {
-        ii = Loc.lastIndexOf("Phone:")
-        locate.contact = Loc.substring(i + 10, ii - 1)
-      }
-
-      i = Loc.indexOf("Mobile  :")
-      if (i < 5) { locate.mobile = "" }
-      else {
-        ii = Loc.indexOf("Fax")
-        if (ii > 0) {
-          locate.mobile = Loc.substring(i + 10, ii - 1)
+        if (features) {
+          duplicate = true;
+          this.snackBar.open(
+            'Ticket was not inserted. It is a duplicate.',
+            '',
+            { duration: 4000 }
+          );
+        } else {
+          console.log('Adding locate');
+          this.geolocate(Addname, instanceID);
         }
-        else {
-          locate.mobile = Loc.substring(i + 10, i + 23)
-        }
-      }
-
-      i = Loc.indexOf("Fax  ")
-      ii = Loc.indexOf("Email  ")
-      if (i > 0) {
-        if (ii > 0) {
-          locate.fax = Loc.substring(i + 10, ii - 1)
-        }
-        else {
-          locate.fax = Loc.substring(i + 10, i + 23)
-        }
-      }
-      else {
-        locate.fax = ""
-      }
-
-      i = Loc.indexOf("Email  ")
-      ii = Loc.indexOf("Remarks ")
-      if (i > 0) {
-        locate.email = Loc.substring(i + 10, ii - 2)
-      }
-      else {
-        locate.email = ""
-      }
-      this.locate = locate
-      this.geojsonservice.GetSome(this.mapConfig.currentLayer.layer.ID, "ticket = '" + locate.ticket + "'")
-        .subscribe((x) => {
-          if (x[0][0]['features']) {
-            let snackBarRef = this.snackBar.open('Ticket was not inserted.  It is a duplicate.', '', {
-              duration: 4000
-            });
+        if (locate.cancel) {
+          console.log('Locate cancelled', features[0][0]['properties']['disposition']);
+          if (features[0][0]['properties']['disposition'] != '1' || features[0][0]['properties']['disposition'] != '2') {
+            console.log('Not already marked.  Cancelling ticket.');
+            this.cancelTicket(this.mapConfig, instanceID, locate, 'System Cancel');
+            this.snackBar.open(
+              'Locate was not inserted. It was marked as cancelled.',
+              '',
+              { duration: 4000 }
+            );
+            return;
           }
-          else {
-            this.geolocate(Addname, instanceID)
-          }
-        })
-    }
-    catch (e) {
-      let snackBarRef = this.snackBar.open('Locate email is not formed correctly.', '', {
-        duration: 4000
+        }
       });
+
+
+    } catch (e) {
+      this.snackBar.open(
+        'Locate email is not formed correctly.',
+        '',
+        { duration: 4000 }
+      );
     }
+
   }
 
   private geolocate(addName: string, instanceID: number) {
     console.log('geolocate')
     let geometry: JSON
     let httpP = new HttpParams()
+    const howardBounds = "south: 40.3870,west: -86.2701,north: 40.5509,east: -85.9467"
     httpP = httpP.append("address", addName)
-    httpP = httpP.append("components", "administrative_area:Howard")
+    httpP = httpP.append("bounds", howardBounds)
+    httpP = httpP.append("components", "administrative_area:IN")
     httpP = httpP.append("sensor", "false")
     httpP = httpP.append("key", "AIzaSyDAaLEIXTo6am6x0-QlegzxDnZLIN3mS-o")
     this.GetGeoLocation(httpP)
       .subscribe((results: string) => {
+        console.log('geolocate results', results)
         let i = results.indexOf('<lat>')
         let ii = results.indexOf('</lat>')
         let lat = results.substring(i + 5, ii - 1)
@@ -447,6 +416,21 @@ export class LocatesService {
         this.updateRecord(table, id, 'email', 'text', this.locate.email)
         this.reloadLayer(this.mapConfig.currentLayer)
         this.zoomToFeature(id, geometry)
+        //add comment in mycube logs
+        console.log('adding log')
+        let logForm = new LogField
+        logForm.comment = "Locate Added"
+        logForm.logTable = 'c' + table
+        logForm.schema = 'mycube'
+        logForm.userid = this.mapConfig.user.ID
+        logForm.featureid = id
+        logForm.auto = true
+        this.dataFormService.addLogForm(logForm).then(data => {
+          console.log('log added', data)
+        })
+        let snackBarRef = this.snackBar.open('ticked ' + this.locate.ticket + ' created', '', {
+          duration: 4000
+        });
       })
   }
 
@@ -461,49 +445,44 @@ export class LocatesService {
     mcf.value = value
     this.sqlService.Update(table, id, mcf)
       .subscribe(data => {
-        //This is to check for duplicates.  There's got to be a better way to do this.
-        if (field == 'ticket') {
-          this.sqlService.GetSingle('mycube.t' + table, id)
-            .subscribe((x) => {
-              let y: Locate = x[0][0]
-              if (y.ticket != null) {
-                let snackBarRef = this.snackBar.open('Ticket ' + this.locate.ticket + ' was inserted.', 'Undo', {
-                  duration: 4000
-                });
-                let logForm = new LogField
-                logForm.comment = "Ticket Added"
-                logForm.logTable = 'c' + table
-                logForm.schema = 'mycube'
-                logForm.userid = this.mapConfig.user.ID
-                logForm.featureid = id   
-                logForm.auto = true             
-                this.dataFormService.addLogForm(logForm)
-                snackBarRef.onAction().subscribe((x) => {
-                  this.sqlService.Delete(table, id)
-                    .subscribe((x) => {
-                      let newSnackBarRef = this.snackBar.open("Undone")
-                    })
-                })
-              }
-              else {
-                //Code should never get to this point.  There is another check further up.
-                let snackBarRef = this.snackBar.open('Ticket was not inserted.  It is a duplicate.', '', {
-                  duration: 4000
-                });
-                this.sqlService.Delete(table, id)
-                  .subscribe((x) => {
-
-                  })
-              }
-            })
-        }
-        // this.reloadLayer();
+        console.log('updateRecord', data)
       })
     return true
   }
 
+
+
+  public cancelTicket(mapConfig: MapConfig, instanceID: number, ticket: Locate, canceledBy: string) {
+    ticket.disposition = "3E"
+    let ticketID = ticket.id.toString()
+    this.mapConfig = mapConfig
+    let undo: boolean
+    let i = mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == instanceID)
+    let obj = mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'myCube Layer Identity (integer)')
+    let table: number = obj['setting']['value']
+    let strDate = new Date()
+    this.updateRecord(table, ticketID, 'closed', 'text', strDate.toLocaleString())
+    let ntext: RegExp = /'/g
+    this.updateRecord(table, ticketID, 'note', 'text', 'Canceled')
+    this.updateRecord(table, ticketID, 'disposition', 'text', ticket.disposition)
+    undo = false
+    let userID = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'UserID')
+    let password = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'Password')
+    let serviceAreaCode = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'Service Area Code')
+    userID = userID['setting']['value']
+    password = password['setting']['value']
+    serviceAreaCode = serviceAreaCode['setting']['value']
+    console.log('userID', userID, 'password', password, 'serviceAreaCode', serviceAreaCode, 'ticket', ticket.ticket)
+    this.positiveResponseService.submitPositiveResponse(userID, password, serviceAreaCode, ticket)
+      .subscribe(data => {
+        console.log('Positive response submitted', data);
+      })
+
+  }
+
   public completeTicket(mapConfig: MapConfig, instanceID: number, ticket: Locate, completedNote: string, completedBy: string) {
     let ticketID = ticket.id.toString()
+    ticket.note = completedNote
     this.mapConfig = mapConfig
     let undo: boolean
     let i = mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == instanceID)
@@ -512,18 +491,35 @@ export class LocatesService {
     let strDate = new Date()
     i = mapConfig.userpagelayers.findIndex(x => x.layerID == table)
     let feat: Feature = this.mapConfig.selectedFeature
-    this.mapConfig.currentLayer.olLayer.getSource().removeFeature(this.mapConfig.selectedFeature)
-    this.clearFeature(mapConfig.userpagelayers[i])
-    let flItemIndex: number = this.mapConfig.featureList.findIndex(x => x.feature == feat)
-    let flItem: featureList = this.mapConfig.featureList.splice(flItemIndex)[0]
+    let disp = new disposition
+    let d = disp.disposition
+    console.log(d.find(x => x['value'] == ticket.disposition)['closes'])
+    if (d.find(x => x['value'] == ticket.disposition)['closes'] == true) {
+      console.log('removing feature')
+      ticket.closed = strDate.toLocaleString()
+      this.mapConfig.currentLayer.olLayer.getSource().removeFeature(this.mapConfig.selectedFeature)
+      this.clearFeature(mapConfig.userpagelayers[i])
+    }
+    else {
+      console.log('not removing feature')
+    }
+    let logForm = new LogField
+    logForm.comment = "Positive Response " + ticket.disposition + " by " + completedBy
+    logForm.logTable = 'c' + table
+    logForm.schema = 'mycube'
+    logForm.userid = this.mapConfig.user.ID
+    logForm.featureid = ticketID
+    logForm.auto = true
+    this.dataFormService.addLogForm(logForm).then(data => {
+      console.log('log added', data)
+    })
     let snackBarRef = this.snackBar.open('Ticket completed.', 'Undo', {
       duration: 4000
     });
     snackBarRef.onAction().subscribe((x) => {
       undo = true
-      this.mapConfig.selectedFeature = feat
-      this.mapConfig.currentLayer.source.addFeature(this.mapConfig.selectedFeature)
-      this.selectFeature(this.mapConfig.currentLayer)
+      this.mapConfig.currentLayer.olLayer.getSource().addFeature(feat)
+      this.clearFeature(mapConfig.userpagelayers[i])
       let snackBarRef = this.snackBar.open('Undone.', '', {
         duration: 4000
       });
@@ -531,64 +527,34 @@ export class LocatesService {
     })
     snackBarRef.afterDismissed().subscribe((x) => {
       if (!undo) {
-        this.updateRecord(table, ticketID, 'closed', 'text', strDate.toLocaleString())
-        let ntext: RegExp = /'/g
-        if (completedNote) { completedNote = completedNote.replace(ntext, "''") }
-        this.updateRecord(table, ticketID, 'note', 'text', completedNote)
-        this.updateRecord(table, ticketID, 'completedby', 'text', completedBy)
-        this.updateRecord(table, ticketID, 'disposition', 'text', ticket.disposition)
+        if (ticket.closed) {
+          this.updateRecord(table, ticketID, 'closed', 'text', strDate.toLocaleString())
+        }
+        else {
+          let ntext: RegExp = /'/g
+          if (completedNote) { completedNote = completedNote.replace(ntext, "''") }
+          this.updateRecord(table, ticketID, 'note', 'text', completedNote)
+          this.updateRecord(table, ticketID, 'completedby', 'text', completedBy)
+          this.updateRecord(table, ticketID, 'disposition', 'text', ticket.disposition)
+        }
         undo = false
-        this.sendUpdateToIRTH(instanceID, ticket)
-        this.reloadLayer(this.mapConfig.currentLayer, "current")
+        let i = this.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == instanceID)
+        let userID = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'UserID')
+        let password = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'Password')
+        let serviceAreaCode = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'Service Area Code')
+        userID = userID['setting']['value']
+        password = password['setting']['value']
+        serviceAreaCode = serviceAreaCode['setting']['value']
+        console.log('userID', userID, 'password', password, 'serviceAreaCode', serviceAreaCode, 'ticket', ticket.ticket)
+        this.positiveResponseService.submitPositiveResponse(userID, password, serviceAreaCode, ticket)
+          .subscribe(data => {
+            console.log('Positive response submitted', data);
+          })
+
       }
     })
   }
 
-  sendUpdateToIRTH(instanceID: number, ticket: Locate) {
-    let i = this.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == instanceID)
-    let stateCode = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'State Code')
-    let userID = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'UserID')
-    let password = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'Password')
-    let serviceAreaCode = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'Service Area Code')
-    stateCode = stateCode['setting']['value']
-    userID = userID['setting']['value']
-    password = password['setting']['value']
-    serviceAreaCode = serviceAreaCode['setting']['value']
-
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('POST', environment.proxyUrl + '/irth.indiana811.org/IrthOneCallWebServices/PositiveResponseV2.asmx', true);
-
-    var sr =
-    `<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-    <soap:Body>
-      <Respond xmlns="http://Irth.com/OneCall/PositiveResponse">
-        <occCode>` + stateCode + `</occCode>
-        <userID>` + userID + `</userID>
-        <password>` + password + `</password>
-        <serviceAreaCode>` + serviceAreaCode + `</serviceAreaCode>
-        <occTicketID>` + ticket.ticket + `</occTicketID>
-        <responseCode>` + ticket.disposition + `</responseCode>
-        <responseCategory></responseCategory>
-        <comment>Auto Response by the City of Kokomo</comment>
-      </Respond>
-    </soap:Body>
-  </soap:Envelope>`
-
-    xmlhttp.onreadystatechange =  () => {
-      console.log(xmlhttp.responseText)
-        if (xmlhttp.readyState == 4) {
-            if (xmlhttp.status == 200) {
-                var xml = xmlhttp.responseXML;
-                var req = xmlhttp.responseURL
-                console.log(req)
-                console.log(xml); //I'm printing my result square number
-            }
-        }
-    }
-    // Send the POST request
-    xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-    xmlhttp.send(sr)
-}
 
   public flipSortBy() {
     switch (this.sortBy) {
@@ -642,4 +608,52 @@ export class LocatesService {
       })
     }
   }
+
+  sendUpdateToIRTH(instanceID: number, ticket: Locate) {
+    let i = this.mapConfig.userpageinstances.findIndex(x => x.moduleInstanceID == instanceID)
+    let stateCode = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'State Code')
+    let userID = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'UserID')
+    let password = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'Password')
+    let serviceAreaCode = this.mapConfig.userpageinstances[i].module_instance.settings['settings'].find(x => x['setting']['name'] == 'Service Area Code')
+    stateCode = stateCode['setting']['value']
+    userID = userID['setting']['value']
+    password = password['setting']['value']
+    serviceAreaCode = serviceAreaCode['setting']['value']
+
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open('POST', environment.proxyUrl + 'https://811.indiana811.org/api/External/PositiveResponse/Respond', true);
+
+    var sr =
+      `<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+      <Respond xmlns="http://Irth.com/OneCall/PositiveResponse">
+        <occCode>` + stateCode + `</occCode>
+        <userID>` + userID + `</userID>
+        <password>` + password + `</password>
+        <serviceAreaCode>` + serviceAreaCode + `</serviceAreaCode>
+        <occTicketID>` + ticket.ticket + `</occTicketID>
+        <responseCode>` + ticket.disposition + `</responseCode>
+        <responseCategory></responseCategory>
+        <comment>Auto Response by the City of Kokomo</comment>
+      </Respond>
+    </soap:Body>
+  </soap:Envelope>`
+
+    xmlhttp.onreadystatechange = () => {
+      console.log(xmlhttp.responseText)
+      if (xmlhttp.readyState == 4) {
+        if (xmlhttp.status == 200) {
+          var xml = xmlhttp.responseXML;
+          var req = xmlhttp.responseURL
+          console.log(req)
+          console.log(xml); //I'm printing my result square number
+        }
+      }
+    }
+    // Send the POST request
+    xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+    xmlhttp.send(sr)
+  }
+
+
 }

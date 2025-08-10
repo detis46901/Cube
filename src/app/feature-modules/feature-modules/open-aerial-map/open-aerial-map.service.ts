@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserPageLayer } from '_models/layer.model';
 import { MapConfig } from 'app/map/models/map.model';
 import { HttpClient } from '@angular/common/http';
-import { Observable ,  Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { MyCubeService } from './../../../map/services/mycube.service'
 import { Image } from './open-aerial-map.model'
 import { WMSService } from '../../../map/services/wms.service'
@@ -13,6 +13,7 @@ import Polygon from 'ol/geom/Polygon';
 import WMTSCapabilities from 'ol/format/WMTSCapabilities';
 import WMTS from 'ol/source/WMTS';
 import { optionsFromCapabilities } from 'ol/source/WMTS';
+import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
 
 @Injectable()
@@ -31,10 +32,10 @@ export class OpenAerialMapService {
   public opacity: number;
   public selectedImage = new Image()
   public imageZIndex: number
-  
+
 
   public GetImagesFromURL = (): Observable<any> => {
-    return this._http.get('https://api.openaerialmap.org/meta?provider=City%20of%20Kokomo&limit=1000')
+    return this._http.get('httpS://cube-kokomo.com:9876/api.openaerialmap.org/meta?provider=City%20of%20Kokomo&limit=1000')
   }
 
   public loadLayer(mapConfig: MapConfig, layer: UserPageLayer, init?: boolean): boolean {
@@ -53,22 +54,22 @@ export class OpenAerialMapService {
 
   public setCurrentLayer(layer: UserPageLayer): boolean {
     this.AOMMouseOver = this.mapConfig.map.on('pointermove', (evt: any) => {
-        if (this.mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
-          this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
-            if (layer === this.bboxLayer) {
-              this.selectedImage = this.images.find(x => x._id == feature.get('_id'))
-            }
-          })
-        }
-        else {
-          this.mapConfig.mouseoverLayer = null;
-          this.selectedImage = new Image()
-        }
-      })
+      if (this.mapConfig.map.hasFeatureAtPixel(evt.pixel)) {
+        this.mapConfig.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+          if (layer === this.bboxLayer) {
+            this.selectedImage = this.images.find(x => x._id == feature.get('_id'))
+          }
+        })
+      }
+      else {
+        this.mapConfig.mouseoverLayer = null;
+        this.selectedImage = new Image()
+      }
+    })
     // this.mapConfig.showStyleButton = true
     return true
   }
-  
+
   public unsetCurrentLayer(layer: UserPageLayer): boolean {
     return true
   }
@@ -77,24 +78,24 @@ export class OpenAerialMapService {
   }
   public selectFeature(layer: UserPageLayer): Image {
     let image: Image
-        let _id: string
-        _id = this.mapConfig.selectedFeature.get('_id')
-        image = this.images.find(x => x._id == _id)
-        if (image.on == false) {
-          this.loadImage(image)
-          image.function = 'add'
-        }
-        else {
-          this.removeImage(image)
-          image.function = 'subtract'
-        }
+    let _id: string
+    _id = this.mapConfig.selectedFeature.get('_id')
+    image = this.images.find(x => x._id == _id)
+    if (image.on == false) {
+      this.loadImage(image)
+      image.function = 'add'
+    }
+    else {
+      this.removeImage(image)
+      image.function = 'subtract'
+    }
     return image
   }
 
   public styleSelectedFeature(layer: UserPageLayer): boolean {
     return true
   }
-  
+
   public unstyleSelectedFeature(layer: UserPageLayer): boolean {
     return true
   }
@@ -156,30 +157,38 @@ export class OpenAerialMapService {
   }
 
   loadImage(image: Image) {
+    console.log('loading image', image)
     image.on = true
-    this.wmsService.getCapabilities(image.properties.wmts)
-      .subscribe((data) => {
-        let parser = new WMTSCapabilities();
-        let result = parser.read(data);
-          let options = optionsFromCapabilities(result, {
-          layer: 'None',
-          matrixSet: 'EPSG:3857'
-        });
+    // this.wmsService.getCapabilities(image.properties.tms)
+    //   .subscribe((data) => {
+    //     console.log(data)
+    //     let parser = new WMTSCapabilities();
+    //     let result = parser.read(data);
+    //     let options = optionsFromCapabilities(result, {
+    //       layer: 'None',
+    //       matrixSet: 'EPSG:3857'
+    //     });
+    //     console.log(options)
+        
         let wmsLayer = new TileLayer({
-          opacity: this.opacity,
-          source: new WMTS(options)
-        });
-        wmsLayer.setZIndex(this.imageZIndex)
-        wmsLayer.setVisible(true);
-        this.mapConfig.map.addLayer(wmsLayer);
-        image.layer = wmsLayer
-      })
-  }
+          source: new XYZ({
 
-  removeImage(image: Image) {
-    image.on = false
-    this.mapConfig.map.removeLayer(image.layer)
-  }
+          url: image.properties.tms
+        })
+      // opacity: this.opacity,
+        })
+          wmsLayer.setZIndex(this.imageZIndex)
+    wmsLayer.setVisible(true);
+    this.mapConfig.map.addLayer(wmsLayer);
+    image.layer = wmsLayer
+
+      // });
+}
+
+removeImage(image: Image) {
+  image.on = false
+  this.mapConfig.map.removeLayer(image.layer)
+}
 
   // toggleImage(image: Image) {
   //   if (image.on == false) {
@@ -193,6 +202,6 @@ export class OpenAerialMapService {
   // }
 
   public setOpacity(opacity: number) {
-    this.opacity = opacity
-  }
+  this.opacity = opacity
+}
 }

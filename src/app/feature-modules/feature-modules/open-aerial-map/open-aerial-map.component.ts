@@ -90,7 +90,7 @@ export class OpenAerialMapComponent implements OnInit {
   }
 
   public copyURL(image: Image) {
-    Clipboard.copy(image.properties.wmts)
+    Clipboard.copy(image.properties.tms)
     this.snackBar.open("Copied to the clipboard", "", {
       duration: 2000,
   });

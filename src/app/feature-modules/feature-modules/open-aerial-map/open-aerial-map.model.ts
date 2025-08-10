@@ -18,7 +18,7 @@ export class Image {
 }
 
 export class Properties {
-    wmts: string
+    tms: string
 }
 
 export class coord {

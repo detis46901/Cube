@@ -65,8 +65,8 @@
       </div>
       <div *ngFor="let item of disposition.disposition">
         <div *ngIf="item.value == ticket.disposition">
-          <button mat-button mat-raised-button *ngIf="item.completesTicket == true" color="primary" (click)='completeTicket()' [disabled]='ticket.closed != null'>Complete Ticket</button>
-          <button mat-button mat-raised-button *ngIf="item.completesTicket == false" color="primary" (click)='completeTicket()' [disabled]='ticket.closed != null'>Update Status</button>
+          <button mat-button mat-raised-button *ngIf="item.completesTicket == true" color="primary" (click)='completeTicket(ticket)' [disabled]='ticket.closed != null'>Complete Ticket</button>
+          <button mat-button mat-raised-button *ngIf="item.completesTicket == false" color="primary" (click)='completeTicket(ticket)' [disabled]='ticket.closed != null'>Update Status</button>
           <button mat-button mat-raised-button *ngIf="item.completesTicket == true" color="primary" (click)='emailContractor(ticket)' [disabled]='ticket.closed != null || !ticket.email'>Email Contractor</button> <br>
         </div>  
       </div>

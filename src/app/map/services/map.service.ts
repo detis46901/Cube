@@ -3,7 +3,7 @@ import { MapConfig, mapStyles, featureList } from '../models/map.model';
 import { UserPageLayerService } from '../../../_services/_userPageLayer.service';
 import { UserPageService } from '../../../_services/_userPage.service';
 import { UserPageInstanceService } from '../../../_services/_userPageInstance.service'
-import { LayerPermission, UserPageLayer } from '../../../_models/layer.model';
+import { LayerPermission, UserPageLayer, WMSLayer } from '../../../_models/layer.model';
 import { UserPageInstance, ModulePermission } from '../../../_models/module.model'
 import { UserPage } from '../../../_models/user.model';
 import { LayerPermissionService } from '../../../_services/_layerPermission.service';
@@ -70,7 +70,7 @@ export class MapService {
         private styleService: StyleService,
         private featuremodulesservice: FeatureModulesService,
         private snackBar: MatSnackBar,
-        private dataFormService: DataFormService,     
+        private dataFormService: DataFormService,
     ) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.mapConfig.userID = currentUser && currentUser.userID;
@@ -514,15 +514,15 @@ export class MapService {
                                     .subscribe((x) => {
                                         console.log(x)
                                         this.sqlService.addRecord(this.mapConfig.currentLayer.layer.ID, JSON.parse(featurejson))
-                                        .subscribe((data) => {
-                                            featureID = data[0][0].id
-                                            console.log(data)
-                                            this.finishDraw(e, featureID, data, stylefunction, featurejson);
-                                        })
+                                            .subscribe((data) => {
+                                                featureID = data[0][0].id
+                                                console.log(data)
+                                                this.finishDraw(e, featureID, data, stylefunction, featurejson);
+                                            })
                                     })
                             }
                             console.log(success)
-                            if (success) {this.finishDraw(e, featureID, data, stylefunction, featurejson);}
+                            if (success) { this.finishDraw(e, featureID, data, stylefunction, featurejson); }
                         })
                     this.mapConfig.map.removeLayer(vector);
                     this.mapConfig.map.changed();
@@ -667,6 +667,20 @@ export class MapService {
             maxZoom: 19,
             cacheSize: environment.cacheSize
         })
+        const wmsLayer = new ImageLayer({
+            source: new ImageWMS({
+                url: 'https://di-ingov.img.arcgis.com/arcgis/services/DynamicWebMercator/Indiana_Current_Imagery/ImageServer/WMSServer?request=GetCapabilities&service=WMS',
+                params: {
+                    'LAYERS': '0', // You may need to change this based on the GetCapabilities response
+                    'FORMAT': 'JPGPNG',
+                    'TRANSPARENT': true
+                },
+                ratio: 1,
+                serverType: 'mapserver', // Use 'geoserver', 'mapserver', or 'qgis' depending on the server
+                crossOrigin: 'anonymous'
+            })
+        })
+
         let base: any
         if (environment.MapBoxBaseMapUrl != '') {
             base = new XYZ({ "url": environment.MapBoxBaseMapUrl });
@@ -676,7 +690,7 @@ export class MapService {
         }
         if (this.base == 'base') {
             this.base = 'aerial';
-            this.mapConfig.baseLayers[0].setSource(aerial);
+            this.mapConfig.baseLayers[0].setSource(new XYZ({url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"}));
         }
         else {
             this.base = 'base';
@@ -693,14 +707,14 @@ export class MapService {
         })
     }
 
-    public createHeatMap(layer: UserPageLayer){
-        layer = this.mapConfig.currentLayer        
+    public createHeatMap(layer: UserPageLayer) {
+        layer = this.mapConfig.currentLayer
         var vector = new HeatmapLayer({
             source: new VectorSource({
-                url: 'https://cube-kokomo.com:8080/geoserver/wms', 
+                url: 'https://cube-kokomo.com:8080/geoserver/wms',
                 format: new KML({
                     extractStyles: false
-                })            
+                })
             }),
             radius: 20,
             blur: 15,
@@ -711,7 +725,7 @@ export class MapService {
                 layer: 'toner'
             })
         });
-        vector.getSource().on('addfeature', function(event){
+        vector.getSource().on('addfeature', function (event) {
             var score = event.feature.get('score');
             event.feature.set('weight', score);
         });
@@ -815,8 +829,8 @@ export class MapService {
             this.mapConfig.showFilterButton = true
             this.mapConfig.showStyleButton = true
             this.mapConfig.showDeleteButton = true
-        }else{
-        // if (layer.layer.layerType == "MyCube" && layer.style.filter.column){
+        } else {
+            // if (layer.layer.layerType == "MyCube" && layer.style.filter.column){
             this.mapConfig.filterOn = true
         }
         this.mapConfig.showStyleButton = true

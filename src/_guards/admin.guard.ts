@@ -9,8 +9,9 @@ export class AdminGuard implements CanActivate {
  
     //Decides if a user is both logged in and an admin.
     public canActivate(): boolean {
-        if (localStorage.getItem('currentUser')) {
-            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const userStr = localStorage.getItem('currentUser');
+        if (userStr) {
+            const currentUser = JSON.parse(userStr);
             this.admin = currentUser && currentUser.admin;
             if (this.admin === true) {
                 // logged in as admin so return true

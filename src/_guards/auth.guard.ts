@@ -14,8 +14,9 @@ export class AuthGuard implements CanActivate {
     //Decides if a user is logged in.
     public canActivate(): boolean {
         //console.log(localStorage)
-        if (localStorage.getItem('currentUser')) {
-            let currentUser = JSON.parse(localStorage.getItem('currentUser'))
+        const userStr = localStorage.getItem('currentUser');
+        if (userStr) {
+            const currentUser = JSON.parse(userStr);
             if (currentUser.public) {
                 console.log('not a private user')
                 this.router.navigate(['/login']);

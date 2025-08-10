@@ -16,8 +16,9 @@ export class PublicGuard implements CanActivate {
         console.log(this.route.snapshot.paramMap)
         this.publicName = this.route.snapshot.paramMap.get('publicName')
         console.log(this.publicName)
-        //console.log(localStorage)
-            if (localStorage.getItem('currentUser')) {
+    //console.log(localStorage)
+    const userStr = localStorage.getItem('currentUser');
+    if (userStr) {
                 // logged in so return true
                 //console.log("returning true from auth guard")
                 return true;

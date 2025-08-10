@@ -19,9 +19,10 @@ export class PasswordComponent implements OnInit {
     public error;
 
     constructor(private userService: UserService) {
-        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
+    const userStr = localStorage.getItem('currentUser');
+    const currentUser = userStr ? JSON.parse(userStr) : null;
+    this.token = currentUser && currentUser.token;
+    this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {

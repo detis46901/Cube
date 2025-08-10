@@ -17,9 +17,10 @@ export class ProfileComponent implements OnInit {
     public user: User;
 
     constructor(private dialog: MatDialog, private userService: UserService) {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.userID = currentUser && currentUser.userID;
+    const userStr = localStorage.getItem('currentUser');
+    const currentUser = userStr ? JSON.parse(userStr) : null;
+    this.token = currentUser && currentUser.token;
+    this.userID = currentUser && currentUser.userID;
     }
 
     ngOnInit() {

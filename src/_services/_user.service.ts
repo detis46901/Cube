@@ -78,6 +78,7 @@ export class UserService /*extends ParentService*/ {
     }
 
     public login(username: string, password: string) {
+        console.log(this.actionUrl + "login")
         return this._http.post(this.actionUrl + "login", { email: username, password: password })
      }
 }

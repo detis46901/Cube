@@ -19,9 +19,10 @@ export class SettingsComponent implements OnInit{
     constructor(private dataService: UserService) {}
 
     ngOnInit() {
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.userID = currentUser && currentUser.userID;
-        this.getAllItems(this.userID);
+    const userStr = localStorage.getItem('currentUser');
+    const currentUser = userStr ? JSON.parse(userStr) : null;
+    this.userID = currentUser && currentUser.userID;
+    this.getAllItems(this.userID);
     }
 
     public getAllItems(userid): void {
